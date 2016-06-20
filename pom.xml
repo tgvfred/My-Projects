@@ -1,12 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.disney.composite</groupId>
-	<artifactId>api</artifactId>
+	<groupId>com.disney.gqe</groupId>
+	<artifactId>APIUtilsSoap</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Composite API</name>
 	<description>Project for Composite Soap and Rest services along with utilities that consume them</description>
-	
 	<build>
 		<pluginManagement>
 			<plugins>
