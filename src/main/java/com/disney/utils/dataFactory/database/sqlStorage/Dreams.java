@@ -1,0 +1,88 @@
+package com.disney.utils.dataFactory.database.sqlStorage;
+
+/**
+ * This class contains queries that are designed to be used in the Dreams databases in the various environments.
+ * @author Waightstill W Avery
+ *
+ */
+public class Dreams {
+	public static String getReservationInfoByTpsId(final String tps){
+		return  " SELECT tp.TP_ID, tps.TPS_ID, tps.TRVL_STS_NM TPS_TRAVEL_STATUS, tps.SRC_ACCT_CTR_ID, tps.TPS_ARVL_DT, tps.TPS_DPRT_DT, tc_grp.TC_GRP_NB, tc_grp.TC_GRP_TYP_NM,tc.TC_ID, tc.TC_TYP_NM, tc.PROD_ID, tc.TC_STRT_DTS , tc.TC_END_DTS, tc.PROD_TYP_NM, tc.FAC_ID, tc.TRVL_STS_NM TC_TRVL_STS_NM " +
+				" FROM RES_MGMT.TP, RES_MGMT.TPS, RES_MGMT.TC_GRP, RES_MGMT.TC " +
+				" WHERE tp.TP_ID = tps.TP_ID " +
+				" AND tps.TPS_ID = TC_GRP.TPS_ID " +
+				" AND tc_grp.TC_GRP_NB = tc.TC_GRP_NB " +
+				" AND tps.tps_id ='" + tps + "'";
+	}
+	
+	public static String getTpPartyId(final String tpId){
+		return "SELECT TXN_PTY_ID, PRMY_PTY_IN " +
+				" FROM RES_MGMT.TP_PTY " + 
+				" WHERE TP_ID = " + tpId;
+	}
+	
+	public static String getTcPartyId(final String tcId){
+		return "SELECT TXN_IDVL_PTY_ID " +
+				" FROM RES_MGMT.TC_GST " + 
+				" WHERE TC_ID = " + tcId;
+	}
+	
+	
+	public static String getTpsIDFromExternalReference(String externalRefVal){
+		return "SELECT TPS_ID FROM RES_MGMT.TPS_EXTNL_REF WHERE TPS_EXTNL_REF_VL = '" + externalRefVal + "'";
+	}
+	
+	/**
+	 * This subclass of queries is intended to query the Dreams database for product IDs for a given facility ID.  
+	 * The genesis of this class occurred to resolve the issue of scheduled events (i.e. ALC) reservation product IDs not being consistent across environments.
+	 * There are 3 parameters that were used to derive the following queries:
+	 * **	ageDef	-	assumed to mean that a product ID contains an age definition; required for some reservations to be retrieved after having been booked/modified.
+	 * **	reservable	-	assumed to mean that a product ID can be booked/reserved; required for some reservations to be booked/modified.
+	 * **	product type	-	the type of product that is desired for a particular facility ID; multiple product IDs can be affiliated with a given facility ID
+	 * @author Waightstill W Avery
+	 *
+	 */
+	public static class ProductIds{
+		public static final String productIdColumnName = "PROD_ID";
+		
+		private static final String baseProductIdQuery = "select unique a.prod_id as "+productIdColumnName+" from pricing.fac_prod a ";
+		private static final String joinForReservableAndProdTypeName = "join pricing.prod b on a.prod_id = b.prod_id ";
+		private static final String joinForAgeDef = "join pricing.cmpnt_prod_age_def d on a.prod_id = d.prod_id ";
+		private static final String facilityPart = "where a.fac_id = {FACILITY_ID} ";
+		private static final String endDatePart = "and a.fac_prod_end_dt is null ";
+		private static final String reservablePart = "and b.prod_rsrvbl_in = 'Y' ";
+		private static final String productTypeNamePart = "and b.prod_typ_nm = '{PRODUCT_TYPE}'";
+		
+		private static final String noFilterQuery = baseProductIdQuery + facilityPart + endDatePart;	
+		private static final String ageDefProductTypeReservableQuery = baseProductIdQuery + joinForReservableAndProdTypeName + joinForAgeDef + facilityPart + endDatePart + reservablePart + productTypeNamePart;
+		private static final String ageDefProductTypeQuery = baseProductIdQuery + joinForAgeDef + joinForReservableAndProdTypeName + facilityPart + endDatePart + productTypeNamePart;
+		private static final String ageDefReservableQuery = baseProductIdQuery + joinForReservableAndProdTypeName + joinForAgeDef + facilityPart + endDatePart + reservablePart;
+		private static final String ageDefQuery = baseProductIdQuery + joinForReservableAndProdTypeName + joinForAgeDef + facilityPart + endDatePart;	
+		private static final String productTypeReservableQuery = baseProductIdQuery + joinForReservableAndProdTypeName + facilityPart + endDatePart + reservablePart + productTypeNamePart;
+		private static final String productTypeQuery = baseProductIdQuery + joinForReservableAndProdTypeName + facilityPart + endDatePart + productTypeNamePart;
+		private static final String reservableQuery = baseProductIdQuery + joinForReservableAndProdTypeName + facilityPart + endDatePart + reservablePart;
+		
+		public static String getNoFilterQuery(){return noFilterQuery;}
+		public static String getAgeDefProductTypeReservableQuery(){return ageDefProductTypeReservableQuery;}
+		public static String getAgeDefProductTypeQuery(){return ageDefProductTypeQuery;}
+		public static String getAgeDefReservableQuery(){return ageDefReservableQuery;}
+		public static String getAgeDefQuery(){return ageDefQuery;}
+		public static String getProductTypeReservableQuery(){return productTypeReservableQuery;}
+		public static String getProductTypeQuery(){return productTypeQuery;}
+		public static String getReservableQuery(){return reservableQuery;}
+	}
+	
+	public static class ComponentProductIds{
+		public static final String componentProductIdColumnName = "COMPONENT_ID";
+		public static final String componentProductTypeColumnName = "COMPONENT_TYPE";
+		
+		private static final String baseComponentProductIdQuery = "select unique a.prod_id as "+componentProductIdColumnName+", c.prod_typ_nm as "+componentProductTypeColumnName+" from pricing.cmpnt_prod a ";
+		private static final String joinForAgeDef = "join pricing.cmpnt_prod_age_def b on a.prod_id = b.prod_id ";
+		private static final String joinForComponentType = "join pricing.prod c on a.prod_id = c.prod_id ";
+		private static final String joinForFacilityId = "join pricing.fac_prod d on a.prod_id = d.prod_id ";
+		private static final String facilityIdQuery = "where d.fac_id = '{FACILITY_ID}'";
+		
+		public static String productIdWithAgeDefFacilityIdQuery = baseComponentProductIdQuery + joinForAgeDef + joinForComponentType + joinForFacilityId + facilityIdQuery;
+	}
+
+}

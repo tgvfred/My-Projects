@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ServiceClusterName" parallel="methods" thread-count="20">   <!-- UPDATE ServiceClusterName HERE -->
+	<parameter name="environment" value="bashful" />
+	<test name="ServiceName">                                            <!-- UPDATE ServiceName HERE -->
+		<groups>
+			<run>
+				<include name="operationName"></include>                 <!-- UPDATE operationName HERE -->   
+				<exclude name="dev"></exclude>
+				<exclude name="debug"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.servicePackageName.*"> <!-- UPDATE servicePackageName HERE -->
+			</package>
+		</packages>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->

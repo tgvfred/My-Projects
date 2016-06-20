@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="AccommodationSalesService" parallel="methods" thread-count="20">   
+	<parameter name="environment" value="bashful" />
+	<test name="Book">                                            
+		<groups>
+			<run>
+				<include name="retrieveCancellationPolicy"></include>                 
+				<exclude name="dev"></exclude>
+				<exclude name="debug"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationSalesServicePort.*"> 
+			</package>
+		</packages>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->

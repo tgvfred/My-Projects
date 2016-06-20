@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="AccommodationSalesService" parallel="methods" thread-count="20">
+	<parameter name="environment" value="sleepy" />
+	<test name="Reinstate">
+ 		<!-- <groups>
+			<run>
+				<include name="Cancel"></include>
+				<include name="Reinstate"></include>
+				
+				<exclude name="dev"></exclude>
+				<exclude name="debug"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationSalesServicePort.*">
+			</package>
+		</packages> -->
+		
+		<classes>
+			<class name="com.disney.composite.api.accommodationSalesServicePort.TestReinstate"></class>
+		</classes> 
+	</test> <!-- Test -->
+</suite> <!-- Suite -->

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestRetrieveSummaryBySalesOrderId_Suite" data-provider-thread-count="3">
+	<parameter name="environment" value="Bashful" />
+	<test name="TestRetrieveSummaryBySalesOrderId">
+		<classes>
+			<class
+				name="com.disney.composite.api.travelPlanSalesOrderServiceV1.TestRetrieveSummaryBySalesOrderId"/>
+		</classes>
+	</test>
+</suite>

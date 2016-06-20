@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="methods" thread-count="10"  data-provider-thread-count="10" >
+	<listeners>
+		<listener class-name="com.disney.composite.core.Screenshot"></listener>
+	</listeners>
+	<parameter name="browserUnderTest" value="iexplorer" />
+	<!-- <parameter name="environment" value="${environment}" />
+	<parameter name="runLocation" value="${runLocation}" /> -->
+	
+	<parameter name="environment" value="grumpy" />
+	<parameter name="runLocation" value="remote" /> 
+	<test name="Regression">
+		<groups>
+			<run>
+				<include name="api"/>  
+				<exclude name="dvc"/>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.*"/>
+		</packages>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->

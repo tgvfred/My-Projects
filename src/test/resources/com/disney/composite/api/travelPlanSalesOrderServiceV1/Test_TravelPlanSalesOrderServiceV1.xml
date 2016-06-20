@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TravelPlanSalesOrderServiceV1_Suite" parallel="classes" thread-count="16" data-provider-thread-count="10">
+	<parameter name="environment" value="Sleepy" />
+	<test name="TravelPlanSalesOrderServiceV1">
+		<packages>
+			<package name="com.disney.composite.api.travelPlanSalesOrderServiceV1.*"></package>
+		</packages>
+	</test>
+</suite>

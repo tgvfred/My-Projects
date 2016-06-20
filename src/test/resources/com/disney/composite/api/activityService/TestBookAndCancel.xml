@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestBookAndCancel_Suite">
+	<parameter name="environment" value="Bashful" />
+	<test name="TestBookAndCancel">
+		<classes>
+			<class
+				name="com.disney.composite.api.activityService.TestBookAndCancel"/>
+		</classes>
+	</test>
+</suite>
