@@ -15,11 +15,14 @@ public class Cancel extends ActivityService {
 		removeWhiteSpace();
 	}
 
-	public void setReservationNumber(String value){
-		setRequestNodeValueByXPath("/Envelope/Body/cancel/cancelActivityComponentRequest/reservationNumber", value);
-	}
-	
-	public String getCancellationConfirmationNumber(){
-		return getResponseNodeValueByXPath("/Envelope/Body/cancelActivityComponentResponse/cancellationNumber");
-	}
+	/**
+	 * Sets the reservation number in the SOAP request
+	 * @param value - reservation number
+	 */
+	public void setReservationNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/cancel/cancelActivityComponentRequest/reservationNumber", value);}	
+	/**
+	 * Gets the cancellation number from the SOAP response
+	 * @return - cancellation number
+	 */
+	public String getCancellationConfirmationNumber(){return getResponseNodeValueByXPath("/Envelope/Body/cancelActivityComponentResponse/cancellationNumber");}
 }
