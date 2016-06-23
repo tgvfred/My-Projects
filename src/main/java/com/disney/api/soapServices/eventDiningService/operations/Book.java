@@ -13,8 +13,6 @@ public class Book extends EventDiningService {
 		super(environment);
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("book")));
-//		System.out.println(getRequest());
-	
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
@@ -322,4 +320,3 @@ public class Book extends EventDiningService {
 		}
 	}
 }
-

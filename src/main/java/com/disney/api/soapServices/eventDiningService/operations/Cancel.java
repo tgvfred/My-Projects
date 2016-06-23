@@ -8,7 +8,6 @@ public class Cancel extends EventDiningService {
 		super(environment);
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("cancel")));
-//		System.out.println(getRequest());
 		
 		generateServiceContext();				
         setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
