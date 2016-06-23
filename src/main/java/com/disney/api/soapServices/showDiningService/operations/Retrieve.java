@@ -69,7 +69,7 @@ public class Retrieve extends ShowDiningService {
 	public String getTravelPlanId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/travelPlanId");}
 	public String getFacilityid(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/facilityId");}
 	public String getProductId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/productId");}
-	
+
 	/**
 	 * Gets reservation status from SOAP response
 	 * @return reservation status 
