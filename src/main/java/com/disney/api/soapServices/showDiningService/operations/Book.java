@@ -237,50 +237,31 @@ public class Book extends ShowDiningService {
 			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/componentPrices" + index, BaseSoapCommands.REMOVE_NODE.toString());
 		}
 	}
-	
-	
-	
-	public String getRequestFacilityId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/facilityId");}
-	public String getRequestServiceStartDate(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/serviceStartDate");}
-	public String getRequestServicePeriodId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/servicePeriodId");}
-	public String getRequestProductId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/productId");}
-	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/inventoryDetails/reservableResourceId", value);}	
-	public void setPrimaryGuestFirstName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/firstName", value);}
-	public void setPrimaryGuestLastName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/lastName", value);}
-	public void setPrimaryGuestMiddleName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/middleName", value);}	
-	public void setPrimaryGuestAddressIsPrimary(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/primary", value);}
-	public void setPrimaryGuestAddressLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/locatorId", value);}	
-	public void setPrimaryGuestAddressGuestLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/guestLocatorId", value);}	
-	public void setPrimaryGuestAddress2(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/addressLine2", value);}		
-	public void setPrimaryGuestPartyid(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/partyId", value);}	
-	public void setPrimaryGuestEmailAddressIsPrimary(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/primary", value);}
-	public void setPrimaryGuestEmailAddressLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/locatorId", value);}	
-	public void setPrimaryGuestEmailAddressGuestLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/guestLocatorId", value);}	
-	public void setPrimaryGuestEmailAddress(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/address", value);}
-	public void setPrimaryGuestSuffix(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/suffix", value);}	
-	public void setPrimaryGuestTitle(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/title", value);}
-	public void setContactName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/contactName", value);}	
-	public void addTravelAgency(String agencyId){addTravelAgency(agencyId, "0", "0", "0", "0", "0", "0");}
-	
-	public void addTravelAgency(String agencyIataNumber, String agencyOdsId, String guestAgencyId, String agentId, String guestAgentId, String confirmationLocatorValue, String guestConfirmationLocationId){
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest", "fx:AddNode;Node:travelAgency");
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:agencyIataNumber");
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:agencyOdsId");
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:guestTravelAgencyId");
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:agentId");
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:guestAgentId");
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:confirmationLocatorValue");
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:guestConfirmationLocationId");
 
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/agencyIataNumber", agencyIataNumber);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/agencyOdsId", agencyOdsId);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/guestTravelAgencyId", guestAgencyId);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/agentId", agentId);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/guestAgentId", guestAgentId);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/confirmationLocatorValue", confirmationLocatorValue);		
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/guestConfirmationLocationId", guestConfirmationLocationId);
-	}
-	
+	/**
+	 * Gets the facility ID from the SOAP request
+	 * @return facility ID 
+	 */
+	public String getRequestFacilityId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/facilityId");}
+	/**
+	 * Gets the service start date from the SOAP request
+	 * @return service start date 
+	 */
+	public String getRequestServiceStartDate(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/serviceStartDate");}
+	/**
+	 * Gets the service period ID from the SOAP request
+	 * @return service period ID 
+	 */
+	public String getRequestServicePeriodId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/servicePeriodId");}
+	/**
+	 * Gets the product ID from the SOAP request
+	 * @return product ID
+	 */
+	public String getRequestProductId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/productId");}
+	/**
+	 * Sets the party for an instance of this class
+	 * @param party - HouseHold instance containing all guests and related data
+	 */
 	public void setParty(HouseHold party){
 		int currentGuest = 1;
 		String partyRolePosition = "";
@@ -324,8 +305,49 @@ public class Book extends ShowDiningService {
 
 			currentGuest++;
 		}
+	}	
+	/**
+	 * Adds travel agency in the SOAP request
+	 * @param agencyId - travel agency
+	 */
+	public void addTravelAgency(String agencyId){addTravelAgency(agencyId, "0", "0", "0", "0", "0", "0");}
+	/**
+	 * Adds travel agency in the SOAP request
+	 * @param agencyIataNumber - travel agency IATA number
+	 * @param agencyOdsId - travel agency ODS ID
+	 * @param guestAgencyId - guest travel agency ID
+	 * @param agentId - travel agent ID
+	 * @param guestAgentId - guest travel agent ID
+	 * @param confirmationLocatorValue - travel agency confirmation locator value
+	 * @param guestConfirmationLocationId - guest travel agency confirmation location ID
+	 */
+	public void addTravelAgency(String agencyIataNumber, String agencyOdsId, String guestAgencyId, String agentId, String guestAgentId, String confirmationLocatorValue, String guestConfirmationLocationId){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest", "fx:AddNode;Node:travelAgency");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:agencyIataNumber");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:agencyOdsId");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:guestTravelAgencyId");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:agentId");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:guestAgentId");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:confirmationLocatorValue");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency", "fx:AddNode;Node:guestConfirmationLocationId");
+
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/agencyIataNumber", agencyIataNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/agencyOdsId", agencyOdsId);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/guestTravelAgencyId", guestAgencyId);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/agentId", agentId);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/guestAgentId", guestAgentId);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/confirmationLocatorValue", confirmationLocatorValue);		
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/travelAgency/guestConfirmationLocationId", guestConfirmationLocationId);
 	}
-	
+	/**
+	 * Sets the reservable resource ID in the SOAP request
+	 * @param value reservable resource ID
+	 */
+	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/inventoryDetails/reservableResourceId", value);}
+	/**
+	 * Adds the primary guest address to the SOAP request
+	 * @param guest - Guest-class instance for the primary guest
+	 */
 	private void addPrimaryGuestAddresses(Guest guest){
 		addPrimaryGuestAddressDetailNodes( guest.getAllAddresses().size() - 1);
 		int position = 1;
@@ -357,7 +379,10 @@ public class Book extends ShowDiningService {
 			position++;
 		}
 	}
-	
+	/**
+	 * Adds nodes for the primary guest address details nodes
+	 * @param numberToAdd - number of addresses to add
+	 */
 	private void addPrimaryGuestAddressDetailNodes(int numberToAdd){
 		int position = 2;
 		for(int x=1 ; x <= numberToAdd ; x++){
@@ -374,7 +399,10 @@ public class Book extends ShowDiningService {
 			position++;
 		}
 	}
-	
+	/**
+	 * Adds the primary guest email address(es) to the SOAP request
+	 * @param guest - Guest-class instance for the primary guest
+	 */
 	private void addPrimaryGuestEmails(Guest guest){		
 		addPrimaryGuestEmailDetailNodes(guest.getAllEmails().size() - 1);		
 		int position = 1;		
@@ -393,8 +421,11 @@ public class Book extends ShowDiningService {
 			}
 			position++;
 		}
-	}
-	
+	}	
+	/**
+	 * Adds nodes for the primary guest email details nodes
+	 * @param numberToAdd - number of emails to add
+	 */
 	private void addPrimaryGuestEmailDetailNodes(int numberToAdd){
 		int position = 2;
 		for(int x=1 ; x <= numberToAdd ; x++){
@@ -404,8 +435,11 @@ public class Book extends ShowDiningService {
 			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails["+position+"]", "fx:AddNode;Node:primary");
 			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails["+position+"]", "fx:AddNode;Node:address");
 		}
-	}	
-	
+	}		
+	/**
+	 * Adds party roles for all guests that are not the primary guest
+	 * @param numberToAdd - number of non-primary guests to add
+	 */
 	private void addPartyRoleNodes(int numberToAdd){
 		int position = 2;
 		for(int x=1 ; x <= numberToAdd ; x++){
@@ -425,4 +459,79 @@ public class Book extends ShowDiningService {
 			position++;
 		}
 	}
+	/**
+	 * Sets primary guest first name in the SOAP request
+	 * @param value - primary guest first name
+	 */
+	public void setPrimaryGuestFirstName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/firstName", value);}
+	/**
+	 * Sets primary guest last name in the SOAP request
+	 * @param value - primary guest last name
+	 */
+	public void setPrimaryGuestLastName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/lastName", value);}
+	/**
+	 * Sets primary guest middle name in the SOAP request
+	 * @param value - primary guest middle name
+	 */
+	public void setPrimaryGuestMiddleName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/middleName", value);}	
+	/**
+	 * Sets flag to determine a primary guest address is the primary address in the SOAP request
+	 * @param value - flag to determine a primary guest address is the primary address
+	 */
+	public void setPrimaryGuestAddressIsPrimary(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/primary", value);}
+	/**
+	 * Sets primary guest address locator ID in the SOAP request
+	 * @param value - guest address locator ID
+	 */
+	public void setPrimaryGuestAddressLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/locatorId", value);}	
+	/**
+	 * Sets primary guest address guest  locator ID in the SOAP request
+	 * @param value - primary guest address guest  locator ID
+	 */	
+	public void setPrimaryGuestAddressGuestLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/guestLocatorId", value);}	
+	/**
+	 * Sets primary guest address line 2 in the SOAP request
+	 * @param value - primary guest address line 2
+	 */
+	public void setPrimaryGuestAddress2(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/addressLine2", value);}		
+	/**
+	 * Sets primary guest party ID in the SOAP request
+	 * @param value - primary guest party ID 
+	 */	
+	public void setPrimaryGuestPartyid(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/partyId", value);}		
+	/**
+	 * Sets flag to determine a primary guest email address is the primary address in the SOAP request
+	 * @param value - flag to determine a primary guest email address is the primary address
+	 */
+	public void setPrimaryGuestEmailAddressIsPrimary(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/primary", value);}
+	/**
+	 * Sets primary guest email address locator ID in the SOAP request
+	 * @param value - primary guest email address locator ID
+	 */
+	public void setPrimaryGuestEmailAddressLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/locatorId", value);}		
+	/**
+	 * Sets primary guest email address guest locator ID in the SOAP request
+	 * @param value - primary guest email address guest locator ID
+	 */
+	public void setPrimaryGuestEmailAddressGuestLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/guestLocatorId", value);}	
+	/**
+	 * Sets primary guest email address in the SOAP request
+	 * @param value - primary guest email address
+	 */	
+	public void setPrimaryGuestEmailAddress(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/address", value);}
+	/**
+	 * Sets the primary guest suffix in the SOAP request
+	 * @param value - primary guest suffix
+	 */
+	public void setPrimaryGuestSuffix(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/suffix", value);}
+	/**
+	 * Sets the primary guest title in the SOAP request
+	 * @param value - primary guest title
+	 */	
+	public void setPrimaryGuestTitle(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/title", value);}
+	/**
+	 * Sets the contact name in the SOAP request
+	 * @param value - contact name
+	 */
+	public void setContactName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/contactName", value);}
 }

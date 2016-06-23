@@ -452,4 +452,62 @@ public class Book extends TableServiceDiningServicePort {
 			index = "";
 		}
 	}
+	/**
+	 * Gets the facility ID from the SOAP response
+	 * @return facility ID from the SOAP response
+	 */
+	public String getRequestFacilityId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/facilityId");}
+	/**
+	 * Gets the service start dateTime from the SOAP response
+	 * @return service start dateTime
+	 */
+	public String getRequestServiceStartDate(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/serviceStartDate");}
+	/**
+	 * Gets the service period ID from the SOAP response
+	 * @return service period ID
+	 */
+	public String getRequestServicePeriodId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/servicePeriodId");}
+	/**
+	 * Gets the product ID from the SOAP response
+	 * @return product ID
+	 */
+	public String getRequestProductId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/productId");}
+	/**
+	 * Adds travel agency in the SOAP request
+	 * @param agencyId - travel agency
+	 */
+	public void addTravelAgency(String agencyId){addTravelAgency(agencyId, "0", "0", "0", "0", "0", "0");}
+	/**
+	 * Sets the reservable resource ID in the SOAP request
+	 * @param value reservable resource ID
+	 */
+	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails/reservableResourceId", value);}
+	/**
+	 * Adds travel agency in the SOAP request
+	 * @param agencyIataNumber - travel agency IATA number
+	 * @param agencyOdsId - travel agency ODS ID
+	 * @param guestAgencyId - guest travel agency ID
+	 * @param agentId - travel agent ID
+	 * @param guestAgentId - guest travel agent ID
+	 * @param confirmationLocatorValue - travel agency confirmation locator value
+	 * @param guestConfirmationLocationId - guest travel agency confirmation location ID
+	 */
+	public void addTravelAgency(String agencyIataNumber, String agencyOdsId, String guestAgencyId, String agentId, String guestAgentId, String confirmationLocatorValue, String guestConfirmationLocationId){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest", "fx:AddNode;Node:travelAgency");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency", "fx:AddNode;Node:agencyIataNumber");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency", "fx:AddNode;Node:agencyOdsId");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency", "fx:AddNode;Node:guestTravelAgencyId");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency", "fx:AddNode;Node:agentId");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency", "fx:AddNode;Node:guestAgentId");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency", "fx:AddNode;Node:confirmationLocatorValue");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency", "fx:AddNode;Node:guestConfirmationLocationId");
+
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency/agencyIataNumber", agencyIataNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency/agencyOdsId", agencyOdsId);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency/guestTravelAgencyId", guestAgencyId);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency/agentId", agentId);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency/guestAgentId", guestAgentId);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency/confirmationLocatorValue", confirmationLocatorValue);		
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency/guestConfirmationLocationId", guestConfirmationLocationId);
+	}
 }
