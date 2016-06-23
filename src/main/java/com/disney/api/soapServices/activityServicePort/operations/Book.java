@@ -36,7 +36,7 @@ public class Book extends ActivityService{
 		}
 	}
 	/**
-	 * Setst the sales channel in the in the SOAP Request
+	 * Sets the sales channel in the in the SOAP Request
 	 * @param value - sales channel
 	 */
 	public void setActivitySalesChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/salesChannel", value);}
@@ -321,16 +321,16 @@ public class Book extends ActivityService{
 	public void setServiceStartDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/serviceStartDate", value);}
 	/**
 	 * Sets the reservable resource ID in the SOAP request
-	 * @param value reservable resouce ID
+	 * @param value reservable resource ID
 	 */
 	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", value);}
 	/**
-	 * Sets the product ID in the SOAP request
+	 * Sets the primary guest suffix in the SOAP request
 	 * @param value - product ID
 	 */
 	public void setPrimaryGuestSuffix(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/suffix", value);}	
 	/**
-	 * Sets the primary guest suffix in the SOAP request
+	 * Sets the primary guest title in the SOAP request
 	 * @param value - primary guest suffix
 	 */
 	public void setPrimaryGuestTitle(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/title", value);}
@@ -434,7 +434,7 @@ public class Book extends ActivityService{
 	}
 	/**
 	 * Sets the party for an instance of this class
-	 * @param party - HouseHold instance contaning all guests and related data
+	 * @param party - HouseHold instance containing all guests and related data
 	 */
 	public void setParty(HouseHold party){
 		int currentGuest = 1;
