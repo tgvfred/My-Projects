@@ -326,12 +326,12 @@ public class Book extends ActivityService{
 	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", value);}
 	/**
 	 * Sets the primary guest suffix in the SOAP request
-	 * @param value - product ID
+	 * @param value - primary guest suffix
 	 */
 	public void setPrimaryGuestSuffix(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/suffix", value);}	
 	/**
 	 * Sets the primary guest title in the SOAP request
-	 * @param value - primary guest suffix
+	 * @param value - primary guest title
 	 */
 	public void setPrimaryGuestTitle(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/title", value);}
 	/**

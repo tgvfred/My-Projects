@@ -59,4 +59,5 @@ public class Retrieve extends ActivityService {
 	 * @return - primary guest age 
 	 */
 	public String getPrimaryGuestAge(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveActivityComponentResponse/activityReservation/activity/partyRoles[1]/age");}
+	
 }
