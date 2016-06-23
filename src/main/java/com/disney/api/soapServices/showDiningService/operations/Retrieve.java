@@ -70,4 +70,9 @@ public class Retrieve extends ShowDiningService {
 	public String getFacilityid(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/facilityId");}
 	public String getProductId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/productId");}
 	
+	public String getStatus(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/status");}
+	public int getNumberOfGuests(){return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/partyRoles/guest").getLength();}
+	public String getResourceAssignmentIdentifier(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/inventoryDetails/resourceAssignmentIdentifier");}
+	public String getResponseFacilityId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/facilityId");}	
+	public String getPrimaryGuestAge(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/partyRoles[1]/age");}
 }
