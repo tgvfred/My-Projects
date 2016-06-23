@@ -9,17 +9,17 @@ import com.disney.utils.TestReporter;
 
 public class TestRetrieveSalesChannels {
 	// Defining global variables
-	protected ThreadLocal<String> testName = new ThreadLocal<String>();
-	protected ThreadLocal<String> environment = new ThreadLocal<String>();
+	protected String testName = null;
+	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
-	public void setup(String environment) {this.environment.set(environment);}
+	public void setup(String environment) {this.environment = environment;}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testRetrieveSalesChannels(){
 		TestReporter.logStep("Retrieve Sales Channels");
-		RetrieveSalesChannels retrieveSalesChannels = new RetrieveSalesChannels(environment.get());
+		RetrieveSalesChannels retrieveSalesChannels = new RetrieveSalesChannels(environment);
 		retrieveSalesChannels.sendRequest();
 		TestReporter.logAPI(!retrieveSalesChannels.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveSalesChannels);
 		TestReporter.assertGreaterThanZero(retrieveSalesChannels.getNumberOfSalesChannels());

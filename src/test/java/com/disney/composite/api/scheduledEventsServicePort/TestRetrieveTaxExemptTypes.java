@@ -9,17 +9,17 @@ import com.disney.utils.TestReporter;
 
 public class TestRetrieveTaxExemptTypes {
 	// Defining global variables
-	protected ThreadLocal<String> testName = new ThreadLocal<String>();
-	protected ThreadLocal<String> environment = new ThreadLocal<String>();
+	protected String testName = null;
+	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
-	public void setup(String environment) {this.environment.set(environment);}
+	public void setup(String environment) {this.environment = environment;}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testRetrieveTaxExemptTypes(){
 		TestReporter.logStep("Retrieve Tax Exempt Types");
-		RetrieveTaxExemptTypes retrieveTaxExemptTypes = new RetrieveTaxExemptTypes(environment.get());
+		RetrieveTaxExemptTypes retrieveTaxExemptTypes = new RetrieveTaxExemptTypes(environment);
 		retrieveTaxExemptTypes.sendRequest();
 		TestReporter.logAPI(!retrieveTaxExemptTypes.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveTaxExemptTypes);
 		TestReporter.assertGreaterThanZero(retrieveTaxExemptTypes.getNumberOfTaxExemptTypes());

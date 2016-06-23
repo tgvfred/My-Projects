@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestCancel_Suite">
+	<parameter name="environment" value="Bashful" />
+	<test name="TestCancel">
+		<classes>
+			<class name="com.disney.test.composite.SEReservationGenerator.eventDining.TestCancel"/>
+		</classes>
+	</test>
+</suite>

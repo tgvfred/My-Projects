@@ -9,17 +9,17 @@ import com.disney.utils.TestReporter;
 
 public class TestRetrieveGuestRequests {
 	// Defining global variables
-	protected ThreadLocal<String> testName = new ThreadLocal<String>();
-	protected ThreadLocal<String> environment = new ThreadLocal<String>();
+	protected String testName = null;
+	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
-	public void setup(String environment) {this.environment.set(environment);}
+	public void setup(String environment) {this.environment = environment;}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testRetrieveGuestRequests(){
 		TestReporter.logStep("Retrieve Guest Request");
-		RetrieveGuestRequests retrieveGuestRequests = new RetrieveGuestRequests(environment.get());
+		RetrieveGuestRequests retrieveGuestRequests = new RetrieveGuestRequests(environment);
 		retrieveGuestRequests.sendRequest();
 		TestReporter.logAPI(!retrieveGuestRequests.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveGuestRequests);
 		TestReporter.assertGreaterThanZero(retrieveGuestRequests.getNumberOfGuestRequests());

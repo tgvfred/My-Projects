@@ -11,24 +11,24 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 
 public class TestCheckout {
 	// Defining global variables
-	protected ThreadLocal<String> testName = new ThreadLocal<String>();
-	protected ThreadLocal<String> environment = new ThreadLocal<String>();
+	protected String testName = null;
+	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(String environment) {
-		this.environment.set(environment);
+		this.environment = environment;
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testCheckout(){
 		TestReporter.logStep("Book PreRequisite Reservation");
 		PreReqBooking res = new PreReqBooking();
-		ScheduledEventReservation book = res.bookEventDining(environment.get());
+		ScheduledEventReservation book = res.bookEventDining(environment);
 		res.markArrived(book);
 		
 		TestReporter.logStep("Checkout reservation");
-		Checkout checkout = new Checkout(environment.get());
+		Checkout checkout = new Checkout(environment);
 		checkout.setTravelPlanSegmentId(book.getConfirmationNumber());
 		checkout.sendRequest();
 		TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "An error occurred checking-out an event dining service reservation", checkout);
