@@ -3,17 +3,11 @@ package com.disney.composite.api.scheduledEventsServicePort;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.eventDiningService.operations.Book;
-import com.disney.api.soapServices.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.SearchByVenue;
-import com.disney.utils.Datatable;
 import com.disney.utils.Randomness;
-import com.disney.utils.Regex;
-import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
