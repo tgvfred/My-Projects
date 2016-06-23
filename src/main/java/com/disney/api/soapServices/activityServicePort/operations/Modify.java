@@ -184,7 +184,7 @@ public class Modify extends ActivityService {
 	}
 	/**
 	 * Sets the primary guest suffix in the SOAP request
-	 * @param value - product ID
+	 * @param value - primary guest suffix
 	 */
 	public void setPrimaryGuestSuffix(String value){
 		try{setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/primaryGuest/suffix", value);}
