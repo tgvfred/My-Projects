@@ -1,4 +1,4 @@
-package com.disney.utils.dataFactory.staging.bookDiningReservation;
+package com.disney.utils.dataFactory.staging.bookSEReservation;
 
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 /**
@@ -10,6 +10,9 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 public interface ScheduledEventReservation{
 	// Generic scenario name, intended to have all extraneous elements (components, add-ons, comments, etc.) removed
 	public static final String NOCOMPONENTSNOADDONS = "NoComponentsNoAddOns";
+	public static final String ONECOMPONENTSNOADDONS = "OneComponentsNoAddOns";
+	public static final String NOCOMPONENTSNOADDONSTWOADULTS = "NoComponentsNoAddOnsTwoAdults";
+	public static final String ONECOMPONENTSNOADDONSTWOADULTS = "OneComponentsNoAddOnsTwoAdults";
 	
 	// Getters used to retrieve field values
 	public String getEnvironment();
@@ -22,20 +25,43 @@ public interface ScheduledEventReservation{
 	public String getProductId();
 	public String getServicePeriodId();
 	public String getServiceStartDate();
+	public int getNumberOfGuests();
+	public String getValidateBookingStatus();
+	public String getTableNumber();
+	public String getAssignTableNumberStatus();
+	public String getPrintTicketStatus();
+	public String getReprintTicketStatus();
+	public String getRetrieveResponseFacilityID();
+	public String getPrimaryGuestAge();
+	public String getModifyResponseStatus();
+	// Setters used to set field values
+	public void setFacilityId(String facilityId);
+	public void setProductId(String productId);
+	public void setProductType(String productType);
+	public void setBookingScenario(String scenario);
 	// Interfaces for methods to generate and set a household
 	public HouseHold party();
 	public void setParty(HouseHold party);	
-	// Interfaces for methods to book scheduled events
+	// Interfaces for methods to book and retrieve scheduled events
 	public void book(String facilityID, String startDate, String servicePeriod, String productId);
 	public void book(String diningBookScenario);
+	public void retrieve();
 	// Interfaces for methods to cancel scheduled reservations, as well as methods to update scheduled event reservations to 'Arrived' or 'No Show'
 	public void cancel();
 	public void arrived();
 	public void noShow();
+	// Interfaces for methods to validate bookings
+	public void validateBooking();
+	public void validateBooking(String scenario);
 	// Interfaces for methods to add a travel agency to a scheduled event reservation
 	public void addTravelAgency();
 	public void addTravelAgency(String agencyId);
 	public void addTravelAgency(String agencyIataNumber, String agencyOdsId, String guestAgencyId, String agentId, String guestAgentId, String confirmationLocatorValue, String guestConfirmationLocationId);
+	// Interfaces for show dining reservations
+	public void assignTableNumbers();
+	public void assignTableNumbers(String tableNumber);
+	public void printTicket();
+	public void reprintTicket();
 	// Interface for a sub-class that will contain methods to modify scheduled event reservations
 	public Modify modify();
 }

@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 import org.testng.Reporter;
 
-import com.disney.test.utils.Datatable;
+import com.disney.utils.Datatable;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
@@ -76,12 +76,9 @@ public class HouseHold {
 		int numberChildrenCreated = 0;
 		int numberInfantsCreated = 0;
 
-		int numberAdults = Integer.valueOf(datatable
-				.getDataParameter("NumberAdults"));
-		int numberChildren = Integer.valueOf(datatable
-				.getDataParameter("NumberChildren"));
-		int numberInfants = Integer.valueOf(datatable
-				.getDataParameter("NumberInfants"));
+		int numberAdults = Integer.valueOf(datatable.getDataParameter("NumberAdults"));
+		int numberChildren = Integer.valueOf(datatable.getDataParameter("NumberChildren"));
+		int numberInfants = Integer.valueOf(datatable.getDataParameter("NumberInfants"));
 		int houseHoldSize = numberAdults + numberChildren + numberInfants;
 
 		for (int x = 0; x < houseHoldSize; x++) {
