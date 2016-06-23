@@ -8,7 +8,6 @@ public class Retrieve extends EventDiningService {
 		super(environment);
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("retrieve")));
-//		System.out.println(getRequest());
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
