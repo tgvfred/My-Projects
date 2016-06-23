@@ -173,7 +173,7 @@ public class Modify extends ActivityService {
 	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/inventoryDetails/reservableResourceId", value);}
 	/**
 	 * Sets the primary guest title in the SOAP request
-	 * @param value - primary guest suffix
+	 * @param value - primary guest title
 	 */
 	public void setPrimaryGuestTitle(String value){
 		try{setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/primaryGuest/title", value);}
