@@ -322,7 +322,7 @@ public class TestRetrieve {
 		if (Scenario.get().toLowerCase().contains("international")) {
 			generateGuest();
 			book.get().setPrimaryGuestPostalCode(address.get().getZipCode());
-			book.get().setPrimaryGuestAddress1(address.get().getAddress1());
+			book.get().setActivityPrimaryGuestAddress1(address.get().getAddress1());
 			book.get().setPrimaryGuestCountry(address.get().getCountry());
 			book.get().setPrimaryGuestState(address.get().getStateAbbv());
 			book.get().setPrimaryGuestCity(address.get().getCity());
