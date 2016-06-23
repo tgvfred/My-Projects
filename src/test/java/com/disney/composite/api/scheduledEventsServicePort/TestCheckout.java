@@ -6,8 +6,8 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.Checkout;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.staging.bookDiningReservation.PreReqBooking;
-import com.disney.utils.dataFactory.staging.bookDiningReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.PreReqBooking;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestCheckout {
 	// Defining global variables
