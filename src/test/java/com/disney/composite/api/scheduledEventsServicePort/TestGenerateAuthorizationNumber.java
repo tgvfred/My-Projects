@@ -9,17 +9,17 @@ import com.disney.utils.TestReporter;
 
 public class TestGenerateAuthorizationNumber {
 	// Defining global variables
-	protected ThreadLocal<String> testName = new ThreadLocal<String>();
-	protected ThreadLocal<String> environment = new ThreadLocal<String>();
+	protected String testName = null;
+	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
-	public void setup(String environment) {this.environment.set(environment);}
+	public void setup(String environment) {this.environment = environment;}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testGenerateAuthorizationNumber(){
 		TestReporter.logStep("Generate Authrization Number");
-		GenerateAuthorizationNumber generateAuthorizationNumber = new GenerateAuthorizationNumber(environment.get());
+		GenerateAuthorizationNumber generateAuthorizationNumber = new GenerateAuthorizationNumber(environment);
 		generateAuthorizationNumber.sendRequest();
 		TestReporter.logAPI(!generateAuthorizationNumber.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", generateAuthorizationNumber);
 		TestReporter.assertTrue(!generateAuthorizationNumber.getAuthorizationNumber().isEmpty(), "Authorization Number not generated.");

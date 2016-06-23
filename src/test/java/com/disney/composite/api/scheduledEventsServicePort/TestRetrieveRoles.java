@@ -9,17 +9,17 @@ import com.disney.utils.TestReporter;
 
 public class TestRetrieveRoles {
 	// Defining global variables
-	protected ThreadLocal<String> testName = new ThreadLocal<String>();
-	protected ThreadLocal<String> environment = new ThreadLocal<String>();
+	protected String testName = null;
+	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
-	public void setup(String environment) {this.environment.set(environment);}
+	public void setup(String environment) {this.environment = environment;}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testRetrieveRoles(){
 		TestReporter.logStep("Retrieve Roles");
-		RetrieveRoles retrieveRoles = new RetrieveRoles(environment.get());
+		RetrieveRoles retrieveRoles = new RetrieveRoles(environment);
 		retrieveRoles.sendRequest();
 		TestReporter.logAPI(!retrieveRoles.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveRoles);
 //		TestReporter.assertEquals(retrieveRoles.getResponseStatusCode(), "200", "An error occurred during retrieval.\nRequest:\n"+retrieveRoles.getRequest()+"\nResponse:\n"+retrieveRoles.getResponse());
