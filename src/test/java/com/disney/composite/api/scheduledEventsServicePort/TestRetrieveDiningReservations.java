@@ -7,8 +7,8 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.RetrieveDiningReservations;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
-import com.disney.utils.dataFactory.staging.bookDiningReservation.EventDiningReservation;
-import com.disney.utils.dataFactory.staging.bookDiningReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestRetrieveDiningReservations {
 	// Defining global variables
