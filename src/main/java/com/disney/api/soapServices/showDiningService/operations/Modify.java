@@ -478,4 +478,24 @@ public class Modify extends ShowDiningService {
 	 * @return - primary guest party ID
 	 */
 	public void setPrimaryGuestPartyId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/primaryGuest/partyId", value);}
+	/**
+	 * Gets the service start dateTime in the SOAP request
+	 * @param value - service start dateTime
+	 */
+	public String getRequestServiceStartDate(){return getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/serviceStartDate");}
+	/**
+	 * Gets the facility ID in the SOAP request
+	 * @return facility ID
+	 */
+	public String getRequestFacilityId(){return getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/facilityId");}
+	/**
+	 * Sets the service period ID in the SOAP request
+	 * @param value - service period ID
+	 */
+	public String getRequestServicePeriodId(){return getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/servicePeriodId");}
+	/**
+	 * Gets the service period ID in the SOAP request
+	 * @return service period ID
+	 */
+	public String getRequestProductId(){return getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/productId");}
 }
