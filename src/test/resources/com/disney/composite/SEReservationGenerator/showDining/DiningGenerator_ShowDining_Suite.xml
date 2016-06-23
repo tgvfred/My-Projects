@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ShowDining_Suite" parallel="classes" thread-count="18">
+	<parameter name="environment" value="Sleepy" />
+	<test name="ShowDining">
+		<packages>
+			<package name="com.disney.test.composite.SEReservationGenerator.showDining.*"></package>
+		</packages>
+	</test>
+</suite>

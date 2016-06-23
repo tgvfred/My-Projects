@@ -9,17 +9,17 @@ import com.disney.utils.TestReporter;
 
 public class TestRetrieveReprintReasons {
 	// Defining global variables
-	protected ThreadLocal<String> testName = new ThreadLocal<String>();
-	protected ThreadLocal<String> environment = new ThreadLocal<String>();
+	protected String testName = null;
+	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
-	public void setup(String environment) {this.environment.set(environment);}
+	public void setup(String environment) {this.environment = environment;}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testRetrieveReprintReasons(){
 		TestReporter.logStep("Retrieve Reprint Reasons");
-		RetrieveReprintReasons retrieveReprintReasons = new RetrieveReprintReasons(environment.get());
+		RetrieveReprintReasons retrieveReprintReasons = new RetrieveReprintReasons(environment);
 		retrieveReprintReasons.sendRequest();
 		TestReporter.logAPI(!retrieveReprintReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveReprintReasons);
 		TestReporter.assertGreaterThanZero(retrieveReprintReasons.getNumberOfReprintReasons());

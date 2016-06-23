@@ -9,17 +9,17 @@ import com.disney.utils.TestReporter;
 
 public class TestRetrieveChangeReasons {
 	// Defining global variables
-	protected ThreadLocal<String> testName = new ThreadLocal<String>();
-	protected ThreadLocal<String> environment = new ThreadLocal<String>();
+	protected String testName = null;
+	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
-	public void setup(String environment) {this.environment.set(environment);}
+	public void setup(String environment) {this.environment = environment;}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testRetrieveChangeReasons(){
 		TestReporter.logStep("Retrieve Change Reasons");
-		RetrieveChangeReasons retrieveChangeReasons = new RetrieveChangeReasons(environment.get());
+		RetrieveChangeReasons retrieveChangeReasons = new RetrieveChangeReasons(environment);
 		retrieveChangeReasons.sendRequest();
 		TestReporter.logAPI(!retrieveChangeReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveChangeReasons);
 		TestReporter.assertGreaterThanZero(retrieveChangeReasons.getNumberOfChangeReasons());
