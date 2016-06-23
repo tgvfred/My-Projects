@@ -1,4 +1,4 @@
-package com.disney.utils.dataFactory.staging.bookDiningReservation;
+package com.disney.utils.dataFactory.staging.bookSEReservation;
 
 
 import org.testng.annotations.Test;

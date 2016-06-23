@@ -1,4 +1,4 @@
-package com.disney.utils.dataFactory.staging.bookDiningReservation;
+package com.disney.utils.dataFactory.staging.bookSEReservation;
 
 import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.api.soapServices.eventDiningService.operations.Arrived;
