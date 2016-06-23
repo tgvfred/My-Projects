@@ -330,4 +330,14 @@ public class Modify extends TableServiceDiningServicePort {
 			position++;
 		}
 	}
+	/**
+	 * Sets the service period ID in the SOAP request
+	 * @param value - service period ID
+	 */
+	public void setServicePeriosId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/servicePeriodId", value);}
+	/**
+	 * Sets the service start dateTime in the SOAP request
+	 * @param value service start dateTime
+	 */
+	public void setServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/serviceStartDate", value);}
 }
