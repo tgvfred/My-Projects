@@ -4,9 +4,6 @@ import com.disney.api.soapServices.paymentService.PaymentService;
 import com.disney.utils.XMLTools;
 
 public class PostCheckPayment extends PaymentService{
-	private String rrn;
-	private String rrnKey;
-	
 	public PostCheckPayment(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file

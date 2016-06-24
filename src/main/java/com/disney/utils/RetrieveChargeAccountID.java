@@ -1,7 +1,6 @@
 package com.disney.utils;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.testng.Assert;
 
 import com.disney.test.utils.dataFactory.database.Recordset;
 import com.disney.test.utils.dataFactory.database.databaseImpl.OracleDatabase;
@@ -14,8 +13,6 @@ public class RetrieveChargeAccountID {
 			+ "JOIN GST_CHRG_ACCT.SETTL_METH_EXPR_CRD SME ON SCG.SETTL_METH_ID = SME.SETTL_METH_ID "
 			+ "WHERE SME.EXPRNC_CRD_NB LIKE  '%{TP_ID}%"
 			+ "' ORDER BY SME.EXPRNC_CRD_NB ASC";
-	private String chargeAccountID = "";
-	private String experienceCardNumber = "";
 	private String[][] results;
 	private String database = "SALES";
 	

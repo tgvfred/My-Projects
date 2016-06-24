@@ -25,19 +25,6 @@ public class sandbox {
 		Assert.assertTrue(ResortInfo.isDVCResort(resort));
 		
 	}
-//	@Test
-	public void sandbox(){
-		RetrieveDetails retrieve = new RetrieveDetails("Sleepy", "Main");
-		retrieve.setPartyId("127328185");
-		retrieve.setManufacturerId("19999841879007685");
-		retrieve.sendRequest();
-		 
-		Assert.assertEquals(retrieve.getResponseStatusCode(), "200","Response was not 200");
-		
-		System.out.println(retrieve.getAccessEncodingStatus());
-		System.out.println(retrieve.getAccessMediaId());
-		System.out.println(retrieve.getRfidMediaId());
-	}
 	//@Test
 	public void randomDetailedReservation(){
 		Reservation reservation = new GenerateReservation().bookResortReservation().CONTEMPORARY(environment);		

@@ -86,7 +86,8 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlImporter;
 import com.eviware.soapui.support.SoapUIException;*/
 
-@SuppressWarnings("deprecation")
+
+@SuppressWarnings({ "unused", "deprecation" })
 public abstract class BaseSoapService{
 
 	private String strEnvironment = null;
@@ -1028,67 +1029,6 @@ public abstract class BaseSoapService{
 		return conversationID;
 	}
 	
-	private void doTrustToCertificates() throws NoSuchAlgorithmException, KeyManagementException {
-        Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-        TrustManager[] trustAllCerts = new TrustManager[]{
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
-                        return;
-                    }
-
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
-                        return;
-                    }
-                }  
-        };
-      /*  KeyManager[] kms = null;
-        TrustManager[] tms = null;
-        try {
-        	KeyStore clientStore = KeyStore.getInstance("X.509");
-       
-			clientStore.load(new FileInputStream(new File(getClass().getResource("/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.cer").getPath())), "Disney123".toCharArray());
-		
-	        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-	        kmf.init(clientStore, "Disney123".toCharArray());
-	        
-	        kms = kmf.getKeyManagers();
-	        System.out.println(System.getProperty("java.home"));
-	        String path = System.getProperty("java.home")  +"\\lib\\security\\cacerts.jks";
-	        KeyStore trustStore = KeyStore.getInstance("JKS");
-	        System.out.println(new File(path));
-	        trustStore.load(new FileInputStream(new File(path)), "changeit".toCharArray());
-	
-	        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-	        tmf.init(trustStore);
-	        tms = tmf.getTrustManagers();
-        } catch (CertificateException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnrecoverableKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-
-        SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init(null, trustAllCerts, new SecureRandom());
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        HostnameVerifier hv = new HostnameVerifier() {
-            public boolean verify(String urlHostName, SSLSession session) {
-                if (!urlHostName.equalsIgnoreCase(session.getPeerHost())) {
-                    System.out.println("Warning: URL host '" + urlHostName + "' is different to SSLSession host '" + session.getPeerHost() + "'.");
-                }
-                return true;
-            }
-        };
-        HttpsURLConnection.setDefaultHostnameVerifier(hv);
-    }
 	
 	private void checkP12(){
 		KeyStore clientStore;

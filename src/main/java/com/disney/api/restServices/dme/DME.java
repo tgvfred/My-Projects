@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@SuppressWarnings("unused")
 public class DME {
 	private List<GroundTransferReservation> dme = new ArrayList<>();
 	private ObjectMapper mapper = new ObjectMapper();
