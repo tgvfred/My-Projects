@@ -503,7 +503,7 @@ public abstract class BaseSoapService{
 		
 		url = getServiceURL();
 		
-		//checkP12();
+		checkP12();
 		
 		try {
 			messageFactory = MessageFactory.newInstance(SOAPConstants.DEFAULT_SOAP_PROTOCOL);
@@ -1043,10 +1043,11 @@ public abstract class BaseSoapService{
 	        kmf.init(clientStore, "Disney123".toCharArray());
 	        KeyManager[] kms = kmf.getKeyManagers();
 	       
-	        String path = getClass().getResource("/com/disney/certificates/webvan/cacerts").getPath();
-	       
+	       // String path = getClass().getResource("/com/disney/certificates/webvan/cacerts").getPath();
+	        InputStream isCA = new URL("https://github.disney.com/WDPRO-QA/lilo/raw/master/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/cacerts").openStream();
+			
 	        KeyStore trustStore = KeyStore.getInstance("JKS");
-	        trustStore.load(new FileInputStream(new File(path)), "changeit".toCharArray());
+	        trustStore.load(isCA, "changeit".toCharArray());
 	
 	        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 	        tmf.init(trustStore);
