@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="FolioInterface_Payment_Resort_Suite">
+	<parameter name="environment" value="Grumpy" />
+	<test name="FolioInterface_Payment_Resort" parallel="classes" thread-count="20">
+		<groups>
+			<run>
+				<include name="resort"></include>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.test.composite.folioInterface.payment.*"></package>
+		</packages>
+	</test>
+</suite>

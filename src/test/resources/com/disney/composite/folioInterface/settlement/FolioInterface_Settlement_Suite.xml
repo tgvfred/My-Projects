@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="FolioInterface_Settlement_Suite">
+	<parameter name="environment" value="Grumpy" />
+	<test name="FolioInterface_Settlement" parallel="classes" thread-count="20">
+		<packages>
+			<package name="com.disney.test.composite.folioInterface.settlement.*"></package>
+		</packages>
+	</test>
+</suite>
