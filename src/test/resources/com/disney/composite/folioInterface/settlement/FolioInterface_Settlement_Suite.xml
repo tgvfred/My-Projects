@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Grumpy" />
 	<test name="FolioInterface_Settlement" parallel="classes" thread-count="20">
 		<packages>
-			<package name="com.disney.test.composite.folioInterface.settlement.*"></package>
+			<package name="com.disney.composite.folioInterface.settlement.*"></package>
 		</packages>
 	</test>
 </suite>

@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Bashful" />
 	<test name="TestFolioInterface" parallel="classes" thread-count="20">
 		<packages>
-			<package name="com.disney.test.composite.folioInterface.*"></package>
+			<package name="com.disney.composite.folioInterface.*"></package>
 		</packages>
 	</test>
 </suite>

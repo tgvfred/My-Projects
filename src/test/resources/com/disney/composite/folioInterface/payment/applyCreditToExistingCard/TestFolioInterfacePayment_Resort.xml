@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Grumpy" />
 	<test name="TestFolioInterfacePayment_Resort">
 		<classes>
-			<class name="com.disney.test.composite.folioInterface.payment.applyCreditToExistingCard.TestFolioInterfacePayment_Resort"/>
+			<class name="com.disney.composite.folioInterface.payment.applyCreditToExistingCard.TestFolioInterfacePayment_Resort"/>
 		</classes>
 	</test>
 </suite>

@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Bashful" />
 	<test name="TestFolioInterfacePayment_Resort">
 		<classes>
-			<class name="com.disney.test.composite.folioInterface.payment.postCheckPayment.TestFolioInterfacePayment_Resort"/>
+			<class name="com.disney.composite.folioInterface.payment.postCheckPayment.TestFolioInterfacePayment_Resort"/>
 		</classes>
 	</test>
 </suite>
