@@ -459,11 +459,7 @@ public class FolioInterfacePayment extends FolioInterface{
 		TestReporter.log("Status: " + getCardStatus());
 		TestReporter.log("Delay: " + getCardDelay());
 		TestReporter.log("Enter CCV: " + getCardCCV());
-	}
-	
-	
-	
-	
+	}	
 	/**
 	 * Sets the user-defined payment scenario, and invokes a method to make a check payment
 	 * @param scenario - user-defined payment scenario
