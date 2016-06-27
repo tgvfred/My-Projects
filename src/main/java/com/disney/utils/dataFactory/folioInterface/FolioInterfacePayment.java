@@ -1,7 +1,5 @@
 package com.disney.utils.dataFactory.folioInterface;
 
-import org.testng.annotations.Test;
-
 import com.disney.AutomationException;
 import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -509,6 +507,9 @@ public class FolioInterfacePayment extends FolioInterface{
 		TestReporter.logAPI(!postPayment.getResponseStatusCode().equals("200"), "An error occurred make a check payment", postPayment);
 		return postPayment;
 	}
+	/**
+	 * Grabs all banked-in lilo users with the manager role, and uses the resulting data to populate the postCheckPayment request
+	 */
 	private void determineBankedInUser_BankingAccountingCenterName(){
 		boolean bankedIn = true;
 		String query = Dreams.getLiloManager_BankAccountCenterName();
@@ -533,12 +534,5 @@ public class FolioInterfacePayment extends FolioInterface{
 			bankIn.setLocationId(getLocationId());
 			bankIn.sendRequest();
 		}
-	}
-	
-	@Test
-	public void test(){
-		setLocationId("48");
-		setEnvironment("Bashful");
-		determineBankedInUser_BankingAccountingCenterName();
 	}
 }
