@@ -1,5 +1,6 @@
 package com.disney.api.soapServices.paymentService.operations;
 
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.paymentService.PaymentService;
 import com.disney.utils.XMLTools;
 
@@ -39,17 +40,38 @@ public class PostCheckPayment extends PaymentService{
 	public void setFolioId(String value){
 		setRequestNodeValueByXPath("/*[local-name(.)='Envelope'][1]/*[local-name(.)='Body'][1]/*[local-name(.)='postCheckPayment'][1]/*[local-name(.)='pmtInfo'][1]/*[local-name(.)='responsibleParty'][1]/*[local-name(.)='folioId'][1]", value);
 	}
-	
+	/**
+	 * Sets the document originator value (e.g. username or guest name) in the SOAP request
+	 * @param value - document originator value (e.g. username or guest name)
+	 */
 	public void setDocumentOriginator(String value){
-		setRequestNodeValueByXPath("/*[local-name(.)='Envelope'][1]/*[local-name(.)='Body'][1]/*[local-name(.)='postCheckPayment'][1]/*[local-name(.)='pmtInfo'][1]/*[local-name(.)='documentOriginator'][1]", value);
+		try{setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo/documentOriginator", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo", "fx:addnode;node:documentOriginator");
+			setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo/documentOriginator", value);
+		}
 	}
-	
+	/**
+	 * Sets the check number in the SOAP request
+	 * @param value - check number
+	 */
 	public void setCheckNumber(String value){
-		setRequestNodeValueByXPath("/*[local-name(.)='Envelope'][1]/*[local-name(.)='Body'][1]/*[local-name(.)='postCheckPayment'][1]/*[local-name(.)='pmtInfo'][1]/*[local-name(.)='checkNumber'][1]", value);
+		try{setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo/checkNumber", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo", "fx:addnode;node:checkNumber");
+			setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo/checkNumber", value);
+		}
 	}
-	
+	/**
+	 * Sets the authorization number in the SOAP request
+	 * @param value - authorization number
+	 */
 	public void setAuthorizationNumber(String value){
-		setRequestNodeValueByXPath("/*[local-name(.)='Envelope'][1]/*[local-name(.)='Body'][1]/*[local-name(.)='postCheckPayment'][1]/*[local-name(.)='pmtInfo'][1]/*[local-name(.)='authorizationNumber'][1]", value);
+		try{setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo/authorizationNumber", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo", "fx:addnode;node:authorizationNumber");
+			setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo/authorizationNumber", value);
+		}
 	}
 	
 	public String getFolioBalance(){
