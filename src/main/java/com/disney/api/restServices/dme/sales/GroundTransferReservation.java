@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.disney.utils.dataFactory.staging.Reservation;
 
+@SuppressWarnings("unused")
 public class GroundTransferReservation {
 	private Reservation res;
 	private String travelPlanId = "";

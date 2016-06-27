@@ -14,9 +14,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.disney.utils.dataFactory.VirtualTable;
-import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 import com.disney.utils.dataFactory.database.Recordset;
 
+@SuppressWarnings("unused")
 public class Datatable {
 	//public static String LILO_MASTER_DATA_PATH = "Z:\\Automation\\Selenium\\Data\\Page Scenarios\\Lilo\\Lilo_Master_Data.xlsx";
 	//public static String LILO_MASTER_DATA_PATH = "com/disney/composite/apps/lilo/masterdata/Lilo_Master_Data.xlsx";
@@ -190,7 +190,7 @@ public class Datatable {
 	public  void setDatatablePath(String path) {
 		datatablePath = path;
 	}
-
+/*
 	public  void setDatatableSheet(String sheet) {
 		datatableSheet = sheet;
 		this.setExcelFile();
@@ -199,7 +199,7 @@ public class Datatable {
 	public  void setDatatableRow(int row) {
 		datatableRow = row;
 		this.setTableInfo();
-	}
+	}*/
 
 	private void setCurrentScenario(String scenario) {
 		currentScenario = scenario;
@@ -225,7 +225,7 @@ public class Datatable {
 		currentScenarioRow++;
 		return scenario;
 	}
-
+/*
 	public  Object[][] getTableArray(String SheetName, int iTestCaseRow) {
 		String[][] tabArray = null;
 		try {
@@ -312,9 +312,9 @@ public class Datatable {
 			e.printStackTrace();
 		}
 		return (tabArray);
-	}
+	}*/
 
-	public  Object[][] getTestScenarios(String FilePath,
+	/*public  Object[][] getTestScenarios(String FilePath,
 			String SheetName, int rowToRun) {
 
 		String[][] tabArray = null;
@@ -365,9 +365,9 @@ public class Datatable {
 			e.printStackTrace();
 		}
 		return (tabArray);
-	}
+	}*/
 
-	// This method is to read the test data from the Excel cell, in this we are
+/*	// This method is to read the test data from the Excel cell, in this we are
 	// passing parameters as Row num and Col num
 	public  String getCellData(int RowNum, int ColNum) {
 		try {
@@ -532,7 +532,7 @@ public class Datatable {
 		}
 		datatableData = tabArray;
 	}
-
+*/
 
 /*	
 	public static String getDataParameter(String field) {

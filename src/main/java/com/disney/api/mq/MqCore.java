@@ -22,6 +22,7 @@ import com.disney.utils.dataFactory.VirtualTable;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.ibm.mq.jms.MQQueueConnectionFactory;
 
+@SuppressWarnings("unused")
 public class MqCore extends BaseSoapService{
 	private String server = "";
 	private String tdmURL = "QAAUTO_";

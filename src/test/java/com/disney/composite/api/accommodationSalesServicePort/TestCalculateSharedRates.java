@@ -1,13 +1,10 @@
 package com.disney.composite.api.accommodationSalesServicePort;
 
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.CalculateSharedRates;
-import com.disney.api.soapServices.accommodationSalesServicePort.operations.UnShare;
 import com.disney.utils.TestReporter;
 
 public class TestCalculateSharedRates {

@@ -1,13 +1,9 @@
 package com.disney.composite.api;
 
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationSalesServicePort.operations.Quickbook;
-import com.disney.utils.TestReporter;
-
+@SuppressWarnings("unused")
 public class TEMPLATE_TestOperationName {
 	private String environment = "";
 	

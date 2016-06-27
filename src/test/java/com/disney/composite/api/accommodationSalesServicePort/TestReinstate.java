@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.Reinstate;
-import com.disney.api.soapServices.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 

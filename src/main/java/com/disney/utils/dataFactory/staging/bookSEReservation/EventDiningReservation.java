@@ -234,7 +234,7 @@ public class EventDiningReservation implements ScheduledEventReservation {
 		eventDiningBook.setFacilityId(getFacilityId());		//FAC.FAC_ID
 		eventDiningBook.setProductId(getProductId());          //PROD.PROD_ID
 		if(this.productType != null) if(!this.productType.isEmpty()) eventDiningBook.setProductType(this.productType);
-		eventDiningBook.setServicePeriosId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
+		eventDiningBook.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		eventDiningBook.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){eventDiningBook.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
