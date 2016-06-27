@@ -869,7 +869,7 @@ public abstract class BaseSoapService{
 		} else if (environment.toLowerCase().contentEquals("evil queen") || environment.toLowerCase().contentEquals("evil_queen")) {
 			environment = "Evil%20Queen";
 		}
-		String url = "http://tdm-win2008r2-b.wdw-ilab.wdw.disney.com/EnvSrvcEndPntRepository/rest/retrieveServiceEndpoint/{environment}/{service}";
+		String url = "http://fldcvpswa6204.wdw.disney.com/EnvSrvcEndPntRepository/rest/retrieveServiceEndpoint/{environment}/{service}";
 		String responseXML = "";
 		Document responseDoc = null;
 		url = url.replace("{environment}", WordUtils.capitalize(environment));
