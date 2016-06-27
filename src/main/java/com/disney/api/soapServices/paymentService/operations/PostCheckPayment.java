@@ -67,4 +67,30 @@ public class PostCheckPayment extends PaymentService{
 	public String getPaymentId(){
 		return getResponseNodeValueByXPath("/*[local-name(.)='Envelope'][1]/*[local-name(.)='Body'][1]/*[local-name(.)='postCheckPaymentResponse'][1]/*[local-name(.)='returnParameter'][1]/*[local-name(.)='paymentId'][1]");
 	}
+	
+	/**
+	 * Sets the tendered amount in the SOAP request
+	 * @param value - tendered amount
+	 */
+	public void setTenderedAmountAmount(String value){setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo/tenderedAmount/amount", value);}
+	/**
+	 * Sets the converted amount in the SOAP request
+	 * @param value - converted amount
+	 */
+	public void setConvertedAmountAmount(String value){setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo/convertedAmount/amount", value);}
+	/**
+	 * Sets the 3-letter party name in the SOAP request.  The 3 letters are the first 3 letters of the primary guest's last name
+	 * @param value - 3-letter party name
+	 */
+	public void setThreeLetterPartyName(String value){setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo/responsibleParty/threeLetterPartyName", value);}
+	/**
+	 * Sets external reference number in the SOAP request, obtained by the reservation
+	 * @param value - external reference number
+	 */
+	public void setExternalReferenceNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/pmtInfo/responsibleParty/externalReferenceNumber", value);}
+	/**
+	 * Sets the username in the SOAP request
+	 * @param value - username
+	 */
+	public void setUser(String value){setRequestNodeValueByXPath("/Envelope/Body/postCheckPayment/context/userName", value);}
 }
