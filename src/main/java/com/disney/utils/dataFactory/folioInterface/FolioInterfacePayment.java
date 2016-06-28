@@ -43,12 +43,15 @@ public class FolioInterfacePayment extends FolioInterface{
 	private PostCardPayment postPayment;	// PostCardPayment instance
 	private RetrieveFolioBalanceDue retrieveBalance;	// RetrieveFolioBalanceDue instance
 	private String defaultCheckPaymentScenario = "Main";	// Default scenario for making a check payment
+	private String defaultCardPaymentScenario = "Pay total amount due with valid visa with incidentals";	// Default scenario for making a check payment
 	private String scenario;	// Scenario for the next occurring process
 	private String liloUser;	// Lilo user, used to ensure a user is banked-in to accept payments such as check, cash, etc.
 	private OracleDatabase odb;	// Oracle database to be used to query databases
 	private Recordset resultSet;	// Recordset from a database query
 	private String bankingAccountingCenterName;	// Banking Accounting Center Name, used for check payments, and possibly others
 	private String checkNumber;	// Document number for making a check payment
+	private boolean existingCard = false;	// Flag to determine if a card on file is to be used
+	private double paidAmount = 0.0;
 	
 	/**
 	 * Dummy constructor
@@ -275,6 +278,26 @@ public class FolioInterfacePayment extends FolioInterface{
 	 * @return - String, check number
 	 */
 	protected String getCheckNumber(){return checkNumber;}
+	/**
+	 * Sets the flag for using an existing card
+	 * @param exist - flag for using an existing card
+	 */
+	protected void setExistingCard(boolean exist){existingCard = exist;}
+	/**
+	 * Gets the flag for using an existing card
+	 * @return boolean, flag for using an existing card
+	 */
+	protected boolean getExistingCard(){return existingCard;}
+	/**
+	 * Sets the total amount paid for a given instance of the folioInterface
+	 * @param amount - total amount paid for a given instance of the folioInterface
+	 */
+	protected void setPaidAmount(double amount){paidAmount = amount;}
+	/**
+	 * Gets the total amount paid for a given instance of the folioInterface
+	 * @return double, total amount paid for a given instance of the folioInterface
+	 */
+	protected double getPaidAmount(){return paidAmount;}
 	
 	/**
 	 * Method that invoke helper methods that retrieves the balance due on the folio, posts the card payment, and capture values from the PostCardPayment response
@@ -285,9 +308,8 @@ public class FolioInterfacePayment extends FolioInterface{
 		// Retrieve Folio Balance Due
 		retrieveFolioBalanceDue();
 		// Post Card Payment
-		postCardPayment(scenario, false);		
-		//Set payment metadata from the PostCardPayment response
-		setValuesFromPostPaymentResponse(postPayment);
+		setExistingCard(false);
+		postCardPayment(scenario);
 	}	
 	/**
 	 * Method that invoke helper methods that posts the card payment, and captures values from the PostCardPayment response
@@ -297,9 +319,7 @@ public class FolioInterfacePayment extends FolioInterface{
 	public void applyCreditToExistingCard(String scenario, String creditAmount){
 		TestReporter.logStep("Apply a Credit ["+creditAmount+"] to an Existing Card For Payment Scenario ["+scenario+"]");
 		//Post Card payment
-		postCardPayment(scenario, creditAmount, true);		
-		//Set payment metadata from the PostCardPayment response
-		setValuesFromPostPaymentResponse(postPayment);
+		postCardPayment(scenario, creditAmount, true);
 	}
 	/**
 	 * Makes a payment to an existing card on file
@@ -310,7 +330,8 @@ public class FolioInterfacePayment extends FolioInterface{
 		// Retrieve folio balance due
 		retrieveFolioBalanceDue();	
 		// Post card payment
-		postCardPayment(scenario, true);
+		setExistingCard(true);
+		postCardPayment(scenario);	
 	}
 	/**
 	 * Attempts to make a payment using a negative scenario that is intended to invoke an error
@@ -321,8 +342,8 @@ public class FolioInterfacePayment extends FolioInterface{
 		setIsNegativeScenario(getDatatable().getDataParameter("ErrorType"));
 		setIsNegativeScenario(getDatatable().getDataParameter("ErrorMessage"));
 		retrieveFolioBalanceDue();
-		postCardPayment(scenario, false);		
-		setValuesFromPostPaymentResponse(postPayment);		
+		setExistingCard(false);
+		postCardPayment(scenario);			
 	}
 	/**
 	 * Method that calls a series of setter methods that capture values from the PostCardPayment response
@@ -368,8 +389,10 @@ public class FolioInterfacePayment extends FolioInterface{
 	 *            made for a given instance of this class
 	 */
 	private void postCardPayment(String scenario, String amount, boolean existingCard){
-		setAmountToPay(amount);
-		postCardPayment(scenario, existingCard);
+		setExistingCard(existingCard);
+		if(amount == null){setAmountToPay("-" + String.valueOf(getPaidAmount()));}
+		else setAmountToPay("override:" + amount);
+		postCardPayment(scenario);
 	}
 	/**
 	 * Method to post a card payment
@@ -378,18 +401,23 @@ public class FolioInterfacePayment extends FolioInterface{
 	 *            used. This method will fail if a previous payment has not been
 	 *            made for a given instance of this class
 	 */
-	private void postCardPayment(String scenario, Boolean existingCard){
+	private void postCardPayment(String scenario){
 		String convoMapKey;
 		getDatatableValues(scenario);
-		
 		//Generate a card
-		if(!existingCard) generateCard(getCardStatus(), getCardDelay());
+		if(!getExistingCard()) generateCard(getCardStatus(), getCardDelay());
 		
 		if(getAmountToPay() == null || getAmountToPay().isEmpty()) setAmountToPay(getDatatable().getDataParameter("Amount"));		
 		
 		postPayment = new PostCardPayment(getEnvironment(),"Visa-CreditCard");
-		if(getAmountToPay().equalsIgnoreCase("total")){postPayment.setAmount(getBalanceDue());}
-		else{postPayment.setAmount(getAmountToPay().replace("$", "").replace(",", ""));}
+		if(getAmountToPay().equalsIgnoreCase("total")){
+			setAmountToPay(getBalanceDue());
+			postPayment.setAmount(getAmountToPay());
+		}
+		else{
+			setAmountToPay(getAmountToPay().replace("$", "").replace(",", ""));
+			postPayment.setAmount(getAmountToPay());
+		}
 		// If making a payment to an existing card then at this point the folio ID should have been set by a previous transaction. 
 		// If no folio ID exists, throw an AutomationException
 		try{postPayment.setFolioId(getFolioId());}
@@ -419,7 +447,7 @@ public class FolioInterfacePayment extends FolioInterface{
 		postPayment.setPaymentMethod(getCardPaymentMethod());
 		postPayment.setPaymentType(getCardPaymentType().replace(" ", ""));
 		
-		if(existingCard){
+		if(getExistingCard()){
 			String method = getCardPaymentMethod();
 			if(getCardPaymentMethod().equalsIgnoreCase("DINERS CLUB")) method = "DINERS_CLUB";
 			else if(getCardPaymentMethod().equalsIgnoreCase("American Express")) method = "AMEX";
@@ -428,13 +456,16 @@ public class FolioInterfacePayment extends FolioInterface{
 		}else{
 			postPayment.setRetreivalReferenceNumber();
 			convoMapKey = "payment";
-		}		
+		}	
 		postPayment.sendRequest();
 		getConversationIdMap().put(convoMapKey, postPayment.getConversationID());
 		if(getIsNegativeScenario().equalsIgnoreCase("true")){
 			TestReporter.log(postPayment.getFaultString());
 			TestReporter.assertTrue(postPayment.getFaultString().contains(getNegativeScenarioErrorMessage()), "The expected error message ["+getNegativeScenarioErrorMessage()+"] was not found in the fault string ["+postPayment.getFaultString()+"]");
 		}else{TestReporter.logAPI(!postPayment.getResponseStatusCode().equals("200"), "An error occurred while attempting to post a card payment.", postPayment);}		
+		//Set payment metadata from the post payment response
+		setValuesFromPostPaymentResponse(postPayment);
+		setPaidAmount(getPaidAmount() + Double.parseDouble(getAmountToPay()));
 	}
 	/**
 	 * Retrieves from the virtual tables
@@ -447,13 +478,20 @@ public class FolioInterfacePayment extends FolioInterface{
 		
 		if (getDatatable().getDataParameter("Incidentals").equalsIgnoreCase("false")) {incidentals = false;}
 		if(incidentals) TestReporter.log("Applying incidentals");
-		setAmountToPay(getDatatable().getDataParameter("Amount"));
 		
-		setCardPaymentType(getDatatable().getDataParameter("PaymentType"));
-		setCardPaymentMethod(getDatatable().getDataParameter("PaymentMethod"));
-		setCardStatus(getDatatable().getDataParameter("Status"));
-		setCardDelay(getDatatable().getDataParameter("Delay"));
-		setCardCCV(getDatatable().getDataParameter("EnterCCV"));
+		try{
+			if(getAmountToPay().contains("override")){setAmountToPay(getAmountToPay().split(":")[1]);}
+			else{setAmountToPay(getDatatable().getDataParameter("Amount"));}
+		}
+		catch(NullPointerException e){setAmountToPay(getDatatable().getDataParameter("Amount"));}
+		
+		if(!getExistingCard()){
+			setCardPaymentType(getDatatable().getDataParameter("PaymentType"));
+			setCardPaymentMethod(getDatatable().getDataParameter("PaymentMethod"));
+			setCardStatus(getDatatable().getDataParameter("Status"));
+			setCardDelay(getDatatable().getDataParameter("Delay"));
+			setCardCCV(getDatatable().getDataParameter("EnterCCV"));
+		}
 		TestReporter.log("Payment Type: " + getCardPaymentType());
 		TestReporter.log("Payment Method: " + getCardPaymentMethod());
 		TestReporter.log("Status: " + getCardStatus());
@@ -500,7 +538,9 @@ public class FolioInterfacePayment extends FolioInterface{
 		postPayment.setBankingAccountName(getBankingAccountingCenterName());
 		
 		postPayment.sendRequest();
-		TestReporter.logAPI(!postPayment.getResponseStatusCode().equals("200"), "An error occurred make a check payment", postPayment);
+		TestReporter.logAPI(!postPayment.getResponseStatusCode().equals("200"), "An error occurred make a check payment", postPayment);		
+		//Set payment metadata from the post payment response
+		setValuesFromPostPaymentResponse(postPayment);		
 		return postPayment;
 	}
 	/**
@@ -530,5 +570,13 @@ public class FolioInterfacePayment extends FolioInterface{
 			bankIn.setLocationId(getLocationId());
 			bankIn.sendRequest();
 		}
+	}
+	/**
+	 * Makes the first night's deposit
+	 */
+	public void makeFirstNightDeposit(){
+		if(getScenario() == null || getScenario().isEmpty()) setScenario(defaultCardPaymentScenario);
+		retrieveFolioBalanceDue();
+		postCardPayment(getScenario(), getDepositDue(), false);		
 	}
 }
