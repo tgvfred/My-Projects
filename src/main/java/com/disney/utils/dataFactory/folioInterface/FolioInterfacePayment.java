@@ -403,7 +403,9 @@ public class FolioInterfacePayment extends FolioInterface{
 	 */
 	private void postCardPayment(String scenario){
 		String convoMapKey;
-		getDatatableValues(scenario);
+		
+		// Split payment scenarios are anticipated to have previously been set
+		if(!getScenario().equalsIgnoreCase("split"))getDatatableValues(scenario);
 		//Generate a card
 		if(!getExistingCard()) generateCard(getCardStatus(), getCardDelay());
 		
@@ -472,9 +474,7 @@ public class FolioInterfacePayment extends FolioInterface{
 	 * @param scenario - Payment UI Virtual Table scenario
 	 */
 	private void getDatatableValues(String scenario){
-		getDatatable().setVirtualtablePath(Datatable.PAYMENTUI_MASTER_DATA_PATH);
-		getDatatable().setVirtualtablePage("PaymentUI");
-		getDatatable().setVirtualtableScenario(scenario);
+		setVirtualTable(scenario);
 		
 		if (getDatatable().getDataParameter("Incidentals").equalsIgnoreCase("false")) {incidentals = false;}
 		if(incidentals) TestReporter.log("Applying incidentals");
@@ -596,5 +596,44 @@ public class FolioInterfacePayment extends FolioInterface{
 		retrieveFolioBalanceDue();
 		setAmountToPay("total");
 		postCheckPayment();	
+	}
+	
+	private void setVirtualTable(String scenario){
+		getDatatable().setVirtualtablePath(Datatable.PAYMENTUI_MASTER_DATA_PATH);
+		getDatatable().setVirtualtablePage("PaymentUI");
+		getDatatable().setVirtualtableScenario(scenario);
+	}
+	
+	
+	
+	
+	public void makeSplitCardPayment(String scenario){		
+		setVirtualTable(scenario);
+		String[] cardPaymentTypes = getDatatable().getDataParameter("PaymentType").split(";");
+		String[] cardPaymentMethods = getDatatable().getDataParameter("PaymentMethod").split(";");
+		String[] status = getDatatable().getDataParameter("Status").split(";");
+		String[] delay = getDatatable().getDataParameter("Delay").split(";");
+		String[] ccv = getDatatable().getDataParameter("EnterCCV").split(";");
+		String[] incidentals = getDatatable().getDataParameter("Incidentals").split(";");
+		String[] amounts = getDatatable().getDataParameter("Amount").split(";");
+		
+		for(int payments = 0; payments < cardPaymentTypes.length; payments++){
+			setCardPaymentType(cardPaymentTypes[payments]);
+			setCardPaymentMethod(cardPaymentMethods[payments]);
+			setCardStatus(status[payments]);
+			setCardDelay(delay[payments]);
+			setCardCCV(ccv[payments]);
+			setIncidentals(Boolean.parseBoolean(incidentals[payments]));
+			setAmountToPay(amounts[payments]);
+			TestReporter.log("Payment Type [" + payments + "]: " + getCardPaymentType());
+			TestReporter.log("Payment Method [" + payments + "]: " + getCardPaymentMethod());
+			TestReporter.log("Status [" + payments + "]: " + getCardStatus());
+			TestReporter.log("Delay [" + payments + "]: " + getCardDelay());
+			TestReporter.log("Enter CCV [" + payments + "]: " + getCardCCV());
+			
+			retrieveFolioBalanceDue();
+			setScenario("split");
+			postCardPayment(getScenario());
+		}		
 	}
 }
