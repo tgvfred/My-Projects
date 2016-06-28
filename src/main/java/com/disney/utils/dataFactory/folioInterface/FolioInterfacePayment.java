@@ -474,26 +474,27 @@ public class FolioInterfacePayment extends FolioInterface{
 	 * Grabs all banked-in lilo users with the manager role, and uses the resulting data to populate the postCheckPayment request
 	 */
 	private void determineBankedInUser_BankingAccountingCenterName(){
+		UserBankOut bankOut;
+		UserBankIn bankIn = null;
 		String defaultUser = "test5109.use";
 		setLiloUser(defaultUser);
 		String query = Dreams.getBankAccountcEnterNameByUserName(getLiloUser());
 		setDatabase(new OracleDatabase(getEnvironment(), "Dreams"));
 		TestReporter.log("LILO User Query: " + query);
-		UserBankOut bankOut;
-		UserBankIn bankIn = null;
+		setRecordset(new Recordset(odb.getResultSet(query)));
 		
-		setLiloUser(defaultUser);
-		if(isUserBankedIn()){
-			TestReporter.log("Default LILO user ["+getLiloUser()+"] was banked-in.  Attemeting to bank-out the defaulut user.");
-			bankOut = new UserBankOut(getEnvironment());
-			bankOut.setBagnumber(Randomness.randomNumber(4));
-			bankOut.setUser(getLiloUser());
-			bankOut.sendRequest();
-			System.out.println(bankOut.getResponse());
-			isUserBankedIn();
+		if(getRecordset().getRowCount() == 0){
+			setLiloUser(defaultUser);
+			if(isUserBankedIn()){
+				TestReporter.log("Default LILO user ["+getLiloUser()+"] was banked-in.  Attemeting to bank-out the defaulut user.");
+				bankOut = new UserBankOut(getEnvironment());
+				bankOut.setBagnumber(Randomness.randomNumber(4));
+				bankOut.setUser(getLiloUser());
+				bankOut.sendRequest();
+			}
+			bankInLiloUser(bankIn);
+			setRecordset(new Recordset(odb.getResultSet(query)));
 		}
-		bankInLiloUser(bankIn);
-		isUserBankedIn();
 		setRecordset(new Recordset(odb.getResultSet(query)));
 		setBankingAccountingCenterName(getRecordset().getValue(1, 1));
 	}
@@ -508,7 +509,6 @@ public class FolioInterfacePayment extends FolioInterface{
 		bankIn.setLocationId(getLocationId());
 		bankIn.setTillType("Manager");
 		bankIn.sendRequest();
-		System.out.println(bankIn.getResponse());
 	}
 	/**
 	 * Determines if a LILO user is banked-in
@@ -519,7 +519,6 @@ public class FolioInterfacePayment extends FolioInterface{
 		IsUserBankedIn isUserBankedIn = new IsUserBankedIn(getEnvironment());
 		isUserBankedIn.setUser(getLiloUser());
 		isUserBankedIn.sendRequest();
-		System.out.println(isUserBankedIn.getResponse());
 		try {
 			isUserBankedIn.getLocationId();
 			return true;
