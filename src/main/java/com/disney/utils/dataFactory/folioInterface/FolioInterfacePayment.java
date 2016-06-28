@@ -7,6 +7,7 @@ import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.core.exceptions.XPathNullNodeValueException;
 import com.disney.api.soapServices.folioBankServicesV2.operations.IsUserBankedIn;
 import com.disney.api.soapServices.folioBankServicesV2.operations.UserBankIn;
+import com.disney.api.soapServices.folioBankServicesV2.operations.UserBankOut;
 import com.disney.api.soapServices.folioServicePort.operations.RetrieveFolioBalanceDue;
 import com.disney.api.soapServices.paymentService.operations.PostCardPayment;
 import com.disney.api.soapServices.paymentService.operations.PostCheckPayment;
@@ -405,7 +406,12 @@ public class FolioInterfacePayment extends FolioInterface{
 		String convoMapKey;
 		
 		// Split payment scenarios are anticipated to have previously been set
-		if(!getScenario().equalsIgnoreCase("split"))getDatatableValues(scenario);
+		try{
+			getScenario().equalsIgnoreCase("split");
+			if(!getScenario().equalsIgnoreCase("split"))getDatatableValues(scenario);
+		}
+		catch(NullPointerException e){getDatatableValues(scenario);}
+		
 		//Generate a card
 		if(!getExistingCard()) generateCard(getCardStatus(), getCardDelay());
 		
@@ -548,29 +554,58 @@ public class FolioInterfacePayment extends FolioInterface{
 	 * Grabs all banked-in lilo users with the manager role, and uses the resulting data to populate the postCheckPayment request
 	 */
 	private void determineBankedInUser_BankingAccountingCenterName(){
-		boolean bankedIn = true;
-		String query = Dreams.getLiloManager_BankAccountCenterName();
+		String defaultUser = "test5109.use";
+		setLiloUser(defaultUser);
+//		String query = Dreams.getLiloManager_BankAccountCenterName();
+		String query = Dreams.getBankAccountcEnterNameByUserName(getLiloUser());
 		setDatabase(new OracleDatabase(getEnvironment(), "Dreams"));
 		TestReporter.log("LILO User Query: " + query);
-		setRecordset(new Recordset(odb.getResultSet(query)));	
-
-		setLiloUser(getRecordset().getValue(1, 1));
-		setBankingAccountingCenterName(getRecordset().getValue(2, 1));
+		UserBankOut bankOut;
+		UserBankIn bankIn = null;
+		
+		setLiloUser(defaultUser);
+		if(isUserBankedIn()){
+			TestReporter.log("Default LILO user ["+getLiloUser()+"] was banked-in.  Attemeting to bank-out the defaulut user.");
+			bankOut = new UserBankOut(getEnvironment());
+			bankOut.setBagnumber(Randomness.randomNumber(4));
+			bankOut.setUser(getLiloUser());
+			bankOut.sendRequest();
+			System.out.println(bankOut.getResponse());
+			isUserBankedIn();
+		}
+		bankInLiloUser(bankIn);
+		isUserBankedIn();
+		setRecordset(new Recordset(odb.getResultSet(query)));
+		setBankingAccountingCenterName(getRecordset().getValue(1, 1));
+	}
+	/**
+	 * Banks-in a LILO user with the 'Manager' role
+	 * @param bankIn - UserBankIn instance from a calling method
+	 */
+	private void bankInLiloUser(UserBankIn bankIn){
+		TestReporter.log("Banking user " + getLiloUser() + " into location '" + getLocationId() +"'");
+		bankIn = new UserBankIn(getEnvironment());
+		bankIn.setUser(getLiloUser());
+		bankIn.setLocationId(getLocationId());
+		bankIn.setTillType("Manager");
+		bankIn.sendRequest();
+		System.out.println(bankIn.getResponse());
+	}
+	/**
+	 * Determines if a LILO user is banked-in
+	 * @return - boolean, true if the user is banked-in, false otherwise
+	 */
+	private boolean isUserBankedIn(){
 		TestReporter.log("Check if " +getLiloUser()+" is banked in");		
 		IsUserBankedIn isUserBankedIn = new IsUserBankedIn(getEnvironment());
 		isUserBankedIn.setUser(getLiloUser());
 		isUserBankedIn.sendRequest();
-		
-		try {isUserBankedIn.getLocationId();}
-		catch (XPathNotFoundException xpnfe) {bankedIn = false;}
-		
-		if (!bankedIn) {
-			TestReporter.log("Banking user " + getLiloUser() + " into location '" + getLocationId() +"'");
-			UserBankIn bankIn = new UserBankIn(getEnvironment());
-			bankIn.setUser(getLiloUser());
-			bankIn.setLocationId(getLocationId());
-			bankIn.sendRequest();
+		System.out.println(isUserBankedIn.getResponse());
+		try {
+			isUserBankedIn.getLocationId();
+			return true;
 		}
+		catch (XPathNotFoundException xpnfe) {return false;}
 	}
 	/**
 	 * Makes the first night's deposit
