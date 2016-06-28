@@ -238,11 +238,11 @@ public class EventDiningReservation implements ScheduledEventReservation {
 		eventDiningBook.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){eventDiningBook.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-		resource.setFacilityId(getFacilityId());
-		resource.sendRequest();
-		resource.getReservableResources();
-		eventDiningBook.setReservableResourceId(resource.getFirstReservableResourceId());
+//		ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
+//		resource.setFacilityId(getFacilityId());
+//		resource.sendRequest();
+//		resource.getReservableResources();
+//		eventDiningBook.setReservableResourceId(resource.getFirstReservableResourceId());
 		
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		eventDiningBook.sendRequest();

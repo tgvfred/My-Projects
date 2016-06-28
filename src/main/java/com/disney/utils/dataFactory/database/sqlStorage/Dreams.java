@@ -6,6 +6,9 @@ package com.disney.utils.dataFactory.database.sqlStorage;
  *
  */
 public class Dreams {
+	final static String LILOMANAGERROLE = "Manager";
+	final static String LILONOTILLROLE = "null";
+	
 	public static String getReservationInfoByTpsId(final String tps){
 		return  " SELECT tp.TP_ID, tps.TPS_ID, tps.TRVL_STS_NM TPS_TRAVEL_STATUS, tps.SRC_ACCT_CTR_ID, tps.TPS_ARVL_DT, tps.TPS_DPRT_DT, tc_grp.TC_GRP_NB, tc_grp.TC_GRP_TYP_NM,tc.TC_ID, tc.TC_TYP_NM, tc.PROD_ID, tc.TC_STRT_DTS , tc.TC_END_DTS, tc.PROD_TYP_NM, tc.FAC_ID, tc.TRVL_STS_NM TC_TRVL_STS_NM " +
 				" FROM RES_MGMT.TP, RES_MGMT.TPS, RES_MGMT.TC_GRP, RES_MGMT.TC " +
@@ -31,6 +34,18 @@ public class Dreams {
 	public static String getTpsIDFromExternalReference(String externalRefVal){
 		return "SELECT TPS_ID FROM RES_MGMT.TPS_EXTNL_REF WHERE TPS_EXTNL_REF_VL = '" + externalRefVal + "'";
 	}
+	
+	// Query to retrieve a lilo user
+	public static String getLiloUserAndBankAccountCenterNameByRole= "select a.BANK_IN_USER_ID, b.acct_ctr_nm "
+			+ "from folio.bank_in a "
+			+ "join accting.acct_ctr b on a.bank_acct_ctr_id = b.acct_ctr_id "
+			+ "where a.till_typ_nm = '{ROLE}' "
+			+ "and rownum = 1 "
+			+ "and a.bank_in_id Not In ("
+			+ "select a.bank_in_id "
+			+ "from folio.bank_in a "
+			+ "join folio.bank_out b on a.bank_in_id = b.bank_in_id "
+			+ "where a.till_typ_nm = '{ROLE}')";
 	
 	/**
 	 * This subclass of queries is intended to query the Dreams database for product IDs for a given facility ID.  
@@ -85,4 +100,6 @@ public class Dreams {
 		public static String productIdWithAgeDefFacilityIdQuery = baseComponentProductIdQuery + joinForAgeDef + joinForComponentType + joinForFacilityId + facilityIdQuery;
 	}
 
+	public static String getLiloManager_BankAccountCenterName(){ return getLiloUserAndBankAccountCenterNameByRole.replace("{ROLE}", LILOMANAGERROLE);}
+	public static String getLiloNoTill_BankAccountCenterName(){ return getLiloUserAndBankAccountCenterNameByRole.replace("{ROLE}", LILONOTILLROLE);}
 }
