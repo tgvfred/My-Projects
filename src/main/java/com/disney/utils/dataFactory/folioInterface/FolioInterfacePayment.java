@@ -2,16 +2,12 @@ package com.disney.utils.dataFactory.folioInterface;
 
 import com.disney.AutomationException;
 import com.disney.api.soapServices.ServiceConstants;
-import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.core.exceptions.XPathNullNodeValueException;
 import com.disney.api.soapServices.folioBankServicesV2.operations.IsUserBankedIn;
 import com.disney.api.soapServices.folioBankServicesV2.operations.UserBankIn;
 import com.disney.api.soapServices.folioBankServicesV2.operations.UserBankOut;
-import com.disney.api.soapServices.folioServicePort.operations.RetrieveFolioBalanceDue;
 import com.disney.api.soapServices.paymentService.operations.PostCardPayment;
 import com.disney.api.soapServices.paymentService.operations.PostCheckPayment;
-import com.disney.utils.Datatable;
 import com.disney.utils.Randomness;
 import com.disney.utils.RetrieveTravelComponentId;
 import com.disney.utils.TestReporter;
@@ -28,7 +24,6 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  *
  */
 public class FolioInterfacePayment extends FolioInterface{
-	private String balanceDue;	// Contains the current folio balance due
 	private String partyId;	// Contains the partyID from the current reservation
 	private String primaryGuestFirstName;	// Primary guest first name from the current reservation
 	private String primaryGuestLastName;	// Primary guest last name from the current reservation
@@ -37,12 +32,9 @@ public class FolioInterfacePayment extends FolioInterface{
 	private String paymentId;	// Payment ID from the most recent payment
 	private String rrnNumber;	// Retrieval Reference Number from the PostCardPayment response 
 	private String rrnKey;	// Retrieval Reference Key from the PostCardPayment response
-	private String amountToPay;	// Contains the amount to pay
-	private String facilityId;	// Contains the facility ID for the reservation
-	private boolean incidentals = true;	// Flag to determine if a card is to be used for incidentals 
+	private String facilityId;	// Contains the facility ID for the reservation 
 	private HouseHold party;	// HouseHold containing all guests in the reservation, most important to payment is the primary guest
 	private PostCardPayment postPayment;	// PostCardPayment instance
-	private RetrieveFolioBalanceDue retrieveBalance;	// RetrieveFolioBalanceDue instance
 	private String defaultCheckPaymentScenario = "Main";	// Default scenario for making a check payment
 	private String defaultCardPaymentScenario = "Pay total amount due with valid visa with incidentals";	// Default scenario for making a check payment
 	private String scenario;	// Scenario for the next occurring process
@@ -51,8 +43,7 @@ public class FolioInterfacePayment extends FolioInterface{
 	private Recordset resultSet;	// Recordset from a database query
 	private String bankingAccountingCenterName;	// Banking Accounting Center Name, used for check payments, and possibly others
 	private String checkNumber;	// Document number for making a check payment
-	private boolean existingCard = false;	// Flag to determine if a card on file is to be used
-	private double paidAmount = 0.0;
+	private double paidAmount = 0.0;	// Accrues the total amount paid
 	
 	/**
 	 * Dummy constructor
@@ -94,16 +85,6 @@ public class FolioInterfacePayment extends FolioInterface{
 		setPartyId(res.getPartyId());
 	}
 	
-	/**
-	 * Sets the value for the current folio balance due
-	 * @param balanceDue - String, current folio balance due
-	 */
-	protected void setBalanceDue(String balanceDue){this.balanceDue = balanceDue;}
-	/**
-	 * Gets the value for the current folio balance due
-	 * @return String, current folio balance due
-	 */
-	protected String getBalanceDue(){return balanceDue;}
 	/**
 	 * Sets the party ID for the current reservation
 	 * @param id - String, party ID for the current reservation
@@ -185,16 +166,6 @@ public class FolioInterfacePayment extends FolioInterface{
 	 */
 	protected void setRRNKey(String key) {this.rrnKey = key;}
 	/**
-	 * Set the amount to pay
-	 * @param amount - String, amount to pay
-	 */
-	protected void setAmountToPay(String amount){amountToPay = amount;}
-	/**
-	 * Gets the amount to pay
-	 * @return - String, amount to pay
-	 */
-	protected String getAmountToPay(){return amountToPay;}
-	/**
 	 * Sets the facility id from the reservation
 	 * @param id - String, facility id from the reservation
 	 */
@@ -209,16 +180,6 @@ public class FolioInterfacePayment extends FolioInterface{
 	 * @return String, facility id that was used for the reservation
 	 */
 	protected String getFacilityId() {return facilityId;}
-	/**
-	 * Sets the incidentals flag
-	 * @param inc - incidentals flag
-	 */
-	protected void setIncidentals(boolean inc){incidentals = inc;}
-	/**
-	 * Gets the incidentals flag
-	 * @return String, incidentals flag
-	 */
-	protected boolean getIncidentals(){return incidentals;}
 	/**
 	 * Sets the scenario for the next method
 	 * @param sce - scenario for the next method
@@ -279,16 +240,6 @@ public class FolioInterfacePayment extends FolioInterface{
 	 * @return - String, check number
 	 */
 	protected String getCheckNumber(){return checkNumber;}
-	/**
-	 * Sets the flag for using an existing card
-	 * @param exist - flag for using an existing card
-	 */
-	protected void setExistingCard(boolean exist){existingCard = exist;}
-	/**
-	 * Gets the flag for using an existing card
-	 * @return boolean, flag for using an existing card
-	 */
-	protected boolean getExistingCard(){return existingCard;}
 	/**
 	 * Sets the total amount paid for a given instance of the folioInterface
 	 * @param amount - total amount paid for a given instance of the folioInterface
@@ -365,21 +316,21 @@ public class FolioInterfacePayment extends FolioInterface{
 		}
 		
 	}	
-	/**
-	 * Method that retrieves the folio balance due, and sets some critical values that are captured from the RetrieveFolioBalanceDue response
-	 */
-	private void retrieveFolioBalanceDue(){
-		retrieveBalance = new RetrieveFolioBalanceDue(getEnvironment(), "UI booking");
-		retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getTravelPlanId());
-		retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
-		try{retrieveBalance.setLocationId(getLocationId());}
-		catch(XPathNullNodeValueException e){retrieveBalance.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());}
-		retrieveBalance.sendRequest();
-		TestReporter.logAPI(!retrieveBalance.getResponseStatusCode().equals("200"), "An error occurred retrieving the folio balance due.", retrieveBalance);	
-		setBalanceDue(retrieveBalance.getPaymentRequired());
-		setDepositDue(retrieveBalance.getDepositRequired());
-		setFolioId(retrieveBalance.getFolioId());
-	}	
+//	/**
+//	 * Method that retrieves the folio balance due, and sets some critical values that are captured from the RetrieveFolioBalanceDue response
+//	 */
+//	private void retrieveFolioBalanceDue(){
+//		retrieveBalance = new RetrieveFolioBalanceDue(getEnvironment(), "UI booking");
+//		retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getTravelPlanId());
+//		retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
+//		try{retrieveBalance.setLocationId(getLocationId());}
+//		catch(XPathNullNodeValueException e){retrieveBalance.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());}
+//		retrieveBalance.sendRequest();
+//		TestReporter.logAPI(!retrieveBalance.getResponseStatusCode().equals("200"), "An error occurred retrieving the folio balance due.", retrieveBalance);	
+//		setBalanceDue(retrieveBalance.getPaymentRequired());
+//		setDepositDue(retrieveBalance.getDepositRequired());
+//		setFolioId(retrieveBalance.getFolioId());
+//	}	
 	/**
 	 * Method that invokes methods to set the amount to pay, and posts the card payment
 	 * 
@@ -476,35 +427,6 @@ public class FolioInterfacePayment extends FolioInterface{
 		setPaidAmount(getPaidAmount() + Double.parseDouble(getAmountToPay()));
 	}
 	/**
-	 * Retrieves from the virtual tables
-	 * @param scenario - Payment UI Virtual Table scenario
-	 */
-	private void getDatatableValues(String scenario){
-		setVirtualTable(scenario);
-		
-		if (getDatatable().getDataParameter("Incidentals").equalsIgnoreCase("false")) {incidentals = false;}
-		if(incidentals) TestReporter.log("Applying incidentals");
-		
-		try{
-			if(getAmountToPay().contains("override")){setAmountToPay(getAmountToPay().split(":")[1]);}
-			else{setAmountToPay(getDatatable().getDataParameter("Amount"));}
-		}
-		catch(NullPointerException e){setAmountToPay(getDatatable().getDataParameter("Amount"));}
-		
-		if(!getExistingCard()){
-			setCardPaymentType(getDatatable().getDataParameter("PaymentType"));
-			setCardPaymentMethod(getDatatable().getDataParameter("PaymentMethod"));
-			setCardStatus(getDatatable().getDataParameter("Status"));
-			setCardDelay(getDatatable().getDataParameter("Delay"));
-			setCardCCV(getDatatable().getDataParameter("EnterCCV"));
-		}
-		TestReporter.log("Payment Type: " + getCardPaymentType());
-		TestReporter.log("Payment Method: " + getCardPaymentMethod());
-		TestReporter.log("Status: " + getCardStatus());
-		TestReporter.log("Delay: " + getCardDelay());
-		TestReporter.log("Enter CCV: " + getCardCCV());
-	}	
-	/**
 	 * Sets the user-defined payment scenario, and invokes a method to make a check payment
 	 * @param scenario - user-defined payment scenario
 	 */
@@ -556,7 +478,6 @@ public class FolioInterfacePayment extends FolioInterface{
 	private void determineBankedInUser_BankingAccountingCenterName(){
 		String defaultUser = "test5109.use";
 		setLiloUser(defaultUser);
-//		String query = Dreams.getLiloManager_BankAccountCenterName();
 		String query = Dreams.getBankAccountcEnterNameByUserName(getLiloUser());
 		setDatabase(new OracleDatabase(getEnvironment(), "Dreams"));
 		TestReporter.log("LILO User Query: " + query);
@@ -631,17 +552,11 @@ public class FolioInterfacePayment extends FolioInterface{
 		retrieveFolioBalanceDue();
 		setAmountToPay("total");
 		postCheckPayment();	
-	}
-	
-	private void setVirtualTable(String scenario){
-		getDatatable().setVirtualtablePath(Datatable.PAYMENTUI_MASTER_DATA_PATH);
-		getDatatable().setVirtualtablePage("PaymentUI");
-		getDatatable().setVirtualtableScenario(scenario);
-	}
-	
-	
-	
-	
+	}	
+	/**
+	 * Makes a split card payment
+	 * @param scenario - virtual table scenario
+	 */
 	public void makeSplitCardPayment(String scenario){		
 		setVirtualTable(scenario);
 		String[] cardPaymentTypes = getDatatable().getDataParameter("PaymentType").split(";");

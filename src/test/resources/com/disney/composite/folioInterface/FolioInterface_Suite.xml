@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestFolioInterface_Suite">
-	<parameter name="environment" value="Sleepy" />
+	<parameter name="environment" value="Grumpy" />
 	<test name="TestFolioInterface" parallel="classes" thread-count="20">
 		<packages>
 			<package name="com.disney.composite.folioInterface.*"></package>
