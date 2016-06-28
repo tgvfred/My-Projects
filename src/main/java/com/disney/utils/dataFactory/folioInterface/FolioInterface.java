@@ -10,6 +10,7 @@ import com.disney.api.soapServices.folioServicePort.operations.RetrieveFolioBala
 import com.disney.utils.Datatable;
 import com.disney.utils.GenerateCard;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 /**
  * This class serves as the superclass for other folio classes such as FolioPayment and FolioSettlement
@@ -50,7 +51,8 @@ public class FolioInterface {
 	private String cardAddressLine2; // Contains the card address line 2
 	private String cardCity;	// Contains the card city
 	private String cardState;	// Contains the card state
-	private String cardPostalCode;	// Contains the card postal code
+	private String cardPostalCode;	// Contains the card postal 
+	private HouseHold party;	// HouseHold containing all guests in the reservation, most important to payment is the primary guest
 	
 	/**
 	 * Retrieves the current environment under test
@@ -382,6 +384,16 @@ public class FolioInterface {
 	 * @return String card address postal code
 	 */
 	protected String getCardPostalCode(){return cardPostalCode;}
+	/**
+	 * Sets the HouseHold instance the contains all guests on the reservation
+	 * @param hh - HouseHold instance the contains all guests on the reservation
+	 */
+	protected void setParty(HouseHold hh){party = hh;}
+	/**
+	 * Gets the HouseHold instance the contains all guests on the reservation
+	 * @return HouseHold, instance the contains all guests on the reservation
+	 */
+	protected HouseHold getParty(){return party;}
 	
 	/**
 	 * Generates a card to use for payment or settlement

@@ -14,7 +14,6 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.Reservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
@@ -33,7 +32,6 @@ public class FolioInterfacePayment extends FolioInterface{
 	private String rrnNumber;	// Retrieval Reference Number from the PostCardPayment response 
 	private String rrnKey;	// Retrieval Reference Key from the PostCardPayment response
 	private String facilityId;	// Contains the facility ID for the reservation 
-	private HouseHold party;	// HouseHold containing all guests in the reservation, most important to payment is the primary guest
 	private PostCardPayment postPayment;	// PostCardPayment instance
 	private String defaultCheckPaymentScenario = "Main";	// Default scenario for making a check payment
 	private String defaultCardPaymentScenario = "Pay total amount due with valid visa with incidentals";	// Default scenario for making a check payment
@@ -60,10 +58,10 @@ public class FolioInterfacePayment extends FolioInterface{
 		setTravelComponentId(new RetrieveTravelComponentId(getEnvironment(), getTravelPlanSegmentId()).searchForReservationInformationByTravelPlanSegment());
 		setFacilityId(seRes.getFacilityId());
 		setLocationId("9");  // This is the location ID for "System-WDW Scheduled Events - Guest  Facing" as it is found in the Dreams.RSRC_INV.WRK_LOC table
-		this.party = seRes.party();
-		setPrimaryGuestFirstName(party.primaryGuest().getFirstName());
-		setPrimaryGuestLastName(party.primaryGuest().getLastName());
-		setPartyId(party.primaryGuest().getPartyId());
+		setParty(seRes.party());
+		setPrimaryGuestFirstName(getParty().primaryGuest().getFirstName());
+		setPrimaryGuestLastName(getParty().primaryGuest().getLastName());
+		setPartyId(getParty().primaryGuest().getPartyId());
 	}
 	/**
 	 * Constructor intended for use with an instance of the ReservationDecorator which contains a booked Resort reservation

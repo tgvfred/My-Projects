@@ -2,10 +2,35 @@ package com.disney.utils.dataFactory.folioInterface;
 
 import com.disney.api.soapServices.folioServicePort.operations.CreateSettlementMethod;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.staging.Reservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class FolioInterfaceSettlement extends FolioInterface{
 	private String expressCheckout;	// Flag to determine if Express Checkout should be used for the settlement method
+	public String defaultSettlementScenario = "Main";
 	
+	/**
+	 * Dummy constructor
+	 */
+	public FolioInterfaceSettlement(){}
+	/**
+	 * Constructor intended for use with an instance of the ScheduledEventReservation which contains a booked Scheduled Event reservation
+	 * @param seRes - ScheduledEventReservation, an instance of the ScheduledEventReservation which should contain a booked Scheduled Event reservation
+	 */
+	public FolioInterfaceSettlement(ScheduledEventReservation seRes){
+		setEnvironment(seRes.getEnvironment());
+		setTravelPlanId(seRes.getTravelPlanId());
+		setLocationId("9");  // This is the location ID for "System-WDW Scheduled Events - Guest  Facing" as it is found in the Dreams.RSRC_INV.WRK_LOC table
+	}
+	/**
+	 * Constructor intended for use with an instance of the ReservationDecorator which contains a booked Resort reservation
+	 * @param resDec - ReservationDecorator, an instance of the ReservationDecorator which should contain a booked Resort reservation
+	 */
+	public FolioInterfaceSettlement(Reservation res){
+		setEnvironment(res.getEnvironment());
+		setTravelPlanId(res.getTravelPlanId());
+		setLocationId(res.getLocationId());
+	}
 	/**
 	 * Sets the express checkout flag
 	 * @param checkout - express checkout flag
@@ -17,15 +42,6 @@ public class FolioInterfaceSettlement extends FolioInterface{
 	 */
 	protected String getExpressCheckout(){return expressCheckout;}
 	
-	/**
-	 * Creates a settlement method using a predefined scenario
-	 */
-	public void createSettlementMethod(){
-		CreateSettlementMethod settlement = new CreateSettlementMethod(getEnvironment(), "Main");
-		settlement.setFolioId(getFolioId());
-		settlement.sendRequest();
-		TestReporter.logAPI(!settlement.getResponseStatusCode().equals("200"), "An error occurred creating a settlement method.", settlement);
-	}
 	/**
 	 * Creates a settlement method using a predefined scenario
 	 * @param scenario - payment UI virtual table
