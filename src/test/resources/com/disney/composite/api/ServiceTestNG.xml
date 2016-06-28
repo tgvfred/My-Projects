@@ -5,7 +5,7 @@
 	<test name="ServiceName">                                            <!-- UPDATE ServiceName HERE -->
 		<groups>
 			<run>
-				<include name="operationName"></include>                 <!-- UPDATE operationName HERE -->   
+				<include name="smoke"></include>                 <!-- UPDATE operationName HERE -->   
 				<exclude name="dev"></exclude>
 				<exclude name="debug"></exclude>
 			</run>
