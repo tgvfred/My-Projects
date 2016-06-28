@@ -32,7 +32,7 @@ public class TestFolioInterfacePayment_SE {
 				res.cancel();
 	}
 	
-	@Test(groups={"SE"})
+	@Test(groups={"SE", "api"})
 	public void testFolioPayment_SE(){
 		TestReporter.logScenario("Make payment in full with a check to Scheduled Event reservation.");
 		TestReporter.log("Reservation Number: " + res.getConfirmationNumber());

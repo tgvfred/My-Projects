@@ -36,7 +36,7 @@ public class TestFolioInterfacePayment_SE {
 				res.cancel();
 	}
 	
-	@Test(groups={"SE"})
+	@Test(groups={"SE", "api"})
 	public void testFolioPayment_SE(){
 		TestReporter.logScenario("Make card payment with card on file to Scheduled Event reservation.");
 		TestReporter.log("Reservation Number: " + res.getConfirmationNumber());

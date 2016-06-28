@@ -32,7 +32,7 @@ public class TestFolioInterfaceSettlement_SE {
 				res.cancel();
 	}
 	
-	@Test(groups={"SE"})
+	@Test(groups={"SE", "api"})
 	public void testFolioPayment_SE(){
 		TestReporter.logScenario("Create a card settlement for a Scheduled Event reservation.");
 		TestReporter.log("Reservation Number: " + res.getConfirmationNumber());

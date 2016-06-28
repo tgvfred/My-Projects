@@ -34,7 +34,7 @@ public class TestFolioInterfacePayment_Resort {
 				res.cancelAccommodation();
 	}
 	
-	@Test(groups={"resort"})
+	@Test(groups={"resort", "api"})
 	public void testFolioPayment_Resort(){
 		TestReporter.logScenario("Make credit payment with card on file to Resort reservation.");
 		TestReporter.log("Reservation Number: " + res.getTravelPlanSegmentId());
