@@ -1064,6 +1064,9 @@ public abstract class BaseSoapService{
     }
 	
 	public String getFaultString(){
+		if(faultString == null || faultString.isEmpty()) {
+			faultString = "No Fault Found in Response";
+		}
 		return faultString;
 	}
 	/*public static boolean validateXMLSchema(String uri, Document doc){

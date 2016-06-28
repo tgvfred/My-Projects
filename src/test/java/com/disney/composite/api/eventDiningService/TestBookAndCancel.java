@@ -1,44 +1,60 @@
 package com.disney.composite.api.eventDiningService;
 
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.eventDiningService.operations.Book;
+import com.disney.api.soapServices.eventDiningService.operations.Cancel;
+import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
-import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
-public class TestBookAndCancel {
+public class TestBookAndCancel extends BaseTest{
 	// Defining global variables
-	protected String environment;
 	protected String TPS_ID = null;
-	protected ScheduledEventReservation res;
-	protected HouseHold hh = null;
 	
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(
-		String environment){this.environment = environment;
-		hh = new HouseHold(1);
-		hh.sendToApi(this.environment);
-	}
-
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBook(){
-		res = new EventDiningReservation(environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getTravelPlanId()), "The travel plan ID ["+res.getTravelPlanId()+"] is not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getConfirmationNumber()), "The reservation number ["+res.getConfirmationNumber()+"] is not numeric as expected.");
-		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
+		System.out.println(environment);
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.sendRequest();
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is not numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
 	}
-	
+
 	@Test(dependsOnMethods = {"testBook"}, groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testCancel() {
-		res.cancel();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getCancellationNumber()), "The cancellation number ["+res.getCancellationNumber()+"] was not numeric as expected.");
-		TestReporter.assertEquals(res.getStatus(), "Cancelled", "The reservation status ["+res.getStatus()+"] was not 'Cancelled' as expected.");
+		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+		cancel.setReservationNumber(TPS_ID);
+		cancel.sendRequest();
+		TestReporter.assertTrue(Regex.match("[0-9]+", cancel.getCancellationConfirmationNumber()), "The cancellation number ["+cancel.getCancellationConfirmationNumber()+"] was not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);
+		logItems.addItem("ChargeGroupIF", "cancelChargeGroups", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "cancelOrder", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		validateLogs(cancel, logItems);
 	}
 
 }
