@@ -513,8 +513,7 @@ public class FolioInterfacePayment extends FolioInterface{
 		if(getScenario() == null || getScenario().isEmpty()) setScenario(defaultCheckPaymentScenario);
 		// Retrieve folio balance due
 		retrieveFolioBalanceDue();
-		// Post Check Payment and set values from the response
-		setValuesFromPostPaymentResponse(postCheckPayment());
+		postCheckPayment();
 	}
 	/**
 	 * Posts a check payment for the current reservation
@@ -525,8 +524,9 @@ public class FolioInterfacePayment extends FolioInterface{
 		postPayment.setAuthorizationNumber(Randomness.randomNumber(4).toString());
 		setCheckNumber(Randomness.randomNumber(4).toString());
 		postPayment.setCheckNumber(getCheckNumber());
-		postPayment.setConvertedAmountAmount(getBalanceDue());
-		postPayment.setTenderedAmountAmount(getBalanceDue());
+		setAmountToPay(getBalanceDue());
+		postPayment.setConvertedAmountAmount(getAmountToPay());
+		postPayment.setTenderedAmountAmount(getAmountToPay());
 		postPayment.setDocumentOriginator(getPrimaryGuestFirstName() + " " + getPrimaryGuestLastName());
 		postPayment.setFolioId(getFolioId());
 		postPayment.setLocationId(getLocationId());
@@ -540,7 +540,8 @@ public class FolioInterfacePayment extends FolioInterface{
 		postPayment.sendRequest();
 		TestReporter.logAPI(!postPayment.getResponseStatusCode().equals("200"), "An error occurred make a check payment", postPayment);		
 		//Set payment metadata from the post payment response
-		setValuesFromPostPaymentResponse(postPayment);		
+		setValuesFromPostPaymentResponse(postPayment);
+		setPaidAmount(getPaidAmount() + Double.parseDouble(getAmountToPay()));		
 		return postPayment;
 	}
 	/**
@@ -577,6 +578,23 @@ public class FolioInterfacePayment extends FolioInterface{
 	public void makeFirstNightDeposit(){
 		if(getScenario() == null || getScenario().isEmpty()) setScenario(defaultCardPaymentScenario);
 		retrieveFolioBalanceDue();
-		postCardPayment(getScenario(), getDepositDue(), false);		
+		postCardPayment(getScenario(), getDepositDue(), false);	
+	}
+	/**
+	 * Makes a payment in full using a credit card
+	 */
+	public void makeFullCardPayment(){
+		retrieveFolioBalanceDue();
+		setAmountToPay("total");
+		postCardPayment(defaultCardPaymentScenario);		
+	}
+	/**
+	 * Makes a payment in full using a check
+	 */
+	public void makeFullCheckPayment(){
+		if(getScenario() == null || getScenario().isEmpty()) setScenario(defaultCheckPaymentScenario);
+		retrieveFolioBalanceDue();
+		setAmountToPay("total");
+		postCheckPayment();	
 	}
 }
