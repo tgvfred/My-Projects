@@ -43,8 +43,6 @@ public class TestReinstateWithRePrice {
 			ReinstateWithRePrice.setTravelComponentId(book.getTravelComponentId());
 			ReinstateWithRePrice.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 			ReinstateWithRePrice.sendRequest();
-			System.out.println(ReinstateWithRePrice.getRequest());
-			System.out.println(ReinstateWithRePrice.getResponse());
 			TestReporter.assertEquals(ReinstateWithRePrice.getResponseStatusCode(), "200", "The response code was not 200");
 		}
 }

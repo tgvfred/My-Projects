@@ -1,4 +1,4 @@
-package com.disney.composite.folioInterface.payment.postCheckPayment;
+package com.disney.composite.folioInterface.payment.makeFirstNightDeposit;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -34,10 +34,10 @@ public class TestFolioInterfacePayment_SE {
 	
 	@Test(groups={"SE", "api"})
 	public void testFolioPayment_SE(){
-		TestReporter.logScenario("Make check payment to Scheduled Event reservation.");
+		TestReporter.logScenario("Make first night deposit card payment to Scheduled Event reservation.");
 		TestReporter.log("Reservation Number: " + res.getConfirmationNumber());
 		TestReporter.log("Travel Plan Number: " + res.getTravelPlanId());
 		FolioInterfacePayment payment = new FolioInterfacePayment(res);
-		payment.makeCheckPayment();
+		payment.makeFirstNightDeposit();
 	}
 }

@@ -3,9 +3,14 @@ package com.disney.utils.dataFactory.folioInterface;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.disney.api.soapServices.ServiceConstants;
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNullNodeValueException;
+import com.disney.api.soapServices.folioServicePort.operations.RetrieveFolioBalanceDue;
 import com.disney.utils.Datatable;
 import com.disney.utils.GenerateCard;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 /**
  * This class serves as the superclass for other folio classes such as FolioPayment and FolioSettlement
@@ -37,7 +42,17 @@ public class FolioInterface {
 	private String isNegative = "";	// Flag to determine if a negative scenario is being tested
 	private String errorType = "";	// Expected error type
 	private String errorMessage = "";	// Expected error message
-	
+	private boolean incidentals = true;	// Flag to determine if a card is to be used for incidentals
+	private String amountToPay;	// Contains the amount to pay
+	private boolean existingCard = false;	// Flag to determine if a card on file is to be used
+	private RetrieveFolioBalanceDue retrieveBalance;	// RetrieveFolioBalanceDue instance
+	private String balanceDue;	// Contains the current folio balance due
+	private String cardAddressLine1; // Contains the card address line 1
+	private String cardAddressLine2; // Contains the card address line 2
+	private String cardCity;	// Contains the card city
+	private String cardState;	// Contains the card state
+	private String cardPostalCode;	// Contains the card postal 
+	private HouseHold party;	// HouseHold containing all guests in the reservation, most important to payment is the primary guest
 	
 	/**
 	 * Retrieves the current environment under test
@@ -278,7 +293,107 @@ public class FolioInterface {
 	 * Gets negative scenario error message
 	 * @return String, negative scenario error message
 	 */
-	protected String getNegativeScenarioErrorMessage(){return errorMessage;}	
+	protected String getNegativeScenarioErrorMessage(){return errorMessage;}
+	/**
+	 * Sets the incidentals flag
+	 * @param inc - incidentals flag
+	 */
+	protected void setIncidentals(boolean inc){incidentals = inc;}
+	/**
+	 * Gets the incidentals flag
+	 * @return String, incidentals flag
+	 */
+	protected boolean getIncidentals(){return incidentals;}	
+	/**
+	 * Set the amount to pay
+	 * @param amount - String, amount to pay
+	 */
+	protected void setAmountToPay(String amount){amountToPay = amount;}
+	/**
+	 * Gets the amount to pay
+	 * @return - String, amount to pay
+	 */
+	protected String getAmountToPay(){return amountToPay;}
+	/**
+	 * Sets the flag for using an existing card
+	 * @param exist - flag for using an existing card
+	 */
+	protected void setExistingCard(boolean exist){existingCard = exist;}
+	/**
+	 * Gets the flag for using an existing card
+	 * @return boolean, flag for using an existing card
+	 */
+	protected boolean getExistingCard(){return existingCard;}
+	/**
+	 * Sets the value for the current folio balance due
+	 * @param balanceDue - String, current folio balance due
+	 */
+	protected void setBalanceDue(String balanceDue){this.balanceDue = balanceDue;}
+	/**
+	 * Gets the value for the current folio balance due
+	 * @return String, current folio balance due
+	 */
+	protected String getBalanceDue(){return balanceDue;}
+	/**
+	 * Sets the card address line 1
+	 * @param line1 - card address line 1
+	 */
+	protected void setCardAddressLine1(String line1){cardAddressLine1 = line1;}
+	/**
+	 * Gets the card address line 1
+	 * @return String card address line 1
+	 */
+	protected String getCardAddressLine1(){return cardAddressLine1;}
+	/**
+	 * Sets the card address line 2
+	 * @param line1 - card address line 2
+	 */
+	protected void setCardAddressLine2(String line2){cardAddressLine2 = line2;}
+	/**
+	 * Gets the card address line 2
+	 * @return String card address line 2
+	 */
+	protected String getCardAddressLine2(){return cardAddressLine2;}
+	/**
+	 * Sets the card address city
+	 * @param line1 - card address city
+	 */
+	protected void setCardCity(String city){cardCity = city;}
+	/**
+	 * Gets the card address city
+	 * @return String card address city
+	 */
+	protected String getCardCity(){return cardCity;}
+	/**
+	 * Sets the card address state
+	 * @param line1 - card address state
+	 */
+	protected void setCardState(String state){cardState = state;}
+	/**
+	 * Gets the card address state
+	 * @return String card address state
+	 */
+	protected String getCardState(){return cardState;}
+	/**
+	 * Sets the card address postal code
+	 * @param line1 - card address postal code
+	 */
+	protected void setCardPostalCode(String code){cardPostalCode = code;}
+	/**
+	 * Gets the card address postal code
+	 * @return String card address postal code
+	 */
+	protected String getCardPostalCode(){return cardPostalCode;}
+	/**
+	 * Sets the HouseHold instance the contains all guests on the reservation
+	 * @param hh - HouseHold instance the contains all guests on the reservation
+	 */
+	protected void setParty(HouseHold hh){party = hh;}
+	/**
+	 * Gets the HouseHold instance the contains all guests on the reservation
+	 * @return HouseHold, instance the contains all guests on the reservation
+	 */
+	protected HouseHold getParty(){return party;}
 	
 	/**
 	 * Generates a card to use for payment or settlement
@@ -304,6 +419,64 @@ public class FolioInterface {
 		setCardExpirationYear(cardInfo.get("ExpYear"));
 		setCardExpirationDate(getCardExpirationMonth() + "/" + getCardExpirationYear());
 		setCardCCV(cardInfo.get("CVV2"));
-		setCardHolderName(cardInfo.get("NameOnCard"));
+		setCardHolderName(cardInfo.get("NameOnCard"));		
+		setCardAddressLine1(cardInfo.get("BillingStreet"));
+		setCardAddressLine2(cardInfo.get("BillingStreet2"));
+		setCardCity(cardInfo.get("BillingCity"));
+		setCardState(cardInfo.get("BillingState"));
+		setCardPostalCode(cardInfo.get("BillingZip"));
+	}
+	/**
+	 * Retrieves from the virtual tables
+	 * @param scenario - Payment UI Virtual Table scenario
+	 */
+	protected void getDatatableValues(String scenario){
+		setVirtualTable(scenario);
+		
+		if (getDatatable().getDataParameter("Incidentals").equalsIgnoreCase("false")) {incidentals = false;}
+		if(incidentals) TestReporter.log("Applying incidentals");
+		
+		try{
+			if(getAmountToPay().contains("override")){setAmountToPay(getAmountToPay().split(":")[1]);}
+			else{setAmountToPay(getDatatable().getDataParameter("Amount"));}
+		}
+		catch(NullPointerException e){setAmountToPay(getDatatable().getDataParameter("Amount"));}
+		
+		if(!getExistingCard()){
+			setCardPaymentType(getDatatable().getDataParameter("PaymentType"));
+			setCardPaymentMethod(getDatatable().getDataParameter("PaymentMethod"));
+			setCardStatus(getDatatable().getDataParameter("Status"));
+			setCardDelay(getDatatable().getDataParameter("Delay"));
+			setCardCCV(getDatatable().getDataParameter("EnterCCV"));
+		}
+		TestReporter.log("Payment Type: " + getCardPaymentType());
+		TestReporter.log("Payment Method: " + getCardPaymentMethod());
+		TestReporter.log("Status: " + getCardStatus());
+		TestReporter.log("Delay: " + getCardDelay());
+		TestReporter.log("Enter CCV: " + getCardCCV());
+	}
+	/**
+	 * Sets the virtual table path, page and scenario
+	 * @param scenario - virtual table scenario
+	 */
+	protected void setVirtualTable(String scenario){
+		getDatatable().setVirtualtablePath(Datatable.PAYMENTUI_MASTER_DATA_PATH);
+		getDatatable().setVirtualtablePage("PaymentUI");
+		getDatatable().setVirtualtableScenario(scenario);
+	}
+	/**
+	 * Method that retrieves the folio balance due, and sets some critical values that are captured from the RetrieveFolioBalanceDue response
+	 */
+	protected void retrieveFolioBalanceDue(){
+		retrieveBalance = new RetrieveFolioBalanceDue(getEnvironment(), "UI booking");
+		retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getTravelPlanId());
+		retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
+		try{retrieveBalance.setLocationId(getLocationId());}
+		catch(XPathNullNodeValueException e){retrieveBalance.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());}
+		retrieveBalance.sendRequest();
+		TestReporter.logAPI(!retrieveBalance.getResponseStatusCode().equals("200"), "An error occurred retrieving the folio balance due.", retrieveBalance);	
+		setBalanceDue(retrieveBalance.getPaymentRequired());
+		setDepositDue(retrieveBalance.getDepositRequired());
+		setFolioId(retrieveBalance.getFolioId());
 	}
 }

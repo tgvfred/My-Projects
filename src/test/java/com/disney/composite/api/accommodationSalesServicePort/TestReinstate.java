@@ -45,9 +45,7 @@ public class TestReinstate {
 		Reinstate.setTravelComponentId(book.getTravelComponentId());
 		Reinstate.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 		Reinstate.sendRequest();
-		System.out.println(Reinstate.getRequest());
-		System.out.println(Reinstate.getResponse());
-		TestReporter.assertEquals(Reinstate.getResponseStatusCode(), "200", "The response code was not 200");
+		TestReporter.logAPI(!Reinstate.getResponseStatusCode().equals("200"), "An error occurred reinstating the reservation with travel plan segment ID["+book.getTravelPlanSegmentId()+"]", Reinstate);
 	}
 	
 	

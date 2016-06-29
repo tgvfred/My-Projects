@@ -1,4 +1,4 @@
-package com.disney.composite.folioInterface.payment.postCheckPayment;
+package com.disney.composite.folioInterface.settlement.createSettlementMethod;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -6,12 +6,12 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.folioInterface.FolioInterfacePayment;
+import com.disney.utils.dataFactory.folioInterface.FolioInterfaceSettlement;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.TableServiceDiningReservation;
 
-public class TestFolioInterfacePayment_SE {
+public class TestFolioInterfaceSettlement_SE {
 	private String environment;
 	private ScheduledEventReservation res;
 	private HouseHold party;
@@ -21,8 +21,8 @@ public class TestFolioInterfacePayment_SE {
 	public void setup(String environment){
 		this.environment = environment;
 		party = new HouseHold(2);
-		res = new ShowDiningReservation(this.environment, party);
-		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		res = new TableServiceDiningReservation(this.environment, party);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 	
 	@AfterMethod(alwaysRun=true)
@@ -34,10 +34,10 @@ public class TestFolioInterfacePayment_SE {
 	
 	@Test(groups={"SE", "api"})
 	public void testFolioPayment_SE(){
-		TestReporter.logScenario("Make check payment to Scheduled Event reservation.");
+		TestReporter.logScenario("Create a card settlement for a Scheduled Event reservation.");
 		TestReporter.log("Reservation Number: " + res.getConfirmationNumber());
 		TestReporter.log("Travel Plan Number: " + res.getTravelPlanId());
-		FolioInterfacePayment payment = new FolioInterfacePayment(res);
-		payment.makeCheckPayment();
+		FolioInterfaceSettlement settlement = new FolioInterfaceSettlement(res);
+		settlement.createSettlementMethod("Pay total amount due with valid Visa, with incidentals with CCV with Express Checkout");
 	}
 }

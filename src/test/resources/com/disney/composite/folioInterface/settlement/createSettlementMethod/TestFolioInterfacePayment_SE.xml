@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Sleepy" />
 	<test name="TestFolioInterfacePayment_SE">
 		<classes>
-			<class name="com.disney.composite.folioInterface.payment.postCheckPayment.TestFolioInterfacePayment_SE"/>
+			<class name="com.disney.composite.folioInterface.settlement.createSettlementMethod.TestFolioInterfaceSettlement_SE"/>
 		</classes>
 	</test>
 </suite>
