@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestArrived_Suite" parallel="false" thread-count="5">
+	<parameter name="environment" value="Bashful" />
+	<test name="TestArrived">
+		<classes>
+			<class name="com.disney.composite.api.showDiningService.arrived.TestArrived_Negative_InvalidReservationStatus"/>
+		</classes>
+	</test>
+</suite>

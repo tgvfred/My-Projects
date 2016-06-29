@@ -1,16 +1,20 @@
 package com.disney.composite.api.accommodationSalesServicePort;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.ReinstateWithRePrice;
+import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestReinstateWithRePrice {
 	    private String environment = "";
-		Book book = null;
+		private Book book = null;
+		
 		@BeforeTest(alwaysRun = true)
 		@Parameters({"environment" })
 		public void setup(String environment) {
@@ -18,31 +22,37 @@ public class TestReinstateWithRePrice {
 			book= new Book(environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 			book.sendRequest();
 			
-			System.out.println(book.getRequest());
-			System.out.println(book.getResponse());
-		}
-			
-		/*@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "Cancel"})
-		public void testCancel_MainFlow(){
-			
 			Cancel cancel = new Cancel(environment, "Main");
-			cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
+			cancel.setCancelDate(Randomness.generateCurrentXMLDate(0));
 			cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
 			cancel.sendRequest();
-			System.out.println(cancel.getRequest());
-			System.out.println(cancel.getResponse());
-			TestReporter.assertEquals(cancel.getResponseStatusCode(), "200", "The response code was not 200");
-		}*/
+		}
 		
-		@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "reinstateWithRePrice"})
-		        
-		public void TestReinstateWithRePrice_MainFlow(){
-			
+		@AfterMethod(alwaysRun=true)
+		public void teardown(){
+			try{
+				if(book != null){
+					if(book.getTravelPlanSegmentId() != null){
+						if(!book.getTravelPlanSegmentId().isEmpty()){
+							Cancel cancel = new Cancel(environment, "Main");
+							cancel.setCancelDate(Randomness.generateCurrentXMLDate(0));
+							cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+							cancel.sendRequest();
+						}
+					}
+				}
+			}catch(Exception e){}
+		}
+		
+		@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "reinstateWithRePrice"})		        
+		public void TestReinstateWithRePrice_MainFlow(){	
+			TestReporter.logScenario("Test Reinstate with Reprice");
 			ReinstateWithRePrice ReinstateWithRePrice = new ReinstateWithRePrice(environment, "Main");
 			ReinstateWithRePrice.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
 			ReinstateWithRePrice.setTravelComponentId(book.getTravelComponentId());
 			ReinstateWithRePrice.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 			ReinstateWithRePrice.sendRequest();
-			TestReporter.assertEquals(ReinstateWithRePrice.getResponseStatusCode(), "200", "The response code was not 200");
+			TestReporter.logAPI(!ReinstateWithRePrice.getResponseStatusCode().equals("200"), "An error occurred reinstating with reprice", ReinstateWithRePrice);
+		    TestReporter.log("Travel Plan ID: " + book.getTravelPlanId());
 		}
 }

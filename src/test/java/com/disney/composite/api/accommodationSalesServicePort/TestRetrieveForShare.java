@@ -1,36 +1,52 @@
 package com.disney.composite.api.accommodationSalesServicePort;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.RetrieveforShare;
+import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestRetrieveforShare {
+public class TestRetrieveForShare {
 	private String environment = "";
-	Book book = null;
+	private Book book = null;
+	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({"environment" })
 	public void setup(String environment) {
 		this.environment = environment;
 		book= new Book(environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 		book.sendRequest();
-		
-		//System.out.println(book.getRequest());
-		//System.out.println(book.getResponse());
+	}
+	
+	@AfterMethod(alwaysRun=true)
+	public void teardown(){
+		try{
+			if(book != null){
+				if(book.getTravelPlanSegmentId() != null){
+					if(!book.getTravelPlanSegmentId().isEmpty()){
+						Cancel cancel = new Cancel(environment, "Main");
+						cancel.setCancelDate(Randomness.generateCurrentXMLDate(0));
+						cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+						cancel.sendRequest();
+					}
+				}
+			}
+		}catch(Exception e){}
 	}
 		
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "retrieveForShare"})
-	public void testRetrieveforShare_MainFlow(){
-		
+	public void testRetrieveForShare_MainFlow(){
+		TestReporter.logScenario("Test Retrieve for Share");
 		RetrieveforShare retrieveforShare = new RetrieveforShare(environment, "Main" );
 		retrieveforShare.settravelComponentGroupingId(book.getTravelComponentGroupingId());
 		retrieveforShare.settravelPlanSegmentId(book.getTravelPlanSegmentId());
 		retrieveforShare.sendRequest();
-		//System.out.println(retrieveforShare.getRequest());
-		//System.out.println(retrieveforShare.getResponse());
-		TestReporter.assertEquals(retrieveforShare.getResponseStatusCode(), "200", "The response code was not 200");
+		TestReporter.logAPI(!retrieveforShare.getResponseStatusCode().equals("200"), "An error occurred retrieving for share", retrieveforShare);
+	    TestReporter.log("Travel Plan ID: " + book.getTravelPlanId());
 	}
 }
