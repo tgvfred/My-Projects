@@ -1,8 +1,5 @@
 package com.disney.composite.api.eventDiningService;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.eventDiningService.operations.Book;
@@ -19,7 +16,6 @@ public class TestBookAndCancel extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBook(){
-		System.out.println(environment);
 		hh = new HouseHold(1);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
