@@ -22,4 +22,9 @@ public class BookWithPrice extends AccommodationSalesServicePort{
 	public String getReservationType(){
 		return getResponseNodeValueByXPath("/Envelope/Body/bookWithPriceResponse/response/roomDetails[2]/reservationType");
 	}
+	
+	public String getTravelPlanSegmentId(){return getResponseNodeValueByXPath("/Envelope/Body/bookWithPriceResponse/response/travelPlanSegmentId");}
+	public String getTravelPlanId(){return getResponseNodeValueByXPath("/Envelope/Body/bookWithPriceResponse/response/travelPlanId");}
+	public String getTravelComponentId(){return getResponseNodeValueByXPath("/Envelope/Body/bookWithPriceResponse/response/roomDetails[1]/travelComponentId");}
+	public String getTravelComponentGroupingId(){return getResponseNodeValueByXPath("/Envelope/Body/bookWithPriceResponse/response/roomDetails[1]/travelComponentGroupingId");}
 }

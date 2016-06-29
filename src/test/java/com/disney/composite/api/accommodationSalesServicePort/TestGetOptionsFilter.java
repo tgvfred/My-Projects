@@ -8,35 +8,28 @@ import com.disney.api.soapServices.accommodationSalesServicePort.operations.GetO
 import com.disney.utils.TestReporter;
 
 public class TestGetOptionsFilter {
-private String environment = "";
+	private String environment = "";
 	
-@BeforeMethod(alwaysRun = true)
+	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
-	public void setup(String environment) {
-		this.environment = environment;
-	
-	}
+	public void setup(String environment) {this.environment = environment;}
 		
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "GetOptionsByFilter"})
 	public void testGetOptionsByFilterByFilter_Role(){
-		
+		TestReporter.logScenario("Test Get Options By Filter - ROLE");
 		GetOptionsByFilter GetOptionsByFilter = new GetOptionsByFilter(environment, "getOptionsByFilter_Role" );
 		GetOptionsByFilter.sendRequest();
-		//System.out.println(GetOptionsByFilter.getRequest());
-		//System.out.println(GetOptionsByFilter.getResponse());
-		TestReporter.assertEquals(GetOptionsByFilter.getResponseStatusCode(), "200", "The response code was not 200");
+		TestReporter.logAPI(!GetOptionsByFilter.getResponseStatusCode().equals("200"), "An error occurred getting options by filter", GetOptionsByFilter);
 		TestReporter.assertNotNull(GetOptionsByFilter.getoptionKey(), "The response contains a option Key");
 		TestReporter.assertNotNull(GetOptionsByFilter.getoptionValue(), "The response contains a option Value");
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "GetOptionsByFilter"})
 	public void testGetOptionsByFilterByFilter_LANGUAGE(){
-		
+		TestReporter.logScenario("Test Get Options By Filter - LANGUAGE");
 		GetOptionsByFilter GetOptionsByFilter = new GetOptionsByFilter(environment, "getOptionsByFilter_LANGUAGE" );
 		GetOptionsByFilter.sendRequest();
-		//System.out.println(GetOptionsByFilter.getRequest());
-		//System.out.println(GetOptionsByFilter.getResponse());
-		TestReporter.assertEquals(GetOptionsByFilter.getResponseStatusCode(), "200", "The response code was not 200");
+		TestReporter.logAPI(!GetOptionsByFilter.getResponseStatusCode().equals("200"), "An error occurred getting options by filter", GetOptionsByFilter);
 		TestReporter.assertNotNull(GetOptionsByFilter.getoptionKey(), "The response contains a option Key");
 		TestReporter.assertNotNull(GetOptionsByFilter.getoptionValue(), "The response contains a option Value");
 	}
