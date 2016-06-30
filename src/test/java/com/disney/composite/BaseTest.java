@@ -24,7 +24,7 @@ public class BaseTest {
 	@BeforeMethod(alwaysRun = true)
 	@Parameters("environment")
 	public void setup(@Optional String environment){
-		this.environment = environment;
+		this.environment = "Sleepy";
 		hh = new HouseHold(1);
 	}
 	
