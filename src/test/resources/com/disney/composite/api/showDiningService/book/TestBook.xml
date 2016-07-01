@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestPrintTicket_Suite" data-provider-thread-count="3">
+<suite name="TestBook_Suite" data-provider-thread-count="3">
 	<parameter name="environment" value="Grumpy" />
-	<test name="TestPrintTicket">
+	<test name="TestBook">
 		<classes>
-			<class name="com.disney.composite.api.showDiningService.TestPrintTicket"/>
+			<class name="com.disney.composite.api.showDiningService.book.TestBook"/>
 		</classes>
 	</test>
 </suite>

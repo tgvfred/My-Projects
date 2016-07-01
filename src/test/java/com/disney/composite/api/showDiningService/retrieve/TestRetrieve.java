@@ -1,4 +1,4 @@
-package com.disney.composite.api.showDiningService;
+package com.disney.composite.api.showDiningService.retrieve;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;

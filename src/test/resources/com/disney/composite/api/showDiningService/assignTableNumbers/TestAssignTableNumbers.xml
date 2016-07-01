@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Grumpy" />
 	<test name="TestAssignTableNumbers">
 		<classes>
-			<class	name="com.disney.composite.api.showDiningService.TestAssignTableNumbers"/>
+			<class	name="com.disney.composite.api.showDiningService.assignTableNumbers.TestAssignTableNumbers"/>
 		</classes>
 	</test>
 </suite>

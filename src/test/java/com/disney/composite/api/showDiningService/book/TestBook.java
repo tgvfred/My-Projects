@@ -1,5 +1,6 @@
-package com.disney.composite.api.showDiningService;
+package com.disney.composite.api.showDiningService.book;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -10,13 +11,12 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
-public class TestBookAndCancel {
+public class TestBook {
 	protected String environment;
 	protected String TP_ID = null;
 	protected String TPS_ID = null;
 	private ScheduledEventReservation res;
 	private HouseHold party;
-	private String cancellationNumber;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
@@ -26,14 +26,14 @@ public class TestBookAndCancel {
 		party.sendToApi(environment);
 	}
 
-	@Test(dependsOnMethods = {"testBook"}, groups = {"api", "regression", "dining", "showDiningService"})
-	public void testCancel() {
-		res.cancel();
-		cancellationNumber = res.getCancellationNumber();
-		TestReporter.assertTrue(Regex.match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
-		TestReporter.assertEquals(res.getStatus(), "Cancelled", "The reservation status ["+res.getStatus()+"] was not 'Cancelled' as expected.");
+	@AfterMethod(alwaysRun=true)
+	public void teardown(){
+		if(res != null)
+			if(!res.getConfirmationNumber().isEmpty()){
+				res.cancel();
+			}				
 	}
-
+	
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void testBook() {
 		res = new ShowDiningReservation(environment, party);

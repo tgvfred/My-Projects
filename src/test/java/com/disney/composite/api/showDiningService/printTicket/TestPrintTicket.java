@@ -1,4 +1,4 @@
-package com.disney.composite.api.showDiningService;
+package com.disney.composite.api.showDiningService.printTicket;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -10,7 +10,7 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
-public class TestReprintTicket {
+public class TestPrintTicket {
 	protected String environment;
 	private ScheduledEventReservation res;
 	private HouseHold party;
@@ -23,7 +23,6 @@ public class TestReprintTicket {
 		party.sendToApi(environment);
 		res = new ShowDiningReservation(environment, party);
 		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-		res.printTicket();
 	}
 	
 	@AfterMethod(alwaysRun=true)
@@ -34,8 +33,8 @@ public class TestReprintTicket {
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
-	public void testReprintTicket() {
-		res.reprintTicket();
-		TestReporter.assertEquals(res.getReprintTicketStatus(), "SUCCESS", "The status ["+res.getReprintTicketStatus()+"] was not 'SUCCESS' as expected.");
+	public void testPrintTicket() {
+		res.printTicket();
+		TestReporter.assertEquals(res.getPrintTicketStatus(), "SUCCESS", "The status ["+res.getPrintTicketStatus()+"] was not 'SUCCESS' as expected.");
 	}
 }

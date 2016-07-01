@@ -1,6 +1,5 @@
-package com.disney.composite.api.showDiningService;
+package com.disney.composite.api.showDiningService.arrived;
 
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -10,7 +9,11 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
-public class TestPrintTicket {
+public class TestArrived {
+
+	// *******************
+	// Test Class Fields
+	// *******************
 	protected String environment;
 	private ScheduledEventReservation res;
 	private HouseHold party;
@@ -24,17 +27,11 @@ public class TestPrintTicket {
 		res = new ShowDiningReservation(environment, party);
 		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 	}
-	
-	@AfterMethod(alwaysRun=true)
-	public void teardown(){
-		if(res.getConfirmationNumber() != null)
-			if(!res.getConfirmationNumber().isEmpty())
-				res.cancel();
-	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
-	public void testPrintTicket() {
-		res.printTicket();
-		TestReporter.assertEquals(res.getPrintTicketStatus(), "SUCCESS", "The status ["+res.getPrintTicketStatus()+"] was not 'SUCCESS' as expected.");
+	public void testArrived() {
+		res.arrived();
+		TestReporter.assertEquals(res.getArrivedStatus(), "SUCCESS", "Arrived status ["+res.getArrivedStatus()+"] was not 'SUCCESS' as expected.");
+		TestReporter.assertEquals(res.getStatus(), "Arrived", "The reservation status ["+res.getStatus()+"] was not 'Arrived' as expected.");
 	}
 }

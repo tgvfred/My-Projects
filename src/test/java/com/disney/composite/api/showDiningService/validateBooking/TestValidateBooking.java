@@ -1,4 +1,4 @@
-package com.disney.composite.api.showDiningService;
+package com.disney.composite.api.showDiningService.validateBooking;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;

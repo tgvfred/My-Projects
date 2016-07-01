@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestRetrieve_Suite" data-provider-thread-count="3">
+<suite name="TestModify_Suite">
 	<parameter name="environment" value="Grumpy" />
-	<test name="TestRetrieve">
+	<test name="TestModify">
 		<classes>
-			<class name="com.disney.composite.api.showDiningService.TestRetrieve"/>
+			<class name="com.disney.composite.api.showDiningService.modify.TestModify"/>
 		</classes>
 	</test>
 </suite>

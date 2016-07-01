@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Grumpy" />
 	<test name="TestNoShow">
 		<classes>
-			<class name="com.disney.composite.api.showDiningService.TestNoShow"/>
+			<class name="com.disney.composite.api.showDiningService.noShow.TestNoShow"/>
 		</classes>
 	</test>
 </suite>
