@@ -30,7 +30,7 @@ public class TestNoShow {
 	public void testNoShow() {
 		res.noShow();
 		cancellationNumber = res.getCancellationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
 		TestReporter.assertEquals(res.getStatus(), "No Show", "The reservation status ["+res.getStatus()+"] was not 'No Show' as expected.");	
 	}
 }

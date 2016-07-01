@@ -45,8 +45,8 @@ public class TestRetrieve {
 		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		travelPlanId = res.getTravelPlanId();
 		reservationNumber = res.getConfirmationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", travelPlanId), "The travel plan ID ["+travelPlanId+"] was not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", reservationNumber), "The reservation number ["+reservationNumber+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", travelPlanId), "The travel plan ID ["+travelPlanId+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", reservationNumber), "The reservation number ["+reservationNumber+"] was not numeric as expected.");
 		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
 	}
 }

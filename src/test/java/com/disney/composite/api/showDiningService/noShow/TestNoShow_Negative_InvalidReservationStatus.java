@@ -40,8 +40,7 @@ public class TestNoShow_Negative_InvalidReservationStatus extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void noShowReservation() {
 		TestReporter.logScenario("Test Setting Arrivd Reservation to Arrived");
-		Book book = book();
-		
+		Book book = book();		
 
 		NoShow noshow = new NoShow(environment, "ContactCenter");
 		noshow.setReservatinoNumber(book.getTravelPlanSegmentId());

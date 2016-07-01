@@ -19,7 +19,7 @@ public class TestArrived {
 		this.environment = environment;
 		res = new TableServiceDiningReservation(this.environment);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getTravelPlanId()), "The travel plan ID ["+res.getTravelPlanId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.getTravelPlanId()), "The travel plan ID ["+res.getTravelPlanId()+"] was not numeric as expected.");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})

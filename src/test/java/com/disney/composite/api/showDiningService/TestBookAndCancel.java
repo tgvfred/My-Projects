@@ -30,7 +30,7 @@ public class TestBookAndCancel {
 	public void testCancel() {
 		res.cancel();
 		cancellationNumber = res.getCancellationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
 		TestReporter.assertEquals(res.getStatus(), "Cancelled", "The reservation status ["+res.getStatus()+"] was not 'Cancelled' as expected.");
 	}
 
@@ -40,8 +40,8 @@ public class TestBookAndCancel {
 		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		TP_ID = res.getTravelPlanId();
 		TPS_ID = res.getConfirmationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", TP_ID), "The travel plan ID ["+TP_ID+"] was not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", TPS_ID), "The reservation number ["+TPS_ID+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", TP_ID), "The travel plan ID ["+TP_ID+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", TPS_ID), "The reservation number ["+TPS_ID+"] was not numeric as expected.");
 		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
 	}
 }
