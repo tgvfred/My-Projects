@@ -31,7 +31,7 @@ public class TestNoShow_Negative_InvalidReservationStatus extends BaseTest{
 		Book book = book();
 		
 		Arrived arrived = new Arrived(environment, "ContactCenter");
-		arrived.setReservatinoNumber(book.getTravelPlanSegmentId());
+		arrived.setReservationNumber(book.getTravelPlanSegmentId());
 		arrived.sendRequest();
 		
 		noShow(book);

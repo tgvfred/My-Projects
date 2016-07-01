@@ -1,44 +1,29 @@
 package com.disney.composite.api.showDiningService.cancel;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.showDiningService.operations.Book;
+import com.disney.api.soapServices.showDiningService.operations.Cancel;
+import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
-public class TestCancel {
-	protected String environment;
-	protected String TP_ID = null;
-	protected String TPS_ID = null;
-	private ScheduledEventReservation res;
-	private HouseHold party;
-	private String cancellationNumber;
-	
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(String environment) {
-		this.environment = environment;
-		party = new HouseHold(1);
-		party.sendToApi(environment);
-
-		res = new ShowDiningReservation(environment, party);
-		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-		TP_ID = res.getTravelPlanId();
-		TPS_ID = res.getConfirmationNumber();
-		TestReporter.assertTrue(Regex.match("[0-9]+", TP_ID), "The travel plan ID ["+TP_ID+"] was not numeric as expected.");
-		TestReporter.assertTrue(Regex.match("[0-9]+", TPS_ID), "The reservation number ["+TPS_ID+"] was not numeric as expected.");
-		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
-	}
+public class TestCancel extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void testCancel() {
-		res.cancel();
-		cancellationNumber = res.getCancellationNumber();
-		TestReporter.assertTrue(Regex.match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
-		TestReporter.assertEquals(res.getStatus(), "Cancelled", "The reservation status ["+res.getStatus()+"] was not 'Cancelled' as expected.");
+		TestReporter.logStep("Book a show dining reservation.");
+		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		book.setParty(hh);
+		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
+		
+		TestReporter.logStep("Cancel an existing reservation.");
+		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
+		cancel.sendRequest();
+		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred during cancellation", cancel);
+		TestReporter.assertTrue(Regex.match("[0-9]+", cancel.getCancellationConfirmationNumber()), "The cancellation number ["+cancel.getCancellationConfirmationNumber()+"] was not numeric as expected.");
 	}
 }

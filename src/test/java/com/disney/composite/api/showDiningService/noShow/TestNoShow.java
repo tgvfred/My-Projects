@@ -1,36 +1,29 @@
 package com.disney.composite.api.showDiningService.noShow;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.showDiningService.operations.Book;
+import com.disney.api.soapServices.showDiningService.operations.NoShow;
+import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
-public class TestNoShow {
-	protected String environment;
-	private ScheduledEventReservation res;
-	private HouseHold party;
-	private String cancellationNumber;
-	
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(String environment) {
-		this.environment = environment;
-		party = new HouseHold(1);
-		party.sendToApi(environment);
-		res = new ShowDiningReservation(environment, party);
-		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-	}
+public class TestNoShow extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void testNoShow() {
-		res.noShow();
-		cancellationNumber = res.getCancellationNumber();
-		TestReporter.assertTrue(Regex.match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
-		TestReporter.assertEquals(res.getStatus(), "No Show", "The reservation status ["+res.getStatus()+"] was not 'No Show' as expected.");	
+		TestReporter.logStep("Book a show dining reservation.");
+		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		book.setParty(hh);
+		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
+
+		TestReporter.logStep("Update a show dining reservation to [No Show].");
+		NoShow noShow = new NoShow(environment, "GuestFacing");
+		noShow.setReservatinoNumber(book.getTravelPlanSegmentId());
+		noShow.sendRequest();
+		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [No Show]", noShow);
+		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationConfirmationNumber()), "The cancellation number ["+noShow.getCancellationConfirmationNumber()+"] was not numeric as expected.");
 	}
 }

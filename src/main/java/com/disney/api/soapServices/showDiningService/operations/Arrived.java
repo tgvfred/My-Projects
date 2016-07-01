@@ -16,7 +16,7 @@ public class Arrived extends ShowDiningService {
 		removeWhiteSpace();
 	}
 	
-	public void setReservatinoNumber(String value){
+	public void setReservationNumber(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/arrived/arrivedShowDiningRequest/reservationNumber", value);
 	}
 	

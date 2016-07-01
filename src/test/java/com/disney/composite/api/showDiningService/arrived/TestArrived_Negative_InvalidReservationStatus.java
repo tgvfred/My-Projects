@@ -14,9 +14,9 @@ public class TestArrived_Negative_InvalidReservationStatus extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void cancelledReservation() {
-		TestReporter.logScenario("Test Setting Cancelled Reservation to Arrived");
 		Book book = book();
-		
+
+		TestReporter.logScenario("Test Setting Cancelled Reservation to Arrived");
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 		cancel.sendRequest();
@@ -26,26 +26,28 @@ public class TestArrived_Negative_InvalidReservationStatus extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void arrivedReservation() {
-		TestReporter.logScenario("Test Setting Arrivd Reservation to Arrived");
 		Book book = book();
-		
+
+		TestReporter.logScenario("Test Setting Arrived Reservation to Arrived");
 		Arrived arrived = new Arrived(environment, "ContactCenter");
-		arrived.setReservatinoNumber(book.getTravelPlanSegmentId());
+		arrived.setReservationNumber(book.getTravelPlanSegmentId());
 		arrived.sendRequest();
 		
 		arrived(book);
 	}
 	
 	private Book book(){
+		TestReporter.logStep("Book an show dining reservation.");
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
 		return book;
 	}
 	
 	private void arrived(Book book){		
 		Arrived arrived = new Arrived(environment, "ContactCenter");
-		arrived.setReservatinoNumber(book.getTravelPlanSegmentId());
+		arrived.setReservationNumber(book.getTravelPlanSegmentId());
 		arrived.sendRequest();
 		TestReporter.logAPI(!arrived.getFaultString().contains(" Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED!"), arrived.getFaultString() ,arrived);
 
