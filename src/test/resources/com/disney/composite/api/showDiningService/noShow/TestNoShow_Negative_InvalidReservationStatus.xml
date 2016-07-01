@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Bashful" />
 	<test name="TestNoShow">
 		<classes>
-			<class name="com.disney.composite.api.showDiningService.arrived.TestNoShow_Negative_InvalidReservationStatus"/>
+			<class name="com.disney.composite.api.showDiningService.noShow.TestNoShow_Negative_InvalidReservationStatus"/>
 		</classes>
 	</test>
 </suite>
