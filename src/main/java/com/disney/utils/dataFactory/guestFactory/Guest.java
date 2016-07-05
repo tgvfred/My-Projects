@@ -52,7 +52,7 @@ public class Guest {
 	private String odsId = "0";
 	private String partyId = "0";
 	private Create guest = null;
-	private CreateParty party = null;
+	
 	private SearchByNameAndAddress search = null;
 	/**
 	 * @summary Upon instantiation, generate name guest data, along with
@@ -70,56 +70,99 @@ public class Guest {
 	}
 
 	public void sendToApi(String environment) {
-		guest = new Create(environment, "Main");
-		guest.setPrefix(title);
-		guest.setFirstName(firstName);
-		guest.setMiddleName(middleName);
-		guest.setLastName(lastName);
-		guest.setAge(age);
-		guest.setPhoneNumber(phones.get(0).getNumber());
-		guest.setEmail(emails.get(0).getEmail());
-		guest.setAddress1(addresses.get(0).getAddress1());
-		guest.setCity(addresses.get(0).getCity());
-		guest.setCountry(addresses.get(0).getCountry());
-		guest.setState(addresses.get(0).getStateAbbv());
-		guest.setPostalCode(addresses.get(0).getZipCode());
-		guest.sendRequest();
-		
-		addresses.get(0).setZipCode(guest.getPostalCode());
-
+		sendToApi(environment, false);
+	}
+	
+	public void sendToApi(String environment, boolean isPartyV3) {
+		if(!environment.equalsIgnoreCase("Development")){
+			guest = new Create(environment, "Main");
+			guest.setPrefix(title);
+			guest.setFirstName(firstName);
+			guest.setMiddleName(middleName);
+			guest.setLastName(lastName);
+			guest.setAge(age);
+			guest.setPhoneNumber(phones.get(0).getNumber());
+			guest.setEmail(emails.get(0).getEmail());
+			guest.setAddress1(addresses.get(0).getAddress1());
+			guest.setCity(addresses.get(0).getCity());
+			guest.setCountry(addresses.get(0).getCountry());
+			guest.setState(addresses.get(0).getStateAbbv());
+			guest.setPostalCode(addresses.get(0).getZipCode());
+			guest.sendRequest();
+			
+			addresses.get(0).setZipCode(guest.getPostalCode());
+			}
 		Sleeper.sleep(2000);
-
-		odsId = guest.getOdsGuestId();
-		addresses.get(0).setZipCode(guest.getPostalCode());
-		addresses.get(0).setLocatorId(guest.getAddressLocatorId());
-		phones.get(0).setLocatorId(guest.getPhoneLocatorId());
-		emails.get(0).setLocatorId(guest.getEmailLocatorId());
-		
-		party = new CreateParty(environment, "SampleCreate");
-		party.setExternalReferenceValue(guest.getOdsGuestId());
-		party.setPrimaryGuestAge(age);
-		party.setPrimaryGuestFirstName(firstName);
-		party.setPrimaryGuestLastName(lastName);
-		
-		party.setAddressLocatorId(guest.getAddressLocatorId());
-		party.setAddressLine1(addresses.get(0).getAddress1());
-		party.setAddressCity(guest.getCity());
-		party.setAddressState(guest.getState());
-		party.setAddressZipCode(guest.getPostalCode());
-		party.setAddressCountry(addresses.get(0).getCountry());
-		System.out.println();
-		
-		party.setPhoneNumberLocatorId(guest.getPhoneLocatorId());
-		party.setPhoneNumber(guest.getPhoneNumber());
-		
-		party.setEmailAddressLocatorId(guest.getEmailLocatorId());
-		party.setEmailAddress(guest.getEmail());
-		
-		//party.setRequestNodeValueByXPath("/Envelope/Body/createParty/partyRequest/externalreference/externalReferenceSource", "ODS");
-		
-		party.sendRequest();
-		
-		this.partyId = party.getPartyid();
+		if(isPartyV3){
+			com.disney.api.soapServices.partyV3.operations.CreateParty partyV3 = null;
+			partyV3 = new com.disney.api.soapServices.partyV3.operations.CreateParty(environment, "SampleCreate");
+			if(!environment.equalsIgnoreCase("Development")){
+				odsId = guest.getOdsGuestId();
+				addresses.get(0).setZipCode(guest.getPostalCode());
+				addresses.get(0).setLocatorId(guest.getAddressLocatorId());
+				phones.get(0).setLocatorId(guest.getPhoneLocatorId());
+				emails.get(0).setLocatorId(guest.getEmailLocatorId());
+			
+			}else{
+				odsId = String.valueOf(Randomness.randomNumberBetween(1000000, 9999999));
+			}
+			
+			partyV3.setExternalReferenceValue(odsId);
+			partyV3.setPrimaryGuestAge(age);
+			partyV3.setPrimaryGuestFirstName(firstName);
+			partyV3.setPrimaryGuestLastName(lastName);
+			
+			partyV3.setAddressLocatorId(addresses.get(0).getLocatorId());
+			partyV3.setAddressLine1(addresses.get(0).getAddress1());
+			partyV3.setAddressCity(addresses.get(0).getCity());
+			partyV3.setAddressState(addresses.get(0).getState());
+			partyV3.setAddressZipCode(addresses.get(0).getZipCode());
+			partyV3.setAddressCountry(addresses.get(0).getCountry());
+			
+			partyV3.setPhoneNumberLocatorId(phones.get(0).getLocatorId());
+			partyV3.setPhoneNumber(phones.get(0).getNumber());
+			
+			partyV3.setEmailAddressLocatorId(emails.get(0).getLocatorId());
+			partyV3.setEmailAddress(emails.get(0).getEmail());
+			
+			//party.setRequestNodeValueByXPath("/Envelope/Body/createParty/partyRequest/externalreference/externalReferenceSource", "ODS");
+			partyV3.sendRequest();
+			
+			this.partyId = partyV3.getPartyid();
+		}else{
+			CreateParty party = null;
+			odsId = guest.getOdsGuestId();
+			addresses.get(0).setZipCode(guest.getPostalCode());
+			addresses.get(0).setLocatorId(guest.getAddressLocatorId());
+			phones.get(0).setLocatorId(guest.getPhoneLocatorId());
+			emails.get(0).setLocatorId(guest.getEmailLocatorId());
+			
+			party = new CreateParty(environment, "SampleCreate");
+			party.setExternalReferenceValue(guest.getOdsGuestId());
+			party.setPrimaryGuestAge(age);
+			party.setPrimaryGuestFirstName(firstName);
+			party.setPrimaryGuestLastName(lastName);
+			
+			party.setAddressLocatorId(guest.getAddressLocatorId());
+			party.setAddressLine1(addresses.get(0).getAddress1());
+			party.setAddressCity(guest.getCity());
+			party.setAddressState(guest.getState());
+			party.setAddressZipCode(guest.getPostalCode());
+			party.setAddressCountry(addresses.get(0).getCountry());
+			System.out.println();
+			
+			party.setPhoneNumberLocatorId(guest.getPhoneLocatorId());
+			party.setPhoneNumber(guest.getPhoneNumber());
+			
+			party.setEmailAddressLocatorId(guest.getEmailLocatorId());
+			party.setEmailAddress(guest.getEmail());
+			
+			//party.setRequestNodeValueByXPath("/Envelope/Body/createParty/partyRequest/externalreference/externalReferenceSource", "ODS");
+			
+			party.sendRequest();
+			
+			this.partyId = party.getPartyid();
+		}
 	/*	search = new SearchByNameAndAddress(environment,
 				"GuestSearch-LastName_FirstName_StreetAddress_ZipCode");
 		search.setLastName(lastName);
