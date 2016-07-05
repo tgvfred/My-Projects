@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestAssignTableNumbers_Suite" parallel="methods" thread-count="20">
+<suite name="TestAssignTableNumbers_Negative_Suite" parallel="methods" thread-count="20">
 	<parameter name="environment" value="Sleepy" />
-	<test name="TestAssignTableNumbers">
+	<test name="TestAssignTableNumbers_Negative">
 		<classes>
 			<class	name="com.disney.composite.api.showDiningService.assignTableNumbers.TestAssignTableNumbers_Negative"/>
 		</classes>

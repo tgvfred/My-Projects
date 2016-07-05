@@ -149,10 +149,4 @@ public class TestNoShow_Negative extends BaseTest{
 		logInvalidItems.addItem("ShowDiningServiceIF", "retrieve", false);
 		validateNotInLogs(noShow.get(), logInvalidItems);
 	}
-	
-	
-	
-	
-	
-
 }
