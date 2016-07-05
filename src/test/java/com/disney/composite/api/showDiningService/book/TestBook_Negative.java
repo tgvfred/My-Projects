@@ -1,5 +1,6 @@
 package com.disney.composite.api.showDiningService.book;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -7,6 +8,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.showDiningService.operations.Book;
+import com.disney.api.soapServices.showDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -31,6 +33,15 @@ public class TestBook_Negative  extends BaseTest{
 		book.set(new Book(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS));
 		book.get().setParty(hh);
 		logValidItems.set(new LogItems());
+	}
+	
+	@AfterMethod
+	public void teardown(){
+		try{
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(book.get().getTravelPlanSegmentId());
+			cancel.sendRequest();
+		}catch(Exception e){}
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -213,7 +224,16 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Source Accounting Center");
 		book.get().setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("SOURCER ACCOUNTING CENTER IS REQUIRED! : SOURCER ACCOUNTING CENTER IS REQUIRED!");
-	}	
+	}
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
+	public void missingComponent(){
+		expectedLogs.set(new String[2]);
+		expectedLogs.get()[0] = "FacilityMasterServiceSEI;findFacilityByEnterpriseID";
+		expectedLogs.get()[1] = "PackagingService;getProducts";
+		TestReporter.logScenario("Missing Components");
+		book.get().setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/componentPrices", BaseSoapCommands.REMOVE_NODE.toString());
+		sendRequestAndValidateFaultString("COMPONENT PRICE IS REQUIRED! :  For Product : "+ book.get().getRequestProductId());		
+	}
 	
     private void sendRequestAndValidateFaultString(String fault){
     	book.get().sendRequest();

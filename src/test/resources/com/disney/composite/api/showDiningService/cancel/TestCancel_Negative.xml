@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestCancel_Negative_Suite" parallel="methods" thread-count="5">
+	<parameter name="environment" value="Sleepy" />
+	<test name="TestCancel_Negative">
+		<classes>
+			<class name="com.disney.composite.api.showDiningService.cancel.TestCancel_Negative"/>
+		</classes>
+	</test>
+</suite>

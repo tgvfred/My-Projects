@@ -6,6 +6,7 @@ import com.disney.api.soapServices.showDiningService.operations.Arrived;
 import com.disney.api.soapServices.showDiningService.operations.Book;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestArrived extends BaseTest{
@@ -24,5 +25,13 @@ public class TestArrived extends BaseTest{
 		arrived.sendRequest();
 		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [Arrived]", arrived);
 		TestReporter.assertEquals(arrived.getResponseStatus(), "SUCCESS", "Arrived status ["+arrived.getResponseStatus()+"] was not 'SUCCESS' as expected.");
+		
+		LogItems logValidItems = new LogItems();
+		logValidItems.addItem("ShowDiningServiceIF", "arrived", true);
+		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", true);
+		logValidItems.addItem("ChargeGroupIF", "checkIn", true);
+		logValidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", true);
+		logValidItems.addItem("PartyIF", "retrieveParty", true);
+		validateLogs(arrived, logValidItems);
 	}
 }
