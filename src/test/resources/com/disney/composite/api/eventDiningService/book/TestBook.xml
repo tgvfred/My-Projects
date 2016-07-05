@@ -5,7 +5,7 @@
 	<test name="TestArrived">
 		<classes>
 			<class
-				name="com.disney.composite.api.eventDiningService.book.TestBook_Negative_MissingRequiredFields"/>
+				name="com.disney.composite.api.eventDiningService.book.TestBook_Negative"/>
 		</classes>
 	</test>
 </suite>
