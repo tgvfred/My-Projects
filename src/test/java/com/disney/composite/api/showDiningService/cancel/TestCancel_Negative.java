@@ -1,5 +1,6 @@
 package com.disney.composite.api.showDiningService.cancel;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -33,6 +34,15 @@ public class TestCancel_Negative extends BaseTest{
 		book.get().setParty(hh);
 		book.get().sendRequest();
 		logValidItems.set(new LogItems());
+	}
+	
+	@AfterMethod
+	public void teardown(){
+		try{
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(book.get().getTravelPlanSegmentId());
+			cancel.sendRequest();
+		}catch(Exception e){}
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
