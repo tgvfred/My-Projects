@@ -38,7 +38,7 @@ public class Modify extends EventDiningService {
 	public void setProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/productId", value);}
 	public String getRequestProductId(){return getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/productId");}
 	public void setProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/productType", value);}	
-	public void setServicePeriosId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/servicePeriodId", value);}	
+	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/servicePeriodId", value);}	
 	public String getRequestServicePeriodId(){return getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/servicePeriodId");}
 	public void setSignInLocation(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/signInLocation", value);}	
 	public void setAddOnComponentType(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/addOnComponents/componentPrices/componentType", value);}	

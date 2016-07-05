@@ -5,7 +5,7 @@
 	<test name="TestModify">
 		<classes>
 			<class
-				name="com.disney.composite.api.eventDiningService.TestModify"/>
+				name="com.disney.composite.api.eventDiningService.modify.TestModify"/>
 		</classes>
 	</test>
 </suite>

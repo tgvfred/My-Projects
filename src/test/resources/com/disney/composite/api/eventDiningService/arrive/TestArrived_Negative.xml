@@ -5,7 +5,7 @@
 	<test name="TestArrived">
 		<classes>
 			<class
-				name="com.disney.composite.api.eventDiningService.TestArrived"/>
+				name="com.disney.composite.api.eventDiningService.arrived.TestArrived_Negative"/>
 		</classes>
 	</test>
 </suite>
