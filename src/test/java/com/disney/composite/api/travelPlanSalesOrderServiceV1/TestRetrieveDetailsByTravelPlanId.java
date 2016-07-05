@@ -56,7 +56,7 @@ public class TestRetrieveDetailsByTravelPlanId {
 		retrieve.setTravelPlanId(create.getTravelPlanId());
 		retrieve.sendRequest();
 		TestReporter.assertEquals(retrieve.getResponseStatusCode(), "200", "An error occurred during retrieval.\nRequest:\n"+retrieve.getRequest()+"\nResonse:\n"+retrieve.getResponse());
-		TestReporter.assertTrue(new Regex().match("[0-9]+", retrieve.getSalesOrdersSalesOrderItemGroupsId()), "The Sales Order Item Group Id ["+retrieve.getSalesOrdersSalesOrderItemGroupsId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", retrieve.getSalesOrdersSalesOrderItemGroupsId()), "The Sales Order Item Group Id ["+retrieve.getSalesOrdersSalesOrderItemGroupsId()+"] was not numeric as expected.");
 		TestReporter.assertEquals(retrieve.getSalesOrdersId(), create.getSalesOrderIdId(), "The Sales Order Id ["+retrieve.getSalesOrdersId()+"] was not that which was expected ["+create.getSalesOrderIdId()+"].");
 		TestReporter.assertEquals(retrieve.getTravelPlanTravelPlanId(), create.getTravelPlanId(), "The travel plan ["+retrieve.getTravelPlanTravelPlanId()+"] was not that which was expected ["+create.getTravelPlanId()+"]");
 	}

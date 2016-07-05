@@ -86,8 +86,7 @@ public class BaseTest {
 					if (containsRequest && containsResponse) {
 						isValid = true;
 						break;
-					}
-					
+					}					
 				}
 	
 				// Throw exceptions if Request or Response is not found 
@@ -118,5 +117,4 @@ public class BaseTest {
 		
 		return rs;
 	}
-
 }

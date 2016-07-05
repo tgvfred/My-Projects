@@ -1,37 +1,53 @@
 package com.disney.composite.api.accommodationSalesServicePort;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.RemoveComments;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestRemoveCommets {
 	private String environment = "";
-    Book book = null;
+    private Book book = null;
+    
     @BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(String environment) {
 		this.environment = environment;
 		book= new Book(environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 		book.sendRequest();
-		//System.out.println(book.getResponse());
 		
+	}
+	
+	@AfterMethod(alwaysRun=true)
+	public void teardown(){
+		try{
+			if(book != null){
+				if(book.getTravelPlanSegmentId() != null){
+					if(!book.getTravelPlanSegmentId().isEmpty()){
+						Cancel cancel = new Cancel(environment, "Main");
+						cancel.setCancelDate(Randomness.generateCurrentXMLDate(0));
+						cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+						cancel.sendRequest();
+					}
+				}
+			}
+		}catch(Exception e){}
 	}
 		
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RemoveComments", "debug"})
 	public void testRemoveComments_MainFlow(){
-		
+		TestReporter.logScenario("Test Remove Comments");
 		RemoveComments RemoveComments = new RemoveComments(environment, "Main");
 		RemoveComments.setparentIds(book.getTravelComponentId());
 		RemoveComments.setcommentText(Randomness.randomString(5));
 		RemoveComments.sendRequest();
-		//System.out.println(RemoveComments.getRequest());
-		//System.out.println(RemoveComments.getResponse());
-		TestReporter.assertEquals(RemoveComments.getResponseStatusCode(), "200", "The response code was not 200");
-		
+		TestReporter.logAPI(!RemoveComments.getResponseStatusCode().equals("200"), "An error occurred removing comments", RemoveComments);
+	    TestReporter.log("Travel Plan ID: " + book.getTravelPlanId());
 	}
 }

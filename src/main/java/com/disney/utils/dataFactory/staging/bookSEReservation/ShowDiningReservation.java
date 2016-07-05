@@ -288,7 +288,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	public void arrived() {
 		TestReporter.logStep("Update an show dining reservation to [Arrived].");
 		Arrived arrived = new Arrived(getEnvironment(), "GuestFacing");
-		arrived.setReservatinoNumber(getConfirmationNumber());
+		arrived.setReservationNumber(getConfirmationNumber());
 		arrived.sendRequest();
 		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [Arrived]", arrived);
 		this.arrivedStatus = arrived.getResponseStatus();

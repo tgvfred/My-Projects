@@ -11,20 +11,16 @@ public class TestRetrieveProductPurchaseData {
 	private String environment = "";
 	
 	@BeforeMethod(alwaysRun = true)
-		@Parameters({  "environment" })
-		public void setup(String environment) {
-			this.environment = environment;
-		
-		}
-				
-		@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "retrieveProductPurchaseData"})
-		public void testRetrieveProductPurchaseData_MainFlow(){
-			RetrieveProductPurchaseData RetrieveProductPurchaseData = new RetrieveProductPurchaseData(environment, "Main");
-			RetrieveProductPurchaseData.sendRequest();
-			//System.out.println(RetrieveProductPurchaseData.getRequest());
-			//System.out.println(RetrieveProductPurchaseData.getResponse());
-			TestReporter.assertEquals(RetrieveProductPurchaseData.getResponseStatusCode(), "200", "The response code was not 200");
-			TestReporter.assertNotNull(RetrieveProductPurchaseData.getproductId(), "The response contains a Product Id");
-			TestReporter.assertNotNull(RetrieveProductPurchaseData.getproductTypeName(), "The response contains a Product Type Name");
-		}
+	@Parameters({  "environment" })
+	public void setup(String environment) {this.environment = environment;}
+			
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "retrieveProductPurchaseData"})
+	public void testRetrieveProductPurchaseData_MainFlow(){
+		TestReporter.logScenario("Test Retrieve Product Purchase Data");
+		RetrieveProductPurchaseData RetrieveProductPurchaseData = new RetrieveProductPurchaseData(environment, "Main");
+		RetrieveProductPurchaseData.sendRequest();
+		TestReporter.logAPI(!RetrieveProductPurchaseData.getResponseStatusCode().equals("200"), "An error occurred retrieving product purchase data", RetrieveProductPurchaseData);
+		TestReporter.assertNotNull(RetrieveProductPurchaseData.getproductId(), "The response contains a Product Id");
+		TestReporter.assertNotNull(RetrieveProductPurchaseData.getproductTypeName(), "The response contains a Product Type Name");
+	}
 }

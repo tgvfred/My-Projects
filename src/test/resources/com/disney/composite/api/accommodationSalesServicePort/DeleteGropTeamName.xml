@@ -3,23 +3,8 @@
 <suite name="AccommodationSalesService" parallel="false" thread-count="20">
 	<parameter name="environment" value="sleepy" />
 	<test name="CreateGroupTeamName">
- 
-<!-- 		 <groups>
-			<run>
-				<include name="CreateGroupTeamName"></include>
-				<include name="DeleteGroupTeamName"></include>
-				<exclude name="dev"></exclude>
-				<exclude name="debug"></exclude>
-			</run>
-		</groups>
-		<packages>
-			<package name="com.disney.composite.api.accommodationSalesServicePort.*">
-			</package>
-		</packages> -->
-		
-		
 		<classes>
-      <class name="com.disney.composite.api.accommodationSalesServicePort.TestDeleteGroupTeamName"/>
-    </classes> 
+			<class name="com.disney.composite.api.accommodationSalesServicePort.TestDeleteGroupTeamName" />
+		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

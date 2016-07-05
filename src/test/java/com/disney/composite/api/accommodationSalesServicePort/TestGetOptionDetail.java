@@ -8,22 +8,17 @@ import com.disney.api.soapServices.accommodationSalesServicePort.operations.GetO
 import com.disney.utils.TestReporter;
 
 public class TestGetOptionDetail {
-private String environment = "";
+	private String environment = "";
 	
-@BeforeMethod(alwaysRun = true)
+	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
-	public void setup(String environment) {
-		this.environment = environment;
-	
-	}
+	public void setup(String environment) {this.environment = environment;}
 		
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "GetOptionDetail"})
-	public void testGetOptionDetail_MainFlow(){
-		
+	public void testGetOptionDetail_MainFlow(){	
+		TestReporter.logScenario("Test Get Option Details");	
 		GetOptionDetail GetOptionDetail = new GetOptionDetail(environment, "Main" );
 		GetOptionDetail.sendRequest();
-		//System.out.println(GetOptionDetail.getRequest());
-		//System.out.println(GetOptionDetail.getResponse());
-		TestReporter.assertEquals(GetOptionDetail.getResponseStatusCode(), "200", "The response code was not 200");
+		TestReporter.logAPI(!GetOptionDetail.getResponseStatusCode().equals("200"), "An error occurred getting option details", GetOptionDetail);
 	}
 }

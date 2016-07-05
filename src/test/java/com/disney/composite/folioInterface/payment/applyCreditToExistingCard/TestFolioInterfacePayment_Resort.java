@@ -12,7 +12,6 @@ import com.disney.utils.dataFactory.staging.Reservation;
 
 public class TestFolioInterfacePayment_Resort {
 	private String environment;
-	private String reservationNumber;
 	private String paymentScenario = "Pay total amount due with valid visa with incidentals";
 	private String creditScenario = "Pay total -$1 with valid Visa, with incidentals with CCV with Express Checkout";
 	private Reservation res;
@@ -24,21 +23,22 @@ public class TestFolioInterfacePayment_Resort {
 		this.environment = environment;
 		res = new GenerateReservation().bookResortReservation().BEACH_CLUB(this.environment);
 		res.quickBook();
-		reservationNumber = res.getTravelPlanSegmentId();
 		payment = new FolioInterfacePayment(res);
 		payment.makeCardPayment(paymentScenario);
 	}
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty())
+		if(res.getTravelPlanSegmentId() != null)
+			if(!res.getTravelPlanSegmentId().isEmpty())
 				res.cancelAccommodation();
 	}
 	
-	@Test(groups={"resort"})
+	@Test(groups={"resort", "api"})
 	public void testFolioPayment_Resort(){
-		TestReporter.log("Reservation Number: " + reservationNumber);
+		TestReporter.logScenario("Make credit payment with card on file to Resort reservation.");
+		TestReporter.log("Reservation Number: " + res.getTravelPlanSegmentId());
+		TestReporter.log("Travel Plan Number: " + res.getTravelPlanId());
 		payment.applyCreditToExistingCard(creditScenario, null);
 	}
 }

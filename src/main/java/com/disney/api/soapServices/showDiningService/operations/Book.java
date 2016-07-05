@@ -112,6 +112,10 @@ public class Book extends ShowDiningService {
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/signInLocation", value);
 	}
 	
+	public void setAuthorizationNumber(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/authorizationNumber", value);
+	}
+	
 	public void setAddOnComponentType(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/addOnComponents/componentPrices/componentType", value);
 	}
@@ -534,4 +538,14 @@ public class Book extends ShowDiningService {
 	 * @param value - contact name
 	 */
 	public void setContactName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/contactName", value);}
+	/**
+	 * Sets the freeze ID in the SOAP request
+	 * @param value - freexe ID
+	 */
+	public void setFreezeId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/freezeId", value);}
+	/**
+	 * Sets the party role age type
+	 * @param value - party role age type
+	 */
+	public void setPartyRoleAgeType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles/ageType", value);}
 }

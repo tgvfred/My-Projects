@@ -60,10 +60,10 @@ public class TestRetrieve {
 		retrieve.get().sendRequest();
 		TestReporter.logAPI(!retrieve.get().getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieve.get());
 		
-		TestReporter.assertTrue(new Regex().match("[0-9]+", retrieve.get().getPrimaryGuestGuestId()), "The primary guest ID ["+retrieve.get().getPrimaryGuestGuestId()+"] is not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", retrieve.get().getPrimaryGuestPartyId()), "The primary guest party ID ["+retrieve.get().getPrimaryGuestPartyId()+"] is not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", retrieve.get().getReservationNumber()), "The reservation number ["+retrieve.get().getReservationNumber()+"] is not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", retrieve.get().getPrimaryGuestGuestId()), "The primary guest ID ["+retrieve.get().getPrimaryGuestGuestId()+"] is not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", retrieve.get().getPrimaryGuestPartyId()), "The primary guest party ID ["+retrieve.get().getPrimaryGuestPartyId()+"] is not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", retrieve.get().getReservationNumber()), "The reservation number ["+retrieve.get().getReservationNumber()+"] is not numeric as expected.");
 		TestReporter.assertEquals(retrieve.get().getReservationStatus(), "Booked", "The reservation status ["+retrieve.get().getReservationStatus()+"] was not 'Booked' as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", retrieve.get().getTravelPlanId()), "The travel plan ID ["+retrieve.get().getTravelPlanId()+"] is not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", retrieve.get().getTravelPlanId()), "The travel plan ID ["+retrieve.get().getTravelPlanId()+"] is not numeric as expected.");
 	}
 }

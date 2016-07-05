@@ -47,6 +47,18 @@ public class Dreams {
 			+ "join folio.bank_out b on a.bank_in_id = b.bank_in_id "
 			+ "where a.till_typ_nm = '{ROLE}')";
 	
+	// Query to retrieve lilo user's banking accounting center name
+	public static String getBankAccountCenterNameByUserName = "select b.acct_ctr_nm "
+			+ "from folio.bank_in a "
+			+ "join accting.acct_ctr b on a.bank_acct_ctr_id = b.acct_ctr_id "
+			+ "where a.till_typ_nm = 'Manager' "
+			+ "and a.BANK_IN_USER_ID like '%{USER}%' "
+			+ "and a.bank_in_id Not In ("
+			+ "select a.bank_in_id "
+			+ "from folio.bank_in a "
+			+ "join folio.bank_out b on a.bank_in_id = b.bank_in_id "
+			+ "where a.till_typ_nm = 'Manager')";
+	
 	/**
 	 * This subclass of queries is intended to query the Dreams database for product IDs for a given facility ID.  
 	 * The genesis of this class occurred to resolve the issue of scheduled events (i.e. ALC) reservation product IDs not being consistent across environments.
@@ -102,4 +114,5 @@ public class Dreams {
 
 	public static String getLiloManager_BankAccountCenterName(){ return getLiloUserAndBankAccountCenterNameByRole.replace("{ROLE}", LILOMANAGERROLE);}
 	public static String getLiloNoTill_BankAccountCenterName(){ return getLiloUserAndBankAccountCenterNameByRole.replace("{ROLE}", LILONOTILLROLE);}
+	public static String getBankAccountcEnterNameByUserName(String user){ return getBankAccountCenterNameByUserName.replace("{USER}", user);}
 }

@@ -13,12 +13,10 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservat
 
 public class TestFolioInterfacePayment_SE {
 	private String environment;
-	private String reservationNumber;
 	private ScheduledEventReservation res;
 	private FolioInterfacePayment payment;
 	private HouseHold party;
 	private String paymentScenario = "Pay total amount due with valid visa with incidentals";
-	private String creditScenario = "Pay total -$1 with valid Visa, with incidentals with CCV with Express Checkout";
 	
 	@BeforeMethod(alwaysRun=true)
 	@Parameters("environment")
@@ -33,14 +31,16 @@ public class TestFolioInterfacePayment_SE {
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty())
+		if(res.getConfirmationNumber() != null)
+			if(!res.getConfirmationNumber().isEmpty())
 				res.cancel();
 	}
 	
-	@Test(groups={"SE"})
+	@Test(groups={"SE", "api"})
 	public void testFolioPayment_SE(){
+		TestReporter.logScenario("Make credit payment with card on file to Scheduled Event reservation.");
 		TestReporter.log("Reservation Number: " + res.getConfirmationNumber());
-		payment.applyCreditToExistingCard(creditScenario, null);
+		TestReporter.log("Travel Plan Number: " + res.getTravelPlanId());
+		payment.applyCreditToExistingCard(paymentScenario, "-$0.01");
 	}
 }

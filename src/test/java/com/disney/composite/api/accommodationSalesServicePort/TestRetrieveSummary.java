@@ -28,8 +28,6 @@ public class TestRetrieveSummary {
 		RetrieveSummary RetrieveSummary = new RetrieveSummary(environment, "Retrieve Summay" );
 		RetrieveSummary.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
 		RetrieveSummary.sendRequest();
-		System.out.println(RetrieveSummary.getRequest());
-		System.out.println(RetrieveSummary.getResponse());
-		TestReporter.assertEquals(RetrieveSummary.getResponseStatusCode(), "200", "The response code was not 200");
+		TestReporter.logAPI(!RetrieveSummary.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", RetrieveSummary);
 	}
 }

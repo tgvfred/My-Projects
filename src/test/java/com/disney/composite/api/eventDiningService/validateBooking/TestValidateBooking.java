@@ -19,7 +19,7 @@ public class TestValidateBooking extends BaseTest{
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment) {
-		this.environment = "Bashful";
+		this.environment = environment;
 		//res = new EventDiningReservation(this.environment);
 	}
 

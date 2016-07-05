@@ -20,13 +20,13 @@ public class TestBookAndCancel {
 	@Test(dependsOnMethods = {"testBook"}, groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testCancel() {
 		res.cancel();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getCancellationNumber()), "The cancellation number ["+res.getCancellationNumber()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.getCancellationNumber()), "The cancellation number ["+res.getCancellationNumber()+"] was not numeric as expected.");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testBook(){
 		res = new TableServiceDiningReservation(environment);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getTravelPlanId()), "The travel plan ID ["+res.getTravelPlanId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.getTravelPlanId()), "The travel plan ID ["+res.getTravelPlanId()+"] was not numeric as expected.");
 	}
 }

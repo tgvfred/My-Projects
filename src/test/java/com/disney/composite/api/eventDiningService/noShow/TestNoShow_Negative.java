@@ -26,7 +26,7 @@ public class TestNoShow_Negative extends BaseTest{
 	@BeforeTest(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
-		this.environment = "Bashful";
+		this.environment = environment;
 		hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);

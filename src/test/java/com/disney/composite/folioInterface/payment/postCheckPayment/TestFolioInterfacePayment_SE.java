@@ -13,7 +13,6 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservat
 
 public class TestFolioInterfacePayment_SE {
 	private String environment;
-	private String reservationNumber;
 	private ScheduledEventReservation res;
 	private HouseHold party;
 	
@@ -28,14 +27,16 @@ public class TestFolioInterfacePayment_SE {
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty())
+		if(res.getConfirmationNumber() != null)
+			if(!res.getConfirmationNumber().isEmpty())
 				res.cancel();
 	}
 	
-	@Test(groups={"SE"})
+	@Test(groups={"SE", "api"})
 	public void testFolioPayment_SE(){
+		TestReporter.logScenario("Make check payment to Scheduled Event reservation.");
 		TestReporter.log("Reservation Number: " + res.getConfirmationNumber());
+		TestReporter.log("Travel Plan Number: " + res.getTravelPlanId());
 		FolioInterfacePayment payment = new FolioInterfacePayment(res);
 		payment.makeCheckPayment();
 	}
