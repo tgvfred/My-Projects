@@ -1,6 +1,5 @@
 package com.disney.composite.api.eventDiningService.book;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.eventDiningService.operations.Book;
@@ -15,28 +14,30 @@ public class TestBook extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	
-	@BeforeMethod(alwaysRun=true)
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBook(){
 		hh = new HouseHold(1);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is not numeric as expected.");
 		TPS_ID=book.getTravelPlanSegmentId();
 		
-	}
-
-	@Test(dependsOnMethods = {"testBook"}, groups = {"api", "regression", "dining", "eventDiningService"})
-	public void testCancel() {
-		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-		cancel.setReservationNumber(TPS_ID);
-		cancel.sendRequest();
-		TestReporter.assertTrue(Regex.match("[0-9]+", cancel.getCancellationConfirmationNumber()), "The cancellation number ["+cancel.getCancellationConfirmationNumber()+"] was not numeric as expected.");
-
 		LogItems logItems = new LogItems();
-		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);
-		logItems.addItem("ChargeGroupIF", "cancelChargeGroups", false);
-		logItems.addItem("TravelPlanServiceCrossReferenceV3", "cancelOrder", false);
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
 		logItems.addItem("UpdateInventory", "updateInventory", false);
-		validateLogs(cancel, logItems);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
 	}
+
+
 }

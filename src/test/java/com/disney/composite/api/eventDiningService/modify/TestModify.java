@@ -1,19 +1,22 @@
-package com.disney.composite.api.eventDiningService;
+package com.disney.composite.api.eventDiningService.modify;
 
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.guestFactory.Guest;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
-public class TestNoShow {
+public class TestModify {
 	// Defining global variables
 	protected String environment;
-	protected ScheduledEventReservation res =null;
+	protected String TPS_ID = null;
+	protected ScheduledEventReservation res = null;
 	protected HouseHold hh = null; 
 	
 	@BeforeMethod(alwaysRun = true)
@@ -25,11 +28,15 @@ public class TestNoShow {
 		res = new EventDiningReservation(environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
+	
+	@AfterMethod(alwaysRun = true)
+	public synchronized void closeSession(ITestResult test) {res.cancel();}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
-	public void testNoShow(){
-		res.noShow();
-		TestReporter.assertEquals(res.getStatus(), "No Show", "The reservation status ["+res.getStatus()+"] was not 'No Show' as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getCancellationNumber()), "The cancellation number ["+res.getCancellationNumber()+"] was not numeric as expected.");
+	public void testModify(){
+		hh.addGuest(new Guest());
+		hh.sendToApi(this.environment);
+		res.modify().modifyPartyMix(hh);
+		TestReporter.assertEquals(res.getNumberOfGuests(), hh.getAllGuests().size(), "The number of guests ["+res.getNumberOfGuests()+"] does not match the expected number of guests ["+hh.getAllGuests().size()+"].");
 	}
 }
