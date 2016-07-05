@@ -84,14 +84,14 @@ public class TestArrived_Negative  extends BaseTest{
 	
 	private void logItems(){
 		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ShowDiningServiceIF", "arrived", true);
+		logValidItems.addItem("ShowDiningServiceIF", "arrived", false);
 		validateLogs(arrived.get(), logValidItems);
 		
 		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		logInvalidItems.addItem("ChargeGroupIF", "checkIn", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-		logInvalidItems.addItem("PartyIF", "retrieveParty", false);
+		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", true);
+		logInvalidItems.addItem("ChargeGroupIF", "checkIn", true);
+		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", true);
+		logInvalidItems.addItem("PartyIF", "retrieveParty", true);
 		validateNotInLogs(arrived.get(), logInvalidItems);
 	}
 }

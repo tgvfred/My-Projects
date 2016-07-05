@@ -65,12 +65,12 @@ public class BaseTest {
 					if(!containsResponse){
 						containsResponse = (rs.getValue("SVC_CLASS").contains(item.getServiceClass()) &&
 											rs.getValue("SVC_OPERATION").equals(item.getServiceOperation()) && 
-											rs.getValue("BP_STEP").contains("Response")) ? true : false;
+											(rs.getValue("BP_STEP").contains("Exception") || rs.getValue("BP_STEP").contains("Response"))) ? true : false;
 					}
 					
 					if(shouldBeInLogs){
 						//Ensure Response does not have an Error Code if an error is not expected
-						if(rs.getValue("LOG_LVL").equalsIgnoreCase("Exception")){
+						if(rs.getValue("LOG_LVL").equalsIgnoreCase("Exception") || !rs.getValue("ERROR_CODE").equalsIgnoreCase("null")){
 							if((rs.getValue("SVC_CLASS").contains(item.getServiceClass()) || 
 									rs.getValue("SVC_OPERATION").equals(item.getServiceOperation()))){
 								if( item.isErrorExpected() == false){
@@ -90,10 +90,10 @@ public class BaseTest {
 				}
 	
 				// Throw exceptions if Request or Response is not found 
-				if(!shouldBeInLogs && containsRequest) throw new AutomationException("Unexpected request found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]");
-				if(!shouldBeInLogs && containsResponse) throw new AutomationException("Unexpected response found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]");
-				if(shouldBeInLogs && !containsRequest) throw new AutomationException("Expected request not found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]");
-				if(shouldBeInLogs && !containsResponse) throw new AutomationException("Expected response not found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]");
+				if(!shouldBeInLogs && containsRequest) throw new AutomationException("Unexpected request found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]. Convo ID: " + soap.getConversationID());
+				if(!shouldBeInLogs && containsResponse) throw new AutomationException("Unexpected response found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]. Convo ID: " + soap.getConversationID());
+				if(shouldBeInLogs && !containsRequest) throw new AutomationException("Expected request not found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]. Convo ID: " + soap.getConversationID());
+				if(shouldBeInLogs && !containsResponse) throw new AutomationException("Expected response not found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]. Convo ID: " + soap.getConversationID());
 			}
 		}else{
 			TestReporter.log("Skipping log validation for Grumpy");

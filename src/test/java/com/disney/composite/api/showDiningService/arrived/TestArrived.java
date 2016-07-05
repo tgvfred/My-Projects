@@ -27,11 +27,11 @@ public class TestArrived extends BaseTest{
 		TestReporter.assertEquals(arrived.getResponseStatus(), "SUCCESS", "Arrived status ["+arrived.getResponseStatus()+"] was not 'SUCCESS' as expected.");
 		
 		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ShowDiningServiceIF", "arrived", true);
-		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", true);
-		logValidItems.addItem("ChargeGroupIF", "checkIn", true);
-		logValidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", true);
-		logValidItems.addItem("PartyIF", "retrieveParty", true);
+		logValidItems.addItem("ShowDiningServiceIF", "arrived", false);
+		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		logValidItems.addItem("ChargeGroupIF", "checkIn", false);
+		logValidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logValidItems.addItem("PartyIF", "retrieveParty", false);
 		validateLogs(arrived, logValidItems);
 	}
 }
