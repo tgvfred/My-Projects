@@ -44,7 +44,7 @@ public class TestAssignTableNumbers extends BaseTest{
 		TestReporter.assertEquals(assign.getStatus(), "SUCCESS", "The status ["+assign.getStatus()+"] was not 'SUCCESS' as expected.");
 		
 		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ShowDiningServiceIF", "assignTableNumbers", true);
+		logValidItems.addItem("ShowDiningServiceIF", "assignTableNumbers", false);
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "updateInventoryForScheduledEvents", false);
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);

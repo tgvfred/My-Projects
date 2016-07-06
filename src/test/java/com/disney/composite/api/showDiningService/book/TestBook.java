@@ -43,24 +43,24 @@ public class TestBook extends BaseTest{
 		TestReporter.assertTrue(Regex.match("[0-9]+", TPS_ID), "The reservation number ["+TPS_ID+"] was not numeric as expected.");
 
 		logValidItems.set(new LogItems());
-		logValidItems.get().addItem("ShowDiningServiceIF", "book", true);
-		logValidItems.get().addItem("FolioServiceIF", "retrieveAccountingTransactions", true);
-		logValidItems.get().addItem("GuestLinkServiceV1SEI", "createEntitlementReference", true);
-		logValidItems.get().addItem("TravelPlanServiceV3SEI", "create", true);
-		logValidItems.get().addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", true);
-		logValidItems.get().addItem("PartyIF", "createAndRetrieveParty", true);
-		logValidItems.get().addItem("PartyIF", "retrieveParty", true);
-		logValidItems.get().addItem("PartyIF", "retrievePartyBasicInformation", true);
-		logValidItems.get().addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", true);
-		logValidItems.get().addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", true);		
-		logValidItems.get().addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", true);
-		logValidItems.get().addItem("PackagingService", "getProducts", true);
-		logValidItems.get().addItem("GuestLinkServiceV1", "createEntitlementReference", true);
-		logValidItems.get().addItem("GuestServiceV1", "create", true);
-		logValidItems.get().addItem("PartyIF", "updateExternalPartyAndLocatorId", true);
-		logValidItems.get().addItem("TravelPlanServiceV3", "create", true);		
-		logValidItems.get().addItem("UpdateInventory", "updateInventory", true);
-		logValidItems.get().addItem("ShowDiningServiceIF", "retrieve", true);	
+		logValidItems.get().addItem("ShowDiningServiceIF", "book", false);
+		logValidItems.get().addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
+		logValidItems.get().addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false);
+		logValidItems.get().addItem("TravelPlanServiceV3SEI", "create", false);
+		logValidItems.get().addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logValidItems.get().addItem("PartyIF", "createAndRetrieveParty", false);
+		logValidItems.get().addItem("PartyIF", "retrieveParty", false);
+		logValidItems.get().addItem("PartyIF", "retrievePartyBasicInformation", false);
+		logValidItems.get().addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logValidItems.get().addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);		
+		logValidItems.get().addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
+		logValidItems.get().addItem("PackagingService", "getProducts", false);
+		logValidItems.get().addItem("GuestLinkServiceV1", "createEntitlementReference", false);
+		logValidItems.get().addItem("GuestServiceV1", "create", false);
+		logValidItems.get().addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logValidItems.get().addItem("TravelPlanServiceV3", "create", false);		
+		logValidItems.get().addItem("UpdateInventory", "updateInventory", false);
+		logValidItems.get().addItem("ShowDiningServiceIF", "retrieve", false);	
 		validateLogs(book, logValidItems.get());
 	}
 }
