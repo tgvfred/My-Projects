@@ -22,4 +22,19 @@ public class SearchGuestIDByExternalReference extends PartyV3{
 	public String getPartyId(){
 		return getResponseNodeValueByXPath("/Envelope/Body/searchGuestIDByExternalReferenceResponse/return/partyIds");
 	}
+	/**
+	 * Retrieves all party IDs in the SOAP response
+	 * @return - all party IDs in the SOAP response
+	 */
+	public int getNumberOfResponsePartyIds(){
+		int number = 0;
+		try{number = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/searchGuestIDByExternalReferenceResponse/return/partyIds").getLength();}catch(Exception e){}
+		return number;
+	}
+	
+	public void addExternalReferenceValue(String value){
+		int index = XMLTools.getNodeList(getRequestDocument(), "/Envelope/Body/searchGuestIDByExternalReference/searchGuestIDByExternalReferenceRequest/externalRefValues").getLength();
+		setRequestNodeValueByXPath("/Envelope/Body/searchGuestIDByExternalReference/searchGuestIDByExternalReferenceRequest", "fx:addNode;node:externalRefValues");
+		setRequestNodeValueByXPath("/Envelope/Body/searchGuestIDByExternalReference/searchGuestIDByExternalReferenceRequest/externalRefValues["+String.valueOf(index+1)+"]", value);
+	}
 }
