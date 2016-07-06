@@ -16,12 +16,12 @@ public class TestSearchGuestIDByName  extends BaseTest{
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
-		this.environment = "Development";
+		this.environment = environment;
 		guest.sendToApi(this.environment, true);
 	}
 	
 	@Test
-	public void searchGuestIDByEmail(){
+	public void searchGuestIDByName(){
 		SearchGuestIDByName search = new SearchGuestIDByName(this.environment);
 		search.setGuestFirstName(guest.getFirstName());
 		search.setGuestLastName(guest.getLastName());
