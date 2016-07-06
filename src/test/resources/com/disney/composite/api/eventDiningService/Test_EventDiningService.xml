@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="EventDiningService_Suite" parallel="classes" thread-count="6" data-provider-thread-count="20">
-	<parameter name="environment" value="Dev" />
+<suite name="EventDiningService_Suite" parallel="methods" thread-count="200" >
+	<parameter name="environment" value="Sleepy" />
 	<test name="EventDiningService">
 		<packages>
 			<package name="com.disney.composite.api.eventDiningService.*"></package>
