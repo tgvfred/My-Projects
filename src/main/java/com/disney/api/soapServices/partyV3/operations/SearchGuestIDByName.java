@@ -24,4 +24,13 @@ public class SearchGuestIDByName extends PartyV3{
 	public String getPartyId(){
 		return getResponseNodeValueByXPath("/Envelope/Body/searchGuestIDByNameResponse/return/partyIds");
 	}
+	/**
+	 * Retrieves all party IDs in the SOAP response
+	 * @return - all party IDs in the SOAP response
+	 */
+	public int getNumberOfResponsePartyIds(){
+		int number = 0;
+		try{number = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/searchGuestIDByNameResponse/return/partyIds").getLength();}catch(Exception e){}
+		return number;
+	}
 }
