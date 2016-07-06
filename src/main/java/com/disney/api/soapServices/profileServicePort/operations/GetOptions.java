@@ -1,5 +1,8 @@
 package com.disney.api.soapServices.profileServicePort.operations;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.w3c.dom.NodeList;
 
 import com.disney.api.soapServices.profileServicePort.ProfileServicePort;
@@ -23,4 +26,14 @@ public class GetOptions extends ProfileServicePort{
 	 * @return
 	 */
 	public NodeList getReponseOptions(){return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/getOptionsResponse/response");}
+	
+	public Map<String, String> getOptionsKeyValuePairs(){
+		Map<String, String> pairs = new HashMap<String, String>();
+		NodeList options = getReponseOptions();
+		for(int i = 0; i < options.getLength(); i++){
+			pairs.put(XMLTools.getNodeList(options.item(i), "optionKey").item(0).getTextContent(), 
+					XMLTools.getNodeList(options.item(i), "optionValue").item(0).getTextContent());
+		}
+		return pairs;
+	}
 }

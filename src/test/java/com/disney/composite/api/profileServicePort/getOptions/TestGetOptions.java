@@ -1,4 +1,4 @@
-package com.disney.composite.api.profileServicePort;
+package com.disney.composite.api.profileServicePort.getOptions;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
