@@ -25,7 +25,7 @@ public class TestSearchGuestIDByName  extends BaseTest{
 		
 	}
 	
-//	@Test
+	@Test
 	public void searchGuestIDByFullName(){
 		SearchGuestIDByName search = new SearchGuestIDByName(this.environment);
 		search.setGuestFirstName(guest.getFirstName());
@@ -33,11 +33,12 @@ public class TestSearchGuestIDByName  extends BaseTest{
 		search.sendRequest();
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() >= 1, "The Party ID's is not at least 1 as expected. It is ["+search.getNumberOfResponsePartyIds()+"]");
 		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
 	}
 	
 
-	//@Test
+	@Test
 	public void searchGuestIDByFirstName(){
 		SearchGuestIDByName search = new SearchGuestIDByName(this.environment);
 		search.setGuestFirstName(guest.getFirstName());
@@ -45,11 +46,12 @@ public class TestSearchGuestIDByName  extends BaseTest{
 		search.sendRequest();
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() >= 1, "The Party ID's is not at least 1 as expected. It is ["+search.getNumberOfResponsePartyIds()+"]");
 		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
 	}
 
 
-	//@Test
+	@Test
 	public void searchGuestIDByLastName(){
 		SearchGuestIDByName search = new SearchGuestIDByName(this.environment);
 		search.setGuestFirstName(BaseSoapCommands.REMOVE_NODE.toString());
@@ -57,11 +59,12 @@ public class TestSearchGuestIDByName  extends BaseTest{
 		search.sendRequest();
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() >= 1, "The Party ID's is not at least 1 as expected. It is ["+search.getNumberOfResponsePartyIds()+"]");
 		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
 	}
 	
 
-	@Test(expectedExceptions=XPathNotFoundException.class)
+	@Test
 	public void searchGuestIDByInvalidNames(){
 		SearchGuestIDByName search = new SearchGuestIDByName(this.environment);
 		search.setGuestFirstName("MissingName");
@@ -69,6 +72,6 @@ public class TestSearchGuestIDByName  extends BaseTest{
 		search.sendRequest();
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
-		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() == 0, "The Party ID's is not 0 as expected. It is ["+search.getNumberOfResponsePartyIds()+"]");
 	}
 }
