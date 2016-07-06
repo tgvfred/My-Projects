@@ -6,20 +6,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Composite API</name>
 	<description>Project for Composite Soap and Rest services along with utilities that consume them</description>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.1</version>
-					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
 	<dependencies>
 		<dependency>
 			<groupId>com.disney.gqe</groupId>
@@ -141,4 +127,71 @@
 		</dependency>
 		<!-- End IBM MQ requirements-->
 	</dependencies>
+	
+	<properties>
+		<aspectj.version>1.8.5</aspectj.version>
+		<allure.version>{latest-allure-version}</allure.version>
+		<testNGSourceDirectory>src/test/resources</testNGSourceDirectory>
+	</properties>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.12.4</version>
+					<executions>
+						<execution>
+							<phase>test</phase>
+							<goals>
+								<goal>test</goal>
+							</goals>
+							<configuration>
+								<skip>true</skip>
+								<includes>
+									<!-- <include>**/Suite_Room_Only_E2E.java</include> -->
+								</includes>
+							</configuration>
+						</execution>
+					</executions>
+					<configuration>
+		 				<testFailureIgnore>false</testFailureIgnore>
+		                <argLine>
+		                    -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
+		                </argLine>
+		              
+						
+						<suiteXmlFiles>
+							<suiteXmlFile>${testNGSourceDirectory}/${suiteXmlFile}</suiteXmlFile>
+						</suiteXmlFiles>
+
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.aspectj</groupId>
+							<artifactId>aspectjweaver</artifactId>
+							<version>${aspectj.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.3</version>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.12.4</version>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

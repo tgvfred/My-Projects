@@ -7,7 +7,6 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.partyV3.operations.SearchGuestIDByName;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
