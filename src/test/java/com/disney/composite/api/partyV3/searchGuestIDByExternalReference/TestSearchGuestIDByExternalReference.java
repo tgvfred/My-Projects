@@ -13,6 +13,7 @@ import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestSearchGuestIDByExternalReference  extends BaseTest{
 	private Guest guest = new Guest();
+	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
