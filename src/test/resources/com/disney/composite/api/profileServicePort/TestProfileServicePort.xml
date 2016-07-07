@@ -3,8 +3,8 @@
 <suite name="TestProfileServicePort_Suite" parallel="classes" thread-count="20">
 	<parameter name="environment" value="Development" />
 	<test name="TestProfileServicePort">
-		<classes>
-			<class name="com.disney.composite.api.profileServicePort.*"/>
-		</classes>
+		<packages>
+			<package name="com.disney.composite.api.profileServicePort.*"></package>
+		</packages>
 	</test>
 </suite>

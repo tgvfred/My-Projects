@@ -16,6 +16,7 @@ public class RetrieveProfiles extends ProfileServicePort{
 	private String[] createdOn;
 	private String[] active;
 	private String[] priority;
+	private String[] routingType;
 	private NodeList infos;
 	
 	public RetrieveProfiles(String environment) {
@@ -82,6 +83,7 @@ public class RetrieveProfiles extends ProfileServicePort{
 		createdOn = new String[numInfos];
 		active = new String[numInfos];
 		priority = new String[numInfos];
+		routingType = new String[numInfos];
 		for(int i = 0; i < infos.getLength(); i++){
 			code[i] = XMLTools.getNodeList(infos.item(i), "code").item(0).getTextContent();
 			description[i] = XMLTools.getNodeList(infos.item(i), "description").item(0).getTextContent();
@@ -93,6 +95,8 @@ public class RetrieveProfiles extends ProfileServicePort{
 			createdOn[i] = XMLTools.getNodeList(infos.item(i), "createdOn").item(0).getTextContent();
 			active[i] = XMLTools.getNodeList(infos.item(i), "active").item(0).getTextContent();
 			priority[i] = XMLTools.getNodeList(infos.item(i), "priority").item(0).getTextContent();
+			try{routingType[i] = XMLTools.getNodeList(infos.item(i), "routing/routingType").item(0).getTextContent();}
+			catch(Exception e){routingType[i] = "";}
 		}
 	}
 	/**
@@ -145,4 +149,9 @@ public class RetrieveProfiles extends ProfileServicePort{
 	 * @return - profile infos a prioritys
 	 */
 	public String[] getProfileInfosAPrioritys(){return priority;};
+	/**
+	 * Retrieves profile infos routing types
+	 * @return - profile infos routing types
+	 */
+	public String[] getProfileInfosRoutingTypes(){return routingType;}
 }

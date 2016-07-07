@@ -21,14 +21,15 @@ public class TestRetrieveProfilesByCode extends BaseTest{
 	@Override
 	@BeforeMethod
 	@Parameters("environment")
-	public void setup(@Optional String environment){
+	public void setup(@Optional String environment){		
+		// Get all options for the enum value "PROFILE_TYPE"
 		this.environment = environment;
-//		this.environment = "Development";
 		go = new GetOptions(this.environment);
 		go.setProfileOptionEnumType("PROFILE_TYPE");
 		go.sendRequest();
 		TestReporter.logAPI(!go.getResponseStatusCode().equals("200"), "An error occured getting options for enum type [PROFILE_TYPE].", go);
 		
+		// Iterate over the options from the response and use them to retrieve profiles.  Once profiles are returned, break out of the loop.
 		for(Entry<String, String> entry : go.getOptionsKeyValuePairs().entrySet()){
 			retrieve = new RetrieveProfiles(environment);
 			retrieve.setEnterpriseFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
