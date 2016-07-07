@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestModify_Suite">
+<suite name="TestModify_Negative_Suite">
 	<parameter name="environment" value="Bashful" />
-	<test name="TestModify">
+	<test name="TestModify_Negative">
 		<classes>
-			<class name="com.disney.composite.api.showDiningService.modify.TestModify"/>
+			<class name="com.disney.composite.api.showDiningService.modify.TestModify_Negative"/>
 		</classes>
 	</test>
 </suite>

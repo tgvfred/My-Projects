@@ -498,4 +498,11 @@ public class Modify extends ShowDiningService {
 	 * @return service period ID
 	 */
 	public String getRequestProductId(){return getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/productId");}
+	/**
+	 * Sets the authorization number in the SOAP request
+	 * @param value - authorization number 
+	 */
+	public void setAuthorizationNumber(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/authorizationNumber", value);
+	}
 }

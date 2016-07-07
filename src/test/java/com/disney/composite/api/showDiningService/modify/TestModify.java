@@ -1,6 +1,9 @@
 package com.disney.composite.api.showDiningService.modify;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.showDiningService.operations.Book;
@@ -8,6 +11,7 @@ import com.disney.api.soapServices.showDiningService.operations.Cancel;
 import com.disney.api.soapServices.showDiningService.operations.Modify;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
@@ -20,6 +24,15 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 
 public class TestModify extends BaseTest{
 	private Book book;
+	protected HouseHold hh = null;
+	
+	@Override
+	@BeforeMethod(alwaysRun=true)
+	@Parameters("environment")
+	public void setup(@Optional String environment){
+		this.environment = environment;
+		hh = new HouseHold(1);
+	}
 	
 	@AfterMethod
 	public void teardown(){
@@ -48,5 +61,28 @@ public class TestModify extends BaseTest{
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred during modification", modify);
 		TestReporter.assertEquals(modify.getResponseStatus(), "SUCCESS", "The status ["+modify.getResponseStatus()+"] was not 'SUCCESS' as expected.");
+		logItems(modify);
+	}
+	
+	private void logItems(Modify modify){
+		LogItems logValidItems = new LogItems();
+		logValidItems.addItem("ShowDiningServiceIF", "modify", false);
+		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		logValidItems.addItem("ChargeGroupIF", "modifyGuestContainedChargeGroup", false);
+		logValidItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);
+		logValidItems.addItem("PartyIF", "retrieveParties", false);
+		logValidItems.addItem("PartyIF", "retrieveParty", false);
+		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "updateInventoryForScheduledEvents", false);
+		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
+		logValidItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
+		logValidItems.addItem("PackagingService", "getProducts", false);
+		logValidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logValidItems.addItem("UpdateInventory", "updateInventory", false);
+		validateLogs(modify, logValidItems);
+		
+//		LogItems logInvalidItems = new LogItems();
+//		logInvalidItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
+//		validateNotInLogs(modify.get(), logInvalidItems);
 	}
 }
