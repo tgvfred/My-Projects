@@ -30,6 +30,13 @@ public class Dreams {
 				" WHERE TC_ID = " + tcId;
 	}
 	
+	public static String getGuestExternalReferenceInfoByType(String type){
+		return "Select ext.TXN_PTY_ID, "
+				+ "    ext.TXN_PTY_EXTNL_REF_VAL "
+				+ " from GUEST.TXN_PTY_EXTNL_REF ext "
+				+ " where  ext.PTY_EXTNL_SRC_NM= '" + type + "' "
+				+ "    and ROWNUM = 1 ";
+	}
 	
 	public static String getTpsIDFromExternalReference(String externalRefVal){
 		return "SELECT TPS_ID FROM RES_MGMT.TPS_EXTNL_REF WHERE TPS_EXTNL_REF_VL = '" + externalRefVal + "'";
