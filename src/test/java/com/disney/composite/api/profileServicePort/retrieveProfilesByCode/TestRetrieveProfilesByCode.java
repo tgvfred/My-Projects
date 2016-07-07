@@ -50,10 +50,17 @@ public class TestRetrieveProfilesByCode extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "profile", "ProfileServiceIF"})
 	public void testRetrieveProfilesByCode(){
+		TestReporter.logScenario("Retrieve Profiles By Code");
 		RetrieveProfilesByCode retrieveByCode = new RetrieveProfilesByCode(environment);
 		retrieveByCode.setIncludeInactiveProfiles("false");
 		retrieveByCode.setProfileCode(retrieve.getProfileInfosCodes()[0]);
 		retrieveByCode.sendRequest();
 		TestReporter.logAPI(!retrieveByCode.getResponseStatusCode().equals("200"), "An error occurred retrieving profiles by code", retrieveByCode);
+		
+		TestReporter.assertEquals(retrieve.getProfileInfosActives()[0], retrieveByCode.getActive(), "Verify the actual active value ["+retrieveByCode.getActive()+"] matches that which was expected ["+retrieve.getProfileInfosActives()[0]+"].");
+		TestReporter.assertEquals(retrieve.getProfileInfosAPrioritys()[0], retrieveByCode.getPriority(), "Verify the actual priority value ["+retrieveByCode.getPriority()+"] matches that which was expected ["+retrieve.getProfileInfosAPrioritys()[0]+"].");
+		TestReporter.assertEquals(retrieve.getProfileInfosDescriptions()[0], retrieveByCode.getDescription(), "Verify the actual description ["+retrieveByCode.getDescription()+"] matches that which was expected ["+retrieve.getProfileInfosDescriptions()[0]+"].");
+		TestReporter.assertEquals(retrieve.getProfileInfosProfileIds()[0], retrieveByCode.getProfileId(), "Verify the actual ID ["+retrieveByCode.getProfileId()+"] matches that which was expected ["+retrieve.getProfileInfosProfileIds()[0]+"].");
+		TestReporter.assertEquals(retrieve.getProfileInfosProfileTypes()[0], retrieveByCode.getProfileType(), "Verify the actual type ["+retrieveByCode.getProfileType()+"] matches that which was expected ["+retrieve.getProfileInfosProfileTypes()[0]+"].");
 	}
 }

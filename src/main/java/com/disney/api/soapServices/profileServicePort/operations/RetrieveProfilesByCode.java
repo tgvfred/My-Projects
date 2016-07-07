@@ -11,13 +11,44 @@ public class RetrieveProfilesByCode extends ProfileServicePort{
 		removeComments() ;
 		removeWhiteSpace();
 	}
-	
+	/**
+	 * Sets the profile code for which to search, in the SOAP request
+	 * @param value - profile code for which to search
+	 */
 	public void setProfileCode(String value){setRequestNodeValueByXPath("/Envelope/Body/retrieveProfilesByCode/retrieveProfilesByCodeRequest/profileCodes", value);}
+	/**
+	 * Sets the flag to include inactive profiles in the SOAP request
+	 * @param value - flag to include inactive profiles 
+	 */
 	public void setIncludeInactiveProfiles(String value){setRequestNodeValueByXPath("/Envelope/Body/retrieveProfilesByCode/retrieveProfilesByCodeRequest/includeInactiveProfiles", value);}
-	public void getCode(){getRequestNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/code");}
-	public void getDescription(){getRequestNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/description");}
-	public void getProfileId(){getRequestNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/profileId");}
-	public void getProfileType(){getRequestNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/profileType");}
-	public void getActive(){getRequestNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/active");}
-	public void getPriority(){getRequestNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/priority");}
+	/**
+	 * Gets the profile code from the SOAP response
+	 * @return - profile code
+	 */
+	public String getCode(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/code");}
+	/**
+	 * Gets the profile description from the SOAP response
+	 * @return - profile description
+	 */
+	public String getDescription(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/description");}
+	/**
+	 * Gets the profile ID from the SOAP response
+	 * @return - profile ID
+	 */
+	public String getProfileId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/profileId");}
+	/**
+	 * Gets the profile type from the SOAP response
+	 * @return - profile type
+	 */
+	public String getProfileType(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/profileType");}
+	/**
+	 * Gets the boolean string indicating if a profile is active, from the SOAP response
+	 * @return - boolean string indicating if a profile is active
+	 */
+	public String getActive(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/active");}
+	/**
+	 * Gets the boolean string indicating if a profile is a priority, from the SOAP response
+	 * @return - boolean string indicating if a profile is a priority
+	 */
+	public String getPriority(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveProfilesByCodeResponse/return/profileDetails/priority");}
 }

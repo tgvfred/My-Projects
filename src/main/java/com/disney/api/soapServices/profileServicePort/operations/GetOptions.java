@@ -26,7 +26,10 @@ public class GetOptions extends ProfileServicePort{
 	 * @return
 	 */
 	public NodeList getReponseOptions(){return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/getOptionsResponse/response");}
-	
+	/**
+	 * Gathers all key-value pairs for each option from the response
+	 * @return - all key-value pairs for each option
+	 */
 	public Map<String, String> getOptionsKeyValuePairs(){
 		Map<String, String> pairs = new HashMap<String, String>();
 		NodeList options = getReponseOptions();
