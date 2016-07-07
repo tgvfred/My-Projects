@@ -1,5 +1,8 @@
 package com.disney.composite.api.showDiningService.arrived;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.showDiningService.operations.Arrived;
@@ -7,9 +10,19 @@ import com.disney.api.soapServices.showDiningService.operations.Book;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestArrived extends BaseTest{
+	protected HouseHold hh = null;
+	
+	@Override
+	@BeforeMethod(alwaysRun=true)
+	@Parameters("environment")
+	public void setup(@Optional String environment){
+		this.environment = environment;
+		hh = new HouseHold(1);
+	}
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void testArrived() {

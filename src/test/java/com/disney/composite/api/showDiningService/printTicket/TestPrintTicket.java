@@ -1,6 +1,9 @@
 package com.disney.composite.api.showDiningService.printTicket;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.showDiningService.operations.Book;
@@ -8,10 +11,21 @@ import com.disney.api.soapServices.showDiningService.operations.Cancel;
 import com.disney.api.soapServices.showDiningService.operations.PrintTicket;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestPrintTicket extends BaseTest{
 	private Book book;
+	protected HouseHold hh = null;
+	
+	@Override
+	@BeforeMethod(alwaysRun=true)
+	@Parameters("environment")
+	public void setup(@Optional String environment){
+		this.environment = environment;
+		hh = new HouseHold(1);
+	}
 	
 	@AfterMethod
 	public void teardown(){
@@ -38,5 +52,12 @@ public class TestPrintTicket extends BaseTest{
 		print.sendRequest();
 		TestReporter.logAPI(!print.getResponseStatusCode().equals("200"), "An error occurred while printing a ticket.", print);
 		TestReporter.assertEquals(print.getStatus(), "SUCCESS", "The status ["+print.getStatus()+"] was not 'SUCCESS' as expected.");
+		logItems(print);
+	}
+	
+	private void logItems(PrintTicket print){
+		LogItems logValidItems = new LogItems();
+		logValidItems.addItem("ShowDiningServiceIF", "printTicket", false);
+		validateLogs(print, logValidItems);
 	}
 }

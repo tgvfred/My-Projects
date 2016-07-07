@@ -1,6 +1,9 @@
 package com.disney.composite.api.showDiningService.assignTableNumbers;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.showDiningService.operations.AssignTableNumbers;
@@ -10,11 +13,21 @@ import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestAssignTableNumbers extends BaseTest{
 	private String tableNumber = String.valueOf(Randomness.randomNumberBetween(1, 99));
 	private Book book;
+	protected HouseHold hh = null;
+	
+	@Override
+	@BeforeMethod(alwaysRun=true)
+	@Parameters("environment")
+	public void setup(@Optional String environment){
+		this.environment = environment;
+		hh = new HouseHold(1);
+	}
 	
 	@AfterMethod
 	public void teardown(){
