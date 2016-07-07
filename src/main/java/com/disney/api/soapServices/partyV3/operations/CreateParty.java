@@ -15,10 +15,13 @@ public class CreateParty extends PartyV3{
 		removeWhiteSpace();
 	}
 	
+	public void setExternalReferenceSource(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/createParty/partyRequest/externalreference/externalReferenceSource", value);
+	}
+
 	public void setExternalReferenceValue(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/createParty/partyRequest/externalreference/externalReferenceValue", value);
 	}
-	
 	public void setPrimaryGuestAge(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/createParty/partyRequest/individual/age", value);
 	}
