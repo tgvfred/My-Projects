@@ -1,5 +1,6 @@
 package com.disney.composite.api.partyV3.searchGuestIDByExternalReference;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -10,6 +11,10 @@ import com.disney.api.soapServices.partyV3.operations.SearchGuestIDByExternalRef
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestSearchGuestIDByExternalReference  extends BaseTest{
@@ -23,7 +28,7 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3"})
-	public void testSearchGuestIDByExternalReference(){
+	public void testSearchGuestIDByODS(){
 		TestReporter.logScenario("Search By External Reference Type and Value");
 		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
 		search.setGuestExternalReference("ODS", guest.getOdsId());
@@ -32,6 +37,173 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
 	}
+
+	@Test(groups = {"api", "regression", "party", "partyV3"})
+	public void testSearchGuestIDByIataNumber(){
+		String type = "IATANUMBER";
+		TestReporter.logScenario("Search By External Reference Type " + type);
+		
+		// Find existing data in environment to use
+		Database db = new OracleDatabase(environment, Database.DREAMS);
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getGuestExternalReferenceInfoByType(type)));
+		
+		// If no data found, then skip test without failing
+		if(rs.getRowCount() == 0) throw new SkipException("No pre-existing external references with type [" + type +"] ");
+		
+		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
+		search.setGuestExternalReference(type, rs.getValue("TXN_PTY_EXTNL_REF_VAL"));
+		search.sendRequest();
+		
+		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getPartyId().equals(rs.getValue("TXN_PTY_ID")), "The Party ID ["+search.getPartyId()+"] is not ["+rs.getValue("TXN_PTY_ID")+"] as expected.");
+	}
+	
+	@Test(groups = {"api", "regression", "party", "partyV3"})
+	public void testSearchGuestIDBySwid(){
+		String type = "SWID";
+		TestReporter.logScenario("Search By External Reference Type " + type);
+	
+		// Find existing data in environment to use
+		Database db = new OracleDatabase(environment, Database.DREAMS);
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getGuestExternalReferenceInfoByType(type)));
+		
+		// If no data found, then skip test without failing
+		if(rs.getRowCount() == 0) throw new SkipException("No pre-existing external references with type [" + type +"] ");
+		
+		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
+		search.setGuestExternalReference(type, rs.getValue("TXN_PTY_EXTNL_REF_VAL"));
+		search.sendRequest();
+		
+		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getPartyId().equals(rs.getValue("TXN_PTY_ID")), "The Party ID ["+search.getPartyId()+"] is not ["+rs.getValue("TXN_PTY_ID")+"] as expected.");
+	}
+	
+	@Test(groups = {"api", "regression", "party", "partyV3"})
+	public void testSearchGuestIDByGuid(){
+		String type = "GUID";
+		TestReporter.logScenario("Search By External Reference Type " + type);
+		
+		// Find existing data in environment to use
+		Database db = new OracleDatabase(environment, Database.DREAMS);
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getGuestExternalReferenceInfoByType(type)));
+		
+		// If no data found, then skip test without failing
+		if(rs.getRowCount() == 0) throw new SkipException("No pre-existing external references with type [" + type +"] ");
+		
+		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
+		search.setGuestExternalReference(type, rs.getValue("TXN_PTY_EXTNL_REF_VAL"));
+		search.sendRequest();
+		
+		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getPartyId().equals(rs.getValue("TXN_PTY_ID")), "The Party ID ["+search.getPartyId()+"] is not ["+rs.getValue("TXN_PTY_ID")+"] as expected.");
+	}
+
+	@Test(groups = {"api", "regression", "party", "partyV3"})
+	public void testSearchGuestIDByPassportID(){
+		String type = "PASSPORT";
+		TestReporter.logScenario("Search By External Reference Type " + type);
+		
+		// Find existing data in environment to use
+		Database db = new OracleDatabase(environment, Database.DREAMS);
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getGuestExternalReferenceInfoByType(type)));
+		
+		// If no data found, then skip test without failing
+		if(rs.getRowCount() == 0) throw new SkipException("No pre-existing external references with type [" + type +"] ");
+		
+		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
+		search.setGuestExternalReference(type, rs.getValue("TXN_PTY_EXTNL_REF_VAL"));
+		search.sendRequest();
+		
+		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getPartyId().equals(rs.getValue("TXN_PTY_ID")), "The Party ID ["+search.getPartyId()+"] is not ["+rs.getValue("TXN_PTY_ID")+"] as expected.");
+	}
+
+	
+	@Test(groups = {"api", "regression", "party", "partyV3"})
+	public void testSearchGuestIDByXbmsID(){
+		String type = "XBMS";
+		TestReporter.logScenario("Search By External Reference Type " + type);
+		
+		// Find existing data in environment to use
+		Database db = new OracleDatabase(environment, Database.DREAMS);
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getGuestExternalReferenceInfoByType(type)));
+		
+		// If no data found, then skip test without failing
+		if(rs.getRowCount() == 0) throw new SkipException("No pre-existing external references with type [" + type +"] ");
+		
+		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
+		search.setGuestExternalReference(type, rs.getValue("TXN_PTY_EXTNL_REF_VAL"));
+		search.sendRequest();
+		
+		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getPartyId().equals(rs.getValue("TXN_PTY_ID")), "The Party ID ["+search.getPartyId()+"] is not ["+rs.getValue("TXN_PTY_ID")+"] as expected.");
+	}
+
+	@Test(groups = {"api", "regression", "party", "partyV3"})
+	public void testSearchGuestIDByOriginalTxnLGuestID(){
+		String type = "ORIGINAL_TXN_GUEST_ID";
+		TestReporter.logScenario("Search By External Reference Type " + type);
+		
+		// Find existing data in environment to use
+		Database db = new OracleDatabase(environment, Database.DREAMS);
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getGuestExternalReferenceInfoByType(type)));
+		
+		// If no data found, then skip test without failing
+		if(rs.getRowCount() == 0) throw new SkipException("No pre-existing external references with type [" + type +"] ");
+		
+		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
+		search.setGuestExternalReference(type, rs.getValue("TXN_PTY_EXTNL_REF_VAL"));
+		search.sendRequest();
+		
+		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getPartyId().equals(rs.getValue("TXN_PTY_ID")), "The Party ID ["+search.getPartyId()+"] is not ["+rs.getValue("TXN_PTY_ID")+"] as expected.");
+	}
+	
+
+	
+	@Test(groups = {"api", "regression", "party", "partyV3"})
+	public void testSearchGuestIDByFolioID(){
+		String type = "FOLIOID";
+		TestReporter.logScenario("Search By External Reference Type " + type);
+		
+		// Find existing data in environment to use
+		Database db = new OracleDatabase(environment, Database.DREAMS);
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getGuestExternalReferenceInfoByType(type)));
+		
+		// If no data found, then skip test without failing
+		if(rs.getRowCount() == 0) throw new SkipException("No pre-existing external references with type [" + type +"] ");
+		
+		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
+		search.setGuestExternalReference(type, rs.getValue("TXN_PTY_EXTNL_REF_VAL"));
+		search.sendRequest();
+		
+		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getPartyId().equals(rs.getValue("TXN_PTY_ID")), "The Party ID ["+search.getPartyId()+"] is not ["+rs.getValue("TXN_PTY_ID")+"] as expected.");
+	}
+	
+
+	
+	@Test(groups = {"api", "regression", "party", "partyV3"})
+	public void testSearchGuestIDByPlid(){
+		String type = "PLID";
+		TestReporter.logScenario("Search By External Reference Type " + type);
+		
+		// Find existing data in environment to use
+		Database db = new OracleDatabase(environment, Database.DREAMS);
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getGuestExternalReferenceInfoByType(type)));
+		
+		// If no data found, then skip test without failing
+		if(rs.getRowCount() == 0) throw new SkipException("No pre-existing external references with type [" + type +"] ");
+		
+		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
+		search.setGuestExternalReference(type, rs.getValue("TXN_PTY_EXTNL_REF_VAL"));
+		search.sendRequest();
+		
+		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
+		TestReporter.assertTrue(search.getPartyId().equals(rs.getValue("TXN_PTY_ID")), "The Party ID ["+search.getPartyId()+"] is not ["+rs.getValue("TXN_PTY_ID")+"] as expected.");
+	}
+	
+	
 	
 	@Test(groups = {"api", "regression", "party", "partyV3"})
 	public void testSearchGuestIDByExternalReference_Type_NoResults(){
