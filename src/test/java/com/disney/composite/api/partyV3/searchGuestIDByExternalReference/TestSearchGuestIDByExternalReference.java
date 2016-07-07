@@ -129,6 +129,8 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		Recordset rs = new Recordset(db.getResultSet(Dreams.getGuestExternalReferenceInfoByType(type)));
 		
 		// If no data found, then skip test without failing
+		if(rs.getRowCount() == 0) throw new SkipException("No pre-existing external references with type [" + type +"] ");
+		
 		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
 		search.setGuestExternalReference(type, rs.getValue("TXN_PTY_EXTNL_REF_VAL"));
 		search.sendRequest();

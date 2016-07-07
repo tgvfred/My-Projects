@@ -17,7 +17,7 @@ public class TestSearchGuestIDByName_Negative  extends BaseTest{
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
-		this.environment = "Development";
+		this.environment = environment;
 		guest.sendToApi(this.environment, true);
 	}
 	

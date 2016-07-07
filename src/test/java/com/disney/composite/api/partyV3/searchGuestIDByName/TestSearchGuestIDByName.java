@@ -18,8 +18,7 @@ public class TestSearchGuestIDByName  extends BaseTest{
 	@BeforeTest(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
-		this.environment = "Development";
-		guest.sendToApi(this.environment, true);
+		this.environment = environment;
 		guest.sendToApi(this.environment, true);
 		
 	}
