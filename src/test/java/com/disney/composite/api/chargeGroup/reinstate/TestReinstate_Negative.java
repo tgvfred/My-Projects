@@ -11,8 +11,8 @@ import com.disney.api.soapServices.chargeGroup.operations.CreateChargeGroupsAndP
 import com.disney.api.soapServices.chargeGroup.operations.Reinstate;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.composite.BaseTest;
-import com.disney.utils.TestReporter;
 import com.disney.utils.Randomness;
+import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class TestReinstate_Negative extends BaseTest{
