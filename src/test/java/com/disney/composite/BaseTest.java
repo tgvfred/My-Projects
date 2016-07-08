@@ -41,7 +41,7 @@ public class BaseTest {
 		boolean isValid = false;
 		boolean containsRequest = false;
 		boolean containsResponse = false;
-		if(!environment.equalsIgnoreCase("Grumpy")){
+		if(!environment.equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development")){
 				
 			Recordset rs = getLogs(environment, soap.getConversationID());
 			
@@ -96,7 +96,7 @@ public class BaseTest {
 				if(shouldBeInLogs && !containsResponse) throw new AutomationException("Expected response not found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]. Convo ID: " + soap.getConversationID());
 			}
 		}else{
-			TestReporter.log("Skipping log validation for Grumpy");
+			TestReporter.log("Skipping log validation for Grumpy and Development");
 		}
 	}
 	
