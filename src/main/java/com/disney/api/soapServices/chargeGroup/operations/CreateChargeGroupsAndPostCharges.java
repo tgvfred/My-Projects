@@ -74,4 +74,15 @@ public class CreateChargeGroupsAndPostCharges extends ChargeGroup{
 	public boolean isSuccessful(){
 		return getResponseNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostChargesResponse/returnParameter").equals("success");
 	}
+	
+	
+	
+
+	
+	public String getRequestPrimaryReferenceName(){
+		return getRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/guestContainedChargeGroupRequest/primaryReference/referenceName");
+	}
+	public String getRequestPrimaryReferenceValue(){
+		return getRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/guestContainedChargeGroupRequest/primaryReference/referenceValue");
+	}
 }
