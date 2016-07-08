@@ -474,7 +474,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 			modify.setParty(party());
 			modify.setFacilityId(getFacilityId());
 			modify.setServiceStartDate(getServiceStartDate());
-			modify.setServicePeriosId(getServicePeriodId());
+			modify.setServicePeriodId(getServicePeriodId());
 			modify.setProductId(getProductId());
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			modify.sendRequest();
