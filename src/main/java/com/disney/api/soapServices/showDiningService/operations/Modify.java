@@ -46,7 +46,7 @@ public class Modify extends ShowDiningService {
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/facilityId", value);
 	}
 	
-	public void setServicePeriosId(String value){
+	public void setServicePeriodId(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/servicePeriodId", value);
 	}
 	
@@ -109,10 +109,6 @@ public class Modify extends ShowDiningService {
 	
 	public void setCommunicationsChannel(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/communicationChannel", value);
-	}
-	
-	public void setReservationnumber(String value){
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/reservationNumber", value);
 	}
 	
 	public void setProductId(String value){
@@ -502,7 +498,20 @@ public class Modify extends ShowDiningService {
 	 * Sets the authorization number in the SOAP request
 	 * @param value - authorization number 
 	 */
-	public void setAuthorizationNumber(String value){
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/authorizationNumber", value);
-	}
+	public void setAuthorizationNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/authorizationNumber", value);}
+	/**
+	 * Sets the freeze ID in the SOAP request
+	 * @param value - freeze ID
+	 */
+	public void setFreezeId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/freezeId", value);}
+	/**
+	 * Sets the party role age type in the SOAP request
+	 * @param value - party role age type
+	 */
+	public void setPartyRoleAgeType(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/partyRoles/ageType", value);}
+	/**
+	 * Sets the source accounting center in the SOAP request
+	 * @param value - source accounting center 
+	 */
+	public void setSourceAccountingCenter(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/sourceAccountingCenter", value);}
 }

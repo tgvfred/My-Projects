@@ -56,7 +56,7 @@ public class TestModify extends BaseTest{
 		hh = new HouseHold(hh.getAllGuests().size() + 1);
 		Modify modify = new Modify(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		modify.setTravelPlanId(book.getTravelPlanId());
-		modify.setReservationnumber(book.getTravelPlanSegmentId());
+		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		modify.setParty(hh);
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred during modification", modify);
