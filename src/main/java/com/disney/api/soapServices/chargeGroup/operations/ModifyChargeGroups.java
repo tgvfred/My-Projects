@@ -21,6 +21,32 @@ public class ModifyChargeGroups extends ChargeGroup{
 		removeWhiteSpace();
 	}
 	
+	
+	
+	
+	public void setGuestFirstName(String value){
+		setGuestContainerResponsiblePartyFirstName(value);
+		setResponsiblePartyFirstName(value);
+	}
+	public void setGuestLastName(String value){
+		setGuestContainerResponsiblePartyLastName(value);
+		setResponsiblePartyLastName(value);
+	}
+	public void setTravelPlanComponentGroupId(String value){
+		setGuestContainedPrimaryReferenceValue(value);
+	}
+	public void setTravelPlanSegmentId(String value){
+		setGuestContainedAncestorValue(value);
+		setGuestContainerPrimaryReferenceValue(value);
+	}
+	public void setTravelPlanId(String value){
+		setRootPrimaryReferenceValue(value);
+		setGuestContainedRootReferenceValue(value);
+		setGuestContainerRootReferenceValue(value);
+	}
+	
+	public String getReturnParameter(){return getResponseNodeValueByXPath("/Envelope/Body/modifyChargeGroupsResponse/returnParameter");}
+	
 	//**************************
 	//**************************
 	//	rootChargeGroupRequestTO
@@ -30,6 +56,11 @@ public class ModifyChargeGroups extends ChargeGroup{
 	 * Remove entire rootChargeGroupRequestTO node
 	 */
 	public void removeRootChargeGroupRequestTO(){setRequestNodeValueByXPath("/Envelope/Body/modifyChargeGroups/rootChargeGroupRequestTO/description", BaseSoapCommands.REMOVE_NODE.toString());}
+	/**
+	 * Sets rootChargeGroupRequestTO description
+	 * @param value
+	 */
+	public void setRootDescription(String value){setRequestNodeValueByXPath("/Envelope/Body/modifyChargeGroups/rootChargeGroupRequestTO/description", value);}
 	/**
 	 * Remove entire rootChargeGroupRequestTO/period node
 	 */

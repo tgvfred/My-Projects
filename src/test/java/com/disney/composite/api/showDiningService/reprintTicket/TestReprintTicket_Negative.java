@@ -28,7 +28,7 @@ public class TestReprintTicket_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidReservationNumber() {
 		TestReporter.logScenario("Invalid Reservation Number");
-		String number = Randomness.randomNumber(4);
+		String number = "1234";
 		ReprintTicket reprint = new ReprintTicket(environment, "Main");
 		reprint.setReservationNumber(number);
 		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, reprint);

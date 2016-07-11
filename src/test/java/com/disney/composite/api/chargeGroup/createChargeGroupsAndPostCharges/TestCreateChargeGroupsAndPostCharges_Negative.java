@@ -37,7 +37,7 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 	}
 	
 	protected CreateChargeGroupsAndPostCharges create(){
-		CreateChargeGroupsAndPostCharges create = new CreateChargeGroupsAndPostCharges("Development", "MinimalInfo");
+		CreateChargeGroupsAndPostCharges create = new CreateChargeGroupsAndPostCharges(environment, "MinimalInfo");
 		create.setGuestFirstName(hh.primaryGuest().getFirstName());
 		create.setGuestLastName(hh.primaryGuest().getLastName());
 		create.setTravelPlanComponentGroupId(number);
@@ -79,14 +79,14 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			create.sendRequest();
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue both required for PrimaryReference.<null>,"+super.number), create.getFaultString(), create);
 		}
-		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
-		public void missingPrimaryReferenceValue(){
-			TestReporter.logScenario("Missing Primary Reference Value");
-			CreateChargeGroupsAndPostCharges create = create();
-			create.setRootPrimaryReferenceValue(BaseSoapCommands.REMOVE_NODE.toString());
-			create.sendRequest();
-			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue both required for PrimaryReference.DREAMS_TP,<null>"), create.getFaultString(), create);
-		}
+//		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
+//		public void missingPrimaryReferenceValue(){
+//			TestReporter.logScenario("Missing Primary Reference Value");
+//			CreateChargeGroupsAndPostCharges create = create();
+//			create.setRootPrimaryReferenceValue(BaseSoapCommands.REMOVE_NODE.toString());
+//			create.sendRequest();
+//			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue both required for PrimaryReference.DREAMS_TP,<null>"), create.getFaultString(), create);
+//		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReference(){
 			TestReporter.logScenario("Missing Primary Reference");
