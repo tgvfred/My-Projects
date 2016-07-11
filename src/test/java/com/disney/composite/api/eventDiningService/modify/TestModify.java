@@ -3,6 +3,7 @@ package com.disney.composite.api.eventDiningService.modify;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -18,18 +19,17 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 public class TestModify extends BaseTest{
 	// Defining global variables
 	protected ScheduledEventReservation res = null;
+	HouseHold hh = null;
 	
-	@BeforeMethod(alwaysRun = true)
+	@BeforeTest(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
-		HouseHold hh = new HouseHold(1);
+		hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 	
-	@AfterMethod(alwaysRun = true)
-	public synchronized void closeSession(ITestResult test) {res.cancel();}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModify(){
@@ -49,6 +49,150 @@ public class TestModify extends BaseTest{
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
 		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
 		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems);
+	}
+	
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyTo2Adults(){
+		HouseHold newParty = new HouseHold("2 Adults");
+		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
+		originalRes.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(originalRes.getConfirmationNumber());
+		modify.setTravelPlanId(originalRes.getTravelPlanId());
+		modify.setParty(newParty);
+		modify.setFacilityId(originalRes.getFacilityId());
+		modify.setServiceStartDate(originalRes.getServiceStartDate());
+		modify.setServicePeriodId(originalRes.getServicePeriodId());
+		modify.setProductId(originalRes.getProductId());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems);
+	}
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyTo4Adults(){
+		HouseHold newParty = new HouseHold("4 Adults");
+		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
+		originalRes.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(originalRes.getConfirmationNumber());
+		modify.setTravelPlanId(originalRes.getTravelPlanId());
+		modify.setParty(newParty);
+		modify.setFacilityId(originalRes.getFacilityId());
+		modify.setServiceStartDate(originalRes.getServiceStartDate());
+		modify.setServicePeriodId(originalRes.getServicePeriodId());
+		modify.setProductId(originalRes.getProductId());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems);
+	}
+	
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyTo2Adults2Child(){
+		HouseHold newParty = new HouseHold("2 Adults 2 Child");
+		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
+		originalRes.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(originalRes.getConfirmationNumber());
+		modify.setTravelPlanId(originalRes.getTravelPlanId());
+		modify.setParty(newParty);
+		modify.setFacilityId(originalRes.getFacilityId());
+		modify.setServiceStartDate(originalRes.getServiceStartDate());
+		modify.setServicePeriodId(originalRes.getServicePeriodId());
+		modify.setProductId(originalRes.getProductId());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems);
+	}
+	
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyTo4Adults2Child2Infant(){
+		HouseHold newParty = new HouseHold("4 Adults 2 Child 2 Infant");
+		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
+		originalRes.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(originalRes.getConfirmationNumber());
+		modify.setTravelPlanId(originalRes.getTravelPlanId());
+		modify.setParty(newParty);
+		modify.setFacilityId(originalRes.getFacilityId());
+		modify.setServiceStartDate(originalRes.getServiceStartDate());
+		modify.setServicePeriodId(originalRes.getServicePeriodId());
+		modify.setProductId(originalRes.getProductId());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems);
+	}
+	
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyTo12Adults(){
+		HouseHold newParty = new HouseHold(12);
+		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
+		originalRes.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(originalRes.getConfirmationNumber());
+		modify.setTravelPlanId(originalRes.getTravelPlanId());
+		modify.setParty(newParty);
+		modify.setFacilityId(originalRes.getFacilityId());
+		modify.setServiceStartDate(originalRes.getServiceStartDate());
+		modify.setServicePeriodId(originalRes.getServicePeriodId());
+		modify.setProductId(originalRes.getProductId());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems);
