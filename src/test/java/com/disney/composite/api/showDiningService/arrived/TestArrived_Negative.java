@@ -18,17 +18,11 @@ public class TestArrived_Negative  extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	protected ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
-	protected ThreadLocal<Arrived> arrived = new ThreadLocal<Arrived>();
 	
 	@Override
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
-	public void setup(@Optional String environment){
-		this.environment = environment;
-		hh = new HouseHold(1);
-		res.set(new ShowDiningReservation(this.environment, hh));
-		res.get().book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-	}
+	public void setup(@Optional String environment){this.environment = environment;}
 
 	@AfterMethod
 	public void teardown(){
@@ -42,26 +36,28 @@ public class TestArrived_Negative  extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingReservationNumber(){
 		TestReporter.logScenario("Test Arrived with a Missing Reservation Number Node");
-		arrived.set(new Arrived(this.environment,"ContactCenter"));
-		arrived.get().setReservationNumber("fx:removenode");
-		arrived.get().sendRequest();
-		TestReporter.logAPI(!arrived.get().getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0"), arrived.get().getFaultString() ,arrived.get());
-		logItems();
+		Arrived arrived = new Arrived(this.environment, "ContactCenter");
+		arrived.setReservationNumber("fx:removenode");
+		arrived.sendRequest();
+		TestReporter.logAPI(!arrived.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0"), arrived.getFaultString() ,arrived);
+		logItems(arrived);
 	}	
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidReservationNumber(){
 		TestReporter.logScenario("Test Arrived with a Invalid Reservation Number");
-		arrived.set(new Arrived(this.environment,"ContactCenter"));
-		arrived.get().setReservationNumber("11111");
-		arrived.get().sendRequest();
-		TestReporter.logAPI(!arrived.get().getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111"), arrived.get().getFaultString() ,arrived.get());
-		logItems();
+		Arrived arrived = new Arrived(this.environment, "ContactCenter");
+		arrived.setReservationNumber("11111");
+		arrived.sendRequest();
+		TestReporter.logAPI(!arrived.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111"), arrived.getFaultString() ,arrived);
+		logItems(arrived);
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void cancelledReservation(){
 		TestReporter.logScenario("Test Arrived with a Cancelled Reservation Number");
+		hh = new HouseHold(1);	
+		res.set(new ShowDiningReservation(this.environment, hh));
 		res.get().book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		res.get().cancel();
 		arrived();
@@ -70,28 +66,31 @@ public class TestArrived_Negative  extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void arrivedReservation() {
 		TestReporter.logScenario("Test Setting Arrived Reservation to Arrived");
+		hh = new HouseHold(1);	
+		res.set(new ShowDiningReservation(this.environment, hh));
+		res.get().book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		res.get().arrived();		
 		arrived();
 	}
 	
-	private void arrived(){		
-		arrived.set(new Arrived(environment, "ContactCenter"));
-		arrived.get().setReservationNumber(res.get().getConfirmationNumber());
-		arrived.get().sendRequest();
-		TestReporter.logAPI(!arrived.get().getFaultString().contains(" Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED!"), arrived.get().getFaultString() ,arrived.get());
-		logItems();
+	private void arrived(){
+		Arrived arrived = new Arrived(this.environment, "ContactCenter");
+		arrived.setReservationNumber(res.get().getConfirmationNumber());
+		arrived.sendRequest();
+		TestReporter.logAPI(!arrived.getFaultString().contains(" Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED!"), arrived.getFaultString() ,arrived);
+		logItems(arrived);
 	}
 	
-	private void logItems(){
+	private void logItems(Arrived arrived){
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ShowDiningServiceIF", "arrived", true);
-		validateLogs(arrived.get(), logValidItems);
+		validateLogs(arrived, logValidItems);
 		
 		LogItems logInvalidItems = new LogItems();
 		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		logInvalidItems.addItem("ChargeGroupIF", "checkIn", false);
 		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logInvalidItems.addItem("PartyIF", "retrieveParty", false);
-		validateNotInLogs(arrived.get(), logInvalidItems);
+		validateNotInLogs(arrived, logInvalidItems);
 	}
 }

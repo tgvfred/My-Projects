@@ -248,7 +248,7 @@ public class TestModify_Negative extends BaseTest{
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
 		
 		NoShow noShow = new NoShow(environment, "ContactCenter");
-		noShow.setReservatinoNumber(book.getTravelPlanSegmentId());
+		noShow.setReservationNumber(book.getTravelPlanSegmentId());
 		noShow.sendRequest();
 		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to [NoShow]", noShow);
 		

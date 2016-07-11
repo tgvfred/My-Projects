@@ -14,7 +14,7 @@ public class NoShow extends ShowDiningService {
 		removeWhiteSpace();
 	}
 	
-	public void setReservatinoNumber(String value){
+	public void setReservationNumber(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/noShow/noShowShowDiningRequest/reservationNumber", value);
 	}
 	
