@@ -84,7 +84,7 @@ public class TestArrived_Negative  extends BaseTest{
 	private void logItems(Arrived arrived){
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ShowDiningServiceIF", "arrived", true);
-		validateLogs(arrived, logValidItems);
+		validateLogs(arrived, logValidItems, 10000);
 		
 		LogItems logInvalidItems = new LogItems();
 		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);

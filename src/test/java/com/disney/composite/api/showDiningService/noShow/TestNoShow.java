@@ -51,6 +51,6 @@ public class TestNoShow extends BaseTest{
 		logValidItems.addItem("PricingService", "getCancellationCharges", false);
 		logValidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateLogs(noShow, logValidItems);
+		validateLogs(noShow, logValidItems, 10000);
 	}
 }

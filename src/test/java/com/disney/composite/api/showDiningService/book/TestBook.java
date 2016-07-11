@@ -102,6 +102,6 @@ public class TestBook extends BaseTest{
 		logValidItems.addItem("PackagingService", "getProducts", false);
 		logValidItems.addItem("TravelPlanServiceV3", "create", false);		
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateLogs(book, logValidItems);
+		validateLogs(book, logValidItems, 10000);
 	}
 }

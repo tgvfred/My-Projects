@@ -19,10 +19,9 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestNoShow_Negative extends BaseTest{
-	protected ThreadLocal<Book> book = new ThreadLocal<Book>();
-	protected ThreadLocal<NoShow> noShow = new ThreadLocal<NoShow>();
 	protected ThreadLocal<LogItems> logValidItems = new ThreadLocal<LogItems>();
 	protected ThreadLocal<String[]> expectedLogs = new ThreadLocal<String[]>();
+	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
 	@Override
 	@BeforeMethod(alwaysRun = true)
@@ -30,107 +29,124 @@ public class TestNoShow_Negative extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		book.set(new Book(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS));
-		book.get().setParty(hh);
-		book.get().sendRequest();
 		logValidItems.set(new LogItems());
-		noShow.set(new NoShow(environment, "ContactCenter"));
 	}
 	
-	@AfterMethod
+	@AfterMethod(alwaysRun = true)
 	public void teardown(){
-		try{
-			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-			cancel.setTravelPlanSegmentId(book.get().getTravelPlanSegmentId());
-			cancel.sendRequest();
-		}catch(Exception e){}
+		if(TPS_ID.get() != null)
+			if(!TPS_ID.get().isEmpty()){
+				Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+				cancel.setTravelPlanSegmentId(TPS_ID.get());
+				cancel.sendRequest();
+			}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidCommunicationChannel() {
 		TestReporter.logScenario("Invalid Communications Channel");
-		noShow.get().setReservationNumber(book.get().getTravelPlanSegmentId());
-		noShow.get().setCommunicationsChannel(Randomness.randomString(4));
-		sendRequestAndValidateFaultString("communication Channel is required : null");
+		NoShow noShow = new NoShow(environment, "ContactCenter");
+		noShow.setReservationNumber(book().getTravelPlanSegmentId());
+		noShow.setCommunicationsChannel(Randomness.randomString(4));
+		sendRequestAndValidateFaultString("communication Channel is required : null", noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidReservationNumber() {
 		String number = Randomness.randomNumber(4);
 		TestReporter.logScenario("Invalid Reservation Number");
-		noShow.get().setReservationNumber(number);
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number);
+		NoShow noShow = new NoShow(environment, "ContactCenter");
+		noShow.setReservationNumber(number);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, noShow);
 	}	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidSalesChannel() {
 		TestReporter.logScenario("Invalid Sales Channel");
-		noShow.get().setReservationNumber(book.get().getTravelPlanSegmentId());
-		noShow.get().setSalesChannel(Randomness.randomString(4));
-		sendRequestAndValidateFaultString("Sales Channel is required : null");
+		NoShow noShow = new NoShow(environment, "ContactCenter");
+		noShow.setReservationNumber(book().getTravelPlanSegmentId());
+		noShow.setSalesChannel(Randomness.randomString(4));
+		sendRequestAndValidateFaultString("Sales Channel is required : null", noShow);
 	}	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingCommunicationChannel() {
 		TestReporter.logScenario("Missing Communications Channel");
-		noShow.get().setReservationNumber(book.get().getTravelPlanSegmentId());
-		noShow.get().setCommunicationsChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("communication Channel is required : null");
+		NoShow noShow = new NoShow(environment, "ContactCenter");
+		noShow.setReservationNumber(book().getTravelPlanSegmentId());
+		noShow.setCommunicationsChannel(BaseSoapCommands.REMOVE_NODE.toString());
+		sendRequestAndValidateFaultString("communication Channel is required : null", noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingReservationNumber() {
 		TestReporter.logScenario("Missing Reservation Number");
-		noShow.get().setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
+		NoShow noShow = new NoShow(environment, "ContactCenter");
+		noShow.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingSalesChannel() {
 		TestReporter.logScenario("Missing Sales Channel");
-		noShow.set(new NoShow(environment, "ContactCenter"));
-		noShow.get().setReservationNumber(book.get().getTravelPlanSegmentId());
-		noShow.get().setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Sales Channel is required : null");
+		NoShow noShow = new NoShow(environment, "ContactCenter");
+		noShow.setReservationNumber(book().getTravelPlanSegmentId());
+		noShow.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
+		sendRequestAndValidateFaultString("Sales Channel is required : null", noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void noShow() {
 		TestReporter.logScenario("No Show");
-		noShow.get().setReservationNumber(book.get().getTravelPlanSegmentId());
-		noShow.get().sendRequest();
-		TestReporter.logAPI(!noShow.get().getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'No Show'", noShow.get());
-		
-		noShow.set(new NoShow(environment, "ContactCenter"));
-		noShow.get().setReservationNumber(book.get().getTravelPlanSegmentId());
-		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!");
+		Book book = book();
+		NoShow noShow = new NoShow(environment, "ContactCenter");
+		noShow.setReservationNumber(book.getTravelPlanSegmentId());
+		noShow.sendRequest();
+		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'No Show'", noShow);
+
+		noShow = new NoShow(environment, "ContactCenter");
+		noShow.setReservationNumber(book.getTravelPlanSegmentId());
+		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!", noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void arrivedReservation() {
 		TestReporter.logScenario("Arrived");
+		Book book = book();
+		NoShow noShow = new NoShow(environment, "ContactCenter");
 		Arrived arrived = new Arrived(environment, "ContactCenter");
-		arrived.setReservationNumber(book.get().getTravelPlanSegmentId());
+		arrived.setReservationNumber(book.getTravelPlanSegmentId());
 		arrived.sendRequest();
 		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'Arrived'", arrived);
 		
-		noShow.get().setReservationNumber(book.get().getTravelPlanSegmentId());
-		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!");
+		noShow.setReservationNumber(book.getTravelPlanSegmentId());
+		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!", noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void cancelledReservation() {
 		TestReporter.logScenario("Arrived");
+		Book book = book();
+		NoShow noShow = new NoShow(environment, "ContactCenter");
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-		cancel.setTravelPlanSegmentId(book.get().getTravelPlanSegmentId());
+		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 		cancel.sendRequest();
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation", cancel);
 		
-		noShow.get().setReservationNumber(book.get().getTravelPlanSegmentId());
-		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!");
+		noShow.setReservationNumber(book.getTravelPlanSegmentId());
+		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!", noShow);
 	}
 	
-    private void sendRequestAndValidateFaultString(String fault){
-    	noShow.get().sendRequest();
-    	TestReporter.logAPI(!noShow.get().getFaultString().contains(fault), noShow.get().getFaultString(), noShow.get());
-		logItems();
+	private Book book(){
+		Book book = new Book(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		book.setParty(hh);
+		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking a show dining event", book);
+		TPS_ID.set(book.getTravelPlanSegmentId());
+		return book;
+	}
+	
+    private void sendRequestAndValidateFaultString(String fault, NoShow noShow){
+    	noShow.sendRequest();
+    	TestReporter.logAPI(!noShow.getFaultString().contains(fault), noShow.getFaultString(), noShow);
+		logItems(noShow);
     }
 	
-	private void logItems(){
+	private void logItems(NoShow noShow){
 		logValidItems.get().addItem("ShowDiningServiceIF", "noShow", true);
-		validateLogs(noShow.get(), logValidItems.get());
+		validateLogs(noShow, logValidItems.get(), 10000);
 		
 		LogItems logInvalidItems = new LogItems();
 		logInvalidItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
@@ -147,6 +163,6 @@ public class TestNoShow_Negative extends BaseTest{
 		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
 		logInvalidItems.addItem("ShowDiningServiceIF", "retrieve", false);
-		validateNotInLogs(noShow.get(), logInvalidItems);
+		validateNotInLogs(noShow, logInvalidItems);
 	}
 }

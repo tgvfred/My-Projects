@@ -52,6 +52,6 @@ public class TestCancel extends BaseTest{
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);
 		logValidItems.addItem("ravelPlanServiceCrossReferenceV3SEI", "cancelOrder", false);
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateLogs(cancel, logValidItems);
+		validateLogs(cancel, logValidItems, 10000);
 	}
 }

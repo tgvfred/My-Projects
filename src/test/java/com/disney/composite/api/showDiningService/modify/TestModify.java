@@ -108,6 +108,6 @@ public class TestModify extends BaseTest{
 		logValidItems.addItem("PackagingService", "getProducts", false);
 		logValidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateLogs(modify, logValidItems);
+		validateLogs(modify, logValidItems, 10000);
 	}
 }

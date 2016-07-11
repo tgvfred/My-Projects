@@ -67,6 +67,6 @@ public class TestReprintTicket extends BaseTest{
 	private void logItems(ReprintTicket reprint){
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ShowDiningServiceIF", "reprintTicket", false);
-		validateLogs(reprint, logValidItems);
+		validateLogs(reprint, logValidItems, 10000);
 	}
 }
