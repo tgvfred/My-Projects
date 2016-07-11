@@ -302,7 +302,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	public void noShow() {
 		TestReporter.logStep("Update an show dining reservation to [No Show].");
 		NoShow noShow = new NoShow(getEnvironment(), "GuestFacing");
-		noShow.setReservatinoNumber(getConfirmationNumber());
+		noShow.setReservationNumber(getConfirmationNumber());
 		noShow.sendRequest();
 		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [No Show]", noShow);
 		this.cancellationNumber = noShow.getCancellationConfirmationNumber();

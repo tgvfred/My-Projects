@@ -62,6 +62,6 @@ public class TestAssignTableNumbers extends BaseTest{
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "updateInventoryForScheduledEvents", false);
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
 		logValidItems.addItem("PartyIF", "retrieveParty", false);
-		validateLogs(assign, logValidItems);
+		validateLogs(assign, logValidItems, 10000);
 	}
 }

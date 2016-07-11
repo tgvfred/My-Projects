@@ -6,9 +6,7 @@ import com.disney.utils.XMLTools;
 public class Retrieve extends ShowDiningService {
 	public Retrieve(String environment, String scenario) {
 		super(environment);
-		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("retrieve")));
-//		System.out.println(getRequest());
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));

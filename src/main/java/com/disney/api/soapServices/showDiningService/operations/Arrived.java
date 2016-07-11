@@ -7,8 +7,6 @@ public class Arrived extends ShowDiningService {
 	public Arrived(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("arrived")));
-		System.out.println(getRequest());
-	
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));

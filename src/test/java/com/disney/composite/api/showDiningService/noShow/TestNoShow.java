@@ -34,7 +34,7 @@ public class TestNoShow extends BaseTest{
 
 		TestReporter.logStep("Update a show dining reservation to [No Show].");
 		NoShow noShow = new NoShow(environment, "GuestFacing");
-		noShow.setReservatinoNumber(book.getTravelPlanSegmentId());
+		noShow.setReservationNumber(book.getTravelPlanSegmentId());
 		noShow.sendRequest();
 		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [No Show]", noShow);
 		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationConfirmationNumber()), "The cancellation number ["+noShow.getCancellationConfirmationNumber()+"] was not numeric as expected.");
@@ -51,6 +51,6 @@ public class TestNoShow extends BaseTest{
 		logValidItems.addItem("PricingService", "getCancellationCharges", false);
 		logValidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateLogs(noShow, logValidItems);
+		validateLogs(noShow, logValidItems, 10000);
 	}
 }

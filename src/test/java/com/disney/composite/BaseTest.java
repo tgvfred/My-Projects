@@ -19,6 +19,7 @@ public class BaseTest {
 	
 	protected String environment;
 	protected HouseHold hh = null;
+	protected int logTimeout = 3000;
 	//private List<LogItems> logItems = new ArrayList<LogItems>();
 	
 	@BeforeMethod(alwaysRun = true)
@@ -29,6 +30,16 @@ public class BaseTest {
 	}
 	
 	protected void validateLogs(BaseSoapService soap, LogItems logItems){
+		validate(true, soap, logItems);
+	}
+	
+	protected void validateLogs(BaseSoapService soap, LogItems logItems, int logTimeout){
+		this.logTimeout = logTimeout;
+		validate(true, soap, logItems);
+	}
+	
+	protected void validateLogs(BaseSoapService soap, LogItems logItems, String logTimeout){
+		this.logTimeout = Integer.parseInt(logTimeout);
 		validate(true, soap, logItems);
 	}
 	
@@ -101,7 +112,7 @@ public class BaseTest {
 	}
 	
 	private Recordset getLogs(String environment, String convoId){
-		Sleeper.sleep(3000); //Adding delay to ensure all logs are in DB 
+		Sleeper.sleep(logTimeout); //Adding delay to ensure all logs are in DB 
 		
 		String sql = "SELECT LOG_ID, LOG_LVL, LOG_MSG_TXT, ERROR_CODE, APP_NAME, BP_STEP, SVC_CLASS, SVC_OPERATION"
 				+ "	FROM DRMSLOG.LOG_MSG "

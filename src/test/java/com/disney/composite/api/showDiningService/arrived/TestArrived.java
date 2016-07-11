@@ -45,6 +45,6 @@ public class TestArrived extends BaseTest{
 		logValidItems.addItem("ChargeGroupIF", "checkIn", false);
 		logValidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logValidItems.addItem("PartyIF", "retrieveParty", false);
-		validateLogs(arrived, logValidItems);
+		validateLogs(arrived, logValidItems, 10000);
 	}
 }

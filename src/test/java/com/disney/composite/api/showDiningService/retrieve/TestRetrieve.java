@@ -62,6 +62,6 @@ public class TestRetrieve extends BaseTest{
 		logValidItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
 		logValidItems.addItem("PackagingService", "getProducts", false);
-		validateLogs(retrieve, logValidItems);
+		validateLogs(retrieve, logValidItems, 10000);
 	}
 }

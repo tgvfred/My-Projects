@@ -7,8 +7,6 @@ public class AssignTableNumbers extends ShowDiningService {
 	public AssignTableNumbers(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("assignTableNumbers")));
-		System.out.println(getRequest());
-	
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));

@@ -7,40 +7,32 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.showDiningService.operations.Book;
 import com.disney.api.soapServices.showDiningService.operations.Cancel;
 import com.disney.api.soapServices.showDiningService.operations.Retrieve;
 import com.disney.composite.BaseTest;
-import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestRetrieve_Negative extends BaseTest{
-	protected ThreadLocal<Book> book = new ThreadLocal<Book>();
-	protected ThreadLocal<Retrieve> retrieve = new ThreadLocal<Retrieve>();
 	protected ThreadLocal<LogItems> logValidItems = new ThreadLocal<LogItems>();
 	protected ThreadLocal<String[]> expectedLogs = new ThreadLocal<String[]>();
+	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
 	@Override
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
-		hh = new HouseHold(1);
-		book.set(new Book(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS));
-		book.get().setParty(hh);
-		book.get().sendRequest();
+		hh = new HouseHold(1);		
 		logValidItems.set(new LogItems());
-		retrieve.set(new Retrieve(environment, "RetrieveDiningEvent"));
 	}
 	
 	@AfterMethod
 	public void teardown(){
 		try{
 			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-			cancel.setTravelPlanSegmentId(book.get().getTravelPlanSegmentId());
+			cancel.setTravelPlanSegmentId(TPS_ID.get());
 			cancel.sendRequest();
 		}catch(Exception e){}
 	}
@@ -48,26 +40,28 @@ public class TestRetrieve_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidReservationNumber(){
 		TestReporter.logScenario("Invalid Reservation Number");
-		String number = Randomness.randomNumber(4);
-		retrieve.get().setReservationNumber(number);
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number);
+		String number = "1234";
+		Retrieve retrieve = new Retrieve(environment, "RetrieveDiningEvent");
+		retrieve.setReservationNumber(number);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, retrieve);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingReservationNumber(){
 		TestReporter.logScenario("Missing Reservation Number");
-		retrieve.get().setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
-	}	
-
-    private void sendRequestAndValidateFaultString(String fault){
-    	retrieve.get().sendRequest();
-    	TestReporter.logAPI(!retrieve.get().getFaultString().contains(fault), retrieve.get().getFaultString(), retrieve.get());
-		logItems();
+		Retrieve retrieve = new Retrieve(environment, "RetrieveDiningEvent");
+		retrieve.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", retrieve);
+	}
+	
+    private void sendRequestAndValidateFaultString(String fault, Retrieve retrieve){
+    	retrieve.sendRequest();
+    	TestReporter.logAPI(!retrieve.getFaultString().contains(fault), retrieve.getFaultString(), retrieve);
+		logItems(retrieve);
     }
 	
-	private void logItems(){
+	private void logItems(Retrieve retrieve){
 		logValidItems.get().addItem("ShowDiningServiceIF", "retrieve", true);
-		validateLogs(retrieve.get(), logValidItems.get());
+		validateLogs(retrieve, logValidItems.get(), 10000);
 		
 		LogItems logInvalidItems = new LogItems();
 		logInvalidItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
@@ -75,6 +69,6 @@ public class TestRetrieve_Negative extends BaseTest{
 		logInvalidItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
 		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
 		logInvalidItems.addItem("PackagingService", "getProducts", false);
-		validateNotInLogs(retrieve.get(), logInvalidItems);
+		validateNotInLogs(retrieve, logInvalidItems);
 	}
 }

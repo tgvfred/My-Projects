@@ -58,6 +58,6 @@ public class TestPrintTicket extends BaseTest{
 	private void logItems(PrintTicket print){
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ShowDiningServiceIF", "printTicket", false);
-		validateLogs(print, logValidItems);
+		validateLogs(print, logValidItems, 10000);
 	}
 }

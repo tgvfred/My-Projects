@@ -14,7 +14,6 @@ public class Modify extends ShowDiningService {
 		super(environment);
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("modify")));
-		System.out.println(getRequest());
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
