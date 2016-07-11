@@ -22,7 +22,7 @@ public class TestFilterPartyIDsByLastName_Negative extends BaseTest{
 		FilterPartyIDsByLastName filter = new FilterPartyIDsByLastName(environment, "Main");
 		filter.setLastName(BaseSoapCommands.REMOVE_NODE.toString());
 		filter.sendRequest();
-		TestReporter.logAPI(!filter.getFaultString().contains("Last Name is invalid  : Last Name is not found"), filter.getFaultString() ,filter);		
+		TestReporter.logAPI(!filter.getFaultString().contains("Last Name is invalid  : Last Name is blank"), filter.getFaultString() ,filter);		
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3", "negative"})
