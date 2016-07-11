@@ -23,8 +23,8 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  */
 
 public class TestModify extends BaseTest{
-	private Book book;
 	protected HouseHold hh = null;
+	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
 	@Override
 	@BeforeMethod(alwaysRun=true)
@@ -36,35 +36,64 @@ public class TestModify extends BaseTest{
 	
 	@AfterMethod
 	public void teardown(){
-		if(book != null)
-			if(!book.getTravelPlanSegmentId().isEmpty()){
+		if(TPS_ID.get() != null)
+			if(!TPS_ID.get().isEmpty()){
 				Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-				cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
+				cancel.setTravelPlanSegmentId(TPS_ID.get());
 				cancel.sendRequest();
 			}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void testModify() {
-		TestReporter.logStep("Book a show dining reservation.");
-		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		TestReporter.logScenario("Modify an existing reservation by increasing the party mix by 1 adult");
+		HouseHold hh2 = new HouseHold(hh.getAllGuests().size() + 1);
+		sendRequestAndvalidateLogs(book(), hh2);
+	}	
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyWith2Adults(){
+		TestReporter.logStep("Book a show dining reservation with 2 adults.");
+		HouseHold hh2 = new HouseHold("2 Adults");
+		sendRequestAndvalidateLogs(book(), hh2);
+	}
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyWith4Adults(){
+		TestReporter.logStep("Book a show dining reservation with 4 adults.");
+		HouseHold hh2 = new HouseHold("4 Adults");
+		sendRequestAndvalidateLogs(book(), hh2);
+	}
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyWith2Adults2Child(){
+		TestReporter.logStep("Book a show dining reservation with 2 adults and 2 children.");
+		HouseHold hh2 = new HouseHold("2 Adults 2 Child");
+		sendRequestAndvalidateLogs(book(), hh2);
+	}
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyWith12InParty(){
+		TestReporter.logStep("Book a show dining reservation with 12 adults.");
+		HouseHold hh2 = new HouseHold(12);
+		sendRequestAndvalidateLogs(book(), hh2);
+	}
+	
+	private Book book(){
+		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
-		
-		TestReporter.logScenario("Modify an existing reservation.");
-		hh = new HouseHold(hh.getAllGuests().size() + 1);
+		TPS_ID.set(book.getTravelPlanSegmentId());
+		return book;
+	}
+	
+	private void sendRequestAndvalidateLogs(Book book, HouseHold hh){
+		TestReporter.log("Reservation Number: " + TPS_ID.get());
 		Modify modify = new Modify(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		modify.setTravelPlanId(book.getTravelPlanId());
-		modify.setReservationNumber(book.getTravelPlanSegmentId());
+		modify.setReservationNumber(TPS_ID.get());
 		modify.setParty(hh);
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred during modification", modify);
 		TestReporter.assertEquals(modify.getResponseStatus(), "SUCCESS", "The status ["+modify.getResponseStatus()+"] was not 'SUCCESS' as expected.");
-		logItems(modify);
-	}
-	
-	private void logItems(Modify modify){
+		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ShowDiningServiceIF", "modify", false);
 		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
@@ -80,9 +109,5 @@ public class TestModify extends BaseTest{
 		logValidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateLogs(modify, logValidItems);
-		
-//		LogItems logInvalidItems = new LogItems();
-//		logInvalidItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
-//		validateNotInLogs(modify.get(), logInvalidItems);
 	}
 }
