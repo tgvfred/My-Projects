@@ -24,4 +24,6 @@ public class ValidateBooking extends EventDiningService {
 	public void setGuestId(String value){setRequestNodeValueByXPath("/Envelope/Body/validateBooking/eventDiningPackage/partyRoles/guest/guestId", value);}
 	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/validateBooking/eventDiningPackage/servicePeriodId", value);}
 	public String getStopReservation(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/stopReservation");}
+	public String getStopReason(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/stopReason");}
+	public String getRulesFired(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/rulesFired");}
 }
