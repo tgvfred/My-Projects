@@ -27,7 +27,7 @@ public class TestRetrieve extends BaseTest{
 	@BeforeTest(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
-		this.environment = "Bashful";
+		this.environment = environment;
 		hh = new HouseHold(1);
 		book = new Book(this.environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
