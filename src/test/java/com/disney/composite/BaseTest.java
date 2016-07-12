@@ -61,7 +61,8 @@ public class BaseTest {
 				containsRequest = false;
 				containsResponse = false;
 				
-				System.out.println(item.getServiceClass() + "#" + item.getServiceOperation());
+				// Uncomment the below line to view the service#operation under validation
+//				System.out.println(item.getServiceClass() + "#" + item.getServiceOperation());
 				
 				for(rs.moveFirst() ; rs.hasNext() ; rs.moveNext()){
 					
