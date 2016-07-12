@@ -1,6 +1,7 @@
 package com.disney.api.soapServices.eventDiningService.operations;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.eventDiningService.EventDiningService;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.guestFactory.Address;
@@ -24,7 +25,10 @@ public class Modify extends EventDiningService {
 	public void setComponentUnitPriceDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices/unitPrices/date", value);}	
 	public void setServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/serviceStartDate", value);}	
 	public String getRequestServiceStartDate(){return getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/serviceStartDate");}
-	public String getResponseStatus(){return getResponseNodeValueByXPath("/Envelope/Body/modifyEventDiningResponse/status");}
+	public String getResponseStatus(){try{
+		return getResponseNodeValueByXPath("/Envelope/Body/modifyEventDiningResponse/status");
+		}catch(XPathNotFoundException xpnf) {return "false";}
+	}
 	public void setTravelPlanId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/travelPlanId", value);}	
 	public void setReservationNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/reservationNumber", value);}	
 	public void setComponentPriceComponentType(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices/componentType", value);}	
