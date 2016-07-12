@@ -34,7 +34,6 @@ public class TestNoShow extends BaseTest{
 	public void testNoShow(){
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber(res.getConfirmationNumber());
-		System.out.println(noShow.getRequest());
 		noShow.sendRequest();
 		
 		TestReporter.logAPI(!noShow.getResponseStatusCode().contains("200"), noShow.getFaultString() ,noShow);

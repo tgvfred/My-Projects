@@ -22,7 +22,7 @@ public class TestValidateBooking extends BaseTest{
 	@BeforeTest(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment) {
-		this.environment = "bashful";
+		this.environment = environment;
 		book = new Book(this.environment, "NoComponentsNoAddOns");
 	}
 
