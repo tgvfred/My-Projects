@@ -31,14 +31,16 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 	}
 	
-	@AfterMethod
+	@AfterMethod(alwaysRun = true)
 	public void teardown(){
-		if(res != null)
-			if(!res.getConfirmationNumber().isEmpty()){
-				Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-				cancel.setTravelPlanSegmentId(res.getConfirmationNumber());
-				cancel.sendRequest();
-			}
+		try{
+			if(res != null)
+				if(!res.getConfirmationNumber().isEmpty()){
+					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+					cancel.setTravelPlanSegmentId(res.getConfirmationNumber());
+					cancel.sendRequest();
+				}
+		}catch(Exception e){}
 	}
 
     @Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})

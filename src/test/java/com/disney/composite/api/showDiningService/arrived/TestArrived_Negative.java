@@ -24,7 +24,7 @@ public class TestArrived_Negative  extends BaseTest{
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){this.environment = environment;}
 
-	@AfterMethod
+	@AfterMethod(alwaysRun = true)
 	public void teardown(){
 		try{
 			if(res != null)

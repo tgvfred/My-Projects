@@ -36,12 +36,14 @@ public class TestBook extends BaseTest{
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(TPS_ID != null)
-			if(!TPS_ID.get().isEmpty()){
-				Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-				cancel.setTravelPlanSegmentId(TPS_ID.get());
-				cancel.sendRequest();
-			}
+		try{
+			if(TPS_ID.get() != null)
+				if(!TPS_ID.get().isEmpty()){
+					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+					cancel.setTravelPlanSegmentId(TPS_ID.get());
+					cancel.sendRequest();
+				}			
+		}catch(Exception e){}
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})

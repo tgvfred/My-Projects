@@ -28,7 +28,7 @@ public class TestRetrieve_Negative extends BaseTest{
 		logValidItems.set(new LogItems());
 	}
 	
-	@AfterMethod
+	@AfterMethod(alwaysRun=true)
 	public void teardown(){
 		try{
 			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
