@@ -16,6 +16,19 @@ import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
+/**
+ * The following steps are taken for this test:
+ * 		<ol>
+ * 			<li>Get profile options using the GetOptions operation and the enum type "PROFILE_TYPE."</li>
+ * 			<li>Iterate over each returned option type and use that to retrieve profiles with the RetrieveProfiles operation.</li>
+ * 			<li>Once profiles are returned, the loop is exited.</li>
+ * 			<li>A profile is then searched for, using the results, that contains a routing type.</li>
+ * 			<li>The code from the first returned profile is then used to test the RetrieveProfilesByCode operation.</li>
+ * 			<li>Validations are performed to ensure the expected values match the actual values for various fields.</li>
+ * 		</ol>
+ * @author Waits Avery
+ *
+ */
 public class TestRetrieveProfilesByRoutingType extends BaseTest{
 	protected GetOptions go;
 	protected RetrieveProfiles retrieve;
@@ -52,6 +65,7 @@ public class TestRetrieveProfilesByRoutingType extends BaseTest{
 		}
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving profiles", retrieve);
 		
+		//Locate a profile with a routing type
 		for(int i = 0; i < retrieve.getProfileInfosRoutingTypes().length; i++){
 			if(!retrieve.getProfileInfosRoutingTypes()[i].isEmpty()){
 				indexOfNodeWithRoutingType = i;
