@@ -61,7 +61,8 @@ public class BaseTest {
 				containsRequest = false;
 				containsResponse = false;
 				
-				System.out.println(item.getServiceClass() + "#" + item.getServiceOperation());
+				// Uncomment the below line to view the service#operation under validation
+//				System.out.println(item.getServiceClass() + "#" + item.getServiceOperation());
 				
 				for(rs.moveFirst() ; rs.hasNext() ; rs.moveNext()){
 					
@@ -121,10 +122,13 @@ public class BaseTest {
 					//	+ "AND BP_STEP like 'Outbound%' "
 						+ "ORDER BY SVC_CLASS ASC";
 		
-		System.out.println(sql);
+		// Uncomment the below line to output the SQL to the console
+//		System.out.println(sql);
 		Database db = new OracleDatabase(environment, Database.DREAMS_LOG);
 		Recordset rs = new Recordset(db.getResultSet(sql));
-		rs.print();
+
+		// Uncomment the below line to output the recordset to the console
+//		rs.print();
 		
 		return rs;
 	}

@@ -510,7 +510,7 @@ public abstract class BaseSoapService{
 			
 			// Convert XML Request to SoapMessage
 			request = messageFactory.createMessage(new MimeHeaders(), new StringBufferInputStream(getRequest()));			
-		//	request.writeTo(System.out);
+//			request.writeTo(System.out);
 		//	System.out.println();
 
 			// Send out Soap Request to the endopoint

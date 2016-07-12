@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestRetrieve_Negative_Suite" parallel="methods" thread-count="5">
-	<parameter name="environment" value="Bashful" />
+	<parameter name="environment" value="Development" />
 	<test name="TestRetrieve_Negative">
 		<classes>
 			<class name="com.disney.composite.api.showDiningService.retrieve.TestRetrieve_Negative"/>

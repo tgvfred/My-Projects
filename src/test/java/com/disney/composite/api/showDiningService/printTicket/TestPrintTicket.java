@@ -27,14 +27,16 @@ public class TestPrintTicket extends BaseTest{
 		hh = new HouseHold(1);
 	}
 	
-	@AfterMethod
+	@AfterMethod(alwaysRun = true)
 	public void teardown(){
-		if(book != null)
-			if(!book.getTravelPlanSegmentId().isEmpty()){
-				Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-				cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
-				cancel.sendRequest();
-			}
+		try{
+			if(book != null)
+				if(!book.getTravelPlanSegmentId().isEmpty()){
+					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+					cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
+					cancel.sendRequest();
+				}
+		}catch(Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})

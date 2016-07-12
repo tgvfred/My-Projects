@@ -1,5 +1,6 @@
 package com.disney.composite.api.showDiningService.cancel;
 
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
@@ -21,6 +22,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 public class TestCancel_Negative extends BaseTest{
 	protected ThreadLocal<LogItems> logValidItems = new ThreadLocal<LogItems>();
 	protected ThreadLocal<String[]> expectedLogs = new ThreadLocal<String[]>();
+	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
 	@BeforeTest(alwaysRun = true)
 	@Parameters({ "environment" })
@@ -34,6 +36,18 @@ public class TestCancel_Negative extends BaseTest{
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		logValidItems.set(new LogItems());
+	}
+	
+	@AfterTest(alwaysRun=true)
+	public void teardown(){
+		try{
+			if(TPS_ID.get() != null)
+				if(!TPS_ID.get().isEmpty()){
+					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+					cancel.setTravelPlanSegmentId(TPS_ID.get());
+					cancel.sendRequest();
+				}
+		}catch(Exception e){}
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -94,6 +108,8 @@ public class TestCancel_Negative extends BaseTest{
 		Book book = new Book(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking a show dining reservation.", book);
+		TPS_ID.set(book.getTravelPlanSegmentId());
 		return book;
 	}
 	

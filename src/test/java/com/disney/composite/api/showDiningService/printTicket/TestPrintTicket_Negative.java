@@ -1,14 +1,11 @@
 package com.disney.composite.api.showDiningService.printTicket;
 
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.showDiningService.operations.Book;
-import com.disney.api.soapServices.showDiningService.operations.Cancel;
 import com.disney.api.soapServices.showDiningService.operations.PrintTicket;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
@@ -17,7 +14,6 @@ import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class TestPrintTicket_Negative extends BaseTest{
-	protected Book book = null;
 	protected ThreadLocal<LogItems> logValidItems = new ThreadLocal<LogItems>();
 	
 	@Override
@@ -27,15 +23,6 @@ public class TestPrintTicket_Negative extends BaseTest{
 		this.environment = environment;
 		hh = new HouseHold(1);
 		logValidItems.set(new LogItems());
-	}
-	
-	@AfterMethod
-	public void teardown(){
-		try{
-			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-			cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
-			cancel.sendRequest();
-		}catch(Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})

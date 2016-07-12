@@ -34,12 +34,14 @@ public class TestNoShow_Negative extends BaseTest{
 	
 	@AfterMethod(alwaysRun = true)
 	public void teardown(){
-		if(TPS_ID.get() != null)
-			if(!TPS_ID.get().isEmpty()){
-				Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-				cancel.setTravelPlanSegmentId(TPS_ID.get());
-				cancel.sendRequest();
-			}
+		try{
+			if(TPS_ID.get() != null)
+				if(!TPS_ID.get().isEmpty()){
+					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+					cancel.setTravelPlanSegmentId(TPS_ID.get());
+					cancel.sendRequest();
+				}
+		}catch(Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -52,7 +54,7 @@ public class TestNoShow_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidReservationNumber() {
-		String number = Randomness.randomNumber(4);
+		String number = "1234";
 		TestReporter.logScenario("Invalid Reservation Number");
 		NoShow noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(number);

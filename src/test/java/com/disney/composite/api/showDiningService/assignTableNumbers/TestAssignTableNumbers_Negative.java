@@ -1,6 +1,7 @@
 package com.disney.composite.api.showDiningService.assignTableNumbers;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -22,7 +23,7 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 	protected ScheduledEventReservation res = null;
 	
 	@Override
-	@BeforeTest(alwaysRun=true)
+	@BeforeMethod(alwaysRun=true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
@@ -31,14 +32,16 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 	}
 	
-	@AfterMethod
+	@AfterMethod(alwaysRun = true)
 	public void teardown(){
-		if(res != null)
-			if(!res.getConfirmationNumber().isEmpty()){
-				Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-				cancel.setTravelPlanSegmentId(res.getConfirmationNumber());
-				cancel.sendRequest();
-			}
+		try{
+			if(res != null)
+				if(!res.getConfirmationNumber().isEmpty()){
+					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+					cancel.setTravelPlanSegmentId(res.getConfirmationNumber());
+					cancel.sendRequest();
+				}
+		}catch(Exception e){}
 	}
 
     @Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
