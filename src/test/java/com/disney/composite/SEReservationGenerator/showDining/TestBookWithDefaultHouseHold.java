@@ -44,12 +44,12 @@ public class TestBookWithDefaultHouseHold {
 	
 	@Test
 	public void testBookWithDefaultHouseHold_UpdatePartyRoles(){
-		party.sendToApi(environment);
+//		party.sendToApi(environment);
 		book();
 	}
 	
 	private void book(){
-		res = new ShowDiningReservation(environment,party);
+		res = new ShowDiningReservation(environment, party);
 		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		travelPlanId = res.getTravelPlanId();
 		reservationNumber = res.getConfirmationNumber();
