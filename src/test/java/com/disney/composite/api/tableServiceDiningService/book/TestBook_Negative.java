@@ -237,7 +237,7 @@ public class TestBook_Negative extends BaseTest{
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("TableServiceDiningServiceIF", "book", true);		
-		validateLogs(book, logValidItems);
+		validateLogs(book, logValidItems, 10000);
 		
 		LogItems logInvalidItems = new LogItems();
 		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);

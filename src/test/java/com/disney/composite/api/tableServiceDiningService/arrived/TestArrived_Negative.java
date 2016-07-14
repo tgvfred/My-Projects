@@ -75,7 +75,7 @@ public class TestArrived_Negative  extends BaseTest{
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("TableServiceDiningServiceIF", "arrived", true);
-		validateLogs(arrived, logValidItems);
+		validateLogs(arrived, logValidItems, 10000);
 		
 		LogItems logInvalidItems = new LogItems();
 		logInvalidItems.addItem("ChargeGroupIF", "checkIn", false);

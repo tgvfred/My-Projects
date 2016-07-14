@@ -51,7 +51,7 @@ public class TestCancel extends BaseTest{
 		if(environment.equalsIgnoreCase("Sleepy")){
 			logItems.addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false); //Sleepy only
 		}
-		validateLogs(cancel, logItems);
+		validateLogs(cancel, logItems, 10000);
 	}
 
 }

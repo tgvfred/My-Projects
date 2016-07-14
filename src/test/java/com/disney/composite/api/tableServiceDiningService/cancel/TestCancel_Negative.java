@@ -98,7 +98,7 @@ public class TestCancel_Negative  extends BaseTest{
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("TableServiceDiningServiceIF", "cancel", true);
-		validateLogs(cancel, logValidItems);
+		validateLogs(cancel, logValidItems, 10000);
 		
 		LogItems logInvalidItems = new LogItems();
 		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);

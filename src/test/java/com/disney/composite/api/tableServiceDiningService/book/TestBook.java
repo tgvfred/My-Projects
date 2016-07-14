@@ -100,6 +100,6 @@ public class TestBook extends BaseTest{
 			logItems.addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false); //Sleepy only
 		}
 			
-		validateLogs(book, logItems);
+		validateLogs(book, logItems, 10000);
 	}
 }

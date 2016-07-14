@@ -50,6 +50,6 @@ public class TestArrived  extends BaseTest{
 		if(environment.equalsIgnoreCase("Sleepy")){
 			logItems.addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false); //Sleepy only
 		}
-		validateLogs(arrived, logItems);
+		validateLogs(arrived, logItems, 10000);
 	}
 }
