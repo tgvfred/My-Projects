@@ -1,4 +1,4 @@
-package com.disney.composite.api.tableServiceDiningService;
+package com.disney.composite.api.tableServiceDiningService_old;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;

@@ -1,4 +1,4 @@
-package com.disney.composite.api.eventDiningService.book;
+package com.disney.composite.api.tableServiceDiningService.book;
 
 import org.testng.annotations.Test;
 
