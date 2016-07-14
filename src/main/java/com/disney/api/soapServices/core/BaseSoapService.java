@@ -77,6 +77,7 @@ import com.disney.api.soapServices.core.exceptions.XPathNullNodeValueException;
 import com.disney.test.utils.Randomness;
 import com.disney.test.utils.Regex;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.VirtualTable;
@@ -299,7 +300,7 @@ public abstract class BaseSoapService{
 	 *            String: Environment under test
 	 */
 	protected void setEnvironment(String environment) {
-		strEnvironment = environment;
+		strEnvironment = Environment.getEnvironmentName(environment);
 	}
 
 	/**
@@ -527,7 +528,7 @@ public abstract class BaseSoapService{
 					"Operation given did not match any operations in the service"
 							+ uoe.getCause());
 		} catch (SOAPException soape) {
-			throw new RuntimeException(soape.getCause());
+			throw new RuntimeException(soape.getMessage(), soape.getCause());
 		} catch (IOException ioe) {
 			throw new RuntimeException("Failed to read the request properly"
 					+ ioe.getCause());
@@ -864,15 +865,15 @@ public abstract class BaseSoapService{
 		setEnvironment(environment);
 		setService(service);
 		// include the %20 as whitespace for URL format
-		if (environment.toLowerCase().contentEquals("snow white") || environment.toLowerCase().contentEquals("snow_white")) {
-			environment = "Snow%20White";
-		} else if (environment.toLowerCase().contentEquals("evil queen") || environment.toLowerCase().contentEquals("evil_queen")) {
-			environment = "Evil%20Queen";
+		if (getEnvironment().toLowerCase().contentEquals("snow white") || getEnvironment().toLowerCase().contentEquals("snow_white")) {
+			setEnvironment("Snow%20White");
+		} else if (getEnvironment().toLowerCase().contentEquals("evil queen") || getEnvironment().toLowerCase().contentEquals("evil_queen")) {
+			setEnvironment("Evil%20Queen");
 		}
 		String url = "http://fldcvpswa6204.wdw.disney.com/EnvSrvcEndPntRepository/rest/retrieveServiceEndpoint/{environment}/{service}";
 		String responseXML = "";
 		Document responseDoc = null;
-		url = url.replace("{environment}", WordUtils.capitalize(environment));
+		url = url.replace("{environment}", WordUtils.capitalize(getEnvironment()));
 		url = url.replace("{service}", service);
 
 		try { 
@@ -902,15 +903,15 @@ public abstract class BaseSoapService{
 		setEnvironment(environment);
 
 		// include the %20 as whitespace for URL format
-		if (environment.toLowerCase().contentEquals("snow white") || environment.toLowerCase().contentEquals("snow_white")) {
-			environment = "Snow%20White";
-		} else if (environment.toLowerCase().contentEquals("evil queen") || environment.toLowerCase().contentEquals("evil_queen")) {
-			environment = "Evil%20Queen";
+		if (getEnvironment().toLowerCase().contentEquals("snow white") || getEnvironment().toLowerCase().contentEquals("snow_white")) {
+			setEnvironment("Snow%20White");
+		} else if (getEnvironment().toLowerCase().contentEquals("evil queen") || getEnvironment().toLowerCase().contentEquals("evil_queen")) {
+			setEnvironment("Evil%20Queen");
 		}
-		String url = "http://tdm-win2008r2-b.wdw-ilab.wdw.disney.com/EnvSrvcEndPntRepository/rest/retrieveServiceEndpoint/{environment}/{service}";
+		String url = "http://fldcvpswa6204.wdw.disney.com/EnvSrvcEndPntRepository/rest/retrieveServiceEndpoint/{environment}/{service}";
 		String responseXML = "";
 		Document responseDoc = null;
-		url = url.replace("{environment}", environment);
+		url = url.replace("{environment}", WordUtils.capitalize(getEnvironment()));
 		url = url.replace("{service}", service);
 
 		try { 
