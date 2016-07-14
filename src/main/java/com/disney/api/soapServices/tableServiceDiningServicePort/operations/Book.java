@@ -510,4 +510,10 @@ public class Book extends TableServiceDiningServicePort {
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency/confirmationLocatorValue", confirmationLocatorValue);		
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/travelAgency/guestConfirmationLocationId", guestConfirmationLocationId);
 	}
+	
+	/**
+	 * Sets the service period ID in the SOAP request
+	 * @param value - service period ID
+	 */
+	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/servicePeriodId", value);}
 }
