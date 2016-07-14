@@ -70,7 +70,7 @@ public class TestModify_Negative extends BaseTest{
 	public void invalidBookDateExceeds180DaysInFuture(){		
 		TestReporter.logScenario("Booking Date Exceeds 180 Days");
 		Modify modify = modify(book());
-		modify.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(181));
+		modify.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(182));
 		sendRequestAndValidateLogs(modify, "RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})

@@ -66,7 +66,7 @@ public class TestValidateBooking extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void bookDateBeyond180Days(){
 		TestReporter.logStep("Validate a Show Dining Booking - Book Date Beyond 180 Days");
-		ValidateBooking validate = setupValidateBookingInstance(book.getRequestFacilityId(), book.getRequestProductId(), Randomness.generateCurrentXMLDatetime(181), book.getRequestServicePeriodId());
+		ValidateBooking validate = setupValidateBookingInstance(book.getRequestFacilityId(), book.getRequestProductId(), Randomness.generateCurrentXMLDatetime(182), book.getRequestServicePeriodId());
 		TestReporter.assertEquals(validate.getStopReservation(),"true", "The 'Stop Reservation' value ["+validate.getStopReservation()+"] was not 'true' as expected.");
 		TestReporter.assertEquals(validate.getStopReason(),"Day Guest cannot book a Dining Reservation beyond 180 days from booking date", "Verify the stop reason ["+validate.getStopReason()+"] matches that which is expected [Day Guest cannot book a Dining Reservation beyond 180 days from booking date].");
 		TestReporter.assertEquals(validate.getRulesFired(),"OneEighty_Ten_Rule_DAY_GUEST_2", "Verify the rules fired ["+validate.getRulesFired()+"] matches that which is expected [OneEighty_Ten_Rule_DAY_GUEST_2].");

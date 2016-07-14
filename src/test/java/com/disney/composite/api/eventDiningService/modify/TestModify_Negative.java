@@ -369,7 +369,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setFacilityId(res.getFacilityId());
 		modify.setServiceStartDate(res.getServiceStartDate());
 		modify.setServicePeriodId(res.getServicePeriodId());
-		modify.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("181"));
+		modify.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("182"));
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getFaultString().contains("RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date"), modify.getFaultString() ,modify);
 
