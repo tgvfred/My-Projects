@@ -30,6 +30,7 @@ public class TestArrived  extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testArrived(){
+		TestReporter.logScenario("Arrived");
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber(res.getConfirmationNumber());
 		arrived.sendRequest();

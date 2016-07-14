@@ -40,7 +40,7 @@ public class TestArrived_Negative  extends BaseTest{
 		}catch(Exception e){}
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService", "negative"})
 	public void missingReservationNumber(){
 		TestReporter.logScenario("Missing Reservation");
 		Arrived arrived = new Arrived(this.environment,"Main");
@@ -49,7 +49,7 @@ public class TestArrived_Negative  extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService", "negative"})
 	public void invalidReservationNumber(){
 		TestReporter.logScenario("Arrived");
 		Arrived arrived = new Arrived(this.environment,"Main");
@@ -57,7 +57,7 @@ public class TestArrived_Negative  extends BaseTest{
 		sendRequestAndValidateLogs(arrived, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService", "negative"})
 	public void cancelledReservation(){
 		TestReporter.logScenario("Cancelled Reservation");
 		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
