@@ -83,14 +83,21 @@ public class TestBook extends BaseTest{
 	
 	private void addAndValidateLogs(Book book){
 		LogItems logItems = new LogItems();
+		logItems.addItem("TableServiceDiningServiceIF", "book", false);
 		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
 		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
 		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
 		logItems.addItem("TravelPlanServiceV3", "create", false);
 		logItems.addItem("UpdateInventory", "updateInventory", false);
+		logItems.addItem("TravelPlanServiceV3SEI", "create", false);
+		logItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("GuestLinkServiceV1", "createEntitlementReference", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);			
 		
 		if(environment.equalsIgnoreCase("Sleepy")){
 			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+			logItems.addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false); //Sleepy only
 		}
 			
 		validateLogs(book, logItems);
