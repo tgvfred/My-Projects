@@ -27,35 +27,35 @@ public class TestBook extends BaseTest{
 		}catch(Exception e){}
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "tableServiceDiningServiceIF"})
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testBook(){
 		TestReporter.logScenario("1 Adult");
 		hh = new HouseHold(1);	
 		addAndValidateLogs(bookAndValidate(hh));
 	}
 
-	@Test(groups = {"api", "regression", "dining", "tableServiceDiningServiceIF"})
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testBookWith2Adults(){
 		TestReporter.logScenario("2 Adults");
 		hh = new HouseHold("2 Adults");	
 		addAndValidateLogs(bookAndValidate(hh));
 	}
 
-	@Test(groups = {"api", "regression", "dining", "tableServiceDiningServiceIF"})
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testBookWith4Adults(){
 		TestReporter.logScenario("4 Adults");
 		hh = new HouseHold("4 Adults");	
 		addAndValidateLogs(bookAndValidate(hh));
 	}
 
-	@Test(groups = {"api", "regression", "dining", "tableServiceDiningServiceIF"})
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testBookWith2Adults2Child(){
 		TestReporter.logScenario("2 Adults, 2 Children");
 		hh = new HouseHold("2 Adults 2 Child");	
 		addAndValidateLogs(bookAndValidate(hh));
 	}
 
-	@Test(groups = {"api", "regression", "dining", "tableServiceDiningServiceIF"})
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testBookWith4Adults2Child2Infant(){
 		TestReporter.logScenario("4 Adults, 2 Children, 2 Infants");
 		hh = new HouseHold("4 Adults 2 Child 2 Infant");	
@@ -63,7 +63,7 @@ public class TestBook extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "tableServiceDiningServiceIF"})
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testBookWith12InParty(){
 		TestReporter.logScenario("12 Adults");
 		hh = new HouseHold(12);		
