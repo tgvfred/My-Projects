@@ -10,7 +10,7 @@ public class Dreams {
 	final static String LILONOTILLROLE = "null";
 	
 	public static String getReservationInfoByTpsId(final String tps){
-		return  " SELECT tp.TP_ID, tps.TPS_ID, tps.TRVL_STS_NM TPS_TRAVEL_STATUS, tps.SRC_ACCT_CTR_ID, tps.TPS_ARVL_DT, tps.TPS_DPRT_DT, tc_grp.TC_GRP_NB, tc_grp.TC_GRP_TYP_NM,tc.TC_ID, tc.TC_TYP_NM, tc.PROD_ID, tc.TC_STRT_DTS , tc.TC_END_DTS, tc.PROD_TYP_NM, tc.FAC_ID, tc.TRVL_STS_NM TC_TRVL_STS_NM " +
+		return  " SELECT tp.TP_ID, tps.TPS_ID, tps.TRVL_STS_NM TPS_TRAVEL_STATUS, tps.SRC_ACCT_CTR_ID, tps.TPS_ARVL_DT, tps.TPS_DPRT_DT, tc_grp.TC_GRP_NB, tc_grp.TC_GRP_TYP_NM,tc.TC_ID, tc.TC_TYP_NM, tc.PROD_ID, tc.TC_STRT_DTS , tc.TC_END_DTS, tc.PROD_TYP_NM, tc.FAC_ID, tc.TRVL_STS_NM TC_TRVL_STS_NM, ASGN_OWN_ID TC_ASGN_OWN_ID " +
 				" FROM RES_MGMT.TP, RES_MGMT.TPS, RES_MGMT.TC_GRP, RES_MGMT.TC " +
 				" WHERE tp.TP_ID = tps.TP_ID " +
 				" AND tps.TPS_ID = TC_GRP.TPS_ID " +
@@ -40,6 +40,10 @@ public class Dreams {
 	
 	public static String getTpsIDFromExternalReference(String externalRefVal){
 		return "SELECT TPS_ID FROM RES_MGMT.TPS_EXTNL_REF WHERE TPS_EXTNL_REF_VL = '" + externalRefVal + "'";
+	}
+
+	public static String getTcReservableResourceID(String tcId){
+		return "SELECT RSRC_INVTRY_TYP_CD FROM RES_MGMT.TC_RSRVBL_RSRC WHERE TC_ID = '" + tcId + "'";
 	}
 	
 	// Query to retrieve a lilo user
