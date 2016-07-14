@@ -1,83 +1,80 @@
 package com.disney.composite.api.tableServiceDiningService.arrived;
 
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.eventDiningService.operations.Arrived;
+import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Arrived;
+import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
-import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.TableServiceDiningReservation;
 
 public class TestArrived_Negative  extends BaseTest{
 	// Defining global variables
-	protected String TPS_ID = null;
-	protected ScheduledEventReservation res = null;
+	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
 	@Override
-	@BeforeTest(alwaysRun = true)
+	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		res = new EventDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 
+	@AfterMethod(alwaysRun=true)
+	public void teardown(){
+		try{
+			if(TPS_ID.get() != null)
+				if(!TPS_ID.get().isEmpty()){
+					Cancel cancel = new Cancel(environment, "Main");
+					cancel.setReservationNumber(TPS_ID.get());
+					cancel.sendRequest();
+				}
+		}catch(Exception e){}
+	}
+	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingReservationNumber(){
+		TestReporter.logScenario("Missing Reservation");
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		arrived.sendRequest();
-		TestReporter.logAPI(!arrived.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0"), arrived.getFaultString() ,arrived);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("EventDiningServiceIF", "arrived", true);
-		validateLogs(arrived, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("ChargeGroupIF", "checkIn", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateNotInLogs(arrived, logInvalidItems);
+		sendRequestAndValidateLogs(arrived, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
 	}
 	
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidReservationNumber(){
+		TestReporter.logScenario("Arrived");
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber("11111");
-		arrived.sendRequest();
-		TestReporter.logAPI(!arrived.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111"), arrived.getFaultString() ,arrived);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("EventDiningServiceIF", "arrived", true);
-		validateLogs(arrived, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("ChargeGroupIF", "checkIn", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateNotInLogs(arrived, logInvalidItems);
+		sendRequestAndValidateLogs(arrived, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void cancelledReservation(){
-		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, hh);
-		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		res2.cancel();
+		TestReporter.logScenario("Cancelled Reservation");
+		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.getConfirmationNumber());
+		res.cancel();
 		Arrived arrived = new Arrived(this.environment,"Main");
-		arrived.setReservationNumber(res2.getConfirmationNumber());
+		arrived.setReservationNumber(res.getConfirmationNumber());
+		sendRequestAndValidateLogs(arrived, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED!");
+	}
+	
+	private void sendRequestAndValidateLogs(Arrived arrived, String faultString){
 		arrived.sendRequest();
-		TestReporter.logAPI(!arrived.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED!"), arrived.getFaultString() ,arrived);
+		TestReporter.logAPI(!arrived.getFaultString().contains(faultString), arrived.getFaultString() ,arrived);
 
 		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("EventDiningServiceIF", "arrived", true);
+		logValidItems.addItem("TableServiceDiningServiceIF", "arrived", true);
 		validateLogs(arrived, logValidItems);
 		
 		LogItems logInvalidItems = new LogItems();

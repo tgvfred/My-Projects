@@ -10,7 +10,7 @@ import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
-import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.TableServiceDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestArrived  extends BaseTest{
@@ -24,11 +24,11 @@ public class TestArrived  extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		res = new EventDiningReservation(this.environment, hh);
+		res = new TableServiceDiningReservation(this.environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testArrived(){
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber(res.getConfirmationNumber());
@@ -39,9 +39,17 @@ public class TestArrived  extends BaseTest{
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "checkIn", false);
-		logItems.addItem("EventDiningServiceIF", "arrived", false);
+		logItems.addItem("TableServiceDiningServiceIF", "arrived", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		
+
+		logItems.addItem("PartyIF", "retrieveParty", false);
+		
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false); //Sleepy only
+		}
 		validateLogs(arrived, logItems);
 	}
 }
