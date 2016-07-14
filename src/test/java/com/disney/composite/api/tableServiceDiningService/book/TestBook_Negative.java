@@ -3,7 +3,7 @@ package com.disney.composite.api.tableServiceDiningService.book;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.eventDiningService.operations.Book;
+import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Book;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -166,48 +166,6 @@ public class TestBook_Negative extends BaseTest{
 		LogItems logInvalidItems = new LogItems();
 		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
 		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);	
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(book, logInvalidItems);
-	}
-	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
-	public void invalidProductId(){
-		Book book = new Book(environment, "NoComponentsNoAddOns");
-		book.setParty(hh);
-		book.setProductId( "1491863");
-		book.sendRequest();
-		TestReporter.logAPI(!book.getFaultString().contains("Data not found. : No Product could be found for  productTypes [] productID=1491863"), book.getFaultString() ,book);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("EventDiningServiceIF", "book", true);
-		validateLogs(book, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);	
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(book, logInvalidItems);
-	}
-	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
-	public void invalidEnterpriseFacilityId(){
-		Book book = new Book(environment, "NoComponentsNoAddOns");
-		book.setParty(hh);
-		book.setRequestNodeValueByXPath("//enterpriseProductId",  "12214");
-		book.sendRequest();
-		TestReporter.logAPI(!book.getFaultString().contains("Data not found. : No Product could be found for  productTypes [] productID=149863 enterpriseProductID=12214"), book.getFaultString() ,book);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("EventDiningServiceIF", "book", true);
-		validateLogs(book, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);	
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);
 		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
 		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateNotInLogs(book, logInvalidItems);
@@ -402,27 +360,6 @@ public class TestBook_Negative extends BaseTest{
 	}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
-	public void missingProductId(){
-		Book book = new Book(environment, "NoComponentsNoAddOns");
-		book.setParty(hh);
-		book.setProductId(BaseSoapCommands.REMOVE_NODE.toString());
-		book.sendRequest();
-		TestReporter.logAPI(!book.getFaultString().contains("PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!"), book.getFaultString() ,book);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("EventDiningServiceIF", "book", true);
-		validateLogs(book, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);	
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(book, logInvalidItems);
-	}
-
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingProductType(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
@@ -569,4 +506,20 @@ public class TestBook_Negative extends BaseTest{
 		validateNotInLogs(book, logInvalidItems);
 	}
 
+	private void sendRequestAndValidateLogs(Book book, String fault){
+		book.sendRequest();
+		TestReporter.logAPI(!book.getFaultString().contains(fault), book.getFaultString() ,book);
+		
+		LogItems logValidItems = new LogItems();
+		logValidItems.addItem("EventDiningServiceIF", "book", true);
+		validateLogs(book, logValidItems);
+		
+		LogItems logInvalidItems = new LogItems();
+		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
+		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
+		validateNotInLogs(book, logInvalidItems);
+	}
 }
