@@ -26,8 +26,8 @@ public class UpdateInventoryForScheduledEvents extends AccommodationInventoryReq
 	 */
 	public void setAssignmentRequestDetailsDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/assignmentRequestDetails/date", value);}
 	/**
-	 * assignment request details is all day flage
-	 * @param value - request details is all day flage
+	 * assignment request details is all day flag
+	 * @param value - request details is all day flag
 	 */
 	public void setAssignmentRequestDetailsIsAllDay(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/assignmentRequestDetails/isAllDay", value);}
 	/**

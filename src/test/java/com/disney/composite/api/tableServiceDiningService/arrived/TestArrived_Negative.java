@@ -81,6 +81,7 @@ public class TestArrived_Negative  extends BaseTest{
 		logInvalidItems.addItem("ChargeGroupIF", "checkIn", false);
 		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		logInvalidItems.addItem("PartyIF", "retrieveParty", false);
 		validateNotInLogs(arrived, logInvalidItems);
 	}
 }

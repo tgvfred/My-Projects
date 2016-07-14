@@ -34,19 +34,14 @@ public class TestArrived  extends BaseTest{
 		arrived.setReservationNumber(res.getConfirmationNumber());
 		arrived.sendRequest();
 		TestReporter.logAPI(!arrived.getResponseStatusCode().contains("200"), arrived.getFaultString() ,arrived);
-		TestReporter.logAPI(!arrived.getArrivalStatus().equals("SUCCESS"), "The response ["+arrived.getArrivalStatus()+"] was not 'SUCCESS' as expected.", arrived);
-		
+		TestReporter.logAPI(!arrived.getArrivalStatus().equals("SUCCESS"), "The response ["+arrived.getArrivalStatus()+"] was not 'SUCCESS' as expected.", arrived);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "checkIn", false);
 		logItems.addItem("TableServiceDiningServiceIF", "arrived", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		
-
-		logItems.addItem("PartyIF", "retrieveParty", false);
-		
-		
+		logItems.addItem("PartyIF", "retrieveParty", false);		
 		if(environment.equalsIgnoreCase("Sleepy")){
 			logItems.addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false); //Sleepy only
 		}

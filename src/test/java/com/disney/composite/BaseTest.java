@@ -20,6 +20,7 @@ public class BaseTest {
 	protected String environment;
 	protected HouseHold hh = null;
 	protected int logTimeout = 3000;
+	protected int defaultTimeout = 3000;
 	//private List<LogItems> logItems = new ArrayList<LogItems>();
 	
 	@BeforeMethod(alwaysRun = true)
@@ -45,6 +46,7 @@ public class BaseTest {
 	
 	
 	protected void validateNotInLogs(BaseSoapService soap, LogItems logItems){
+		logTimeout = defaultTimeout;
 		validate(false,soap,logItems);
 	}
 	
