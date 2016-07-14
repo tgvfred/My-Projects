@@ -235,17 +235,22 @@ public class TestReporter {
 	}
 	
 	public static void logAPI(boolean fail, String message, BaseSoapService bs){
+		String failFormat = "";
 		if(fail){
+			failFormat = "<font size = 2 color=\"red\">";
 			logFailure(message);
 		}
-			logNoHtmlTrim("<br /><b>SOAP REQUEST</b>");
+			logNoHtmlTrim(failFormat+ "<b>SOAP REQUEST [ " + bs.getService() + "#" + bs.getOperation() + " ] </b></font>");
 			Reporter.setEscapeHtml(true);
 			logNoXmlTrim(bs.getRequest().replaceAll("</*>", "</*>"));
 			Reporter.setEscapeHtml(false);
-			logNoHtmlTrim("<br /><b>SOAP RESPONSE</b>" );
+			Reporter.log("<br/>");
+			logNoHtmlTrim(failFormat + "<b>SOAP RESPONSE [ " + bs.getService() + "#" + bs.getOperation() + " ] </b></font>" );
 			Reporter.setEscapeHtml(true);
 			logNoXmlTrim(bs.getResponse());
 			Reporter.setEscapeHtml(false);
+			Reporter.log("<br/>");
+			
 		if(fail){
 			throw new AutomationException(message);
 		}
