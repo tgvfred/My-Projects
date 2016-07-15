@@ -63,7 +63,7 @@ public class TestReporter {
 	}
 
 	public static void logNoHtmlTrim(String message) {
-		Reporter.log(getTimestamp() + " :: " + message + "<br />");
+		Reporter.log(message + "<br />");
 		if(getPrintToConsole()) System.out.println(getTimestamp() + message.trim());
 	}
 	public static void logNoXmlTrim(String message) {
@@ -240,7 +240,7 @@ public class TestReporter {
 			failFormat = "<font size = 2 color=\"red\">";
 			logFailure(message);
 		}
-			logNoHtmlTrim(failFormat+ "<b>SOAP REQUEST [ " + bs.getService() + "#" + bs.getOperation() + " ] </b></font>");
+			logNoHtmlTrim("<font size = 2><b>Endpoint: " + bs.getServiceURL() + "</b></font><br/>"+failFormat+ "<b>SOAP REQUEST [ " + bs.getService() + "#" + bs.getOperation() + " ] </b></font>");
 			Reporter.setEscapeHtml(true);
 			logNoXmlTrim(bs.getRequest().replaceAll("</*>", "</*>"));
 			Reporter.setEscapeHtml(false);
