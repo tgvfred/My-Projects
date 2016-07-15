@@ -63,6 +63,7 @@ import com.disney.utils.dataFactory.guestFactory.Guest;
 import com.disney.utils.date.DateTimeConversion;
 
 
+@SuppressWarnings("unused")
 public class ReservationDecorator implements Reservation {
 	/*
 	 * General variables

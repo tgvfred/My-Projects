@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ShowDiningService_Suite">
+	<parameter name="environment" value="Sleepy" />
+	<suite-files>
+		<!-- Arrived -->
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/arrived/TestArrived_Negative.xml"></suite-file>
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/arrived/TestArrived.xml"></suite-file>
+		<!-- AssignTableNumbers -->
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/assignTableNumbers/TestAssignTableNumbers_Negative.xml"></suite-file>
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/assignTableNumbers/TestAssignTableNumbers.xml"></suite-file>
+		<!-- Book -->
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/book/TestBook_Negative.xml"></suite-file>
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/book/TestBook.xml"></suite-file>
+		<!-- Cancel -->
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/cancel/TestCancel_Negative.xml"></suite-file>
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/cancel/TestCancel.xml"></suite-file>
+		<!-- Modify -->
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/modify/TestModify.xml"></suite-file>
+		<!-- NoShow -->
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/noShow/TestNoShow_Negative.xml"></suite-file>
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/noShow/TestNoShow.xml"></suite-file>
+		<!-- PrintTicket -->
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/printTicket/TestPrintTicket_Negative.xml"></suite-file>
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/printTicket/TestPrintTicket.xml"></suite-file>
+		<!-- ReprintTicket -->
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/reprintTicket/TestReprintTicket_Negative.xml"></suite-file>
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/reprintTicket/TestReprintTicket.xml"></suite-file>
+		<!-- Retrieve -->
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/retrieve/TestRetrieve_Negative.xml"></suite-file>
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/retrieve/TestRetrieve.xml"></suite-file>
+		<!-- ValidateBooking -->
+		<suite-file path="src/test/resources/com/disney/composite/api/showDiningService/validateBooking/TestValidateBooking.xml"></suite-file>
+	</suite-files>
+</suite>

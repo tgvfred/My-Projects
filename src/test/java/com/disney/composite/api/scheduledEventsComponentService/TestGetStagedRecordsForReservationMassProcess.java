@@ -61,6 +61,6 @@ public class TestGetStagedRecordsForReservationMassProcess {
 			}
 			catch(AssertionError | AutomationException e){}
 		}
-		TestReporter.assertTrue(new Regex().match("[0-9]+", records.getTravelPlanSegmentId()), "The TPS ID ["+records.getTravelPlanSegmentId()+"] was not numeric as expected.");			
+		TestReporter.assertTrue(Regex.match("[0-9]+", records.getTravelPlanSegmentId()), "The TPS ID ["+records.getTravelPlanSegmentId()+"] was not numeric as expected.");			
 	}
 }

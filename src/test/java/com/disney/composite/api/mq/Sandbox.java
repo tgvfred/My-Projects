@@ -7,7 +7,7 @@ import com.disney.utils.TestReporter;
 
 public class Sandbox {
 
-	@Test
+	@Test(invocationCount=50, threadPoolSize=50)
 	public void Bashful_WDW(){
 		RoomQuote rq = new RoomQuote("Bashful", "WDW", false, "Main");
 		rq.sendRequest();

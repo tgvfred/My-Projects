@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TableServiceDiningService_Suite" parallel="classes" thread-count="9" data-provider-thread-count="10">
-	<parameter name="environment" value="Grumpy" />
+<suite name="TableServiceDiningService_Suite" parallel="methods" thread-count="20">
+	<parameter name="environment" value="Sleepy" />
 	<test name="TableServiceDiningService">
 		<packages>
 			<package name="com.disney.composite.api.tableServiceDiningService.*"></package>

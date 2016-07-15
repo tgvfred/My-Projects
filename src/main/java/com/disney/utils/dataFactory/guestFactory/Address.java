@@ -13,7 +13,7 @@ import com.disney.utils.Randomness;
 public class Address{
 
 	private String guestSeedPath = "/com/disney/utils/guestFactory/seeds/";
-	private String locatorId = "";
+	private String locatorId = "0";
 	private String[] streets = Randomness.seedReader(guestSeedPath + "Streets");
 	private String[] cities = Randomness.seedReader(guestSeedPath + "Cities");
 	private String[] states = Randomness.seedReader(guestSeedPath + "States");

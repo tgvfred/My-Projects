@@ -1,6 +1,7 @@
 package com.disney.utils.dataFactory.database.databaseImpl;
 
 import com.disney.test.utils.Base64Coder;
+import com.disney.utils.Environment;
 import com.disney.utils.dataFactory.database.Database;
 
 public class OracleDatabase extends Database {	
@@ -12,12 +13,16 @@ public class OracleDatabase extends Database {
 	private String dbMcPassword = Base64Coder.decodeString("bWNhZG1pbg==");
 	
 	public OracleDatabase(String environment, String tnsName){
+		environment = Environment.getEnvironmentName(environment);
 		switch (environment.toLowerCase()) {
 		case "snowwhite":
 			environment = "SNOW_WHITE";
 			break;
 		case "evilqueen":
 			environment = "EVIL_QUEEN";
+			break;
+		case "development":
+			environment = "DEV3";
 			break;
 		default:
 			break;

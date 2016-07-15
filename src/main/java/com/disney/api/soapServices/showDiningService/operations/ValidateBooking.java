@@ -6,9 +6,7 @@ import com.disney.utils.XMLTools;
 public class ValidateBooking extends ShowDiningService {
 	public ValidateBooking(String environment, String scenario) {
 		super(environment);
-		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("validateBooking")));
-//		System.out.println(getRequest());
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
@@ -25,4 +23,6 @@ public class ValidateBooking extends ShowDiningService {
 	public void setGuestId(String value){setRequestNodeValueByXPath("/Envelope/Body/validateBooking/dinnerShowPackage/partyRoles/guest/guestId", value);}
 	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/validateBooking/dinnerShowPackage/servicePeriodId", value);}
 	public String getStopReservation(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/stopReservation");}
+	public String getStopReason(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/stopReason");}
+	public String getRulesFired(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/rulesFired");}
 }

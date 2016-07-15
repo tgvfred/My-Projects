@@ -25,5 +25,7 @@ public class BuyPoints extends AccommodationSalesServicePort{
 	public String gettravelComponentId(){
 		return getResponseNodeValueByXPath("/Envelope/Body/buyPointsResponse/response/travelComponentId");
 	}
-	
+	public String getTravelPlanId(){return getResponseNodeValueByXPath("/Envelope/Body/buyPointsResponse/response/travelPlanId");}
+	public String getTravelComponentId(){return getResponseNodeValueByXPath("/Envelope/Body/buyPointsResponse/response/travelComponentId");}
+	public String getTravelComponentGroupingId(){return getResponseNodeValueByXPath("/Envelope/Body/buyPointsResponse/response/travelComponentGroupingId");}
 }

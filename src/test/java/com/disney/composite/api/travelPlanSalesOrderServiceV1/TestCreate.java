@@ -48,8 +48,8 @@ public class TestCreate {
 		create.setGuestAddressZipCode(hh.primaryGuest().primaryAddress().getZipCode());
 		create.sendRequest();
 		TestReporter.assertEquals(create.getResponseStatusCode(), "200", "An error occurred during creation.\nRequest:\n"+create.getRequest()+"\nResonse:\n"+create.getResponse());
-		TestReporter.assertTrue(new Regex().match("[0-9]+", create.getTravelPlanId()), "The TP_ID ["+create.getTravelPlanId()+"] was not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", create.getTravelPlanSegmentId()), "The TPS_ID ["+create.getTravelPlanId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", create.getTravelPlanId()), "The TP_ID ["+create.getTravelPlanId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", create.getTravelPlanSegmentId()), "The TPS_ID ["+create.getTravelPlanId()+"] was not numeric as expected.");
 	}
 	
 	private void generatHousehold(){

@@ -7,8 +7,6 @@ public class AssignTableNumbers extends ShowDiningService {
 	public AssignTableNumbers(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("assignTableNumbers")));
-		System.out.println(getRequest());
-	
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
@@ -22,4 +20,9 @@ public class AssignTableNumbers extends ShowDiningService {
 	public void setSalesChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/assignTableNumbers/assignTableNumbersRequest/salesChannel", value);}
 	public void setCommunicationsChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/assignTableNumbers/assignTableNumbersRequest/communicationChannel", value);}
 	public String getStatus(){return getResponseNodeValueByXPath("Envelope/Body/assignTableNumbersResponse/status");}
+	/**
+	 * Set the table number in the SOAP request
+	 * @param value - table number
+	 */
+	public void setTableNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/assignTableNumbers/assignTableNumbersRequest/inventoryDetails/resourceAssignmentIdentifier", value);}
 }

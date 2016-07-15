@@ -10,7 +10,7 @@ import com.disney.test.utils.Randomness;
 */
 public class Email{
 	private boolean isPrimary = false;
-	private String locatorId = "";
+	private String locatorId = "0";
 	private String country = "";
 	private String type = "";
 	private String email = "";

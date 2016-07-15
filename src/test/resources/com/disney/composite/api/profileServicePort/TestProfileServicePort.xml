@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestProfileServicePort_Suite" parallel="classes" thread-count="20">
+	<parameter name="environment" value="Development" />
+	<test name="TestProfileServicePort">
+		<packages>
+			<package name="com.disney.composite.api.profileServicePort.*"></package>
+		</packages>
+	</test>
+</suite>

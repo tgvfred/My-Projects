@@ -7,9 +7,7 @@ public class Arrived extends EventDiningService {
 	public Arrived(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
-		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("arrived")));
-//		System.out.println(getRequest());
-	
+		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("arrived")));	
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));

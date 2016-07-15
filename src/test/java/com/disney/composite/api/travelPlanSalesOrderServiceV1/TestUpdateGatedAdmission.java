@@ -8,7 +8,6 @@ import com.disney.api.soapServices.travelPlanSalesOrderServiceV1.operations.Crea
 import com.disney.api.soapServices.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.api.soapServices.travelPlanSalesOrderServiceV1.operations.UpdateGatedAdmission;
 import com.disney.utils.Randomness;
-import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 

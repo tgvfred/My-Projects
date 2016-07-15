@@ -40,8 +40,8 @@ public class TestBook {
 		book.get().setServiceStartDate(bookingDate.get());
 		book.get().sendRequest();
 		TestReporter.logAPI(!book.get().getResponseStatusCode().equals("200"), "An error occurred during booking.", book.get());
-		TestReporter.assertTrue(new Regex().match("[0-9]+", book.get().getReservationNumber()), "The reservation number ["+book.get().getReservationNumber()+"] was not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", book.get().getTravelPlanId()), "The travel plan ID ["+book.get().getTravelPlanId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.get().getReservationNumber()), "The reservation number ["+book.get().getReservationNumber()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.get().getTravelPlanId()), "The travel plan ID ["+book.get().getTravelPlanId()+"] was not numeric as expected.");
 	}
 	
 	private void generateHousehold(){

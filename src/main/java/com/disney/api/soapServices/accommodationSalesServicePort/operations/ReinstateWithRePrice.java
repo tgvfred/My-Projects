@@ -14,8 +14,7 @@ public class ReinstateWithRePrice extends AccommodationSalesServicePort{
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
 		removeComments() ;
 		removeWhiteSpace();
-	}
-	
+	}	
 	
 	public void setTravelComponentId(String Tcp_ID){
 		setRequestNodeValueByXPath("/Envelope/Body/reinstateWithRePrice/request/roomdetails/travelComponentId", Tcp_ID);
