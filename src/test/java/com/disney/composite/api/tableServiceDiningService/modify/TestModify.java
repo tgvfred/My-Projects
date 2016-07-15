@@ -37,7 +37,6 @@ public class TestModify extends BaseTest{
 					cancel.setReservationNumber(TPS_ID.get());
 					cancel.sendRequest();
 				}
-					
 		}catch(Exception e){}
 	}
 
