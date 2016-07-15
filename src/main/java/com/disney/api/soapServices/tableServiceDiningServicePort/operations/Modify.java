@@ -59,10 +59,15 @@ public class Modify extends TableServiceDiningServicePort {
 	 */
 	public void setPrimaryGuestMiddleName(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/primaryGuest/middleName", value);}
 	/**
-	 * Sets the service period ID in the SOAP request
+	 * Sets the product ID in the SOAP request
 	 * @param value - service period ID
 	 */
 	public void setProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/productId", value);}
+	/**
+	 * Sets the product type in the SOAP request
+	 * @param value - service period ID
+	 */
+	public void setProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/productType", value);}
 	/**
 	 * Sets the facility ID in the SOAP request
 	 * @param value - facility ID
