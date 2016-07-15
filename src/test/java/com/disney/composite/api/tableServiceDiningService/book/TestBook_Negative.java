@@ -102,7 +102,7 @@ public class TestBook_Negative extends BaseTest{
 		TestReporter.logScenario("Book More Than 180 Days In Advance");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("181"));
+		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("182"));
 		sendRequestAndValidateLogs(book, "RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date");
 	}
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})

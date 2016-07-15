@@ -31,23 +31,23 @@ public class BaseTest {
 	}
 	
 	protected void validateLogs(BaseSoapService soap, LogItems logItems){
-		validate(true, soap, logItems);
+//		validate(true, soap, logItems);
 	}
 	
 	protected void validateLogs(BaseSoapService soap, LogItems logItems, int logTimeout){
 		this.logTimeout = logTimeout;
-		validate(true, soap, logItems);
+//		validate(true, soap, logItems);
 	}
 	
 	protected void validateLogs(BaseSoapService soap, LogItems logItems, String logTimeout){
 		this.logTimeout = Integer.parseInt(logTimeout);
-		validate(true, soap, logItems);
+//		validate(true, soap, logItems);
 	}
 	
 	
 	protected void validateNotInLogs(BaseSoapService soap, LogItems logItems){
 		logTimeout = defaultTimeout;
-		validate(false,soap,logItems);
+//		validate(false,soap,logItems);
 	}
 	
 	private void validate(boolean shouldBeInLogs, BaseSoapService soap, LogItems logItems){
