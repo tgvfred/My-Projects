@@ -6,6 +6,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Cancel;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Modify;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
@@ -16,7 +17,6 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.TableServiceDining
 
 public class TestModify extends BaseTest{
 	// Defining global variables
-	protected ScheduledEventReservation res = null;
 	HouseHold hh = null;
 	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
@@ -26,58 +26,72 @@ public class TestModify extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		res = new TableServiceDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		TPS_ID.set(res.getConfirmationNumber());
 	}
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
 		try{
 			if(TPS_ID.get() != null)
-				if(!TPS_ID.get().isEmpty())
-					res.cancel();
+				if(!TPS_ID.get().isEmpty()){
+					Cancel cancel = new Cancel(environment, "Main");
+					cancel.setReservationNumber(TPS_ID.get());
+					cancel.sendRequest();
+				}
+					
 		}catch(Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModify(){
 		TestReporter.logScenario("1 Adult");
+		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.getConfirmationNumber());
 		HouseHold newParty = new HouseHold(1);
-		modifyAndValidateLogs(newParty);
+		modifyAndValidateLogs(newParty,res);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModifyTo2Adults(){
 		TestReporter.logScenario("2 Adults");
+		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold newParty = new HouseHold("2 Adults");
-		modifyAndValidateLogs(newParty);
+		modifyAndValidateLogs(newParty,res);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModifyTo4Adults(){
 		TestReporter.logScenario("4 Adults");
+		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold newParty = new HouseHold("4 Adults");
-		modifyAndValidateLogs(newParty);
+		modifyAndValidateLogs(newParty,res);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModifyTo2Adults2Child(){
 		TestReporter.logScenario("2 Adults, 2 Children");
+		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold newParty = new HouseHold("2 Adults 2 Child");
-		modifyAndValidateLogs(newParty);
+		modifyAndValidateLogs(newParty,res);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModifyTo4Adults2Child2Infant(){
 		TestReporter.logScenario("4 Adults, 2 Children, 2 Infants");
+		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold newParty = new HouseHold("4 Adults 2 Child 2 Infant");
-		modifyAndValidateLogs(newParty);
+		modifyAndValidateLogs(newParty,res);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModifyTo12Adults(){
 		TestReporter.logScenario("12 Adults");
+		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold newParty = new HouseHold(12);
-		modifyAndValidateLogs(newParty);
+		modifyAndValidateLogs(newParty,res);
 	}
 	
-	private void modifyAndValidateLogs(HouseHold newParty){
+	private void modifyAndValidateLogs(HouseHold newParty, ScheduledEventReservation res){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
