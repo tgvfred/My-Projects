@@ -86,6 +86,7 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDate(res.getServiceStartDate());
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred duringmodification.", modify);
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 		LogItems logItems = new LogItems();
