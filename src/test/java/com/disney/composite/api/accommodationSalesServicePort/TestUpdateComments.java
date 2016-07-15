@@ -1,12 +1,10 @@
 package com.disney.composite.api.accommodationSalesServicePort;
 
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.Book;
-import com.disney.api.soapServices.accommodationSalesServicePort.operations.RetrieveRates;
 import com.disney.api.soapServices.accommodationSalesServicePort.operations.UpdateComments;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;

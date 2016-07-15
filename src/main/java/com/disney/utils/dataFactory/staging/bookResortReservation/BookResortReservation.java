@@ -29,6 +29,7 @@ import com.disney.utils.dataFactory.staging.bookResortReservation.resorts.VeroBe
 
 
 public class BookResortReservation{
+	@SuppressWarnings("unused")
 	private String environment;
 	
 	public BookResortReservation(String environment){

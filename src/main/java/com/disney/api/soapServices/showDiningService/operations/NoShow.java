@@ -7,8 +7,6 @@ public class NoShow extends ShowDiningService {
 	public NoShow(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("noShow")));
-		System.out.println(getRequest());
-	
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
@@ -16,7 +14,7 @@ public class NoShow extends ShowDiningService {
 		removeWhiteSpace();
 	}
 	
-	public void setReservatinoNumber(String value){
+	public void setReservationNumber(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/noShow/noShowShowDiningRequest/reservationNumber", value);
 	}
 	

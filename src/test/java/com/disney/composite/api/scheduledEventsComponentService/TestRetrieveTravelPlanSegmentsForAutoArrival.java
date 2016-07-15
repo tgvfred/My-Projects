@@ -120,7 +120,7 @@ public class TestRetrieveTravelPlanSegmentsForAutoArrival {
 				}
 				
 				eventDiningBook.get().setProductType(ProductType);
-				eventDiningBook.get().setServicePeriosId(ServicePeriodId);
+				eventDiningBook.get().setServicePeriodId(ServicePeriodId);
 				eventDiningBook.get().setAddOnComponentType(AddOnComponentType);
 				eventDiningBook.get().setAddOnComponentId(AddOnComponentId);
 				eventDiningBook.get().setAddOnRevenueClassificationId(AddOnRevenueClassificationId);

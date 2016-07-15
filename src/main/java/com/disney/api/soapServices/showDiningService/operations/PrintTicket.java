@@ -7,8 +7,6 @@ public class PrintTicket extends ShowDiningService {
 	public PrintTicket(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("printTicket")));
-		System.out.println(getRequest());
-	
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));

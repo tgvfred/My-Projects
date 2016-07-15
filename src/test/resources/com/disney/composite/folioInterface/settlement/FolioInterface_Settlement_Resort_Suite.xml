@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="FolioInterface_Settlement_Resort_Suite">
+	<parameter name="environment" value="Grumpy" />
+	<test name="FolioInterface_Settlement_Resort" parallel="classes" thread-count="20">
+		<groups>
+			<run>
+				<include name="resort"></include>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.folioInterface.settlement.*"></package>
+		</packages>
+	</test>
+</suite>

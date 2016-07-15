@@ -25,4 +25,6 @@ public class ValidateBooking extends TableServiceDiningServicePort{
 	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/validateBooking/tableService/servicePeriodId", value);}
 	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/validateBooking/tableService/inventoryDetails/reservableResourceId", value);}
 	public String getStopReservation(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/stopReservation");}
+	public String getStopReason(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/stopReason");}
+	public String getRulesFired(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/rulesFired");}
 }

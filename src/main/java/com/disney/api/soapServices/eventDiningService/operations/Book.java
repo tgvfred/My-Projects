@@ -13,8 +13,6 @@ public class Book extends EventDiningService {
 		super(environment);
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("book")));
-//		System.out.println(getRequest());
-	
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
@@ -59,7 +57,7 @@ public class Book extends EventDiningService {
 	public void setFacilityName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/facilityName", value);}	
 	public void setProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/productId", value);}	
 	public void setProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/productType", value);}	
-	public void setServicePeriosId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/servicePeriodId", value);}	
+	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/servicePeriodId", value);}	
 	public void setSignInLocation(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/signInLocation", value);}	
 	public void setAddOnComponentType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/addOnComponents/componentPrices/componentType", value);}	
 	public void setAddOnComponentId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/addOnComponents/componentPrices/componentId", value);}	
@@ -322,4 +320,3 @@ public class Book extends EventDiningService {
 		}
 	}
 }
-

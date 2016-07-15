@@ -8,7 +8,6 @@ public class Retrieve extends EventDiningService {
 		super(environment);
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("retrieve")));
-//		System.out.println(getRequest());
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
@@ -65,4 +64,19 @@ public class Retrieve extends EventDiningService {
 	}
 	
 	public String getStatus(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveEventDiningResponse/EventDiningReservation/status");}
+	/**
+	 * Gets the total number of guests from the SOAP response
+	 * @return total number of guests 
+	 */
+	public int getNumberOfGuests(){return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveEventDiningResponse/EventDiningReservation/eventDiningPackage/partyRoles/guest").getLength();}
+	/**
+	 * Gets the facility ID from the SOAP response
+	 * @return facility ID 
+	 */
+	public String getResponseFacilityId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveEventDiningResponse/EventDiningReservation/eventDiningPackage/facilityId");}	
+	/**
+	 * Gets the primary guest age from the SOAP response
+	 * @return primary guest age 
+	 */
+	public String getPrimaryGuestAge(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveEventDiningResponse/EventDiningReservation/eventDiningPackage/partyRoles[1]/age");}
 }

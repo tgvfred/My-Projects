@@ -12,7 +12,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
@@ -25,30 +24,25 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.jayway.restassured.response.Headers;
 
 
 
 public class RestService {
-    private String cookie;
     protected RestService restService;
 	int statusCode = 0;
 	String responseFormat;
 	protected String responseAsString = null;
 	String userAgent; 
 	
-	protected CookieStore cookieStore = new BasicCookieStore();
 	protected HttpContext httpContext = new BasicHttpContext();
 	
 	protected HttpClient httpClient = null;
@@ -57,10 +51,8 @@ public class RestService {
 	
 	
 	//constructor
-	@SuppressWarnings("deprecation")
 	public RestService() {
 	    httpClient = HttpClientBuilder.create().build();
-	    httpContext.setAttribute("http.cookie-store", cookieStore);
 	}
 	
 	/*
@@ -78,15 +70,7 @@ public class RestService {
 	public String getResponseFormat(){ return responseFormat; }
 	
 	private void setResponseFormat(HttpResponse httpResponse){ responseFormat = ContentType.getOrDefault(httpResponse.getEntity()).getMimeType().replace("application/", "");	}
-	
-	private void setResponseCookie(HttpResponse httpResponse){
-	    Header[] header = httpResponse.getHeaders("Set-Cookie");
-	   // this.cookie = header[0].getValue(); 
-	}
-	
-	public String getResponseCookie(){
-	    return cookie;
-	}
+
 	/**
 	 * Sends a GET request
 	 * 
@@ -103,7 +87,6 @@ public class RestService {
 		
 		setStatusCode(httpResponse);		
 		setResponseFormat(httpResponse);
-		setResponseCookie(httpResponse);
 		
 		responseAsString = EntityUtils.toString(httpResponse.getEntity());
 		//System.out.println("String response: " + responseAsString);
@@ -152,7 +135,6 @@ public class RestService {
 		HttpResponse httpResponse = httpClient.execute(httppost, httpContext);
 		setStatusCode(httpResponse);		
 		setResponseFormat(httpResponse);
-		setResponseCookie(httpResponse);
 		
 		responseAsString = EntityUtils.toString(httpResponse.getEntity());
 		//System.out.println("String response: " + responseAsString);
@@ -174,7 +156,7 @@ public class RestService {
 		//HttpClient httpclient = HttpClients.createDefault();
 		HttpPost httppost = new HttpPost(URL);
 		httppost.setHeaders(headers);
-		httppost.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
+		httppost.setEntity(new UrlEncodedFormEntity(params,"UTF-8"));
 		
 		HttpResponse httpResponse = httpClient.execute(httppost, httpContext);
 		setStatusCode(httpResponse);		
@@ -214,7 +196,7 @@ public class RestService {
 	public String sendPutRequest(String URL, List<NameValuePair> params) throws ClientProtocolException, IOException{
 		//HttpClient httpclient = HttpClients.createDefault();
 		HttpPut putRequest = new HttpPut(URL);
-		putRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+		putRequest.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 		
 		HttpResponse httpResponse = httpClient.execute(putRequest, httpContext);
 		setStatusCode(httpResponse);		
@@ -229,7 +211,7 @@ public class RestService {
 	public String sendPutRequest(String URL,  Header[] headers ,List<NameValuePair> params) throws ClientProtocolException, IOException{
 		//HttpClient httpclient = HttpClients.createDefault();
 		HttpPut putRequest = new HttpPut(URL);
-		putRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+		putRequest.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 		if (headers != null) putRequest.setHeaders(headers);
 		HttpResponse httpResponse = httpClient.execute(putRequest, httpContext);
 		setStatusCode(httpResponse);		
@@ -266,7 +248,7 @@ public class RestService {
 	public String sendPatchRequest(String URL, Header[] headers, List<NameValuePair> params) throws ClientProtocolException, IOException{
 		//HttpClient httpclient = HttpClients.createDefault();
 		HttpPatch patchRequest = new HttpPatch(URL);
-		patchRequest.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
+		patchRequest.setEntity(new UrlEncodedFormEntity(params,"UTF-8"));
 		if (headers != null) patchRequest.setHeaders(headers);
 		
 		HttpResponse httpResponse = httpClient.execute(patchRequest, httpContext);

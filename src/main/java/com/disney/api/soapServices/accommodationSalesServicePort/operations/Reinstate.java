@@ -17,6 +17,15 @@ public class Reinstate extends AccommodationSalesServicePort{
 		removeWhiteSpace();
 	}
 	
+	public Reinstate(String environment) {
+		super(environment);		
+		//Generate a request from a project xml file
+		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("reinstate")));
+		generateServiceContext();
+		removeComments() ;
+		removeWhiteSpace();
+	}
+	
 	
 	public void setTravelComponentId(String Tcp_ID){
 		setRequestNodeValueByXPath("/Envelope/Body/reinstate/request/roomdetails/travelComponentId", Tcp_ID);

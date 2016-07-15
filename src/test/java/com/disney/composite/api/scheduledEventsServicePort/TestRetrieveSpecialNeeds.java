@@ -9,17 +9,17 @@ import com.disney.utils.TestReporter;
 
 public class TestRetrieveSpecialNeeds {
 	// Defining global variables
-	protected ThreadLocal<String> testName = new ThreadLocal<String>();
-	protected ThreadLocal<String> environment = new ThreadLocal<String>();
+	protected String testName = null;
+	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
-	public void setup(String environment) {this.environment.set(environment);}
+	public void setup(String environment) {this.environment = environment;}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testRetrieveSpecialNeeds(){
 		TestReporter.logStep("Retrieve Special Needs");
-		RetrieveSpecialNeeds retrieveSpecialNeeds = new RetrieveSpecialNeeds(environment.get());
+		RetrieveSpecialNeeds retrieveSpecialNeeds = new RetrieveSpecialNeeds(environment);
 		retrieveSpecialNeeds.sendRequest();
 		TestReporter.logAPI(!retrieveSpecialNeeds.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveSpecialNeeds);
 		TestReporter.assertGreaterThanZero(retrieveSpecialNeeds.getNumberOfSpecialNeeds());

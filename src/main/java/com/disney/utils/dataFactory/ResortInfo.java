@@ -1,5 +1,6 @@
 package com.disney.utils.dataFactory;
 
+import com.disney.AutomationException;
 import com.disney.utils.dataFactory.database.Recordset;
 
 public class ResortInfo {
@@ -62,7 +63,6 @@ public class ResortInfo {
 	}
 	
 	public static String getResortInfo(ResortColumns using, String info, ResortColumns find){
-		String searchText = "";
 		Recordset resorts =null;
 		switch (using){
 		case RESORT_NAME:
@@ -95,6 +95,8 @@ public class ResortInfo {
 		case CAMPUS_ID:
 			resorts = getInfo(tableName, ResortColumns.CAMPUS_ID, info);
 			break;
+		default:
+			throw new AutomationException("Value entered for [using] is not valid");
 		}
 		
 		return resorts.getValue(find.toString());

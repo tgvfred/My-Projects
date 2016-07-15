@@ -3,21 +3,8 @@
 <suite name="AccommodationSalesService" parallel="methods" thread-count="20">
 	<parameter name="environment" value="bashful" />
 	<test name="BookWithPrice">
-		<!-- <groups>
-			<run>
-				<include name="BookWithPrice"></include>
-				<exclude name="dev"></exclude>
-				<exclude name="debug"></exclude>
-			</run>
-		</groups>
-		<packages>
-			<package name="com.disney.composite.api.accommodationSalesServicePort.*">
-			</package>
-		</packages> -->
-		
 		<classes>
-      <class name="com.disney.composite.api.accommodationSalesServicePort.TestBookWithPrice"/>
-    </classes>
-		
+			<class name="com.disney.composite.api.accommodationSalesServicePort.TestBookWithPrice" />
+		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

@@ -72,16 +72,14 @@ public class VirtualTable {
 		try {
 			conn.setRequestMethod("GET");
 		} catch (ProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NoDataFromVirtualTableException(e.getMessage());
 		}
 
 		InputStream stream = null;
 		try {
 			stream = conn.getInputStream();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NoDataFromVirtualTableException(e.getMessage());
 		}
 		BufferedReader bufferReader = new BufferedReader(new InputStreamReader(
 				stream));
@@ -92,8 +90,7 @@ public class VirtualTable {
 				rawResponse.append(buffer);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NoDataFromVirtualTableException(e.getMessage());
 		}
 
 		return rawResponse.toString();
