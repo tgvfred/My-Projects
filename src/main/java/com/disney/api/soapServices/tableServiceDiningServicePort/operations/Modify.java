@@ -87,7 +87,7 @@ public class Modify extends TableServiceDiningServicePort {
 	 * Gets the status from modifying the reservation from the SOAP response
 	 * @return status from modifying the reservation
 	 */
-	public String getResponseStatus(){return getResponseNodeValueByXPath("/Envelope/Body/modifyTableServiceRequest/status");}
+	public String getResponseStatus(){return getResponseNodeValueByXPath("/Envelope/Body/modifyTableServiceResponse/status");}
 	/**
 	 * Gets the facility ID in the SOAP request
 	 * @return facility ID
@@ -334,7 +334,7 @@ public class Modify extends TableServiceDiningServicePort {
 	 * Sets the service period ID in the SOAP request
 	 * @param value - service period ID
 	 */
-	public void setServicePeriosId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/servicePeriodId", value);}
+	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/servicePeriodId", value);}
 	/**
 	 * Sets the service start dateTime in the SOAP request
 	 * @param value service start dateTime
