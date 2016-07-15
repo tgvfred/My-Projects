@@ -8,7 +8,7 @@ public class ActivityService extends BaseSoapService {
 		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Bashful")){			
 			setEnvironmentServiceURL("ActivityServicePort", environment);
 		}else{
-			setEnvironmentServiceURL("http://10.51.158.199:8080/Activity/ActivityServicePort");	
+			setEnvironmentServiceURL("ActivityServicePort", environment, "http://10.51.158.199:8080/Activity/ActivityServicePort");	
 		}    
 	}
 }

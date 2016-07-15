@@ -8,7 +8,7 @@ public class TableServiceDiningServicePort  extends BaseSoapService {
 		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Bashful")){
 			setEnvironmentServiceURL("TableServiceDiningServicePort", environment);	
 		}else{
-			setEnvironmentServiceURL("http://10.51.158.200:8080/Dining/TableServiceDiningServicePort");
+			setEnvironmentServiceURL("TableServiceDiningServicePort", environment, "http://10.51.158.200:8080/Dining/TableServiceDiningServicePort");
 		}
 	}
 

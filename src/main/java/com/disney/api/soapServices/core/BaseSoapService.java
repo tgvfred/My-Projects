@@ -888,15 +888,15 @@ public abstract class BaseSoapService{
 		setServiceURL(getFirstNodeValueByTagName(responseDoc, "endPoint") + "?wsdl");
 
 	}
+	
 
-	protected void setEnvironmentServiceURL(String endpoint) {
-		if (endpoint.contains("http")){
-			setServiceURL(endpoint + "?wsdl");
-		}else{
-			setServiceURL(endpoint + ".wsdl");
-		}
+
+	protected void setEnvironmentServiceURL(String service, String environment, String url) {
+		setEnvironment(environment);
+		setService(service);
+		setServiceURL(url + "?wsdl");
 	}
-
+	
 	//DJS - This was added as proof of concept for endpoints utilizing Service Virtualization
 	
 	public void setEnvironmentServiceURLSV(String service, String environment) {

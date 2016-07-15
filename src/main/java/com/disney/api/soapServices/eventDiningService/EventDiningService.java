@@ -12,7 +12,7 @@ public class EventDiningService extends BaseSoapService {
 		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Bashful")){
 			setEnvironmentServiceURL("EventDiningServicePort", environment);
 		}else{
-			setEnvironmentServiceURL("http://10.51.158.200:8080/Dining/EventDiningServicePort");
+			setEnvironmentServiceURL("EventDiningServicePort", environment, "http://10.51.158.200:8080/Dining/EventDiningServicePort");
 		}
 	}
 
