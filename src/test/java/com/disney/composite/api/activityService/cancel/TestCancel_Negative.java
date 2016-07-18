@@ -42,19 +42,7 @@ public class TestCancel_Negative  extends BaseTest{
 	public void missingReservationNumber(){
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		cancel.sendRequest();
-		TestReporter.logAPI(!cancel.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0"), cancel.getFaultString() ,cancel);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "cancel", true);
-		validateLogs(cancel, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "cancelChargeGroups", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "cancelOrder", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(cancel, logInvalidItems);
+		sendRequestAndValidateLogs(cancel, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
 	}
 	
 
@@ -62,19 +50,7 @@ public class TestCancel_Negative  extends BaseTest{
 	public void invalidReservationNumber(){
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber("11111");
-		cancel.sendRequest();
-		TestReporter.logAPI(!cancel.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111"), cancel.getFaultString() ,cancel);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "cancel", true);
-		validateLogs(cancel, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "cancelChargeGroups", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "cancelOrder", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(cancel, logInvalidItems);
+		sendRequestAndValidateLogs(cancel, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -84,19 +60,7 @@ public class TestCancel_Negative  extends BaseTest{
 		res2.arrived();
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
-		cancel.sendRequest();
-		TestReporter.logAPI(!cancel.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), cancel.getFaultString() ,cancel);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "cancel", true);
-		validateLogs(cancel, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "cancelChargeGroups", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "cancelOrder", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(cancel, logInvalidItems);
+		sendRequestAndValidateLogs(cancel, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -106,19 +70,7 @@ public class TestCancel_Negative  extends BaseTest{
 		res2.noShow();
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
-		cancel.sendRequest();
-		TestReporter.logAPI(!cancel.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), cancel.getFaultString() ,cancel);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "cancel", true);
-		validateLogs(cancel, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "cancelChargeGroups", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "cancelOrder", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(cancel, logInvalidItems);
+		sendRequestAndValidateLogs(cancel, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -128,8 +80,12 @@ public class TestCancel_Negative  extends BaseTest{
 		res2.cancel();
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
+		sendRequestAndValidateLogs(cancel, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
+	}
+	
+	private void sendRequestAndValidateLogs(Cancel cancel, String faultString){
 		cancel.sendRequest();
-		TestReporter.logAPI(!cancel.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), cancel.getFaultString() ,cancel);
+		TestReporter.logAPI(!cancel.getFaultString().contains(faultString), cancel.getFaultString() ,cancel);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ActivityServiceIF", "cancel", true);

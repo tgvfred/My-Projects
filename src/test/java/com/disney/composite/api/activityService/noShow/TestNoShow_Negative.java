@@ -1,0 +1,143 @@
+package com.disney.composite.api.activityService.noShow;
+
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.activityServicePort.operations.NoShow;
+import com.disney.composite.BaseTest;
+import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
+
+public class TestNoShow_Negative extends BaseTest{
+	// Defining global variables
+	protected String TPS_ID = null;
+	protected ScheduledEventReservation res = null;
+	
+	
+	@Override
+	@BeforeTest(alwaysRun = true)
+	@Parameters({ "environment" })
+	public void setup(@Optional String environment){
+		this.environment = environment;
+		hh = new HouseHold(1);
+		hh.primaryGuest().setAge("6");
+		res = new ActivityEventReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+	}
+
+	@AfterTest(alwaysRun=true)
+	private void teardown(){
+		try{
+			if(res != null)
+				if(!res.getConfirmationNumber().isEmpty())
+					res.cancel();
+		}catch(Exception e){}
+	}
+	
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	public void testMissingReservationNumber(){
+		TestReporter.logScenario("Missing Reservation Number");
+		NoShow noShow = new NoShow(environment, "Main");
+		noShow.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
+		sendRequestAndValidateLogs(noShow, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
+	}	
+
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	public void testInvalidReservationNumber(){
+		TestReporter.logScenario("Invalid Reservation Number");
+		NoShow noShow = new NoShow(environment, "Main");
+		noShow.setReservationNumber("123456789011");
+		sendRequestAndValidateLogs(noShow, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 123456789011");
+	}
+
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	public void testMissingSalesChannel(){
+		TestReporter.logScenario("Missing Sales Channel");
+		NoShow noShow = new NoShow(environment, "Main");
+		noShow.setReservationNumber(res.getConfirmationNumber());		
+		noShow.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
+		sendRequestAndValidateLogs(noShow, "Sales Channel is required : null");
+	}
+
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	public void testInvalidSalesChannel(){
+		TestReporter.logScenario("Invalid Sales Channel");
+		NoShow noShow = new NoShow(environment, "Main");
+		noShow.setReservationNumber(res.getConfirmationNumber());		
+		noShow.setSalesChannel("Blah");
+		sendRequestAndValidateLogs(noShow, "Sales Channel is required : null");
+	}
+	
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	public void testMissingCommunicationChannel(){
+		TestReporter.logScenario("Missing Communications Channel");
+			NoShow noShow = new NoShow(environment, "Main");
+			noShow.setReservationNumber(res.getConfirmationNumber());		
+			noShow.setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
+			sendRequestAndValidateLogs(noShow, "communication Channel is required : null");
+	}
+
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	public void testInvalidCommunicationChannel(){
+		TestReporter.logScenario("Invalid Communications Channel");
+			NoShow noShow = new NoShow(environment, "Main");
+			noShow.setReservationNumber(res.getConfirmationNumber());		
+			noShow.setCommunicationChannel("Blah");
+			sendRequestAndValidateLogs(noShow, "communication Channel is required : null");
+	}
+
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	public void cancelledReservation(){
+		TestReporter.logScenario("Cancelled Reservation");
+		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, hh);
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		res2.cancel();
+		NoShow noShow = new NoShow(environment, "Main");
+		noShow.setReservationNumber(res2.getConfirmationNumber());
+		sendRequestAndValidateLogs(noShow, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!");
+	}
+	
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	public void arrivedReservation(){
+		TestReporter.logScenario("Arrived Reservation");
+		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, hh);
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		res2.arrived();
+		NoShow noShow = new NoShow(environment, "Main");
+		noShow.setReservationNumber(res2.getConfirmationNumber());
+		sendRequestAndValidateLogs(noShow, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!");
+	}
+	
+	private void sendRequestAndValidateLogs(NoShow noShow, String faultString){	
+		noShow.sendRequest();
+		TestReporter.logAPI(!noShow.getFaultString().contains(faultString), noShow.getFaultString() ,noShow);
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ActivityServiceIF", "noShow", true);
+		validateLogs(noShow, logItems);		
+		
+		LogItems logInvalidItems = new LogItems();
+		logInvalidItems.addItem("ActivityServiceIF", "noShow", false);
+		logInvalidItems.addItem("PricingService", "getCancellationCharges", false);
+		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
+		logInvalidItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
+		logInvalidItems.addItem("PartyIF", "retrieveParty", false);
+		logInvalidItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
+		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);
+		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
+		logInvalidItems.addItem("ActivityServiceIF", "retrieve", false);
+		logInvalidItems.addItem("PackagingService", "getProducts", false);
+		logInvalidItems.addItem("PricingService", "priceComponents", false);
+		validateNotInLogs(noShow, logInvalidItems);
+		
+	}
+}
