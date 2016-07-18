@@ -300,6 +300,11 @@ public class Book extends ActivityService{
 	 */
 	public String getRequestProductId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/productId");}
 	/**
+	 * Gets the product type from the SOAP response
+	 * @return product type
+	 */
+	public String getRequestProductType(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/productType");}
+	/**
 	 * Sets the facility ID in the SOAP Request
 	 * @param value - facility ID
 	 */

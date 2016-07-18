@@ -118,6 +118,11 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 */
 	@Override public String getProductId(){throw new AutomationException(productIdExceptionMessage);}
 	/**
+	 * Retrieves the product type of the current reservation
+	 * @return String, product type of the current reservation
+	 */
+	@Override public String getProductType(){throw new AutomationException(productIdExceptionMessage);}
+	/**
 	 * Retrieves the service period ID of the current reservation
 	 * @return String, service period ID of the current reservation
 	 */

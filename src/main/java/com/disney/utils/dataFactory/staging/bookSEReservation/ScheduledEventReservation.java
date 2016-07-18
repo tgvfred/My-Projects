@@ -23,6 +23,7 @@ public interface ScheduledEventReservation{
 	public String getArrivedStatus();
 	public String getFacilityId();
 	public String getProductId();
+	public String getProductType();
 	public String getServicePeriodId();
 	public String getServiceStartDate();
 	public int getNumberOfGuests();
