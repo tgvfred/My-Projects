@@ -117,6 +117,11 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 */
 	@Override public String getProductId(){return this.productId;}
 	/**
+	 * Retrieves the product type of the current reservation
+	 * @return String, product type of the current reservation
+	 */
+	@Override public String getProductType(){return this.productType;}
+	/**
 	 * Retrieves the service period ID of the current reservation
 	 * @return String, service period ID of the current reservation
 	 */
@@ -212,10 +217,11 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	public void book(String eventDiningBookScenario) {
 		Book book = new Book(getEnvironment(), eventDiningBookScenario);
 		this.bookingScenario = eventDiningBookScenario;
-		this.facilityId = book.getRequestFacilityId();
-		this.serviceStartDate = book.getRequestServiceStartDate();
-		this.servicePeriod = book.getRequestServicePeriodId();
-		this.productId = book.getRequestProductId();
+		if(this.facilityId == null || this.facilityId.isEmpty())this.facilityId = book.getRequestFacilityId();
+		if(this.serviceStartDate == null || this.serviceStartDate.isEmpty())this.serviceStartDate = book.getRequestServiceStartDate();
+		if(this.servicePeriod == null || this.servicePeriod.isEmpty())this.servicePeriod = book.getRequestServicePeriodId();
+		if(this.productId == null || this.productId.isEmpty())this.productId = book.getRequestProductId();
+		if(this.productType == null || this.productType.isEmpty())this.productType= book.getRequestProductType();;
 		book();
 	}
 	
@@ -230,8 +236,9 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		book.setParty(party());		
 		book.setFacilityId(getFacilityId());		//FAC.FAC_ID
 		book.setProductId(getProductId());          //PROD.PROD_ID
-		if(!this.productType.isEmpty()) book.setActivityProductType(this.productType);
-		book.setServicePeriosId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
+		book.setProductType(getProductType());
+		if(!this.productType.isEmpty()) book.setProductType(this.productType);
+		book.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		book.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
@@ -250,8 +257,8 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 			book.sendRequest();
 		}
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an activity event service reservation", book);
-		this.travelPlanId = book.getActivityTravelPlanId();
-		this.confirmationNumber = book.getActivityTravelPlanSegmentId();
+		this.travelPlanId = book.getTravelPlanId();
+		this.confirmationNumber = book.getTravelPlanSegmentId();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
 		TestReporter.log("Reservation Number: " + getConfirmationNumber());
 		retrieve();
@@ -407,7 +414,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 			modify.setParty(party());
 			modify.setFacilityId(getFacilityId());
 			modify.setServiceStartDate(getServiceStartDate());
-			modify.setServicePeriosId(getServicePeriodId());
+			modify.setServicePeriodId(getServicePeriodId());
 			modify.setProductId(getProductId());
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			modify.sendRequest();

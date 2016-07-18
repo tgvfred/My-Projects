@@ -60,4 +60,14 @@ public class ValidateBooking extends EventDiningService {
 	 * @return
 	 */
 	public String getStopReservation(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/stopReservation");}
+	/**
+	 * Gets the stop reason from the SOAP response
+	 * @return - stop reason
+	 */
+	public String getStopReason(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/stopReason");}
+	/**
+	 * Gets the rules fired from the SOAP response
+	 * @return - rules fired
+	 */
+	public String getRulesFired(){return getResponseNodeValueByXPath("/Envelope/Body/validateBookingResponse/bookingRulesValidationResponse/rulesFired");}
 }
