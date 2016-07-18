@@ -5,6 +5,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.eventDiningService.operations.Arrived;
 import com.disney.composite.BaseTest;
@@ -34,6 +35,8 @@ public class TestArrived_Negative  extends BaseTest{
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
 		arrived.sendRequest();
+		
+		validateApplicationError(arrived, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 		TestReporter.logAPI(!arrived.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0"), arrived.getFaultString() ,arrived);
 
 		LogItems logValidItems = new LogItems();
@@ -53,6 +56,8 @@ public class TestArrived_Negative  extends BaseTest{
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber("11111");
 		arrived.sendRequest();
+		
+		validateApplicationError(arrived, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 		TestReporter.logAPI(!arrived.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111"), arrived.getFaultString() ,arrived);
 
 		LogItems logValidItems = new LogItems();
@@ -74,6 +79,8 @@ public class TestArrived_Negative  extends BaseTest{
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber(res2.getConfirmationNumber());
 		arrived.sendRequest();
+
+		validateApplicationError(arrived, DiningErrorCode.INVALID_TRAVEL_STATUS);
 		TestReporter.logAPI(!arrived.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED!"), arrived.getFaultString() ,arrived);
 
 		LogItems logValidItems = new LogItems();
