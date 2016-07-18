@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestBook_Suite" parallel="methods" thread-count="10">
+<suite name="TestCancel_Suite">
 	<parameter name="environment" value="Latest" />
-	<test name="TestBook">
+	<test name="TestCancel">
 		<classes>
-			<class name="com.disney.composite.api.activityService.book.TestBook"/>
+			<class name="com.disney.composite.api.activityService.cancel.TestCancel"/>
 		</classes>
 	</test>
 </suite>
