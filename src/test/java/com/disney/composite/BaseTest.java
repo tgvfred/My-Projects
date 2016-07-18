@@ -5,6 +5,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 import com.disney.AutomationException;
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -48,6 +49,26 @@ public class BaseTest {
 	protected void validateNotInLogs(BaseSoapService soap, LogItems logItems){
 		logTimeout = defaultTimeout;
 //		validate(false,soap,logItems);
+	}
+	
+	protected void validateApplicationError(BaseSoapService soap, ApplicationErrorCode error){
+		if(soap.getServiceExceptionApplicationFaultCode().contains(error.getErrorCode())){
+			TestReporter.assertTrue(true, "Exception Code was [" + error.getErrorCode() + "] as expected.");
+		}else{
+			TestReporter.logAPI(true, "Exception Code was not [" + error.getErrorCode() + "] as expected. Instead found [" +soap.getServiceExceptionApplicationFaultCode() + "]",soap);
+		}
+		
+		if(soap.getServiceExceptionApplicationFaultModule().contains(error.getModuleName())){
+			TestReporter.assertTrue(true, "Exception Module was  [" + error.getModuleName() + "] as expected.");
+		}else{
+			TestReporter.logAPI(true, "Exception Module was not [" + error.getModuleName() + "] as expected. Instead found [" +soap.getServiceExceptionApplicationFaultModule() + "]" ,soap);
+		}
+		
+		if(soap.getServiceExceptionApplicationFaultMessage().contains(error.getDesciption())){
+			TestReporter.assertTrue(true, "Exception Message was  [" + error.getDesciption() + "] as expected.");
+		}else{
+			TestReporter.logAPI(true, "Exception Message was not [" + error.getDesciption() + "] as expected. Instead found [" +soap.getServiceExceptionApplicationFaultMessage() + "]",soap);
+		}
 	}
 	
 	private void validate(boolean shouldBeInLogs, BaseSoapService soap, LogItems logItems){
