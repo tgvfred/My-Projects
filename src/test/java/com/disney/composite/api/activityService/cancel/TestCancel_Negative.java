@@ -8,6 +8,8 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.activityServicePort.operations.Cancel;
+import com.disney.api.soapServices.applicationError.ActivityErrorCode;
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -42,7 +44,7 @@ public class TestCancel_Negative  extends BaseTest{
 	public void missingReservationNumber(){
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(cancel, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
+		sendRequestAndValidateLogs(cancel, ActivityErrorCode.RECORD_NOT_FOUND_EXCEPTION,"RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
 	}
 	
 
@@ -50,7 +52,7 @@ public class TestCancel_Negative  extends BaseTest{
 	public void invalidReservationNumber(){
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber("11111");
-		sendRequestAndValidateLogs(cancel, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
+		sendRequestAndValidateLogs(cancel, ActivityErrorCode.RECORD_NOT_FOUND_EXCEPTION,"RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -60,7 +62,7 @@ public class TestCancel_Negative  extends BaseTest{
 		res2.arrived();
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
-		sendRequestAndValidateLogs(cancel, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
+		sendRequestAndValidateLogs(cancel, ActivityErrorCode.INVALID_TRAVEL_STATUS ,"Travel Status is invalid  : INVALID RESERVATION STATUS.");
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -70,7 +72,7 @@ public class TestCancel_Negative  extends BaseTest{
 		res2.noShow();
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
-		sendRequestAndValidateLogs(cancel, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
+		sendRequestAndValidateLogs(cancel, ActivityErrorCode.INVALID_TRAVEL_STATUS , "Travel Status is invalid  : INVALID RESERVATION STATUS.");
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -80,11 +82,12 @@ public class TestCancel_Negative  extends BaseTest{
 		res2.cancel();
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
-		sendRequestAndValidateLogs(cancel, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
+		sendRequestAndValidateLogs(cancel, ActivityErrorCode.INVALID_TRAVEL_STATUS , "Travel Status is invalid  : INVALID RESERVATION STATUS.");
 	}
 	
-	private void sendRequestAndValidateLogs(Cancel cancel, String faultString){
+	private void sendRequestAndValidateLogs(Cancel cancel, ApplicationErrorCode error, String faultString){
 		cancel.sendRequest();
+		validateApplicationError(cancel, error);
 		TestReporter.logAPI(!cancel.getFaultString().contains(faultString), cancel.getFaultString() ,cancel);
 
 		LogItems logValidItems = new LogItems();

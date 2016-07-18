@@ -8,6 +8,8 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.activityServicePort.operations.NoShow;
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.ActivityErrorCode;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -46,7 +48,7 @@ public class TestNoShow_Negative extends BaseTest{
 		TestReporter.logScenario("Missing Reservation Number");
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(noShow, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
+		sendRequestAndValidateLogs(noShow, ActivityErrorCode.RECORD_NOT_FOUND_EXCEPTION, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
 	}	
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -54,7 +56,7 @@ public class TestNoShow_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Reservation Number");
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber("123456789011");
-		sendRequestAndValidateLogs(noShow, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 123456789011");
+		sendRequestAndValidateLogs(noShow, ActivityErrorCode.RECORD_NOT_FOUND_EXCEPTION, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 123456789011");
 	}
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -63,7 +65,7 @@ public class TestNoShow_Negative extends BaseTest{
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber(res.getConfirmationNumber());		
 		noShow.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(noShow, "Sales Channel is required : null");
+		sendRequestAndValidateLogs(noShow, ActivityErrorCode.SALES_CHANNEL_REQUIRED, "Sales Channel is required : null");
 	}
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -72,7 +74,7 @@ public class TestNoShow_Negative extends BaseTest{
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber(res.getConfirmationNumber());		
 		noShow.setSalesChannel("Blah");
-		sendRequestAndValidateLogs(noShow, "Sales Channel is required : null");
+		sendRequestAndValidateLogs(noShow, ActivityErrorCode.SALES_CHANNEL_REQUIRED, "Sales Channel is required : null");
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -81,7 +83,7 @@ public class TestNoShow_Negative extends BaseTest{
 			NoShow noShow = new NoShow(environment, "Main");
 			noShow.setReservationNumber(res.getConfirmationNumber());		
 			noShow.setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
-			sendRequestAndValidateLogs(noShow, "communication Channel is required : null");
+			sendRequestAndValidateLogs(noShow, ActivityErrorCode.COMMUNICATION_CHANNEL_REQUIRED, "communication Channel is required : null");
 	}
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -90,7 +92,7 @@ public class TestNoShow_Negative extends BaseTest{
 			NoShow noShow = new NoShow(environment, "Main");
 			noShow.setReservationNumber(res.getConfirmationNumber());		
 			noShow.setCommunicationChannel("Blah");
-			sendRequestAndValidateLogs(noShow, "communication Channel is required : null");
+			sendRequestAndValidateLogs(noShow,ActivityErrorCode.COMMUNICATION_CHANNEL_REQUIRED,  "communication Channel is required : null");
 	}
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -101,7 +103,7 @@ public class TestNoShow_Negative extends BaseTest{
 		res2.cancel();
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber(res2.getConfirmationNumber());
-		sendRequestAndValidateLogs(noShow, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!");
+		sendRequestAndValidateLogs(noShow, ActivityErrorCode.INVALID_TRAVEL_STATUS, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!");
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -112,11 +114,12 @@ public class TestNoShow_Negative extends BaseTest{
 		res2.arrived();
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber(res2.getConfirmationNumber());
-		sendRequestAndValidateLogs(noShow, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!");
+		sendRequestAndValidateLogs(noShow, ActivityErrorCode.INVALID_TRAVEL_STATUS, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!");
 	}
 	
-	private void sendRequestAndValidateLogs(NoShow noShow, String faultString){	
+	private void sendRequestAndValidateLogs(NoShow noShow, ApplicationErrorCode error, String faultString){	
 		noShow.sendRequest();
+		validateApplicationError(noShow, error);
 		TestReporter.logAPI(!noShow.getFaultString().contains(faultString), noShow.getFaultString() ,noShow);
 
 		LogItems logItems = new LogItems();
