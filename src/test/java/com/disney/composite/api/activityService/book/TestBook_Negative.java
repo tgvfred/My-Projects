@@ -95,49 +95,24 @@ public class TestBook_Negative extends BaseTest{
 		sendRequestAndValidateLogs(book, "Data not found. : No Product could be found for  productTypes [] productID=1491863");
 	}
 	
-//	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
-//	public void invalidBookDateInPast(){
-//		TestReporter.logScenario("Invalid Booking Date In The Past");
-//		Book book = new Book(environment, "NoComponentsNoAddOns");
-//		book.setParty(hh);
-//		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("-30"));
-//		book.sendRequest();
-//		TestReporter.logAPI(!book.getFaultString().contains("RESManagement suggests to stop this reservation : Book Date is greater than Service date"), book.getFaultString() ,book);
-//
-//		LogItems logValidItems = new LogItems();
-//		logValidItems.addItem("ActivityServiceIF", "book", true);
-//		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);
-//		validateLogs(book, logValidItems);
-//		
-//		LogItems logInvalidItems = new LogItems();
-//		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-//		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);	
-//		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-//		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-//		validateNotInLogs(book, logInvalidItems);
-//	}
-//	
-//	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
-//	public void invalidBookDateExceeds180DaysInFuture(){
-//		TestReporter.logScenario("Invalid Booking Date 180 Days In The Future");
-//		Book book = new Book(environment, "NoComponentsNoAddOns");
-//		book.setParty(hh);
-//		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("182"));
-//		book.sendRequest();
-//		TestReporter.logAPI(!book.getFaultString().contains("RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date"), book.getFaultString() ,book);
-//
-//		LogItems logValidItems = new LogItems();
-//		logValidItems.addItem("ActivityServiceIF", "book", true);
-//		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);
-//		validateLogs(book, logValidItems);
-//		
-//		LogItems logInvalidItems = new LogItems();
-//		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-//		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);	
-//		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-//		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-//		validateNotInLogs(book, logInvalidItems);
-//	}
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	public void invalidBookDateInPast(){
+		TestReporter.logScenario("Invalid Booking Date In The Past");
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("-30"));
+		sendRequestAndValidateLogs(book, "RESManagement suggests to stop this reservation : Book Date is greater than Service date");
+	}
+	
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	public void invalidBookDateExceeds180DaysInFuture(){
+		TestReporter.logScenario("Invalid Booking Date 180 Days In The Future");
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("182"));
+		sendRequestAndValidateLogs(book, "RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date");
+	}
+	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void missingPrimaryGuest(){
 		TestReporter.logScenario("Missing Primary Guest");

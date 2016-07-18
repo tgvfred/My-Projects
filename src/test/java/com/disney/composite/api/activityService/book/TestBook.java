@@ -63,18 +63,6 @@ public class TestBook extends BaseTest{
 		HouseHold hh = new HouseHold(12);
 		bookAndValidateLogs(hh, false, false);
 	}
-//	@Test
-//	public void book180DaysInTheFuture(){
-//		TestReporter.logScenario("12 Adults");
-//		HouseHold hh = new HouseHold(1);
-//		bookAndValidateLogs(hh, true, false);
-//	}
-//	@Test
-//	public void bookDateInThePast(){
-//		TestReporter.logScenario("12 Adults");
-//		HouseHold hh = new HouseHold(1);
-//		bookAndValidateLogs(hh, true, true);
-//	}
 	
 	private void bookAndValidateLogs(HouseHold hh, boolean oneHundredEighty, boolean past){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
