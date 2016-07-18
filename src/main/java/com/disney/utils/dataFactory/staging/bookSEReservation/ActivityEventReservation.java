@@ -230,8 +230,8 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		book.setParty(party());		
 		book.setFacilityId(getFacilityId());		//FAC.FAC_ID
 		book.setProductId(getProductId());          //PROD.PROD_ID
-		if(!this.productType.isEmpty()) book.setActivityProductType(this.productType);
-		book.setServicePeriosId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
+		if(!this.productType.isEmpty()) book.setProductType(this.productType);
+		book.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		book.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
@@ -250,8 +250,8 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 			book.sendRequest();
 		}
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an activity event service reservation", book);
-		this.travelPlanId = book.getActivityTravelPlanId();
-		this.confirmationNumber = book.getActivityTravelPlanSegmentId();
+		this.travelPlanId = book.getTravelPlanId();
+		this.confirmationNumber = book.getTravelPlanSegmentId();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
 		TestReporter.log("Reservation Number: " + getConfirmationNumber());
 		retrieve();
