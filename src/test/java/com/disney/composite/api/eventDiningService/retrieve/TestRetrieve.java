@@ -2,6 +2,7 @@ package com.disney.composite.api.eventDiningService.retrieve;
 
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
@@ -24,7 +25,7 @@ public class TestRetrieve extends BaseTest{
 	Book book = null;
 	
 	@Override
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;

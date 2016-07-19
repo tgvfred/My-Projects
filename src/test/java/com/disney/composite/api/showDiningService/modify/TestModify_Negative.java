@@ -39,7 +39,7 @@ public class TestModify_Negative extends BaseTest{
 	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	private Book book;
 	
-	@BeforeTest(alwaysRun=true)
+	@BeforeClass(alwaysRun=true)
 	@Parameters("environment")
 	public void testSetup(@Optional String environment){
 		book= new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);

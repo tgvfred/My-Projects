@@ -1,6 +1,7 @@
 package com.disney.composite.api.activityService.modify;
 
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -21,7 +22,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 public class TestModify_Negative extends BaseTest{
 	protected ScheduledEventReservation res = null;
 	
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
