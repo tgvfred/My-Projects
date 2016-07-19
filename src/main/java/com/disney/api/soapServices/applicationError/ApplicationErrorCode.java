@@ -23,4 +23,9 @@ public class ApplicationErrorCode {
 	public String getDesciption() {
 		return desciption.trim();
 	}
+	
+	@Override
+	public String toString(){
+		return String.format("Module: '%s' \nError Code: '%s' \nError Message: '%s'", moduleName, errorCode, desciption);
+	}
 }
