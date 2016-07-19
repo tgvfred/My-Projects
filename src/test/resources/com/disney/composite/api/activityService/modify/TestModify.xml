@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Latest" />
 	<test name="TestModify">
 		<classes>
-			<class name="com.disney.composite.api.activityService.modify.TestModify_Negative"/>
+			<class name="com.disney.composite.api.activityService.modify.TestModify"/>
 		</classes>
 	</test>
 </suite>

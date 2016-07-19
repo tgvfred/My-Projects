@@ -25,133 +25,38 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	public String environment = "Development";
-	@Test(groups = {"api", "regression", "roomInventory", "accommodationInventoryRequestComponentServicePort"})
+	
+	@Test(groups = {"api", "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
 	public void testUpdatingWithEventDiningRes(){
-		hh = new HouseHold(1);
-		ScheduledEventReservation res = new EventDiningReservation("Development", hh);
+		ScheduledEventReservation res = new EventDiningReservation(environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		
-		Database db = new OracleDatabase("Development", Database.DREAMS);
-		Recordset rsBaseInfo = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(res.getConfirmationNumber()) + " AND PROD_TYP_NM = 'RESERVABLE_RESOURCE_COMPONENT'"));
-		Recordset rsResourceId= new Recordset(db.getResultSet(Dreams.getTcReservableResourceID(rsBaseInfo.getValue("TC_ID"))));
-		String tcId = rsBaseInfo.getValue("TC_ID");
-		String assignmentOwnerId = rsBaseInfo.getValue("TC_ASGN_OWN_ID");
-		UpdateInventoryForScheduledEvents update = new UpdateInventoryForScheduledEvents("Development", "MinimalInfo");
-		update.setAssignmentRequestDetailsDate(res.getServiceStartDate());
-		update.setAssignmentOwnerId(assignmentOwnerId);
-		update.setFacilityId(res.getFacilityId());
-		update.setOwnerDetailsBookingDate(res.getServiceStartDate());
-		update.setOwnerDetailsOwnerName(res.party().primaryGuest().getFullName());
-		update.setOwnerDetailsOwnerReferenceNumber(tcId);
-		update.setOwnerDetailsTravelPlanId(res.getTravelPlanId());
-		update.setOwnerDetailsTravelPlanSegmentId(res.getConfirmationNumber());
-		update.setOwnerDetailsPeriodStartDate(res.getServiceStartDate());
-		update.setPeriodStartDate(res.getServiceStartDate());
-		update.setResourceTypeCode(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"));
-		update.setTpId(res.getTravelPlanId());
-		update.setUpdateInventoryTypeInfoReservableResourceId(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"));
-		update.setUpdateInventoryTypeInfoOldServiceStartDate(res.getServiceStartDate());
-		update.setUpdateInventoryTypeInfoNewServiceStartDate(BaseSoapCommands.GET_DATE_TIME.commandAppend("2"));
-		update.setUpdateInventoryTypeInfoNewDuration("1");
-		update.sendRequest();
-		TestReporter.logAPI(!update.getResponseStatusCode().contains("200"), update.getFaultString() ,update);
-		TestReporter.assertTrue(Regex.match("[0-9]+", update.getNewAssignmentOwnerId()), "The new Assignement Owner ID ["+update.getNewAssignmentOwnerId()+"] is numeric as expected.");
-		TestReporter.assertTrue(Regex.match("[0-9]+", update.getResponseTravelComponentId()), "The returned Travel Component Id ["+update.getResponseTravelComponentId()+"] is numeric as expected.");
-		TestReporter.assertTrue(Long.parseLong(update.getNewAssignmentOwnerId()) > Long.parseLong(assignmentOwnerId), "The returned Assignment Owner Id [" + update.getNewAssignmentOwnerId() + "] is expected to be larger than prior Assignment ID [" + assignmentOwnerId +"]" );
-		TestReporter.assertTrue(tcId.equals(update.getResponseTravelComponentId()) , "The returned Travel Component Id [" + update.getResponseTravelComponentId() + "] is expected to be equal to Travel Component ID sent in request  [" + tcId+"]" );
-		
-		
-		LogItems logItems = new LogItems();			
-		//validateLogs(update, logItems);
+		update(res);
 	}
 
-	@Test(groups = {"api", "regression", "roomInventory", "accommodationInventoryRequestComponentServicePort"})
+	@Test(groups = {"api", "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
 	public void testUpdatingWithShowDiningRes(){
-		hh = new HouseHold(1);
-		ScheduledEventReservation res = new ShowDiningReservation("Development", hh);
+		ScheduledEventReservation res = new ShowDiningReservation(environment, hh);
 		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-		
-		Database db = new OracleDatabase("Development", Database.DREAMS);
-		Recordset rsBaseInfo = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(res.getConfirmationNumber()) + " AND PROD_TYP_NM = 'RESERVABLE_RESOURCE_COMPONENT'"));
-		Recordset rsResourceId= new Recordset(db.getResultSet(Dreams.getTcReservableResourceID(rsBaseInfo.getValue("TC_ID"))));
-		String tcId = rsBaseInfo.getValue("TC_ID");
-		String assignmentOwnerId = rsBaseInfo.getValue("TC_ASGN_OWN_ID");
-		UpdateInventoryForScheduledEvents update = new UpdateInventoryForScheduledEvents("Development", "MinimalInfo");
-		update.setAssignmentRequestDetailsDate(res.getServiceStartDate());
-		update.setAssignmentOwnerId(assignmentOwnerId);
-		update.setFacilityId(res.getFacilityId());
-		update.setOwnerDetailsBookingDate(res.getServiceStartDate());
-		update.setOwnerDetailsOwnerName(res.party().primaryGuest().getFullName());
-		update.setOwnerDetailsOwnerReferenceNumber(tcId);
-		update.setOwnerDetailsTravelPlanId(res.getTravelPlanId());
-		update.setOwnerDetailsTravelPlanSegmentId(res.getConfirmationNumber());
-		update.setOwnerDetailsPeriodStartDate(res.getServiceStartDate());
-		update.setPeriodStartDate(res.getServiceStartDate());
-		update.setResourceTypeCode(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"));
-		update.setTpId(res.getTravelPlanId());
-		update.setUpdateInventoryTypeInfoReservableResourceId(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"));
-		update.setUpdateInventoryTypeInfoOldServiceStartDate(res.getServiceStartDate());
-		update.setUpdateInventoryTypeInfoNewServiceStartDate(BaseSoapCommands.GET_DATE_TIME.commandAppend("2"));
-		update.setUpdateInventoryTypeInfoNewDuration("1");
-		update.sendRequest();
-		TestReporter.logAPI(!update.getResponseStatusCode().contains("200"), update.getFaultString() ,update);
-		TestReporter.assertTrue(Regex.match("[0-9]+", update.getNewAssignmentOwnerId()), "The new Assignement Owner ID ["+update.getNewAssignmentOwnerId()+"] is numeric as expected.");
-		TestReporter.assertTrue(Regex.match("[0-9]+", update.getResponseTravelComponentId()), "The returned Travel Component Id ["+update.getResponseTravelComponentId()+"] is numeric as expected.");
-		TestReporter.assertTrue(Long.parseLong(update.getNewAssignmentOwnerId()) > Long.parseLong(assignmentOwnerId), "The returned Assignment Owner Id [" + update.getNewAssignmentOwnerId() + "] is expected to be larger than prior Assignment ID [" + assignmentOwnerId +"]" );
-		TestReporter.assertTrue(tcId.equals(update.getResponseTravelComponentId()) , "The returned Travel Component Id [" + update.getResponseTravelComponentId() + "] is expected to be equal to Travel Component ID sent in request  [" + tcId+"]" );
-		
-		
-		LogItems logItems = new LogItems();			
-		//validateLogs(update, logItems);
+		update(res);
 	}
 	
-	@Test(groups = {"api", "regression", "roomInventory", "accommodationInventoryRequestComponentServicePort"})
+	@Test(groups = {"api", "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
 	public void testUpdatingWithTableServiceDiningRes(){
-		hh = new HouseHold(1);
-		ScheduledEventReservation res = new TableServiceDiningReservation("Development", hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		
-		Database db = new OracleDatabase("Development", Database.DREAMS);
-		Recordset rsBaseInfo = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(res.getConfirmationNumber()) + " AND PROD_TYP_NM = 'RESERVABLE_RESOURCE_COMPONENT'"));
-		Recordset rsResourceId= new Recordset(db.getResultSet(Dreams.getTcReservableResourceID(rsBaseInfo.getValue("TC_ID"))));
-		String tcId = rsBaseInfo.getValue("TC_ID");
-		String assignmentOwnerId = rsBaseInfo.getValue("TC_ASGN_OWN_ID");
-		UpdateInventoryForScheduledEvents update = new UpdateInventoryForScheduledEvents("Development", "MinimalInfo");
-		update.setAssignmentRequestDetailsDate(res.getServiceStartDate());
-		update.setAssignmentOwnerId(assignmentOwnerId);
-		update.setFacilityId(res.getFacilityId());
-		update.setOwnerDetailsBookingDate(res.getServiceStartDate());
-		update.setOwnerDetailsOwnerName(res.party().primaryGuest().getFullName());
-		update.setOwnerDetailsOwnerReferenceNumber(tcId);
-		update.setOwnerDetailsTravelPlanId(res.getTravelPlanId());
-		update.setOwnerDetailsTravelPlanSegmentId(res.getConfirmationNumber());
-		update.setOwnerDetailsPeriodStartDate(res.getServiceStartDate());
-		update.setPeriodStartDate(res.getServiceStartDate());
-		update.setResourceTypeCode(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"));
-		update.setTpId(res.getTravelPlanId());
-		update.setUpdateInventoryTypeInfoReservableResourceId(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"));
-		update.setUpdateInventoryTypeInfoOldServiceStartDate(res.getServiceStartDate());
-		update.setUpdateInventoryTypeInfoNewServiceStartDate(BaseSoapCommands.GET_DATE_TIME.commandAppend("2"));
-		update.setUpdateInventoryTypeInfoNewDuration("1");
-		update.sendRequest();
-		TestReporter.logAPI(!update.getResponseStatusCode().contains("200"), update.getFaultString() ,update);
-		TestReporter.assertTrue(Regex.match("[0-9]+", update.getNewAssignmentOwnerId()), "The new Assignement Owner ID ["+update.getNewAssignmentOwnerId()+"] is numeric as expected.");
-		TestReporter.assertTrue(Regex.match("[0-9]+", update.getResponseTravelComponentId()), "The returned Travel Component Id ["+update.getResponseTravelComponentId()+"] is numeric as expected.");
-		TestReporter.assertTrue(Long.parseLong(update.getNewAssignmentOwnerId()) > Long.parseLong(assignmentOwnerId), "The returned Assignment Owner Id [" + update.getNewAssignmentOwnerId() + "] is expected to be larger than prior Assignment ID [" + assignmentOwnerId +"]" );
-		TestReporter.assertTrue(tcId.equals(update.getResponseTravelComponentId()) , "The returned Travel Component Id [" + update.getResponseTravelComponentId() + "] is expected to be equal to Travel Component ID sent in request  [" + tcId+"]" );
-		
-		
-		LogItems logItems = new LogItems();			
-		//validateLogs(update, logItems);
+		ScheduledEventReservation res = new TableServiceDiningReservation(environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);	
+		update(res);
 	}
 	
-//	@Test(groups = {"api", "regression", "roomInventory", "accommodationInventoryRequestComponentServicePort"})
+//	@Test(groups = {"api", "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
 	public void testUpdatingWithActivityEventRes(){
-		hh = new HouseHold(1);
-		ScheduledEventReservation res = new ActivityEventReservation("Development", hh);
+		ScheduledEventReservation res = new ActivityEventReservation(environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		
-		Database db = new OracleDatabase("Development", Database.DREAMS);
+		update(res);
+	}
+	
+	private UpdateInventoryForScheduledEvents update(ScheduledEventReservation res){
+
+		Database db = new OracleDatabase(environment, Database.DREAMS);
 		Recordset rsBaseInfo = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(res.getConfirmationNumber()) + " AND PROD_TYP_NM = 'RESERVABLE_RESOURCE_COMPONENT'"));
 		Recordset rsResourceId= new Recordset(db.getResultSet(Dreams.getTcReservableResourceID(rsBaseInfo.getValue("TC_ID"))));
 		String tcId = rsBaseInfo.getValue("TC_ID");
@@ -166,6 +71,7 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 		update.setOwnerDetailsTravelPlanId(res.getTravelPlanId());
 		update.setOwnerDetailsTravelPlanSegmentId(res.getConfirmationNumber());
 		update.setOwnerDetailsPeriodStartDate(res.getServiceStartDate());
+		update.setOwnerDetailsPeriodEndDate(res.getServiceStartDate());
 		update.setPeriodStartDate(res.getServiceStartDate());
 		update.setResourceTypeCode(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"));
 		update.setTpId(res.getTravelPlanId());
@@ -174,6 +80,7 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 		update.setUpdateInventoryTypeInfoNewServiceStartDate(BaseSoapCommands.GET_DATE_TIME.commandAppend("2"));
 		update.setUpdateInventoryTypeInfoNewDuration("1");
 		update.sendRequest();
+		
 		TestReporter.logAPI(!update.getResponseStatusCode().contains("200"), update.getFaultString() ,update);
 		TestReporter.assertTrue(Regex.match("[0-9]+", update.getNewAssignmentOwnerId()), "The new Assignement Owner ID ["+update.getNewAssignmentOwnerId()+"] is numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", update.getResponseTravelComponentId()), "The returned Travel Component Id ["+update.getResponseTravelComponentId()+"] is numeric as expected.");
@@ -183,5 +90,6 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 		
 		LogItems logItems = new LogItems();			
 		//validateLogs(update, logItems);
+		return update;
 	}
 }

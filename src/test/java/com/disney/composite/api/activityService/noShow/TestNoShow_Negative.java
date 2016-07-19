@@ -114,7 +114,7 @@ public class TestNoShow_Negative extends BaseTest{
 		res2.arrived();
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber(res2.getConfirmationNumber());
-		sendRequestAndValidateLogs(noShow, ActivityErrorCode.INVALID_TRAVEL_STATUS, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!");
+		sendRequestAndValidateLogs(noShow, ActivityErrorCode.INVALID_TRAVEL_STATUS, " Travel Status is invalid  : INVALID RESERVATION STATUS.");
 	}
 	
 	private void sendRequestAndValidateLogs(NoShow noShow, ApplicationErrorCode error, String faultString){	

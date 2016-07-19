@@ -1,9 +1,6 @@
 package com.disney.composite.api.eventDiningService.modify;
 
-import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -12,7 +9,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.eventDiningService.operations.Book;
 import com.disney.api.soapServices.eventDiningService.operations.Modify;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;

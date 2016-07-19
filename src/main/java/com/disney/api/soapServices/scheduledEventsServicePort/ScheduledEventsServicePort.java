@@ -5,10 +5,6 @@ import com.disney.utils.Environment;
 
 public class ScheduledEventsServicePort extends BaseSoapService{
 	public ScheduledEventsServicePort(String environment) {	
-		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Bashful")){	
-			setEnvironmentServiceURL("ScheduledEventsServicePort", environment);
-		}else{
-			setEnvironmentServiceURL("ScheduledEventsServicePort", environment, "http://10.51.158.200:8080/Dining/ScheduledEventsServicePort");
-		}
+		setEnvironmentServiceURL("ScheduledEventsServicePort", environment);
 	}
 }

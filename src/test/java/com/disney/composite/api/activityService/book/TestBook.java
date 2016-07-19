@@ -6,7 +6,8 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.activityServicePort.operations.Book;
 import com.disney.api.soapServices.activityServicePort.operations.Cancel;
 import com.disney.composite.BaseTest;
-import com.disney.test.utils.Randomness;
+import com.disney.test.utils.Sleeper;
+import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -73,6 +74,12 @@ public class TestBook extends BaseTest{
 		if(oneHundredEighty) book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(200));
 		if(past) book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(-1));
 		book.sendRequest();
+		
+		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+			book.sendRequest();
+		}
+		
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "Verify travel plan ID ["+book.getTravelPlanId()+"] is numeric.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "Verify reservation number ["+book.getTravelPlanSegmentId()+"] is numeric.");

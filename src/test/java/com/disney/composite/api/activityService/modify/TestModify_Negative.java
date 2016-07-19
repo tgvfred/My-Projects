@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.activityServicePort.operations.Modify;
 import com.disney.api.soapServices.applicationError.ActivityErrorCode;
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
@@ -18,14 +19,14 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReser
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestModify_Negative extends BaseTest{
-	// Defining global variables
-	protected String TPS_ID = null;
 	protected ScheduledEventReservation res = null;
+	
 	@BeforeTest(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		HouseHold hh = new HouseHold(1);
+		hh.primaryGuest().setAge("6");
 		res = new ActivityEventReservation(this.environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
@@ -39,13 +40,13 @@ public class TestModify_Negative extends BaseTest{
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
-		modify.setFacilityId("1010");
+		modify.setFacilityId("-1");
 		modify.setServiceStartDate(res.getServiceStartDate());
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setProductId(res.getProductId());
 		modify.sendRequest();
-		validateApplicationError(modify, ActivityErrorCode.INVALID_FACILITY_ID);
-		TestReporter.logAPI(!modify.getFaultString().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY!! : INVALID FACILITY ID"), modify.getFaultString() ,modify);
+		validateApplicationError(modify, ActivityErrorCode.INVALID_FACILITY);
+		TestReporter.logAPI(!modify.getFaultString().contains("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ActivityServiceIF", "modify", true);
@@ -117,32 +118,6 @@ public class TestModify_Negative extends BaseTest{
 	
 		TestReporter.logAPI(!modify.getFaultString().contains("Unmarshalling Error: For input string: \"Invalid Id\""), modify.getFaultString() ,modify);
 	}
-
-	//@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
-	public void invalidTravelPlanId(){
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
-		modify.setReservationNumber(res.getConfirmationNumber());
-		modify.setTravelPlanId("11223");
-		modify.setParty(res.party());
-		modify.setFacilityId(res.getFacilityId());
-		modify.setServiceStartDate(res.getServiceStartDate());
-		modify.setServicePeriodId(res.getServicePeriodId());
-		modify.setProductId(res.getProductId());
-		modify.sendRequest();
-		validateApplicationError(modify, ActivityErrorCode.TRAVEL_PLAN_NOT_FOUND);
-		TestReporter.logAPI(!modify.getFaultString().contains("TRAVEL_PLAN_NOT_FOUND : TRAVEL PLAN NOT FOUND"), modify.getFaultString() ,modify);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "modify", true);
-		validateLogs(modify, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
-		logInvalidItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateNotInLogs(modify, logInvalidItems);
-	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void invalidReservationNumber(){
@@ -172,7 +147,9 @@ public class TestModify_Negative extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void invalidPrimaryGuestTitle(){
-		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, new HouseHold(1));
+		HouseHold hh = new HouseHold(1);
+		hh.primaryGuest().setAge("6");
+		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, hh);
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(res2.getConfirmationNumber());
@@ -203,7 +180,9 @@ public class TestModify_Negative extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void invalidPrimaryGuestCountry(){
-		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment,new HouseHold(1));
+		HouseHold hh = new HouseHold(1);
+		hh.primaryGuest().setAge("6");
+		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, hh);
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(res2.getConfirmationNumber());
@@ -301,33 +280,6 @@ public class TestModify_Negative extends BaseTest{
 		modify.sendRequest();
 		validateApplicationError(modify, ActivityErrorCode.DATA_NOT_FOUND_SERVICE_EXCEPTION);
 		TestReporter.logAPI(!modify.getFaultString().contains("Data not found. : No Product could be found for  productTypes [] productID=1491863"), modify.getFaultString() ,modify);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "modify", true);
-		validateLogs(modify, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);	
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(modify, logInvalidItems);
-	}
-	
-	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
-	public void invalidEnterpriseFacilityId(){
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
-		modify.setReservationNumber(res.getConfirmationNumber());
-		modify.setTravelPlanId(res.getTravelPlanId());
-		modify.setParty(res.party());
-		modify.setFacilityId(res.getFacilityId());
-		modify.setServiceStartDate(res.getServiceStartDate());
-		modify.setServicePeriodId(res.getServicePeriodId());
-		modify.setRequestNodeValueByXPath("//enterpriseProductId",  "12214");
-		modify.sendRequest();
-		validateApplicationError(modify, ActivityErrorCode.DATA_NOT_FOUND_SERVICE_EXCEPTION);
-		TestReporter.logAPI(!modify.getFaultString().contains("Data not found. : No Product could be found for  productTypes [] productID=149863 enterpriseProductID=12214"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ActivityServiceIF", "modify", true);
@@ -532,34 +484,6 @@ public class TestModify_Negative extends BaseTest{
 		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateNotInLogs(modify, logInvalidItems);
 	}
-	
-	//@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
-	public void missingSourceAccountingCenter(){
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
-		modify.setReservationNumber(res.getConfirmationNumber());
-		modify.setTravelPlanId(res.getTravelPlanId());
-		modify.setParty(res.party());
-		modify.setFacilityId(res.getFacilityId());
-		modify.setServiceStartDate(res.getServiceStartDate());
-		modify.setServicePeriodId(res.getServicePeriodId());
-		modify.setProductId(res.getProductId());
-		modify.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
-		modify.sendRequest();
-		validateApplicationError(modify, ActivityErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED);
-		TestReporter.logAPI(!modify.getFaultString().contains("SOURCER ACCOUNTING CENTER IS REQUIRED! : SOURCER ACCOUNTING CENTER IS REQUIRED!"), modify.getFaultString() ,modify);
-		
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "modify", true);
-		validateLogs(modify, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);	
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(modify, logInvalidItems);
-	}
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void missingFacilityId(){
@@ -573,7 +497,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setProductId(res.getProductId());
 		modify.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
-		validateApplicationError(modify, ActivityErrorCode.INVALID_FACILITY_ID);
+		validateApplicationError(modify, ActivityErrorCode.INVALID_FACILITY);
 		TestReporter.logAPI(!modify.getFaultString().contains("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!"), modify.getFaultString() ,modify);
 		
 		LogItems logValidItems = new LogItems();
@@ -672,34 +596,6 @@ public class TestModify_Negative extends BaseTest{
 		validateNotInLogs(modify, logInvalidItems);
 	}
 
-	//@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
-	public void missingFreeze(){
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
-		modify.setReservationNumber(res.getConfirmationNumber());
-		modify.setTravelPlanId(res.getTravelPlanId());
-		modify.setParty(res.party());
-		modify.setFacilityId(res.getFacilityId());
-		modify.setServiceStartDate(res.getServiceStartDate());
-		modify.setServicePeriodId(res.getServicePeriodId());
-		modify.setProductId(res.getProductId());
-		modify.setRequestNodeValueByXPath("//freezeId",BaseSoapCommands.REMOVE_NODE.toString());
-		modify.sendRequest();
-		validateApplicationError(modify, ActivityErrorCode.FREEZE_ID_REQUIRED);
-		TestReporter.logAPI(!modify.getFaultString().contains("Freeze Id is required : FREEZE ID IS REQUIRED"), modify.getFaultString() ,modify);
-
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "modify", true);
-		validateLogs(modify, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);	
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(modify, logInvalidItems);
-	}
-
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void missingReservableResourceID(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
@@ -783,38 +679,12 @@ public class TestModify_Negative extends BaseTest{
 		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateNotInLogs(modify, logInvalidItems);
 	}
-
-	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
-	public void missingServicePeriodId(){
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
-		modify.setReservationNumber(res.getConfirmationNumber());
-		modify.setTravelPlanId(res.getTravelPlanId());
-		modify.setParty(res.party());
-		modify.setFacilityId(res.getFacilityId());
-		modify.setServiceStartDate(res.getServiceStartDate());
-		modify.setServicePeriodId(res.getServicePeriodId());
-		modify.setProductId(res.getProductId());
-		modify.setServicePeriodId(BaseSoapCommands.REMOVE_NODE.toString());
-		modify.sendRequest();
-		validateApplicationError(modify, ActivityErrorCode.PRODUCT_ID_REQUIRED);
-		TestReporter.logAPI(!modify.getFaultString().contains("ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED."), modify.getFaultString() ,modify);
-		
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "modify", true);
-		validateLogs(modify, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);	
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(modify, logInvalidItems);
-	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void arrivedReservation(){
-		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, new HouseHold(1));
+		HouseHold hh = new HouseHold(1);
+		hh.primaryGuest().setAge("6");
+		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, hh);
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(res2.getConfirmationNumber());
@@ -842,39 +712,11 @@ public class TestModify_Negative extends BaseTest{
 		validateNotInLogs(modify, logInvalidItems);
 	}
 
-	//@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
-	public void cancelledReservation(){
-		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, new HouseHold(1));
-		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
-		modify.setReservationNumber(res2.getConfirmationNumber());
-		modify.setTravelPlanId(res2.getTravelPlanId());
-		modify.setParty(res2.party());
-		modify.setFacilityId(res2.getFacilityId());
-		modify.setServiceStartDate(res2.getServiceStartDate());
-		modify.setServicePeriodId(res2.getServicePeriodId());
-		modify.setProductId(res2.getProductId());
-		res2.cancel();
-		modify.sendRequest();
-		validateApplicationError(modify, ActivityErrorCode.INVALID_TRAVEL_STATUS);
-		TestReporter.logAPI(!modify.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), modify.getFaultString() ,modify);
-		
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "modify", true);
-		validateLogs(modify, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);	
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(modify, logInvalidItems);
-	}
-
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void noShowReservation(){
-		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, new HouseHold(1));
+		HouseHold hh = new HouseHold(1);
+		hh.primaryGuest().setAge("6");
+		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, hh);
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(res2.getConfirmationNumber());
@@ -885,21 +727,34 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res2.getServicePeriodId());
 		modify.setProductId(res2.getProductId());
 		res2.noShow();
+		sendRequestAndValidateLogs(modify, "Travel Status is invalid  : INVALID RESERVATION STATUS.", ActivityErrorCode.INVALID_TRAVEL_STATUS);
+	}
+	
+	private void sendRequestAndValidateLogs(Modify modify, String faultSTring, ApplicationErrorCode errorCode){
 		modify.sendRequest();
-		validateApplicationError(modify, ActivityErrorCode.INVALID_TRAVEL_STATUS);
-		TestReporter.logAPI(!modify.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), modify.getFaultString() ,modify);
+		validateApplicationError(modify, errorCode);
+		TestReporter.logAPI(!modify.getFaultString().contains(faultSTring), modify.getFaultString() ,modify);
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ActivityServiceIF", "modify", true);
 		validateLogs(modify, logValidItems);
 		
 		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);	
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
+		logInvalidItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logInvalidItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		logInvalidItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
+		logInvalidItems.addItem("PartyIF", "retrieveParty", false);
+		logInvalidItems.addItem("PartyIF", "retrieveParties", false);
+		logInvalidItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
+		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);
+		logInvalidItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
+		logInvalidItems.addItem("ActivityServiceIF", "retrieve", false);
+		logInvalidItems.addItem("PackagingService", "getProducts", false);
+		logInvalidItems.addItem("PricingService", "priceComponents", false);
+		logInvalidItems.addItem("GuestServiceV1", "create", false);
 		validateNotInLogs(modify, logInvalidItems);
 	}
-
 }
