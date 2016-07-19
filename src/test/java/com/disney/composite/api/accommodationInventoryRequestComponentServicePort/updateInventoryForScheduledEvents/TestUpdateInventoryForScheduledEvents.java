@@ -24,7 +24,6 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.TableServiceDining
 public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
-	public String environment = "Development";
 	
 	@Test(groups = {"api", "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
 	public void testUpdatingWithEventDiningRes(){
