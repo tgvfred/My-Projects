@@ -2,6 +2,9 @@ package com.disney.composite.api.tableServiceDiningService.book;
 
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
+import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Book;
 import com.disney.composite.BaseTest;
@@ -19,7 +22,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setFacilityId("1010");
-		sendRequestAndValidateLogs(book, "FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY!! : INVALID FACILITY ID");
+		sendRequestAndValidateLogs(book, DiningErrorCode.INVALID_FACILITY_ID, "FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY!! : INVALID FACILITY ID");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -28,7 +31,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setCommunicationChannel("Invalid Center");
-		sendRequestAndValidateLogs(book, "communication Channel is required : null");
+		sendRequestAndValidateLogs(book, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED, "communication Channel is required : null");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -47,7 +50,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setTravelPlanId("1111111");
-		sendRequestAndValidateLogs(book, "TRAVEL_PLAN_NOT_FOUND : TRAVEL PLAN NOT FOUND");
+		sendRequestAndValidateLogs(book, DiningErrorCode.TRAVEL_PLAN_NOT_FOUND, "TRAVEL_PLAN_NOT_FOUND : TRAVEL PLAN NOT FOUND");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -57,7 +60,7 @@ public class TestBook_Negative extends BaseTest{
 		HouseHold party = new HouseHold(1);
 		party.primaryGuest().setTitle("Mre.");
 		book.setParty(party);
-		sendRequestAndValidateLogs(book, "Salutation is invalid : Salutation Mre. is invalid");
+		sendRequestAndValidateLogs(book, PartyErrorCode.SALUTATION_INVALID, "Salutation is invalid : Salutation Mre. is invalid");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -67,7 +70,7 @@ public class TestBook_Negative extends BaseTest{
 		HouseHold party = new HouseHold(1);
 		party.primaryGuest().primaryAddress().setCountry("Randland");
 		book.setParty(party);
-		sendRequestAndValidateLogs(book, "Create Party Error : Please enter valid country code");
+		sendRequestAndValidateLogs(book, PartyErrorCode.CREATE_PARTY_ERROR, "Create Party Error : Please enter valid country code");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -76,7 +79,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setSalesChannel("blah");
-		sendRequestAndValidateLogs(book, "Sales Channel is required : null");
+		sendRequestAndValidateLogs(book, DiningErrorCode.SALES_CHANNEL_REQUIRED, "Sales Channel is required : null");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -85,7 +88,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setRequestNodeValueByXPath("//authorizationNumber", "12345431");
-		sendRequestAndValidateLogs(book, "INVALID AUTHORIZATION CODE !! : INVALID AUTHORIZATION CODE !");
+		sendRequestAndValidateLogs(book, DiningErrorCode.INVALID_AUTHORIZATION_CODE, "INVALID AUTHORIZATION CODE !! : INVALID AUTHORIZATION CODE !");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -94,7 +97,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("-30"));
-		sendRequestAndValidateLogs(book, "RESManagement suggests to stop this reservation : Book Date is greater than Service date");
+		sendRequestAndValidateLogs(book, DiningErrorCode.EXCEPTION_RULE_FIRED, "RESManagement suggests to stop this reservation : Book Date is greater than Service date");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -103,7 +106,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("182"));
-		sendRequestAndValidateLogs(book, "RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date");
+		sendRequestAndValidateLogs(book, DiningErrorCode.EXCEPTION_RULE_FIRED, "RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date");
 	}
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
 	public void missingPrimaryGuest(){
@@ -111,7 +114,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setRequestNodeValueByXPath("//primaryGuest", BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
+		sendRequestAndValidateLogs(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED, "Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -120,7 +123,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setRequestNodeValueByXPath("//primaryGuest/lastName", BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
+		sendRequestAndValidateLogs(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED,"Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -129,7 +132,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setRequestNodeValueByXPath("//primaryGuest/firstName", BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
+		sendRequestAndValidateLogs(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED, "Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -138,7 +141,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "Sales Channel is required : null");
+		sendRequestAndValidateLogs(book,  DiningErrorCode.SALES_CHANNEL_REQUIRED,"Sales Channel is required : null");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -147,7 +150,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "communication Channel is required : null");
+		sendRequestAndValidateLogs(book,  DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED,"communication Channel is required : null");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -156,7 +159,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "SOURCER ACCOUNTING CENTER IS REQUIRED! : SOURCER ACCOUNTING CENTER IS REQUIRED!");
+		sendRequestAndValidateLogs(book,  DiningErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED,"SOURCER ACCOUNTING CENTER IS REQUIRED! : SOURCER ACCOUNTING CENTER IS REQUIRED!");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -165,7 +168,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!");
+		sendRequestAndValidateLogs(book,  DiningErrorCode.INVALID_FACILITY,"FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -174,7 +177,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setProductType(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "PRODUCT TYPE NAME IS REQUIRED!! : PRODUCT TYPE NAME IS REQUIRED!!");
+		sendRequestAndValidateLogs(book,  DiningErrorCode.PRODUCT_TYPE_NAME_REQUIRED,"PRODUCT TYPE NAME IS REQUIRED!! : PRODUCT TYPE NAME IS REQUIRED!!");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -183,7 +186,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!");
+		sendRequestAndValidateLogs(book,  DiningErrorCode.SERVICE_START_DATE_REQUIRED,"INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -192,7 +195,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setRequestNodeValueByXPath("//freezeId",BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "Freeze Id is required : FREEZE ID IS REQUIRED");
+		sendRequestAndValidateLogs(book,  DiningErrorCode.FREEZE_ID_REQUIRED,"Freeze Id is required : FREEZE ID IS REQUIRED");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -201,7 +204,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!");
+		sendRequestAndValidateLogs(book,  DiningErrorCode.NO_RESERVABLE_RESOURCE_ID,"RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -210,7 +213,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setRequestNodeValueByXPath("//partyRoles",BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE");
+		sendRequestAndValidateLogs(book,  DiningErrorCode.INVALID_PARTYMIX,"Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -219,7 +222,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setRequestNodeValueByXPath("//partyRoles/ageType",BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "Age Type is required : AGE TYPE IS REQUIRED.");
+		sendRequestAndValidateLogs(book,  DiningErrorCode.AGE_TYPE_REQUIRED,"Age Type is required : AGE TYPE IS REQUIRED.");
 	}
 
 	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
@@ -228,11 +231,12 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setServicePeriodId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(book, "ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED.");
+		sendRequestAndValidateLogs(book, DiningErrorCode.SERVICE_PERIOD_REQUIRED, "ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED.");
 	}
 
-	private void sendRequestAndValidateLogs(Book book, String fault){
+	private void sendRequestAndValidateLogs(Book book, ApplicationErrorCode error, String fault){
 		book.sendRequest();
+		validateApplicationError(book, error);
 		TestReporter.logAPI(!book.getFaultString().contains(fault), book.getFaultString() ,book);
 		
 		LogItems logValidItems = new LogItems();
