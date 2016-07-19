@@ -931,7 +931,7 @@ public abstract class BaseSoapService{
 		String request = "";
 		strOperationName = operationName;
 		String url = "https://github.disney.com/raw/phlej001/TestDataOnDemand/master/TestDataOnDemand/soap-xml-storage/{environment}/{service}/{operation}.xml";
-		url = url.replace("{environment}", WordUtils.capitalize(getEnvironment())); 
+		url = url.replace("{environment}", WordUtils.capitalize(getEnvironment().replace("_CM",""))); 
 		url = url.replace("{service}", getService());
 		url = url.replace("{operation}", getOperation());
 		
