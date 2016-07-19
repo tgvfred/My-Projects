@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestModify_Suite" parallel=true thread-count="10">
+<suite name="TestModify_Suite" parallel="methods" thread-count="10">
 	<parameter name="environment" value="Latest" />
 	<test name="TestModify">
 		<classes>

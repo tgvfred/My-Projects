@@ -1,17 +1,13 @@
 package com.disney.composite.api.activityService.modify;
 
-import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.activityServicePort.operations.Book;
 import com.disney.api.soapServices.activityServicePort.operations.Modify;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -20,9 +16,8 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReser
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestModify_Negative extends BaseTest{
-	// Defining global variables
-	protected String TPS_ID = null;
 	protected ScheduledEventReservation res = null;
+	
 	@BeforeTest(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
@@ -818,7 +813,7 @@ public class TestModify_Negative extends BaseTest{
 		validateNotInLogs(modify, logInvalidItems);
 	}
 
-	//@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void cancelledReservation(){
 		ScheduledEventReservation res2 = new ActivityEventReservation(this.environment, new HouseHold(1));
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
