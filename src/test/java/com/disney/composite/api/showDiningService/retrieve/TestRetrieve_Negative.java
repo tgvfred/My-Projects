@@ -6,6 +6,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.showDiningService.operations.Cancel;
 import com.disney.api.soapServices.showDiningService.operations.Retrieve;
@@ -43,18 +45,19 @@ public class TestRetrieve_Negative extends BaseTest{
 		String number = "1234";
 		Retrieve retrieve = new Retrieve(environment, "RetrieveDiningEvent");
 		retrieve.setReservationNumber(number);
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, retrieve);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, retrieve);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingReservationNumber(){
 		TestReporter.logScenario("Missing Reservation Number");
 		Retrieve retrieve = new Retrieve(environment, "RetrieveDiningEvent");
 		retrieve.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", retrieve);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, retrieve);
 	}
 	
-    private void sendRequestAndValidateFaultString(String fault, Retrieve retrieve){
+    private void sendRequestAndValidateFaultString(String fault, ApplicationErrorCode error, Retrieve retrieve){
     	retrieve.sendRequest();
+		validateApplicationError(retrieve, error);
     	TestReporter.logAPI(!retrieve.getFaultString().contains(fault), retrieve.getFaultString(), retrieve);
 		logItems(retrieve);
     }

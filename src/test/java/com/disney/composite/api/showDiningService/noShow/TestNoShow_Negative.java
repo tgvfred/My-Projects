@@ -6,6 +6,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.showDiningService.operations.Arrived;
 import com.disney.api.soapServices.showDiningService.operations.Book;
@@ -50,7 +52,7 @@ public class TestNoShow_Negative extends BaseTest{
 		NoShow noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(book().getTravelPlanSegmentId());
 		noShow.setCommunicationsChannel(Randomness.randomString(4));
-		sendRequestAndValidateFaultString("communication Channel is required : null", noShow);
+		sendRequestAndValidateFaultString("communication Channel is required : null", DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED, noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidReservationNumber() {
@@ -58,7 +60,7 @@ public class TestNoShow_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Reservation Number");
 		NoShow noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(number);
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, noShow);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, noShow);
 	}	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidSalesChannel() {
@@ -66,7 +68,7 @@ public class TestNoShow_Negative extends BaseTest{
 		NoShow noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(book().getTravelPlanSegmentId());
 		noShow.setSalesChannel(Randomness.randomString(4));
-		sendRequestAndValidateFaultString("Sales Channel is required : null", noShow);
+		sendRequestAndValidateFaultString("Sales Channel is required : null", DiningErrorCode.SALES_CHANNEL_REQUIRED, noShow);
 	}	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingCommunicationChannel() {
@@ -74,14 +76,14 @@ public class TestNoShow_Negative extends BaseTest{
 		NoShow noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(book().getTravelPlanSegmentId());
 		noShow.setCommunicationsChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("communication Channel is required : null", noShow);
+		sendRequestAndValidateFaultString("communication Channel is required : null", DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED, noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingReservationNumber() {
 		TestReporter.logScenario("Missing Reservation Number");
 		NoShow noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", noShow);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingSalesChannel() {
@@ -89,7 +91,7 @@ public class TestNoShow_Negative extends BaseTest{
 		NoShow noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(book().getTravelPlanSegmentId());
 		noShow.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Sales Channel is required : null", noShow);
+		sendRequestAndValidateFaultString("Sales Channel is required : null", DiningErrorCode.SALES_CHANNEL_REQUIRED, noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void noShow() {
@@ -102,7 +104,7 @@ public class TestNoShow_Negative extends BaseTest{
 
 		noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(book.getTravelPlanSegmentId());
-		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!", noShow);
+		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!", DiningErrorCode.INVALID_TRAVEL_STATUS, noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void arrivedReservation() {
@@ -115,7 +117,7 @@ public class TestNoShow_Negative extends BaseTest{
 		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'Arrived'", arrived);
 		
 		noShow.setReservationNumber(book.getTravelPlanSegmentId());
-		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!", noShow);
+		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!", DiningErrorCode.INVALID_TRAVEL_STATUS, noShow);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void cancelledReservation() {
@@ -128,7 +130,7 @@ public class TestNoShow_Negative extends BaseTest{
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation", cancel);
 		
 		noShow.setReservationNumber(book.getTravelPlanSegmentId());
-		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!", noShow);
+		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!", DiningErrorCode.INVALID_TRAVEL_STATUS, noShow);
 	}
 	
 	private Book book(){
@@ -140,8 +142,9 @@ public class TestNoShow_Negative extends BaseTest{
 		return book;
 	}
 	
-    private void sendRequestAndValidateFaultString(String fault, NoShow noShow){
+    private void sendRequestAndValidateFaultString(String fault, ApplicationErrorCode error, NoShow noShow){
     	noShow.sendRequest();
+		validateApplicationError(noShow, error);
     	TestReporter.logAPI(!noShow.getFaultString().contains(fault), noShow.getFaultString(), noShow);
 		logItems(noShow);
     }

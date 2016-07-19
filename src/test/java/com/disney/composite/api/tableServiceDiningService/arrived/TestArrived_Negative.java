@@ -6,6 +6,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Arrived;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Cancel;
@@ -45,7 +47,7 @@ public class TestArrived_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Reservation");
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(arrived, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
+		sendRequestAndValidateLogs(arrived, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION,"RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
 	}
 	
 
@@ -54,7 +56,7 @@ public class TestArrived_Negative  extends BaseTest{
 		TestReporter.logScenario("Arrived");
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber("11111");
-		sendRequestAndValidateLogs(arrived, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
+		sendRequestAndValidateLogs(arrived, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService", "negative"})
@@ -66,11 +68,12 @@ public class TestArrived_Negative  extends BaseTest{
 		res.cancel();
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber(res.getConfirmationNumber());
-		sendRequestAndValidateLogs(arrived, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED!");
+		sendRequestAndValidateLogs(arrived, DiningErrorCode.INVALID_TRAVEL_STATUS, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED!");
 	}
 	
-	private void sendRequestAndValidateLogs(Arrived arrived, String faultString){
+	private void sendRequestAndValidateLogs(Arrived arrived, ApplicationErrorCode error, String faultString){
 		arrived.sendRequest();
+		validateApplicationError(arrived, error);
 		TestReporter.logAPI(!arrived.getFaultString().contains(faultString), arrived.getFaultString() ,arrived);
 
 		LogItems logValidItems = new LogItems();
