@@ -267,7 +267,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			book.sendRequest();
 		}
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an show dining service reservation", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an show dining service reservation: " +book.getFaultString(), book);
 		this.travelPlanId = book.getTravelPlanId();
 		this.confirmationNumber = book.getTravelPlanSegmentId();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
@@ -284,7 +284,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		Cancel cancel = new Cancel(getEnvironment(), "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(getConfirmationNumber());
 		cancel.sendRequest();
-		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling an show dining service reservation", cancel);
+		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling an show dining service reservation: " +cancel.getFaultString(), cancel);
 		this.cancellationNumber = cancel.getCancellationConfirmationNumber();
 		retrieve();
 	}
@@ -298,7 +298,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		Arrived arrived = new Arrived(getEnvironment(), "GuestFacing");
 		arrived.setReservationNumber(getConfirmationNumber());
 		arrived.sendRequest();
-		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [Arrived]", arrived);
+		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [Arrived]: " +arrived.getFaultString(), arrived);
 		this.arrivedStatus = arrived.getResponseStatus();
 		retrieve();
 	}
@@ -312,7 +312,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		NoShow noShow = new NoShow(getEnvironment(), "GuestFacing");
 		noShow.setReservationNumber(getConfirmationNumber());
 		noShow.sendRequest();
-		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [No Show]", noShow);
+		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [No Show]: " +noShow.getFaultString(), noShow);
 		this.cancellationNumber = noShow.getCancellationConfirmationNumber();
 		retrieve();
 	}
