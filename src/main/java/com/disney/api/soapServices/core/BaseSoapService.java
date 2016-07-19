@@ -539,7 +539,7 @@ public abstract class BaseSoapService{
 			SOAPFault newFault = responseBody.getFault();
 			faultString = newFault.getFaultString();
 			setRepsonseStatusCode(newFault.getFaultCode());
-			TestReporter.logAPI(false, "Soap Response FAULT:  " + newFault.getFaultCode(), this);
+			//TestReporter.logAPI(false, "Soap Response FAULT:  " + newFault.getFaultCode(), this);
 		} else {
 			setRepsonseStatusCode("200");
 		}
@@ -1070,6 +1070,43 @@ public abstract class BaseSoapService{
 		}
 		return faultString;
 	}
+	
+
+	public String getServiceExceptionErrorMessage(){
+		String error= "";
+		try{
+			error = getResponseNodeValueByXPath("//ServiceException/applicationErrors/dynamicErrorMessage");
+		}catch(XPathNotFoundException xpe){}
+		
+		return error;
+	}
+	
+	public String getServiceExceptionApplicationFaultCode(){
+		String error= "";
+		try{
+			error = getResponseNodeValueByXPath("//ServiceException/applicationErrors/applicationFaultCode/code");
+		}catch(XPathNotFoundException xpe){}
+		
+		return error;
+	}
+
+	public String getServiceExceptionApplicationFaultMessage(){
+		String error= "";
+		try{
+			error = getResponseNodeValueByXPath("//ServiceException/applicationErrors/applicationFaultCode/message");
+		}catch(XPathNotFoundException xpe){}
+		
+		return error;
+	}
+	public String getServiceExceptionApplicationFaultModule(){
+		String error= "";
+		try{
+			error = getResponseNodeValueByXPath("//ServiceException/applicationErrors/applicationFaultCode/moduleName");
+		}catch(XPathNotFoundException xpe){}
+		
+		return error;
+	}
+	
 	/*public static boolean validateXMLSchema(String uri, Document doc){
         
 	       try {

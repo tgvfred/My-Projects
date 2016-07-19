@@ -2,6 +2,7 @@ package com.disney.composite.api.chargeGroup.modifyChargeGroups;
 
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -21,20 +22,13 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 	
 	@Override
 	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(@Optional String environment){
-		this.environment = environment;
-		hh = new HouseHold(1);
-	}
-	
-	@BeforeMethod(alwaysRun=true)
 	@Parameters({"environment"})
-	public void testSetup(@Optional String environment){
+	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
 		number.set(Randomness.randomNumber(12));
 		if(number.get().startsWith("0")) number.set(number.get().replaceFirst("0", "1"));
-		CreateChargeGroupsAndPostCharges create = new CreateChargeGroupsAndPostCharges(environment, "MinimalInfo");
+		CreateChargeGroupsAndPostCharges create = new CreateChargeGroupsAndPostCharges(this.environment, "MinimalInfo");
 		create.setGuestFirstName(hh.primaryGuest().getFirstName());
 		create.setGuestLastName(hh.primaryGuest().getLastName());
 		create.setTravelPlanComponentGroupId(number.get());
@@ -47,7 +41,7 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 	@AfterTest(alwaysRun=true)
 	public void teardown(){
 		try{
-			CancelChargeGroup cancel = new CancelChargeGroup(environment);
+			CancelChargeGroup cancel = new CancelChargeGroup(this.environment);
 			cancel.setReferenceValue("DREAMS_TCG");
 			cancel.setReferenceValue(number.get());
 			cancel.sendRequest();
@@ -55,7 +49,7 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 	}
 	
 	protected ModifyChargeGroups create(){
-		ModifyChargeGroups modify = new ModifyChargeGroups(environment, "MinimalInfo");
+		ModifyChargeGroups modify = new ModifyChargeGroups(this.environment, "MinimalInfo");
 		modify.setGuestFirstName(hh.primaryGuest().getFirstName());
 		modify.setGuestLastName(hh.primaryGuest().getLastName());
 		modify.setTravelPlanComponentGroupId(number.get());
@@ -71,6 +65,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.setRootDescription(BaseSoapCommands.REMOVE_NODE.toString());
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2061"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing Description"), modify.getServiceExceptionApplicationFaultMessage() , modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing Description : Invalid Charge Group - missing description"), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -79,6 +77,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.setRootPeriodEndDate(Randomness.generateCurrentXMLDatetime(-45));
 			modify.sendRequest();
+		
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2060"), modify.getServiceExceptionApplicationFaultCode() ,modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() ,modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group Period"), modify.getServiceExceptionApplicationFaultMessage() ,modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group Period : ChargeGroup period provided is invalid."), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -87,6 +89,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.removeRootPeriod();
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2060"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group Period"), modify.getServiceExceptionApplicationFaultMessage() , modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group Period : Invalid Charge Group - missing Period"), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -95,6 +101,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.setRootPrimaryReferenceName(BaseSoapCommands.REMOVE_NODE.toString());
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2062"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), modify.getServiceExceptionApplicationFaultMessage() , modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.<null>,"+super.number.get()), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -111,6 +121,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.removeRootPrimaryReference();
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2062"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), modify.getServiceExceptionApplicationFaultMessage() , modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : Invalid Charge Group - missing primary reference"), modify.getFaultString(), modify);				
 		}
 	}
@@ -122,6 +136,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.setGuestContainerDescription(BaseSoapCommands.REMOVE_NODE.toString());
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2061"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing Description"), modify.getServiceExceptionApplicationFaultMessage() , modify);						
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing Description : Invalid Charge Group - missing description"), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -130,6 +148,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.removeGuestContainerPeriod();
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2060"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group Period"), modify.getServiceExceptionApplicationFaultMessage() , modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group Period : Invalid Charge Group - missing Period"), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -137,7 +159,11 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			TestReporter.logScenario("Missing Primary Reference Name");
 			ModifyChargeGroups modify = create();
 			modify.setGuestContainerPrimaryReferenceName(BaseSoapCommands.REMOVE_NODE.toString());
-			modify.sendRequest();
+			modify.sendRequest();			
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2062"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), modify.getServiceExceptionApplicationFaultMessage() , modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.<null>,"+super.number.get()), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -146,6 +172,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.setGuestContainerPrimaryReferenceValue(BaseSoapCommands.REMOVE_NODE.toString());
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2062"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), modify.getServiceExceptionApplicationFaultMessage() , modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.DREAMS_TPS,<null>"), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -154,6 +184,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.removeGuestContainerPrimaryReference();
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2062"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), modify.getServiceExceptionApplicationFaultMessage() , modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : Invalid Charge Group - missing primary reference"), modify.getFaultString(), modify);			
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -162,6 +196,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.setGuestContainerSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2001"), modify.getServiceExceptionApplicationFaultCode() ,modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() ,modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Missing required fields"), modify.getServiceExceptionApplicationFaultMessage() ,modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Missing required fields. : Invalid GuestChargeGroupContainerRequest. RootReference, SourceAccountingCenterID and ResponsibleParty fields are required."), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -170,6 +208,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.removeGuestContainerRootReference();
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2001"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Missing required fields"), modify.getServiceExceptionApplicationFaultMessage() , modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Missing required fields. : Invalid GuestChargeGroupContainerRequest. RootReference, SourceAccountingCenterID and ResponsibleParty fields are required."), modify.getFaultString(), modify);
 		}
 	}
@@ -181,6 +223,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.setGuestContainedDescription(BaseSoapCommands.REMOVE_NODE.toString());
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2061"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing Description"), modify.getServiceExceptionApplicationFaultMessage() , modify);						
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing Description : Invalid Charge Group - missing description"), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -189,6 +235,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.removeGuestContainedPeriod();
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2060"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group Period"), modify.getServiceExceptionApplicationFaultMessage() , modify);						
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group Period : Invalid Charge Group - missing Period"), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -196,7 +246,11 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			TestReporter.logScenario("Missing Primary Reference Name");
 			ModifyChargeGroups modify = create();
 			modify.setGuestContainedPrimaryReferenceName(BaseSoapCommands.REMOVE_NODE.toString());
-			modify.sendRequest();
+			modify.sendRequest();			
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2062"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), modify.getServiceExceptionApplicationFaultMessage() , modify);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.<null>,"+super.number.get()), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -205,6 +259,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.setGuestContainedPrimaryReferenceValue(BaseSoapCommands.REMOVE_NODE.toString());
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2062"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), modify.getServiceExceptionApplicationFaultMessage() , modify);			
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.DREAMS_TCG,<null>"), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -213,6 +271,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.removeGuestContainedPrimaryReference();
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2062"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), modify.getServiceExceptionApplicationFaultMessage() , modify);			
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : Invalid Charge Group - missing primary reference"), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -221,6 +283,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.removeGuestContainedAncestor();
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2001"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Missing required fields"), modify.getServiceExceptionApplicationFaultMessage() , modify);			
 			TestReporter.logAPI(!modify.getFaultString().contains("Missing required fields. : Invalid GuestChargeGroupContainedRequest. Ancestor, Root, GuaranteeType and TransactionFacility are required fields."), modify.getFaultString(), modify);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -229,6 +295,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			ModifyChargeGroups modify = create();
 			modify.removeGuestContainedRoot();
 			modify.sendRequest();
+
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultCode().contains("2001"), modify.getServiceExceptionApplicationFaultCode() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), modify.getServiceExceptionApplicationFaultModule() , modify);
+			TestReporter.logAPI(!modify.getServiceExceptionApplicationFaultMessage().contains("Missing required fields"), modify.getServiceExceptionApplicationFaultMessage() , modify);			
 			TestReporter.logAPI(!modify.getFaultString().contains("Missing required fields. : Invalid GuestChargeGroupContainedRequest. Ancestor, Root, GuaranteeType and TransactionFacility are required fields."), modify.getFaultString(), modify);
 		}
 	}

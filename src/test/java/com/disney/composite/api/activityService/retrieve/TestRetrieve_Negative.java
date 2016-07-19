@@ -8,6 +8,8 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.activityServicePort.operations.Retrieve;
+import com.disney.api.soapServices.applicationError.ActivityErrorCode;
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -43,7 +45,7 @@ public class TestRetrieve_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Reservation Number");
 		Retrieve retrieve = new Retrieve(this.environment, "RetrieveDiningEvent");
 		retrieve.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(retrieve, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
+		sendRequestAndValidateLogs(retrieve, ActivityErrorCode.RECORD_NOT_FOUND_EXCEPTION, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -51,11 +53,12 @@ public class TestRetrieve_Negative  extends BaseTest{
 		TestReporter.logScenario("Invalid Reservation Number");
 		Retrieve retrieve = new Retrieve(this.environment, "RetrieveDiningEvent");
 		retrieve.setReservationNumber("11111");
-		sendRequestAndValidateLogs(retrieve, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
+		sendRequestAndValidateLogs(retrieve, ActivityErrorCode.RECORD_NOT_FOUND_EXCEPTION, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
 	}
 	
-	private void sendRequestAndValidateLogs(Retrieve retrieve, String faultString){
+	private void sendRequestAndValidateLogs(Retrieve retrieve, ApplicationErrorCode error, String faultString){
 		retrieve.sendRequest();
+		validateApplicationError(retrieve, error);
 		TestReporter.logAPI(!retrieve.getFaultString().contains(faultString), retrieve.getFaultString() ,retrieve);
 
 		LogItems logValidItems = new LogItems();

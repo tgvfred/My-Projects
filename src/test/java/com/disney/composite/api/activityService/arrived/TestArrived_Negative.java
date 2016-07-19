@@ -7,6 +7,8 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.activityServicePort.operations.Arrived;
+import com.disney.api.soapServices.applicationError.ActivityErrorCode;
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -33,7 +35,7 @@ public class TestArrived_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Reservation Number");
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(arrived, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
+		sendRequestAndValidateLogs(arrived, ActivityErrorCode.RECORD_NOT_FOUND_EXCEPTION, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
 	}
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -41,7 +43,7 @@ public class TestArrived_Negative  extends BaseTest{
 		TestReporter.logScenario("Invalid Reservation Number");
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber("11111");
-		sendRequestAndValidateLogs(arrived, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
+		sendRequestAndValidateLogs(arrived, ActivityErrorCode.RECORD_NOT_FOUND_EXCEPTION,"RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
 	}	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void cancelledReservation(){
@@ -51,11 +53,12 @@ public class TestArrived_Negative  extends BaseTest{
 		res2.cancel();
 		Arrived arrived = new Arrived(this.environment,"Main");
 		arrived.setReservationNumber(res2.getConfirmationNumber());
-		sendRequestAndValidateLogs(arrived, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED!");
+		sendRequestAndValidateLogs(arrived, ActivityErrorCode.INVALID_TRAVEL_STATUS, "Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED!");
 	}
 	
-	private void sendRequestAndValidateLogs(Arrived arrived, String faultString){
+	private void sendRequestAndValidateLogs(Arrived arrived, ApplicationErrorCode error, String faultString){
 		arrived.sendRequest();
+		validateApplicationError(arrived, error);
 		TestReporter.logAPI(!arrived.getFaultString().contains(faultString), arrived.getFaultString() ,arrived);
 
 		LogItems logValidItems = new LogItems();

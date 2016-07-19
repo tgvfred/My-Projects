@@ -53,6 +53,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRootDecription(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+			
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2061"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing Description"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing Description : Missing description"), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -61,22 +65,36 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRootEndDate(Randomness.generateCurrentXMLDatetime(-45));
 			create.sendRequest();
+		
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2060"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group Period"), create.getServiceExceptionApplicationFaultMessage() ,create);
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group Period : ChargeGroup period provided is invalid."), create.getFaultString(), create);
 		}
+		
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPeriod(){
 			TestReporter.logScenario("Missing Period");
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/rootChargeGroupRequest/period", BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+	
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2060"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group Period"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group Period : Missing Period"), create.getFaultString(), create);
 		}
+		
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReferenceName(){
 			TestReporter.logScenario("Missing Primary Reference Name");
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRootPrimaryReferenceName(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+			
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2062"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue both required for PrimaryReference.<null>,"+super.number), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -85,6 +103,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/rootChargeGroupRequest/primaryReference", BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2062"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), create.getServiceExceptionApplicationFaultMessage() ,create);					
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : Missing primary reference"), create.getFaultString(), create);				
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -93,6 +115,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRootSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2001"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Missing required fields"), create.getServiceExceptionApplicationFaultMessage() ,create);					
 			TestReporter.logAPI(!create.getFaultString().contains("Missing required fields. : SourceAccountingCenterID is required in ChargeGroupRequest. SourceAccountingCenterID=null"), create.getFaultString(), create);
 		}
 	}
@@ -104,6 +130,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setGuestContainerDecription(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2061"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing Description"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing Description : Missing description"), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -112,6 +142,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/guestContainerChargeGroupRequest/period", BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2060"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group Period"), create.getServiceExceptionApplicationFaultMessage() ,create);						
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group Period : Missing Period"), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -120,6 +154,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setGuestContainerPrimaryReferenceName(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2062"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue both required for PrimaryReference.<null>,"+super.number), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -128,6 +166,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setGuestContainerPrimaryReferenceValue(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2062"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue both required for PrimaryReference.DREAMS_TPS,<null>"), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -136,6 +178,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/guestContainerChargeGroupRequest/primaryReference", BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2062"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : Missing primary reference"), create.getFaultString(), create);			
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -144,6 +190,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setGuestContainerSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2001"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Missing required fields"), create.getServiceExceptionApplicationFaultMessage() ,create);						
 			TestReporter.logAPI(!create.getFaultString().contains("Missing required fields. : GuestChargeGroupContainerRequest is invalid. RootReference:DREAMS_TP,"+super.number+" SourceAccountingCenterID:null"), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -152,6 +202,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/guestContainerChargeGroupRequest/rootReference", BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2001"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Missing required fields"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			boolean match = Regex.match("Missing required fields. : GuestChargeGroupContainerRequest is invalid. RootReference:null SourceAccountingCenterID:[0-9]+ ResponsibleParty:[0-9]+", "Missing required fields. : GuestChargeGroupContainerRequest is invalid. RootReference:null SourceAccountingCenterID:3 ResponsibleParty:127313850");
 			TestReporter.logAPI(!match, create.getFaultString(), create);
 		}
@@ -164,6 +218,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setGuestContainedDecription(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2061"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing Description"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing Description : Missing description"), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -172,6 +230,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/guestContainedChargeGroupRequest/period", BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2060"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group Period"), create.getServiceExceptionApplicationFaultMessage() ,create);						
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group Period : Missing Period"), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -180,6 +242,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setGuestContainedPrimaryReferenceName(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2062"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue both required for PrimaryReference.<null>,"+super.number), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -188,6 +254,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setGuestContainedPrimaryReferenceValue(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2062"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue both required for PrimaryReference.DREAMS_TCG,<null>"), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -196,6 +266,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/guestContainedChargeGroupRequest/primaryReference", BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2062"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Invalid Charge Group - missing primary reference"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Invalid Charge Group - missing primary reference : Missing primary reference"), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -204,6 +278,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setGuestContainedSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2001"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Missing required fields"), create.getServiceExceptionApplicationFaultMessage() ,create);						
 			TestReporter.logAPI(!create.getFaultString().contains("Missing required fields. : SourceAccountingCenterID is required in ChargeGroupRequest. SourceAccountingCenterID=null"), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -212,6 +290,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/guestContainedChargeGroupRequest/ancestor", BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2001"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Missing required fields"), create.getServiceExceptionApplicationFaultMessage() ,create);
 			TestReporter.logAPI(!create.getFaultString().contains("Missing required fields. : Invalid GuestChargeGroupContainedRequest. Ancestor, Root, GuaranteeType and TransactionFacility are required fields."), create.getFaultString(), create);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
@@ -220,6 +302,10 @@ public class TestCreateChargeGroupsAndPostCharges_Negative extends BaseTest{
 			CreateChargeGroupsAndPostCharges create = create();
 			create.setRequestNodeValueByXPath("/Envelope/Body/createChargeGroupsAndPostCharges/guestContainedChargeGroupRequest/root", BaseSoapCommands.REMOVE_NODE.toString());
 			create.sendRequest();
+
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultCode().contains("2001"), create.getServiceExceptionApplicationFaultCode() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultModule().contains("LILO_FOLIO"), create.getServiceExceptionApplicationFaultModule() ,create);
+			TestReporter.logAPI(!create.getServiceExceptionApplicationFaultMessage().contains("Missing required fields"), create.getServiceExceptionApplicationFaultMessage() ,create);			
 			TestReporter.logAPI(!create.getFaultString().contains("Missing required fields. : Invalid GuestChargeGroupContainedRequest. Ancestor, Root, GuaranteeType and TransactionFacility are required fields."), create.getFaultString(), create);
 		}
 	}

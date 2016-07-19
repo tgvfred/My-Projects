@@ -34,7 +34,6 @@ public class TestModify extends BaseTest{
 		ScheduledEventReservation originalRes = bookOriginalRes();
 		sendRequestAndValidateLogs(originalRes, newParty);
 	}
-	
 
 	@Test(groups = {"api", "regression", "activity", "activityService"})
 	public void testModifyTo2Adults(){
