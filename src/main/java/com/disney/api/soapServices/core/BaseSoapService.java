@@ -503,7 +503,7 @@ public abstract class BaseSoapService{
 		String url;
 		
 		url = getServiceURL();
-		
+		TestReporter.logStep("URL: " + url);
 		checkP12();
 		
 		try {
