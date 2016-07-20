@@ -22,7 +22,7 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestNoShow_Negative extends BaseTest{
-	protected ThreadLocal<LogItems> logValidItems = new ThreadLocal<LogItems>();
+	//protected ThreadLocal<LogItems> logValidItems = new ThreadLocal<LogItems>();
 	protected ThreadLocal<String[]> expectedLogs = new ThreadLocal<String[]>();
 	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
@@ -32,7 +32,7 @@ public class TestNoShow_Negative extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		logValidItems.set(new LogItems());
+		//logValidItems.set(new LogItems());
 	}
 	
 	@AfterMethod(alwaysRun = true)
@@ -151,8 +151,10 @@ public class TestNoShow_Negative extends BaseTest{
     }
 	
 	private void logItems(NoShow noShow){
-		logValidItems.get().addItem("ShowDiningServiceIF", "noShow", true);
-		validateLogs(noShow, logValidItems.get(), 10000);
+
+		LogItems logValidItems = new LogItems();
+		logValidItems.addItem("ShowDiningServiceIF", "noShow", true);
+		validateLogs(noShow, logValidItems, 10000);
 		
 		LogItems logInvalidItems = new LogItems();
 		logInvalidItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
