@@ -5,6 +5,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.ProfileErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.profileServicePort.operations.RetrieveProfilesByRoutingType;
 import com.disney.composite.BaseTest;
@@ -27,6 +28,7 @@ public class TestRetrieveProfilesByRoutingType_Negative extends BaseTest{
 		retrieveProfilesByRoutingType.setProfileType(BaseSoapCommands.REMOVE_NODE.toString());
 		retrieveProfilesByRoutingType.setIncludeInactiveProfiles(BaseSoapCommands.REMOVE_NODE.toString());
 		retrieveProfilesByRoutingType.sendRequest();
+		validateApplicationError(retrieveProfilesByRoutingType, ProfileErrorCode.ROUTING_TYPE_MISSING);
 		TestReporter.logAPI(!retrieveProfilesByRoutingType.getFaultString().contains("Routing type is missing : Invalid Request! Either the request is NULL or its missing a valid RoutingType!"), retrieveProfilesByRoutingType.getFaultString() ,retrieveProfilesByRoutingType);
 	}
 	
@@ -39,6 +41,7 @@ public class TestRetrieveProfilesByRoutingType_Negative extends BaseTest{
 		retrieveProfilesByRoutingType.setProfileType(BaseSoapCommands.REMOVE_NODE.toString());
 		retrieveProfilesByRoutingType.setIncludeInactiveProfiles(BaseSoapCommands.REMOVE_NODE.toString());
 		retrieveProfilesByRoutingType.sendRequest();
+		validateApplicationError(retrieveProfilesByRoutingType, ProfileErrorCode.ROUTING_TYPE_MISSING);
 		TestReporter.logAPI(!retrieveProfilesByRoutingType.getFaultString().contains("Routing type is missing : Invalid Request! Either the request is NULL or its missing a valid RoutingType!"), retrieveProfilesByRoutingType.getFaultString() ,retrieveProfilesByRoutingType);
 	}
 }
