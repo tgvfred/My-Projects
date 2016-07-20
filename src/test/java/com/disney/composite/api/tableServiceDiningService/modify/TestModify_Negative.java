@@ -1,6 +1,7 @@
 package com.disney.composite.api.tableServiceDiningService.modify;
 
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -22,7 +23,7 @@ public class TestModify_Negative extends BaseTest{
 	protected String TPS_ID = null;
 	protected ScheduledEventReservation res = null;
 	
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;

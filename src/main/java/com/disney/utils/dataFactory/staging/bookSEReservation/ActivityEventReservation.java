@@ -242,7 +242,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		book.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		if(getEnvironment().equalsIgnoreCase("Development")){
+		if(getEnvironment().equalsIgnoreCase("Development")&& !getEnvironment().contains("_CM") ){
 			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
 			resource.setFacilityId(getFacilityId());
 			resource.sendRequest();
@@ -252,11 +252,12 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
-		if(book.getResponse().contains("Row was updated or deleted by another transaction")){
+		if(book.getResponse().contains("Row was updated or deleted by another transaction")|| 
+				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			book.sendRequest();
 		}
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an activity event service reservation", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an activity event service reservation: " +book.getFaultString(), book);
 		this.travelPlanId = book.getTravelPlanId();
 		this.confirmationNumber = book.getTravelPlanSegmentId();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
@@ -273,7 +274,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		Cancel cancel = new Cancel(getEnvironment(), "CancelDiningEvent");
 		cancel.setReservationNumber(getConfirmationNumber());
 		cancel.sendRequest();
-		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling an activity event service reservation", cancel);
+		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling an activity event service reservation: " +cancel.getFaultString(), cancel);
 		this.cancellationNumber = cancel.getCancellationConfirmationNumber();
 		retrieve();
 	}
@@ -287,7 +288,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		Arrived arrived = new Arrived(getEnvironment(), "Main");
 		arrived.setReservationNumber(getConfirmationNumber());
 		arrived.sendRequest();
-		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred updating an activity event service reservation to [Arrived]", arrived);
+		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred updating an activity event service reservation to [Arrived]: " +arrived.getFaultString(), arrived);
 		this.arrivedStatus = arrived.getArrivalStatus();
 		retrieve();
 	}
@@ -301,7 +302,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		NoShow noShow = new NoShow(getEnvironment(), "Main");
 		noShow.setReservationNumber(getConfirmationNumber());
 		noShow.sendRequest();
-		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an activity event service reservation to [No Show]", noShow);
+		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an activity event service reservation to [No Show]: " +noShow.getFaultString(), noShow);
 		this.cancellationNumber = noShow.getCancellationNumber();
 		retrieve();
 	}	

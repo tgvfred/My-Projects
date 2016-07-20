@@ -1,5 +1,6 @@
 package com.disney.composite.api.eventDiningService.noShow;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -24,7 +25,7 @@ public class TestNoShow_Negative extends BaseTest{
 	
 	
 	@Override
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;

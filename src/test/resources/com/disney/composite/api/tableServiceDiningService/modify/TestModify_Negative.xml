@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestModify_Negative_Suite" parallel="methods" thread-count="30">
-	<parameter name="environment" value="Development" />
+	<parameter name="environment" value="bashful_CM" />
 	<test name="TestModify_Negative">
 		<classes>
 			<class name="com.disney.composite.api.tableServiceDiningService.modify.TestModify_Negative"/>

@@ -1,12 +1,14 @@
 package com.disney.composite.api.showDiningService.assignTableNumbers;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.AutomationException;
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -25,13 +27,15 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 	protected ScheduledEventReservation res = null;
 	
 	@Override
-	@BeforeTest(alwaysRun=true)
+	@BeforeClass(alwaysRun=true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		res = new ShowDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		res = new ShowDiningReservation(environment, hh);
+		try{
+			res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		}catch(AutomationException ae){}
 	}
 	
 	@AfterMethod(alwaysRun = true)
@@ -123,6 +127,8 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 	}
     
     private AssignTableNumbers assign(){
+    	if(res.getConfirmationNumber() == null) throw new AutomationException("Failed to creating booking");
+
 		AssignTableNumbers assign = new AssignTableNumbers(environment, "Main");
 		assign.setPartySize(String.valueOf(hh.getAllGuests().size()));
 		assign.setTravelPlanSegmentId(res.getConfirmationNumber());

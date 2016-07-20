@@ -1,6 +1,7 @@
 package com.disney.composite.api.showDiningService.cancel;
 
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
@@ -26,7 +27,7 @@ public class TestCancel_Negative extends BaseTest{
 	protected ThreadLocal<String[]> expectedLogs = new ThreadLocal<String[]>();
 	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void testSetup(@Optional String environment){
 		this.environment = environment;
