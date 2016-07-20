@@ -3,10 +3,10 @@ package com.disney.composite.api.seatedEventsComponentService.book;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.CoreResErrorCode;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.LiloPartyErrorCode;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
-import com.disney.api.soapServices.applicationError.LiloSystemRESMErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.seatedEventsComponentService.operations.Book;
 import com.disney.composite.BaseTest;
@@ -85,7 +85,7 @@ public class TestBook_Negative extends BaseTest{
 		TestReporter.logScenario("Missing Source Accounting Center");
 		Book book = book();
 		book.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestValidateLogs(book, "SOURCER ACCOUNTING CENTER IS REQUIRED! : Invalid Source Accounting Center#0", LiloSystemRESMErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED);
+		sendRequestValidateLogs(book, "SOURCER ACCOUNTING CENTER IS REQUIRED! : Invalid Source Accounting Center#0", CoreResErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED);
 	}
 	@Test(groups = {"api", "regression", "dining", "seatedEventsComponentService", "negative"})
 	public void invalidPrimaryGuestTitle(){
@@ -133,7 +133,7 @@ public class TestBook_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Source Accounting Center - Negative Number");
 		Book book = book();
 		book.setSourceAccountingCenter(sac);
-		sendRequestValidateLogs(book, "SOURCER ACCOUNTING CENTER IS REQUIRED! : Invalid Source Accounting Center#"+sac, LiloSystemRESMErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED);
+		sendRequestValidateLogs(book, "SOURCER ACCOUNTING CENTER IS REQUIRED! : Invalid Source Accounting Center#"+sac, CoreResErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED);
 	}
 	@Test(groups = {"api", "regression", "dining", "seatedEventsComponentService", "negative"})
 	public void invalidSourceAccountingCenter_NotFound(){
