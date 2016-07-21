@@ -17,7 +17,19 @@ import com.disney.utils.date.SimpleDate;
 
 public class TestReporter {
 	private static boolean printToConsole = false;
-
+	public static final int NONE = 0;
+	public static final int INFO = 1;
+	public static final int DEBUG = 2;
+	private static int debugLevel = 0;
+	
+	public static void setDebugLevel(int level){
+		debugLevel = level;
+	}
+	
+	public static int getDebugLevel(){
+		return debugLevel;
+	}
+	
 	private static String getTimestamp() {
 		return SimpleDate.getTimestamp().toString() + " :: ";
 	}
@@ -60,6 +72,22 @@ public class TestReporter {
 	public static void log(String message) {
 		Reporter.log(new Timestamp(new java.util.Date().getTime()) + " :: " + message + "<br />");
 		if(getPrintToConsole()) System.out.println(getTimestamp() + trimHtml(message.trim()));
+	}
+
+	public static void logDebug(String message) {
+		if(debugLevel >= DEBUG){
+			//Reporter.log(getTimestamp()replace(" ::", "") + "::DEBUG::" + message + "<br />");
+			//if(getPrintToConsole()) System.out.println(getTimestamp()replace(" ::", "") + "::DEBUG:: " + trimHtml(message.trim()));
+			System.out.println(getTimestamp().replace(" ::", "") + ":: DEBUG :: " + (message.trim()));
+		}
+	}
+
+	public static void logInfo(String message) {
+		if(debugLevel >= INFO){
+			//Reporter.log(new Timestamp(new java.util.Date().getTime()) + " :: " + "::INFO:: " + message + "<br />");
+			//if(getPrintToConsole()) System.out.println(getTimestamp().replace(" ::", "") + "::INFO:: " + trimHtml(message.trim()));
+			System.out.println(getTimestamp().replace(" ::", "") + ":: INFO :: "  + message.trim());
+		}
 	}
 
 	public static void logNoHtmlTrim(String message) {

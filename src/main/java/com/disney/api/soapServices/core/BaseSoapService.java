@@ -493,6 +493,7 @@ public abstract class BaseSoapService{
 	 *             Failed to read the Request properly
 	 */
 	public void sendRequest() {
+		TestReporter.logDebug("Entering BaseSoapService#sendRequest()");
 		SOAPMessage request = null;
 		SOAPMessage response = null;
 		SOAPConnectionFactory connectionFactory = null;
@@ -502,24 +503,34 @@ public abstract class BaseSoapService{
 
 		String url;
 		
-		url = getServiceURL();
 		
+		url = getServiceURL();
+		TestReporter.logInfo("Service URL to send request: [" + url + "]");
+		TestReporter.logInfo("Set WebVan Cert");
 		checkP12();
 		
 		try {
+			TestReporter.logDebug("Initializing Soap Message Factory");
 			messageFactory = MessageFactory.newInstance(SOAPConstants.DEFAULT_SOAP_PROTOCOL);
 			
 			// Convert XML Request to SoapMessage
+			TestReporter.logInfo("Request to send: \n" + getRequest());
+			TestReporter.logDebug("Convertting request to a Soap Message");
 			request = messageFactory.createMessage(new MimeHeaders(), new StringBufferInputStream(getRequest()));			
 //			request.writeTo(System.out);
 		//	System.out.println();
 
 			// Send out Soap Request to the endopoint
+			TestReporter.logDebug("Initializing Soap Connection Factory");
 			connectionFactory = SOAPConnectionFactory.newInstance();
 			
+			TestReporter.logDebug("Establishing connection to Service");
 			connection = connectionFactory.createConnection();
+			
+			TestReporter.logDebug("Sending Request to Service");
 			response = connection.call(request, url);
-
+			TestReporter.logDebug("Received Response from Service");
+			
 			// Normalize Response and get the soap body
 			response.getSOAPBody().normalize();
 			responseBody = response.getSOAPBody();
@@ -534,28 +545,34 @@ public abstract class BaseSoapService{
 					+ ioe.getCause());
 		}
 
+		TestReporter.logInfo("Checking Response for faults");
 		// Check for faults and report
 		if (responseBody.hasFault()) {
+			TestReporter.logInfo("Fault Found");
 			SOAPFault newFault = responseBody.getFault();
 			faultString = newFault.getFaultString();
 			setRepsonseStatusCode(newFault.getFaultCode());
 			//TestReporter.logAPI(false, "Soap Response FAULT:  " + newFault.getFaultCode(), this);
 		} else {
+			TestReporter.logInfo("No fault found");
 			setRepsonseStatusCode("200");
 		}
 
 		try {
+			TestReporter.logDebug("Closing Soap Connection");
 			connection.close();
 
 		} catch (SOAPException soape) {
 			throw new RuntimeException(soape.getCause());
 		}
 
+		TestReporter.logDebug("Convertting Response to XML Document");
 		// Covert Soap Response to XML and set it as Response in memory
 		Document doc = XMLTools.makeXMLDocument(response);
 		doc.normalize();
 		setResponseDocument(doc);
 		setResponseBaseURI(responseBody.getNamespaceURI());
+		TestReporter.logInfo("Response returned: \n" + getResponse());
 	//	System.out.println();
 	//	System.out.println();
 	//	System.out.println("Response");
@@ -1033,35 +1050,54 @@ public abstract class BaseSoapService{
 	
 	private void checkP12(){
 		KeyStore clientStore;
+		TestReporter.logDebug("Entering BaseSoapRequest#checkP12");
 		try {
+
+			TestReporter.logDebug("Creating Keystore Instance");
 			clientStore = KeyStore.getInstance("PKCS12");
 
 			//clientStore.load(new FileInputStream(new File(getClass().getResource("/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12").getPath())), "Disney123".toCharArray());
+
+			TestReporter.logDebug("Retrieving WebVan Certificate");
 			InputStream is = new URL("https://github.disney.com/WDPRO-QA/lilo/raw/master/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12").openStream();
+
+			TestReporter.logDebug("Loading WebVan Certifcate into Keystore");
 			clientStore.load(is, "Disney123".toCharArray());
 	
+
+			TestReporter.logDebug("Unlocking WebVan cert with key");
 	        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 	        kmf.init(clientStore, "Disney123".toCharArray());
 	        KeyManager[] kms = kmf.getKeyManagers();
 	       
 	       // String path = getClass().getResource("/com/disney/certificates/webvan/cacerts").getPath();
+	        TestReporter.logDebug("Retrieving CA Cert Store");
 	        InputStream isCA = new URL("https://github.disney.com/WDPRO-QA/lilo/raw/master/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/cacerts").openStream();
 			
+	        TestReporter.logDebug("Unlocking CA Cert Store with key");
 	        KeyStore trustStore = KeyStore.getInstance("JKS");
 	        trustStore.load(isCA, "changeit".toCharArray());
 	
+	        TestReporter.logDebug("Generating Trust Manager");
 	        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+	        
+	        TestReporter.logDebug("Loading CA Cert Store into Trust Manager");
 	        tmf.init(trustStore);
 	        TrustManager[] tms = tmf.getTrustManagers();
 	
+	        TestReporter.logDebug("Generating SSL Context");
 	        SSLContext sslContext = null;
 	        sslContext = SSLContext.getInstance("TLS");
+	        
+	        TestReporter.logDebug("Loading WebVan Cert into Trust Manager with SSL Context");
 	        sslContext.init(kms, tms, new SecureRandom());
 	
+	        TestReporter.logDebug("Establishing initial SSL Socket");
 	        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
 		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | UnrecoverableKeyException | KeyManagementException e) {
 			e.printStackTrace();
 		}
+		TestReporter.logDebug("Exitting BaseSoapRequest#checkP12");
     }
 	
 	public String getFaultString(){
