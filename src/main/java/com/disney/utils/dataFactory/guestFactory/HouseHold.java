@@ -35,7 +35,7 @@ public class HouseHold {
 			TestReporter.logDebug("Generating Guest [" + (numberOfGuests+1) + "]");	
 			addGuest(new Guest());
 
-			TestReporter.logDebug("Setting Guest [" +(numberOfGuests+1)+"] Address, Phone and Email to primary Guest");
+			TestReporter.logDebug("Setting Guest [" +(x+1)+"] Address, Phone and Email to primary Guest");
 			guests.get(x).getAllAddresses().get(0).setPrimary(true);
 			guests.get(x).getAllAddresses().get(0).setStreetName(guests.get(0).primaryAddress().getStreetName());
 			guests.get(x).getAllAddresses().get(0).setStreetNumber(guests.get(0).primaryAddress().getStreetNumber());
@@ -46,7 +46,7 @@ public class HouseHold {
 			guests.get(x).getAllAddresses().get(0).setOptIn(true);
 			guests.get(x).getAllPhones().get(0).setPrimary(true);
 			guests.get(x).getAllEmails().get(0).setPrimary(true);
-			TestReporter.logInfo(guests.get(x).toString().replace("<br/>", "\n"));
+			TestReporter.logInfo("\n"+guests.get(x).toString().replace("<br/>", "\n"));
 		}
 
 		TestReporter.logDebug("Set first guest as Primary Guest");
@@ -77,34 +77,24 @@ public class HouseHold {
 		int numberChildren = Integer.valueOf(datatable.getDataParameter("NumberChildren"));
 		int numberInfants = Integer.valueOf(datatable.getDataParameter("NumberInfants"));
 		int houseHoldSize = numberAdults + numberChildren + numberInfants;
-
+		
+		TestReporter.logInfo(String.format("Adults [%s], Children [%s], Infants [%s]",numberAdults,numberChildren,numberInfants));
 		for (int x = 0; x < houseHoldSize; x++) {
+
+			TestReporter.logDebug("Setting Guest [" +(x+1)+"] Address, Phone and Email to primary Guest");
 			addGuest(new Guest());
 
 			guests.get(x).getAllAddresses().get(0).setPrimary(true);
-			guests.get(x)
-					.getAllAddresses()
-					.get(0)
-					.setStreetName(
-							guests.get(0).primaryAddress().getStreetName());
-			guests.get(x)
-					.getAllAddresses()
-					.get(0)
-					.setStreetNumber(
-							guests.get(0).primaryAddress().getStreetNumber());
-			guests.get(x).getAllAddresses().get(0)
-					.setCity(guests.get(0).primaryAddress().getCity());
-			guests.get(x).getAllAddresses().get(0)
-					.setState(guests.get(0).primaryAddress().getState());
-			guests.get(x)
-					.getAllAddresses()
-					.get(0)
-					.setStateAbbv(guests.get(0).primaryAddress().getStateAbbv());
-			guests.get(x).getAllAddresses().get(0)
-					.setZipCode(guests.get(0).primaryAddress().getZipCode());
+			guests.get(x).getAllAddresses().get(0).setStreetName(guests.get(0).primaryAddress().getStreetName());
+			guests.get(x).getAllAddresses().get(0).setStreetNumber(guests.get(0).primaryAddress().getStreetNumber());
+			guests.get(x).getAllAddresses().get(0).setCity(guests.get(0).primaryAddress().getCity());
+			guests.get(x).getAllAddresses().get(0).setState(guests.get(0).primaryAddress().getState());
+			guests.get(x).getAllAddresses().get(0).setStateAbbv(guests.get(0).primaryAddress().getStateAbbv());
+			guests.get(x).getAllAddresses().get(0).setZipCode(guests.get(0).primaryAddress().getZipCode());
 			guests.get(x).getAllAddresses().get(0).setOptIn(true);
 			guests.get(x).getAllPhones().get(0).setPrimary(true);
 			guests.get(x).getAllEmails().get(0).setPrimary(true);
+			TestReporter.logInfo("\n "+guests.get(x).toString().replace("<br/>", "\n"));
 
 			if (numberAdultsCreated < numberAdults
 					/*&& Integer.valueOf(guests.get(x).getAge()) < 18*/) {
@@ -147,7 +137,10 @@ public class HouseHold {
 			}
 		}
 
+
+		TestReporter.logDebug("Set first guest as Primary Guest");
 		guests.get(0).setPrimary(true);
+		TestReporter.logDebug("Ensure first guest is older than 18");
 		if (Integer.valueOf(guests.get(0).getAge()) < 18) {
 			guests.get(0).setAge(
 					String.valueOf(Randomness.randomNumberBetween(18, 99)));
