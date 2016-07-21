@@ -28,44 +28,41 @@ public class HouseHold {
 	 * @see com.disney.utils.dataFactory.guestFactory.Guest
 	 */
 	public HouseHold(int numberOfGuests) {
+		TestReporter.logDebug("Entering HouseHold#init with number of Guests");
+		TestReporter.logInfo("Creating party with ["+numberOfGuests+"] guests");
+		
 		for (int x = 0; x < numberOfGuests; x++) {
+			TestReporter.logDebug("Generating Guest [" + (numberOfGuests+1) + "]");	
 			addGuest(new Guest());
 
+			TestReporter.logDebug("Setting Guest [" +(x+1)+"] Address, Phone and Email to primary Guest");
 			guests.get(x).getAllAddresses().get(0).setPrimary(true);
-			guests.get(x)
-					.getAllAddresses()
-					.get(0)
-					.setStreetName(
-							guests.get(0).primaryAddress().getStreetName());
-			guests.get(x)
-					.getAllAddresses()
-					.get(0)
-					.setStreetNumber(
-							guests.get(0).primaryAddress().getStreetNumber());
-			guests.get(x).getAllAddresses().get(0)
-					.setCity(guests.get(0).primaryAddress().getCity());
-			guests.get(x).getAllAddresses().get(0)
-					.setState(guests.get(0).primaryAddress().getState());
-			guests.get(x)
-					.getAllAddresses()
-					.get(0)
-					.setStateAbbv(guests.get(0).primaryAddress().getStateAbbv());
-			guests.get(x).getAllAddresses().get(0)
-					.setZipCode(guests.get(0).primaryAddress().getZipCode());
+			guests.get(x).getAllAddresses().get(0).setStreetName(guests.get(0).primaryAddress().getStreetName());
+			guests.get(x).getAllAddresses().get(0).setStreetNumber(guests.get(0).primaryAddress().getStreetNumber());
+			guests.get(x).getAllAddresses().get(0).setCity(guests.get(0).primaryAddress().getCity());
+			guests.get(x).getAllAddresses().get(0).setState(guests.get(0).primaryAddress().getState());
+			guests.get(x).getAllAddresses().get(0).setStateAbbv(guests.get(0).primaryAddress().getStateAbbv());
+			guests.get(x).getAllAddresses().get(0).setZipCode(guests.get(0).primaryAddress().getZipCode());
 			guests.get(x).getAllAddresses().get(0).setOptIn(true);
 			guests.get(x).getAllPhones().get(0).setPrimary(true);
 			guests.get(x).getAllEmails().get(0).setPrimary(true);
+			TestReporter.logInfo("\n"+guests.get(x).toString().replace("<br/>", "\n"));
 		}
 
+		TestReporter.logDebug("Set first guest as Primary Guest");
 		guests.get(0).setPrimary(true);
+		TestReporter.logDebug("Ensure first guest is older than 18");
 		if (Integer.parseInt(guests.get(0).getAge()) <= 18) {
 			guests.get(0).setAge("45");
 			guests.get(0).setChild(false);
 			guests.get(0).setBirthDate("1970-01-14");
 		}
+		TestReporter.logDebug("Entering HouseHold#init with number of Guests");
 	}
 
 	public HouseHold(String guestScenario) {
+		TestReporter.logDebug("Entering HouseHold#init with Guest Scenario");
+		TestReporter.logInfo("Creating party with scenario ["+guestScenario+"]");
 		Datatable datatable = new Datatable();
 		datatable.setVirtualtablePath("METADATA_");
 		datatable.setVirtualtablePage("GUESTS");
@@ -80,34 +77,24 @@ public class HouseHold {
 		int numberChildren = Integer.valueOf(datatable.getDataParameter("NumberChildren"));
 		int numberInfants = Integer.valueOf(datatable.getDataParameter("NumberInfants"));
 		int houseHoldSize = numberAdults + numberChildren + numberInfants;
-
+		
+		TestReporter.logInfo(String.format("Adults [%s], Children [%s], Infants [%s]",numberAdults,numberChildren,numberInfants));
 		for (int x = 0; x < houseHoldSize; x++) {
+
+			TestReporter.logDebug("Setting Guest [" +(x+1)+"] Address, Phone and Email to primary Guest");
 			addGuest(new Guest());
 
 			guests.get(x).getAllAddresses().get(0).setPrimary(true);
-			guests.get(x)
-					.getAllAddresses()
-					.get(0)
-					.setStreetName(
-							guests.get(0).primaryAddress().getStreetName());
-			guests.get(x)
-					.getAllAddresses()
-					.get(0)
-					.setStreetNumber(
-							guests.get(0).primaryAddress().getStreetNumber());
-			guests.get(x).getAllAddresses().get(0)
-					.setCity(guests.get(0).primaryAddress().getCity());
-			guests.get(x).getAllAddresses().get(0)
-					.setState(guests.get(0).primaryAddress().getState());
-			guests.get(x)
-					.getAllAddresses()
-					.get(0)
-					.setStateAbbv(guests.get(0).primaryAddress().getStateAbbv());
-			guests.get(x).getAllAddresses().get(0)
-					.setZipCode(guests.get(0).primaryAddress().getZipCode());
+			guests.get(x).getAllAddresses().get(0).setStreetName(guests.get(0).primaryAddress().getStreetName());
+			guests.get(x).getAllAddresses().get(0).setStreetNumber(guests.get(0).primaryAddress().getStreetNumber());
+			guests.get(x).getAllAddresses().get(0).setCity(guests.get(0).primaryAddress().getCity());
+			guests.get(x).getAllAddresses().get(0).setState(guests.get(0).primaryAddress().getState());
+			guests.get(x).getAllAddresses().get(0).setStateAbbv(guests.get(0).primaryAddress().getStateAbbv());
+			guests.get(x).getAllAddresses().get(0).setZipCode(guests.get(0).primaryAddress().getZipCode());
 			guests.get(x).getAllAddresses().get(0).setOptIn(true);
 			guests.get(x).getAllPhones().get(0).setPrimary(true);
 			guests.get(x).getAllEmails().get(0).setPrimary(true);
+			TestReporter.logInfo("\n "+guests.get(x).toString().replace("<br/>", "\n"));
 
 			if (numberAdultsCreated < numberAdults
 					/*&& Integer.valueOf(guests.get(x).getAge()) < 18*/) {
@@ -150,11 +137,16 @@ public class HouseHold {
 			}
 		}
 
+
+		TestReporter.logDebug("Set first guest as Primary Guest");
 		guests.get(0).setPrimary(true);
+		TestReporter.logDebug("Ensure first guest is older than 18");
 		if (Integer.valueOf(guests.get(0).getAge()) < 18) {
 			guests.get(0).setAge(
 					String.valueOf(Randomness.randomNumberBetween(18, 99)));
 		}
+
+		TestReporter.logDebug("Exiting HouseHold#init with Guest Scenario");
 	}
 
 	public void sendToApi(String environment) {

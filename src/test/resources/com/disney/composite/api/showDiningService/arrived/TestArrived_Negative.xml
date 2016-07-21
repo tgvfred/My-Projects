@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestArrived_Negative_Suite" parallel="methods" thread-count="5">
-	<parameter name="environment" value="Development" />
+<suite name="TestArrived_Negative_Suite" parallel="methods" thread-count="50">
+	<parameter name="environment" value="sleepy" />
 	<test name="TestArrived_Negative">
 		<classes>
 			<class name="com.disney.composite.api.showDiningService.arrived.TestArrived_Negative"/>

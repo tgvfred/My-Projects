@@ -29,4 +29,24 @@ public class Book extends SeatedEventsComponentService{
 	public void setServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookCirqueRequest/admissionProducts/serviceStartDate", value);}
 	public String getReservationNumber(){return getResponseNodeValueByXPath("/Envelope/Body/bookResponse/seatedEventBookResponseWSTO/reservationNumber");}
 	public String getTravelPlanId(){return getResponseNodeValueByXPath("/Envelope/Body/bookResponse/seatedEventBookResponseWSTO/travelPlanId");}
+	/**
+	 * Sets the Nexus Reservation Code
+	 * @param value - Nexus Reservation Code
+	 */
+	public void setNexusReservationCode(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookCirqueRequest/nexusReservationCode", value);}
+	/**
+	 * Sets the title of the primary guest
+	 * @param value - title of the primary guest
+	 */
+	public void setPrimaryGuestTitle(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookCirqueRequest/primaryGuest/title", value);}
+	/**
+	 * Sets the primary guest country
+	 * @param value - primary guest country
+	 */
+	public void setPrimaryGuestCountry(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookCirqueRequest/primaryGuest/addressDetails/country", value);}
+	/**
+	 * Sets the travel plan ID
+	 * @param value - travel plan ID
+	 */
+	public void setTravelPlanId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookCirqueRequest/travelPlanId", value);}
 }

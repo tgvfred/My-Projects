@@ -56,10 +56,15 @@ public class Modify extends ActivityService {
 	 */
 	public void setFacilityId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/facilityId", value);}
 	/**
-	 * Sets the service period ID in the SOAP request
-	 * @param value - service period ID
+	 * Sets the product ID in the SOAP request
+	 * @param value - product ID
 	 */
 	public void setProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/productId", value);}
+	/**
+	 * Sets the product type in the SOAP request
+	 * @param value - product type 
+	 */
+	public void setProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/productType", value);}
 	/**
 	 * Gets the status from modifying the reservation from the SOAP response
 	 * @return status from modifying the reservation
@@ -160,7 +165,7 @@ public class Modify extends ActivityService {
 	 * Sets the service period ID in the SOAP request
 	 * @param value - service period ID
 	 */
-	public void setServicePeriosId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/servicePeriodId", value);}
+	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/servicePeriodId", value);}
 	/**
 	 * Sets the service start dateTime in the SOAP request
 	 * @param value service start dateTime

@@ -5,6 +5,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.ProfileErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.profileServicePort.operations.GetOptions;
 import com.disney.api.soapServices.profileServicePort.operations.RetrieveProfiles;
@@ -29,6 +30,7 @@ public class TestRetrieveProfilesByCode_Negative extends BaseTest{
 		RetrieveProfilesByCode retrieveByCode = new RetrieveProfilesByCode(environment);
 		retrieveByCode.setProfileCode(code);
 		retrieveByCode.sendRequest();
+		validateApplicationError(retrieveByCode, ProfileErrorCode.NO_PROFILE_FOUND);
 		TestReporter.logAPI(!retrieveByCode.getFaultString().contains("No profile found for profileId : ["+code+"]"), retrieveByCode.getFaultString() ,retrieveByCode);
 	}
 	

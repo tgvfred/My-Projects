@@ -1,7 +1,9 @@
 package com.disney.composite.api.tableServiceDiningService.modify;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -19,13 +21,15 @@ public class TestModify extends BaseTest{
 	// Defining global variables
 	HouseHold hh = null;
 	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
-	
+	private ScheduledEventReservation res;
 	@Override
-	@BeforeMethod(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
+		res = new TableServiceDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 	
 	@AfterMethod(alwaysRun=true)
@@ -43,8 +47,6 @@ public class TestModify extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModify(){
 		TestReporter.logScenario("1 Adult");
-		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		TPS_ID.set(res.getConfirmationNumber());
 		HouseHold newParty = new HouseHold(1);
 		modifyAndValidateLogs(newParty,res);
@@ -52,40 +54,30 @@ public class TestModify extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModifyTo2Adults(){
 		TestReporter.logScenario("2 Adults");
-		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold newParty = new HouseHold("2 Adults");
 		modifyAndValidateLogs(newParty,res);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModifyTo4Adults(){
 		TestReporter.logScenario("4 Adults");
-		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold newParty = new HouseHold("4 Adults");
 		modifyAndValidateLogs(newParty,res);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModifyTo2Adults2Child(){
 		TestReporter.logScenario("2 Adults, 2 Children");
-		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold newParty = new HouseHold("2 Adults 2 Child");
 		modifyAndValidateLogs(newParty,res);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModifyTo4Adults2Child2Infant(){
 		TestReporter.logScenario("4 Adults, 2 Children, 2 Infants");
-		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold newParty = new HouseHold("4 Adults 2 Child 2 Infant");
 		modifyAndValidateLogs(newParty,res);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
 	public void testModifyTo12Adults(){
 		TestReporter.logScenario("12 Adults");
-		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold newParty = new HouseHold(12);
 		modifyAndValidateLogs(newParty,res);
 	}
