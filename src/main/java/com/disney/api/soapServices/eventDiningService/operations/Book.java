@@ -124,12 +124,11 @@ public class Book extends EventDiningService {
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies["+index+"]");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies["+index+"]", value);
 		}catch(Exception e){
-			e.printStackTrace();
 			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:allergies");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies["+index+"]", value);
 		}
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies["+index+"]", value);
 	}
 	
 	public void addTravelAgency(String agencyId){

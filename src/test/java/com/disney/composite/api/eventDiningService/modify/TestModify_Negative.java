@@ -1,5 +1,6 @@
 package com.disney.composite.api.eventDiningService.modify;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
@@ -31,7 +32,7 @@ public class TestModify_Negative extends BaseTest{
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 	
-	@AfterTest(alwaysRun = true)
+	@AfterClass(alwaysRun = true)
 	public synchronized void closeSession() {res.cancel();}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
