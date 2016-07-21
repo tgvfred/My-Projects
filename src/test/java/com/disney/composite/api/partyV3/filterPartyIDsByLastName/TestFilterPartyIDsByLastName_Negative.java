@@ -5,6 +5,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.partyV3.operations.FilterPartyIDsByLastName;
 import com.disney.composite.BaseTest;
@@ -22,6 +23,7 @@ public class TestFilterPartyIDsByLastName_Negative extends BaseTest{
 		FilterPartyIDsByLastName filter = new FilterPartyIDsByLastName(environment, "Main");
 		filter.setLastName(BaseSoapCommands.REMOVE_NODE.toString());
 		filter.sendRequest();
+		validateApplicationError(filter, PartyErrorCode.LAST_NAME_INVALID);
 		TestReporter.logAPI(!filter.getFaultString().contains("Last Name is invalid  : Last Name is blank"), filter.getFaultString() ,filter);		
 	}
 	
@@ -41,6 +43,7 @@ public class TestFilterPartyIDsByLastName_Negative extends BaseTest{
 		FilterPartyIDsByLastName filter = new FilterPartyIDsByLastName(environment, "Main");
 		filter.setPartyId(BaseSoapCommands.REMOVE_NODE.toString());
 		filter.sendRequest();
+		validateApplicationError(filter, PartyErrorCode.PARTY_ID_LIST_NULL_EMPTY);
 		TestReporter.logAPI(!filter.getFaultString().contains("List of Party ids is null or empty : Party List is empty"), filter.getFaultString() ,filter);
 	}
 }

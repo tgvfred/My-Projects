@@ -1,11 +1,14 @@
 package com.disney.composite.api.tableServiceDiningService.cancel;
 
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Cancel;
 import com.disney.composite.BaseTest;
@@ -21,7 +24,7 @@ public class TestCancel_Negative  extends BaseTest{
 	protected ScheduledEventReservation res = null;
 	
 	@Override
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
@@ -47,7 +50,7 @@ public class TestCancel_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Reservation");
 		Cancel cancel = new Cancel(this.environment,"Main");
 		cancel.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(cancel, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
+		sendRequestAndValidateLogs(cancel, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 0");
 	}
 	
 
@@ -56,7 +59,7 @@ public class TestCancel_Negative  extends BaseTest{
 		TestReporter.logScenario("Invalid Reservation Number");
 		Cancel cancel = new Cancel(this.environment,"Main");
 		cancel.setReservationNumber("11111");
-		sendRequestAndValidateLogs(cancel, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
+		sendRequestAndValidateLogs(cancel, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, "RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "tableDiningService", "negative"})
@@ -67,7 +70,7 @@ public class TestCancel_Negative  extends BaseTest{
 		res2.arrived();
 		Cancel cancel = new Cancel(this.environment,"Main");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
-		sendRequestAndValidateLogs(cancel, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
+		sendRequestAndValidateLogs(cancel, DiningErrorCode.INVALID_TRAVEL_STATUS, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "tableDiningService", "negative"})
@@ -78,7 +81,7 @@ public class TestCancel_Negative  extends BaseTest{
 		res2.noShow();
 		Cancel cancel = new Cancel(this.environment,"Main");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
-		sendRequestAndValidateLogs(cancel, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
+		sendRequestAndValidateLogs(cancel, DiningErrorCode.INVALID_TRAVEL_STATUS, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "tableDiningService", "negative"})
@@ -89,11 +92,12 @@ public class TestCancel_Negative  extends BaseTest{
 		res2.cancel();		
 		Cancel cancel = new Cancel(this.environment,"Main");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
-		sendRequestAndValidateLogs(cancel, "Travel Status is invalid  : INVALID RESERVATION STATUS.");	
+		sendRequestAndValidateLogs(cancel, DiningErrorCode.INVALID_TRAVEL_STATUS,  "Travel Status is invalid  : INVALID RESERVATION STATUS.");	
 	}
 	
-	private void sendRequestAndValidateLogs(Cancel cancel, String faultString){
+	private void sendRequestAndValidateLogs(Cancel cancel, ApplicationErrorCode error, String faultString){
 		cancel.sendRequest();
+		validateApplicationError(cancel, error);
 		TestReporter.logAPI(!cancel.getFaultString().contains(faultString), cancel.getFaultString() ,cancel);
 
 		LogItems logValidItems = new LogItems();

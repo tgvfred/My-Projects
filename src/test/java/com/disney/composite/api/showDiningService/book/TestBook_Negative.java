@@ -5,6 +5,10 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.ActivityErrorCode;
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
+import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.showDiningService.operations.Book;
 import com.disney.composite.BaseTest;
@@ -35,21 +39,21 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Invalid Authorization Number");
 		Book book = book();
 		book.setAuthorizationNumber("1");
-		sendRequestAndValidateFaultString("INVALID AUTHORIZATION CODE !! : INVALID AUTHORIZATION CODE !", book);
+		sendRequestAndValidateFaultString("INVALID AUTHORIZATION CODE !! : INVALID AUTHORIZATION CODE !", DiningErrorCode.INVALID_AUTHORIZATION_CODE, book);
 	}	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidBookDateExceeds180DaysInFuture(){
 		TestReporter.logScenario("Booking Date Exceeds 180 Days in the Future");
 		Book book = book();
 		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(182));
-		sendRequestAndValidateFaultString("RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date", book);
+		sendRequestAndValidateFaultString("RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date", DiningErrorCode.EXCEPTION_RULE_FIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidBookDateInPast(){
 		TestReporter.logScenario("Booking Date in the Past");
 		Book book = book();
 		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(-1));
-		sendRequestAndValidateFaultString("RESManagement suggests to stop this reservation : Book Date is greater than Service date", book);
+		sendRequestAndValidateFaultString("RESManagement suggests to stop this reservation : Book Date is greater than Service date",  DiningErrorCode.EXCEPTION_RULE_FIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidCommunicationChannel(){
@@ -57,7 +61,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Invalid Communications Channel");
 		Book book = book();
 		book.setCommunicationChannel(Randomness.randomString(4));
-		sendRequestAndValidateFaultString("communication Channel is required : null", book);
+		sendRequestAndValidateFaultString("communication Channel is required : null",  DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidFacilityId(){
@@ -65,14 +69,14 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Invalid Facility ID");
 		Book book = book();
 		book.setFacilityId("-1");
-		sendRequestAndValidateFaultString("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!", book);
+		sendRequestAndValidateFaultString("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!",  DiningErrorCode.INVALID_FACILITY, book);
 	}	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidPrimaryGuestCountry(){
 		TestReporter.logScenario("Invalid Primary Guest Country");
 		Book book = book();
 		book.setPrimaryGuestCountry("INVALID");
-		sendRequestAndValidateFaultString("Create Party Error : Please enter valid country code", book);
+		sendRequestAndValidateFaultString("Create Party Error : Please enter valid country code", PartyErrorCode.CREATE_PARTY_ERROR, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidPrimaryGuestTitle(){
@@ -80,7 +84,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Invalid Primary Guest Title");
 		Book book = book();
 		book.setPrimaryGuestTitle(title);
-		sendRequestAndValidateFaultString("Salutation is invalid : Salutation "+title+" is invalid", book);
+		sendRequestAndValidateFaultString("Salutation is invalid : Salutation "+title+" is invalid",  PartyErrorCode.SALUTATION_INVALID, book);
 	}	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidProductId(){
@@ -89,7 +93,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Invalid Product ID");
 		Book book = book();
 		book.setProductId("-1");
-		sendRequestAndValidateFaultString("PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!", book);
+		sendRequestAndValidateFaultString("PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!", DiningErrorCode.PRODUCT_ID_REQUIRED,  book);
 	}	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidSalesChannel(){
@@ -97,7 +101,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Invalid Sales Channel");
 		Book book = book();
 		book.setSalesChannel("INVAlID");
-		sendRequestAndValidateFaultString("Sales Channel is required : null", book);
+		sendRequestAndValidateFaultString("Sales Channel is required : null",  DiningErrorCode.SALES_CHANNEL_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingCommunicationChannel(){
@@ -105,7 +109,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Communications Channel");
 		Book book = book();
 		book.setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("communication Channel is required : null", book);
+		sendRequestAndValidateFaultString("communication Channel is required : null",  DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingFacilityId(){
@@ -113,7 +117,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Facility ID");
 		Book book = book();
 		book.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!", book);
+		sendRequestAndValidateFaultString("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!",  DiningErrorCode.INVALID_FACILITY, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingFreeze(){
@@ -123,7 +127,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Freeze ID");
 		Book book = book();
 		book.setFreezeId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Freeze Id is required : FREEZE ID IS REQUIRED", book);
+		sendRequestAndValidateFaultString("Freeze Id is required : FREEZE ID IS REQUIRED",  DiningErrorCode.FREEZE_ID_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingPartyRoleAgeType(){
@@ -132,7 +136,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Party Role Age Type");
 		Book book = book();
 		book.setPartyRoleAgeType(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Age Type is required : AGE TYPE IS REQUIRED.", book);
+		sendRequestAndValidateFaultString("Age Type is required : AGE TYPE IS REQUIRED.",  DiningErrorCode.AGE_TYPE_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingPartyRoles(){
@@ -141,7 +145,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Party Roles");
 		Book book = book();
 		book.setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles", BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE.", book);
+		sendRequestAndValidateFaultString("Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE.",  DiningErrorCode.INVALID_PARTYMIX, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingPrimaryGuest(){
@@ -151,7 +155,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Primary Guest");
 		Book book = book();
 		book.setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest", BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED", book);
+		sendRequestAndValidateFaultString("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED",  DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingPrimaryGuestFirstName(){
@@ -161,7 +165,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Primary Guest First Name");
 		Book book = book();
 		book.setPrimaryGuestFirstName(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED", book);
+		sendRequestAndValidateFaultString("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED", DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED,book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingPrimaryGuestLastName(){
@@ -171,7 +175,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Primary Guest Last Name");
 		Book book = book();
 		book.setPrimaryGuestLastName(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED", book);
+		sendRequestAndValidateFaultString("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED", DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED,book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingProductId(){
@@ -180,7 +184,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Product ID");
 		Book book = book();
 		book.setProductId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!", book);
+		sendRequestAndValidateFaultString("PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!", DiningErrorCode.PRODUCT_ID_REQUIRED,book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingProductType(){
@@ -189,7 +193,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Product Type");
 		Book book = book();
 		book.setProductType(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("PRODUCT TYPE NAME IS REQUIRED!! : PRODUCT TYPE NAME IS REQUIRED!!", book);
+		sendRequestAndValidateFaultString("PRODUCT TYPE NAME IS REQUIRED!! : PRODUCT TYPE NAME IS REQUIRED!!",DiningErrorCode.PRODUCT_TYPE_NAME_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingReservableResourceID(){
@@ -199,7 +203,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Reservable Resource ID");
 		Book book = book();
 		book.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!", book);
+		sendRequestAndValidateFaultString("RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!", DiningErrorCode.NO_RESERVABLE_RESOURCE_ID,book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingSalesChannel(){
@@ -207,7 +211,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Sales Channel");
 		Book book = book();
 		book.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Sales Channel is required : null", book);
+		sendRequestAndValidateFaultString("Sales Channel is required : null", DiningErrorCode.SALES_CHANNEL_REQUIRED,book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingServicePeriodId(){
@@ -216,7 +220,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Service Period ID");
 		Book book = book();
 		book.setServicePeriosId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED.", book);
+		sendRequestAndValidateFaultString("ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED.", DiningErrorCode.SERVICE_PERIOD_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingServiceStartDate(){
@@ -225,7 +229,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Service Start Date");
 		Book book = book();
 		book.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!", book);
+		sendRequestAndValidateFaultString("INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!", DiningErrorCode.SERVICE_START_DATE_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingSourceAccountingCenter(){
@@ -233,7 +237,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Source Accounting Center");
 		Book book = book();
 		book.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("SOURCER ACCOUNTING CENTER IS REQUIRED! : SOURCER ACCOUNTING CENTER IS REQUIRED!", book);
+		sendRequestAndValidateFaultString("SOURCER ACCOUNTING CENTER IS REQUIRED! : SOURCER ACCOUNTING CENTER IS REQUIRED!", DiningErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingComponent(){
@@ -243,7 +247,7 @@ public class TestBook_Negative  extends BaseTest{
 		TestReporter.logScenario("Missing Components");
 		Book book = book();
 		book.setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/componentPrices", BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("COMPONENT PRICE IS REQUIRED! :  For Product : "+ book.getRequestProductId(), book);		
+		sendRequestAndValidateFaultString("COMPONENT PRICE IS REQUIRED! :  For Product : "+ book.getRequestProductId(), DiningErrorCode.COMPONENT_PRICE_REQUIRED, book);		
 	}
 	
 	private Book book(){
@@ -252,8 +256,9 @@ public class TestBook_Negative  extends BaseTest{
 		return book;
 	}
 	
-    private void sendRequestAndValidateFaultString(String fault, Book book){
+    private void sendRequestAndValidateFaultString(String fault, ApplicationErrorCode error, Book book){
     	book.sendRequest();
+		validateApplicationError(book, error);
     	TestReporter.logAPI(!book.getFaultString().contains(fault), book.getFaultString() ,book);
 		logItems(book);
     }

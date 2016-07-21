@@ -17,7 +17,38 @@ import com.disney.utils.date.SimpleDate;
 
 public class TestReporter {
 	private static boolean printToConsole = false;
-
+	
+	/**
+	 * No additional info printed to console
+	 */
+	public static final int NONE = 0;
+	
+	/**
+	 * Will print some useful information to console such as URL's, parameters, and RQ/RS
+	 */
+	public static final int INFO = 1;
+	
+	/**
+	 *  Will print some low-level granular steps to console 
+	 */
+	public static final int DEBUG = 2;
+	private static int debugLevel = 0;
+	
+	/**
+	 * 
+	 * @param level - Options below <br/>
+	 *  TestReporter.NONE : (Default) - No additional info printed to console <br/> 
+	 *  TestReporter.INFO : Will print some useful information to console such as URL's, parameters, and RQ/RS<br/>
+	 *  TestReporter.DEBUG : Will print some low level information to console <br/>
+	 */
+	public static void setDebugLevel(int level){
+		debugLevel = level;
+	}
+	
+	public static int getDebugLevel(){
+		return debugLevel;
+	}
+	
 	private static String getTimestamp() {
 		return SimpleDate.getTimestamp().toString() + " :: ";
 	}
@@ -62,8 +93,32 @@ public class TestReporter {
 		if(getPrintToConsole()) System.out.println(getTimestamp() + trimHtml(message.trim()));
 	}
 
+	/**
+	 * Use to output low-level granular steps
+	 * @param message
+	 */
+	public static void logDebug(String message) {
+		if(debugLevel >= DEBUG){
+			//Reporter.log(getTimestamp()replace(" ::", "") + "::DEBUG::" + message + "<br />");
+			//if(getPrintToConsole()) System.out.println(getTimestamp()replace(" ::", "") + "::DEBUG:: " + trimHtml(message.trim()));
+			System.out.println(getTimestamp().replace(" ::", "") + ":: DEBUG :: " + (message.trim()));
+		}
+	}
+
+	/**
+	 * Use to output useful information such as URL's, parameters, and RQ/RS
+	 * @param message
+	 */
+	public static void logInfo(String message) {
+		if(debugLevel >= INFO){
+			//Reporter.log(new Timestamp(new java.util.Date().getTime()) + " :: " + "::INFO:: " + message + "<br />");
+			//if(getPrintToConsole()) System.out.println(getTimestamp().replace(" ::", "") + "::INFO:: " + trimHtml(message.trim()));
+			System.out.println(getTimestamp().replace(" ::", "") + ":: INFO :: "  + message.trim());
+		}
+	}
+
 	public static void logNoHtmlTrim(String message) {
-		Reporter.log(getTimestamp() + " :: " + message + "<br />");
+		Reporter.log(message + "<br />");
 		if(getPrintToConsole()) System.out.println(getTimestamp() + message.trim());
 	}
 	public static void logNoXmlTrim(String message) {
@@ -240,7 +295,7 @@ public class TestReporter {
 			failFormat = "<font size = 2 color=\"red\">";
 			logFailure(message);
 		}
-			logNoHtmlTrim(failFormat+ "<b>SOAP REQUEST [ " + bs.getService() + "#" + bs.getOperation() + " ] </b></font>");
+			logNoHtmlTrim("<font size = 2><b>Endpoint: " + bs.getServiceURL() + "</b></font><br/>"+failFormat+ "<b>SOAP REQUEST [ " + bs.getService() + "#" + bs.getOperation() + " ] </b></font>");
 			Reporter.setEscapeHtml(true);
 			logNoXmlTrim(bs.getRequest().replaceAll("</*>", "</*>"));
 			Reporter.setEscapeHtml(false);

@@ -1,12 +1,15 @@
 package com.disney.composite.api.showDiningService.cancel;
 
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.showDiningService.operations.Arrived;
 import com.disney.api.soapServices.showDiningService.operations.Book;
@@ -24,7 +27,7 @@ public class TestCancel_Negative extends BaseTest{
 	protected ThreadLocal<String[]> expectedLogs = new ThreadLocal<String[]>();
 	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void testSetup(@Optional String environment){
 		this.environment = environment;
@@ -56,14 +59,14 @@ public class TestCancel_Negative extends BaseTest{
 		String number = String.valueOf(Randomness.randomNumberBetween(1, 999));
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(number);
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, cancel);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, cancel);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingReservationNumber(){
 		TestReporter.logScenario("Missing Reservation Number");
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", cancel);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, cancel);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void arrivedReservation(){
@@ -76,7 +79,7 @@ public class TestCancel_Negative extends BaseTest{
 		
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
-		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.", cancel);
+		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.", DiningErrorCode.INVALID_TRAVEL_STATUS, cancel);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void cancelledReservation(){
@@ -89,7 +92,7 @@ public class TestCancel_Negative extends BaseTest{
 		
 		cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
-		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.", cancel);
+		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.", DiningErrorCode.INVALID_TRAVEL_STATUS, cancel);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void noShowReservation(){
@@ -101,7 +104,7 @@ public class TestCancel_Negative extends BaseTest{
 		
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
-		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.", cancel);
+		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.", DiningErrorCode.INVALID_TRAVEL_STATUS, cancel);
 	}
 	
 	private Book book(){
@@ -113,8 +116,9 @@ public class TestCancel_Negative extends BaseTest{
 		return book;
 	}
 	
-    private void sendRequestAndValidateFaultString(String fault, Cancel cancel){
+    private void sendRequestAndValidateFaultString(String fault, ApplicationErrorCode error, Cancel cancel){
     	cancel.sendRequest();
+		validateApplicationError(cancel, error);
     	TestReporter.logAPI(!cancel.getFaultString().contains(fault), cancel.getFaultString() ,cancel);
 		logItems(cancel);
     }

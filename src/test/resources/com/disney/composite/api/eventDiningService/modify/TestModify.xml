@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestModify" data-provider-thread-count="6">
-	<parameter name="environment" value="Bashful" />
+<suite name="TestModify" data-provider-thread-count="200">
+	<parameter name="environment" value="Development" />
 	<test name="TestModify">
 		<classes>
 			<class

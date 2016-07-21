@@ -46,12 +46,13 @@ public class VirtualTable {
 	private final String baseURL = BaseURL.PROD.toString();
 
 	private String sendGetRequest(String strUrl, String responseFormat){
-
+		TestReporter.logDebug("Entering VirtualTable#sendGetRequest");
 		StringBuilder rawResponse = new StringBuilder();
 
 		URL urlRequest = null;
 
 		try {
+			TestReporter.logDebug("Converting to URL");
 			urlRequest = new URL(strUrl);
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
@@ -60,6 +61,7 @@ public class VirtualTable {
 
 		HttpURLConnection conn = null;
 		try {
+			TestReporter.logDebug("Establishing connection to Virtual Table server");
 			conn = (HttpURLConnection) urlRequest
 					.openConnection();
 		} catch (IOException e) {
@@ -70,11 +72,14 @@ public class VirtualTable {
 		conn.setDoInput(true);
 		conn.setRequestProperty("Accept", "application/" + responseFormat);
 		try {
+			TestReporter.logDebug("Sending GET request to Virtual Tables");
 			conn.setRequestMethod("GET");
 		} catch (ProtocolException e) {
+			TestReporter.logDebug("Failed to retieve data from Virtual Tables");
 			throw new NoDataFromVirtualTableException(e.getMessage());
 		}
 
+		TestReporter.logDebug("Convert Virtual Table Response to String");
 		InputStream stream = null;
 		try {
 			stream = conn.getInputStream();
@@ -92,7 +97,7 @@ public class VirtualTable {
 		} catch (IOException e) {
 			throw new NoDataFromVirtualTableException(e.getMessage());
 		}
-
+		TestReporter.logDebug("Exiting VirtualTable#sendGetRequest");
 		return rawResponse.toString();
 	}
 
@@ -122,6 +127,7 @@ public class VirtualTable {
 	}
 	
 	public String getRow(String tableName, String searchColumnName, String searchColumnValue) {
+		TestReporter.logDebug("Entering VirtualTable#getRow");
 		String url = baseURL + Rows.GET_ROW;
 		String response = "";
 		url = url.replace("{tableName}", tableName);
@@ -134,12 +140,13 @@ public class VirtualTable {
 		System.out.println(url);
 		response = sendGetRequest(url, "json");
 		System.out.println(response);
-		
+		TestReporter.logDebug("Exiting VirtualTable#getRow");
 		return response;
 	}
 	
 	
 	public String getRows(String tableName, String searchColumnName, String searchColumnValue) {
+		TestReporter.logDebug("Entering VirtualTable#getRows");
 		String url = baseURL + Rows.GET_ROW;
 		String response = "";
 		url = url.replace("{tableName}", tableName);
@@ -150,21 +157,28 @@ public class VirtualTable {
 		url = url.replace(" ", "%20");
 		url = url.replace("'", "%27");
 		//System.out.println(url);
+		TestReporter.logInfo("Virtual table URL to retrieve [" + url+ "]");
 		response = sendGetRequest(url, "json");
 		//System.out.println(response);
+		TestReporter.logInfo("Virtual Table response: \n" + response);
+		TestReporter.logDebug("Exiting VirtualTable#getRows");
 		return response;
 	}
 	
 	public static Recordset compileJSON(String header, String text){
+		TestReporter.logDebug("Entering VirtualTable#compileJSON");
 		JSONObject jHeader;
 		try {
 			jHeader= new JSONObject(text).getJSONObject(header + "List");
 			} catch (JSONException e) {
+				TestReporter.logDebug("Failed to create JSON Header Object");
 			throw new RuntimeException("Failed to compile JSON. " + e.getMessage());
 		}
 		
+		TestReporter.logInfo("Check for Error Response from Virtual Tables");
 		try {
 			String error = jHeader.getJSONObject(header).get("FROM_CONTROLLER").toString();
+			TestReporter.logInfo("Error Found: " + error);
 			TestReporter.logFailure(error);
 			if( error.contains("<FROM_CONTROLLER>No values found</FROM_CONTROLLER>")) throw new NoDataFromVirtualTableException("No data returns for Virtual Table [ " + header + " ] ");
 			
@@ -173,11 +187,12 @@ public class VirtualTable {
 			 * Do nothing. No errors returned from server
 			 */
 		}
-		
+		TestReporter.logInfo("No Errors found");
 		JSONArray jArray = new JSONArray();
 		JSONObject jObject = new JSONObject();
 		String JSONType = "";
 		
+		TestReporter.logDebug("Begin converting JSON to Object[][] array");
 		try {
 			jArray =  jHeader.getJSONArray(header);
 			JSONType = "ARRAY";
@@ -243,6 +258,7 @@ public class VirtualTable {
 				}
 			}
 		}
+		TestReporter.logDebug("Exiting VirtualTable#compileJSON");
 		return new Recordset(array);
 	}
 	

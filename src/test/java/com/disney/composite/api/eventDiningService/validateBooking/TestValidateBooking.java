@@ -1,5 +1,6 @@
 package com.disney.composite.api.eventDiningService.validateBooking;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
@@ -19,7 +20,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 
 public class TestValidateBooking extends BaseTest{
 	private Book book = null;
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment) {
 		this.environment = environment;

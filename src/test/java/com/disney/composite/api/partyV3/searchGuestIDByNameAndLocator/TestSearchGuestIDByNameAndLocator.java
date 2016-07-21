@@ -1,5 +1,6 @@
 package com.disney.composite.api.partyV3.searchGuestIDByNameAndLocator;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
@@ -15,7 +16,7 @@ import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestSearchGuestIDByNameAndLocator  extends BaseTest{
 	private Guest guest = new Guest();
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
