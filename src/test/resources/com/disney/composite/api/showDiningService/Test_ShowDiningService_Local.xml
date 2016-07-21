@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="ShowDiningService_Suite" parallel="methods" thread-count="100" >
-	<parameter name="environment" value="Development" />
+	<parameter name="environment" value="Bashful_CM" />
 	<test name="ShowDiningService">
 		<packages>
 			<package name="com.disney.composite.api.showDiningService.*"></package>

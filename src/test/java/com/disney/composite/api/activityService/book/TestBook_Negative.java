@@ -112,7 +112,7 @@ public class TestBook_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Booking Date 180 Days In The Future");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("182"));
+		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("183"));
 		sendRequestAndValidateLogs(book, ActivityErrorCode.EXCEPTION_RULE_FIRED, "RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date");
 	}
 	

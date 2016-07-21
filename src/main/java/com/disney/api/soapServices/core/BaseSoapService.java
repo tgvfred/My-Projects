@@ -503,7 +503,6 @@ public abstract class BaseSoapService{
 
 		String url;
 		
-		
 		url = getServiceURL();
 		TestReporter.logInfo("Service URL to send request: [" + url + "]");
 		TestReporter.logInfo("Set WebVan Cert");
