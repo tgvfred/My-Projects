@@ -1,20 +1,12 @@
 package com.disney.composite.api.scheduledEventsServicePort_old;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.RetrieveAllergies;
+import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 
-public class TestRetrieveAllergies {
-	// Defining global variables
-	protected String testName = null;
-	protected String environment = null;
-	
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(String environment) {this.environment = environment;}
+public class TestRetrieveAllergies extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testRetrieveAllergies(){
