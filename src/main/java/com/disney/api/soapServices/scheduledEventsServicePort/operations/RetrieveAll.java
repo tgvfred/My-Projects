@@ -208,9 +208,9 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		if(numChangeReasons == -1) getNumberOfChangeReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/changeReasons/optionCode");
 		for(int i = 0; i < numChangeReasons; i++){
-			cancelReasonDescriptions.put(String.valueOf(i), nodes.item(i).getTextContent());
+			changeReasonDescriptions.put(String.valueOf(i), nodes.item(i).getTextContent());
 		}
-		return cancelReasonDescriptions;
+		return changeReasonDescriptions;
 	}
 	/**
 	 * Retrieves all change reason descriptions

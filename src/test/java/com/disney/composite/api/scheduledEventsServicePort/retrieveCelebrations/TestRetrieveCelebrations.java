@@ -27,7 +27,8 @@ public class TestRetrieveCelebrations extends BaseTest{
 		reportValues("Celebrations", retrieveCelebrations.getNumberOfCelebrations(), retrieveCelebrations.getCelebrationsIds());
 		
 		LogItems logItems = new LogItems();
-		logItems.addItem("ScheduledEventsServiceIF", "retrieveCancelReasons", false);	
+		logItems.addItem("ScheduledEventsServiceIF", "retrieveCelebrations", false);
+		logItems.addItem("ProfileComponentServiceIF", "retrieveProfilesByRoutingType", false);		
 		validateLogs(retrieveCelebrations, logItems);
 	}
 	
