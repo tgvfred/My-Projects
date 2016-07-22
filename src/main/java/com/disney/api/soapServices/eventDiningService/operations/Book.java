@@ -1,6 +1,7 @@
 package com.disney.api.soapServices.eventDiningService.operations;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.eventDiningService.EventDiningService;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.guestFactory.Address;
@@ -256,11 +257,12 @@ public class Book extends EventDiningService {
 		
 		for(Email email : guest.getAllEmails()){
 			if(position == 1){
-				setPrimaryGuestEmailAddressLocatorId("0");
-				setPrimaryGuestEmailAddressGuestLocatorId("0");
-				setPrimaryGuestEmailAddressIsPrimary(email.isPrimary() ? "true":"false");
-				setPrimaryGuestEmailAddress(email.getEmail());
-				
+				try{
+					setPrimaryGuestEmailAddressLocatorId("0");
+					setPrimaryGuestEmailAddressGuestLocatorId("0");
+					setPrimaryGuestEmailAddressIsPrimary(email.isPrimary() ? "true":"false");
+					setPrimaryGuestEmailAddress(email.getEmail());
+				}catch(XPathNotFoundException xnfe){}
 			}else{
 				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/emailDetails[" + position + "]/primary", email.isPrimary() ? "true":"false");
 				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/emailDetails[" + position + "]/locatorId", "0");
