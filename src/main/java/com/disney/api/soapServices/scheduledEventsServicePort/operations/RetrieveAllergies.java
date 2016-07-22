@@ -2,11 +2,18 @@ package com.disney.api.soapServices.scheduledEventsServicePort.operations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.w3c.dom.NodeList;
 
 import com.disney.api.soapServices.scheduledEventsServicePort.ScheduledEventsServicePort;
 import com.disney.utils.XMLTools;
 
 public class RetrieveAllergies extends ScheduledEventsServicePort{
+	Map<String, String> allergies = new HashMap<String, String>();
+	int numAllergies = -1;
+	
 	public RetrieveAllergies(String environment) {
 		super(environment);
 		//Generate a request from a project xml file
@@ -17,15 +24,24 @@ public class RetrieveAllergies extends ScheduledEventsServicePort{
 		removeWhiteSpace();
 	}
 	
-	public int getNumberOfAllergies(){
-		return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllergiesResponse/allergies").getLength();		
-	}
-	
-	public List<String> getAllAllergies(){
-		List<String>  allergies = new ArrayList<String>();
-		for(int x = 1 ; x < getNumberOfAllergies() ; x++){
-			allergies.add(getResponseNodeValueByXPath("/Envelope/Body/retrieveAllergiesResponse/allergies[" + x +"]"));
+	/**
+	 * Retrieves all allergies
+	 * @return - all allergies
+	 */
+	public Map<String, String> getAllergies(){
+		if(numAllergies == -1) getNumberOfAllergies();
+		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllergiesResponse/allergies");
+		for(int i = 0; i < numAllergies; i++){
+			allergies.put(String.valueOf(i), nodes.item(i).getTextContent());
 		}
 		return allergies;
+	}
+	/**
+	 * Retrieves the number of allergies
+	 * @return - number of allergies
+	 */
+	public int getNumberOfAllergies(){
+		numAllergies = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllergiesResponse/allergies").getLength();
+		return numAllergies;
 	}
 }

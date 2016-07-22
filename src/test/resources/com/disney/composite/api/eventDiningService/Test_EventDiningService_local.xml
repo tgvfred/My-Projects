@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="EventDiningService_Suite" parallel="methods" thread-count="200" >
-	<parameter name="environment" value="Development" />
+	<parameter name="environment" value="latest" />
 	<test name="EventDiningService">
-		<groups>
-			<run>
-				<include name="s138180" />
-			</run>
-		</groups>
 		<packages>
 			<package name="com.disney.composite.api.eventDiningService.*"></package>
 		</packages>
+			<groups>
+				<run>
+				<include name="s138180" />
+					
+					<exclude name="dev"  />
+				</run>
+			</groups>
 	</test>
 </suite>

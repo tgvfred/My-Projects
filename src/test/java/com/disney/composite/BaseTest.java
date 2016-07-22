@@ -32,52 +32,65 @@ public class BaseTest {
 	}
 	
 	protected void validateLogs(BaseSoapService soap, LogItems logItems){
-//		validate(true, soap, logItems);
+		validate(true, soap, logItems);
 	}
 	
 	protected void validateLogs(BaseSoapService soap, LogItems logItems, int logTimeout){
 		this.logTimeout = logTimeout;
-//		validate(true, soap, logItems);
+		validate(true, soap, logItems);
 	}
 	
 	protected void validateLogs(BaseSoapService soap, LogItems logItems, String logTimeout){
 		this.logTimeout = Integer.parseInt(logTimeout);
-//		validate(true, soap, logItems);
+		validate(true, soap, logItems);
 	}
 	
 	
 	protected void validateNotInLogs(BaseSoapService soap, LogItems logItems){
 		logTimeout = defaultTimeout;
-//		validate(false,soap,logItems);
+		validate(false,soap,logItems);
 	}
 	
 	protected void validateApplicationError(BaseSoapService soap, ApplicationErrorCode error){
+		TestReporter.logDebug("Entering BaseTest#validateApplicationError");
 		TestReporter.logStep("Validate Application Error<br/></font>Expected Error Details" + error.toString().replace("\n", "<br/>"));
+		
+		TestReporter.logDebug("Validating Application Error Description");
 		if(soap.getServiceExceptionApplicationFaultMessage().contains(error.getDesciption())){
+			TestReporter.logDebug("Validated Application Error Description");
 			TestReporter.assertTrue(true, "Exception Message was  [" + error.getDesciption() + "] as expected.");
 		}else{
+			TestReporter.logDebug("Validation of Application Error Description failed");
 			TestReporter.logAPI(true, "Exception Message was not [" + error.getDesciption() + "] as expected. Instead found [" +soap.getServiceExceptionApplicationFaultMessage() + "]",soap);
 		}
-		
+
+		TestReporter.logDebug("Validating Application Error Code");
 		if(soap.getServiceExceptionApplicationFaultCode().contains(error.getErrorCode())){
 			TestReporter.assertTrue(true, "Exception Code was [" + error.getErrorCode() + "] as expected.");
+			TestReporter.logDebug("Validated Application Error Code");
 		}else{
+			TestReporter.logDebug("Validation of Application Error Code failed");
 			TestReporter.logAPI(true, "Exception Code was not [" + error.getErrorCode() + "] as expected. Instead found [" +soap.getServiceExceptionApplicationFaultCode() + "]",soap);
 		}
-		
+
+		TestReporter.logDebug("Validating Application Module Name ");
 		if(soap.getServiceExceptionApplicationFaultModule().contains(error.getModuleName())){
+			TestReporter.logDebug("Validated Application Module Name ");
 			TestReporter.assertTrue(true, "Exception Module was  [" + error.getModuleName() + "] as expected.");
 		}else{
+			TestReporter.logDebug("Validation of Application Module Name failed");
 			TestReporter.logAPI(true, "Exception Module was not [" + error.getModuleName() + "] as expected. Instead found [" +soap.getServiceExceptionApplicationFaultModule() + "]" ,soap);
 		}
-		
+		TestReporter.logDebug("Exiting BaseTest#validateApplicationError");
 	}
 	
 	private void validate(boolean shouldBeInLogs, BaseSoapService soap, LogItems logItems){
+		TestReporter.logDebug("Entering BaseTest#validate");
+
 		boolean isValid = false;
 		boolean containsRequest = false;
 		boolean containsResponse = false;
-		if(!environment.equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development")){
+		if(!environment.equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
 				
 			Recordset rs = getLogs(environment, soap.getConversationID());
 			
@@ -88,7 +101,8 @@ public class BaseTest {
 				
 				// Uncomment the below line to view the service#operation under validation
 //				System.out.println(item.getServiceClass() + "#" + item.getServiceOperation());
-				
+
+				TestReporter.logInfo("Searching for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "] in logs");
 				for(rs.moveFirst() ; rs.hasNext() ; rs.moveNext()){
 					
 					//Ensures Request for desired operation exists
@@ -106,12 +120,15 @@ public class BaseTest {
 					}
 					
 					if(shouldBeInLogs){
+						//TestReporter.logDebug("Searching for Exceptions in log for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]");
 						//Ensure Response does not have an Error Code if an error is not expected
 						if(rs.getValue("LOG_LVL").equalsIgnoreCase("Exception") || !rs.getValue("ERROR_CODE").equalsIgnoreCase("null")){
 							if((rs.getValue("SVC_CLASS").contains(item.getServiceClass()) || 
 									rs.getValue("SVC_OPERATION").equals(item.getServiceOperation()))){
+								TestReporter.logDebug("Exception found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "] in logs");
 								if( item.isErrorExpected() == false){
-									System.out.println(rs.getValue("ERROR_CODE") + " : " +rs.getValue("LOG_MSG_TXT") );
+									TestReporter.logDebug("Exception not expected in log for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "] in logs");
+									TestReporter.logDebug("Exception found [" + rs.getValue("ERROR_CODE") + " : " +rs.getValue("LOG_MSG_TXT")  + "] ");
 									throw new AutomationException("Exception found in [" + item.getServiceClass() +"#"+ item.getServiceOperation() + "]\n" 
 									+ rs.getValue("ERROR_CODE") + " : " +rs.getValue("LOG_MSG_TXT"));							
 								}
@@ -121,6 +138,7 @@ public class BaseTest {
 					
 					//Break out of loop once Request and Response is validated
 					if (containsRequest && containsResponse) {
+						TestReporter.logInfo("Found [" + item.getServiceClass() + "#" + item.getServiceOperation() + "] in logs");
 						isValid = true;
 						break;
 					}					
@@ -133,13 +151,17 @@ public class BaseTest {
 				if(shouldBeInLogs && !containsResponse) throw new AutomationException("Expected response not found for [" + item.getServiceClass() + "#" + item.getServiceOperation() + "]. Convo ID: " + soap.getConversationID());
 			}
 		}else{
-			TestReporter.log("Skipping log validation for Grumpy and Development");
+			TestReporter.log("Skipping log validation for [" + environment + "] environment");
 		}
+		TestReporter.logDebug("Exiting BaseTest#validate");
 	}
 	
 	private Recordset getLogs(String environment, String convoId){
+
+		TestReporter.logDebug("Entering BaseTest#getLogs");
+		TestReporter.logDebug("Waiting for [" + String.valueOf(logTimeout/1000) + "] seconds to ensure logs are pushed to DB");
 		Sleeper.sleep(logTimeout); //Adding delay to ensure all logs are in DB 
-		
+		TestReporter.logDebug("Done waiting for logs");
 		String sql = "SELECT LOG_ID, LOG_LVL, LOG_MSG_TXT, ERROR_CODE, APP_NAME, BP_STEP, SVC_CLASS, SVC_OPERATION"
 				+ "	FROM DRMSLOG.LOG_MSG "
 				+ " WHERE CNVRSTN_ID = '"+ convoId+"' "
@@ -149,12 +171,15 @@ public class BaseTest {
 		
 		// Uncomment the below line to output the SQL to the console
 //		System.out.println(sql);
+		TestReporter.logInfo("SQL to search for log \n "+ sql);
 		Database db = new OracleDatabase(environment, Database.DREAMS_LOG);
 		Recordset rs = new Recordset(db.getResultSet(sql));
 
 		// Uncomment the below line to output the recordset to the console
 //		rs.print();
-		
+		TestReporter.logInfo("Records found \n" + rs.printString());
+
+		TestReporter.logDebug("Exiting BaseTest#getLogs");
 		return rs;
 	}
 }
