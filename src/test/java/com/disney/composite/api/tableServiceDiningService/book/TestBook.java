@@ -157,7 +157,6 @@ public class TestBook extends BaseTest{
 	}
 	
 	private Book bookAndValidate(HouseHold hh){
-		TestReporter.setDebugLevel(1);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.sendRequest();
