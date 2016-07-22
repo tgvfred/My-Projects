@@ -1,10 +1,6 @@
 package com.disney.composite.api.eventDiningService.modify;
 
-import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -198,4 +194,29 @@ public class TestModify extends BaseTest{
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems);
 	}
+	
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModify2(){
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res.getConfirmationNumber());
+		modify.setTravelPlanId(res.getTravelPlanId());
+		modify.setParty(res.party());
+		modify.setFacilityId(res.getFacilityId());
+		modify.setServiceStartDate(res.getServiceStartDate());
+		modify.setServicePeriodId(res.getServicePeriodId());
+		modify.setProductId(res.getProductId());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems);
+	}
+	
 }
