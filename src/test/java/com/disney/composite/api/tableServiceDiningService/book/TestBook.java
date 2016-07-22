@@ -84,18 +84,7 @@ public class TestBook extends BaseTest{
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] was not numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", TPS_ID.get()), "The reservation number ["+TPS_ID.get()+"] was not numeric as expected.");
-		
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("tableServiceDiningServiceIF", "book", false);
-		logValidItems.addItem("TravelPlanServiceV3SEI", "create", false);
-		logValidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);
-		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);	
-		logValidItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
-		logValidItems.addItem("PackagingService", "getProducts", false);
-		logValidItems.addItem("TravelPlanServiceV3", "create", false);		
-		logValidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateLogs(book, logValidItems, 10000);
+	
 	}
 	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService", "it4", "s138180" })
 	public void testAddTwoAllergies(){
@@ -110,17 +99,6 @@ public class TestBook extends BaseTest{
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] was not numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", TPS_ID.get()), "The reservation number ["+TPS_ID.get()+"] was not numeric as expected.");
 		
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("tableServiceDiningServiceIF", "book", false);
-		logValidItems.addItem("TravelPlanServiceV3SEI", "create", false);
-		logValidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);
-		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);	
-		logValidItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
-		logValidItems.addItem("PackagingService", "getProducts", false);
-		logValidItems.addItem("TravelPlanServiceV3", "create", false);		
-		logValidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateLogs(book, logValidItems, 10000);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService", "it4", "s138180" })
 	public void testAddAllAllergies(){
@@ -143,17 +121,7 @@ public class TestBook extends BaseTest{
 		TestReporter.assertTrue(Regex.match("[0-9]+",  book.getTravelPlanId()), "The travel plan ID ["+ book.getTravelPlanId()+"] was not numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", TPS_ID.get()), "The reservation number ["+TPS_ID.get()+"] was not numeric as expected.");
 		
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("tableServiceDiningServiceIF", "book", false);
-		logValidItems.addItem("TravelPlanServiceV3SEI", "create", false);
-		logValidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);
-		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);	
-		logValidItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
-		logValidItems.addItem("PackagingService", "getProducts", false);
-		logValidItems.addItem("TravelPlanServiceV3", "create", false);		
-		logValidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateLogs(book, logValidItems, 10000);
+		
 	}
 	
 	private Book bookAndValidate(HouseHold hh){
