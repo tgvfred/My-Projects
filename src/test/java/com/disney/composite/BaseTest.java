@@ -1,10 +1,21 @@
 package com.disney.composite;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.Header;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 import com.disney.AutomationException;
+import com.disney.api.restServices.core.RestService;
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.test.utils.Sleeper;
@@ -23,6 +34,34 @@ public class BaseTest {
 	protected int logTimeout = 3000;
 	protected int defaultTimeout = 3000;
 	//private List<LogItems> logItems = new ArrayList<LogItems>();
+	@BeforeSuite
+	public void updateJenkinsBuildName(){
+		TestReporter.logDebug("Checking if executed from Jenkins");
+		if(!System.getenv("BUILD_ID").isEmpty()){
+			TestReporter.logDebug("Is executed from Jenkins, updating build name");
+			String buildId = System.getenv("BUILD_ID");
+			String buildUrl = System.getenv("BUILD_URL") + "configSubmit";
+			String buildEnv = System.getenv("environment");
+			
+			RestService rest = new RestService();
+		//String url = "http://jenkins-pc.wdw-ilab.wdw.disney.com:9090/view/CompositeModernization/job/CoMo_API_PartyV3_Service/28/configSubmit";
+			String json = "{\"displayName\": \"#" + buildId + " - " + buildEnv + "\", \"description\": \"\", \"core:apply\": \"\"}";
+			Header[] headers =  {new BasicHeader("Content-type", "application/x-www-form-urlencoded")};
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("Submit", "Save"));
+			params.add(new BasicNameValuePair("displayName", "#" + buildId + " - " + buildEnv));
+			params.add(new BasicNameValuePair("json", json));
+			params.add(new BasicNameValuePair("description", ""));
+			params.add(new BasicNameValuePair("core:apply", ""));
+			try {
+				TestReporter.logInfo(rest.sendPostRequest(buildUrl, headers, params));
+			} catch (ClientProtocolException e) {
+				TestReporter.logDebug("Failed to update Jenkins Build Name");
+			} catch (IOException e) {
+				TestReporter.logDebug("Failed to update Jenkins Build Name");
+			}
+		}
+	}
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters("environment")
