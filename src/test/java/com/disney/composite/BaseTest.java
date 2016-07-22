@@ -33,7 +33,6 @@ public class BaseTest {
 	protected HouseHold hh = null;
 	protected int logTimeout = 3000;
 	protected int defaultTimeout = 3000;
-	//private List<LogItems> logItems = new ArrayList<LogItems>();
 	@BeforeSuite
 	public void updateJenkinsBuildName(){
 		TestReporter.logDebug("Checking if executed from Jenkins");
@@ -44,7 +43,6 @@ public class BaseTest {
 			String buildEnv = System.getenv("environment");
 			
 			RestService rest = new RestService();
-		//String url = "http://jenkins-pc.wdw-ilab.wdw.disney.com:9090/view/CompositeModernization/job/CoMo_API_PartyV3_Service/28/configSubmit";
 			String json = "{\"displayName\": \"#" + buildId + " - " + buildEnv + "\", \"description\": \"\", \"core:apply\": \"\"}";
 			Header[] headers =  {new BasicHeader("Content-type", "application/x-www-form-urlencoded")};
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
