@@ -749,7 +749,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 */
 	public Map<String, String> getCelebrationsDescriptions(){
 		if(numCelebrations == -1) getNumberOfCelebrations();
-		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/alaCarteCancelReasons/optionDescription");
+		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/celebrations/optionDescription");
 		for(int i = 0; i < numCelebrations; i++){
 			celebrationsDescriptions.put(String.valueOf(i), nodes.item(i).getTextContent());
 		}
@@ -761,7 +761,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 */
 	public Map<String, String> getCelebrationsIds(){
 		if(numCelebrations == -1) getNumberOfCelebrations();
-		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/alaCarteCancelReasons/optionId");
+		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/celebrations/optionId");
 		for(int i = 0; i < numCelebrations; i++){
 			celebrationsIds.put(String.valueOf(i), nodes.item(i).getTextContent());
 		}
@@ -772,7 +772,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 * @return - number of Celebrations
 	 */
 	public int getNumberOfCelebrations(){
-		numCelebrations = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/alaCarteCancelReasons").getLength();
+		numCelebrations = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/celebrations").getLength();
 		return numCelebrations;
 	}
 }
