@@ -154,7 +154,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 * @return - all cancel reason codes
 	 */
 	public Map<String, String> getCancelReasonCodes(){
-		if(numCancelReasons == -1) getNumberOfBookingStatusValues();
+		if(numCancelReasons == -1) getNumberOfCancelReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/cancelReasons/optionCode");
 		for(int i = 0; i < numCancelReasons; i++){
 			cancelReasonCodes.put(String.valueOf(i), nodes.item(i).getTextContent());
@@ -166,7 +166,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 * @return - all cancel reason descriptions
 	 */
 	public Map<String, String> getCancelReasonDescriptions(){
-		if(numCancelReasons == -1) getNumberOfBookingStatusValues();
+		if(numCancelReasons == -1) getNumberOfCancelReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/cancelReasons/optionDescription");
 		for(int i = 0; i < numCancelReasons; i++){
 			cancelReasonDescriptions.put(String.valueOf(i), nodes.item(i).getTextContent());
@@ -178,7 +178,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 * @return - all cancel reason ids
 	 */
 	public Map<String, String> getCancelReasonIds(){
-		if(numCancelReasons == -1) getNumberOfBookingStatusValues();
+		if(numCancelReasons == -1) getNumberOfCancelReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/cancelReasons/optionId");
 		for(int i = 0; i < numCancelReasons; i++){
 			cancelReasonIds.put(String.valueOf(i), nodes.item(i).getTextContent());
