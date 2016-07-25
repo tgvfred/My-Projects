@@ -2,10 +2,10 @@ package com.disney.api.soapServices.partyService.operations;
 
 import org.w3c.dom.NodeList;
 
-import com.disney.api.soapServices.partyV3.PartyV3;
+import com.disney.api.soapServices.partyService.PartyServiceIF;
 import com.disney.utils.XMLTools;
 
-public class FilterPartyIDsByLastName extends PartyV3{
+public class FilterPartyIDsByLastName extends PartyServiceIF{
 	public FilterPartyIDsByLastName(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
