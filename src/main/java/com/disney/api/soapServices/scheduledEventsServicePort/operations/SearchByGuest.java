@@ -1,5 +1,6 @@
 package com.disney.api.soapServices.scheduledEventsServicePort.operations;
 
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.scheduledEventsServicePort.ScheduledEventsServicePort;
 import com.disney.utils.XMLTools;
 
@@ -14,19 +15,97 @@ public class SearchByGuest extends ScheduledEventsServicePort{
 		removeWhiteSpace();
 	}
 	
-	public void setCancellationNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/cancellationNumber", value);}
-	public void setEmail(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/email", value);}
-	public void setFirstName(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/firstName", value);}
-	public void setLastName(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/lastName", value);}
-	public void setPhoneNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/phoneNumber", value);}
-	public void setPostalCode(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/postalCode", value);}
-	public void setReservationNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/reservationNumber", value);}
-	public void setReservationStatus(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/reservationStatus", value);}
-	public void setGuestOdsIds(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/guestOdsIds", value);}
-	public void setServiceDate(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/serviceDate", value);}
-	public void setServiceWindowEnd(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/serviceWindowEnd", value);}
-	public void setServiceWindowStart(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/serviceWindowStart", value);}
-	public void setSourceAccountingCenter(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/sourceAccountingCenter", value);}
+	public void setCancellationNumber(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/cancellationNumber", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:cancellationNumber");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/cancellationNumber", value);
+		}
+	}
+	public void setEmail(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/email", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:email");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/email", value);
+		}
+	}	
+	public void setFirstName(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/firstName", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:firstName");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/firstName", value);
+		}
+	}
+	public void setLastName(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/lastName", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:lastName");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/lastName", value);
+		}
+	}
+	public void setPhoneNumber(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/phoneNumber", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:phoneNumber");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/phoneNumber", value);
+		}
+	}
+	public void setPostalCode(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/postalCode", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:postalCode");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/postalCode", value);
+		}
+	}
+	public void setReservationNumber(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/reservationNumber", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:reservationNumber");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/reservationNumber", value);
+		}
+	}
+	public void setReservationStatus(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/reservationStatus", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:reservationStatus");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/reservationStatus", value);
+		}
+	}
+	public void setGuestOdsIds(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/guestOdsIds", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:guestOdsIds");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/guestOdsIds", value);
+		}
+	}
+	public void setServiceDate(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/serviceDate", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:serviceDate");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/serviceDate", value);
+		}
+	}
+	public void setServiceWindowEnd(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/serviceWindowEnd", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:serviceWindowEnd");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/serviceWindowEnd", value);
+		}
+	}
+	public void setServiceWindowStart(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/serviceWindowStart", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:serviceWindowStart");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/serviceWindowStart", value);
+		}
+	}
+	public void setSourceAccountingCenter(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/sourceAccountingCenter", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest", "fx:addnode;node:sourceAccountingCenter");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByGuest/searchByGuestRequest/sourceAccountingCenter", value);
+		}
+	}
 	
 	public String getCancellationNumber(){return getResponseNodeValueByXPath("/Envelope/Body/searchByGuestResponse/eventReservations/cancellationNumber");}
 	public String getFacilityId(){return getResponseNodeValueByXPath("/Envelope/Body/searchByGuestResponse/eventReservations/facilityId");}

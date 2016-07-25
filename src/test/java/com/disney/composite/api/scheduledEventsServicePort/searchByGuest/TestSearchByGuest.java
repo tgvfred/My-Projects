@@ -1,4 +1,4 @@
-package com.disney.composite.api.scheduledEventsServicePort_old;
+package com.disney.composite.api.scheduledEventsServicePort.searchByGuest;
 
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
@@ -6,19 +6,21 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.scheduledEventsServicePort.operations.SearchByVenue;
-import com.disney.utils.Randomness;
+import com.disney.api.soapServices.scheduledEventsServicePort.operations.SearchByGuest;
+import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
-public class TestSearchByVenue {
-// Defining global variables
+public class TestSearchByGuest extends BaseTest{
+	// Defining global variables
 	protected String environment = null;
 	protected ScheduledEventReservation res = null;
 	protected HouseHold hh = null; 
 	
+	@Override
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(
@@ -33,17 +35,18 @@ public class TestSearchByVenue {
 	public synchronized void closeSession(ITestResult test) {res.cancel();}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
-	public void testSearchByVenue(){
-
-
-		TestReporter.logStep("Search By Venue");
-		SearchByVenue search = new SearchByVenue(environment, "Main");
-		search = new SearchByVenue(environment, "Main");
-		search.setServiceWindowEnd(Randomness.generateCurrentXMLDatetime(Integer.parseInt("30")));
-		search.setServiceWindowStart(Randomness.generateCurrentXMLDatetime(Integer.parseInt("-30")));
+	public void testSearchByGuest(){
+		TestReporter.logStep("Search By Guest");
+		SearchByGuest search = new SearchByGuest(environment, "Main");
+		search.setReservationNumber(res.getConfirmationNumber());
 		search.sendRequest();
 		TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred during the search.", search);
-		TestReporter.assertTrue(search.getEventReservations().getLength() > 0, "No reservations were returned for facility id ["+res.getFacilityId()+"].");
-	
+		TestReporter.assertEquals(search.getReservationNumber(), res.getConfirmationNumber(), "Verify that the actual reservation number ["+search.getReservationNumber()+"] matches the expected reservation number ["+res.getConfirmationNumber()+"].");
+		TestReporter.assertEquals(search.getFacilityId(), res.getFacilityId(), "The actual facility ID ["+search.getFacilityId()+"] did not match the expected facility ID ["+res.getFacilityId()+"].");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ScheduledEventsServiceIF", "searchByGuest", false);
+		logItems.addItem("PartyIF", "retrieveParty", false);		
+		validateLogs(search, logItems);
 	}
 }
