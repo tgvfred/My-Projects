@@ -7,11 +7,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.guestServiceV2.operations.Create;
 import com.disney.api.soapServices.guestServiceV2.operations.SearchByNameAndAddress;
 import com.disney.api.soapServices.partyService.operations.CreateParty;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.Randomness;
+import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
 /**
@@ -89,8 +91,17 @@ public class Guest {
 			guest.setState(addresses.get(0).getStateAbbv());
 			guest.setPostalCode(addresses.get(0).getZipCode());
 			guest.sendRequest();
-			
-			addresses.get(0).setZipCode(guest.getPostalCode());
+			try{
+				addresses.get(0).setZipCode(guest.getPostalCode());
+			}catch(XPathNotFoundException x){
+
+				guest.sendRequest();
+				try{
+					addresses.get(0).setZipCode(guest.getPostalCode());
+				}catch(XPathNotFoundException x2){
+					TestReporter.logAPI(true, "GoMaster Guest create Zipcode not found", guest);
+				}
+			}
 			}
 		Sleeper.sleep(2000);
 		if(isPartyV3){

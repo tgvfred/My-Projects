@@ -1,14 +1,12 @@
 package com.disney.composite.api.eventDiningService.modify;
 
-import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.eventDiningService.operations.Book;
 import com.disney.api.soapServices.eventDiningService.operations.Modify;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
@@ -198,4 +196,89 @@ public class TestModify extends BaseTest{
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems);
 	}
+	
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	public void testModifyAddAllergy(){
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);		
+		book.sendRequest();
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(book.getTravelPlanSegmentId());
+		modify.setTravelPlanId(book.getTravelPlanId());
+		modify.setParty(hh);
+		modify.setFacilityId(book.getRequestFacilityId());
+		modify.setServiceStartDate(book.getRequestServiceStartDate());
+		modify.setServicePeriodId(book.getRequestServicePeriodId());
+		modify.setProductId(book.getRequestProductId());
+		modify.setAllergies("Egg", "1");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems);
+	}
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	public void testModifyAddAdditionalAllergy(){
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);		
+		book.setAllergies("Egg", "1");
+		book.sendRequest();
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(book.getTravelPlanSegmentId());
+		modify.setTravelPlanId(book.getTravelPlanId());
+		modify.setParty(hh);
+		modify.setFacilityId(book.getRequestFacilityId());
+		modify.setServiceStartDate(book.getRequestServiceStartDate());
+		modify.setServicePeriodId(book.getRequestServicePeriodId());
+		modify.setProductId(book.getRequestProductId());
+		modify.setAllergies("Egg", "1");
+		modify.setAllergies("Corn", "2");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems);
+	}
+	
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	public void testModifyRemoveAllergy(){
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);		
+		book.setAllergies("Egg", "1");
+		book.sendRequest();
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(book.getTravelPlanSegmentId());
+		modify.setTravelPlanId(book.getTravelPlanId());
+		modify.setParty(hh);
+		modify.setFacilityId(book.getRequestFacilityId());
+		modify.setServiceStartDate(book.getRequestServiceStartDate());
+		modify.setServicePeriodId(book.getRequestServicePeriodId());
+		modify.setProductId(book.getRequestProductId());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems);
+	}
+	
 }

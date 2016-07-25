@@ -1,11 +1,8 @@
 package com.disney.composite.api.eventDiningService.book;
 
-import java.util.List;
-
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.eventDiningService.operations.Book;
-import com.disney.api.soapServices.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.RetrieveAllergies;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
@@ -227,7 +224,6 @@ public class TestBook extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testAddAllAllergies(){
 		hh = new HouseHold(1);
-		TestReporter.setDebugLevel(1);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		
@@ -241,7 +237,6 @@ public class TestBook extends BaseTest{
 		}
 		
 		book.sendRequest();
-		System.out.println(book.getRequest());
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is not numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is not numeric as expected.");

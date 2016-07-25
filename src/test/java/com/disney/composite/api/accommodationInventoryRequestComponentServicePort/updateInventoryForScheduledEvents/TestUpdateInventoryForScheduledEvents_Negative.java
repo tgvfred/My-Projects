@@ -1,17 +1,13 @@
 package com.disney.composite.api.accommodationInventoryRequestComponentServicePort.updateInventoryForScheduledEvents;
 
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationInventoryRequestComponentServicePort.operations.UpdateInventoryForScheduledEvents;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.eventDiningService.operations.Book;
-import com.disney.api.soapServices.eventDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
-import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -19,11 +15,8 @@ import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
-import com.disney.utils.dataFactory.staging.bookSEReservation.TableServiceDiningReservation;
 
 public class TestUpdateInventoryForScheduledEvents_Negative extends BaseTest{
 	// Defining global variables
@@ -34,7 +27,7 @@ public class TestUpdateInventoryForScheduledEvents_Negative extends BaseTest{
 	@BeforeClass
 	@Parameters("environment")
 	public void setup(@Optional String environment){
-		this.environment = "Development";
+		this.environment = environment;
 		hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);

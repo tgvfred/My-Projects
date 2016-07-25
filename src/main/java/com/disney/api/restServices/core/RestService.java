@@ -6,9 +6,11 @@ package com.disney.api.restServices.core;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.Header;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -26,6 +28,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -132,7 +135,7 @@ public class RestService {
 		HttpPost httppost = new HttpPost(URL);
 		httppost.setEntity(new UrlEncodedFormEntity(params));
 		
-		HttpResponse httpResponse = httpClient.execute(httppost, httpContext);
+		HttpResponse httpResponse = httpClient.execute(httppost);
 		setStatusCode(httpResponse);		
 		setResponseFormat(httpResponse);
 		
@@ -152,13 +155,12 @@ public class RestService {
 	 * @throws 	IOException
 	 */
 	public String sendPostRequest(String URL,Header[] headers, List<NameValuePair> params) throws ClientProtocolException, IOException{
-		
 		//HttpClient httpclient = HttpClients.createDefault();
 		HttpPost httppost = new HttpPost(URL);
 		httppost.setHeaders(headers);
 		httppost.setEntity(new UrlEncodedFormEntity(params,"UTF-8"));
 		
-		HttpResponse httpResponse = httpClient.execute(httppost, httpContext);
+		HttpResponse httpResponse = httpClient.execute( httppost);
 		setStatusCode(httpResponse);		
 		setResponseFormat(httpResponse);
 		responseAsString = EntityUtils.toString(httpResponse.getEntity());

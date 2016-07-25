@@ -2,12 +2,12 @@ package com.disney.composite.api.tableServiceDiningService.modify;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Book;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Cancel;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Modify;
 import com.disney.composite.BaseTest;
@@ -80,6 +80,64 @@ public class TestModify extends BaseTest{
 		TestReporter.logScenario("12 Adults");
 		HouseHold newParty = new HouseHold(12);
 		modifyAndValidateLogs(newParty,res);
+	}
+	@Test(groups = {"api", "regression", "dining", "tableDiningService", "it4", "s138180" })
+	public void testModifyAddAllergy(){
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);		
+		book.sendRequest();
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(book.getTravelPlanSegmentId());
+		modify.setTravelPlanId(book.getTravelPlanId());
+		modify.setParty(hh);
+		modify.setFacilityId(book.getRequestFacilityId());
+		modify.setServiceStartDate(book.getRequestServiceStartDate());
+		modify.setServicePeriodId(book.getRequestServicePeriodId());
+		//modify.setProductId(book.getRequestProductId());
+		modify.setAllergies("Egg", "1");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+	}
+
+	@Test(groups = {"api", "regression", "dining", "tableDiningService", "it4", "s138180" })
+	public void testModifyAddAdditionalAllergy(){
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);		
+		book.setAllergies("Egg", "1");
+		book.sendRequest();
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(book.getTravelPlanSegmentId());
+		modify.setTravelPlanId(book.getTravelPlanId());
+		modify.setParty(hh);
+		modify.setFacilityId(book.getRequestFacilityId());
+		modify.setServiceStartDate(book.getRequestServiceStartDate());
+		modify.setServicePeriodId(book.getRequestServicePeriodId());
+		//modify.setProductId(book.getRequestProductId());
+		modify.setAllergies("Egg", "1");
+		modify.setAllergies("Corn", "2");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+	}
+	
+	@Test(groups = {"api", "regression", "dining", "tableDiningService", "it4", "s138180" })
+	public void testModifyRemoveAllergy(){
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);		
+		book.setAllergies("Egg", "1");
+		book.sendRequest();
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(book.getTravelPlanSegmentId());
+		modify.setTravelPlanId(book.getTravelPlanId());
+		modify.setParty(hh);
+		modify.setFacilityId(book.getRequestFacilityId());
+		modify.setServiceStartDate(book.getRequestServiceStartDate());
+		modify.setServicePeriodId(book.getRequestServicePeriodId());
+		//modify.setProductId(book.getRequestProductId());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
 	}
 	
 	private void modifyAndValidateLogs(HouseHold newParty, ScheduledEventReservation res){
