@@ -1,10 +1,15 @@
 package com.disney.api.soapServices.scheduledEventsServicePort.operations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.scheduledEventsServicePort.ScheduledEventsServicePort;
 import com.disney.utils.XMLTools;
 
 public class SearchByAgency extends ScheduledEventsServicePort {
+	private Integer numberOfReservations = null;
+	
 	public SearchByAgency(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
@@ -50,36 +55,78 @@ public class SearchByAgency extends ScheduledEventsServicePort {
 	}
 	
 	public int getNumberOfReservation(){
-		return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/searchByAgencyResponse/eventReservations").getLength();		    	
+		numberOfReservations = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/searchByAgencyResponse/eventReservations").getLength(); 
+		return numberOfReservations;
 	}
 	
 	
+	public String getIataNumber(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/agencyIataNumber");}
+	public String getAgencyName(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/agencyName");}
+	public String getCancellationNumber(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/cancellationNumber");}
+	public String getFacilityId(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/facilityId");}
+	public String getPrimaryGuestFirstName(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/primaryGuestFirstName");}
+	public String getPrimaryGuestLastName(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/primaryGuestLastName");}
+	public String getProductTypeName(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/productTypeName");}
+	public String getProductId(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/productId");}
+	public String getEnterpriseProductId(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/enterpriseProductId");}
+	public String getReservationNumber(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/reservationNumber");}
+	public String getReservationStatus(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/reservationStatus");}
+	public String getServiceDate(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/serviceDate");}
+	public String getTicketIssued(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/ticketIssued");}
+	public String getVipLevel(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/vipLevel");}
+	public String getServicePeriodId(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/servicePeriodId");}
+	public String getBookDate(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/bookDate");}
+	public String getSpecialDietaryNeeds(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/specialDietaryNeeds");}
+	public String getExtraCareRequired(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/extraCareRequired");}
+	public String getPaidInFull(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/paidInFull");}
+	public String getPartySize(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByAgencyResponse/eventReservations["+index+"]/partySize");}
 	
 	
-	
-	
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/agencyIataNumber
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/agencyName
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/cancellationNumber
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/facilityId
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/primaryGuestFirstName
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/primaryGuestLastName
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/productTypeName
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/productId
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/enterpriseProductId
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/reservationNumber
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/reservationStatus
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/serviceDate
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/ticketIssued
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/vipLevel
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/servicePeriodId
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/bookDate
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/specialDietaryNeeds
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/extraCareRequired
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/paidInFull
-//	/Envelope/Body/searchByAgencyResponse/eventReservations[1]/partySize
+	/**
+	 * Captures and returns all reservations in the response
+	 * @return
+	 */
+	public List<Reservation> getAllReservations(){
+		List<Reservation> reservations = new ArrayList<Reservation>();
+		
+		if(numberOfReservations == null) getNumberOfReservation();
+		
+		for(int i = 1; i <= numberOfReservations; i++){
+//			System.out.println("Setting reservation ["+String.valueOf(i)+"].");
+			Reservation res = new Reservation();
+			res.setAgencyIataNumber(getIataNumber(String.valueOf(i)));
+			res.setAgencyName(getAgencyName(String.valueOf(i)));
+			res.setBookDate(getBookDate(String.valueOf(i)));
+			res.setCancellationNumber(getCancellationNumber(String.valueOf(i)));
+			res.setEnterpriseProductId(getEnterpriseProductId(String.valueOf(i)));
+			res.setExtraCareRequired(getExtraCareRequired(String.valueOf(i)));
+			res.setFacilityId(getFacilityId(String.valueOf(i)));
+			res.setPaidInFull(getPaidInFull(String.valueOf(i)));
+			res.setPartySize(getPartySize(String.valueOf(i)));
+			res.setPrimaryGuestFirstName(getPrimaryGuestFirstName(String.valueOf(i)));
+			res.setPrimaryGuestLastName(getPrimaryGuestLastName(String.valueOf(i)));
+			res.setProductId(getProductId(String.valueOf(i)));
+			res.setProductTypeName(getProductTypeName(String.valueOf(i)));
+			res.setReservationNumber(getReservationNumber(String.valueOf(i)));
+			res.setReservationStatus(getReservationStatus(String.valueOf(i)));
+			res.setServiceDate(getServiceDate(String.valueOf(i)));
+			res.setServicePeriodId(getServicePeriodId(String.valueOf(i)));
+			res.setSpecialDietaryNeeds(getSpecialDietaryNeeds(String.valueOf(i)));
+			res.setTicketIssued(getTicketIssued(String.valueOf(i)));
+			res.setVipLevel(getVipLevel(String.valueOf(i)));
+			reservations.add(res);
+		}
+		
+		return reservations;
+	}
 
-	public class reservation{
+	
+	/**
+	 * Subclass that contains all data points for a reservation from the response
+	 * @author AutoXP
+	 *
+	 */
+	public class Reservation{
 		private String agencyIataNumber;
 		private String agencyName;
 		private String cancellationNumber;
@@ -140,45 +187,43 @@ public class SearchByAgency extends ScheduledEventsServicePort {
 		public String getReservationNumber(){return reservationNumber;}
 
 		
-//		public void set(String value){ = value;}
-//		public String get(){return ;}
-//
-//		
-//		public void set(String value){ = value;}
-//		public String get(){return ;}
-//
-//		
-//		public void set(String value){ = value;}
-//		public String get(){return ;}
-//
-//		
-//		public void set(String value){ = value;}
-//		public String get(){return ;}
-//
-//		
-//		public void set(String value){ = value;}
-//		public String get(){return ;}
-//
-//		
-//		public void set(String value){ = value;}
-//		public String get(){return ;}
-//
-//		
-//		public void set(String value){ = value;}
-//		public String get(){return ;}
-//
-//		
-//		public void set(String value){ = value;}
-//		public String get(){return ;}
-//
-//		
-//		public void set(String value){ = value;}
-//		public String get(){return ;}
-//
-//		
-//		public void set(String value){ = value;}
-//		public String get(){return ;}
+		public void setReservationStatus(String value){reservationStatus = value;}
+		public String getReservationStatus(){return reservationStatus;}
+
 		
+		public void setServiceDate(String value){serviceDate = value;}
+		public String getServiceDate(){return serviceDate;}
+
 		
+		public void setTicketIssued(String value){ticketIssued = value;}
+		public String getTicketIssued(){return ticketIssued;}
+
+		
+		public void setVipLevel(String value){vipLevel = value;}
+		public String getVipLevel(){return vipLevel;}
+
+		
+		public void setServicePeriodId(String value){servicePeriodId = value;}
+		public String getServicePeriodId(){return servicePeriodId;}
+
+		
+		public void setBookDate(String value){bookDate = value;}
+		public String getBookDate(){return bookDate;}
+
+		
+		public void setSpecialDietaryNeeds(String value){specialDietaryNeeds = value;}
+		public String getSpecialDietaryNeeds(){return specialDietaryNeeds;}
+
+		
+		public void setExtraCareRequired(String value){extraCareRequired = value;}
+		public String getExtraCareRequired(){return extraCareRequired;}
+
+		
+		public void setPaidInFull(String value){paidInFull = value;}
+		public String getPaidInFull(){return paidInFull;}
+
+		
+		public void setPartySize(String value){partySize = value;}
+		public String getPartySize(){return partySize;}		
 	}
 }
