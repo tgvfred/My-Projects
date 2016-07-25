@@ -345,7 +345,7 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 	public void testSearchGuestIDByExternalReference_MultipleValues(){
 		TestReporter.logScenario("Search By External Reference Type and Multiple Values");
 		Guest guest2 = new Guest();
-		guest2.sendToApi(environment, true);		
+		guest2.sendToApi(environment);		
 		SearchGuestIDByExternalReference search = new SearchGuestIDByExternalReference(this.environment);
 		search.setGuestExternalReference("ODS", guest.getOdsId());
 		search.addExternalReferenceValue(guest2.getOdsId());
