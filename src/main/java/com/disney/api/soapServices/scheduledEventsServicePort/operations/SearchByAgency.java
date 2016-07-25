@@ -92,7 +92,6 @@ public class SearchByAgency extends ScheduledEventsServicePort {
 		if(numberOfReservations == null) getNumberOfReservation();
 		
 		for(int i = 1; i <= numberOfReservations; i++){
-//			System.out.println("Setting reservation ["+String.valueOf(i)+"].");
 			Reservation res = new Reservation();
 			res.setAgencyIataNumber(getIataNumber(String.valueOf(i)));
 			res.setAgencyName(getAgencyName(String.valueOf(i)));

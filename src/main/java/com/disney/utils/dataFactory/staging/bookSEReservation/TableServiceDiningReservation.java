@@ -39,7 +39,8 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	private String showDiningMethodExceptionMessage = "This method is only valid for show dining reservations and is not intended for event dining reservations.";
 	private String retrievedFacilityId;	// Facility ID as it is found in the #retrieve() method response
 	private String primaryGuestAge;	//Primary guest address as it is found in the #retrieve() method response; expected to be contained in the first 'partyRole' node
-	private String modifyStatus;	// Status in the response from modify a reservation  
+	private String modifyStatus;	// Status in the response from modify a reservation
+	private String sourceAccountingCenter;	// Source Accounting Center ID  
 	/*
 	 * Travel Agency Fields
 	 */
@@ -183,6 +184,9 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 * Returns the primary guest age
 	 */
 	@Override public String getPrimaryGuestAge() {return this.primaryGuestAge;}
+	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
+	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
+	@Override public String getTravelAgencyId(){return agencyId;}
 	/**
 	 * Retrieve the status from the response of modifying a reservation
 	 * @return String, status from modifying a reservation
