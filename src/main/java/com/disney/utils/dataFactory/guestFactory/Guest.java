@@ -94,7 +94,13 @@ public class Guest {
 			try{
 				addresses.get(0).setZipCode(guest.getPostalCode());
 			}catch(XPathNotFoundException x){
-				TestReporter.logAPI(true, "GoMaster Guest create Zipcode not found", guest);
+
+				guest.sendRequest();
+				try{
+					
+				}catch(XPathNotFoundException x2){
+					TestReporter.logAPI(true, "GoMaster Guest create Zipcode not found", guest);
+				}
 			}
 			}
 		Sleeper.sleep(2000);
