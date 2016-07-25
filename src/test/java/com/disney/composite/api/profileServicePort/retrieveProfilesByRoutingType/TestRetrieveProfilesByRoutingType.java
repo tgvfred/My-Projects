@@ -40,7 +40,7 @@ public class TestRetrieveProfilesByRoutingType extends BaseTest{
 	public void setup(@Optional String environment){
 		
 		// Get all options for the enum value "PROFILE_TYPE"
-		this.environment = "Development";
+		this.environment = environment;
 		go = new GetOptions(this.environment);
 		go.setProfileOptionEnumType("PROFILE_TYPE");
 		go.sendRequest();
