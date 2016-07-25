@@ -27,7 +27,7 @@ public class TestUpdateInventoryForScheduledEvents_Negative extends BaseTest{
 	@BeforeClass
 	@Parameters("environment")
 	public void setup(@Optional String environment){
-		this.environment = "Development";
+		this.environment = environment;
 		hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
