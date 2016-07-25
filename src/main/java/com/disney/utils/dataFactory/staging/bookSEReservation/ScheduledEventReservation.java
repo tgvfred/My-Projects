@@ -40,6 +40,8 @@ public interface ScheduledEventReservation{
 	public void setProductId(String productId);
 	public void setProductType(String productType);
 	public void setBookingScenario(String scenario);
+	public void setSourceAccountingCenter(String sourceAccountingcenter);
+	public String getSourceAccountingCenter();
 	// Interfaces for methods to generate and set a household
 	public HouseHold party();
 	public void setParty(HouseHold party);	
@@ -58,6 +60,7 @@ public interface ScheduledEventReservation{
 	public void addTravelAgency();
 	public void addTravelAgency(String agencyId);
 	public void addTravelAgency(String agencyIataNumber, String agencyOdsId, String guestAgencyId, String agentId, String guestAgentId, String confirmationLocatorValue, String guestConfirmationLocationId);
+	public String getTravelAgencyId();
 	// Interfaces for show dining reservations
 	public void assignTableNumbers();
 	public void assignTableNumbers(String tableNumber);

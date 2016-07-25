@@ -40,6 +40,7 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	private String retrievedFacilityId;	// Facility ID as it is found in the #retrieve() method response
 	private String primaryGuestAge;	//Primary guest address as it is found in the #retrieve() method response; expected to be contained in the first 'partyRole' node 
 	private String modifyStatus;	// Status in the response from modify a reservation 
+	private String sourceAccountingCenter;	// Source Accounting Center ID
 	/*
 	 * Travel Agency Fields
 	 */
@@ -193,6 +194,10 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	 */
 	@Override
 	public String getModifyResponseStatus(){return this.modifyStatus;}
+	
+	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
+	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
+	@Override public String getTravelAgencyId(){return agencyId;}
 	/**
 	 * Defines the facility ID, service start date, service period, and product ID for the current 
 	 * reservation and invokes a method that books the reservation
@@ -261,6 +266,7 @@ public class EventDiningReservation implements ScheduledEventReservation {
 		TestReporter.logAPI(!eventDiningBook.getResponseStatusCode().equals("200"), "An error occurred booking an event dining service reservation: " + eventDiningBook.getFaultString(), eventDiningBook);
 		this.travelPlanId = eventDiningBook.getTravelPlanId();
 		this.confirmationNumber = eventDiningBook.getTravelPlanSegmentId();
+		this.sourceAccountingCenter = eventDiningBook.getSourceAccountingCenter();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
 		TestReporter.log("Reservation Number: " + getConfirmationNumber());
 		retrieve();
@@ -327,7 +333,10 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	/**
 	 * Uses predefined values to invoke a method that defines values for a travel agency that is intended to be added to the current reservation
 	 */
-	@Override public void addTravelAgency(){addTravelAgency("99999998", "0", "0", "0", "0", "0", "0");}
+	@Override public void addTravelAgency(){
+		agencyId = "99999998";
+		addTravelAgency(agencyId, "0", "0", "0", "0", "0", "0");
+	}
 	/**
 	 * Uses user-defined values to invoke a method that defines values for a travel agency that is intended to be added to the current reservation
 	 */

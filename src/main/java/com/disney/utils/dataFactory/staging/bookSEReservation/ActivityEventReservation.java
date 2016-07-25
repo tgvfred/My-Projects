@@ -40,6 +40,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	private String retrievedFacilityId;	// Facility ID as it is found in the #retrieve() method response
 	private String primaryGuestAge;	// Primary guest address as it is found in the #retrieve() method response; expected to be contained in the first 'partyRole' node 
 	private String modifyStatus;	// Status in the response from modify a reservation 
+	private String sourceAccountingCenter;	// Source Accounting Center ID
 	/*
 	 * Travel Agency Fields
 	 */
@@ -190,6 +191,9 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * @return String, status from modifying a reservation
 	 */
 	@Override public String getModifyResponseStatus(){return ActivityEventReservation.this.modifyStatus;}
+	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
+	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
+	@Override public String getTravelAgencyId(){return agencyId;}
 	/**
 	 * Defines the facility ID, service start date, service period, and product ID for the current 
 	 * reservation and invokes a method that books the reservation
@@ -374,6 +378,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	@Override public void assignTableNumbers(String tableNumber) {throw new AutomationException(showDiningMethodExceptionMessage);}
 	@Override public void printTicket() {throw new AutomationException(showDiningMethodExceptionMessage);}
 	@Override public void reprintTicket() {throw new AutomationException(showDiningMethodExceptionMessage);}
+	
 	/**
 	 * Defines the Modify sub-class that is to be used to contain implementations of methods defined in a generic Modify interface.
 	 */

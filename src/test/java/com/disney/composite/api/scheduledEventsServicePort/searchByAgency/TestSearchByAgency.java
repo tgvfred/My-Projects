@@ -1,5 +1,7 @@
 package com.disney.composite.api.scheduledEventsServicePort.searchByAgency;
 
+import java.util.List;
+
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -7,15 +9,14 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.SearchByAgency;
+import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
-public class TestSearchByAgency {
-	// Defining global variables
-	protected String testName = null;
-	protected String environment = null;
+public class TestSearchByAgency extends BaseTest{
 	private ScheduledEventReservation book = null;
 	
 	@BeforeMethod(alwaysRun = true)
@@ -43,5 +44,35 @@ public class TestSearchByAgency {
 		searchByAgency.sendRequest();
 		TestReporter.logAPI(!searchByAgency.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", searchByAgency);
 		TestReporter.assertGreaterThanZero(searchByAgency.getNumberOfReservation());
+		
+		List<SearchByAgency.Reservation> reservations = searchByAgency.getAllReservations();
+		for(int i = 0; i < reservations.size(); i++){
+			System.out.println("Reporting reservation ["+String.valueOf(i)+"]");
+			TestReporter.logStep("Reservation "+String.valueOf(0)+1+": ");
+			TestReporter.log("IATA Number: " + reservations.get(i).getAgencyIataNumber());
+			TestReporter.log("Agency Name: " + reservations.get(i).getAgencyName());
+			TestReporter.log("Cancellation Number: " + reservations.get(i).getCancellationNumber());
+			TestReporter.log("Primary Guest First Name: " + reservations.get(i).getPrimaryGuestFirstName());
+			TestReporter.log("Primary Guest Last Name: " + reservations.get(i).getPrimaryGuestLastName());
+			TestReporter.log("Product Type Name: " + reservations.get(i).getProductTypeName());
+			TestReporter.log("Product ID: " + reservations.get(i).getProductId());
+			TestReporter.log("Enterprise Product ID: " + reservations.get(i).getEnterpriseProductId());
+			TestReporter.log("Reservation Number: " + reservations.get(i).getReservationNumber());
+			TestReporter.log("Reservation Status: " + reservations.get(i).getReservationStatus());
+			TestReporter.log("Service date: " + reservations.get(i).getServiceDate());
+			TestReporter.log("Ticket Issued: " + reservations.get(i).getTicketIssued());
+			TestReporter.log("VIP Level: " + reservations.get(i).getVipLevel());
+			TestReporter.log("Service Period ID: " + reservations.get(i).getServicePeriodId());
+			TestReporter.log("Book Date: " + reservations.get(i).getBookDate());
+			TestReporter.log("Special Dietary Needs: " + reservations.get(i).getSpecialDietaryNeeds());
+			TestReporter.log("Extra Care Required: " + reservations.get(i).getExtraCareRequired());
+			TestReporter.log("Paid In Full: " + reservations.get(i).getPaidInFull());
+			TestReporter.log("Party Size: " + reservations.get(i).getPartySize());
+		}
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("ScheduledEventsServiceIF", "searchByAgency", false);	
+		logItems.addItem("PartyIF", "retrieveParty", false);	
+		validateLogs(searchByAgency, logItems);
 	}
 }
