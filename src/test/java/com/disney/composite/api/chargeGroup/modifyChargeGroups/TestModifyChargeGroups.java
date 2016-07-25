@@ -22,7 +22,7 @@ public class TestModifyChargeGroups extends BaseTest{
 		this.environment = environment;
 		hh = new HouseHold(1);
 		number = String.valueOf(Randomness.randomNumberBetween(1000, 9999));
-		CreateChargeGroupsAndPostCharges create = new CreateChargeGroupsAndPostCharges("Development", "MinimalInfo");
+		CreateChargeGroupsAndPostCharges create = new CreateChargeGroupsAndPostCharges(environment, "MinimalInfo");
 		create.setGuestFirstName(hh.primaryGuest().getFirstName());
 		create.setGuestLastName(hh.primaryGuest().getLastName());
 		create.setTravelPlanComponentGroupId(number);
