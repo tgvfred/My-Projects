@@ -538,6 +538,7 @@ public abstract class BaseSoapService{
 					"Operation given did not match any operations in the service"
 							+ uoe.getCause());
 		} catch (SOAPException soape) {
+			TestReporter.logAPI(true, soape.getMessage(), this);
 			throw new RuntimeException(soape.getMessage(), soape.getCause());
 		} catch (IOException ioe) {
 			throw new RuntimeException("Failed to read the request properly"
