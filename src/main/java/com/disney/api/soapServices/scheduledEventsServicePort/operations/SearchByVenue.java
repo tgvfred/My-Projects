@@ -2,6 +2,7 @@ package com.disney.api.soapServices.scheduledEventsServicePort.operations;
 
 import org.w3c.dom.NodeList;
 
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.scheduledEventsServicePort.ScheduledEventsServicePort;
 import com.disney.utils.XMLTools;
 
@@ -16,13 +17,55 @@ public class SearchByVenue extends ScheduledEventsServicePort{
 		removeWhiteSpace();
 	}
 	
-	public void setFacilityId(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/facilityId", value);}
-	public void setProductIds(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/productIds", value);}
-	public void setReservationStatus(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/reservationStatus", value);}
-	public void setServiceDate(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/serviceDate", value);}
-	public void setServiceWindowEnd(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/serviceWindowEnd", value);}
-	public void setServiceWindowStart(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/serviceWindowStart", value);}
-	public void setSourceAccountingCenter(String value){setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/sourceAccountingCenter", value);}
+	public void setFacilityId(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/facilityId", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest", "fx:addnode;node:facilityId");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/facilityId", value);
+		}
+	}
+	public void setProductIds(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/productIds", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest", "fx:addnode;node:productIds");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/productIds", value);
+		}
+	}
+	public void setReservationStatus(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/reservationStatus", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest", "fx:addnode;node:reservationStatus");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/reservationStatus", value);
+		}
+	}
+	public void setServiceDate(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/serviceDate", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest", "fx:addnode;node:serviceDate");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/serviceDate", value);
+		}
+	}
+	public void setServiceWindowEnd(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/serviceWindowEnd", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest", "fx:addnode;node:serviceWindowEnd");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/serviceWindowEnd", value);
+		}
+	}
+	public void setServiceWindowStart(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/serviceWindowStart", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest", "fx:addnode;node:serviceWindowStart");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/serviceWindowStart", value);
+		}
+	}
+	public void setSourceAccountingCenter(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/sourceAccountingCenter", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest", "fx:addnode;node:sourceAccountingCenter");
+			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/sourceAccountingCenter", value);
+		}
+	}
 	
 	public String getCancellationNumberByIndex(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByVenueResponse/eventReservations["+index+"]/cancellationNumber");}
 	public String getFacilityIdByIndex(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchByVenueResponse/eventReservations["+index+"]/facilityId");}
