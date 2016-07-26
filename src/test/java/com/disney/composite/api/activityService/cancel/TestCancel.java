@@ -31,7 +31,7 @@ public class TestCancel extends BaseTest{
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 
-	@Test( groups = {"api", "regression", "dining", "eventDiningService"})
+	@Test( groups = {"api", "regression", "activity", "eventDiningService"})
 	public void testCancel() {
 		TestReporter.logScenario("Cancel");
 		TestReporter.log("Reservation Number: <b>" + res.getConfirmationNumber() + "</b>");

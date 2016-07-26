@@ -2,6 +2,7 @@ package com.disney.composite.api.scheduledEventsServicePort.searchByAgency;
 
 import java.util.List;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
@@ -29,9 +30,11 @@ public class TestSearchByAgency extends BaseTest{
 		book.book("BookGuaranteedTS");
 	}
 	
-	@AfterMethod(alwaysRun=true)
-	public void cancelReservation(){
+
+	@AfterClass(alwaysRun = true)
+	public synchronized void closeSession() {try{
 		book.cancel();
+	}catch (Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})

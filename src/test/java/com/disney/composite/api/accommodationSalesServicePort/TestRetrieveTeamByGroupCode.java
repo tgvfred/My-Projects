@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationSalesServicePort;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -11,7 +12,7 @@ import com.disney.utils.TestReporter;
 public class TestRetrieveTeamByGroupCode {
 private String environment = "";
 	
-	@BeforeTest(alwaysRun = true)
+@BeforeClass(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(String environment) {
 		this.environment = environment;

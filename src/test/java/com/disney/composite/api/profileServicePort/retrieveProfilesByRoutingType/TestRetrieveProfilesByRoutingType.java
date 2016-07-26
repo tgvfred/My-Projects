@@ -2,6 +2,7 @@ package com.disney.composite.api.profileServicePort.retrieveProfilesByRoutingTyp
 
 import java.util.Map.Entry;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -35,7 +36,7 @@ public class TestRetrieveProfilesByRoutingType extends BaseTest{
 	protected int indexOfNodeWithRoutingType = -1;
 
 	@Override
-	@BeforeTest
+	@BeforeClass
 	@Parameters("environment")
 	public void setup(@Optional String environment){
 		

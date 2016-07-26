@@ -31,7 +31,10 @@ public class TestModify_Negative extends BaseTest{
 	}
 	
 	@AfterClass(alwaysRun = true)
-	public synchronized void closeSession() {res.cancel();}
+	public synchronized void closeSession() {try{
+		res.cancel();
+	}catch (Exception e){}
+	}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidFacilityId(){
