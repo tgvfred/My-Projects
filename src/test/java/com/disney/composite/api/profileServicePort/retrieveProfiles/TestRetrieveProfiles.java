@@ -13,6 +13,7 @@ import com.disney.api.soapServices.profileServicePort.operations.RetrieveProfile
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 
 public class TestRetrieveProfiles extends BaseTest{
 	protected GetOptions go;
@@ -22,8 +23,10 @@ public class TestRetrieveProfiles extends BaseTest{
 	@BeforeMethod
 	@Parameters("environment")
 	public void setup(@Optional String environment){
+		environment = "Stage";
 		this.environment = environment;
-//		this.environment = "Development";
+		
+		TestReporter.setDebugLevel(1);
 		go = new GetOptions(this.environment);
 		go.setProfileOptionEnumType("PROFILE_TYPE");
 		go.sendRequest();
@@ -50,7 +53,7 @@ public class TestRetrieveProfiles extends BaseTest{
 		}
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving profiles", retrieve);
 		
-		TestReporter.assertTrue(Regex.match("[0-9]+", retrieve.getProfileInfosCodes()[0]), "Verify the code ["+retrieve.getProfileInfosCodes()[0]+"] is numeric.");
+		TestReporter.assertTrue(Regex.match("[0-9A-Za-z!.]+", retrieve.getProfileInfosCodes()[0]), "Verify the code ["+retrieve.getProfileInfosCodes()[0]+"] is alphanumeric.");
 		TestReporter.assertTrue(Regex.match("[0-9A-Za-z].*", retrieve.getProfileInfosDescriptions()[0]), "Verify the description ["+retrieve.getProfileInfosDescriptions()[0]+"] is alphanumeric.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", retrieve.getProfileInfosProfileIds()[0]), "Verify the id ["+retrieve.getProfileInfosProfileIds()[0]+"] is numeric");
 		TestReporter.assertTrue(Regex.match("[0-9A-Za-z].*", retrieve.getProfileInfosProfileTypes()[0]), "Verify the profile type ["+retrieve.getProfileInfosProfileTypes()[0]+"] is alphabetic.");
