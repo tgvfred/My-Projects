@@ -35,7 +35,9 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	
 	@AfterClass(alwaysRun=true)
 	public void cancelReservation(){
-		book.cancel();
+		if(book != null)
+			if(!book.getConfirmationNumber().isEmpty())
+				book.cancel();
 	}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
@@ -99,17 +101,17 @@ public class TestSearchByAgency_Negative extends BaseTest{
 		sendRequestAndValidateLogs(searchByAgency, "Search Criteria is Invalid : INVALID SEARCH CRITERIA", DiningErrorCode.INVALID_SEARCH_CRITERIA);		
 	}
 	
-	private void sendRequestAndValidateLogs(SearchByAgency searchByAgency, String faultString, ApplicationErrorCode errorCode){
-		searchByAgency.sendRequest();
-		validateApplicationError(searchByAgency, errorCode);
-		TestReporter.logAPI(!searchByAgency.getFaultString().contains(faultString), searchByAgency.getFaultString(), searchByAgency);
+	private void sendRequestAndValidateLogs(SearchByAgency search, String faultString, ApplicationErrorCode errorCode){
+		search.sendRequest();
+		validateApplicationError(search, errorCode);
+		TestReporter.logAPI(!search.getFaultString().contains(faultString), search.getFaultString(), search);
 		
 		LogItems logItems = new LogItems();
-		logItems.addItem("ScheduledEventsServiceIF", "searchByAgency", true);	
-		validateLogs(searchByAgency, logItems);
+		logItems.addItem("ScheduledEventsServiceIF", "search", true);	
+		validateLogs(search, logItems);
 		
 		LogItems logInvalidItems = new LogItems();	
 		logInvalidItems.addItem("PartyIF", "retrieveParty", false);
-		validateNotInLogs(searchByAgency, logInvalidItems);
+		validateNotInLogs(search, logInvalidItems);
 	}
 }

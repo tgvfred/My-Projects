@@ -34,7 +34,11 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	
 	@AfterClass(alwaysRun = true)
-	public void closeSession() {res.cancel();}	
+	public void closeSession() {
+		if(res != null)
+			if(!res.getConfirmationNumber().isEmpty())
+				res.cancel();
+	}	
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityIdOnly(){

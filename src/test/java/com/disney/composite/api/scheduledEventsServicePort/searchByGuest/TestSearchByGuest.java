@@ -32,7 +32,11 @@ public class TestSearchByGuest extends BaseTest{
 	}
 	
 	@AfterMethod(alwaysRun = true)
-	public synchronized void closeSession(ITestResult test) {res.cancel();}
+	public void closeSession(ITestResult test) {
+		if(res != null)
+			if(!res.getConfirmationNumber().isEmpty())
+				res.cancel();
+	}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testSearchByGuest(){
