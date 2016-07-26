@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestSearchByAgency_Suite">
-	<parameter name="environment" value="Sleepy" />
+	<parameter name="environment" value="Latest_CM" />
 	<test name="TestSearchByAgency">
 		<classes>
 			<class name="com.disney.composite.api.scheduledEventsServicePort.searchByAgency.TestSearchByAgency"/>

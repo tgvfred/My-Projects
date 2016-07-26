@@ -32,9 +32,9 @@ public class TestSearchByAgency extends BaseTest{
 	
 
 	@AfterClass(alwaysRun = true)
-	public synchronized void closeSession() {try{
-		book.cancel();
-	}catch (Exception e){}
+	public synchronized void closeSession() {
+		try{book.cancel();}
+		catch (Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})

@@ -33,7 +33,7 @@ public class ReservableResourceByFacilityID extends BuiltInventoryService{
 		Map<String, ReservableResource> resources = new HashMap<String, ReservableResource>();
 		NodeList reservableResourceArrays = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/reservableResourceByFacilityIDResponse/reservableResourceArray");
 		
-		for(int node = 0; node < reservableResourceArrays.getLength(); node++){
+		for(int node = 0; node < reservableResourceArrays.getLength() - 1; node++){
 			resources.put("resource" + String.valueOf(node), new ReservableResource(reservableResourceArrays.item(node)));
 		}
 		firstReservableResource  = resources.get("resource0");

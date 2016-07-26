@@ -38,7 +38,11 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	
 	@AfterClass(alwaysRun = true)
-	public void teardown() {res.cancel();}
+	public void teardown() {
+		if(res != null)
+			if(!res.getConfirmationNumber().isEmpty())
+				res.cancel();
+	}
 	
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
