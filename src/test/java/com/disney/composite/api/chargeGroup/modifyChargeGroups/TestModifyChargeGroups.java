@@ -10,6 +10,7 @@ import com.disney.api.soapServices.chargeGroup.operations.ModifyChargeGroups;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class TestModifyChargeGroups extends BaseTest{
@@ -43,5 +44,9 @@ public class TestModifyChargeGroups extends BaseTest{
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred modifying a charge group.", modify);
 		TestReporter.assertEquals(modify.getReturnParameter(), "success", "The response parameter ["+modify.getReturnParameter()+"] was not [success] as expected.");
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyChargeGroups", false);
+		validateLogs(modify, logItems);
 	}	
 }

@@ -12,6 +12,7 @@ import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestSearchGuestIDByExternalReference  extends BaseTest{
@@ -33,6 +34,10 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -93,6 +98,11 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getPartyId().equals(party.getPartyid()), "The Party ID ["+search.getPartyId()+"] is not ["+party.getPartyid()+"] as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -123,6 +133,11 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getPartyId().equals(party.getPartyid()), "The Party ID ["+search.getPartyId()+"] is not ["+party.getPartyid()+"] as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -153,6 +168,11 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getPartyId().equals(party.getPartyid()), "The Party ID ["+search.getPartyId()+"] is not ["+party.getPartyid()+"] as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 
 	
@@ -184,6 +204,11 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getPartyId().equals(party.getPartyid()), "The Party ID ["+search.getPartyId()+"] is not ["+party.getPartyid()+"] as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -214,6 +239,11 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getPartyId().equals(party.getPartyid()), "The Party ID ["+search.getPartyId()+"] is not ["+party.getPartyid()+"] as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 	
 
@@ -246,6 +276,11 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getPartyId().equals(party.getPartyid()), "The Party ID ["+search.getPartyId()+"] is not ["+party.getPartyid()+"] as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 	
 
@@ -278,6 +313,11 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getPartyId().equals(party.getPartyid()), "The Party ID ["+search.getPartyId()+"] is not ["+party.getPartyid()+"] as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -308,6 +348,11 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getPartyId().equals(party.getPartyid()), "The Party ID ["+search.getPartyId()+"] is not ["+party.getPartyid()+"] as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -318,6 +363,10 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		search.sendRequest();		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() == 0, "Party IDs were found when none were expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -329,6 +378,10 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() == 0, "Party IDs were found when none were expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -339,6 +392,10 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		search.sendRequest();		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() == 0, "Party IDs were found when none were expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -352,5 +409,9 @@ public class TestSearchGuestIDByExternalReference  extends BaseTest{
 		search.sendRequest();		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() == 2, "Party IDs were found when none were expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByExternalReference", false);
+		validateLogs(search, logItems);
 	}
 }

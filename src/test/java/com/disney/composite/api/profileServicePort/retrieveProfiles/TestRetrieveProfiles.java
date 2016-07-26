@@ -23,10 +23,7 @@ public class TestRetrieveProfiles extends BaseTest{
 	@BeforeMethod
 	@Parameters("environment")
 	public void setup(@Optional String environment){
-		environment = "Stage";
-		this.environment = environment;
-		
-		TestReporter.setDebugLevel(1);
+		this.environment = environment;		
 		go = new GetOptions(this.environment);
 		go.setProfileOptionEnumType("PROFILE_TYPE");
 		go.sendRequest();

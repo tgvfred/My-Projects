@@ -10,6 +10,7 @@ import com.disney.api.soapServices.partyService.operations.SearchGuestIDByName;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestSearchGuestIDByName  extends BaseTest{
@@ -32,6 +33,10 @@ public class TestSearchGuestIDByName  extends BaseTest{
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() >= 1, "The Party ID's is not at least 1 as expected. It is ["+search.getNumberOfResponsePartyIds()+"]");
 		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByName", false);
+		validateLogs(search, logItems);
 	}
 	
 
@@ -45,6 +50,11 @@ public class TestSearchGuestIDByName  extends BaseTest{
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() >= 1, "The Party ID's is not at least 1 as expected. It is ["+search.getNumberOfResponsePartyIds()+"]");
 		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByName", false);
+		validateLogs(search, logItems);
+
 	}
 
 
@@ -58,6 +68,11 @@ public class TestSearchGuestIDByName  extends BaseTest{
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() >= 1, "The Party ID's is not at least 1 as expected. It is ["+search.getNumberOfResponsePartyIds()+"]");
 		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByName", false);
+		validateLogs(search, logItems);
+
 	}
 	
 
@@ -70,5 +85,10 @@ public class TestSearchGuestIDByName  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() == 0, "The Party ID's is not 0 as expected. It is ["+search.getNumberOfResponsePartyIds()+"]");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByName", false);
+		validateLogs(search, logItems);
+
 	}
 }

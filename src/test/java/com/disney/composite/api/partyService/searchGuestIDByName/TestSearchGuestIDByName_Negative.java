@@ -9,6 +9,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.partyService.operations.SearchGuestIDByName;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestSearchGuestIDByName_Negative  extends BaseTest{
@@ -28,6 +29,11 @@ public class TestSearchGuestIDByName_Negative  extends BaseTest{
 		search.sendRequest();
 
 		TestReporter.logAPI(!search.getFaultString().contains("could not extract ResultSe"), search.getFaultString(), search);
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByName", true);
+		validateLogs(search, logItems);
+
 	}
 	
 }

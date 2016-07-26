@@ -7,10 +7,10 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-
 import com.disney.api.soapServices.partyService.operations.SearchGuestIDByNameAndLocator;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestSearchGuestIDByNameAndLocator_Negative  extends BaseTest{
@@ -32,6 +32,11 @@ public class TestSearchGuestIDByNameAndLocator_Negative  extends BaseTest{
 
 		validateApplicationError(search, PartyErrorCode.LAST_NAME_INVALID);
 		TestReporter.logAPI(!search.getFaultString().contains("Last Name is invalid"), search.getFaultString(), search);
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByNameAndLocator", true);
+		validateLogs(search, logItems);
+
 	}
 
 	@Test
@@ -45,5 +50,10 @@ public class TestSearchGuestIDByNameAndLocator_Negative  extends BaseTest{
 
 		validateApplicationError(search, PartyErrorCode.LOCATOR_TYPE_INVALID);
 		TestReporter.logAPI(!search.getFaultString().contains("Locator Type is not valid"), search.getFaultString(), search);
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByNameAndLocator", true);
+		validateLogs(search, logItems);
+
 	}
 }

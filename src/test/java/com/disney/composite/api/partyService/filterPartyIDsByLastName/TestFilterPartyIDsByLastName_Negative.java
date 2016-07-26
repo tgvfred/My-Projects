@@ -11,6 +11,7 @@ import com.disney.api.soapServices.partyService.operations.FilterPartyIDsByLastN
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 
 public class TestFilterPartyIDsByLastName_Negative extends BaseTest{
 	@BeforeMethod(alwaysRun = true)
@@ -24,7 +25,11 @@ public class TestFilterPartyIDsByLastName_Negative extends BaseTest{
 		filter.setLastName(BaseSoapCommands.REMOVE_NODE.toString());
 		filter.sendRequest();
 		validateApplicationError(filter, PartyErrorCode.LAST_NAME_INVALID);
-		TestReporter.logAPI(!filter.getFaultString().contains("Last Name is invalid  : Last Name is blank"), filter.getFaultString() ,filter);		
+		TestReporter.logAPI(!filter.getFaultString().contains("Last Name is invalid  : Last Name is blank"), filter.getFaultString() ,filter);	
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "filterPartyIDsByLastName", true);
+		validateLogs(filter, logItems);
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3", "negative"})
@@ -34,7 +39,7 @@ public class TestFilterPartyIDsByLastName_Negative extends BaseTest{
 		FilterPartyIDsByLastName filter = new FilterPartyIDsByLastName(environment, "Main");
 		filter.setPartyId(id);
 		filter.sendRequest();
-		TestReporter.logAPI(!filter.getFaultString().contains("Unmarshalling Error: For input string: \""+id+"\""), filter.getFaultString() ,filter);		
+		TestReporter.logAPI(!filter.getFaultString().contains("Unmarshalling Error: For input string: \""+id+"\""), filter.getFaultString() ,filter);	
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3", "negative"})
@@ -45,5 +50,9 @@ public class TestFilterPartyIDsByLastName_Negative extends BaseTest{
 		filter.sendRequest();
 		validateApplicationError(filter, PartyErrorCode.PARTY_ID_LIST_NULL_EMPTY);
 		TestReporter.logAPI(!filter.getFaultString().contains("List of Party ids is null or empty : Party List is empty"), filter.getFaultString() ,filter);
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "filterPartyIDsByLastName", true);
+		validateLogs(filter, logItems);
 	}
 }

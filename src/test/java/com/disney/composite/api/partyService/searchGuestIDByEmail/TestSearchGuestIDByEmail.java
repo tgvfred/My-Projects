@@ -10,6 +10,7 @@ import com.disney.api.soapServices.partyService.operations.SearchGuestIDByEmail;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestSearchGuestIDByEmail  extends BaseTest{
@@ -30,6 +31,10 @@ public class TestSearchGuestIDByEmail  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(Regex.match("[0-9]+", search.getPartyId()), "The Party ID ["+search.getPartyId()+"] is not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByEmail", false);
+		validateLogs(search, logItems);
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -39,6 +44,10 @@ public class TestSearchGuestIDByEmail  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() == 0, "Party IDs were found when none were expected");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByEmail", false);
+		validateLogs(search, logItems);
 	}
 	
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -49,5 +58,9 @@ public class TestSearchGuestIDByEmail  extends BaseTest{
 		
 		TestReporter.logAPI(!search.getResponseStatusCode().contains("200"), search.getFaultString(), search);
 		TestReporter.assertTrue(search.getNumberOfResponsePartyIds() == 0, "Party IDs were found when none were expected");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "searchGuestIDByEmail", false);
+		validateLogs(search, logItems);
 	}
 }
