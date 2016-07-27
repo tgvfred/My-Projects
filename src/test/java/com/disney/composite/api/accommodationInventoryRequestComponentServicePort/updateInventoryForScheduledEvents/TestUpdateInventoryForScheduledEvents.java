@@ -58,7 +58,7 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 		Recordset rsResourceId= new Recordset(db.getResultSet(Dreams.getTcReservableResourceID(rsBaseInfo.getValue("TC_ID"))));
 		String tcId = rsBaseInfo.getValue("TC_ID");
 		String assignmentOwnerId = rsBaseInfo.getValue("TC_ASGN_OWN_ID");
-		UpdateInventoryForScheduledEvents update = new UpdateInventoryForScheduledEvents("Development", "MinimalInfo");
+		UpdateInventoryForScheduledEvents update = new UpdateInventoryForScheduledEvents(environment, "MinimalInfo");
 		update.setAssignmentRequestDetailsDate(res.getServiceStartDate());
 		update.setAssignmentOwnerId(assignmentOwnerId);
 		update.setFacilityId(res.getFacilityId());
