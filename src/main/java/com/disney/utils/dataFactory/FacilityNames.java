@@ -1,4 +1,4 @@
-package com.disney.utils.dataFactory.staging;
+package com.disney.utils.dataFactory;
 
 public class FacilityNames {
 	public static Activities activities(){
