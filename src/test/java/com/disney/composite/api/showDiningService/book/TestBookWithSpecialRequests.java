@@ -48,8 +48,7 @@ public class TestBookWithSpecialRequests extends BaseTest{
 		logValidItems.addItem("TravelPlanServiceV3SEI", "create", false);
 		logValidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
 		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);
-		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);	
-		logValidItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
+		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
 		logValidItems.addItem("PackagingService", "getProducts", false);
 		logValidItems.addItem("TravelPlanServiceV3", "create", false);		
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
