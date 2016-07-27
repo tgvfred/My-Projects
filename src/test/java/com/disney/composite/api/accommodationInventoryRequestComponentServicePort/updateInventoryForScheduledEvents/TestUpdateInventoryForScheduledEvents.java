@@ -43,7 +43,7 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 		update(res);
 	}
 	
-	@Test(groups = {"api", "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
+	//@Test(groups = {"api", "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
 	public void testUpdatingWithActivityEventRes(){
 		ScheduledEventReservation res = new ActivityEventReservation(environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
