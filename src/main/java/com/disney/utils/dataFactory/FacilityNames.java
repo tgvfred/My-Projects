@@ -15,9 +15,9 @@ public class FacilityNames {
 		public final String BAY_LAKE_POOL = "Bay Lake Pool";
 		public final String BAYSIDE_MARINA = "Bayside Marina";
 		public final String BEAH_POOL	= "Beach Pool";
-		public final String BIBBIDI_BOBBIDI_BOUTIQUE_DOWNTOWN_DISNEY = "Bibbidi Bobbidi Boutique _ Downtown Disney";
-		public final String BIBBIDI_BOBBIDI_BOUTIQUE_MAGIC_KINGDOM = "Bibbidi Bobbidi Boutique _ Magic Kingdom";
-		public final String BIBBIDI_BOBBIDI_BOUTIQUE_AT_THE_DISNEYLANDrESORT = "Bibbidi Bobbidi Boutique at the Disneyland Resort";
+		public final String BIBBIDI_BOBBIDI_BOUTIQUE_DOWNTOWN_DISNEY = "Bibbidi Bobbidi Boutique - Downtown Disney";
+		public final String BIBBIDI_BOBBIDI_BOUTIQUE_MAGIC_KINGDOM = "Bibbidi Bobbidi Boutique - Magic Kingdom";
+		public final String BIBBIDI_BOBBIDI_BOUTIQUE_AT_THE_DISNEYLAND_RESORT = "Bibbidi Bobbidi Boutique at the Disneyland Resort";
 		public final String BIG_THUNDER_MOUNTAIN_SERVICE_ANIMAL_RELIEF_AREA 	= "Big Thunder Mountain Service Animal Relief Area";
 		public final String BIKE_BARN = "Bike Barn";
 		public final String CABANA_AT_DISNEYS_GRAND_CALIFORNIAN_HOTELSPA = "Cabanas at Disneys Grand Californian Hotel & Spa";
@@ -36,14 +36,14 @@ public class FacilityNames {
 		public final String DISNEYS_BLIZZARD_BEACH_WATER_PARK = "Disneys Blizzard Beach Water Park";
 		public final String DISNEYS_CONTEMPORARY_RESORT = "Disneys Contemporary Resort";
 		public final String DISNEYS_FORT_WILDERNESS_RESORT_CAMPGROUND = "Disneys Fort Wilderness Resort & Campground";
-		public final String DISNEYS_GRAND_CALIFORNIAN_HOTEL_SPA_SERVICE_ANIMAL_REFIEF_AREA = "Disneys Grand Californian Hotel & Spa Service Animal Relief Area";
+		public final String DISNEYS_GRAND_CALIFORNIAN_HOTEL_SPA_SERVICE_ANIMAL_RELIEF_AREA = "Disneys Grand Californian Hotel & Spa Service Animal Relief Area";
 		public final String DISNEYS_GRAND_FLORIDIAN_RESORT_SPA = "Disneys Grand Floridian Resort & Spa";
 		public final String DISNEYS_HOLLYWOOD_STUDIOS_SPECIAL_EVENT = "Disneys Hollywood Studios Special Event";
 		public final String DISNEYS_PARADISE_PIER_HOTEL_SERVICEANIMAL_RELIEF_AREA = "Disneys Paradise Pier Hotel Service Animal Relief Area";
 		public final String DISNEYS_TYPHOON_LAGOON_WATER_PARK = "Disneys Typhoon Lagoon Water Park";
 		public final String DOWNTOWN_DISNEY_DISTRICT_SERVICE_ANIMAL_RELIEF_AREA = "Downtown Disney District Service Animal Relief Area";
 		public final String EPCOT = "Epcot";
-		public final String E_TICKET_POOL = "E_Ticket Pool";
+		public final String E_TICKET_POOL = "E-Ticket Pool";
 		public final String FLIKS_FUN_FAIR_SERVICE_ANIMAL_RELIEF_AREA = "Fliks Fun Fair Service Animal Relief Area";
 		public final String FORT_WILDERNESS_MARINA = "Fort Wilderness Marina";
 		public final String GOOFYS_CANDY_COMPANY = "Goofys Candy Company";
@@ -71,7 +71,7 @@ public class FacilityNames {
 		public final String THE_LITTLE_MERMAIDS_ARIELS_UNDERSEA_ADVENTURE_SERVICE_ANIMAL_RELIEF_AREA = "The Little Mermaid - Ariels Undersea Adventure Service Animal Relief Area";
 		public final String THE_PIRATES_LEAGUE_AT_DISNEYlAND = "The Pirates League at Disneyland";
 		public final String THE_PIRATES_LEAGUE_AT_MAGIC_KINGDOM = "The Pirates League at Magic Kingdom";
-		public final String TRI_CIRCLE_D_RANCH = "Tri_Circle_D Ranch";
+		public final String TRI_CIRCLE_D_RANCH = "Tri-Circle-D Ranch";
 	}
 	
 	public static final class Meals{
