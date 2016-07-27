@@ -14,7 +14,7 @@ public class FacilityNames {
 		public final String BAREFOOT_BAREBIKE_WORKS = "Barefoot Bay Bike Works";
 		public final String BAY_LAKE_POOL = "Bay Lake Pool";
 		public final String BAYSIDE_MARINA = "Bayside Marina";
-		public final String BEAH_POOL	= "Beach Pool";
+		public final String BEACH_POOL	= "Beach Pool";
 		public final String BIBBIDI_BOBBIDI_BOUTIQUE_DOWNTOWN_DISNEY = "Bibbidi Bobbidi Boutique - Downtown Disney";
 		public final String BIBBIDI_BOBBIDI_BOUTIQUE_MAGIC_KINGDOM = "Bibbidi Bobbidi Boutique - Magic Kingdom";
 		public final String BIBBIDI_BOBBIDI_BOUTIQUE_AT_THE_DISNEYLAND_RESORT = "Bibbidi Bobbidi Boutique at the Disneyland Resort";
@@ -25,7 +25,7 @@ public class FacilityNames {
 		public final String CAPN_JACKS_MARINA = "Capn Jacks Marina";
 		public final String CENTRAL_HUB_SERVICE_ANIMAL_RELIEF_AREA = "Central Hub Service Animal Relief Area";
 		public final String CHAMBER_OF_COMMERCE = "Chamber of Commerce";
-		public final String CITY_DISNEY = "City Hall";
+		public final String CITY_HALL = "City Hall";
 		public final String CLUB_DISNEY = "Club Disney";
 		public final String COMMUNITY_HALL_ANIMAL_KINGDOM_LODGE_KIDANI_VILLAGE = "Community Hall - Animal Kingdom Lodge - Kidani Village";
 		public final String CUBS_DEN = "Cubs Den";
