@@ -19,10 +19,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReserva
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestSearchByGuest_Negative extends BaseTest{
-	// Defining global variables
-	protected String environment = null;
 	protected ScheduledEventReservation res = null;
-	protected HouseHold hh = null; 
 	protected String invalidNumber = "1";
 	protected String invalidString = "INVALID";
 	

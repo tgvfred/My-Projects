@@ -16,7 +16,7 @@ public class TestRetrieveCelebrations extends BaseTest{
 		TestReporter.logStep("Retrieve Celebrations");
 		RetrieveCelebrations retrieveCelebrations = new RetrieveCelebrations(environment);
 		retrieveCelebrations.sendRequest();
-		TestReporter.logAPI(!retrieveCelebrations.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveCelebrations);
+		TestReporter.logAPI(!retrieveCelebrations.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveCelebrations.getFaultString(), retrieveCelebrations);
 		
 		TestReporter.assertTrue(retrieveCelebrations.getNumberOfCelebrations() > 0, "Verify Celebrations are returned.");
 		TestReporter.assertTrue(retrieveCelebrations.getCelebrationsCodes().size() == retrieveCelebrations.getNumberOfCelebrations(), "Verify the number of Celebrations codes is ["+retrieveCelebrations.getNumberOfCelebrations()+"].");

@@ -107,7 +107,7 @@ public class TestSearchByAgency_Negative extends BaseTest{
 		TestReporter.logAPI(!search.getFaultString().contains(faultString), search.getFaultString(), search);
 		
 		LogItems logItems = new LogItems();
-		logItems.addItem("ScheduledEventsServiceIF", "search", true);	
+		logItems.addItem("ScheduledEventsServiceIF", "searchByAgency", true);	
 		validateLogs(search, logItems);
 		
 		LogItems logInvalidItems = new LogItems();	

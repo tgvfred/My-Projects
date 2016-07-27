@@ -16,7 +16,7 @@ public class TestRetrieveTaxExemptTypes extends BaseTest{
 		TestReporter.logStep("Retrieve Tax Exempt Types");
 		RetrieveTaxExemptTypes retrieveTaxExemptTypes = new RetrieveTaxExemptTypes(environment);
 		retrieveTaxExemptTypes.sendRequest();
-		TestReporter.logAPI(!retrieveTaxExemptTypes.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveTaxExemptTypes);
+		TestReporter.logAPI(!retrieveTaxExemptTypes.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveTaxExemptTypes.getFaultString(), retrieveTaxExemptTypes);
 		TestReporter.assertTrue(retrieveTaxExemptTypes.getNumberOfTaxExemptTypes() > 0, "Verify tax exempt types are returned.");
 		TestReporter.assertTrue(retrieveTaxExemptTypes.getTaxExemptTypes().size() == retrieveTaxExemptTypes.getNumberOfTaxExemptTypes(), "Verify the number of tax exempt types is ["+retrieveTaxExemptTypes.getNumberOfTaxExemptTypes()+"].");
 		reportValues("Tax Exempt Types", retrieveTaxExemptTypes.getNumberOfTaxExemptTypes(), retrieveTaxExemptTypes.getTaxExemptTypes());

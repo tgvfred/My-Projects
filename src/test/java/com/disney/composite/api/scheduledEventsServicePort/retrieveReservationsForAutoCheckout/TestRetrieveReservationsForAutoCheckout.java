@@ -46,7 +46,7 @@ public class TestRetrieveReservationsForAutoCheckout extends BaseTest{
 
 	private void sendRequestAndValidateLogs(RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout, boolean reservationsReturned){
 		retrieveReservationForAutoCheckout.sendRequest();
-		TestReporter.logAPI(!retrieveReservationForAutoCheckout.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveReservationForAutoCheckout);
+		TestReporter.logAPI(!retrieveReservationForAutoCheckout.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveReservationForAutoCheckout.getFaultString(), retrieveReservationForAutoCheckout);
 		if(reservationsReturned){
 			TestReporter.assertGreaterThanZero(retrieveReservationForAutoCheckout.getNumberOfReservations());
 

@@ -28,6 +28,7 @@ public class TestRetrieve extends BaseTest{
 		book = new Book(this.environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an activity event service reservation: " + book.getFaultString(), book);
 	}
 	
 	@AfterTest(alwaysRun=true)

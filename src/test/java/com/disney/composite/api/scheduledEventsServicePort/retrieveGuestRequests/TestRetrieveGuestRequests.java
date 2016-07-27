@@ -14,7 +14,6 @@ import com.disney.utils.dataFactory.database.LogItems;
 public class TestRetrieveGuestRequests extends BaseTest{
 	// Defining global variables
 	protected String testName = null;
-	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
@@ -25,7 +24,7 @@ public class TestRetrieveGuestRequests extends BaseTest{
 		TestReporter.logStep("Retrieve Guest Request");
 		RetrieveGuestRequests retrieveGuestRequests = new RetrieveGuestRequests(environment);
 		retrieveGuestRequests.sendRequest();
-		TestReporter.logAPI(!retrieveGuestRequests.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveGuestRequests);
+		TestReporter.logAPI(!retrieveGuestRequests.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveGuestRequests.getFaultString(), retrieveGuestRequests);
 		TestReporter.assertTrue(retrieveGuestRequests.getNumberOfGuestRequests() > 0, "Verify guest requests are returned.");
 		TestReporter.assertTrue(retrieveGuestRequests.getGuestRequestCodes().size() == retrieveGuestRequests.getNumberOfGuestRequests(), "Verify the number of guest request codes is ["+retrieveGuestRequests.getNumberOfGuestRequests()+"].");
 		reportValues("Guest Requests", retrieveGuestRequests.getNumberOfGuestRequests(), retrieveGuestRequests.getGuestRequestCodes());
