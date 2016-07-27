@@ -39,7 +39,7 @@ public class TestFulfill_Negative extends BaseTest{
 		book.setPrimaryGuestPhoneNumber(hh.primaryGuest().primaryPhone().getNumber());
 		book.setServiceStartDate(bookingDate);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking.", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TPS_ID = book.getReservationNumber();
 	}	
 	
@@ -116,7 +116,7 @@ public class TestFulfill_Negative extends BaseTest{
 		TestReporter.logAPI(!fulfill.getFaultString().contains(faultString), fulfill.getFaultString(), fulfill);
 		
 		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("SeatedEventsComponentService", "book", true);
+		logValidItems.addItem("SeatedEventsComponentService", "fulfill", true);
 		validateLogs(fulfill, logValidItems, 10000);
 		
 //		LogItems logInvalidItems = new LogItems();	

@@ -166,11 +166,8 @@ public class TestBook_Negative extends BaseTest{
 		validateLogs(book, logValidItems, 10000);
 		
 		LogItems logInvalidItems = new LogItems();	
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);
 		logInvalidItems.addItem("GuestServiceV1", "create", false);
 		logInvalidItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("TravelPlanServiceV3SEI", "create", false);
 		validateNotInLogs(book, logInvalidItems);
 	}
 }

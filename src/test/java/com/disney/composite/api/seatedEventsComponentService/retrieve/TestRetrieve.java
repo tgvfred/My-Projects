@@ -34,7 +34,7 @@ public class TestRetrieve extends BaseTest{
 		book.setPrimaryGuestPhoneNumber(hh.primaryGuest().primaryPhone().getNumber());
 		book.setServiceStartDate(bookingDate);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking.", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TPS_ID = book.getReservationNumber();
 	}
 
