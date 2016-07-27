@@ -99,11 +99,6 @@ public class TestBook extends BaseTest{
 		logItems.addItem("PartyIF", "retrieveParty", false);
 		logItems.addItem("PartyIF", "createAndRetrieveParty", false);
 		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
-		logItems.addItem("CampusServiceIF", "findAllCampuses", false);
-		logItems.addItem("CampusServiceIF", "findAllLocationsByCampus", false);
-		logItems.addItem("DateServiceIF", "retrievePostingDateByCampus", false);
-		logItems.addItem("DateServiceIF", "retrievePostingDateBySource", false);
-		logItems.addItem("AccommodationFacilityServiceSEI", "getAllFacilities", false);
 		logItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
 		logItems.addItem("PackagingService", "getProducts", false);
 		logItems.addItem("PricingService", "priceComponents", false);
@@ -113,6 +108,6 @@ public class TestBook extends BaseTest{
 			
 		}
 			
-		validateLogs(book, logItems);
+		validateLogs(book, logItems, 8000);
 	}
 }

@@ -127,7 +127,6 @@ public class TestNoShow_Negative extends BaseTest{
 		validateLogs(noShow, logItems);		
 		
 		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("ActivityServiceIF", "noShow", false);
 		logInvalidItems.addItem("PricingService", "getCancellationCharges", false);
 		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);

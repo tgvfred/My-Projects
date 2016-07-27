@@ -249,12 +249,11 @@ public class TestBook_Negative extends BaseTest{
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ActivityServiceIF", "book", true);
-		validateLogs(book, logValidItems);
+		validateLogs(book, logValidItems, 8000);
 		
 		LogItems logInvalidItems = new LogItems();
 		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
 		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);	
 		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
 		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
 		logInvalidItems.addItem("ActivityServiceIF", "retrieve", false);
@@ -262,15 +261,12 @@ public class TestBook_Negative extends BaseTest{
 		logInvalidItems.addItem("TravelPlanServiceV3SEI", "create", false);
 		logInvalidItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
 		logInvalidItems.addItem("PartyIF", "retrieveParty", false);
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);
 		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
 		logInvalidItems.addItem("CampusServiceIF", "findAllCampuses", false);
 		logInvalidItems.addItem("CampusServiceIF", "findAllLocationsByCampus", false);
 		logInvalidItems.addItem("DateServiceIF", "retrievePostingDateByCampus", false);
 		logInvalidItems.addItem("DateServiceIF", "retrievePostingDateBySource", false);
 		logInvalidItems.addItem("AccommodationFacilityServiceSEI", "getAllFacilities", false);
-		logInvalidItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
-		logInvalidItems.addItem("PackagingService", "getProducts", false);
 		logInvalidItems.addItem("PricingService", "priceComponents", false);
 		logInvalidItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		validateNotInLogs(book, logInvalidItems);

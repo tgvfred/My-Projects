@@ -56,6 +56,6 @@ public class TestCancel extends BaseTest{
 		logItems.addItem("ActivityServiceIF", "retrieve", false);
 		logItems.addItem("PackagingService", "getProducts", false);
 		logItems.addItem("PricingService", "priceComponents", false);
-		validateLogs(cancel, logItems);
+		validateLogs(cancel, logItems, 8000);
 	}
 }
