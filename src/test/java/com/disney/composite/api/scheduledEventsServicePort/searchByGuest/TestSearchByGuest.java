@@ -15,10 +15,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReserva
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestSearchByGuest extends BaseTest{
-	// Defining global variables
-	protected String environment = null;
 	protected ScheduledEventReservation res = null;
-	protected HouseHold hh = null; 
 	
 	@Override
 	@BeforeMethod(alwaysRun = true)
