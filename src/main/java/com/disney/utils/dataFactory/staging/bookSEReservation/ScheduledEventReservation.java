@@ -13,6 +13,8 @@ public interface ScheduledEventReservation{
 	public static final String ONECOMPONENTSNOADDONS = "OneComponentsNoAddOns";
 	public static final String NOCOMPONENTSNOADDONSTWOADULTS = "NoComponentsNoAddOnsTwoAdults";
 	public static final String ONECOMPONENTSNOADDONSTWOADULTS = "OneComponentsNoAddOnsTwoAdults";
+	public static final String ADDON = "DinnerShowWithAddOn";
+	public static final String SPECIALREQUESTS = "SpecialRequests";
 	
 	// Getters used to retrieve field values
 	public String getEnvironment();
