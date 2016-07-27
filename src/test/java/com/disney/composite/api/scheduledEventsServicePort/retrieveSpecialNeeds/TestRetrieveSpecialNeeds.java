@@ -16,7 +16,7 @@ public class TestRetrieveSpecialNeeds extends BaseTest{
 		TestReporter.logStep("Retrieve Special Needs");
 		RetrieveSpecialNeeds retrieveSpecialNeeds = new RetrieveSpecialNeeds(environment);
 		retrieveSpecialNeeds.sendRequest();
-		TestReporter.logAPI(!retrieveSpecialNeeds.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveSpecialNeeds);
+		TestReporter.logAPI(!retrieveSpecialNeeds.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveSpecialNeeds.getFaultString(), retrieveSpecialNeeds);
 		TestReporter.assertTrue(retrieveSpecialNeeds.getNumberOfSpecialNeeds() > 0, "Verify special events are returned.");
 		TestReporter.assertTrue(retrieveSpecialNeeds.getSpecialNeedsCodes().size() == retrieveSpecialNeeds.getNumberOfSpecialNeeds(), "Verify the number of special needs codes is ["+retrieveSpecialNeeds.getNumberOfSpecialNeeds()+"].");
 		reportValues("Special Needs", retrieveSpecialNeeds.getNumberOfSpecialNeeds(), retrieveSpecialNeeds.getSpecialNeedsCodes());

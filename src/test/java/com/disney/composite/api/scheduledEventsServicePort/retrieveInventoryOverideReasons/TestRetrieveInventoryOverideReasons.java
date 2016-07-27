@@ -14,7 +14,6 @@ import com.disney.utils.dataFactory.database.LogItems;
 public class TestRetrieveInventoryOverideReasons extends BaseTest{
 	// Defining global variables
 	protected String testName = null;
-	protected String environment = null;
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })

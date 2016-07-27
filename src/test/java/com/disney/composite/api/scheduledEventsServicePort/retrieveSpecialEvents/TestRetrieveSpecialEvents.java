@@ -16,7 +16,7 @@ public class TestRetrieveSpecialEvents extends BaseTest{
 		TestReporter.logStep("Retrieve Special Events");
 		RetrieveSpecialEvents retrieveSpecialEvents = new RetrieveSpecialEvents(environment);
 		retrieveSpecialEvents.sendRequest();
-		TestReporter.logAPI(!retrieveSpecialEvents.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveSpecialEvents);
+		TestReporter.logAPI(!retrieveSpecialEvents.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveSpecialEvents.getFaultString(), retrieveSpecialEvents);
 		TestReporter.assertTrue(retrieveSpecialEvents.getNumberOfSpecialEvents() > 0, "Verify special events are returned.");
 		TestReporter.assertTrue(retrieveSpecialEvents.getSpecialEventsCodes().size() == retrieveSpecialEvents.getNumberOfSpecialEvents(), "Verify the number of special event codes is ["+retrieveSpecialEvents.getNumberOfSpecialEvents()+"].");
 		reportValues("Special Events", retrieveSpecialEvents.getNumberOfSpecialEvents(), retrieveSpecialEvents.getSpecialEventsCodes());

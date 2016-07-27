@@ -34,8 +34,9 @@ public class TestSearchByGuest extends BaseTest{
 	@AfterMethod(alwaysRun = true)
 	public void closeSession(ITestResult test) {
 		if(res != null)
-			if(!res.getConfirmationNumber().isEmpty())
-				res.cancel();
+			if(res.getConfirmationNumber() != null)
+				if(!res.getConfirmationNumber().isEmpty())
+					res.cancel();
 	}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})

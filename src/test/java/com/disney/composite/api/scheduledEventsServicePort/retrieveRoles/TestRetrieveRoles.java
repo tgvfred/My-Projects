@@ -16,7 +16,7 @@ public class TestRetrieveRoles extends BaseTest{
 		TestReporter.logStep("Retrieve Roles");
 		RetrieveRoles retrieveRoles = new RetrieveRoles(environment);
 		retrieveRoles.sendRequest();
-		TestReporter.logAPI(!retrieveRoles.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveRoles);
+		TestReporter.logAPI(!retrieveRoles.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveRoles.getFaultString(), retrieveRoles);
 		TestReporter.assertTrue(retrieveRoles.getNumberOfRoles() > 0, "Verify roles are returned.");
 		TestReporter.assertTrue(retrieveRoles.getRoles().size() == retrieveRoles.getNumberOfRoles(), "Verify the number of roles is ["+retrieveRoles.getNumberOfRoles()+"].");
 		reportValues("Roles", retrieveRoles.getNumberOfRoles(), retrieveRoles.getRoles());
