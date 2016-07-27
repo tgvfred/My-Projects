@@ -1,6 +1,6 @@
 package com.disney.composite.api.partyService.filterPartyIDsByLastName;
 
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -10,12 +10,13 @@ import com.disney.api.soapServices.partyService.operations.CreateAndRetrievePart
 import com.disney.api.soapServices.partyService.operations.FilterPartyIDsByLastName;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestFilterPartyIDsByLastName extends BaseTest{
 	private Guest guest = new Guest();	// 
 	
-	@BeforeMethod(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
@@ -31,6 +32,10 @@ public class TestFilterPartyIDsByLastName extends BaseTest{
 		filter.sendRequest();
 		TestReporter.logAPI(!filter.getResponseStatusCode().equals("200"), "An error occurred filtering party ids by last name.", filter);
 		TestReporter.assertTrue(verifyPartyIdInResponse(filter.getResponsePartyIds(), party.getPartyid()), "Verify the party ID ["+party.getPartyid()+"] is found in the response.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "filterPartyIDsByLastName", false);
+		validateLogs(filter, logItems);
 	}
 
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -45,6 +50,10 @@ public class TestFilterPartyIDsByLastName extends BaseTest{
 		TestReporter.logAPI(!filter.getResponseStatusCode().equals("200"), "An error occurred filtering party ids by last name.", filter);
 		TestReporter.assertTrue(verifyPartyIdInResponse(filter.getResponsePartyIds(), party.getPartyid()), "Verify the party ID ["+party.getPartyid()+"] is found in the response.");
 		TestReporter.assertTrue(verifyPartyIdInResponse(filter.getResponsePartyIds(), party2.getPartyid()), "Verify the party ID ["+party2.getPartyid()+"] is found in the response.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "filterPartyIDsByLastName", false);
+		validateLogs(filter, logItems);
 	}
 
 	@Test(groups = {"api", "regression", "party", "partyV3"})
@@ -71,6 +80,10 @@ public class TestFilterPartyIDsByLastName extends BaseTest{
 		filter.sendRequest();
 		TestReporter.logAPI(!filter.getResponseStatusCode().equals("200"), "An error occurred filtering party ids by last name.", filter);
 		TestReporter.assertTrue(filter.getNumberOfResponsePartyIds() == 0, "Party IDs were found in the response when they were not expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("PartyIF", "filterPartyIDsByLastName", false);
+		validateLogs(filter, logItems);
 	}
 	
 	/**

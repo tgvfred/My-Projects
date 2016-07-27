@@ -72,23 +72,23 @@ public class BaseTest {
 	}
 	
 	protected void validateLogs(BaseSoapService soap, LogItems logItems){
-	//	validate(true, soap, logItems);
+		validate(true, soap, logItems);
 	}
 	
 	protected void validateLogs(BaseSoapService soap, LogItems logItems, int logTimeout){
 		this.logTimeout = logTimeout;
-	//	validate(true, soap, logItems);
+		validate(true, soap, logItems);
 	}
 	
 	protected void validateLogs(BaseSoapService soap, LogItems logItems, String logTimeout){
 		this.logTimeout = Integer.parseInt(logTimeout);
-	//	validate(true, soap, logItems);
+		validate(true, soap, logItems);
 	}
 	
 	
 	protected void validateNotInLogs(BaseSoapService soap, LogItems logItems){
 		logTimeout = defaultTimeout;
-	//	validate(false,soap,logItems);
+		validate(false,soap,logItems);
 	}
 	
 	protected void validateApplicationError(BaseSoapService soap, ApplicationErrorCode error){
@@ -173,7 +173,9 @@ public class BaseTest {
 									+ rs.getValue("ERROR_CODE") + " : " +rs.getValue("LOG_MSG_TXT"));							
 								}
 							}
-						}
+						}/*else if(item.isErrorExpected()){
+							throw new AutomationException("Exception was not found in [" + item.getServiceClass() +"#"+ item.getServiceOperation() + "] but was expected");
+						}*/
 					}
 					
 					//Break out of loop once Request and Response is validated

@@ -43,7 +43,7 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 		update(res);
 	}
 	
-//	@Test(groups = {"api", "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
+	@Test(groups = {"api", "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
 	public void testUpdatingWithActivityEventRes(){
 		ScheduledEventReservation res = new ActivityEventReservation(environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
@@ -52,6 +52,7 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 	
 	private UpdateInventoryForScheduledEvents update(ScheduledEventReservation res){
 
+		TestReporter.setDebugLevel(1);
 		Database db = new OracleDatabase(environment, Database.DREAMS);
 		Recordset rsBaseInfo = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(res.getConfirmationNumber()) + " AND PROD_TYP_NM = 'RESERVABLE_RESOURCE_COMPONENT'"));
 		Recordset rsResourceId= new Recordset(db.getResultSet(Dreams.getTcReservableResourceID(rsBaseInfo.getValue("TC_ID"))));
@@ -84,7 +85,8 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 		TestReporter.assertTrue(tcId.equals(update.getResponseTravelComponentId()) , "The returned Travel Component Id [" + update.getResponseTravelComponentId() + "] is expected to be equal to Travel Component ID sent in request  [" + tcId+"]" );
 		
 		
-		LogItems logItems = new LogItems();			
+		LogItems logItems = new LogItems();	
+		logItems.addItem("PartyIF", "searchGuestIDByNameAndLocator", false);		
 		//validateLogs(update, logItems);
 		return update;
 	}
