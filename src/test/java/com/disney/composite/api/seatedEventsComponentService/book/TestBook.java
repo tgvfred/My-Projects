@@ -24,7 +24,7 @@ public class TestBook extends BaseTest{
 		book.setPrimaryGuestPhoneNumber(hh.primaryGuest().primaryPhone().getNumber());
 		book.setServiceStartDate(bookingDate);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking.", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getReservationNumber()), "Verify the reservation number ["+book.getReservationNumber()+"] is numeric.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "Verify the travel plan ID ["+book.getTravelPlanId()+"] is numeric.");
 		
