@@ -2,6 +2,7 @@ package com.disney.utils.dataFactory.staging.bookSEReservation;
 
 import com.disney.AutomationException;
 import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.eventDiningService.operations.Arrived;
 import com.disney.api.soapServices.eventDiningService.operations.Book;
 import com.disney.api.soapServices.eventDiningService.operations.Cancel;
@@ -325,7 +326,9 @@ public class EventDiningReservation implements ScheduledEventReservation {
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving an event dining service reservation", retrieve);
 		this.status = retrieve.getStatus();
-		numberOfGuests = retrieve.getNumberOfGuests();
+		try{
+			numberOfGuests = retrieve.getNumberOfGuests();
+		}catch(XPathNotFoundException e){}
 		retrievedFacilityId = retrieve.getResponseFacilityId();
 		primaryGuestAge = retrieve.getPrimaryGuestAge();
 	}
