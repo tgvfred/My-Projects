@@ -27,7 +27,7 @@ public class TestSearchByAgency extends BaseTest{
 		book = new EventDiningReservation(environment);
 		book.setParty(new HouseHold(1));
 		book.addTravelAgency();
-		book.book("BookGuaranteedTS");
+		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 	
 
@@ -41,8 +41,10 @@ public class TestSearchByAgency extends BaseTest{
 	public void testSearchByAgency(){
 		TestReporter.logStep("Search By Agency");
 		SearchByAgency searchByAgency = new SearchByAgency(environment, "OnlyAgency");
+		searchByAgency.setAgencyIataNumber(book.getTravelAgencyId());
+		searchByAgency.setGuestLastName(hh.primaryGuest().getLastName());
 		searchByAgency.sendRequest();
-		TestReporter.logAPI(!searchByAgency.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", searchByAgency);
+		TestReporter.logAPI(!searchByAgency.getResponseStatusCode().equals("200"), "An error occurred during retrieval." + searchByAgency.getFaultString(), searchByAgency);
 		TestReporter.assertGreaterThanZero(searchByAgency.getNumberOfReservation());
 		
 		List<SearchByAgency.Reservation> reservations = searchByAgency.getAllReservations();

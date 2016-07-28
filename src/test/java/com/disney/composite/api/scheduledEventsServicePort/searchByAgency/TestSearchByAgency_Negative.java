@@ -26,11 +26,11 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	public void preReq_BookReservation(String environment) {
 		this.environment = environment;
 		hh = new HouseHold(1);
-		hh.sendToApi(environment);
+		//hh.sendToApi(environment);
 		book = new EventDiningReservation(environment);
 		book.setParty(hh);
 		book.addTravelAgency();
-		book.book("BookGuaranteedTS");
+		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 	
 	@AfterClass(alwaysRun=true)
@@ -48,7 +48,7 @@ public class TestSearchByAgency_Negative extends BaseTest{
 		searchByAgency.setGuestLastName(book.party().primaryGuest().getLastName());
 		searchByAgency.setReservationStatus("Booked");
 		searchByAgency.setSourceAccountingCenter(book.getSourceAccountingCenter());
-		sendRequestAndValidateLogs(searchByAgency, "No travel plan data found. : NO RESULTS FOUND", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);	
+		sendRequestAndValidateLogs(searchByAgency, "Travel Agency is invalid  : No PARTY IDs found for given Agency IATA Number", DiningErrorCode.INVALID_TRAVEL_AGENCY);	
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testMissingAgencyNumber(){
@@ -68,7 +68,7 @@ public class TestSearchByAgency_Negative extends BaseTest{
 		searchByAgency.setGuestLastName(book.party().primaryGuest().getLastName());
 		searchByAgency.setReservationStatus("Booked");
 		searchByAgency.setSourceAccountingCenter("99");
-		sendRequestAndValidateLogs(searchByAgency, "No travel plan data found. : NO RESULTS FOUND", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);	
+		sendRequestAndValidateLogs(searchByAgency, "No travel plan data found.", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);	
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidGuestName(){
@@ -104,7 +104,7 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	private void sendRequestAndValidateLogs(SearchByAgency search, String faultString, ApplicationErrorCode errorCode){
 		search.sendRequest();
 		validateApplicationError(search, errorCode);
-		TestReporter.logAPI(!search.getFaultString().contains(faultString), search.getFaultString(), search);
+		TestReporter.logAPI(!search.getFaultString().trim().contains(faultString), "Response Fault message [" +search.getFaultString() + "] matches expected fault string [" +faultString+"]", search);
 		
 		LogItems logItems = new LogItems();
 		logItems.addItem("ScheduledEventsServiceIF", "searchByAgency", true);	

@@ -50,7 +50,7 @@ public class TestSearchByVenue extends BaseTest{
 		try{search.setSourceAccountingCenter(res.getSourceAccountingCenter());}
 		catch(XPathNullNodeValueException e){search.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());}
 		search.sendRequest();
-		TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred during the search.", search);
+		TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred during the search."+ search.getFaultString(), search);
 		TestReporter.assertTrue(search.getEventReservations().getLength() > 0, "No reservations were returned for facility id ["+res.getFacilityId()+"].");
 		
 		LogItems logItems = new LogItems();
