@@ -64,12 +64,42 @@ public class TestReporter {
 	public static boolean getPrintToConsole() {
 		return printToConsole;
 	}
+	private static String getClassPath(){
+		StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+		int x = 0;
+		String filename = "";
+		String path = "";
+		for(StackTraceElement element : elements){
+			filename = element.getClassName().toString();
+			if(x == 0 || x == 1 || x == 2) {
+				x++;
+				continue;
+			}else if(!filename.contains("sun.reflect")  &&
+					!filename.contains("com.disney.utils.TestReporter") &&
+					!filename.contains("java.lang.reflect") &&
+					!filename.contains("java.lang.Thread") &&
+					!filename.contains("com.disney.composite.core.interfaces.impl") &&
+					!filename.contains("interfaces.impl.internal.ElementHandler") &&
+					!filename.contains("com.disney.test.composite") &&
+					!filename.contains("com.sun.proxy") &&
+					!filename.contains("org.testng") &&
+					!filename.contains("java.util.concurrent.ThreadPoolExecutor") &&
+					!filename.contains("com.disney.composite.core.Screenshot"))
+			{
+				path = element.getClassName()+"#"+element.getMethodName();
+				break;
+			}
+			
+		}
+		return path;
+	}
 
 	public static void logStep(String step) {
 		Reporter.log("<br/><b><font size = 4>-------------------------------------------------------------------------------</font></b><br/>");
 		Reporter.log("<br/><b><font size = 4>Step: " + step + "</font></b>");
 		Reporter.log("<br/><b><font size = 4>-------------------------------------------------------------------------------</font></b><br/>");
 		if(getPrintToConsole()) System.out.println(trimHtml(step));
+		
 	}
 	
 	public static void logVideo(String sessionId) {
@@ -86,11 +116,14 @@ public class TestReporter {
 	public static void logScenario(String scenario) {
 		Reporter.log("<br/><b><font size = 4>Data Scenario: " + scenario + "</font></b><br/>");
 		if(getPrintToConsole()) System.out.println(trimHtml(scenario));
+		logInfo("-------------------------------------------------------------------------------");
+		logInfo("Data Scenario: " + scenario);
+		logInfo("-------------------------------------------------------------------------------");
 	}
 
 	public static void log(String message) {
-		Reporter.log(new Timestamp(new java.util.Date().getTime()) + " :: " + message + "<br />");
-		if(getPrintToConsole()) System.out.println(getTimestamp() + trimHtml(message.trim()));
+		Reporter.log(getTimestamp() + getClassPath() + " > "+ message + "<br />");
+		if(getPrintToConsole()) System.out.println(getTimestamp() + getClassPath() + " > "+ trimHtml(message.trim()));
 	}
 
 	/**
@@ -99,9 +132,9 @@ public class TestReporter {
 	 */
 	public static void logDebug(String message) {
 		if(debugLevel >= DEBUG){
-			//Reporter.log(getTimestamp()replace(" ::", "") + "::DEBUG::" + message + "<br />");
+			//Reporter.log(getTimestamp().replace(" ::", "") + ":: DEBUG ::" + getClassPath() + " > "+ message + "<br />");
 			//if(getPrintToConsole()) System.out.println(getTimestamp()replace(" ::", "") + "::DEBUG:: " + trimHtml(message.trim()));
-			System.out.println(getTimestamp().replace(" ::", "") + ":: DEBUG :: " + (message.trim()));
+			System.out.println(getTimestamp().replace(" ::", "") + ":: DEBUG :: " + getClassPath() + " > "+  (message.trim()));
 		}
 	}
 
@@ -111,15 +144,15 @@ public class TestReporter {
 	 */
 	public static void logInfo(String message) {
 		if(debugLevel >= INFO){
-			//Reporter.log(new Timestamp(new java.util.Date().getTime()) + " :: " + "::INFO:: " + message + "<br />");
+			//logNoXmlTrim(getTimestamp() + ":: INFO :: "+ getClassPath() + " > " + message + "<br />");
 			//if(getPrintToConsole()) System.out.println(getTimestamp().replace(" ::", "") + "::INFO:: " + trimHtml(message.trim()));
-			System.out.println(getTimestamp().replace(" ::", "") + ":: INFO :: "  + message.trim());
+			System.out.println(getTimestamp().replace(" ::", "") + ":: INFO :: "  + getClassPath() + " > "+ message.trim());
 		}
 	}
 
 	public static void logNoHtmlTrim(String message) {
-		Reporter.log(message + "<br />");
-		if(getPrintToConsole()) System.out.println(getTimestamp() + message.trim());
+		Reporter.log(getTimestamp() + " :: " + getClassPath() + " > "+message + "<br />");
+		if(getPrintToConsole()) System.out.println(getTimestamp() +getClassPath() + " > "+ message.trim());
 	}
 	public static void logNoXmlTrim(String message) {
 		Reporter.setEscapeHtml(true);
@@ -127,12 +160,12 @@ public class TestReporter {
 		Reporter.log(message);
 		Reporter.setEscapeHtml(false);
 		Reporter.log("<br /");
-		if(getPrintToConsole()) System.out.println(getTimestamp() + message.trim());
+		if(getPrintToConsole()) System.out.println(getTimestamp() + getClassPath() + " > "+message.trim());
 	}
 
 	public static void logFailure(String message) {
-		Reporter.log(getTimestamp() + " <font size = 2 color=\"red\"><b><u> FAILURE: " + message + "</font></u></b><br />");
-		if(getPrintToConsole()) System.out.println(getTimestamp() + trimHtml(message.trim()));
+		Reporter.log(getTimestamp() + getClassPath() + " > "+" <font size = 2 color=\"red\"><b><u> FAILURE: " + message + "</font></u></b><br />");
+		if(getPrintToConsole()) System.out.println(getTimestamp() + getClassPath() + " > "+trimHtml(message.trim()));
 	}
 
 	 public static void logScreenshot(WebDriver driver, String fileLocation, String slash) {

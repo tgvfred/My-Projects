@@ -4,14 +4,18 @@ package com.disney.utils.dataFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.activityServicePort.operations.Book;
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.eventDiningService.operations.Book;
 import com.disney.api.soapServices.guestAccessControlService.operations.RetrieveDetails;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams.ProductIds;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.GenerateReservation;
 import com.disney.utils.dataFactory.staging.Reservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class sandbox {
 	String environment = "Sleepy";
@@ -182,58 +186,14 @@ public class sandbox {
 	
 	@Test
 	public void test(){
-		//TestReporter.setDebugLevel(2);
-		/*HouseHold hh = new HouseHold(1);
-		Book book = new Book("Stage", "NoComponentsNoAddOns");
-		book.setParty(hh);
-		book.setFacilityIdByFacilityName("Bay Lake Pool");
-		book.setProductId("53972");
-		book.setProductType("RecreationActivityProduct");
-		book.sendRequest();
-		System.out.println(book.getTravelPlanSegmentId());*/
-		/*System.out.println(ProductInfo.getMealProductIDByName("Naples Lunch"));
-		System.out.println(ProductInfo.getMealProductNameById("357066"));
-		System.out.println(ProductInfo.getActivityProductIDByName("Sofia the First Package"));
-		System.out.println(ProductInfo.getActivityProductNameById("17468858"));
-		*/
-		System.out.println("Meals: Product Name by Product ID");
-		System.out.println(ProductInfo.getMealProductIDByName("Naples Lunch"));
-		System.out.println();
-		System.out.println("Meals: Product ID by Product Name");
-		System.out.println(ProductInfo.getMealProductNameById("357066"));
-		System.out.println();
-		System.out.println("Meals: All Products by Facility ID");
-		ProductInfo.getAllMealProductsByFacilityId("90002066").print();
-		System.out.println("Meals: All Products by Facility Name");
-		ProductInfo.getAllMealProductsByFacilityName("Coral Reef Restaurant").print();
-		System.out.println("Meals: All Products by Cuisine Type");
-		ProductInfo.getAllMealProductsByCuisineType("German").print();
-		System.out.println("Meals: All Products by Experince Type");
-		ProductInfo.getAllMealProductsByExperinceType("Dinner Show").print();
-		System.out.println("Meals: All Products by Meal Period Type");
-		ProductInfo.getAllMealProductsByMealPeriodType("Lunch").print();
-		System.out.println("Meals: All Products by ServiceStyle");
-		ProductInfo.getAllMealProductsByServiceStyle("Table Service").print();
+		TestReporter.setDebugLevel(1);
+		HouseHold hh = new HouseHold(1);
+		ScheduledEventReservation res = new EventDiningReservation("Stage",hh);
+		res.book("TableServiceAddOn");
+		//System.out.println(book.getResponse());
+		System.out.println(res.getConfirmationNumber());
 		
-		System.out.println();
-
-		System.out.println("Activities: Product Name by Product ID");
-		System.out.println(ProductInfo.getActivityProductIDByName("Sofia the First Package"));
-		System.out.println("Activities: Product ID by Product Name");
-		System.out.println(ProductInfo.getActivityProductNameById("17468858"));
-		System.out.println();
-		System.out.println("Activities: All Products by Facility ID");
-		ProductInfo.getAllActivityProductsByFacilityId("80010385").print();
-		System.out.println("Activities: All Products by Facility Name");
-		ProductInfo.getAllActivityProductsByFacilityName("Disney's Wilderness Lodge").print();
-		System.out.println("Activities: All Products by Product Type");
-		ProductInfo.getAllActivityProductsByProductType("Recreation").print();
-		System.out.println("Activities: All Products by Product Type ID");
-		ProductInfo.getAllActivityProductsByProductTypeID("80001077").print();
-		System.out.println("Activities: All Products by Product Subtype");
-		ProductInfo.getAllActivityProductsByProductSubType("Child").print();
-		System.out.println("Activities: All Products by Product Subtype ID");
-		ProductInfo.getAllActivityProductsByProductSubTypeID("80001297").print();
+	
 	}
 	
 }
