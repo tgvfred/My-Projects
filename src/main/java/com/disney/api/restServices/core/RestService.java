@@ -4,15 +4,34 @@ package com.disney.api.restServices.core;
  * Just playing around with some different ways of using rest services with Jackson 
  */
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.apache.commons.lang.WordUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -32,7 +51,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Document;
 
+import com.disney.AutomationException;
+import com.disney.utils.Environment;
+import com.disney.utils.TestReporter;
+import com.disney.utils.XMLTools;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,12 +64,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class RestService {
-    protected RestService restService;
+    private String environment = "";
+    private String mainResource = "";
 	int statusCode = 0;
 	String responseFormat;
 	protected String responseAsString = null;
 	String userAgent; 
-	
 	protected HttpContext httpContext = new BasicHttpContext();
 	
 	protected HttpClient httpClient = null;
@@ -56,11 +80,30 @@ public class RestService {
 	//constructor
 	public RestService() {
 	    httpClient = HttpClientBuilder.create().build();
+	}//constructor
+	public RestService(String environment) {
+	    httpClient = HttpClientBuilder.create().build();
+	    setEnvironment(environment);
 	}
 	
 	/*
 	 * Encapsulation area 
 	 */
+	public String getEnvironment() {
+		return environment;
+	}
+
+	public void setEnvironment(String environment) {
+		this.environment = Environment.getEnvironmentName(environment);
+	}
+	
+	public String getMainResource() {
+		return mainResource;
+	}
+
+	public void setMainResource(String mainResource) {
+		this.mainResource = mainResource;
+	}
 	
 	public String getUserAgent(){ return this.userAgent;}
 	
@@ -73,7 +116,25 @@ public class RestService {
 	public String getResponseFormat(){ return responseFormat; }
 	
 	private void setResponseFormat(HttpResponse httpResponse){ responseFormat = ContentType.getOrDefault(httpResponse.getEntity()).getMimeType().replace("application/", "");	}
+	
+	public String getTdmURL(String resource){
+		String tdmURL = "http://fldcvpswa6204.wdw.disney.com/EnvSrvcEndPntRepository/rest/retrieveServiceEndpoint/{environment}/{resource}";
+		String responseXML = "";
+		Document responseDoc = null;
+		String  tdmResource = getMainResource().contains("REST") ? getMainResource() : "REST_" + getMainResource();
+		tdmURL = tdmURL.replace("{environment}", WordUtils.capitalize(getEnvironment()));
+		tdmURL = tdmURL.replace("{resource}", tdmResource);
 
+		try { 
+			responseXML = sendGetRequest(tdmURL);
+			responseXML = responseXML.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>","").trim();
+			responseDoc = XMLTools.makeXMLDocument(responseXML);
+		} catch (Exception e) {
+			throw new AutomationException("Error getting TDM url");
+		}
+
+		return XMLTools.getFirstNodeValueByTagName(responseDoc, "endPoint") + resource;
+	}
 	/**
 	 * Sends a GET request
 	 * 
@@ -185,7 +246,89 @@ public class RestService {
 		
 		return responseAsString;
 	}
-	
+	/**
+	 * Sends a put (create) request, pass in the parameters for the json arguments to create
+	 * 
+	 * @return 	response in string format
+	 * @throws 	ClientProtocolException
+	 * @throws 	IOException
+	 */
+/*	public String sendPutRequest() throws ClientProtocolException, IOException{
+		//HttpClient httpclient = HttpClients.createDefault();
+		HttpPut putRequest = new HttpPut(url);
+		putRequest.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
+		
+		HttpResponse httpResponse = httpClient.execute(putRequest);
+		setStatusCode(httpResponse);		
+		setResponseFormat(httpResponse);
+		
+		responseAsString = EntityUtils.toString(httpResponse.getEntity());
+		//System.out.println("String response: " + responseAsString);
+		
+		return responseAsString;
+	}*/
+	/**
+	 * Sends a put (create) request, pass in the parameters for the json arguments to create
+	 * 
+	 * @param 	URL		for the service
+	 * @param 	body	json to send
+	 * @return 	response in string format
+	 * @throws 	ClientProtocolException
+	 * @throws 	IOException
+	 *//*
+	public String sendPutRequest(String body) {
+		//HttpClient httpclient = HttpClients.createDefault();
+		HttpPut putRequest = new HttpPut(url);
+		try {
+			putRequest.setEntity( new ByteArrayEntity(body.getBytes("UTF-8")));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		HttpResponse httpResponse = null;
+		try {
+			httpResponse = httpClient.execute(putRequest);
+			responseAsString = EntityUtils.toString(httpResponse.getEntity());
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		setStatusCode(httpResponse);		
+		setResponseFormat(httpResponse);
+		
+		return responseAsString;
+	}*/
+	public HttpResponse sendPutRequest(String url, String body) {
+		//HttpClient httpclient = HttpClients.createDefault();
+		HttpPut putRequest = new HttpPut(url);
+		//checkP12();
+		try {
+			putRequest.setEntity( new ByteArrayEntity(body.getBytes("UTF-8")));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		HttpResponse httpResponse = null;
+		try {
+			httpResponse = httpClient.execute(putRequest);
+			responseAsString = EntityUtils.toString(httpResponse.getEntity());
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		setStatusCode(httpResponse);		
+		setResponseFormat(httpResponse);
+		
+		return httpResponse;
+	}
 	/**
 	 * Sends a put (create) request, pass in the parameters for the json arguments to create
 	 * 
@@ -414,4 +557,55 @@ public class RestService {
 		return mapJSONToTree(responseAsString);
 	}
 	
+	private void checkP12(){
+		KeyStore clientStore;
+		TestReporter.logDebug("Entering BaseSoapRequest#checkP12");
+		try {
+	
+			TestReporter.logDebug("Creating Keystore Instance");
+			clientStore = KeyStore.getInstance("PKCS12");
+	
+			//clientStore.load(new FileInputStream(new File(getClass().getResource("/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12").getPath())), "Disney123".toCharArray());
+	
+			TestReporter.logDebug("Retrieving WebVan Certificate");
+			InputStream is = new URL("https://github.disney.com/WDPRO-QA/lilo/raw/master/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12").openStream();
+	
+			TestReporter.logDebug("Loading WebVan Certifcate into Keystore");
+			clientStore.load(is, "Disney123".toCharArray());
+	
+	
+			TestReporter.logDebug("Unlocking WebVan cert with key");
+	        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+	        kmf.init(clientStore, "Disney123".toCharArray());
+	        KeyManager[] kms = kmf.getKeyManagers();
+	       
+	       // String path = getClass().getResource("/com/disney/certificates/webvan/cacerts").getPath();
+	        TestReporter.logDebug("Retrieving CA Cert Store");
+	        InputStream isCA = new URL("https://github.disney.com/WDPRO-QA/lilo/raw/master/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/cacerts").openStream();
+			
+	        TestReporter.logDebug("Unlocking CA Cert Store with key");
+	        KeyStore trustStore = KeyStore.getInstance("JKS");
+	        trustStore.load(isCA, "changeit".toCharArray());
+	
+	        TestReporter.logDebug("Generating Trust Manager");
+	        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+	        
+	        TestReporter.logDebug("Loading CA Cert Store into Trust Manager");
+	        tmf.init(trustStore);
+	        TrustManager[] tms = tmf.getTrustManagers();
+	
+	        TestReporter.logDebug("Generating SSL Context");
+	        SSLContext sslContext = null;
+	        sslContext = SSLContext.getInstance("TLS");
+	        
+	        TestReporter.logDebug("Loading WebVan Cert into Trust Manager with SSL Context");
+	        sslContext.init(kms, tms, new SecureRandom());
+	
+	        TestReporter.logDebug("Establishing initial SSL Socket");
+	        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | UnrecoverableKeyException | KeyManagementException e) {
+			e.printStackTrace();
+		}
+		TestReporter.logDebug("Exitting BaseSoapRequest#checkP12");
+	}
 }

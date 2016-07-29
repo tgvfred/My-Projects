@@ -1,15 +1,25 @@
 package com.disney.api.restServices.core;
 
-import java.io.IOException;
-
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.HttpResponse;
 import org.junit.Test;
+
+import com.disney.api.restServices.Rest;
 
 public class Sandbox {
 
 	@Test
-	public void test() throws ClientProtocolException, IOException{
-		RestService rest = new RestService();
-		System.out.println(rest.sendGetRequest("http://jenkins-pc.wdw-ilab.wdw.disney.com:9090/view/CompositeModernization/api/json?pretty=true"));
+	public void test() {
+
+		String json = "{"+
+					    "\"chargeAccountIdentifiers\": [{"+
+					        "\"chargeAccountId\": \"2364\""+
+					   " },"+
+					   " {"+
+					        "\"chargeAccountId\": \"2365\""+
+					   " }]"+
+					"}";
+		
+		HttpResponse httpResponse = Rest.folio("Development").chargeAccountServiceV2().chargeAccount().retrieve().sendPutRequest(json);
+		System.out.println( httpResponse.getStatusLine());
 	}
 }
