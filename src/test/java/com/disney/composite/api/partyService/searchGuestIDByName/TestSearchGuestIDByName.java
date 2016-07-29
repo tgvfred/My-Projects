@@ -15,15 +15,15 @@ import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestSearchGuestIDByName  extends BaseTest{
 	private Guest guest = new Guest();
-	@BeforeClass(alwaysRun = true)
-	@Parameters({ "environment" })
+	//@BeforeClass(alwaysRun = true)
+	//@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		guest.sendToApi(this.environment);
 		
 	}
 	
-	@Test
+	//@Test
 	public void searchGuestIDByFullName(){
 		SearchGuestIDByName search = new SearchGuestIDByName(this.environment);
 		search.setGuestFirstName(guest.getFirstName());
@@ -40,7 +40,7 @@ public class TestSearchGuestIDByName  extends BaseTest{
 	}
 	
 
-	@Test
+	//@Test
 	public void searchGuestIDByFirstName(){
 		SearchGuestIDByName search = new SearchGuestIDByName(this.environment);
 		search.setGuestFirstName(guest.getFirstName());
@@ -58,7 +58,7 @@ public class TestSearchGuestIDByName  extends BaseTest{
 	}
 
 
-	@Test
+	//@Test
 	public void searchGuestIDByLastName(){
 		SearchGuestIDByName search = new SearchGuestIDByName(this.environment);
 		search.setGuestFirstName(BaseSoapCommands.REMOVE_NODE.toString());
@@ -76,7 +76,7 @@ public class TestSearchGuestIDByName  extends BaseTest{
 	}
 	
 
-	@Test
+	//@Test
 	public void searchGuestIDByInvalidNames(){
 		SearchGuestIDByName search = new SearchGuestIDByName(this.environment);
 		search.setGuestFirstName("MissingName");

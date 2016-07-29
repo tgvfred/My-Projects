@@ -14,14 +14,14 @@ import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestSearchGuestIDByName_Negative  extends BaseTest{
 	private Guest guest = new Guest();
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
+	//@BeforeMethod(alwaysRun = true)
+	//@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		guest.sendToApi(this.environment);
 	}
 	
-	@Test
+	//@Test
 	public void missingBothFirstAndLastName(){
 		SearchGuestIDByName search = new SearchGuestIDByName(this.environment);
 		search.setGuestFirstName(BaseSoapCommands.REMOVE_NODE.toString());
