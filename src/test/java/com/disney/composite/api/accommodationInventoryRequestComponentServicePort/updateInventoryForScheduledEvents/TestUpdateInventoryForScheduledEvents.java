@@ -55,7 +55,6 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 	
 	private UpdateInventoryForScheduledEvents update(ScheduledEventReservation res){
 
-		TestReporter.setDebugLevel(1);
 		Database db = new OracleDatabase(environment, Database.DREAMS);
 		Recordset rsBaseInfo = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(res.getConfirmationNumber()) + " AND PROD_TYP_NM = 'RESERVABLE_RESOURCE_COMPONENT'"));
 		Recordset rsResourceId= new Recordset(db.getResultSet(Dreams.getTcReservableResourceID(rsBaseInfo.getValue("TC_ID"))));
