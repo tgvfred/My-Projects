@@ -101,7 +101,11 @@ public class ReverseAndPostCharges extends FolioChargeService{
 		setRequestNodeValueByXPath("/Envelope/Body/reverseAndPostCharges/chgReqs/chargeDetail/revenueRecognitionStatus", value);
 	}
 
-	public void setTransactionAccountingCenter(String value){
+	public void setSourceAccountingCenterID(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/reverseAndPostCharges/chgReqs/chargeDetail/sourceAccountingCenterID", value);
+	}
+
+	public void setTransactionAccountingCenterID(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/reverseAndPostCharges/chgReqs/chargeDetail/transactionAccountingCenter", value);
 	}
 

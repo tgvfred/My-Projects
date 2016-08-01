@@ -22,8 +22,8 @@ public class Test_PostCharges extends BaseTest{
 	@Parameters({ "environment" })
 	@Override
 	public void setup(@Optional String environment){
-		TestReporter.setDebugLevel(1);
-		this.environment = "Stage";
+		//TestReporter.setDebugLevel(1);
+		this.environment = environment;
 	}
 	@Test
 	public void testPostCharges(){
