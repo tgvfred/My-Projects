@@ -18,17 +18,11 @@ public class Sandbox {
 	@Test
 	public void test() {
 
-		String json = "{"+
-					    "\"chargeAccountIdentifiers\": [{"+
-					        "\"chargeAccountId\": \"2364\""+
-					   " },"+
-					   " {"+
-					        "\"chargeAccountId\": \"2365\""+
-					   " }]"+
-					"}";
+		String json = "{\"chargeAccountIdentifiers\": [{\"chargeAccountId\": \"2364\"},"+
+					   " {\"chargeAccountId\": \"2365\"}]}";
 		
 		RestResponse response= Rest.folio("Development").chargeAccountServiceV2().chargeAccount().retrieve().sendPutRequest(json);
-		System.out.println( response.getStatusCode());
+		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 	}
 	
 	//@Test

@@ -12,6 +12,6 @@ public class Retrieve {
 	}
 	
 	public RestResponse sendPutRequest(String json){		
-		return restService.sendPutRequest(restService.getTdmURL(resource), json);		
+		return restService.sendPutRequest(resource, json);		
 	}
 }

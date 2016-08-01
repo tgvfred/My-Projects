@@ -4,7 +4,6 @@ import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.ChargeAccount;
 
 public class ChargeAccountServiceV2 {
-	private ChargeAccount chargeAccount;
 	private RestService restService;
 	public ChargeAccountServiceV2(RestService restService){
 		this.restService = restService;

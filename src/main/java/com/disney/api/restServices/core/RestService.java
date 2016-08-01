@@ -107,16 +107,15 @@ public class RestService {
 	
 	public void setUserAgent(String userAgent){ this.userAgent = userAgent;	}	
 	
-	public String getTdmURL(String resource){
+	private String getTdmURL(String resource){
 		String tdmURL = "http://fldcvpswa6204.wdw.disney.com/EnvSrvcEndPntRepository/rest/retrieveServiceEndpoint/{environment}/{resource}";
 		String responseXML = "";
 		Document responseDoc = null;
 		String  tdmResource = getMainResource().contains("REST") ? getMainResource() : "REST_" + getMainResource();
 		tdmURL = tdmURL.replace("{environment}", WordUtils.capitalize(getEnvironment()));
 		tdmURL = tdmURL.replace("{resource}", tdmResource);
-
 		try { 
-			responseXML = sendGetRequest(tdmURL).getResponse();
+			responseXML = sendRequest(new HttpGet(tdmURL)).getResponse();
 			responseXML = responseXML.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>","").trim();
 			responseDoc = XMLTools.makeXMLDocument(responseXML);
 		} catch (Exception e) {
@@ -133,26 +132,26 @@ public class RestService {
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendGetRequest(String url) {
-	   	return sendGetRequest(url, null);
+	public RestResponse sendGetRequest(String resource) {
+	   	return sendGetRequest(resource, null);
 	}
 	
 	/**
 	 * Sends a GET request
 	 * 
-	 * @param 	URL for the service you are testing
+	 * @param 	resource for the service you are testing
 	 * @return 	response in string format
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendGetRequest(String URL, Header[] headers) {
-	    HttpUriRequest request = new HttpGet(URL);
+	public RestResponse sendGetRequest(String resource, Header[] headers) {
+	    HttpUriRequest request = new HttpGet(getTdmURL(resource));
 	    if(headers !=  null) request.setHeaders(headers);
 		return sendRequest(request);
 	}
 	
-	public RestResponse sendPostRequest(String URL, Header[] headers, List<NameValuePair> params, String json){
-		HttpPost httppost = new HttpPost(URL);
+	public RestResponse sendPostRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
+		HttpPost httppost = new HttpPost(getTdmURL(resource));
 		if(headers !=  null) httppost.setHeaders(headers);
 
 		try {
@@ -169,35 +168,35 @@ public class RestService {
 	/**
 	 * Sends a post (update) request, pass in the parameters for the json arguments to update
 	 * 
-	 * @param 	url		for the service
+	 * @param 	resource		for the service
 	 * @param 	params	arguments to update
 	 * @return 	response in string format
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendPostRequest(String url, List<NameValuePair> params){
-		return sendPostRequest(url, null, params, null);
+	public RestResponse sendPostRequest(String resource, List<NameValuePair> params){
+		return sendPostRequest(resource, null, params, null);
 	}
 	
 	/**
 	 * Sends a post (update) request, pass in the parameters for the json arguments to update
 	 * 
-	 * @param 	url		for the service
+	 * @param 	resource		for the service
 	 * @param 	params	arguments to update
 	 * @return 	response in string format
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendPostRequest(String url, Header[] headers, List<NameValuePair> params) {
-		return sendPostRequest(url, headers, params, null);
+	public RestResponse sendPostRequest(String resource, Header[] headers, List<NameValuePair> params) {
+		return sendPostRequest(resource, headers, params, null);
 	}
 	
-	public RestResponse sendPostRequest(String url,Header[] headers, String body){
-		return sendPostRequest(url, headers, null, body);
+	public RestResponse sendPostRequest(String resource,Header[] headers, String body){
+		return sendPostRequest(resource, headers, null, body);
 	}
 	
-	public RestResponse sendPutRequest(String URL, Header[] headers, List<NameValuePair> params, String json){
-		HttpPut httpPut = new HttpPut(URL);
+	public RestResponse sendPutRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
+		HttpPut httpPut = new HttpPut(getTdmURL(resource));
 		if(headers !=  null) httpPut.setHeaders(headers);
 
 		try {
@@ -211,32 +210,32 @@ public class RestService {
 		return sendRequest(httpPut);
 	}
 	
-	public RestResponse sendPutRequest(String url, String json) {
-		return sendPutRequest(url, null, null, json);
+	public RestResponse sendPutRequest(String resource, String json) {
+		return sendPutRequest(resource, null, null, json);
 	}
 	/**
 	 * Sends a put (create) request, pass in the parameters for the json arguments to create
 	 * 
-	 * @param 	URL		for the service
+	 * @param 	resource		for the service
 	 * @param 	params	arguments to update
 	 * @return 	response in string format
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendPutRequest(String url, List<NameValuePair> params) {
-		return sendPutRequest(url, null, params, null);
+	public RestResponse sendPutRequest(String resource, List<NameValuePair> params) {
+		return sendPutRequest(resource, null, params, null);
 	}
 	
-	public RestResponse sendPutRequest(String url, Header[] headers) {
-		return sendPutRequest(url, headers, null, null);
+	public RestResponse sendPutRequest(String resource, Header[] headers) {
+		return sendPutRequest(resource, headers, null, null);
 	}
 	
-	public RestResponse sendPutRequest(String url,  Header[] headers ,List<NameValuePair> params){
-		return sendPutRequest(url, headers, params, null);
+	public RestResponse sendPutRequest(String resource,  Header[] headers ,List<NameValuePair> params){
+		return sendPutRequest(resource, headers, params, null);
 	}
 	
-	public RestResponse sendPatchRequest(String URL, Header[] headers, List<NameValuePair> params, String json){
-		HttpPatch httpPatch = new HttpPatch(URL);
+	public RestResponse sendPatchRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
+		HttpPatch httpPatch = new HttpPatch(getTdmURL(resource));
 		if(headers !=  null) httpPatch.setHeaders(headers);
 
 		try {
@@ -252,27 +251,27 @@ public class RestService {
 	/**
 	 * Sends a patch (update) request, pass in the parameters for the json arguments to update
 	 * 
-	 * @param 	URL		for the service
+	 * @param 	resource		for the service
 	 * @param 	params	arguments to update
 	 * @return 	response in string format
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendPatchRequest(String URL, List<NameValuePair> params){
-	    return sendPatchRequest(URL, null, params,null);
+	public RestResponse sendPatchRequest(String resource, List<NameValuePair> params){
+	    return sendPatchRequest(resource, null, params,null);
 	}
 	
 	/**
 	 * Sends a patch (update) request, pass in the parameters for the json arguments to update
 	 * 
-	 * @param 	URL		for the service
+	 * @param 	resource		for the service
 	 * @param 	params	arguments to update
 	 * @return 	response in string format
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendPatchRequest(String URL, Header[] headers, List<NameValuePair> params) {
-		 return sendPatchRequest(URL, headers, params,null);
+	public RestResponse sendPatchRequest(String resource, Header[] headers, List<NameValuePair> params) {
+		 return sendPatchRequest(resource, headers, params,null);
 	}
 	
 	
@@ -280,20 +279,20 @@ public class RestService {
 	 * Sends a delete request.  Depends on the service if a response is returned.
 	 * If no response is returned, will return null	 * 
 	 * 
-	 * @param 	URL		for the service
+	 * @param 	resource		for the service
 	 * @return 	response in string format or null
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
 	
-	public RestResponse sendDeleteRequest(String URL,Header[] headers){
-		HttpDelete httpDelete = new HttpDelete(URL);
+	public RestResponse sendDeleteRequest(String resource,Header[] headers){
+		HttpDelete httpDelete = new HttpDelete(getTdmURL(resource));
 		if(headers !=  null) httpDelete.setHeaders(headers);
 		return sendRequest(httpDelete);
 	}
 	
-	public RestResponse sendDeleteRequest(String url ){
-		return sendDeleteRequest(url, null); 
+	public RestResponse sendDeleteRequest(String resource ){
+		return sendDeleteRequest(resource, null); 
 	}
 	/**
 	 * Sends an options request.  Options should give what the acceptable methods are for
@@ -309,8 +308,8 @@ public class RestService {
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public Header[] sendOptionsRequest(String URL ) {
-		HttpOptions httpOptions=new HttpOptions(URL);
+	public Header[] sendOptionsRequest(String resource ) {
+		HttpOptions httpOptions=new HttpOptions(getTdmURL(resource));
 		return sendRequest(httpOptions).getHeaders();
 	}
 
@@ -321,58 +320,7 @@ public class RestService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		response.setServiceURL(request.getURI().toString());
 		return response;
-	}
-	private void checkP12(){
-		KeyStore clientStore;
-		TestReporter.logDebug("Entering BaseSoapRequest#checkP12");
-		try {
-	
-			TestReporter.logDebug("Creating Keystore Instance");
-			clientStore = KeyStore.getInstance("PKCS12");
-	
-			//clientStore.load(new FileInputStream(new File(getClass().getResource("/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12").getPath())), "Disney123".toCharArray());
-	
-			TestReporter.logDebug("Retrieving WebVan Certificate");
-			InputStream is = new URL("https://github.disney.com/WDPRO-QA/lilo/raw/master/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12").openStream();
-	
-			TestReporter.logDebug("Loading WebVan Certifcate into Keystore");
-			clientStore.load(is, "Disney123".toCharArray());
-	
-	
-			TestReporter.logDebug("Unlocking WebVan cert with key");
-	        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-	        kmf.init(clientStore, "Disney123".toCharArray());
-	        KeyManager[] kms = kmf.getKeyManagers();
-	       
-	       // String path = getClass().getResource("/com/disney/certificates/webvan/cacerts").getPath();
-	        TestReporter.logDebug("Retrieving CA Cert Store");
-	        InputStream isCA = new URL("https://github.disney.com/WDPRO-QA/lilo/raw/master/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/cacerts").openStream();
-			
-	        TestReporter.logDebug("Unlocking CA Cert Store with key");
-	        KeyStore trustStore = KeyStore.getInstance("JKS");
-	        trustStore.load(isCA, "changeit".toCharArray());
-	
-	        TestReporter.logDebug("Generating Trust Manager");
-	        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-	        
-	        TestReporter.logDebug("Loading CA Cert Store into Trust Manager");
-	        tmf.init(trustStore);
-	        TrustManager[] tms = tmf.getTrustManagers();
-	
-	        TestReporter.logDebug("Generating SSL Context");
-	        SSLContext sslContext = null;
-	        sslContext = SSLContext.getInstance("TLS");
-	        
-	        TestReporter.logDebug("Loading WebVan Cert into Trust Manager with SSL Context");
-	        sslContext.init(kms, tms, new SecureRandom());
-	
-	        TestReporter.logDebug("Establishing initial SSL Socket");
-	        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException | UnrecoverableKeyException | KeyManagementException e) {
-			e.printStackTrace();
-		}
-		TestReporter.logDebug("Exitting BaseSoapRequest#checkP12");
 	}
 }

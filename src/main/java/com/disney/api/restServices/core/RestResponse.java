@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 
@@ -15,10 +16,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RestResponse {
 	private ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	HttpResponse response = null;
-	int statusCode = 0;
-	String responseFormat = "";
-	String responseAsString = "";
+	private HttpUriRequest originalRequest = null;
+	private HttpResponse response = null;
+	private int statusCode = 0;
+	private String responseFormat = "";
+	private String responseAsString = "";
+	private String serviceURL = "";
 	
 	public RestResponse(HttpResponse httpResponse){
 		response  = httpResponse;
@@ -35,6 +38,8 @@ public class RestResponse {
 	public String getResponseFormat(){ return responseFormat; }
 	public String getResponse(){ return responseAsString; }
 	public Header[] getHeaders(){ return response.getAllHeaders();}
+	public String getServiceURL(){ return serviceURL; }
+	public void setServiceURL(String url){ this.serviceURL = url; }
 
 	
 	/**
