@@ -9,6 +9,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicHeader;
 
 import com.disney.AutomationException;
+import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.dme.sales.GroundTransferReservation;
 import com.disney.api.restServices.dme.sales.GroundTransferReservationResponse;
@@ -43,7 +44,7 @@ public class DME {
 	
 	public GroundTransferReservationResponse[] sendRequest(){
 		String jsonInString ="";
-		String response = "";
+		RestResponse response = null;
 		try {
 			jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dme);
 			//System.out.println(jsonInString);
@@ -63,20 +64,12 @@ public class DME {
 	   		    ,new BasicHeader("conversationId",  Randomness.generateConversationId())
 	   		    ,new BasicHeader("requestedTimestamp", Randomness.generateCurrentXMLDatetime() + ".000-04:00")
 	   		};
-		try {
-			response=rest.sendPostRequest(getURL(), headers, jsonInString);
-			//System.out.println(response);
+		response=rest.sendPostRequest(getURL(), headers, jsonInString);
 		
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch blockthrow new AutomationException("Failed to send request", e);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new AutomationException("Failed to send request", e);
-		}
+		
 		GroundTransferReservationResponse[] dmeRes = null;
 		try {
-			dmeRes = mapper.readValue(response, GroundTransferReservationResponse[].class);
+			dmeRes = response.mapJSONToObject(GroundTransferReservationResponse[].class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			throw new AutomationException("Failed to read response:" + response, e);
