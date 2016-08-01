@@ -54,13 +54,8 @@ public class BaseTest {
 			params.add(new BasicNameValuePair("json", json));
 			params.add(new BasicNameValuePair("description", ""));
 			params.add(new BasicNameValuePair("core:apply", ""));
-			try {
-				TestReporter.logInfo(rest.sendPostRequest(buildUrl, headers, params));
-			} catch (ClientProtocolException e) {
-				TestReporter.logDebug("Failed to update Jenkins Build Name");
-			} catch (IOException e) {
-				TestReporter.logDebug("Failed to update Jenkins Build Name");
-			}
+			TestReporter.logInfo(rest.sendPostRequest(buildUrl, headers, params).getResponse());
+			
 		}
 	}
 	

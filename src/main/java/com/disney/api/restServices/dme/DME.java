@@ -63,17 +63,9 @@ public class DME {
 	   		    ,new BasicHeader("conversationId",  Randomness.generateConversationId())
 	   		    ,new BasicHeader("requestedTimestamp", Randomness.generateCurrentXMLDatetime() + ".000-04:00")
 	   		};
-		try {
-			response=rest.sendPostRequest(getURL(), headers, jsonInString);
-			//System.out.println(response);
+		response=rest.sendPostRequest(getURL(), headers, jsonInString).getResponse();
 		
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch blockthrow new AutomationException("Failed to send request", e);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new AutomationException("Failed to send request", e);
-		}
+		
 		GroundTransferReservationResponse[] dmeRes = null;
 		try {
 			dmeRes = mapper.readValue(response, GroundTransferReservationResponse[].class);

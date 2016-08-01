@@ -1,9 +1,7 @@
 package com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.retrieve;
 
-import org.apache.http.HttpResponse;
-
+import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
-import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.ChargeAccount;
 
 public class Retrieve {
 	private RestService restService;
@@ -13,7 +11,7 @@ public class Retrieve {
 		this.resource = resource + this.resource;
 	}
 	
-	public HttpResponse sendPutRequest(String json){		
+	public RestResponse sendPutRequest(String json){		
 		return restService.sendPutRequest(restService.getTdmURL(resource), json);		
 	}
 }
