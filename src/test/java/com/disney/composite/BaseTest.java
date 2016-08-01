@@ -19,6 +19,7 @@ import com.disney.api.restServices.core.RestService;
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.test.utils.Sleeper;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -130,7 +131,7 @@ public class BaseTest {
 		boolean isValid = false;
 		boolean containsRequest = false;
 		boolean containsResponse = false;
-		if(!environment.equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
 				
 			Recordset rs = getLogs(environment, soap.getConversationID());
 			
