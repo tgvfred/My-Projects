@@ -247,6 +247,10 @@ public class RestService {
 	public RestResponse sendPutRequest(String resource,  Header[] headers ,List<NameValuePair> params){
 		return sendPutRequest(resource, headers, params, null);
 	}
+
+	public RestResponse sendPutRequest(String resource,  Header[] headers ,String json){
+		return sendPutRequest(resource, headers, null, json);
+	}
 	
 	public RestResponse sendPatchRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
 		HttpPatch httpPatch = new HttpPatch(getTdmURL(resource));
