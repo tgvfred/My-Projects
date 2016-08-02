@@ -191,6 +191,20 @@ public class RestService {
 		return sendPostRequest(resource, headers, params, null);
 	}
 	
+	public RestResponse sendPostRequest(URI url, Header[] headers, List<NameValuePair> params) {
+		HttpPost httppost = new HttpPost(url.toString());
+		if(headers !=  null) httppost.setHeaders(headers);
+
+		try {
+			if(params !=  null) httppost.setEntity(new UrlEncodedFormEntity(params));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return sendRequest(httppost);
+	}
+	
 	public RestResponse sendPostRequest(String resource,Header[] headers, String body){
 		return sendPostRequest(resource, headers, null, body);
 	}

@@ -1,6 +1,10 @@
 package com.disney.composite;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +43,18 @@ public class BaseTest {
 	//	TestReporter.setDebugLevel(1);
 		TestReporter.logDebug("Checking if executed from Jenkins");
 		String buildId = System.getenv("BUILD_ID");
-		
+		URI url = null;
 		if(buildId != null && !buildId.isEmpty()){
 			TestReporter.logDebug("Is executed from Jenkins, updating build name");
 			//String buildId = System.getenv("BUILD_ID");
 			String buildUrl = System.getenv("BUILD_URL") + "configSubmit";
 			String buildEnv = System.getenv("environment");
+			try {
+				url = new URI(buildUrl);
+			} catch ( URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			RestService rest = new RestService();
 			String json = "{\"displayName\": \"#" + buildId + " - " + buildEnv + "\", \"description\": \"\", \"core:apply\": \"\"}";
@@ -55,7 +65,7 @@ public class BaseTest {
 			params.add(new BasicNameValuePair("json", json));
 			params.add(new BasicNameValuePair("description", ""));
 			params.add(new BasicNameValuePair("core:apply", ""));
-			TestReporter.logInfo(rest.sendPostRequest(buildUrl, headers, params).getResponse());
+			TestReporter.logInfo(rest.sendPostRequest(url, headers, params).getResponse());
 			
 		}
 	}
