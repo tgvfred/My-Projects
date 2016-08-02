@@ -8,8 +8,9 @@ import javax.print.attribute.standard.MediaSize.NA;
 import org.testng.Assert;
 import org.testng.Reporter;
 
-import com.disney.api.restServices.dme.DME;
-import com.disney.api.restServices.dme.sales.GroundTransferReservationResponse;
+import com.disney.api.restServices.Rest;
+import com.disney.api.restServices.sales.groundTransportation.GroundTransferReservations;
+import com.disney.api.restServices.sales.groundTransportation.objects.GroundTransferReservationsResponse;
 import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.accommodationAssignmentServicePort.operations.FindRoomForReservation;
@@ -210,7 +211,7 @@ public class ReservationDecorator implements Reservation {
 	/*
 	 * DME fields
 	 */
-	private GroundTransferReservationResponse[] dmeResponse;
+	private GroundTransferReservationsResponse[] dmeResponse;
 	
 	public ReservationDecorator() {
 		
@@ -2529,21 +2530,21 @@ public class ReservationDecorator implements Reservation {
 	
 	@Override
 	public void addRoundTripDME(){
-		DME dme = new DME(environment ,this);
+		GroundTransferReservations dme = Rest.sales(environment).groundTransferReservations(this);
 		dme.addRoundTripTransportation(getFacilityId(), "80010404", getArrivalDate(), getDepartureDate());
 		dmeResponse = dme.sendRequest();		
 	}
 	
 	@Override
 	public void addInboundDME(){
-		DME dme = new DME(environment ,this);
+		GroundTransferReservations dme =Rest.sales(environment).groundTransferReservations(this);
 		dme.addInboundTransportaion(getFacilityId(), "80010404", getArrivalDate());
 		dmeResponse = dme.sendRequest();		
 	}
 	
 	@Override
 	public void addOutboundDME(){
-		DME dme = new DME(environment ,this);
+		GroundTransferReservations dme = Rest.sales(environment).groundTransferReservations(this);
 		dme.addOutboundTransportaion(getFacilityId(), "80010404", getDepartureDate() );
 		dmeResponse = dme.sendRequest();		
 	}

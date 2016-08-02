@@ -1,4 +1,4 @@
-package com.disney.api.restServices.dme;
+package com.disney.api.restServices.sales.groundTransportation;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ import org.apache.http.message.BasicHeader;
 import com.disney.AutomationException;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
-import com.disney.api.restServices.dme.sales.GroundTransferReservation;
-import com.disney.api.restServices.dme.sales.GroundTransferReservationResponse;
+import com.disney.api.restServices.sales.groundTransportation.objects.GroundTransferReservationsRequest;
+import com.disney.api.restServices.sales.groundTransportation.objects.GroundTransferReservationsResponse;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.dataFactory.staging.Reservation;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -20,17 +20,19 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SuppressWarnings("unused")
-public class DME {
-	private List<GroundTransferReservation> dme = new ArrayList<>();
+public class GroundTransferReservations {
+	private List<GroundTransferReservationsRequest> dme = new ArrayList<>();
+	private String resource = "/v3/groundtransferreservations";
 	private ObjectMapper mapper = new ObjectMapper();
-	private RestService rest = new RestService();
+	private RestService rest = null;
 	private Reservation res;
-	private String env;
-	public DME(String environment, Reservation res){
+	
+	public GroundTransferReservations(RestService rest, Reservation res){
 		this.res = res;
-		this.env = environment;
-		dme.add(new GroundTransferReservation(res));
+		this.rest = rest;
+		dme.add(new GroundTransferReservationsRequest(res));
 	}
+	
 	public void addRoundTripTransportation(String inboundLocation, String outboundLocation, String startDate, String endDate){
 		dme.get(0).addRoundTripTransfer(res, inboundLocation, outboundLocation, startDate, endDate);	
 	}
@@ -42,7 +44,7 @@ public class DME {
 		dme.get(0).addOutboundTransfer(res, outboundLocation, inboundLocation, date);
 	}
 	
-	public GroundTransferReservationResponse[] sendRequest(){
+	public GroundTransferReservationsResponse[] sendRequest(){
 		String jsonInString ="";
 		RestResponse response = null;
 		try {
@@ -64,12 +66,12 @@ public class DME {
 	   		    ,new BasicHeader("conversationId",  Randomness.generateConversationId())
 	   		    ,new BasicHeader("requestedTimestamp", Randomness.generateCurrentXMLDatetime() + ".000-04:00")
 	   		};
-		response=rest.sendPostRequest(getURL(), headers, jsonInString);
+		response=rest.sendPostRequest(resource, headers, jsonInString);
 		
 		
-		GroundTransferReservationResponse[] dmeRes = null;
+		GroundTransferReservationsResponse[] dmeRes = null;
 		try {
-			dmeRes = response.mapJSONToObject(GroundTransferReservationResponse[].class);
+			dmeRes = response.mapJSONToObject(GroundTransferReservationsResponse[].class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			throw new AutomationException("Failed to read response:" + response, e);
@@ -84,25 +86,5 @@ public class DME {
 		}
 		
 		return dmeRes;
-	}
-	
-	private String getURL(){
-		String url = "";
-		switch (env.toLowerCase()) {
-			case "bashful":
-			case "latest": 
-				return "http://dme-latest.wdw.disney.com/sales/v3/groundtransferreservations"; 	
-			
-			case "sleepy":
-			case "stage":
-				return "http://dme-stage.wdw.disney.com/sales/v3/groundtransferreservations"; 
-
-			case "grumpy":
-			case "shadow":
-				return "http://dme-shadow.wdw.disney.com/sales/v3/groundtransferreservations"; 
-
-		default:
-			throw new AutomationException("Environment ["+ env +"] is blank or not valid");
-		}
 	}
 }

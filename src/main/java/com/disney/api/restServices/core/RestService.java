@@ -247,7 +247,10 @@ public class RestService {
 	public RestResponse sendPutRequest(String resource,  Header[] headers ,List<NameValuePair> params){
 		return sendPutRequest(resource, headers, params, null);
 	}
-	
+
+	public RestResponse sendPutRequest(String resource, Header[] headers, String json) {
+		return sendPutRequest(resource, headers, null, json);
+	}
 	public RestResponse sendPatchRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
 		HttpPatch httpPatch = new HttpPatch(getTdmURL(resource));
 		if(headers !=  null) httpPatch.setHeaders(headers);
@@ -275,6 +278,10 @@ public class RestService {
 	    return sendPatchRequest(resource, null, params,null);
 	}
 	
+	public RestResponse sendPatchRequest(String resource, List<NameValuePair> params, String json){
+	    return sendPatchRequest(resource, null, params,json);
+	}
+	
 	/**
 	 * Sends a patch (update) request, pass in the parameters for the json arguments to update
 	 * 
@@ -286,6 +293,10 @@ public class RestService {
 	 */
 	public RestResponse sendPatchRequest(String resource, Header[] headers, List<NameValuePair> params) {
 		 return sendPatchRequest(resource, headers, params,null);
+	}
+	
+	public RestResponse sendPatchRequest(String resource, Header[] headers, String json) {
+		 return sendPatchRequest(resource, headers, null, json);
 	}
 	
 	

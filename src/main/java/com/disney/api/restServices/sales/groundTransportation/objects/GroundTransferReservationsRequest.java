@@ -1,4 +1,4 @@
-package com.disney.api.restServices.dme.sales;
+package com.disney.api.restServices.sales.groundTransportation.objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import com.disney.utils.dataFactory.staging.Reservation;
 
 @SuppressWarnings("unused")
-public class GroundTransferReservation {
+public class GroundTransferReservationsRequest {
 	private Reservation res;
 	private String travelPlanId = "";
 	private String sourceOfTxn = "DME";
@@ -47,7 +47,7 @@ public class GroundTransferReservation {
 		this.endDate = res.getDepartureDate();
 		groundTransfers.get(0).addTransfer(res, "Outbound" , destinationLocationId, originalLocationId, pickupDate);
 	}
-	public GroundTransferReservation(Reservation res){
+	public GroundTransferReservationsRequest(Reservation res){
 		groundTransfers.add(new GroundTransfers(res));
 		
 	}

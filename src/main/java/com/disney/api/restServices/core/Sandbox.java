@@ -12,10 +12,13 @@ import org.junit.Test;
 
 import com.disney.api.restServices.Rest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.guestFactory.Guest;
+import com.disney.utils.dataFactory.staging.GenerateReservation;
+import com.disney.utils.dataFactory.staging.Reservation;
 
 public class Sandbox {
 
-	@Test
+	//@Test
 	public void test() {
 
 		String json = "{\"chargeAccountIdentifiers\": [{\"chargeAccountId\": \"2364\"},"+
@@ -24,7 +27,17 @@ public class Sandbox {
 		RestResponse response= Rest.folio("Development").chargeAccountServiceV2().chargeAccount().retrieve().sendPutRequest(json);
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 	}
-	
+	@Test
+	public void test3() {
+
+		Reservation res = new GenerateReservation().bookResortReservation().CONTEMPORARY("Sleepy");
+		res.setGuestInfo(new Guest());
+		res.quickBook();
+		
+		res.addRoundTripDME();
+		System.out.println(res.getTravelPlanSegmentId());
+		
+	}
 	//@Test
 	public void test2(){
 		TestReporter.logDebug("Is executed from Jenkins, updating build name");
