@@ -10,6 +10,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 
 import com.disney.AutomationException;
+import com.disney.utils.TestReporter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,7 @@ public class RestResponse {
 	private String serviceURL = "";
 	
 	public RestResponse(HttpResponse httpResponse){
+		TestReporter.logDebug("Creating RestResponse based in HTTPResponse");
 		response  = httpResponse;
 		statusCode = response.getStatusLine().getStatusCode();
 		responseFormat = ContentType.getOrDefault(response.getEntity()).getMimeType().replace("application/", "");

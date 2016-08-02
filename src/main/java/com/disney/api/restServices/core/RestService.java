@@ -77,12 +77,18 @@ public class RestService {
 	
 	//constructor
 	public RestService() {
+		TestReporter.logDebug("Initializing RestService");
+		TestReporter.logDebug("Creating Http Client instance");
 	    httpClient = HttpClientBuilder.create().build();
 	}
 	//constructor
 	public RestService(String environment) {
+		TestReporter.logDebug("Initializing RestService");
+		TestReporter.logDebug("Creating Http Client instance");
 	    httpClient = HttpClientBuilder.create().build();
-	    this.environment= environment;
+
+	    TestReporter.logDebug("Set ENVIRONMENT to [" + environment + "]");
+	    setEnvironment(environment);
 	}
 	/*
 	 * Encapsulation area 
@@ -93,6 +99,7 @@ public class RestService {
 
 	public void setEnvironment(String environment) {
 		this.environment = Environment.getEnvironmentName(environment);
+	    TestReporter.logDebug("Translating ["+environment+"] to legacy environment name if required");
 	}
 	
 	public String getMainResource() {
@@ -108,21 +115,36 @@ public class RestService {
 	public void setUserAgent(String userAgent){ this.userAgent = userAgent;	}	
 	
 	private String getTdmURL(String resource){
+		TestReporter.logDebug("Entering RestService.getTdmUrl");
 		String tdmURL = "http://fldcvpswa6204.wdw.disney.com/EnvSrvcEndPntRepository/rest/retrieveServiceEndpoint/{environment}/{resource}";
 		String responseXML = "";
 		Document responseDoc = null;
+
+	    TestReporter.logDebug("Validing Main Resource is set");
+	    if(getMainResource() == null || getMainResource().isEmpty()) throw new AutomationException("Main resource was not set. Set with restService.setMainResource(string)");
+	    
 		String  tdmResource = getMainResource().contains("REST") ? getMainResource() : "REST_" + getMainResource();
+		
+		TestReporter.logDebug("Main Resource is [" + tdmResource +"]");
 		tdmURL = tdmURL.replace("{environment}", WordUtils.capitalize(getEnvironment()));
 		tdmURL = tdmURL.replace("{resource}", tdmResource);
+		TestReporter.logInfo("TDM URL [" + tdmURL + "]");
 		try { 
+			TestReporter.logDebug("Sending request to TDM Endpoint Repo");
 			responseXML = sendRequest(new HttpGet(tdmURL)).getResponse();
+			TestReporter.logDebug("Recieved Response from TDM Endpoint Repo");
 			responseXML = responseXML.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>","").trim();
+			TestReporter.logDebug("Creating XML Document from TDM response");
 			responseDoc = XMLTools.makeXMLDocument(responseXML);
 		} catch (Exception e) {
+			TestReporter.logDebug("Failed to retrieve TDM URL");
 			throw new AutomationException("Error getting TDM url");
 		}
-
-		return XMLTools.getFirstNodeValueByTagName(responseDoc, "endPoint") + resource;
+		TestReporter.logDebug("Retrieving Endpoint from TDM response");
+		String url =XMLTools.getFirstNodeValueByTagName(responseDoc, "endPoint") + resource;
+		TestReporter.logInfo("TDM Endpoint retrieved [" + url +"]");
+		TestReporter.logDebug("Exiting RestService.getTdmUrl");
+		return url;
 	}
 	/**
 	 * Sends a GET request
@@ -145,18 +167,53 @@ public class RestService {
 	 * @throws 	IOException
 	 */
 	public RestResponse sendGetRequest(String resource, Header[] headers) {
-	    HttpUriRequest request = new HttpGet(getTdmURL(resource));
-	    if(headers !=  null) request.setHeaders(headers);
+		TestReporter.logDebug("Preparing to send GET request");
+		TestReporter.logDebug("Getting Rest endpoint from TDM");
+		String url = getTdmURL(resource);
+		TestReporter.logDebug("Creating Http GET instance with URL of ["+url+"]");
+		HttpGet request = new HttpGet(url);
+	    if(headers !=  null) {
+	    	String allHeaders = "";
+	    	for (Header header : headers){
+	    		allHeaders += "[" +header.getName() + ": " + header.getValue()+"] ";
+	    	}
+			TestReporter.logInfo("Adding headers " + allHeaders);
+	    	request.setHeaders(headers);
+	    }
 		return sendRequest(request);
 	}
 	
 	public RestResponse sendPostRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
-		HttpPost httppost = new HttpPost(getTdmURL(resource));
-		if(headers !=  null) httppost.setHeaders(headers);
+		TestReporter.logDebug("Preparing to send POST request");
+		TestReporter.logDebug("Getting Rest endpoint from TDM");
+		String url = getTdmURL(resource);
+		TestReporter.logDebug("Creating Http POST instance with URL of ["+url+"]");
+		HttpPost httppost = new HttpPost(url);
+		if(headers !=  null){
+	    	String allHeaders = "";
+	    	for (Header header : headers){
+	    		allHeaders += "[" +header.getName() + ": " + header.getValue()+"] ";
+	    	}
+			TestReporter.logInfo("Adding headers " + allHeaders);
+			httppost.setHeaders(headers);
 
+	    }
+		
 		try {
-			if(params !=  null) httppost.setEntity(new UrlEncodedFormEntity(params));
-			if(json !=  null)httppost.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
+			if(params !=  null){
+		    	String allParams= "";
+		    	for (NameValuePair param : params){
+		    		allParams += "[" +param.getName() + ": " + param.getValue()+"] ";
+		    	}
+				TestReporter.logInfo("Adding Parameters " + allParams);
+				httppost.setEntity(new UrlEncodedFormEntity(params));
+
+		    }
+			
+			if(json !=  null){
+				TestReporter.logInfo("Adding json [" + json + "]");
+				httppost.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
+			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -210,12 +267,36 @@ public class RestService {
 	}
 	
 	public RestResponse sendPutRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
-		HttpPut httpPut = new HttpPut(getTdmURL(resource));
-		if(headers !=  null) httpPut.setHeaders(headers);
+		TestReporter.logDebug("Preparing to send PUT request");
+		TestReporter.logDebug("Getting Rest endpoint from TDM");
+		String url = getTdmURL(resource);
+		TestReporter.logDebug("Creating Http PUT instance with URL of ["+url+"]");
+		HttpPut httpPut = new HttpPut(url);
+		if(headers !=  null){
+	    	String allHeaders = "";
+	    	for (Header header : headers){
+	    		allHeaders += "[" +header.getName() + ": " + header.getValue()+"] ";
+	    	}
+			TestReporter.logInfo("Adding headers " + allHeaders);
+			httpPut.setHeaders(headers);
 
+	    }
+		
 		try {
-			if(params !=  null) httpPut.setEntity(new UrlEncodedFormEntity(params));
-			if(json !=  null)httpPut.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
+			if(params !=  null){
+		    	String allParams= "";
+		    	for (NameValuePair param : params){
+		    		allParams += "[" +param.getName() + ": " + param.getValue()+"] ";
+		    	}
+				TestReporter.logInfo("Adding Parameters " + allParams);
+				httpPut.setEntity(new UrlEncodedFormEntity(params));
+
+		    }
+			
+			if(json !=  null){
+				TestReporter.logInfo("Adding json [" + json + "]");
+				httpPut.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
+			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -252,17 +333,40 @@ public class RestService {
 		return sendPutRequest(resource, headers, null, json);
 	}
 	public RestResponse sendPatchRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
-		HttpPatch httpPatch = new HttpPatch(getTdmURL(resource));
-		if(headers !=  null) httpPatch.setHeaders(headers);
+		TestReporter.logDebug("Preparing to send PATCH request");
+		TestReporter.logDebug("Getting Rest endpoint from TDM");
+		String url = getTdmURL(resource);
+		TestReporter.logDebug("Creating Http PATCH instance with URL of ["+url+"]");
+		HttpPatch httpPatch = new HttpPatch(url);
+		if(headers !=  null){
+	    	String allHeaders = "";
+	    	for (Header header : headers){
+	    		allHeaders += "[" +header.getName() + ": " + header.getValue()+"] ";
+	    	}
+			TestReporter.logInfo("Adding headers " + allHeaders);
+			httpPatch.setHeaders(headers);
 
+	    }
+		
 		try {
-			if(params !=  null) httpPatch.setEntity(new UrlEncodedFormEntity(params));
-			if(json !=  null)httpPatch.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
+			if(params !=  null){
+		    	String allParams= "";
+		    	for (NameValuePair param : params){
+		    		allParams += "[" +param.getName() + ": " + param.getValue()+"] ";
+		    	}
+				TestReporter.logInfo("Adding Parameters " + allParams);
+				httpPatch.setEntity(new UrlEncodedFormEntity(params));
+
+		    }
+			
+			if(json !=  null){
+				TestReporter.logInfo("Adding json [" + json + "]");
+				httpPatch.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
+			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return sendRequest(httpPatch);
 	}
 	/**
@@ -311,8 +415,22 @@ public class RestService {
 	 */
 	
 	public RestResponse sendDeleteRequest(String resource,Header[] headers){
-		HttpDelete httpDelete = new HttpDelete(getTdmURL(resource));
-		if(headers !=  null) httpDelete.setHeaders(headers);
+		TestReporter.logDebug("Preparing to send PATCH request");
+		TestReporter.logDebug("Getting Rest endpoint from TDM");
+		String url = getTdmURL(resource);
+		TestReporter.logDebug("Creating Http PATCH instance with URL of ["+url+"]");
+		HttpDelete httpDelete = new HttpDelete(url);
+		
+		if(headers !=  null){
+	    	String allHeaders = "";
+	    	for (Header header : headers){
+	    		allHeaders += "[" +header.getName() + ": " + header.getValue()+"] ";
+	    	}
+			TestReporter.logInfo("Adding headers " + allHeaders);
+			httpDelete.setHeaders(headers);
+
+	    }
+		
 		return sendRequest(httpDelete);
 	}
 	
@@ -341,11 +459,14 @@ public class RestService {
 	private RestResponse sendRequest(HttpUriRequest request){
 		RestResponse response = null;
 		try {
+			TestReporter.logDebug("Sending request");
 			response = new RestResponse(httpClient.execute(request));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		TestReporter.logDebug("Setting URI used on RestResponse");		
 		response.setServiceURL(request.getURI().toString());
+		TestReporter.logDebug("Returning RestResponse to calling method");
 		return response;
 	}
 }

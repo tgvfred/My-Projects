@@ -17,19 +17,20 @@ import com.disney.utils.dataFactory.staging.GenerateReservation;
 import com.disney.utils.dataFactory.staging.Reservation;
 
 public class Sandbox {
-
-	//@Test
+	
+	@Test
 	public void test() {
-
+		TestReporter.setDebugLevel(1);
 		String json = "{\"chargeAccountIdentifiers\": [{\"chargeAccountId\": \"2364\"},"+
 					   " {\"chargeAccountId\": \"2365\"}]}";
 		
 		RestResponse response= Rest.folio("Development").chargeAccountServiceV2().chargeAccount().retrieve().sendPutRequest(json);
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 	}
-	@Test
+//	@Test
 	public void test3() {
 
+		TestReporter.setDebugLevel(2);
 		Reservation res = new GenerateReservation().bookResortReservation().CONTEMPORARY("Sleepy");
 		res.setGuestInfo(new Guest());
 		res.quickBook();
