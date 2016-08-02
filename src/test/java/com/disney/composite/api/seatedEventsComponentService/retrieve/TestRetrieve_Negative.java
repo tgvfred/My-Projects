@@ -13,7 +13,7 @@ import com.disney.utils.dataFactory.database.LogItems;
 public class TestRetrieve_Negative extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "seatedEventsComponentService", "negative"})
-	public void invalidReservtionNumber(){
+	public void invalidReservationNumber(){
 		String resNumber = "11111";
 		TestReporter.logStep("Retrieve Seated Events Component Service");
 		Retrieve retrieve = new Retrieve(environment, "Main");
