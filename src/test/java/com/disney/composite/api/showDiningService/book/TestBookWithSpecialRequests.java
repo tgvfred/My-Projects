@@ -32,7 +32,7 @@ public class TestBookWithSpecialRequests extends BaseTest{
 		}catch(Exception e){}
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
-	public void testBookWithAddOns(){
+	public void testBookWithSpecialRequests(){
 		Book book = new Book(environment, ScheduledEventReservation.SPECIALREQUESTS);
 		book.setParty(hh);
 		book.setSignInLocation(BaseSoapCommands.REMOVE_NODE.toString());
