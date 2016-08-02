@@ -12,6 +12,7 @@ import org.testng.Assert;
 import org.testng.Reporter;
 
 import com.disney.AutomationException;
+import com.disney.api.soapServices.SoapException;
 import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.utils.date.SimpleDate;
 
@@ -340,7 +341,7 @@ public class TestReporter {
 			Reporter.log("<br/>");
 			
 		if(fail){
-			throw new AutomationException(message);
+			throw new SoapException(message);
 		}
 	}
 }
