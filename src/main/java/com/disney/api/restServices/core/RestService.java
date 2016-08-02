@@ -41,12 +41,14 @@ import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -54,6 +56,8 @@ import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 
 import com.disney.AutomationException;
+import com.disney.api.restServices.core.Headers.HeaderType;
+import com.disney.test.utils.Randomness;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
@@ -73,7 +77,6 @@ public class RestService {
 	protected HttpContext httpContext = new BasicHttpContext();
 	
 	protected HttpClient httpClient = null;
-	
 	
 	//constructor
 	public RestService() {
@@ -166,37 +169,27 @@ public class RestService {
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendGetRequest(String resource, Header[] headers) {
+	public RestResponse sendGetRequest(String resource, HeaderType type) {
 		TestReporter.logDebug("Preparing to send GET request");
 		TestReporter.logDebug("Getting Rest endpoint from TDM");
 		String url = getTdmURL(resource);
 		TestReporter.logDebug("Creating Http GET instance with URL of ["+url+"]");
 		HttpGet request = new HttpGet(url);
-	    if(headers !=  null) {
-	    	String allHeaders = "";
-	    	for (Header header : headers){
-	    		allHeaders += "[" +header.getName() + ": " + header.getValue()+"] ";
-	    	}
-			TestReporter.logInfo("Adding headers " + allHeaders);
-	    	request.setHeaders(headers);
+	    if(type != null) {
+	    	request.setHeaders(Headers.createHeader(type));
 	    }
 		return sendRequest(request);
 	}
 	
-	public RestResponse sendPostRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
+	public RestResponse sendPostRequest(String resource, HeaderType type, List<NameValuePair> params, String json){
 		TestReporter.logDebug("Preparing to send POST request");
 		TestReporter.logDebug("Getting Rest endpoint from TDM");
 		String url = getTdmURL(resource);
 		TestReporter.logDebug("Creating Http POST instance with URL of ["+url+"]");
 		HttpPost httppost = new HttpPost(url);
-		if(headers !=  null){
-	    	String allHeaders = "";
-	    	for (Header header : headers){
-	    		allHeaders += "[" +header.getName() + ": " + header.getValue()+"] ";
-	    	}
-			TestReporter.logInfo("Adding headers " + allHeaders);
-			httppost.setHeaders(headers);
-
+		
+		if(type != null){
+	    	httppost.setHeaders(Headers.createHeader(type));
 	    }
 		
 		try {
@@ -243,14 +236,16 @@ public class RestService {
 	 * @return 	response in string format
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
-	 */
+	 *//*
 	public RestResponse sendPostRequest(String resource, Header[] headers, List<NameValuePair> params) {
 		return sendPostRequest(resource, headers, params, null);
-	}
+	}*/
 	
-	public RestResponse sendPostRequest(URI url, Header[] headers, List<NameValuePair> params) {
+	public RestResponse sendPostRequest(URI url, HeaderType type, List<NameValuePair> params) {
 		HttpPost httppost = new HttpPost(url.toString());
-		if(headers !=  null) httppost.setHeaders(headers);
+		if(type !=  null) {
+			httppost.setHeaders(Headers.createHeader(type));
+		}
 
 		try {
 			if(params !=  null) httppost.setEntity(new UrlEncodedFormEntity(params));
@@ -262,24 +257,18 @@ public class RestService {
 		return sendRequest(httppost);
 	}
 	
-	public RestResponse sendPostRequest(String resource,Header[] headers, String body){
-		return sendPostRequest(resource, headers, null, body);
+	public RestResponse sendPostRequest(String resource, HeaderType type, String body){
+		return sendPostRequest(resource, type, null, body);
 	}
 	
-	public RestResponse sendPutRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
+	public RestResponse sendPutRequest(String resource, HeaderType type, List<NameValuePair> params, String json){
 		TestReporter.logDebug("Preparing to send PUT request");
 		TestReporter.logDebug("Getting Rest endpoint from TDM");
 		String url = getTdmURL(resource);
 		TestReporter.logDebug("Creating Http PUT instance with URL of ["+url+"]");
 		HttpPut httpPut = new HttpPut(url);
-		if(headers !=  null){
-	    	String allHeaders = "";
-	    	for (Header header : headers){
-	    		allHeaders += "[" +header.getName() + ": " + header.getValue()+"] ";
-	    	}
-			TestReporter.logInfo("Adding headers " + allHeaders);
-			httpPut.setHeaders(headers);
-
+		if(type != null){
+			httpPut.setHeaders(Headers.createHeader(type));
 	    }
 		
 		try {
@@ -305,8 +294,8 @@ public class RestService {
 		return sendRequest(httpPut);
 	}
 	
-	public RestResponse sendPutRequest(String resource, String json) {
-		return sendPutRequest(resource, null, null, json);
+	public RestResponse sendPutRequest(String resource, HeaderType type, String json) {
+		return sendPutRequest(resource, type, null, json);
 	}
 	/**
 	 * Sends a put (create) request, pass in the parameters for the json arguments to create
@@ -317,35 +306,29 @@ public class RestService {
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendPutRequest(String resource, List<NameValuePair> params) {
+	public RestResponse sendPutRequest(String resource,HeaderType type, List<NameValuePair> params) {
+		return sendPutRequest(resource, type , params, null);
+	}
+	
+	public RestResponse sendPutRequest(String resource, HeaderType type) {
+		return sendPutRequest(resource,type, null, null);
+	}
+	
+	public RestResponse sendPutRequest(String resource,  List<NameValuePair> params){
 		return sendPutRequest(resource, null, params, null);
 	}
 	
-	public RestResponse sendPutRequest(String resource, Header[] headers) {
-		return sendPutRequest(resource, headers, null, null);
+	public RestResponse sendPutRequest(String resource,  String json) {
+		return sendPutRequest(resource, null, json);
 	}
-	
-	public RestResponse sendPutRequest(String resource,  Header[] headers ,List<NameValuePair> params){
-		return sendPutRequest(resource, headers, params, null);
-	}
-
-	public RestResponse sendPutRequest(String resource, Header[] headers, String json) {
-		return sendPutRequest(resource, headers, null, json);
-	}
-	public RestResponse sendPatchRequest(String resource, Header[] headers, List<NameValuePair> params, String json){
+	public RestResponse sendPatchRequest(String resource,HeaderType type,  List<NameValuePair> params, String json){
 		TestReporter.logDebug("Preparing to send PATCH request");
 		TestReporter.logDebug("Getting Rest endpoint from TDM");
 		String url = getTdmURL(resource);
 		TestReporter.logDebug("Creating Http PATCH instance with URL of ["+url+"]");
 		HttpPatch httpPatch = new HttpPatch(url);
-		if(headers !=  null){
-	    	String allHeaders = "";
-	    	for (Header header : headers){
-	    		allHeaders += "[" +header.getName() + ": " + header.getValue()+"] ";
-	    	}
-			TestReporter.logInfo("Adding headers " + allHeaders);
-			httpPatch.setHeaders(headers);
-
+		if(type != null){
+			httpPatch.setHeaders(Headers.createHeader(type));
 	    }
 		
 		try {
@@ -378,8 +361,8 @@ public class RestService {
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendPatchRequest(String resource, List<NameValuePair> params){
-	    return sendPatchRequest(resource, null, params,null);
+	public RestResponse sendPatchRequest(String resource, HeaderType type, List<NameValuePair> params){
+	    return sendPatchRequest(resource, type, params, null);
 	}
 	
 	public RestResponse sendPatchRequest(String resource, List<NameValuePair> params, String json){
@@ -395,12 +378,12 @@ public class RestService {
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public RestResponse sendPatchRequest(String resource, Header[] headers, List<NameValuePair> params) {
-		 return sendPatchRequest(resource, headers, params,null);
+	public RestResponse sendPatchRequest(String resource,  List<NameValuePair> params) {
+		 return sendPatchRequest(resource, null, params,null);
 	}
 	
-	public RestResponse sendPatchRequest(String resource, Header[] headers, String json) {
-		 return sendPatchRequest(resource, headers, null, json);
+	public RestResponse sendPatchRequest(String resource, HeaderType type, String json) {
+		 return sendPatchRequest(resource, type, null, json);
 	}
 	
 	
@@ -414,21 +397,15 @@ public class RestService {
 	 * @throws 	IOException
 	 */
 	
-	public RestResponse sendDeleteRequest(String resource,Header[] headers){
+	public RestResponse sendDeleteRequest(String resource,HeaderType type){
 		TestReporter.logDebug("Preparing to send PATCH request");
 		TestReporter.logDebug("Getting Rest endpoint from TDM");
 		String url = getTdmURL(resource);
 		TestReporter.logDebug("Creating Http PATCH instance with URL of ["+url+"]");
 		HttpDelete httpDelete = new HttpDelete(url);
 		
-		if(headers !=  null){
-	    	String allHeaders = "";
-	    	for (Header header : headers){
-	    		allHeaders += "[" +header.getName() + ": " + header.getValue()+"] ";
-	    	}
-			TestReporter.logInfo("Adding headers " + allHeaders);
-			httpDelete.setHeaders(headers);
-
+		if(type != null){
+	    	httpDelete.setHeaders(Headers.createHeader(type));
 	    }
 		
 		return sendRequest(httpDelete);

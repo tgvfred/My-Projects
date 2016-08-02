@@ -9,6 +9,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicHeader;
 
 import com.disney.AutomationException;
+import com.disney.api.restServices.core.Headers.HeaderType;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.sales.groundTransportation.objects.GroundTransferReservationsRequest;
@@ -57,16 +58,7 @@ public class GroundTransferReservations {
 			e.printStackTrace();
 		}
 		
-		Header[] headers =  {
-	   		    new BasicHeader("Content-type", "application/json;charset=utf-8")
-	   		    ,new BasicHeader("Accept", "application/json")
-	   		    ,new BasicHeader("username", "test116.user")
-	   		    ,new BasicHeader("messageId", Randomness.generateMessageId())
-	   		    ,new BasicHeader("Connection", "keep-alive")
-	   		    ,new BasicHeader("conversationId",  Randomness.generateConversationId())
-	   		    ,new BasicHeader("requestedTimestamp", Randomness.generateCurrentXMLDatetime() + ".000-04:00")
-	   		};
-		response=rest.sendPostRequest(resource, headers, jsonInString);
+		response=rest.sendPostRequest(resource, HeaderType.BASIC_CONVO, jsonInString);
 		
 		
 		GroundTransferReservationsResponse[] dmeRes = null;
