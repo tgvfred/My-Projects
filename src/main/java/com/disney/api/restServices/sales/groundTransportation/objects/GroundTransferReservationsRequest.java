@@ -188,7 +188,7 @@ public class GroundTransferReservationsRequest {
 				private String carrierId= "27";
 				private String flightNumber= "1999";
 				private String flightCode= "DL";
-				private String flightDate= "2016-06-01T16:33:05-04:00";
+				private String flightDate= "2016-09-01T16:33:05-04:00";
 				
 				public String getCarrierId() {return carrierId;}			
 				public void setCarrierId(String carrierId) {this.carrierId = carrierId;}
