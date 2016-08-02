@@ -102,7 +102,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("ShowDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 10000);
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "it4", "s138180" })
@@ -131,7 +131,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("ShowDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 10000);
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "it4", "s138180" })
@@ -156,9 +156,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
 		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
 		logItems.addItem("ShowDiningServiceIF", "modify", false);
-		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 10000);
 	}
 	
 	private Book book(){

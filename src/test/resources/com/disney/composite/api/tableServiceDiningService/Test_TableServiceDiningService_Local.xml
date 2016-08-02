@@ -5,12 +5,6 @@
 	<test name="TableServiceDiningService">
 		<packages>
 			<package name="com.disney.composite.api.tableServiceDiningService.*"></package>
-		</packages><groups>
-				<run>
-				<include name="s138180" />
-					
-					<exclude name="dev"  />
-				</run>
-			</groups>
+		</packages>
 	</test>
 </suite>

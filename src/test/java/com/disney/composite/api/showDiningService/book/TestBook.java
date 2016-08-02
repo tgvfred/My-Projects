@@ -104,8 +104,7 @@ public class TestBook extends BaseTest{
 		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);	
 		logValidItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
-		logValidItems.addItem("PackagingService", "getProducts", false);
-		logValidItems.addItem("TravelPlanServiceV3", "create", false);		
+		logValidItems.addItem("PackagingService", "getProducts", false);	
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateLogs(book, logValidItems, 10000);
 	}
@@ -131,7 +130,6 @@ public class TestBook extends BaseTest{
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);	
 		logValidItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
 		logValidItems.addItem("PackagingService", "getProducts", false);
-		logValidItems.addItem("TravelPlanServiceV3", "create", false);		
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateLogs(book, logValidItems, 10000);
 	}
@@ -163,8 +161,7 @@ public class TestBook extends BaseTest{
 		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);	
 		logValidItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
-		logValidItems.addItem("PackagingService", "getProducts", false);
-		logValidItems.addItem("TravelPlanServiceV3", "create", false);		
+		logValidItems.addItem("PackagingService", "getProducts", false);	
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateLogs(book, logValidItems, 10000);
 	}
@@ -187,7 +184,6 @@ public class TestBook extends BaseTest{
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);	
 		logValidItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
 		logValidItems.addItem("PackagingService", "getProducts", false);
-		logValidItems.addItem("TravelPlanServiceV3", "create", false);		
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateLogs(book, logValidItems, 10000);
 	}
