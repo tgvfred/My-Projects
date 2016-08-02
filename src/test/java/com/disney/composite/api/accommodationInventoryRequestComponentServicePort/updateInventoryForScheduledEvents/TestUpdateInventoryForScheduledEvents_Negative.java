@@ -24,7 +24,9 @@ public class TestUpdateInventoryForScheduledEvents_Negative extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	ScheduledEventReservation res =null;
-	
+
+	Database db = null;
+	Database availDb = null;
 	@Override
 	@BeforeClass
 	@Parameters("environment")
@@ -33,7 +35,8 @@ public class TestUpdateInventoryForScheduledEvents_Negative extends BaseTest{
 		hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		
+		db = new OracleDatabase(environment, Database.DREAMS);
+		availDb = new OracleDatabase(environment, Database.AVAIL_SE);
 	}
 	
 	@Test(groups = {"api", "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort", "negative"})
@@ -250,11 +253,9 @@ public class TestUpdateInventoryForScheduledEvents_Negative extends BaseTest{
 	private UpdateInventoryForScheduledEvents update(){
 		
 
-		Database db = new OracleDatabase(environment, Database.DREAMS);
 		Recordset rsBaseInfo = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(res.getConfirmationNumber()) + " AND PROD_TYP_NM = 'RESERVABLE_RESOURCE_COMPONENT'"));
 		Recordset rsResourceId= new Recordset(db.getResultSet(Dreams.getTcReservableResourceID(rsBaseInfo.getValue("TC_ID"))));
 		
-		Database availDb = new OracleDatabase(environment, Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(availDb.getResultSet(AvailSE.getResourceAvailibleTimesByIdAndDate(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"), res.getServiceStartDate())));
 		if (rsInventory.getRowCount() == 0) {
 			rsInventory = new Recordset(availDb.getResultSet(AvailSE.getResourceAvailibleTimesById(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"))));
