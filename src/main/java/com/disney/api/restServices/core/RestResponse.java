@@ -34,6 +34,8 @@ public class RestResponse {
 		} catch (ParseException | IOException e) {
 			throw new AutomationException(e.getMessage(), e);
 		}
+		TestReporter.logInfo("Response Status returned [" + httpResponse.getStatusLine() +"]");
+		TestReporter.logInfo("Response returned [" + responseAsString +"]");
 	}
 	
 	public int getStatusCode(){ return statusCode; }	

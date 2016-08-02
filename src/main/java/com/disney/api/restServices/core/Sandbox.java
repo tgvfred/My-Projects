@@ -20,7 +20,7 @@ public class Sandbox {
 	
 	@Test
 	public void test() {
-		TestReporter.setDebugLevel(1);
+		TestReporter.setDebugLevel(2);
 		String json = "{\"chargeAccountIdentifiers\": [{\"chargeAccountId\": \"2364\"},"+
 					   " {\"chargeAccountId\": \"2365\"}]}";
 		
