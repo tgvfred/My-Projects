@@ -19,6 +19,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 import com.disney.AutomationException;
+import com.disney.api.restServices.core.Headers.HeaderType;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.core.BaseSoapService;
@@ -41,33 +42,35 @@ public class BaseTest {
 	@BeforeSuite
 	public void updateJenkinsBuildName(){
 	//	TestReporter.setDebugLevel(1);
-		TestReporter.logDebug("Checking if executed from Jenkins");
-		String buildId = System.getenv("BUILD_ID");
-		URI url = null;
-		if(buildId != null && !buildId.isEmpty()){
-			TestReporter.logDebug("Is executed from Jenkins, updating build name");
-			//String buildId = System.getenv("BUILD_ID");
-			String buildUrl = System.getenv("BUILD_URL") + "configSubmit";
-			String buildEnv = System.getenv("environment");
-			try {
-				url = new URI(buildUrl);
-			} catch ( URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		try{
+			TestReporter.logDebug("Checking if executed from Jenkins");
+			String buildId = System.getenv("BUILD_ID");
+			URI url = null;
+			if(buildId != null && !buildId.isEmpty()){
+				TestReporter.logDebug("Is executed from Jenkins, updating build name");
+				//String buildId = System.getenv("BUILD_ID");
+				String buildUrl = System.getenv("BUILD_URL") + "configSubmit";
+				String buildEnv = System.getenv("environment");
+				try {
+					url = new URI(buildUrl);
+				} catch ( URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				RestService rest = new RestService();
+				String json = "{\"displayName\": \"#" + buildId + " - " + buildEnv + "\", \"description\": \"\", \"core:apply\": \"\"}";
+				
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+				params.add(new BasicNameValuePair("Submit", "Save"));
+				params.add(new BasicNameValuePair("displayName", "#" + buildId + " - " + buildEnv));
+				params.add(new BasicNameValuePair("json", json));
+				params.add(new BasicNameValuePair("description", ""));
+				params.add(new BasicNameValuePair("core:apply", ""));
+				rest.sendPostRequest(url, HeaderType.JENKINS, params);
+				
 			}
-			
-			RestService rest = new RestService();
-			String json = "{\"displayName\": \"#" + buildId + " - " + buildEnv + "\", \"description\": \"\", \"core:apply\": \"\"}";
-			Header[] headers =  {new BasicHeader("Content-type", "application/x-www-form-urlencoded")};
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("Submit", "Save"));
-			params.add(new BasicNameValuePair("displayName", "#" + buildId + " - " + buildEnv));
-			params.add(new BasicNameValuePair("json", json));
-			params.add(new BasicNameValuePair("description", ""));
-			params.add(new BasicNameValuePair("core:apply", ""));
-			TestReporter.logInfo(rest.sendPostRequest(url, headers, params).getResponse());
-			
-		}
+		}catch(Exception e){}
 	}
 	
 	@BeforeMethod(alwaysRun = true)
