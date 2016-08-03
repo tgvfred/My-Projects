@@ -16,15 +16,7 @@ public class Retrieve {
 	}
 	
 	public RestResponse sendPutRequest(String json){	
-		Header[] headers =  {
-	   		    new BasicHeader("Content-type", "application/json;charset=utf-8")
-	   		    ,new BasicHeader("Accept", "application/json")
-	   		    ,new BasicHeader("username", "test116.user")
-	   		    ,new BasicHeader("messageId", Randomness.generateMessageId())
-	   		    ,new BasicHeader("Connection", "keep-alive")
-	   		    ,new BasicHeader("conversationId",  Randomness.generateConversationId())
-	   		    ,new BasicHeader("requestedTimestamp", Randomness.generateCurrentXMLDatetime() + ".000-04:00")
-	   		};
+		
 		return restService.sendPutRequest(resource, json);		
 	}
 }
