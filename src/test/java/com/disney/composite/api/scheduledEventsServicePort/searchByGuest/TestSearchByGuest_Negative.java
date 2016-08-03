@@ -126,7 +126,7 @@ public class TestSearchByGuest_Negative extends BaseTest{
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setCancellationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		search.setGuestOdsIds(invalidNumber);
+		search.setGuestOdsIds("-1");
 		sendRequestAndValidateLogs(search, "Unexpected Error occurred : searchByGuest : org.hibernate.exception.SQLGrammarException: could not extract ResultSet : org.hibernate.exception.SQLGrammarException: could not extract ResultSet; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.SQLGrammarException: could not extract ResultSet", LiloSystemErrorCode.UNEXPECTED_ERROR);
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})

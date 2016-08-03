@@ -43,62 +43,62 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidAgencyNumber(){
 		TestReporter.logStep("Invalid Agency Number");
-		SearchByAgency searchByAgency = new SearchByAgency(environment, "OnlyAgency");
-		searchByAgency.setAgencyIataNumber("99");
-		searchByAgency.setGuestLastName(book.party().primaryGuest().getLastName());
-		searchByAgency.setReservationStatus("Booked");
-		searchByAgency.setSourceAccountingCenter(book.getSourceAccountingCenter());
-		sendRequestAndValidateLogs(searchByAgency, "No travel plan data found. : NO RESULTS FOUND", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);	
+		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
+		search.setAgencyIataNumber("99");
+		search.setGuestLastName(book.party().primaryGuest().getLastName());
+		search.setReservationStatus("Booked");
+		search.setSourceAccountingCenter(book.getSourceAccountingCenter());
+		sendRequestAndValidateLogs(search, "No travel plan data found. : NO RESULTS FOUND", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);	
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testMissingAgencyNumber(){
 		TestReporter.logStep("Missing Agancy Number");
-		SearchByAgency searchByAgency = new SearchByAgency(environment, "OnlyAgency");
-		searchByAgency.setAgencyIataNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		searchByAgency.setGuestLastName(book.party().primaryGuest().getLastName());
-		searchByAgency.setReservationStatus("Booked");
-		searchByAgency.setSourceAccountingCenter(book.getSourceAccountingCenter());
-		sendRequestAndValidateLogs(searchByAgency, "Search Criteria is Invalid : INVALID SEARCH CRITERIA", DiningErrorCode.INVALID_SEARCH_CRITERIA);	
+		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
+		search.setAgencyIataNumber(BaseSoapCommands.REMOVE_NODE.toString());
+		search.setGuestLastName(book.party().primaryGuest().getLastName());
+		search.setReservationStatus("Booked");
+		search.setSourceAccountingCenter(book.getSourceAccountingCenter());
+		sendRequestAndValidateLogs(search, "Search Criteria is Invalid : INVALID SEARCH CRITERIA", DiningErrorCode.INVALID_SEARCH_CRITERIA);	
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidSourceAccountingCenter(){
 		TestReporter.logStep("Invalid Source Accounting Center");
-		SearchByAgency searchByAgency = new SearchByAgency(environment, "OnlyAgency");
-		searchByAgency.setAgencyIataNumber(book.getTravelAgencyId());
-		searchByAgency.setGuestLastName(book.party().primaryGuest().getLastName());
-		searchByAgency.setReservationStatus("Booked");
-		searchByAgency.setSourceAccountingCenter("99");
-		sendRequestAndValidateLogs(searchByAgency, "No travel plan data found.", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);	
+		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
+		search.setAgencyIataNumber(book.getTravelAgencyId());
+		search.setGuestLastName(book.party().primaryGuest().getLastName());
+		search.setReservationStatus("Booked");
+		search.setSourceAccountingCenter("99");
+		sendRequestAndValidateLogs(search, "No travel plan data found.", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);	
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidGuestName(){
 		TestReporter.logStep("Invalid Guest Name");
-		SearchByAgency searchByAgency = new SearchByAgency(environment, "OnlyAgency");
-		searchByAgency.setAgencyIataNumber(book.getTravelAgencyId());
-		searchByAgency.setGuestLastName(invalidValue);
-		searchByAgency.setReservationStatus("Booked");
-		searchByAgency.setSourceAccountingCenter(book.getSourceAccountingCenter());
-		sendRequestAndValidateLogs(searchByAgency, "No travel plan data found. : NO RESULTS FOUND", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);
+		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
+		search.setAgencyIataNumber(book.getTravelAgencyId());
+		search.setGuestLastName(invalidValue);
+		search.setReservationStatus("Booked");
+		search.setSourceAccountingCenter(book.getSourceAccountingCenter());
+		sendRequestAndValidateLogs(search, "No travel plan data found. : NO RESULTS FOUND", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidReservationStatus(){
 		TestReporter.logStep("Invalid Reservation Status");
-		SearchByAgency searchByAgency = new SearchByAgency(environment, "OnlyAgency");
-		searchByAgency.setAgencyIataNumber(book.getTravelAgencyId());
-		searchByAgency.setGuestLastName(book.party().primaryGuest().getLastName());
-		searchByAgency.setReservationStatus(invalidValue);
-		searchByAgency.setSourceAccountingCenter(book.getSourceAccountingCenter());
-		sendRequestAndValidateLogs(searchByAgency, "Unexpected Error occurred : searchByAgency : "+invalidValue, LiloSystemErrorCode.UNEXPECTED_ERROR);
+		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
+		search.setAgencyIataNumber(book.getTravelAgencyId());
+		search.setGuestLastName(book.party().primaryGuest().getLastName());
+		search.setReservationStatus(invalidValue);
+		search.setSourceAccountingCenter(book.getSourceAccountingCenter());
+		sendRequestAndValidateLogs(search, "Unexpected Error occurred : searchByAgency : "+invalidValue, LiloSystemErrorCode.UNEXPECTED_ERROR);
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testNoData(){
 		TestReporter.logStep("No Data");
-		SearchByAgency searchByAgency = new SearchByAgency(environment, "OnlyAgency");
-		searchByAgency.setAgencyIataNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		searchByAgency.setGuestLastName(BaseSoapCommands.REMOVE_NODE.toString());
-		searchByAgency.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
-		searchByAgency.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(searchByAgency, "Search Criteria is Invalid : INVALID SEARCH CRITERIA", DiningErrorCode.INVALID_SEARCH_CRITERIA);		
+		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
+		search.setAgencyIataNumber(BaseSoapCommands.REMOVE_NODE.toString());
+		search.setGuestLastName(BaseSoapCommands.REMOVE_NODE.toString());
+		search.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
+		search.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
+		sendRequestAndValidateLogs(search, "Search Criteria is Invalid : INVALID SEARCH CRITERIA", DiningErrorCode.INVALID_SEARCH_CRITERIA);		
 	}
 	
 	private void sendRequestAndValidateLogs(SearchByAgency search, String faultString, ApplicationErrorCode errorCode){

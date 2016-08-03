@@ -40,16 +40,16 @@ public class TestSearchByAgency extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testSearchByAgency(){
 		TestReporter.logStep("Search By Agency");
-		SearchByAgency searchByAgency = new SearchByAgency(environment, "OnlyAgency");
-		searchByAgency.setAgencyIataNumber("9999999998");
-		searchByAgency.setGuestLastName(BaseSoapCommands.REMOVE_NODE.toString());
-		searchByAgency.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
-		searchByAgency.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
-		searchByAgency.sendRequest();
-		TestReporter.logAPI(!searchByAgency.getResponseStatusCode().equals("200"), "An error occurred during retrieval." + searchByAgency.getFaultString(), searchByAgency);
-		TestReporter.assertGreaterThanZero(searchByAgency.getNumberOfReservation());
+		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
+		search.setAgencyIataNumber("9999999998");
+		search.setGuestLastName(BaseSoapCommands.REMOVE_NODE.toString());
+		search.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
+		search.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
+		search.sendRequest();
+		TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred during retrieval." + search.getFaultString(), search);
+		TestReporter.assertGreaterThanZero(search.getNumberOfReservation());
 		
-		List<SearchByAgency.Reservation> reservations = searchByAgency.getAllReservations();
+		List<SearchByAgency.Reservation> reservations = search.getAllReservations();
 		for(int i = 0; i < reservations.size(); i++){
 			System.out.println("Reporting reservation ["+String.valueOf(i)+"]");
 			TestReporter.logStep("Reservation "+String.valueOf(i)+": ");
@@ -77,6 +77,6 @@ public class TestSearchByAgency extends BaseTest{
 		LogItems logItems = new LogItems();
 		logItems.addItem("ScheduledEventsServiceIF", "searchByAgency", false);	
 		logItems.addItem("PartyIF", "retrieveParty", false);	
-		validateLogs(searchByAgency, logItems);
+		validateLogs(search, logItems);
 	}
 }
