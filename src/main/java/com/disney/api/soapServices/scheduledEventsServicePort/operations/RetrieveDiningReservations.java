@@ -2,6 +2,7 @@ package com.disney.api.soapServices.scheduledEventsServicePort.operations;
 
 import org.w3c.dom.NodeList;
 
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.scheduledEventsServicePort.ScheduledEventsServicePort;
 import com.disney.utils.XMLTools;
 
@@ -36,6 +37,10 @@ public class RetrieveDiningReservations extends ScheduledEventsServicePort{
 	public String getPaidInFull(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations/paidInFull");}
 	public String getDepositPaid(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations/depositPaid");}
 	public NodeList getDiningReservations(){return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveDiningReservationsResponse/diningReservations");}
+	public int getNumberOfReservations(){
+		try{return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveDiningReservationsResponse/diningReservations/facilityId").getLength();}
+		catch(XPathNotFoundException e){return 0;}
+	}
 	
 	public String getFacilityID(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/facilityId");}
 	public String getGuestDetailsAge(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/guestDetails/age");}

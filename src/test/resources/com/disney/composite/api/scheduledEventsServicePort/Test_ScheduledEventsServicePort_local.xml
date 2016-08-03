@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="SeatedEventComponentService_Suite" parallel="methods" thread-count="30">
-	<parameter name="environment" value="Stage" />
+	<parameter name="environment" value="Latest_CM" />
 	<test name="ScheduledEventsServicePort">
 		<packages>
 			<package name="com.disney.composite.api.scheduledEventsServicePort.*"></package>
