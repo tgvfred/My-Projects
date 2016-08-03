@@ -1,9 +1,9 @@
-package com.disney.api.restServices.dme.sales;
+package com.disney.api.restServices.sales.groundTransportation.objects;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroundTransferReservationResponse {
+public class GroundTransferReservationsResponse {
 	private GroundTransferReservation groundTransferReservation;
 	public void setGroundTransferReservation(GroundTransferReservation groundTransferReservation){ this.groundTransferReservation = groundTransferReservation;}
 	public GroundTransferReservation getGroundTransferReservation(){return this.groundTransferReservation;}
