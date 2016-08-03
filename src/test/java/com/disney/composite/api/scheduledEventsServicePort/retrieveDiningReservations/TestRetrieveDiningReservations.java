@@ -3,6 +3,7 @@ package com.disney.composite.api.scheduledEventsServicePort.retrieveDiningReserv
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.RetrieveDiningReservations;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
@@ -27,6 +28,19 @@ public class TestRetrieveDiningReservations extends BaseTest{
 		TestReporter.logScenario("Facility ID: " + facilityId);
 		RetrieveDiningReservations retrieve = new RetrieveDiningReservations(environment, "Main");
 		retrieve.setFacilityId(facilityId);
+		retrieve.sendRequest();
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving dining reservations. " + retrieve.getFaultString(), retrieve);
+		TestReporter.logStep("["+retrieve.getNumberOfReservations()+"] reservations were returned.");
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("ScheduledEventsServiceIF", "retrieveDiningReservations", false);		
+		validateLogs(retrieve, logItems, 10000);
+	}
+	
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
+	public void noData(){
+		RetrieveDiningReservations retrieve = new RetrieveDiningReservations(environment, "Main");
+		retrieve.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving dining reservations. " + retrieve.getFaultString(), retrieve);
 		TestReporter.logStep("["+retrieve.getNumberOfReservations()+"] reservations were returned.");
