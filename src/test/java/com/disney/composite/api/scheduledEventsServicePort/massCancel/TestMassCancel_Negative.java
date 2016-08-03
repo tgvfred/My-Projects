@@ -31,7 +31,7 @@ public class TestMassCancel_Negative extends BaseTest{
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ScheduledEventsServiceIF", "massCancel", true);
-		validateLogs(massCancel, logValidItems, 10000);
+		validateLogs(massCancel, logValidItems);
 		
 //		LogItems logInvalidItems = new LogItems();	
 //		logInvalidItems.addItem("GuestServiceV1", "create", false);
@@ -48,7 +48,7 @@ public class TestMassCancel_Negative extends BaseTest{
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ScheduledEventsServiceIF", "massCancel", true);
-		validateLogs(massCancel, logValidItems, 10000);
+		validateLogs(massCancel, logValidItems);
 		
 //		LogItems logInvalidItems = new LogItems();	
 //		logInvalidItems.addItem("GuestServiceV1", "create", false);
@@ -73,7 +73,7 @@ public class TestMassCancel_Negative extends BaseTest{
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ScheduledEventsServiceIF", "massCancel", true);
-		validateLogs(massCancel, logValidItems, 10000);
+		validateLogs(massCancel, logValidItems);
 		
 //		LogItems logInvalidItems = new LogItems();	
 //		logInvalidItems.addItem("GuestServiceV1", "create", false);
@@ -98,7 +98,7 @@ public class TestMassCancel_Negative extends BaseTest{
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ScheduledEventsServiceIF", "massCancel", true);
-		validateLogs(massCancel, logValidItems, 10000);
+		validateLogs(massCancel, logValidItems);
 		
 //		LogItems logInvalidItems = new LogItems();	
 //		logInvalidItems.addItem("GuestServiceV1", "create", false);

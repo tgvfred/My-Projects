@@ -3,11 +3,11 @@ package com.disney.composite.api.scheduledEventsServicePort.searchByAgency;
 import java.util.List;
 
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.SearchByAgency;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
@@ -26,7 +26,7 @@ public class TestSearchByAgency extends BaseTest{
 
 		book = new EventDiningReservation(environment);
 		book.setParty(new HouseHold(1));
-		book.addTravelAgency();
+		book.addTravelAgency("9999999998");
 		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 	
@@ -41,8 +41,10 @@ public class TestSearchByAgency extends BaseTest{
 	public void testSearchByAgency(){
 		TestReporter.logStep("Search By Agency");
 		SearchByAgency searchByAgency = new SearchByAgency(environment, "OnlyAgency");
-		searchByAgency.setAgencyIataNumber(book.getTravelAgencyId());
-		searchByAgency.setGuestLastName(hh.primaryGuest().getLastName());
+		searchByAgency.setAgencyIataNumber("9999999998");
+		searchByAgency.setGuestLastName(BaseSoapCommands.REMOVE_NODE.toString());
+		searchByAgency.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
+		searchByAgency.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
 		searchByAgency.sendRequest();
 		TestReporter.logAPI(!searchByAgency.getResponseStatusCode().equals("200"), "An error occurred during retrieval." + searchByAgency.getFaultString(), searchByAgency);
 		TestReporter.assertGreaterThanZero(searchByAgency.getNumberOfReservation());
@@ -50,7 +52,7 @@ public class TestSearchByAgency extends BaseTest{
 		List<SearchByAgency.Reservation> reservations = searchByAgency.getAllReservations();
 		for(int i = 0; i < reservations.size(); i++){
 			System.out.println("Reporting reservation ["+String.valueOf(i)+"]");
-			TestReporter.logStep("Reservation "+String.valueOf(0)+1+": ");
+			TestReporter.logStep("Reservation "+String.valueOf(i)+": ");
 			TestReporter.log("IATA Number: " + reservations.get(i).getAgencyIataNumber());
 			TestReporter.log("Agency Name: " + reservations.get(i).getAgencyName());
 			TestReporter.log("Cancellation Number: " + reservations.get(i).getCancellationNumber());

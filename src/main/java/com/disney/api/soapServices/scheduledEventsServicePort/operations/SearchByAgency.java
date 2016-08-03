@@ -95,7 +95,8 @@ public class SearchByAgency extends ScheduledEventsServicePort {
 			Reservation res = new Reservation();
 			res.setAgencyIataNumber(getIataNumber(String.valueOf(i)));
 			res.setAgencyName(getAgencyName(String.valueOf(i)));
-			res.setBookDate(getBookDate(String.valueOf(i)));
+			try{res.setBookDate(getBookDate(String.valueOf(i)));}
+			catch(XPathNotFoundException e){res.setBookDate("");}
 			res.setCancellationNumber(getCancellationNumber(String.valueOf(i)));
 			res.setEnterpriseProductId(getEnterpriseProductId(String.valueOf(i)));
 			res.setExtraCareRequired(getExtraCareRequired(String.valueOf(i)));

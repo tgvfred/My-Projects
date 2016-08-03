@@ -48,7 +48,7 @@ public class TestSearchByAgency_Negative extends BaseTest{
 		searchByAgency.setGuestLastName(book.party().primaryGuest().getLastName());
 		searchByAgency.setReservationStatus("Booked");
 		searchByAgency.setSourceAccountingCenter(book.getSourceAccountingCenter());
-		sendRequestAndValidateLogs(searchByAgency, "Travel Agency is invalid  : No PARTY IDs found for given Agency IATA Number", DiningErrorCode.INVALID_TRAVEL_AGENCY);	
+		sendRequestAndValidateLogs(searchByAgency, "No travel plan data found. : NO RESULTS FOUND", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);	
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testMissingAgencyNumber(){
