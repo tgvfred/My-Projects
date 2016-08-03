@@ -37,8 +37,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	@AfterClass(alwaysRun = true)
 	public void teardown() {
 		if(res != null)
-			if(!res.getConfirmationNumber().isEmpty())
-				res.cancel();
+			if(res.getConfirmationNumber() != null)
+				if(!res.getConfirmationNumber().isEmpty())
+					res.cancel();
 	}
 	
 	
