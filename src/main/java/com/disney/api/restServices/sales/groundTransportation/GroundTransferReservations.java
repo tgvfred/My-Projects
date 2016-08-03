@@ -62,9 +62,9 @@ public class GroundTransferReservations {
 		
 		
 		GroundTransferReservationsResponse[] dmeRes = null;
-		try {
+//		try {
 			dmeRes = response.mapJSONToObject(GroundTransferReservationsResponse[].class);
-		} catch (JsonParseException e) {
+/*		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			throw new AutomationException("Failed to read response:" + response.getResponse(), e);
 		} catch (JsonMappingException e) {
@@ -75,7 +75,7 @@ public class GroundTransferReservations {
 			// TODO Auto-generated catch block
 			// TODO Auto-generated catch block
 			throw new AutomationException("Failed to read response:" + response.getResponse(), e);
-		}
+		}*/
 		
 		return dmeRes;
 	}

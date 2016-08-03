@@ -56,11 +56,13 @@ import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 
 import com.disney.AutomationException;
+import com.disney.api.WebServiceException;
 import com.disney.api.restServices.core.Headers.HeaderType;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -283,7 +285,7 @@ public class RestService {
 		    }
 			
 			if(json !=  null){
-				TestReporter.logInfo("Adding json [" + json + "]");
+				TestReporter.logInfo("Adding json " + json );
 				httpPut.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
 			}
 		} catch (UnsupportedEncodingException e) {
@@ -433,6 +435,15 @@ public class RestService {
 		return sendRequest(httpOptions).getHeaders();
 	}
 
+	public String getJsonFromObject(Object request){
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request);
+		} catch (JsonProcessingException e) {
+			throw new WebServiceException("Failed to convert object to json");
+		}
+	}
+	
 	private RestResponse sendRequest(HttpUriRequest request){
 		RestResponse response = null;
 		try {
