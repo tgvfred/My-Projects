@@ -42,7 +42,7 @@ public class BaseTest {
 	@BeforeSuite
 	public void updateJenkinsBuildName(){
 	//	TestReporter.setDebugLevel(1);
-		try{
+	/*	try{
 			TestReporter.logDebug("Checking if executed from Jenkins");
 			String buildId = System.getenv("BUILD_ID");
 			URI url = null;
@@ -70,7 +70,7 @@ public class BaseTest {
 				rest.sendPostRequest(url, HeaderType.JENKINS, params);
 				
 			}
-		}catch(Exception e){}
+		}catch(Exception e){}*/
 	}
 	
 	@BeforeMethod(alwaysRun = true)
