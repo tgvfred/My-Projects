@@ -29,7 +29,7 @@ public class TestCreateParty extends BaseTest{
 		guest.sendRequest();
 	}
 	
-	@Test()
+	//@Test()
 	public void testCreateParty(){
 		party = new CreateParty(environment, "SampleCreate");
 		party.setPrimaryGuestAge(primaryGuestAge);

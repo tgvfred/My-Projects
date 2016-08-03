@@ -37,7 +37,7 @@ public class TestRetrieve {
 	 * 		- OperationName - name of the operation
 	 * 		- DataScenario - data scenario used, data sheets can contain multiple scenarios.
 	 */
-	@Test(groups={"api", "regression", "serviceClusterName", "serviceName", "operationName"})
+	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieve"})
 	public void testretrieve(){
 		String json = "{\"chargeAccountIdentifiers\": [{\"chargeAccountId\": \"2364\"},"+
 				   " {\"chargeAccountId\": \"2365\"}]}";		
