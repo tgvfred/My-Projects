@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.NodeList;
 
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.scheduledEventsComponentService.operations.AutoArrived;
 import com.disney.api.soapServices.scheduledEventsComponentService.operations.RetrieveTravelPlanSegmentsForAutoArrival;
 import com.disney.composite.BaseTest;
@@ -29,6 +30,7 @@ public class AutoCheckin extends BaseTest{
 		this.environment = environment;
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(date);
+		retrieve.setSourceAccountingCenter(sourceAccountingCenter);
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving reservations for auto arrival: " + retrieve.getFaultString(), retrieve);
 		if(reservation == null)reservations = retrieve.getAllReservationNumbers();
@@ -36,7 +38,7 @@ public class AutoCheckin extends BaseTest{
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "batch"})
-	public void autoArrived(){
+	public void testAutoArrived(){
 		reservation = reservations.item(0).getTextContent();
 		aa = new AutoArrived(environment, "Main");
 		aa.setTpsId(reservation);
@@ -56,18 +58,10 @@ public class AutoCheckin extends BaseTest{
 		logValidItems.addItem("PricingService", "priceComponents", false);
 		logValidItems.addItem("ScheduledEventsComponentServiceIF", "autoArrived", false);
 		validateLogs(aa, logValidItems, 10000);
-		
-		aa.sendRequest();
-		validateApplicationError(aa, DiningErrorCode.INVALID_TRAVEL_STATUS);
-		TestReporter.logAPI(!aa.getFaultString().contains("INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED"), aa.getFaultString() ,aa);
-
-		logValidItems = new LogItems();
-		logValidItems.addItem("ScheduledEventsServiceIF", "aa", true);
-		validateLogs(aa, logValidItems);
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "batch"}, dependsOnMethods="autoArrived")
-	public void autoArrived_InvalidReservationStatus_Arrived(){		
+	public void testAutoArrived_InvalidReservationStatus_Arrived(){		
 		aa.sendRequest();
 		validateApplicationError(aa, DiningErrorCode.INVALID_TRAVEL_STATUS);
 		TestReporter.logAPI(!aa.getFaultString().contains("INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED"), aa.getFaultString() ,aa);
@@ -78,13 +72,27 @@ public class AutoCheckin extends BaseTest{
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "batch"})
-	public void autoArrived_InvalidReservationNumber(){		
+	public void testAutoArrived_InvalidReservationNumber(){		
+		AutoArrived aa = new AutoArrived(environment, "Main");
+		aa.setTpsId("1");
 		aa.sendRequest();
-		validateApplicationError(aa, DiningErrorCode.INVALID_TRAVEL_STATUS);
-		TestReporter.logAPI(!aa.getFaultString().contains("INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED"), aa.getFaultString() ,aa);
+		validateApplicationError(aa, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION);
+		TestReporter.logAPI(!aa.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 1"), aa.getFaultString() ,aa);
 
 		logValidItems = new LogItems();
 		logValidItems.addItem("ScheduledEventsComponentServiceIF", "aa", true);
+		validateLogs(aa, logValidItems);
+	}
+	
+	@Test(groups = {"api", "regression", "dining", "batch"})
+	public void testAutoArrived_MissingTpsId(){		
+		AutoArrived aa = new AutoArrived(environment, "Main");
+		aa.setTpsId(BaseSoapCommands.REMOVE_NODE.toString());
+		aa.sendRequest();
+		TestReporter.logAPI(!aa.getFaultString().contains("INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED"), aa.getFaultString() ,aa);
+
+		logValidItems = new LogItems();
+		logValidItems.addItem("ScheduledEventsComponentServiceIF", "aa", false);
 		validateLogs(aa, logValidItems);
 	}
 }

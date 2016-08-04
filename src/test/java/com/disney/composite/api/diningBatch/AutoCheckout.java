@@ -10,6 +10,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.Checkout;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.RetrieveReservationsForAutoCheckout;
 import com.disney.composite.BaseTest;
@@ -39,7 +40,7 @@ public class AutoCheckout extends BaseTest{
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "batch"})
-	public void autoCheckout(){
+	public void testAutoCheckout(){
 		Iterator<String> it = reservations.values().iterator();
 		reservation = it.next().toString();
 		checkout = new Checkout(environment);
@@ -57,8 +58,8 @@ public class AutoCheckout extends BaseTest{
 		validateLogs(checkout, logValidItems, 10000);
 	}	
 
-	@Test(groups = {"api", "regression", "dining", "batch", "negative"}, dependsOnMethods="autoCheckout")
-	public void autoCheckout_InvalidReservationStatus_PastVisit(){
+	@Test(groups = {"api", "regression", "dining", "batch", "negative"}, dependsOnMethods="testAutoCheckout")
+	public void testAutoCheckout_InvalidReservationStatus_PastVisit(){
 		if(checkout == null) checkout = new Checkout(environment); 
 		checkout = new Checkout(environment);
 		checkout.setTravelPlanSegmentId(reservation);
@@ -78,7 +79,7 @@ public class AutoCheckout extends BaseTest{
 	}	
 
 	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
-	public void autoCheckout_InvalidReservationNumber(){
+	public void testAutoCheckout_InvalidReservationNumber(){
 		Checkout checkout = new Checkout(environment);
 		checkout.setTravelPlanSegmentId(invalidNumber);
 		checkout.sendRequest();	
@@ -93,5 +94,21 @@ public class AutoCheckout extends BaseTest{
 		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		logValidItems.addItem("PartyIF", "retrieveParty", false);
 		validateNotInLogs(checkout, logValidItems);
+	}	
+
+	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	public void testAutoCheckout_MissingTravelPlanSegmentId(){
+		Checkout checkout = new Checkout(environment);
+		checkout.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
+		checkout.sendRequest();	
+		TestReporter.logAPI(!checkout.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0"), checkout.getFaultString() ,checkout);
+	}
+	
+	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	public void testAutoCheckout_MissingCheckoutRequestNode(){
+		Checkout checkout = new Checkout(environment);
+		checkout.setRequestNodeValueByXPath("/Envelope/Body/checkout/checkoutRequest", BaseSoapCommands.REMOVE_NODE.toString());
+		checkout.sendRequest();	
+		TestReporter.logAPI(!checkout.getFaultString().contains("Unexpected Error occurred : checkout : java.lang.NullPointerException"), checkout.getFaultString() ,checkout);
 	}
 }
