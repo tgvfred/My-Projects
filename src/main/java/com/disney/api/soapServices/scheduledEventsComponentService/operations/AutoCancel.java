@@ -54,9 +54,4 @@ public class AutoCancel extends ScheduledEventsComponentService{
 		int column = resultSet.getColumnIndex("TCG");
 		return resultSet.getValue(column, 1);
 	}
-
-	@Test
-	public void test() {
-		
-	}
 }

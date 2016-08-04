@@ -4,16 +4,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
+import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.Checkout;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.RetrieveReservationsForAutoCheckout;
 import com.disney.composite.BaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -65,7 +68,6 @@ public class AutoCheckout extends BaseTest{
 		checkout.setTravelPlanSegmentId(reservation);
 		checkout.sendRequest();	
 		validateApplicationError(checkout, DiningErrorCode.INVALID_TRAVEL_STATUS);
-//		TestReporter.logAPI(!checkout.getFaultString().contains("INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED"), checkout.getFaultString() ,checkout);
 		TestReporter.logAPI(!checkout.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO PAST VISIT!"), checkout.getFaultString() ,checkout);
 
 		logValidItems = new LogItems();
@@ -110,5 +112,50 @@ public class AutoCheckout extends BaseTest{
 		checkout.setRequestNodeValueByXPath("/Envelope/Body/checkout/checkoutRequest", BaseSoapCommands.REMOVE_NODE.toString());
 		checkout.sendRequest();	
 		TestReporter.logAPI(!checkout.getFaultString().contains("Unexpected Error occurred : checkout : java.lang.NullPointerException"), checkout.getFaultString() ,checkout);
+	}
+	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	public void testAutoCheckout_MissingProcessDate(){
+		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
+			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
+		TestReporter.logStep("Retrieve Reservations for Auto Checkout");
+		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
+		retrieveReservationForAutoCheckout.setProcessDate(BaseSoapCommands.REMOVE_NODE.toString());
+		retrieveReservationForAutoCheckout.sendRequest();
+		validateApplicationError(retrieveReservationForAutoCheckout, LiloSystemErrorCode.UNEXPECTED_ERROR);
+		TestReporter.logAPI(!retrieveReservationForAutoCheckout.getFaultString().contains("Unexpected Error occurred : retrieveReservationsForAutoCheckout : java.lang.NullPointerException"), retrieveReservationForAutoCheckout.getFaultString(), retrieveReservationForAutoCheckout);
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("ScheduledEventsServiceIF", "retrieveReservationsForAutoCheckout", true);	
+		validateLogs(retrieveReservationForAutoCheckout, logItems);
+	}
+	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	public void testAutoCheckout_InvalidDateEqualCondition(){
+		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
+			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
+		TestReporter.logStep("Retrieve Reservations for Auto Checkout");
+		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
+		retrieveReservationForAutoCheckout.setDateEqualCondition_Negative("==");
+		retrieveReservationForAutoCheckout.sendRequest();
+		validateApplicationError(retrieveReservationForAutoCheckout, LiloSystemErrorCode.UNEXPECTED_ERROR);
+		TestReporter.logAPI(!retrieveReservationForAutoCheckout.getFaultString().contains("Unexpected Error occurred : retrieveReservationsForAutoCheckout : org.hibernate.exception.SQLGrammarException: could not extract ResultSet : org.hibernate.exception.SQLGrammarException: could not extract ResultSet; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.SQLGrammarException: could not extract ResultSet"), retrieveReservationForAutoCheckout.getFaultString(), retrieveReservationForAutoCheckout);
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("ScheduledEventsServiceIF", "retrieveReservationsForAutoCheckout", true);	
+		validateLogs(retrieveReservationForAutoCheckout, logItems);
+	}
+	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	public void testAutoCheckout_MissingDateEqualCondition(){
+		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
+			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
+		TestReporter.logStep("Retrieve Reservations for Auto Checkout");
+		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
+		retrieveReservationForAutoCheckout.setDateEqualCondition_Negative(BaseSoapCommands.REMOVE_NODE.toString());
+		retrieveReservationForAutoCheckout.sendRequest();
+		validateApplicationError(retrieveReservationForAutoCheckout, LiloSystemErrorCode.UNEXPECTED_ERROR);
+		TestReporter.logAPI(!retrieveReservationForAutoCheckout.getFaultString().contains("Unexpected Error occurred : retrieveReservationsForAutoCheckout : org.hibernate.exception.SQLGrammarException: could not extract ResultSet : org.hibernate.exception.SQLGrammarException: could not extract ResultSet; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.SQLGrammarException: could not extract ResultSet"), retrieveReservationForAutoCheckout.getFaultString(), retrieveReservationForAutoCheckout);
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("ScheduledEventsServiceIF", "retrieveReservationsForAutoCheckout", true);	
+		validateLogs(retrieveReservationForAutoCheckout, logItems);
 	}
 }

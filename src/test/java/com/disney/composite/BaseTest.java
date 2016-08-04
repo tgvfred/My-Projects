@@ -100,6 +100,12 @@ public class BaseTest {
 		validate(false,soap,logItems);
 	}
 	
+	
+	protected void validateNotInLogs(BaseSoapService soap, LogItems logItems, int logTimeout){
+		this.logTimeout = logTimeout;
+		validate(false,soap,logItems);
+	}
+	
 	protected void validateApplicationError(BaseSoapService soap, ApplicationErrorCode error){
 		TestReporter.logDebug("Entering BaseTest#validateApplicationError");
 		TestReporter.logStep("Validate Application Error<br/></font>Expected Error Details" + error.toString().replace("\n", "<br/>"));
