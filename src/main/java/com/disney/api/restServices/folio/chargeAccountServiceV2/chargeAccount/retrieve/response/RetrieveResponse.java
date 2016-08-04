@@ -1,13 +1,16 @@
 package com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.retrieve.response;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Generated;
 
 import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.retrieve.response.objects.RootChargeAccountResponse;
 
+@Generated("org.jsonschema2pojo")
 public class RetrieveResponse {
 
-	private List<RootChargeAccountResponse> rootChargeAccountResponse = new ArrayList<RootChargeAccountResponse>();
+	private RootChargeAccountResponse rootChargeAccountResponse;
 	private Object nodeChargeAccountResponse;
 
 	/**
@@ -15,7 +18,7 @@ public class RetrieveResponse {
 	 * @return
 	 * The rootChargeAccountResponse
 	 */
-	public List<RootChargeAccountResponse> getRootChargeAccountResponse() {
+	public RootChargeAccountResponse getRootChargeAccountResponse() {
 		return rootChargeAccountResponse;
 	}
 
@@ -25,7 +28,7 @@ public class RetrieveResponse {
 	 * The rootChargeAccountResponse
 	 */
 	public void setRootChargeAccountResponse(RootChargeAccountResponse rootChargeAccountResponse) {
-		this.rootChargeAccountResponse.add(rootChargeAccountResponse);
+		this.rootChargeAccountResponse = rootChargeAccountResponse;
 	}
 
 	/**

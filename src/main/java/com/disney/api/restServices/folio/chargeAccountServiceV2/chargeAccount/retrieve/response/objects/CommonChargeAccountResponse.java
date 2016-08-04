@@ -1,9 +1,7 @@
 package com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.retrieve.response.objects;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CommonChargeAccountResponse {
 
@@ -19,7 +17,6 @@ public class CommonChargeAccountResponse {
 	private List<GuestInfoTO> guestInfoTO = new ArrayList<GuestInfoTO>();
 	private Boolean active;
 	private Boolean pinAvailable;
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
 	/**
 	 * 
@@ -237,12 +234,5 @@ public class CommonChargeAccountResponse {
 		this.pinAvailable = pinAvailable;
 	}
 
-	public Map<String, Object> getAdditionalProperties() {
-		return this.additionalProperties;
-	}
-
-	public void setAdditionalProperty(String name, Object value) {
-		this.additionalProperties.put(name, value);
-	}
 
 }

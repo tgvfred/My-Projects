@@ -1,15 +1,9 @@
 package com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.retrieve.response.objects;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.Generated;
-
-@Generated("org.jsonschema2pojo")
 public class ExternalReference {
 
 	private String referenceName;
 	private String referenceValue;
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
 	/**
 	 * 
@@ -47,12 +41,5 @@ public class ExternalReference {
 		this.referenceValue = referenceValue;
 	}
 
-	public Map<String, Object> getAdditionalProperties() {
-		return this.additionalProperties;
-	}
-
-	public void setAdditionalProperty(String name, Object value) {
-		this.additionalProperties.put(name, value);
-	}
 
 }
