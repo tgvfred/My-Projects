@@ -43,31 +43,23 @@ public class AutoCheckin extends BaseTest{
 		aa = new AutoArrived(environment, "Main");
 		aa.setTpsId(reservation);
 		aa.sendRequest();
-		TestReporter.logAPI(!aa.getResponseStatusCode().equals("200"), "An error occurred setting a reservation to AutoArrived", aa);
+		TestReporter.logAPI(!aa.getResponseStatusCode().equals("200"), "An error occurred setting a reservation to AutoArrived: " + aa.getFaultString(), aa);
 		
 		logValidItems = new LogItems();
-		logValidItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
-		logValidItems.addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false);
 		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrderItem", false);
 		logValidItems.addItem("ChargeGroupIF", "checkIn", false);
-		logValidItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
-		logValidItems.addItem("PartyIF", "retrieveParty", false);
-		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
-		logValidItems.addItem("EventDiningServiceIF", "retrieve", false);
-		logValidItems.addItem("PackagingService", "getProducts", false);
-		logValidItems.addItem("PricingService", "priceComponents", false);
 		logValidItems.addItem("ScheduledEventsComponentServiceIF", "autoArrived", false);
 		validateLogs(aa, logValidItems, 10000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "batch"}, dependsOnMethods="autoArrived")
+	@Test(groups = {"api", "regression", "dining", "batch"}, dependsOnMethods="testAutoArrived")
 	public void testAutoArrived_InvalidReservationStatus_Arrived(){		
 		aa.sendRequest();
 		validateApplicationError(aa, DiningErrorCode.INVALID_TRAVEL_STATUS);
 		TestReporter.logAPI(!aa.getFaultString().contains("INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED"), aa.getFaultString() ,aa);
 
 		logValidItems = new LogItems();
-		logValidItems.addItem("ScheduledEventsComponentServiceIF", "aa", true);
+		logValidItems.addItem("ScheduledEventsComponentServiceIF", "autoArrived", true);
 		validateLogs(aa, logValidItems);
 	}
 	
@@ -80,7 +72,7 @@ public class AutoCheckin extends BaseTest{
 		TestReporter.logAPI(!aa.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 1"), aa.getFaultString() ,aa);
 
 		logValidItems = new LogItems();
-		logValidItems.addItem("ScheduledEventsComponentServiceIF", "aa", true);
+		logValidItems.addItem("ScheduledEventsComponentServiceIF", "autoArrived", true);
 		validateLogs(aa, logValidItems);
 	}
 	
@@ -89,10 +81,10 @@ public class AutoCheckin extends BaseTest{
 		AutoArrived aa = new AutoArrived(environment, "Main");
 		aa.setTpsId(BaseSoapCommands.REMOVE_NODE.toString());
 		aa.sendRequest();
-		TestReporter.logAPI(!aa.getFaultString().contains("INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED"), aa.getFaultString() ,aa);
+		TestReporter.logAPI(!aa.getResponseStatusCode().equals("200"), "An error occurred setting a reservation to AutoArrived", aa);
 
 		logValidItems = new LogItems();
-		logValidItems.addItem("ScheduledEventsComponentServiceIF", "aa", false);
+		logValidItems.addItem("ScheduledEventsComponentServiceIF", "autoArrived", false);
 		validateLogs(aa, logValidItems);
 	}
 }
