@@ -59,9 +59,10 @@ public class TestOptimizeInventory_Negative extends BaseTest{
 		logValidItems.addItem("ScheduledEventsServiceIF", "optimizeInventory", true);
 		validateLogs(optimize, logValidItems);
 		
-//		LogItems logInvalidItems = new LogItems();	
-//		logInvalidItems.addItem("GuestServiceV1", "create", false);
-//		logInvalidItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
-//		validateNotInLogs(massCancel, logInvalidItems);
+		LogItems logInvalidItems = new LogItems();	
+		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "updateInventoryForScheduledEvents", false);
+		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
+		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
+		validateNotInLogs(optimize, logInvalidItems);
 	}
 }

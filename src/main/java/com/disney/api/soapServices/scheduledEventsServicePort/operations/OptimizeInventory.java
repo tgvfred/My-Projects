@@ -1,5 +1,6 @@
 package com.disney.api.soapServices.scheduledEventsServicePort.operations;
 
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.scheduledEventsServicePort.ScheduledEventsServicePort;
 import com.disney.utils.XMLTools;
 
@@ -12,8 +13,7 @@ public class OptimizeInventory extends ScheduledEventsServicePort{
 		generateServiceContext();
 		removeComments() ;
 		removeWhiteSpace();
-	}
-	
+	}	
 	
 	public void setTravelPlanSegmentId(String value){setRequestNodeValueByXPath("/Envelope/Body/optimizeInventory/optimizeInventoryRequest/travelPlanSegmentId", value);}
 	public void setFreezeId(String value){setRequestNodeValueByXPath("/Envelope/Body/optimizeInventory/optimizeInventoryRequest/freezeId", value);}
@@ -25,4 +25,9 @@ public class OptimizeInventory extends ScheduledEventsServicePort{
 	public void setInventoryWant(String value){setRequestNodeValueByXPath("/Envelope/Body/optimizeInventory/optimizeInventoryRequest/inventoryWant", value);}
 	public void setSalesChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/optimizeInventory/optimizeInventoryRequest/salesChannel", value);}
 	public void setCommunicationChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/optimizeInventory/optimizeInventoryRequest/communicationChannel", value);}
+	
+	public boolean isSuccessful(){
+		try{return getResponseNodeValueByXPath("/Envelope/Body/optimizeInventoryResponse/status").equals("SUCCESS");}
+		catch(XPathNotFoundException e){return false;}
+	}
 }

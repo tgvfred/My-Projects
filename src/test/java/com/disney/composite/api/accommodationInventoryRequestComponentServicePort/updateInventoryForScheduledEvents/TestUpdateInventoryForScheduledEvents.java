@@ -6,7 +6,6 @@ import com.disney.api.soapServices.accommodationInventoryRequestComponentService
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.composite.BaseTest;
 import com.disney.test.utils.Randomness;
-import com.disney.test.utils.Sleeper;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
