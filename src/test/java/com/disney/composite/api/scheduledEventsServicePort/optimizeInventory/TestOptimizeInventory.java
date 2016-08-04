@@ -60,7 +60,7 @@ public class TestOptimizeInventory extends BaseTest{
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
-	public void missingInventoryGot(){
+	public void testOptimizeInventory(){
 		OptimizeInventory optimize = new OptimizeInventory(environment, "Main");
 		optimize.setTravelPlanSegmentId(res.getConfirmationNumber());
 		optimize.setPartySize(String.valueOf(hh.getAllGuests().size()));

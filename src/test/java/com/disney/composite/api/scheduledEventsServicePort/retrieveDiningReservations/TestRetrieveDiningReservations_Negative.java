@@ -24,5 +24,4 @@ public class TestRetrieveDiningReservations_Negative extends BaseTest{
 		logValidItems.addItem("ScheduledEventsServiceIF", "retrieveDiningReservations", true);
 		validateLogs(retrieve, logValidItems);
 	}
-
 }

@@ -33,8 +33,8 @@ public class TestSearchByVenue extends BaseTest{
 		res.setFacilityId(facilityId);
 		res.setServiceStartDateTime(serviceDate);
 		res.sendRequest();
-		TPS_ID = res.getTravelPlanSegmentId();
 		TestReporter.logAPI(!res.getResponseStatusCode().equals("200"), "An error occurred booking a table service reservation: " + res.getFaultString(), res);
+		TPS_ID = res.getTravelPlanSegmentId();
 	}
 	
 	@AfterClass(alwaysRun = true)

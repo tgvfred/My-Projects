@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestOptimizeInventory_Suite">
-	<parameter name="environment" value="Latest_CM" />
+	<parameter name="environment" value="Stage" />
 	<test name="TestOptimizeInventory">
 		<classes>
 			<class name="com.disney.composite.api.scheduledEventsServicePort.optimizeInventory.TestOptimizeInventory"/>

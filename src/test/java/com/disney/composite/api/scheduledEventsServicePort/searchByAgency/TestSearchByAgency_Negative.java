@@ -35,9 +35,8 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	
 	@AfterClass(alwaysRun=true)
 	public void cancelReservation(){
-		if(book != null)
-			if(!book.getConfirmationNumber().isEmpty())
-				book.cancel();
+		try{book.cancel();}
+		catch(Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
