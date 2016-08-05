@@ -6,20 +6,25 @@ import com.disney.api.soapServices.chargeGroup.operations.CreateChargeGroupsAndP
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 
 public class TestCreateChargeGroupsAndPostCharges extends BaseTest{
 	
 	@Test 
 	public void testMinimalInfo(){
 		String number = String.valueOf(Randomness.randomNumber(12));
-		CreateChargeGroupsAndPostCharges create = new CreateChargeGroupsAndPostCharges("Development", "MinimalInfo");
+		CreateChargeGroupsAndPostCharges create = new CreateChargeGroupsAndPostCharges(environment, "MinimalInfo");
 		create.setGuestFirstName(hh.primaryGuest().getFirstName());
 		create.setGuestLastName(hh.primaryGuest().getLastName());
 		create.setTravelPlanComponentGroupId(number);
 		create.setTravelPlanSegmentId(number);
 		create.setTravelPlanId(number);
 		create.sendRequest();
-		TestReporter.logAPI(!create.getResponseStatusCode().equals("200"), "An error occurred creating a party.", create);
+		TestReporter.logAPI(!create.getResponseStatusCode().equals("200"), create.getFaultString(), create);
 		TestReporter.logAPI(!create.isSuccessful(), create.getFaultString() ,create);
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "createChargeGroupsAndPostCharges", false);
+		validateLogs(create, logItems);
 	}	
 }

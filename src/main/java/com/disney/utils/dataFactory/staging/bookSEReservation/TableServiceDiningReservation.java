@@ -39,7 +39,8 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	private String showDiningMethodExceptionMessage = "This method is only valid for show dining reservations and is not intended for event dining reservations.";
 	private String retrievedFacilityId;	// Facility ID as it is found in the #retrieve() method response
 	private String primaryGuestAge;	//Primary guest address as it is found in the #retrieve() method response; expected to be contained in the first 'partyRole' node
-	private String modifyStatus;	// Status in the response from modify a reservation  
+	private String modifyStatus;	// Status in the response from modify a reservation
+	private String sourceAccountingCenter;	// Source Accounting Center ID  
 	/*
 	 * Travel Agency Fields
 	 */
@@ -118,6 +119,11 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 */
 	@Override public String getProductId(){throw new AutomationException(productIdExceptionMessage);}
 	/**
+	 * Retrieves the product type of the current reservation
+	 * @return String, product type of the current reservation
+	 */
+	@Override public String getProductType(){throw new AutomationException(productIdExceptionMessage);}
+	/**
 	 * Retrieves the service period ID of the current reservation
 	 * @return String, service period ID of the current reservation
 	 */
@@ -178,6 +184,9 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 * Returns the primary guest age
 	 */
 	@Override public String getPrimaryGuestAge() {return this.primaryGuestAge;}
+	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
+	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
+	@Override public String getTravelAgencyId(){return agencyId;}
 	/**
 	 * Retrieve the status from the response of modifying a reservation
 	 * @return String, status from modifying a reservation
@@ -229,7 +238,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		book.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		if(!environment.equalsIgnoreCase("development")){
+		if(!environment.equalsIgnoreCase("development") && !getEnvironment().contains("_CM") ){
 			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
 			resource.setFacilityId(getFacilityId());
 			resource.sendRequest();
@@ -239,11 +248,12 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
-		if(book.getResponse().contains("Row was updated or deleted by another transaction")){
+		if(book.getResponse().contains("Row was updated or deleted by another transaction") || 
+				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			book.sendRequest();
 		}
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an table service dining service reservation", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an table service dining service reservation: " + book.getFaultString(), book);
 		this.travelPlanId = book.getTravelPlanId();
 		this.confirmationNumber = book.getTravelPlanSegmentId();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
@@ -260,7 +270,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		Cancel cancel = new Cancel(getEnvironment(), "Main");
 		cancel.setReservationNumber(getConfirmationNumber());
 		cancel.sendRequest();
-		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling an table service dining service reservation", cancel);
+		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling an table service dining service reservation: " + cancel.getFaultString(), cancel);
 		this.cancellationNumber = cancel.getCancellationConfirmationNumber();
 		retrieve();
 	}
@@ -274,7 +284,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		Arrived arrived = new Arrived(getEnvironment(), "Main");
 		arrived.setReservationNumber(getConfirmationNumber());
 		arrived.sendRequest();
-		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred updating an table service dining service reservation to [Arrived]", arrived);
+		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred updating an table service dining service reservation to [Arrived]: " + arrived.getFaultString(), arrived);
 		this.arrivedStatus = arrived.getArrivalStatus();
 		retrieve();
 	}
@@ -288,7 +298,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		NoShow noShow = new NoShow(getEnvironment(), "Main");
 		noShow.setReservationNumber(getConfirmationNumber());
 		noShow.sendRequest();
-		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an table service dining service reservation to [No Show]", noShow);
+		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an table service dining service reservation to [No Show]: " + noShow.getFaultString(), noShow);
 		this.cancellationNumber = noShow.getCancellationNumber();
 		retrieve();
 	}

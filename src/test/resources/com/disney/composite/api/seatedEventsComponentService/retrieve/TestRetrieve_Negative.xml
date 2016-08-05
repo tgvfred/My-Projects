@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestRetrieve_Negative_Suite" parallel="methods" thread-count="5">
+	<parameter name="environment" value="Latest_CM" />
+	<test name="TestRetrieve_Negative">
+		<classes>
+			<class name="com.disney.composite.api.seatedEventsComponentService.retrieve.TestRetrieve_Negative"/>
+		</classes>
+	</test>
+</suite>

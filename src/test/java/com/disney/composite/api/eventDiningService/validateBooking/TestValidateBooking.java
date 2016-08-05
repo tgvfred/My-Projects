@@ -1,7 +1,6 @@
 package com.disney.composite.api.eventDiningService.validateBooking;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -11,15 +10,12 @@ import com.disney.api.soapServices.eventDiningService.operations.Book;
 import com.disney.api.soapServices.eventDiningService.operations.ValidateBooking;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
-import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
-import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestValidateBooking extends BaseTest{
 	private Book book = null;
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment) {
 		this.environment = environment;

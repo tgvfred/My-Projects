@@ -280,12 +280,11 @@ public class Book extends TableServiceDiningServicePort {
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+index+"]");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+index+"]", value);
 		}catch(Exception e){
-			e.printStackTrace();
 			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:allergies");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+index+"]", value);
 		}
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+index+"]", value);
 	}
 	
 	public void setParty(HouseHold party){

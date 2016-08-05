@@ -1,11 +1,13 @@
 package com.disney.composite.api.tableServiceDiningService.modify;
 
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
+import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Modify;
 import com.disney.composite.BaseTest;
@@ -20,7 +22,7 @@ public class TestModify_Negative extends BaseTest{
 	protected String TPS_ID = null;
 	protected ScheduledEventReservation res = null;
 	
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
@@ -75,7 +77,8 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setCommunicationChannel("Blah");
 		modify.sendRequest();
-	
+
+		validateApplicationError(modify, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("communication Channel is required : null"), modify.getFaultString() ,modify);
 
 
@@ -102,7 +105,6 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServiceStartDate(res.getServiceStartDate());
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.sendRequest();
-	
 		TestReporter.logAPI(!modify.getFaultString().contains("Unmarshalling Error: For input string: \"Invalid Id\""), modify.getFaultString() ,modify);
 	}
 
@@ -132,6 +134,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServiceStartDate(res.getServiceStartDate());
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 		TestReporter.logAPI(!modify.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 12345678910"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -160,6 +163,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServiceStartDate(res2.getServiceStartDate());
 		modify.setServicePeriodId(res2.getServicePeriodId());
 		modify.sendRequest();
+		validateApplicationError(modify, PartyErrorCode.SALUTATION_INVALID);
 		TestReporter.logAPI(!modify.getFaultString().contains("Salutation is invalid : Salutation Mre. is invalid"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -190,7 +194,8 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServiceStartDate(res2.getServiceStartDate());
 		modify.setServicePeriodId(res2.getServicePeriodId());
 		modify.sendRequest();
-		
+
+		validateApplicationError(modify, PartyErrorCode.CREATE_PARTY_ERROR);
 		TestReporter.logAPI(!modify.getFaultString().contains("Create Party Error : Please enter valid country code"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -218,6 +223,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setSalesChannel("Blah");
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.SALES_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("Sales Channel is required : null"), modify.getFaultString() ,modify);
 
 
@@ -245,6 +251,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setRequestNodeValueByXPath("//authorizationNumber", "12345431");
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.INVALID_AUTHORIZATION_CODE);
 		TestReporter.logAPI(!modify.getFaultString().contains("INVALID AUTHORIZATION CODE !! : INVALID AUTHORIZATION CODE !"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -272,6 +279,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setServiceStartDate(BaseSoapCommands.GET_DATE_TIME.commandAppend("-30"));
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.EXCEPTION_RULE_FIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("RESManagement suggests to stop this reservation : Book Date is greater than Service date"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -299,6 +307,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setServiceStartDate(BaseSoapCommands.GET_DATE_TIME.commandAppend("182"));
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.EXCEPTION_RULE_FIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -326,6 +335,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setRequestNodeValueByXPath("//primaryGuest", BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -353,6 +363,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setRequestNodeValueByXPath("//primaryGuest/lastName", BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -380,6 +391,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setRequestNodeValueByXPath("//primaryGuest/firstName", BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -407,6 +419,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.SALES_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("Sales Channel is required : null"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -434,6 +447,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("communication Channel is required : null"), modify.getFaultString() ,modify);
 		
 		LogItems logValidItems = new LogItems();
@@ -461,6 +475,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.INVALID_FACILITY);
 		TestReporter.logAPI(!modify.getFaultString().contains("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!"), modify.getFaultString() ,modify);
 		
 		LogItems logValidItems = new LogItems();
@@ -488,6 +503,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setProductType(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.PRODUCT_TYPE_NAME_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("PRODUCT TYPE NAME IS REQUIRED!! : PRODUCT TYPE NAME IS REQUIRED!!"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -515,6 +531,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setServiceStartDate(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.SERVICE_START_DATE_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -542,6 +559,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.NO_RESERVABLE_RESOURCE_ID);
 		TestReporter.logAPI(!modify.getFaultString().contains("RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!"), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -569,6 +587,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setRequestNodeValueByXPath("//partyRoles",BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.INVALID_PARTYMIX);
 		TestReporter.logAPI(!modify.getFaultString().contains("Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE"), modify.getFaultString() ,modify);
 		
 		LogItems logValidItems = new LogItems();
@@ -596,6 +615,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setRequestNodeValueByXPath("//partyRoles/ageType",BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.AGE_TYPE_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("Age Type is required : AGE TYPE IS REQUIRED."), modify.getFaultString() ,modify);
 
 		LogItems logValidItems = new LogItems();
@@ -623,6 +643,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setServicePeriodId(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.SERVICE_PERIOD_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED."), modify.getFaultString() ,modify);
 		
 		LogItems logValidItems = new LogItems();
@@ -652,6 +673,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res2.getServicePeriodId());
 		res2.arrived();
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.INVALID_TRAVEL_STATUS);
 		TestReporter.logAPI(!modify.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), modify.getFaultString() ,modify);
 		
 		LogItems logValidItems = new LogItems();
@@ -681,6 +703,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServicePeriodId(res2.getServicePeriodId());
 		res2.noShow();
 		modify.sendRequest();
+		validateApplicationError(modify, DiningErrorCode.INVALID_TRAVEL_STATUS);
 		TestReporter.logAPI(!modify.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), modify.getFaultString() ,modify);
 		
 		LogItems logValidItems = new LogItems();

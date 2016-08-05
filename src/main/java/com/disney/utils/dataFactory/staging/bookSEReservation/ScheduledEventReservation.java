@@ -13,6 +13,8 @@ public interface ScheduledEventReservation{
 	public static final String ONECOMPONENTSNOADDONS = "OneComponentsNoAddOns";
 	public static final String NOCOMPONENTSNOADDONSTWOADULTS = "NoComponentsNoAddOnsTwoAdults";
 	public static final String ONECOMPONENTSNOADDONSTWOADULTS = "OneComponentsNoAddOnsTwoAdults";
+	public static final String ADDON = "DinnerShowWithAddOn";
+	public static final String SPECIALREQUESTS = "SpecialRequests";
 	
 	// Getters used to retrieve field values
 	public String getEnvironment();
@@ -23,6 +25,7 @@ public interface ScheduledEventReservation{
 	public String getArrivedStatus();
 	public String getFacilityId();
 	public String getProductId();
+	public String getProductType();
 	public String getServicePeriodId();
 	public String getServiceStartDate();
 	public int getNumberOfGuests();
@@ -39,6 +42,8 @@ public interface ScheduledEventReservation{
 	public void setProductId(String productId);
 	public void setProductType(String productType);
 	public void setBookingScenario(String scenario);
+	public void setSourceAccountingCenter(String sourceAccountingcenter);
+	public String getSourceAccountingCenter();
 	// Interfaces for methods to generate and set a household
 	public HouseHold party();
 	public void setParty(HouseHold party);	
@@ -57,6 +62,7 @@ public interface ScheduledEventReservation{
 	public void addTravelAgency();
 	public void addTravelAgency(String agencyId);
 	public void addTravelAgency(String agencyIataNumber, String agencyOdsId, String guestAgencyId, String agentId, String guestAgentId, String confirmationLocatorValue, String guestConfirmationLocationId);
+	public String getTravelAgencyId();
 	// Interfaces for show dining reservations
 	public void assignTableNumbers();
 	public void assignTableNumbers(String tableNumber);

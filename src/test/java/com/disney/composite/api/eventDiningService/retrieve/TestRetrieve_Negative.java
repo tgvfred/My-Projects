@@ -1,12 +1,12 @@
 package com.disney.composite.api.eventDiningService.retrieve;
 
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.eventDiningService.operations.Arrived;
 import com.disney.api.soapServices.eventDiningService.operations.Retrieve;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
@@ -21,7 +21,7 @@ public class TestRetrieve_Negative  extends BaseTest{
 	protected ScheduledEventReservation res = null;
 	
 	@Override
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
@@ -35,6 +35,7 @@ public class TestRetrieve_Negative  extends BaseTest{
 		Retrieve retrieve = new Retrieve(this.environment, "RetrieveDiningEvent");
 		retrieve.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
 		retrieve.sendRequest();
+		validateApplicationError(retrieve, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 		TestReporter.logAPI(!retrieve.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0"), retrieve.getFaultString() ,retrieve);
 
 		LogItems logValidItems = new LogItems();
@@ -56,6 +57,7 @@ public class TestRetrieve_Negative  extends BaseTest{
 		Retrieve retrieve = new Retrieve(this.environment, "RetrieveDiningEvent");
 		retrieve.setReservationNumber("11111");
 		retrieve.sendRequest();
+		validateApplicationError(retrieve, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 		TestReporter.logAPI(!retrieve.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111"), retrieve.getFaultString() ,retrieve);
 
 		LogItems logValidItems = new LogItems();

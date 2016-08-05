@@ -7,11 +7,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.guestServiceV2.operations.Create;
 import com.disney.api.soapServices.guestServiceV2.operations.SearchByNameAndAddress;
 import com.disney.api.soapServices.partyService.operations.CreateParty;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.Randomness;
+import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
 /**
@@ -74,7 +76,7 @@ public class Guest {
 	}
 	
 	public void sendToApi(String environment, boolean isPartyV3) {
-		if(!environment.equalsIgnoreCase("Development")){
+		if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
 			guest = new Create(environment, "Main");
 			guest.setPrefix(title);
 			guest.setFirstName(firstName);
@@ -89,14 +91,23 @@ public class Guest {
 			guest.setState(addresses.get(0).getStateAbbv());
 			guest.setPostalCode(addresses.get(0).getZipCode());
 			guest.sendRequest();
-			
-			addresses.get(0).setZipCode(guest.getPostalCode());
+			try{
+				addresses.get(0).setZipCode(guest.getPostalCode());
+			}catch(XPathNotFoundException x){
+
+				guest.sendRequest();
+				try{
+					addresses.get(0).setZipCode(guest.getPostalCode());
+				}catch(XPathNotFoundException x2){
+					TestReporter.logAPI(true, "GoMaster Guest create Zipcode not found", guest);
+				}
+			}
 			}
 		Sleeper.sleep(2000);
-		if(isPartyV3){
+		if(isPartyV3 || environment.equalsIgnoreCase("Development") || environment.contains("_CM")){
 			com.disney.api.soapServices.partyV3.operations.CreateParty partyV3 = null;
 			partyV3 = new com.disney.api.soapServices.partyV3.operations.CreateParty(environment, "SampleCreate");
-			if(!environment.equalsIgnoreCase("Development")){
+			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
 				odsId = guest.getOdsGuestId();
 				addresses.get(0).setZipCode(guest.getPostalCode());
 				addresses.get(0).setLocatorId(guest.getAddressLocatorId());
@@ -131,31 +142,34 @@ public class Guest {
 			this.partyId = partyV3.getPartyid();
 		}else{
 			CreateParty party = null;
-			odsId = guest.getOdsGuestId();
-			addresses.get(0).setZipCode(guest.getPostalCode());
-			addresses.get(0).setLocatorId(guest.getAddressLocatorId());
-			phones.get(0).setLocatorId(guest.getPhoneLocatorId());
-			emails.get(0).setLocatorId(guest.getEmailLocatorId());
+			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+				odsId = guest.getOdsGuestId();
+				addresses.get(0).setZipCode(guest.getPostalCode());
+				addresses.get(0).setLocatorId(guest.getAddressLocatorId());
+				phones.get(0).setLocatorId(guest.getPhoneLocatorId());
+				emails.get(0).setLocatorId(guest.getEmailLocatorId());
+			}else{
+				odsId = String.valueOf(Randomness.randomNumberBetween(1000000, 9999999));
+			}
 			
 			party = new CreateParty(environment, "SampleCreate");
-			party.setExternalReferenceValue(guest.getOdsGuestId());
+			party.setExternalReferenceValue(odsId);
 			party.setPrimaryGuestAge(age);
 			party.setPrimaryGuestFirstName(firstName);
 			party.setPrimaryGuestLastName(lastName);
 			
-			party.setAddressLocatorId(guest.getAddressLocatorId());
+			party.setAddressLocatorId(addresses.get(0).getLocatorId());
 			party.setAddressLine1(addresses.get(0).getAddress1());
-			party.setAddressCity(guest.getCity());
-			party.setAddressState(guest.getState());
-			party.setAddressZipCode(guest.getPostalCode());
+			party.setAddressCity(addresses.get(0).getCity());
+			party.setAddressState(addresses.get(0).getState());
+			party.setAddressZipCode(addresses.get(0).getZipCode());
 			party.setAddressCountry(addresses.get(0).getCountry());
-			System.out.println();
 			
-			party.setPhoneNumberLocatorId(guest.getPhoneLocatorId());
-			party.setPhoneNumber(guest.getPhoneNumber());
+			party.setPhoneNumberLocatorId(phones.get(0).getLocatorId());
+			party.setPhoneNumber(phones.get(0).getNumber());
 			
-			party.setEmailAddressLocatorId(guest.getEmailLocatorId());
-			party.setEmailAddress(guest.getEmail());
+			party.setEmailAddressLocatorId(emails.get(0).getLocatorId());
+			party.setEmailAddress(emails.get(0).getEmail());
 			
 			//party.setRequestNodeValueByXPath("/Envelope/Body/createParty/partyRequest/externalreference/externalReferenceSource", "ODS");
 			

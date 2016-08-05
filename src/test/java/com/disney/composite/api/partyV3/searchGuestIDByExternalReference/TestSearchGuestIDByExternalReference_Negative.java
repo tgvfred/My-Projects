@@ -1,5 +1,6 @@
 package com.disney.composite.api.partyV3.searchGuestIDByExternalReference;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -8,11 +9,10 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.partyV3.operations.SearchGuestIDByExternalReference;
 import com.disney.composite.BaseTest;
-import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestSearchGuestIDByExternalReference_Negative  extends BaseTest{	
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){this.environment = environment;}
 

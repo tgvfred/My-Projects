@@ -20,4 +20,6 @@ public class Checkout extends ScheduledEventsServicePort{
 	public boolean isSuccessfullyCheckedOut(){
 		return getResponseNodeValueByXPath("/Envelope/Body/checkoutResponse/checkoutResponseDetail/isSuccess").equals("true");		
 	}
+
+	public String getReservationNumber(){return getResponseNodeValueByXPath("/Envelope/Body/checkoutResponse/checkoutResponseDetail/travelPLanSegmentId");}
 }

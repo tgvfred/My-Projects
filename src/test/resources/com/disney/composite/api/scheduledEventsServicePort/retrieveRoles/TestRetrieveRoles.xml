@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestRetrieveRoles_Suite">
+	<parameter name="environment" value="Sleepy" />
+	<test name="TestRetrieveRoles">
+		<classes>
+			<class
+				name="com.disney.composite.api.scheduledEventsServicePort.retrieveRoles.TestRetrieveRoles"/>
+		</classes>
+	</test>
+</suite>

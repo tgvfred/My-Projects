@@ -11,6 +11,8 @@ public class OracleDatabase extends Database {
 	private String dbGoMasterPassword = Base64Coder.decodeString("b2RzX3N5bmNfcm81");
 	private String dbMcUsername = Base64Coder.decodeString("TUM=");
 	private String dbMcPassword = Base64Coder.decodeString("bWNhZG1pbg==");
+	private String dbSeUsername = Base64Coder.decodeString("YXZhaWxzZXJv");
+	private String dbSePassword = Base64Coder.decodeString("YXZhaWxzZXJv");
 	
 	public OracleDatabase(String environment, String tnsName){
 		environment = Environment.getEnvironmentName(environment);
@@ -22,6 +24,9 @@ public class OracleDatabase extends Database {
 			environment = "EVIL_QUEEN";
 			break;
 		case "development":
+		case "bashful_cm":
+		case "sleepy_cm":
+		case "grumpy_cm":
 			environment = "DEV3";
 			break;
 		default:
@@ -62,6 +67,11 @@ public class OracleDatabase extends Database {
 		case "celebrations":
 			setDbUserName(dbMcUsername);
 			setDbPassword(dbMcPassword);
+			break;
+
+		case "availse":
+			setDbUserName(dbSeUsername);
+			setDbPassword(dbSePassword);
 			break;
 		}
 	}

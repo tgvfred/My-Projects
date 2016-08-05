@@ -1,6 +1,6 @@
 package com.disney.composite.api.tableServiceDiningService.noShow;
 
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -20,7 +20,7 @@ public class TestNoShow extends BaseTest{
 	protected ScheduledEventReservation res = null;	
 	
 	@Override
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;

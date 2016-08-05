@@ -2,6 +2,7 @@ package com.disney.composite.api.scheduledEventsComponentService;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -59,7 +60,8 @@ public class TestRetrieveTravelPlanSegmentsForAutoArrival {
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
-	public void setup(String environment) {
+	public void setup(@Optional String environment) {
+		environment = "Stage";
 		datatable.set(new Datatable());
 		application.set("alc");
 		this.environment.set(environment);
@@ -88,7 +90,7 @@ public class TestRetrieveTravelPlanSegmentsForAutoArrival {
 
 		// Log the test scenario name in the reporter
 		TestReporter.logScenario(Scenario);
-
+		TestReporter.setDebugLevel(1);
 		// Grab the @Test method name and use it to define the test name
 		testName.set(new Object() {}.getClass().getEnclosingMethod().getName());
 

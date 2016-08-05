@@ -4,6 +4,8 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.eventDiningService.EventDiningService;
 import com.disney.utils.XMLTools;
+import com.disney.utils.dataFactory.FacilityInfo;
+import com.disney.utils.dataFactory.ProductInfo;
 import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
 import com.disney.utils.dataFactory.guestFactory.Guest;
@@ -35,7 +37,25 @@ public class Modify extends EventDiningService {
 	public void setComponentPriceComponentId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices/componentId", value);}	
 	public void setComponentPriceRevenueClassificationId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices/revenueClassification/id", value);}
 	public void setComponentPriceRevenueClassificationName(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices/revenueClassification/name", value);}	
-	public void setFacilityId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/facilityId", value);}	
+	public void setFacilityId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/facilityId", value);}/**
+	 * Sets the facility ID in the SOAP Request by using a known Facility Name
+	 * @param name - facility name to find Id for and insert into request
+	 * @see http://fldcvpswa6204.wdw.disney.com/TDOD/public/gdo/row/QAAUTO_METADATA_ACTIVITIES_FACILITIES
+	 */
+	public void setFacilityIdByFacilityName(String name){setRequestNodeValueByXPath("/Envelope/Body/book/modifyEventDiningRequest/eventDiningPackage/facilityId", FacilityInfo.getMealFacilityIDByName(name));}
+	/**
+	 * Sets the facility name in the SOAP Request by using known Facility ID
+	 * @param id - facility id to find facility name for
+	 * @see http://fldcvpswa6204.wdw.disney.com/TDOD/public/gdo/row/QAAUTO_METADATA_ACTIVITY_FACILITIES
+	 */
+	public void setFacilityNameByFacilityId(String id){setRequestNodeValueByXPath("/Envelope/Body/book/modifyEventDiningRequest/eventDiningPackage/facilityName", FacilityInfo.getMealFacilityNameById(id));}
+	/**
+	 * Sets the product id in the SOAP Request by using known Product Name
+	 * @param value - facility id to find facility name for
+	 * @see http://fldcvpswa6204.wdw.disney.com/TDOD/public/gdo/row/QAAUTO_METADATA_ACTIVITY_PRODUCTS
+	 */
+	public void setProductIdByProductName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/modifyEventDiningRequest/eventDiningPackage/productId", ProductInfo.getMealProductIDByName(value));}
+		
 	public String getRequestFacilityId(){return getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/facilityId");}
 	public void setFacilityName(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/facilityName", value);}	
 	public void setEnterpriseProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/enterpriseProductId", value);}	
@@ -103,10 +123,9 @@ public class Modify extends EventDiningService {
 		try{
 			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+index+"]");
 		}catch(Exception e){
-			e.printStackTrace();
 			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:allergies");
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+index+"]", value);
 		}
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+index+"]", value);
 	}	
 
 	public int getNumberOfComponentIds(){return getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices");}

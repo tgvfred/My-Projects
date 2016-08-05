@@ -70,6 +70,10 @@ public class Dreams {
 			+ "join folio.bank_out b on a.bank_in_id = b.bank_in_id "
 			+ "where a.till_typ_nm = 'Manager')";
 	
+	public static String getChargeInfo(String id){
+		return " select * from folio.chrg where CHRG_ID = " + id;
+	}
+	
 	/**
 	 * This subclass of queries is intended to query the Dreams database for product IDs for a given facility ID.  
 	 * The genesis of this class occurred to resolve the issue of scheduled events (i.e. ALC) reservation product IDs not being consistent across environments.

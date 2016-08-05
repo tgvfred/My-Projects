@@ -1,13 +1,18 @@
 package com.disney.composite.api.showDiningService.modify;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.AutomationException;
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
+import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.showDiningService.operations.Arrived;
 import com.disney.api.soapServices.showDiningService.operations.Book;
 import com.disney.api.soapServices.showDiningService.operations.Cancel;
@@ -28,22 +33,27 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  */
 
 public class TestModify_Negative extends BaseTest{
-	protected HouseHold hh = null;
+	//protected HouseHold hh = null;
 	protected ThreadLocal<LogItems> logValidItems = new ThreadLocal<LogItems>();
 	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
+	private Book book;
 	
-	@BeforeTest(alwaysRun=true)
+	@BeforeClass(alwaysRun=true)
 	@Parameters("environment")
 	public void testSetup(@Optional String environment){
-		this.environment = environment;
+		book= new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		hh = new HouseHold(1);
-		logValidItems.set(new LogItems());
+		book.setParty(hh);
+		book.sendRequest();
+		/*TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
+		TPS_ID.set(book.getTravelPlanSegmentId());*/
 	}
 	
 	@Override
 	@BeforeMethod(alwaysRun=true)
 	@Parameters("environment")
 	public void setup(@Optional String environment){
+		this.environment = environment;
 		logValidItems.set(new LogItems());
 	}
 	
@@ -62,165 +72,165 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidAuthorizationNumber(){		
 		TestReporter.logScenario("Invalid Authorization Number");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setAuthorizationNumber("1");
-		sendRequestAndValidateLogs(modify, "INVALID AUTHORIZATION CODE !! : INVALID AUTHORIZATION CODE !");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.INVALID_AUTHORIZATION_CODE, "INVALID AUTHORIZATION CODE !! : INVALID AUTHORIZATION CODE !");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidBookDateExceeds180DaysInFuture(){		
 		TestReporter.logScenario("Booking Date Exceeds 180 Days");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(182));
-		sendRequestAndValidateLogs(modify, "RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.EXCEPTION_RULE_FIRED,"RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidBookDateInPast(){		
 		TestReporter.logScenario("Booking Date In The Past");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(-1));
-		sendRequestAndValidateLogs(modify, "RESManagement suggests to stop this reservation : Book Date is greater than Service date");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.EXCEPTION_RULE_FIRED,"RESManagement suggests to stop this reservation : Book Date is greater than Service date");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidCommunicationChannel(){	
 		TestReporter.logScenario("Invalid Communications Channel");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setCommunicationsChannel("abcd");
-		sendRequestAndValidateLogs(modify, "communication Channel is required : null");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED,"communication Channel is required : null");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidFacilityId(){	
 		TestReporter.logScenario("Invalid Facility ID");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setFacilityId("-1");
-		sendRequestAndValidateLogs(modify, "FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.INVALID_FACILITY,"FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidPrimaryGuestCountry(){	
 		TestReporter.logScenario("Invalid Primary Guest Country");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setPrimaryGuestCountry("abcd");
-		sendRequestAndValidateLogs(modify, "Create Party Error : Please enter valid country code");
+		sendRequestAndValidateLogs(modify, PartyErrorCode.CREATE_PARTY_ERROR, "Create Party Error : Please enter valid country code");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidPrimaryGuestTitle(){
 		TestReporter.logScenario("Invalid Primary Guest Title");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setPrimaryGuestTitle("abcd");
-		sendRequestAndValidateLogs(modify, "Salutation is invalid : Salutation abcd is invalid");
+		sendRequestAndValidateLogs(modify, PartyErrorCode.SALUTATION_INVALID, "Salutation is invalid : Salutation abcd is invalid");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidProductId(){
 		TestReporter.logScenario("Invalid Product ID");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setProductId("-1");
-		sendRequestAndValidateLogs(modify, "PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.PRODUCT_ID_REQUIRED,"PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidSalesChannel(){
 		TestReporter.logScenario("Invalid Sales Channel");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setSalesChannel("abcd");
-		sendRequestAndValidateLogs(modify, "Sales Channel is required : null");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.SALES_CHANNEL_REQUIRED,"Sales Channel is required : null");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidReservationNumber(){
 		String number = "-1";
 		TestReporter.logScenario("Invalid Reservation Number");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setReservationNumber(number);
-		sendRequestAndValidateLogs(modify, "RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number);
+		sendRequestAndValidateLogs(modify, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION,"RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingCommunicationChannel(){
 		TestReporter.logScenario("Missing Communication Channel");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setCommunicationsChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "communication Channel is required : null");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED,"communication Channel is required : null");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingFacilityId(){
 		TestReporter.logScenario("Missing Facility ID");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.INVALID_FACILITY,"FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingPartyRoleAgeType(){
 		TestReporter.logScenario("Missing Party Role Age Type");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setPartyRoleAgeType(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "Age Type is required : AGE TYPE IS REQUIRED.");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.AGE_TYPE_REQUIRED,"Age Type is required : AGE TYPE IS REQUIRED.");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingPartyRoles(){
 		TestReporter.logScenario("Missing Party Role");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/partyRoles", BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE.");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.INVALID_PARTYMIX,"Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE.");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingPrimaryGuest(){
 		TestReporter.logScenario("Missing Primary Guest");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/primaryGuest", BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED,"Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingPrimaryGuestFirstName(){
 		TestReporter.logScenario("Missing Primary Guest First Name");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setPrimaryGuestFirstName(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED,"Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingPrimaryGuestLastName(){
 		TestReporter.logScenario("Missing Primary Guest Last Name");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setPrimaryGuestLastName(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED,"Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingProductId(){
 		TestReporter.logScenario("Missing Product ID");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setProductId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.PRODUCT_ID_REQUIRED,"PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingProductType(){
 		TestReporter.logScenario("Missing Product Type");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setProductType(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "PRODUCT TYPE NAME IS REQUIRED!! : PRODUCT TYPE NAME IS REQUIRED!!");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.PRODUCT_TYPE_NAME_REQUIRED,"PRODUCT TYPE NAME IS REQUIRED!! : PRODUCT TYPE NAME IS REQUIRED!!");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingReservableResourceID(){
 		TestReporter.logScenario("Missing Reservable Resource ID");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
 		logValidItems.get().addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);	
-		sendRequestAndValidateLogs(modify, "RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.NO_RESERVABLE_RESOURCE_ID,"RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingSalesChannel(){
 		TestReporter.logScenario("Missing Sales Channel");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "Sales Channel is required : null");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.SALES_CHANNEL_REQUIRED,"Sales Channel is required : null");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingServicePeriodId(){
 		TestReporter.logScenario("Missing Service Period ID");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setServicePeriodId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED.");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.SERVICE_PERIOD_REQUIRED,"ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED.");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void missingServiceStartDate(){
 		TestReporter.logScenario("Missing Service Start Date");
-		Modify modify = modify(book());
+		Modify modify = modify();
 		modify.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateLogs(modify, "INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.SERVICE_START_DATE_REQUIRED,"INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void arrivedReservation(){
@@ -236,7 +246,7 @@ public class TestModify_Negative extends BaseTest{
 		
 		TestReporter.logScenario("Arrived Reservation Status");
 		Modify modify = modify(book);
-		sendRequestAndValidateLogs(modify, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
+		sendRequestAndValidateLogs(modify, DiningErrorCode.INVALID_TRAVEL_STATUS,"Travel Status is invalid  : INVALID RESERVATION STATUS.");
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void noShowReservation(){
@@ -252,9 +262,9 @@ public class TestModify_Negative extends BaseTest{
 		
 		TestReporter.logScenario("NoShow Reservation Status");
 		Modify modify = modify(book);
-		sendRequestAndValidateLogs(modify, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
+		sendRequestAndValidateLogs(modify,DiningErrorCode.INVALID_TRAVEL_STATUS, "Travel Status is invalid  : INVALID RESERVATION STATUS.");
 	}
-	
+	/*
 	private Book book(){
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
@@ -262,18 +272,28 @@ public class TestModify_Negative extends BaseTest{
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		return book;
-	}
+	}*/
 	
+	private Modify modify(){
+		return modify(this.book);
+	}
+
 	private Modify modify(Book book){
+		try{
+			book.getTravelPlanSegmentId();
+		}catch(XPathNotFoundException xpfe){
+			throw new AutomationException("Failed to create booking: " + book.getFaultString());
+		}
+		
 		Modify modify = new Modify(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		modify.setParty(hh);
 		modify.setTravelPlanId(book.getTravelPlanId());
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		return modify;
 	}
-	
-	private void sendRequestAndValidateLogs(Modify modify, String faultString){
+	private void sendRequestAndValidateLogs(Modify modify, ApplicationErrorCode error, String faultString){
 		modify.sendRequest();
+		validateApplicationError(modify, error);
     	TestReporter.logAPI(!modify.getFaultString().contains(faultString), modify.getFaultString(), modify);
 		logItems(modify);		
 	}

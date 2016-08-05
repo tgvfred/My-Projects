@@ -12,12 +12,44 @@ import org.testng.Assert;
 import org.testng.Reporter;
 
 import com.disney.AutomationException;
+import com.disney.api.soapServices.SoapException;
 import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.utils.date.SimpleDate;
 
 public class TestReporter {
 	private static boolean printToConsole = false;
-
+	
+	/**
+	 * No additional info printed to console
+	 */
+	public static final int NONE = 0;
+	
+	/**
+	 * Will print some useful information to console such as URL's, parameters, and RQ/RS
+	 */
+	public static final int INFO = 1;
+	
+	/**
+	 *  Will print some low-level granular steps to console 
+	 */
+	public static final int DEBUG = 2;
+	private static int debugLevel = 0;
+	
+	/**
+	 * 
+	 * @param level - Options below <br/>
+	 *  TestReporter.NONE : (Default) - No additional info printed to console <br/> 
+	 *  TestReporter.INFO : Will print some useful information to console such as URL's, parameters, and RQ/RS<br/>
+	 *  TestReporter.DEBUG : Will print some low level information to console <br/>
+	 */
+	public static void setDebugLevel(int level){
+		debugLevel = level;
+	}
+	
+	public static int getDebugLevel(){
+		return debugLevel;
+	}
+	
 	private static String getTimestamp() {
 		return SimpleDate.getTimestamp().toString() + " :: ";
 	}
@@ -33,12 +65,42 @@ public class TestReporter {
 	public static boolean getPrintToConsole() {
 		return printToConsole;
 	}
+	private static String getClassPath(){
+		StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+		int x = 0;
+		String filename = "";
+		String path = "";
+		for(StackTraceElement element : elements){
+			filename = element.getClassName().toString();
+			if(x == 0 || x == 1 || x == 2) {
+				x++;
+				continue;
+			}else if(!filename.contains("sun.reflect")  &&
+					!filename.contains("com.disney.utils.TestReporter") &&
+					!filename.contains("java.lang.reflect") &&
+					!filename.contains("java.lang.Thread") &&
+					!filename.contains("com.disney.composite.core.interfaces.impl") &&
+					!filename.contains("interfaces.impl.internal.ElementHandler") &&
+					!filename.contains("com.disney.test.composite") &&
+					!filename.contains("com.sun.proxy") &&
+					!filename.contains("org.testng") &&
+					!filename.contains("java.util.concurrent.ThreadPoolExecutor") &&
+					!filename.contains("com.disney.composite.core.Screenshot"))
+			{
+				path = element.getClassName()+"#"+element.getMethodName();
+				break;
+			}
+			
+		}
+		return path;
+	}
 
 	public static void logStep(String step) {
 		Reporter.log("<br/><b><font size = 4>-------------------------------------------------------------------------------</font></b><br/>");
 		Reporter.log("<br/><b><font size = 4>Step: " + step + "</font></b>");
 		Reporter.log("<br/><b><font size = 4>-------------------------------------------------------------------------------</font></b><br/>");
 		if(getPrintToConsole()) System.out.println(trimHtml(step));
+		
 	}
 	
 	public static void logVideo(String sessionId) {
@@ -55,16 +117,43 @@ public class TestReporter {
 	public static void logScenario(String scenario) {
 		Reporter.log("<br/><b><font size = 4>Data Scenario: " + scenario + "</font></b><br/>");
 		if(getPrintToConsole()) System.out.println(trimHtml(scenario));
+		logInfo("-------------------------------------------------------------------------------");
+		logInfo("Data Scenario: " + scenario);
+		logInfo("-------------------------------------------------------------------------------");
 	}
 
 	public static void log(String message) {
-		Reporter.log(new Timestamp(new java.util.Date().getTime()) + " :: " + message + "<br />");
-		if(getPrintToConsole()) System.out.println(getTimestamp() + trimHtml(message.trim()));
+		Reporter.log(getTimestamp() + getClassPath() + " > "+ message + "<br />");
+		if(getPrintToConsole()) System.out.println(getTimestamp() + getClassPath() + " > "+ trimHtml(message.trim()));
+	}
+
+	/**
+	 * Use to output low-level granular steps
+	 * @param message
+	 */
+	public static void logDebug(String message) {
+		if(debugLevel >= DEBUG){
+			//Reporter.log(getTimestamp().replace(" ::", "") + ":: DEBUG ::" + getClassPath() + " > "+ message + "<br />");
+			//if(getPrintToConsole()) System.out.println(getTimestamp()replace(" ::", "") + "::DEBUG:: " + trimHtml(message.trim()));
+			System.out.println(getTimestamp().replace(" ::", "") + ":: DEBUG :: " + getClassPath() + " > "+  (message.trim()));
+		}
+	}
+
+	/**
+	 * Use to output useful information such as URL's, parameters, and RQ/RS
+	 * @param message
+	 */
+	public static void logInfo(String message) {
+		if(debugLevel >= INFO){
+			//logNoXmlTrim(getTimestamp() + ":: INFO :: "+ getClassPath() + " > " + message + "<br />");
+			//if(getPrintToConsole()) System.out.println(getTimestamp().replace(" ::", "") + "::INFO:: " + trimHtml(message.trim()));
+			System.out.println(getTimestamp().replace(" ::", "") + ":: INFO :: "  + getClassPath() + " > "+ message.trim());
+		}
 	}
 
 	public static void logNoHtmlTrim(String message) {
-		Reporter.log(getTimestamp() + " :: " + message + "<br />");
-		if(getPrintToConsole()) System.out.println(getTimestamp() + message.trim());
+		Reporter.log(getTimestamp() + " :: " + getClassPath() + " > "+message + "<br />");
+		if(getPrintToConsole()) System.out.println(getTimestamp() +getClassPath() + " > "+ message.trim());
 	}
 	public static void logNoXmlTrim(String message) {
 		Reporter.setEscapeHtml(true);
@@ -72,12 +161,12 @@ public class TestReporter {
 		Reporter.log(message);
 		Reporter.setEscapeHtml(false);
 		Reporter.log("<br /");
-		if(getPrintToConsole()) System.out.println(getTimestamp() + message.trim());
+		if(getPrintToConsole()) System.out.println(getTimestamp() + getClassPath() + " > "+message.trim());
 	}
 
 	public static void logFailure(String message) {
-		Reporter.log(getTimestamp() + " <font size = 2 color=\"red\"><b><u> FAILURE: " + message + "</font></u></b><br />");
-		if(getPrintToConsole()) System.out.println(getTimestamp() + trimHtml(message.trim()));
+		Reporter.log(getTimestamp() + getClassPath() + " > "+" <font size = 2 color=\"red\"><b><u> FAILURE: " + message + "</font></u></b><br />");
+		if(getPrintToConsole()) System.out.println(getTimestamp() + getClassPath() + " > "+trimHtml(message.trim()));
 	}
 
 	 public static void logScreenshot(WebDriver driver, String fileLocation, String slash) {
@@ -240,7 +329,7 @@ public class TestReporter {
 			failFormat = "<font size = 2 color=\"red\">";
 			logFailure(message);
 		}
-			logNoHtmlTrim(failFormat+ "<b>SOAP REQUEST [ " + bs.getService() + "#" + bs.getOperation() + " ] </b></font>");
+			logNoHtmlTrim("<font size = 2><b>Endpoint: " + bs.getServiceURL() + "</b></font><br/>"+failFormat+ "<b>SOAP REQUEST [ " + bs.getService() + "#" + bs.getOperation() + " ] </b></font>");
 			Reporter.setEscapeHtml(true);
 			logNoXmlTrim(bs.getRequest().replaceAll("</*>", "</*>"));
 			Reporter.setEscapeHtml(false);
@@ -252,7 +341,7 @@ public class TestReporter {
 			Reporter.log("<br/>");
 			
 		if(fail){
-			throw new AutomationException(message);
+			throw new SoapException(message);
 		}
 	}
 }

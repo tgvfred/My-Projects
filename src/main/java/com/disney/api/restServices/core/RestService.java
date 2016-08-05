@@ -4,13 +4,34 @@ package com.disney.api.restServices.core;
  * Just playing around with some different ways of using rest services with Jackson 
  */
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.apache.commons.lang.WordUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -20,16 +41,28 @@ import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Document;
 
+import com.disney.AutomationException;
+import com.disney.api.WebServiceException;
+import com.disney.api.restServices.core.Headers.HeaderType;
+import com.disney.test.utils.Randomness;
+import com.disney.utils.Environment;
+import com.disney.utils.TestReporter;
+import com.disney.utils.XMLTools;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,40 +70,87 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class RestService {
-    protected RestService restService;
+    private String environment = "";
+    private String mainResource = "";
 	int statusCode = 0;
 	String responseFormat;
 	protected String responseAsString = null;
 	String userAgent; 
-	
 	protected HttpContext httpContext = new BasicHttpContext();
 	
 	protected HttpClient httpClient = null;
-	private ObjectMapper mapper = new ObjectMapper().
-		      configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	
 	
 	//constructor
 	public RestService() {
+		TestReporter.logDebug("Initializing RestService");
+		TestReporter.logDebug("Creating Http Client instance");
 	    httpClient = HttpClientBuilder.create().build();
 	}
-	
+	//constructor
+	public RestService(String environment) {
+		TestReporter.logDebug("Initializing RestService");
+		TestReporter.logDebug("Creating Http Client instance");
+	    httpClient = HttpClientBuilder.create().build();
+
+	    TestReporter.logDebug("Set ENVIRONMENT to [" + environment + "]");
+	    setEnvironment(environment);
+	}
 	/*
 	 * Encapsulation area 
 	 */
+	public String getEnvironment() {
+		return environment;
+	}
+
+	public void setEnvironment(String environment) {
+		this.environment = Environment.getEnvironmentName(environment);
+	    TestReporter.logDebug("Translating ["+environment+"] to legacy environment name if required");
+	}
+	
+	public String getMainResource() {
+		return mainResource;
+	}
+
+	public void setMainResource(String mainResource) {
+		this.mainResource = mainResource;
+	}
 	
 	public String getUserAgent(){ return this.userAgent;}
 	
 	public void setUserAgent(String userAgent){ this.userAgent = userAgent;	}	
 	
-	public int getStatusCode(){ return statusCode; }
-	
-	private void setStatusCode(HttpResponse httpResponse){ 	statusCode = httpResponse.getStatusLine().getStatusCode(); }
-	
-	public String getResponseFormat(){ return responseFormat; }
-	
-	private void setResponseFormat(HttpResponse httpResponse){ responseFormat = ContentType.getOrDefault(httpResponse.getEntity()).getMimeType().replace("application/", "");	}
+	private String getTdmURL(String resource){
+		TestReporter.logDebug("Entering RestService.getTdmUrl");
+		String tdmURL = "http://fldcvpswa6204.wdw.disney.com/EnvSrvcEndPntRepository/rest/retrieveServiceEndpoint/{environment}/{resource}";
+		String responseXML = "";
+		Document responseDoc = null;
 
+	    TestReporter.logDebug("Validing Main Resource is set");
+	    if(getMainResource() == null || getMainResource().isEmpty()) throw new AutomationException("Main resource was not set. Set with restService.setMainResource(string)");
+	    
+		String  tdmResource = getMainResource().contains("REST") ? getMainResource() : "REST_" + getMainResource();
+		
+		TestReporter.logDebug("Main Resource is [" + tdmResource +"]");
+		tdmURL = tdmURL.replace("{environment}", WordUtils.capitalize(getEnvironment()));
+		tdmURL = tdmURL.replace("{resource}", tdmResource);
+		TestReporter.logInfo("TDM URL [" + tdmURL + "]");
+		try { 
+			TestReporter.logDebug("Sending request to TDM Endpoint Repo");
+			responseXML = sendRequest(new HttpGet(tdmURL)).getResponse();
+			TestReporter.logDebug("Recieved Response from TDM Endpoint Repo");
+			responseXML = responseXML.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>","").trim();
+			TestReporter.logDebug("Creating XML Document from TDM response");
+			responseDoc = XMLTools.makeXMLDocument(responseXML);
+		} catch (Exception e) {
+			TestReporter.logDebug("Failed to retrieve TDM URL");
+			throw new AutomationException("Error getting TDM url");
+		}
+		TestReporter.logDebug("Retrieving Endpoint from TDM response");
+		String url =XMLTools.getFirstNodeValueByTagName(responseDoc, "endPoint") + resource;
+		TestReporter.logInfo("TDM Endpoint retrieved [" + url +"]");
+		TestReporter.logDebug("Exiting RestService.getTdmUrl");
+		return url;
+	}
 	/**
 	 * Sends a GET request
 	 * 
@@ -79,190 +159,233 @@ public class RestService {
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public String sendGetRequest(String URL) throws ClientProtocolException, IOException{
-	    	
-		HttpUriRequest request = new HttpGet(URL);
-		
-		HttpResponse httpResponse = httpClient.execute( request, httpContext);
-		
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		
-		responseAsString = EntityUtils.toString(httpResponse.getEntity());
-		//System.out.println("String response: " + responseAsString);
-		
-		return responseAsString;
+	public RestResponse sendGetRequest(String resource) {
+	   	return sendGetRequest(resource, null);
 	}
 	
 	/**
 	 * Sends a GET request
 	 * 
-	 * @param 	URL for the service you are testing
+	 * @param 	resource for the service you are testing
 	 * @return 	response in string format
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public String sendGetRequest(String URL, Header[] headers) throws ClientProtocolException, IOException{
-	    	HttpUriRequest request = new HttpGet(URL);
-		request.setHeaders(headers);
-		//System.out.println(URL);
-		HttpResponse httpResponse = httpClient.execute( request, httpContext);
-		
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		//setResponseCookie(httpResponse);
-		
-		responseAsString = EntityUtils.toString(httpResponse.getEntity());
-		//System.out.println("String response: " + responseAsString);
-		
-		return responseAsString;
+	public RestResponse sendGetRequest(String resource, HeaderType type) {
+		TestReporter.logDebug("Preparing to send GET request");
+		TestReporter.logDebug("Getting Rest endpoint from TDM");
+		String url = getTdmURL(resource);
+		TestReporter.logDebug("Creating Http GET instance with URL of ["+url+"]");
+		HttpGet request = new HttpGet(url);
+	    if(type != null) {
+	    	request.setHeaders(Headers.createHeader(type));
+	    }
+		return sendRequest(request);
 	}
-	/**
-	 * Sends a post (update) request, pass in the parameters for the json arguments to update
-	 * 
-	 * @param 	URL		for the service
-	 * @param 	params	arguments to update
-	 * @return 	response in string format
-	 * @throws 	ClientProtocolException
-	 * @throws 	IOException
-	 */
-	public String sendPostRequest(String URL, List<NameValuePair> params) throws ClientProtocolException, IOException{
+	
+	public RestResponse sendPostRequest(String resource, HeaderType type, List<NameValuePair> params, String json){
+		TestReporter.logDebug("Preparing to send POST request");
+		TestReporter.logDebug("Getting Rest endpoint from TDM");
+		String url = getTdmURL(resource);
+		TestReporter.logDebug("Creating Http POST instance with URL of ["+url+"]");
+		HttpPost httppost = new HttpPost(url);
 		
-		//HttpClient httpclient = HttpClients.createDefault();
-		HttpPost httppost = new HttpPost(URL);
-		httppost.setEntity(new UrlEncodedFormEntity(params));
+		if(type != null){
+	    	httppost.setHeaders(Headers.createHeader(type));
+	    }
 		
-		HttpResponse httpResponse = httpClient.execute(httppost, httpContext);
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		
-		responseAsString = EntityUtils.toString(httpResponse.getEntity());
-		//System.out.println("String response: " + responseAsString);
+		try {
+			if(params !=  null){
+		    	String allParams= "";
+		    	for (NameValuePair param : params){
+		    		allParams += "[" +param.getName() + ": " + param.getValue()+"] ";
+		    	}
+				TestReporter.logInfo("Adding Parameters " + allParams);
+				httppost.setEntity(new UrlEncodedFormEntity(params));
 
-		return responseAsString;
+		    }
+			
+			if(json !=  null){
+				TestReporter.logInfo("Adding json [" + json + "]");
+				httppost.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return sendRequest(httppost);
 	}
 	
 	/**
 	 * Sends a post (update) request, pass in the parameters for the json arguments to update
 	 * 
-	 * @param 	URL		for the service
+	 * @param 	resource		for the service
 	 * @param 	params	arguments to update
 	 * @return 	response in string format
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public String sendPostRequest(String URL,Header[] headers, List<NameValuePair> params) throws ClientProtocolException, IOException{
-		
-		//HttpClient httpclient = HttpClients.createDefault();
-		HttpPost httppost = new HttpPost(URL);
-		httppost.setHeaders(headers);
-		httppost.setEntity(new UrlEncodedFormEntity(params,"UTF-8"));
-		
-		HttpResponse httpResponse = httpClient.execute(httppost, httpContext);
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		responseAsString = EntityUtils.toString(httpResponse.getEntity());
-		//System.out.println("String response: " + responseAsString);
-		
-		
-		
-		return responseAsString;
+	public RestResponse sendPostRequest(String resource, List<NameValuePair> params){
+		return sendPostRequest(resource, null, params, null);
 	}
 	
-	public String sendPostRequest(String URL,Header[] headers, String body) throws ClientProtocolException, IOException{
-		
-		//HttpClient httpclient = HttpClients.createDefault();
-		HttpPost httppost = new HttpPost(URL);
-		httppost.setHeaders(headers);
-		httppost.setEntity( new ByteArrayEntity(body.getBytes("UTF-8")));
-		
-		HttpResponse httpResponse = httpClient.execute(httppost, httpContext);
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		responseAsString = EntityUtils.toString(httpResponse.getEntity());
-		
-		return responseAsString;
+	/**
+	 * Sends a post (update) request, pass in the parameters for the json arguments to update
+	 * 
+	 * @param 	resource		for the service
+	 * @param 	params	arguments to update
+	 * @return 	response in string format
+	 * @throws 	ClientProtocolException
+	 * @throws 	IOException
+	 *//*
+	public RestResponse sendPostRequest(String resource, Header[] headers, List<NameValuePair> params) {
+		return sendPostRequest(resource, headers, params, null);
+	}*/
+	
+	public RestResponse sendPostRequest(URI url, HeaderType type, List<NameValuePair> params) {
+		HttpPost httppost = new HttpPost(url.toString());
+		if(type !=  null) {
+			httppost.setHeaders(Headers.createHeader(type));
+		}
+
+		try {
+			if(params !=  null) httppost.setEntity(new UrlEncodedFormEntity(params));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return sendRequest(httppost);
 	}
 	
+	public RestResponse sendPostRequest(String resource, HeaderType type, String body){
+		return sendPostRequest(resource, type, null, body);
+	}
+	
+	public RestResponse sendPutRequest(String resource, HeaderType type, List<NameValuePair> params, String json){
+		TestReporter.logDebug("Preparing to send PUT request");
+		TestReporter.logDebug("Getting Rest endpoint from TDM");
+		String url = getTdmURL(resource);
+		TestReporter.logDebug("Creating Http PUT instance with URL of ["+url+"]");
+		HttpPut httpPut = new HttpPut(url);
+		if(type != null){
+			httpPut.setHeaders(Headers.createHeader(type));
+	    }
+		
+		try {
+			if(params !=  null){
+		    	String allParams= "";
+		    	for (NameValuePair param : params){
+		    		allParams += "[" +param.getName() + ": " + param.getValue()+"] ";
+		    	}
+				TestReporter.logInfo("Adding Parameters " + allParams);
+				httpPut.setEntity(new UrlEncodedFormEntity(params));
+
+		    }
+			
+			if(json !=  null){
+				TestReporter.logInfo("Adding json " + json );
+				httpPut.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return sendRequest(httpPut);
+	}
+	
+	public RestResponse sendPutRequest(String resource, HeaderType type, String json) {
+		return sendPutRequest(resource, type, null, json);
+	}
 	/**
 	 * Sends a put (create) request, pass in the parameters for the json arguments to create
 	 * 
-	 * @param 	URL		for the service
+	 * @param 	resource		for the service
 	 * @param 	params	arguments to update
 	 * @return 	response in string format
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public String sendPutRequest(String URL, List<NameValuePair> params) throws ClientProtocolException, IOException{
-		//HttpClient httpclient = HttpClients.createDefault();
-		HttpPut putRequest = new HttpPut(URL);
-		putRequest.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-		
-		HttpResponse httpResponse = httpClient.execute(putRequest, httpContext);
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		
-		responseAsString = EntityUtils.toString(httpResponse.getEntity());
-		//System.out.println("String response: " + responseAsString);
-		
-		return responseAsString;
+	public RestResponse sendPutRequest(String resource,HeaderType type, List<NameValuePair> params) {
+		return sendPutRequest(resource, type , params, null);
 	}
 	
-	public String sendPutRequest(String URL,  Header[] headers ,List<NameValuePair> params) throws ClientProtocolException, IOException{
-		//HttpClient httpclient = HttpClients.createDefault();
-		HttpPut putRequest = new HttpPut(URL);
-		putRequest.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-		if (headers != null) putRequest.setHeaders(headers);
-		HttpResponse httpResponse = httpClient.execute(putRequest, httpContext);
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		
-		responseAsString = EntityUtils.toString(httpResponse.getEntity());
-		//System.out.println("String response: " + responseAsString);
-		
-		return responseAsString;
+	public RestResponse sendPutRequest(String resource, HeaderType type) {
+		return sendPutRequest(resource,type, null, null);
 	}
 	
-	/**
-	 * Sends a patch (update) request, pass in the parameters for the json arguments to update
-	 * 
-	 * @param 	URL		for the service
-	 * @param 	params	arguments to update
-	 * @return 	response in string format
-	 * @throws 	ClientProtocolException
-	 * @throws 	IOException
-	 */
-	public String sendPatchRequest(String URL, List<NameValuePair> params) throws ClientProtocolException, IOException{
-	    return sendPatchRequest(URL, null, params);
+	public RestResponse sendPutRequest(String resource,  List<NameValuePair> params){
+		return sendPutRequest(resource, null, params, null);
 	}
 	
-	/**
-	 * Sends a patch (update) request, pass in the parameters for the json arguments to update
-	 * 
-	 * @param 	URL		for the service
-	 * @param 	params	arguments to update
-	 * @return 	response in string format
-	 * @throws 	ClientProtocolException
-	 * @throws 	IOException
-	 */
-	public String sendPatchRequest(String URL, Header[] headers, List<NameValuePair> params) throws ClientProtocolException, IOException{
-		//HttpClient httpclient = HttpClients.createDefault();
-		HttpPatch patchRequest = new HttpPatch(URL);
-		patchRequest.setEntity(new UrlEncodedFormEntity(params,"UTF-8"));
-		if (headers != null) patchRequest.setHeaders(headers);
+	public RestResponse sendPutRequest(String resource,  String json) {
+		return sendPutRequest(resource, null, json);
+	}
+	public RestResponse sendPatchRequest(String resource,HeaderType type,  List<NameValuePair> params, String json){
+		TestReporter.logDebug("Preparing to send PATCH request");
+		TestReporter.logDebug("Getting Rest endpoint from TDM");
+		String url = getTdmURL(resource);
+		TestReporter.logDebug("Creating Http PATCH instance with URL of ["+url+"]");
+		HttpPatch httpPatch = new HttpPatch(url);
+		if(type != null){
+			httpPatch.setHeaders(Headers.createHeader(type));
+	    }
 		
-		HttpResponse httpResponse = httpClient.execute(patchRequest, httpContext);
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		
-		if(httpResponse.getEntity() != null){
-		    responseAsString = EntityUtils.toString(httpResponse.getEntity());
-		}else{
-		    responseAsString = "";
+		try {
+			if(params !=  null){
+		    	String allParams= "";
+		    	for (NameValuePair param : params){
+		    		allParams += "[" +param.getName() + ": " + param.getValue()+"] ";
+		    	}
+				TestReporter.logInfo("Adding Parameters " + allParams);
+				httpPatch.setEntity(new UrlEncodedFormEntity(params));
+
+		    }
+			
+			if(json !=  null){
+				TestReporter.logInfo("Adding json [" + json + "]");
+				httpPatch.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		//System.out.println("String response: " + responseAsString);
-		
-		return responseAsString;
+		return sendRequest(httpPatch);
+	}
+	/**
+	 * Sends a patch (update) request, pass in the parameters for the json arguments to update
+	 * 
+	 * @param 	resource		for the service
+	 * @param 	params	arguments to update
+	 * @return 	response in string format
+	 * @throws 	ClientProtocolException
+	 * @throws 	IOException
+	 */
+	public RestResponse sendPatchRequest(String resource, HeaderType type, List<NameValuePair> params){
+	    return sendPatchRequest(resource, type, params, null);
+	}
+	
+	public RestResponse sendPatchRequest(String resource, List<NameValuePair> params, String json){
+	    return sendPatchRequest(resource, null, params,json);
+	}
+	
+	/**
+	 * Sends a patch (update) request, pass in the parameters for the json arguments to update
+	 * 
+	 * @param 	resource		for the service
+	 * @param 	params	arguments to update
+	 * @return 	response in string format
+	 * @throws 	ClientProtocolException
+	 * @throws 	IOException
+	 */
+	public RestResponse sendPatchRequest(String resource,  List<NameValuePair> params) {
+		 return sendPatchRequest(resource, null, params,null);
+	}
+	
+	public RestResponse sendPatchRequest(String resource, HeaderType type, String json) {
+		 return sendPatchRequest(resource, type, null, json);
 	}
 	
 	
@@ -270,72 +393,29 @@ public class RestService {
 	 * Sends a delete request.  Depends on the service if a response is returned.
 	 * If no response is returned, will return null	 * 
 	 * 
-	 * @param 	URL		for the service
+	 * @param 	resource		for the service
 	 * @return 	response in string format or null
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public String sendDeleteRequest(String URL) throws ClientProtocolException, IOException{
-
-		HttpUriRequest deleteRequest = new HttpDelete(URL);
+	
+	public RestResponse sendDeleteRequest(String resource,HeaderType type){
+		TestReporter.logDebug("Preparing to send PATCH request");
+		TestReporter.logDebug("Getting Rest endpoint from TDM");
+		String url = getTdmURL(resource);
+		TestReporter.logDebug("Creating Http PATCH instance with URL of ["+url+"]");
+		HttpDelete httpDelete = new HttpDelete(url);
 		
-		HttpResponse httpResponse = httpClient.execute( deleteRequest, httpContext );
-
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
+		if(type != null){
+	    	httpDelete.setHeaders(Headers.createHeader(type));
+	    }
 		
-		if (httpResponse.getEntity()!=null){
-			responseAsString = EntityUtils.toString(httpResponse.getEntity());
-			System.out.println("String response: " + responseAsString);
-		}		
-		
-		return responseAsString;
+		return sendRequest(httpDelete);
 	}
 	
-	public String sendDeleteRequest(String URL,Header[] headers, List<NameValuePair> params) throws ClientProtocolException, IOException{
-	        URI uri = null;
-		URIBuilder builder = new URIBuilder();
-		builder.setScheme("http").setHost("bluesourcestaging.herokuapp.com").setPath("/admin/titles/5884").addParameters(params);
-		try {
-		   uri =builder.build();
-		} catch (URISyntaxException e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
-		HttpDelete deleteRequest = new HttpDelete(uri);
-		
-		if (headers != null) deleteRequest.setHeaders(headers);
-		HttpResponse httpResponse = httpClient.execute( deleteRequest, httpContext );
-
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		
-		if (httpResponse.getEntity()!=null){
-			responseAsString = EntityUtils.toString(httpResponse.getEntity());
-			System.out.println("String response: " + responseAsString);
-		}		
-		
-		return responseAsString;
+	public RestResponse sendDeleteRequest(String resource ){
+		return sendDeleteRequest(resource, null); 
 	}
-	
-	public String sendDeleteRequest(URI uri,Header[] headers) throws ClientProtocolException, IOException{
-
-		HttpDelete deleteRequest = new HttpDelete(uri);
-		
-		if (headers != null) deleteRequest.setHeaders(headers);
-		HttpResponse httpResponse = httpClient.execute( deleteRequest, httpContext );
-
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		
-		if (httpResponse.getEntity()!=null){
-			responseAsString = EntityUtils.toString(httpResponse.getEntity());
-			//System.out.println("String response: " + responseAsString);
-		}		
-		
-		return responseAsString;
-	}
-	
 	/**
 	 * Sends an options request.  Options should give what the acceptable methods are for
 	 * the service (GET, HEAD, PUT, POST, etc).  There should be some sort of an ALLOW 
@@ -350,66 +430,31 @@ public class RestService {
 	 * @throws 	ClientProtocolException
 	 * @throws 	IOException
 	 */
-	public Header[] sendOptionsRequest(String URL ) throws ClientProtocolException, IOException{
-		HttpClient httpclient = HttpClients.createDefault();
-		HttpOptions httpOptions=new HttpOptions(URL);
-		
-		HttpResponse httpResponse=httpclient.execute(httpOptions);
-		System.out.println("Response Headers: ");
-		Header[] headers = httpResponse.getAllHeaders();
-		for (Header header: headers ){	
-			System.out.println(header.getName() + " : " + header.getValue());
-		}
-		
-		setStatusCode(httpResponse);		
-		setResponseFormat(httpResponse);
-		
-		return headers;
+	public Header[] sendOptionsRequest(String resource ) {
+		HttpOptions httpOptions=new HttpOptions(getTdmURL(resource));
+		return sendRequest(httpOptions).getHeaders();
 	}
-	
 
-	
-	/**
-	 * Uses the class instance of the responeAsString to map to object
-	 * @param clazz
-	 * @return
-	 * @throws IOException
-	 */
-	public <T> T mapJSONToObject(Class<T> clazz) throws IOException {
-		return mapJSONToObject(responseAsString, clazz);
-		
+	public String getJsonFromObject(Object request){
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request);
+		} catch (JsonProcessingException e) {
+			throw new WebServiceException("Failed to convert object to json");
+		}
 	}
 	
-	/**
-	 * Can pass in any json as a string and map to object
-	 * @param clazz
-	 * @return
-	 * @throws IOException
-	 */
-	public <T> T mapJSONToObject(String stringResponse, Class<T> clazz) throws IOException {
-		
-		return mapper.readValue(stringResponse, clazz);
+	private RestResponse sendRequest(HttpUriRequest request){
+		RestResponse response = null;
+		try {
+			TestReporter.logDebug("Sending request");
+			response = new RestResponse(httpClient.execute(request));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		TestReporter.logDebug("Setting URI used on RestResponse");		
+		response.setServiceURL(request.getURI().toString());
+		TestReporter.logDebug("Returning RestResponse to calling method");
+		return response;
 	}
-	
-	/**
-	 * Can pass in any json as a string and maps to tree
-	 * @param clazz
-	 * @return
-	 * @throws IOException
-	 */
-	public JsonNode mapJSONToTree(String stringResponse) throws IOException {
-				
-		return mapper.readTree(stringResponse);
-	}
-	
-	/**
-	 * Uses the class instance of the responeAsString to map to tree
-	 * @param clazz
-	 * @return
-	 * @throws IOException
-	 */
-	public JsonNode mapJSONToTree() throws IOException {
-		return mapJSONToTree(responseAsString);
-	}
-	
 }

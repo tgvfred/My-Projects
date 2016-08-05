@@ -2,6 +2,7 @@ package com.disney.utils.dataFactory.staging.bookSEReservation;
 
 import com.disney.AutomationException;
 import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.eventDiningService.operations.Arrived;
 import com.disney.api.soapServices.eventDiningService.operations.Book;
 import com.disney.api.soapServices.eventDiningService.operations.Cancel;
@@ -40,6 +41,7 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	private String retrievedFacilityId;	// Facility ID as it is found in the #retrieve() method response
 	private String primaryGuestAge;	//Primary guest address as it is found in the #retrieve() method response; expected to be contained in the first 'partyRole' node 
 	private String modifyStatus;	// Status in the response from modify a reservation 
+	private String sourceAccountingCenter;	// Source Accounting Center ID
 	/*
 	 * Travel Agency Fields
 	 */
@@ -118,6 +120,11 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	 */
 	@Override public String getProductId(){return this.productId;}
 	/**
+	 * Retrieves the product type of the current reservation
+	 * @return String, product type of the current reservation
+	 */
+	@Override public String getProductType(){return this.productType;}
+	/**
 	 * Retrieves the service period ID of the current reservation
 	 * @return String, service period ID of the current reservation
 	 */
@@ -188,6 +195,10 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	 */
 	@Override
 	public String getModifyResponseStatus(){return this.modifyStatus;}
+	
+	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
+	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
+	@Override public String getTravelAgencyId(){return agencyId;}
 	/**
 	 * Defines the facility ID, service start date, service period, and product ID for the current 
 	 * reservation and invokes a method that books the reservation
@@ -238,21 +249,25 @@ public class EventDiningReservation implements ScheduledEventReservation {
 		eventDiningBook.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){eventDiningBook.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-//		ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-//		resource.setFacilityId(getFacilityId());
-//		resource.sendRequest();
-//		resource.getReservableResources();
-//		eventDiningBook.setReservableResourceId(resource.getFirstReservableResourceId());
+		if(!getEnvironment().equalsIgnoreCase("Development")&& !getEnvironment().contains("_CM") ){
+			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
+			resource.setFacilityId(getFacilityId());
+			resource.sendRequest();
+			resource.getReservableResources();
+			eventDiningBook.setReservableResourceId(resource.getFirstReservableResourceId());
+		}
 		
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		eventDiningBook.sendRequest();
-		if(eventDiningBook.getResponse().contains("Row was updated or deleted by another transaction")){
+		if(eventDiningBook.getResponse().contains("Row was updated or deleted by another transaction")|| 
+				eventDiningBook.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			eventDiningBook.sendRequest();
 		}
-		TestReporter.logAPI(!eventDiningBook.getResponseStatusCode().equals("200"), "An error occurred booking an event dining service reservation", eventDiningBook);
+		TestReporter.logAPI(!eventDiningBook.getResponseStatusCode().equals("200"), "An error occurred booking an event dining service reservation: " + eventDiningBook.getFaultString(), eventDiningBook);
 		this.travelPlanId = eventDiningBook.getTravelPlanId();
 		this.confirmationNumber = eventDiningBook.getTravelPlanSegmentId();
+		this.sourceAccountingCenter = eventDiningBook.getSourceAccountingCenter();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
 		TestReporter.log("Reservation Number: " + getConfirmationNumber());
 		retrieve();
@@ -311,7 +326,9 @@ public class EventDiningReservation implements ScheduledEventReservation {
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving an event dining service reservation", retrieve);
 		this.status = retrieve.getStatus();
-		numberOfGuests = retrieve.getNumberOfGuests();
+		try{
+			numberOfGuests = retrieve.getNumberOfGuests();
+		}catch(XPathNotFoundException e){}
 		retrievedFacilityId = retrieve.getResponseFacilityId();
 		primaryGuestAge = retrieve.getPrimaryGuestAge();
 	}
@@ -319,7 +336,10 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	/**
 	 * Uses predefined values to invoke a method that defines values for a travel agency that is intended to be added to the current reservation
 	 */
-	@Override public void addTravelAgency(){addTravelAgency("99999998", "0", "0", "0", "0", "0", "0");}
+	@Override public void addTravelAgency(){
+		agencyId = "99999998";
+		addTravelAgency(agencyId, "0", "0", "0", "0", "0", "0");
+	}
 	/**
 	 * Uses user-defined values to invoke a method that defines values for a travel agency that is intended to be added to the current reservation
 	 */

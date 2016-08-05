@@ -1,15 +1,14 @@
 package com.disney.composite.api.eventDiningService.noShow;
 
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.eventDiningService.operations.Arrived;
 import com.disney.api.soapServices.eventDiningService.operations.NoShow;
 import com.disney.composite.BaseTest;
-import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -23,7 +22,7 @@ public class TestNoShow_Negative extends BaseTest{
 	
 	
 	@Override
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
@@ -37,7 +36,7 @@ public class TestNoShow_Negative extends BaseTest{
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
 		noShow.sendRequest();
-
+		validateApplicationError(noShow, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 		TestReporter.logAPI(!noShow.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0"), noShow.getFaultString() ,noShow);
 
 		LogItems logItems = new LogItems();
@@ -59,6 +58,7 @@ public class TestNoShow_Negative extends BaseTest{
 		noShow.setReservationNumber("123456789011");
 		noShow.sendRequest();
 
+		validateApplicationError(noShow, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 		TestReporter.logAPI(!noShow.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 123456789011"), noShow.getFaultString() ,noShow);
 
 		LogItems logItems = new LogItems();
@@ -81,6 +81,7 @@ public class TestNoShow_Negative extends BaseTest{
 		noShow.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		noShow.sendRequest();
 
+		validateApplicationError(noShow, DiningErrorCode.SALES_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!noShow.getFaultString().contains("Sales Channel is required : null"), noShow.getFaultString() ,noShow);
 
 		LogItems logItems = new LogItems();
@@ -103,6 +104,7 @@ public class TestNoShow_Negative extends BaseTest{
 		noShow.setSalesChannel("Blah");
 		noShow.sendRequest();
 
+		validateApplicationError(noShow, DiningErrorCode.SALES_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!noShow.getFaultString().contains("Sales Channel is required : null"), noShow.getFaultString() ,noShow);
 
 		LogItems logItems = new LogItems();
@@ -125,6 +127,7 @@ public class TestNoShow_Negative extends BaseTest{
 			noShow.setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
 			noShow.sendRequest();
 
+			validateApplicationError(noShow, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 			TestReporter.logAPI(!noShow.getFaultString().contains("communication Channel is required : null"), noShow.getFaultString() ,noShow);
 
 			LogItems logItems = new LogItems();
@@ -147,6 +150,7 @@ public class TestNoShow_Negative extends BaseTest{
 			noShow.setCommunicationChannel("Blah");
 			noShow.sendRequest();
 
+			validateApplicationError(noShow, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 			TestReporter.logAPI(!noShow.getFaultString().contains("communication Channel is required : null"), noShow.getFaultString() ,noShow);
 
 			LogItems logItems = new LogItems();
@@ -171,6 +175,7 @@ public class TestNoShow_Negative extends BaseTest{
 		noShow.setReservationNumber(res2.getConfirmationNumber());		
 		noShow.sendRequest();
 
+		validateApplicationError(noShow, DiningErrorCode.INVALID_TRAVEL_STATUS);
 		TestReporter.logAPI(!noShow.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!"), noShow.getFaultString() ,noShow);
 
 		LogItems logItems = new LogItems();
@@ -195,6 +200,7 @@ public class TestNoShow_Negative extends BaseTest{
 		noShow.setReservationNumber(res2.getConfirmationNumber());		
 		noShow.sendRequest();
 
+		validateApplicationError(noShow, DiningErrorCode.INVALID_TRAVEL_STATUS);
 		TestReporter.logAPI(!noShow.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!"), noShow.getFaultString() ,noShow);
 
 		LogItems logItems = new LogItems();

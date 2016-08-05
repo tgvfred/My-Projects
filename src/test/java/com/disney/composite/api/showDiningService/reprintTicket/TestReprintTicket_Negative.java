@@ -5,6 +5,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.showDiningService.operations.ReprintTicket;
 import com.disney.composite.BaseTest;
@@ -31,7 +33,7 @@ public class TestReprintTicket_Negative extends BaseTest{
 		String number = "1234";
 		ReprintTicket reprint = new ReprintTicket(environment, "Main");
 		reprint.setReservationNumber(number);
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, reprint);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number,  DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, reprint);
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -39,7 +41,7 @@ public class TestReprintTicket_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Sales Channel");
 		ReprintTicket reprint = new ReprintTicket(environment, "Main");
 		reprint.setSalesChannel(Randomness.randomString(4));
-		sendRequestAndValidateFaultString("Sales Channel is required : null", reprint);
+		sendRequestAndValidateFaultString("Sales Channel is required : null",  DiningErrorCode.SALES_CHANNEL_REQUIRED, reprint);
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -47,7 +49,7 @@ public class TestReprintTicket_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Communications Channel");
 		ReprintTicket reprint = new ReprintTicket(environment, "Main");
 		reprint.setCommunicationChannel(Randomness.randomString(4));
-		sendRequestAndValidateFaultString("communication Channel is required : null", reprint);
+		sendRequestAndValidateFaultString("communication Channel is required : null",  DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED,reprint);
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -56,7 +58,7 @@ public class TestReprintTicket_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Reprint Reason ID");
 		ReprintTicket reprint = new ReprintTicket(environment, "Main");
 		reprint.setReprintReasonId(id);
-		sendRequestAndValidateFaultString("INVALID REASON ID! : INVALID REPRINT REASON#"+id, reprint);
+		sendRequestAndValidateFaultString("INVALID REASON ID! : INVALID REPRINT REASON#"+id,  DiningErrorCode.INVALID_REASON, reprint);
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -64,7 +66,7 @@ public class TestReprintTicket_Negative extends BaseTest{
 		TestReporter.logScenario("Missing Reservation Number");
 		ReprintTicket reprint = new ReprintTicket(environment, "Main");
 		reprint.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", reprint);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0",  DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, reprint);
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -72,7 +74,7 @@ public class TestReprintTicket_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Sales Channel");
 		ReprintTicket reprint = new ReprintTicket(environment, "Main");
 		reprint.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Sales Channel is required : null", reprint);
+		sendRequestAndValidateFaultString("Sales Channel is required : null",DiningErrorCode.SALES_CHANNEL_REQUIRED, reprint);
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -80,7 +82,7 @@ public class TestReprintTicket_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Communications Channel");
 		ReprintTicket reprint = new ReprintTicket(environment, "Main");
 		reprint.setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("communication Channel is required : null", reprint);
+		sendRequestAndValidateFaultString("communication Channel is required : null", DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED, reprint);
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -88,11 +90,12 @@ public class TestReprintTicket_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Reprint Reason ID");
 		ReprintTicket reprint = new ReprintTicket(environment, "Main");
 		reprint.setReprintReasonId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("INVALID REASON ID! : INVALID REPRINT REASON#0", reprint);
+		sendRequestAndValidateFaultString("INVALID REASON ID! : INVALID REPRINT REASON#0", DiningErrorCode.INVALID_REASON, reprint);
 	}	
 
-    private void sendRequestAndValidateFaultString(String fault, ReprintTicket reprint){
+    private void sendRequestAndValidateFaultString(String fault, ApplicationErrorCode error, ReprintTicket reprint){
     	reprint.sendRequest();
+		validateApplicationError(reprint, error);
     	TestReporter.logAPI(!reprint.getFaultString().contains(fault), reprint.getFaultString(), reprint);
 		logItems(reprint);
     }

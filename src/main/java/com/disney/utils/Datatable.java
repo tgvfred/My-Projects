@@ -60,7 +60,13 @@ public class Datatable {
 
 
 	private  Recordset getInfo(String table, String searchTest){
-		return VirtualTable.compileJSON(tdmURL + virtualTablePath + table, new VirtualTable().getRows(tdmURL + virtualTablePath+ table, "Scenario", searchTest ));
+		TestReporter.logDebug("Entering Datatable#getInfo");
+		String virtualTableName = tdmURL + virtualTablePath + table;
+		TestReporter.logInfo("Virtual Table name to retrieve [" + virtualTableName + "]");
+		String rows = new VirtualTable().getRows(virtualTableName, "Scenario", searchTest );
+		Recordset recordSet = VirtualTable.compileJSON(virtualTableName, rows);
+		TestReporter.logDebug("Exiting Datatable#getInfo");
+		return recordSet;
 	}
 	
 	private  Recordset getInfo(String table, String searchTest, String replacementString){

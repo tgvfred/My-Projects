@@ -160,10 +160,9 @@ public class Modify extends ShowDiningService {
 		try{
 			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/allergies["+index+"]");
 		}catch(Exception e){
-			e.printStackTrace();
 			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage", "fx:AddNode;Node:allergies");
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/allergies["+index+"]", value);
 		}
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/allergies["+index+"]", value);
 	}
 	
 	public void setEnterpriseProductid(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/enterpriseProductId", value);}

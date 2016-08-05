@@ -14,7 +14,7 @@ public class Retrieve extends SeatedEventsComponentService{
 		removeWhiteSpace();
 	}
 	
-	public void setReservationnumber(String value){setRequestNodeValueByXPath("/Envelope/Body/retrieve/reservationNumber", value);}
+	public void setReservationNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/retrieve/reservationNumber", value);}
 	public String getPrimaryGuestPartyId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/seatedEventRetrieveResponseTO/reservationInfo/primaryGuest/partyId");}
 	public String getPrimaryGuestGuestId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/seatedEventRetrieveResponseTO/reservationInfo/primaryGuest/guestId");}
 	public String getTravelPlanId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/seatedEventRetrieveResponseTO/reservationInfo/travelPlanId");}

@@ -1,7 +1,6 @@
 package com.disney.composite.api.partyV3.searchGuestIDByExternalReference;
 
-import org.testng.SkipException;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -18,7 +17,7 @@ import com.disney.utils.dataFactory.guestFactory.Guest;
 public class TestSearchGuestIDByExternalReference  extends BaseTest{
 	private Guest guest = new Guest();
 	
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;

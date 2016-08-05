@@ -1,11 +1,10 @@
 package com.disney.composite.api.eventDiningService.cancel;
 
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.eventDiningService.operations.Book;
 import com.disney.api.soapServices.eventDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
@@ -22,7 +21,7 @@ public class TestCancel extends BaseTest{
 	
 	
 	@Override
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;

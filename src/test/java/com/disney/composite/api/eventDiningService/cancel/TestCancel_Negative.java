@@ -1,10 +1,11 @@
 package com.disney.composite.api.eventDiningService.cancel;
 
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.eventDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
@@ -20,7 +21,7 @@ public class TestCancel_Negative  extends BaseTest{
 	protected ScheduledEventReservation res = null;
 	
 	@Override
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
@@ -34,6 +35,7 @@ public class TestCancel_Negative  extends BaseTest{
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
 		cancel.sendRequest();
+		validateApplicationError(cancel, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 		TestReporter.logAPI(!cancel.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0"), cancel.getFaultString() ,cancel);
 
 		LogItems logValidItems = new LogItems();
@@ -54,6 +56,7 @@ public class TestCancel_Negative  extends BaseTest{
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber("11111");
 		cancel.sendRequest();
+		validateApplicationError(cancel, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 		TestReporter.logAPI(!cancel.getFaultString().contains("RECORD NOT FOUND : NO RESERVATION FOUND WITH 11111"), cancel.getFaultString() ,cancel);
 
 		LogItems logValidItems = new LogItems();
@@ -76,6 +79,7 @@ public class TestCancel_Negative  extends BaseTest{
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
 		cancel.sendRequest();
+		validateApplicationError(cancel, DiningErrorCode.INVALID_TRAVEL_STATUS);
 		TestReporter.logAPI(!cancel.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), cancel.getFaultString() ,cancel);
 
 		LogItems logValidItems = new LogItems();
@@ -98,6 +102,7 @@ public class TestCancel_Negative  extends BaseTest{
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
 		cancel.sendRequest();
+		validateApplicationError(cancel, DiningErrorCode.INVALID_TRAVEL_STATUS);
 		TestReporter.logAPI(!cancel.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), cancel.getFaultString() ,cancel);
 
 		LogItems logValidItems = new LogItems();
@@ -120,6 +125,7 @@ public class TestCancel_Negative  extends BaseTest{
 		Cancel cancel = new Cancel(this.environment,"CancelDiningEvent");
 		cancel.setReservationNumber(res2.getConfirmationNumber());
 		cancel.sendRequest();
+		validateApplicationError(cancel, DiningErrorCode.INVALID_TRAVEL_STATUS);
 		TestReporter.logAPI(!cancel.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), cancel.getFaultString() ,cancel);
 
 		LogItems logValidItems = new LogItems();

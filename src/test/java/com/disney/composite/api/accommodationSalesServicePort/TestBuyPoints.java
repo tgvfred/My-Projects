@@ -1,6 +1,7 @@
 package com.disney.composite.api.accommodationSalesServicePort;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -14,7 +15,7 @@ public class TestBuyPoints {
 	private String environment = "";
 	private BuyPoints BuyPoints;
 	
-	@BeforeTest(alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(String environment) {this.environment = environment;}
 	

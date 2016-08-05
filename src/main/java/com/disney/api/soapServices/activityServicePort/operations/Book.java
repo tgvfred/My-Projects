@@ -4,6 +4,8 @@ import com.disney.api.soapServices.activityServicePort.ActivityService;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
+import com.disney.utils.dataFactory.FacilityInfo;
+import com.disney.utils.dataFactory.ProductInfo;
 import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
 import com.disney.utils.dataFactory.guestFactory.Guest;
@@ -28,7 +30,7 @@ public class Book extends ActivityService{
 	 * Sets the travel plan ID in the SOAP Request
 	 * @param value - travel plan ID
 	 */
-	public void setActivityTravelPlanId(String value){
+	public void setTravelPlanId(String value){
 		try{setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/travelPlanId", value);}
 		catch(XPathNotFoundException e){
 			setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest", "fx:AddNode;Node:travelPlanId");
@@ -39,182 +41,200 @@ public class Book extends ActivityService{
 	 * Sets the sales channel in the in the SOAP Request
 	 * @param value - sales channel
 	 */
-	public void setActivitySalesChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/salesChannel", value);}
+	public void setSalesChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/salesChannel", value);}
 	/**
 	 * Sets the communications channel in the SOAP Request
 	 * @param value - communications channel
 	 */
-	public void setActivityCommunicationChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/communicationChannel", value);}
+	public void setCommunicationChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/communicationChannel", value);}
 	/**
 	 * Sets the unit price dateTime(s) in the SOAP Request
 	 * @param value - unit price dateTime
 	 * @param index - index of the node to update
 	 */
-	public void setActivityUnitPriceDateTime(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices["+index+"]/unitPrices/date", value);}
+	public void setUnitPriceDateTime(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices["+index+"]/unitPrices/date", value);}
 	/**
 	 * Sets the component unit price dateTime(s) in the SOAP Request
 	 * @param value - component unit price dateTime
 	 */
-	public void setActivityComponentUnitPriceDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices/unitPrices/date", value);}	
+	public void setComponentUnitPriceDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices/unitPrices/date", value);}	
 //	/**
 //	 * Sets the service start dateTime in the SOAP Request
 //	 * @param value - service start dateTime
 //	 */
-//	public void setActivityServiceStartDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/serviceStartDate", value);}	
+//	public void setServiceStartDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/serviceStartDate", value);}	
 	/**
 	 * Sets the addON component unit price dateTime in the SOAP Request
 	 * @param value - addOn component unit price dateTime
 	 */
-	public void setActivityAddOnComponentUnitPriceDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/componentPrices/unitPrices/date", value);}	
+	public void setAddOnComponentUnitPriceDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/componentPrices/unitPrices/date", value);}	
 	/**
 	 * Sets the addOn service start dateTime in the SOAP Request
 	 * @param value - addOn service start dateTime
 	 */
-	public void setActivityAddOnServiceStartDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/serviceStartDate", value);}	
+	public void setAddOnServiceStartDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/serviceStartDate", value);}	
 	/**
 	 * Sets the source accounting center in the SOAP Request
 	 * @param value = source accounting center
 	 */
-	public void setActivitySourceAccountingCenter(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/sourceAccountingCenter", value);}	
+	public void setSourceAccountingCenter(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/sourceAccountingCenter", value);}	
 	/**
 	 * Gets the sales channel in the SOAP Request
 	 * @return sales channel
 	 */
-	public String getActivitySalesChannel(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/salesChannel");}	
+	public String getSalesChannel(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/salesChannel");}	
 	/**
 	 * Gets the communications channel in the SOAP Request
 	 * @return communications channel
 	 */
-	public String getActivityCommunicationsChannel(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/communicationChannel");}	
+	public String getCommunicationsChannel(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/communicationChannel");}	
 //	/**
 //	 * Gets the primary guest first name in the SOAP Request
 //	 * @return primary guest first name
 //	 */
-//	public String getActivityPrimaryGuestFirstName(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/firstName");}	
+//	public String getPrimaryGuestFirstName(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/firstName");}	
 //	/**
 //	 * Gets the primary guest last name in the SOAP Request
 //	 * @return
 //	 */
-//	public String getActivityPrimaryGuestLastName(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/lastName");}
+//	public String getPrimaryGuestLastName(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/lastName");}
 	/**
 	 * Gets the travel plan ID in the SOAP Response
 	 * @return travel plan ID
 	 */
-	public String getActivityTravelPlanId(){return getResponseNodeValueByXPath("/Envelope/Body/bookActivityComponentResponse/bookResponse/travelPlanId");}	
+	public String getTravelPlanId(){return getResponseNodeValueByXPath("/Envelope/Body/bookActivityComponentResponse/bookResponse/travelPlanId");}	
 	/**
 	 * Gets the travel plan segment ID in the SOAP Response
 	 * @return travel plan segment ID
 	 */
-	public String getActivityTravelPlanSegmentId(){return getResponseNodeValueByXPath("/Envelope/Body/bookActivityComponentResponse/bookResponse/confirmationNumber");}	
+	public String getTravelPlanSegmentId(){return getResponseNodeValueByXPath("/Envelope/Body/bookActivityComponentResponse/bookResponse/confirmationNumber");}	
 	/**
 	 * Sets the component price component type in the SOAP Request
 	 * @param value - component price component type
 	 * @param index - index of node to set
 	 */
-	public void setActivityComponentPriceComponentType(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices["+index+"]/componentType", value);}	
+	public void setComponentPriceComponentType(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices["+index+"]/componentType", value);}	
 	/**
 	 * Sets the component price component id in the SOAP Request
 	 * @param value - component price component id
 	 * @param index - index of node to set
 	 */
-	public void setActivityComponentPriceComponentId(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices["+index+"]/componentId", value);}	
+	public void setComponentPriceComponentId(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices["+index+"]/componentId", value);}	
 	/**
 	 * Sets the component price revenue classification ID in the SOAP Request
 	 * @param value - component price revenue classification ID
 	 * @param index - index of node to set
 	 */
-	public void setActivityComponentPriceRevenueClassificationId(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices["+index+"]/revenueClassification/id", value);}	
+	public void setComponentPriceRevenueClassificationId(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices["+index+"]/revenueClassification/id", value);}	
 	/**
 	 * Sets the component price revenue classification name in the SOAP Request
 	 * @param value - component price revenue classification name
 	 * @param index - index of node to set
 	 */
-	public void setActivityComponentPriceRevenueClassificationName(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices["+index+"]/revenueClassification/name", value);}	
+	public void setComponentPriceRevenueClassificationName(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/componentPrices["+index+"]/revenueClassification/name", value);}	
 //	/**
 //	 * Sets the facility ID in the SOAP Request
 //	 * @param value - facility ID
 //	 */
-//	public void setActivityFacilityId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/facilityId", value);}	
+//	public void setFacilityId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/facilityId", value);}	
 	/**
 	 * Sets the facility name in the SOAP Request
 	 * @param value - facility name
 	 */
-	public void setActivityFacilityName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/facilityName", value);}	
+	public void setFacilityName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/facilityName", value);}	
+	/**
+	 * Sets the facility ID in the SOAP Request by using a known Facility Name
+	 * @param name - facility name to find Id for and insert into request
+	 * @see http://fldcvpswa6204.wdw.disney.com/TDOD/public/gdo/row/QAAUTO_METADATA_ACTIVITIES_FACILITIES
+	 */
+	public void setFacilityIdByFacilityName(String name){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/facilityId", FacilityInfo.getActivityFacilityIDByName(name));}
+	/**
+	 * Sets the facility name in the SOAP Request by using known Facility ID
+	 * @param id - facility id to find facility name for
+	 * @see http://fldcvpswa6204.wdw.disney.com/TDOD/public/gdo/row/QAAUTO_METADATA_ACTIVITY_FACILITIES
+	 */
+	public void setFacilityNameByFacilityId(String id){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/facilityName", FacilityInfo.getActivityFacilityNameById(id));}
+	/**
+	 * Sets the product id in the SOAP Request by using known Product Name
+	 * @param value - facility id to find facility name for
+	 * @see http://fldcvpswa6204.wdw.disney.com/TDOD/public/gdo/row/QAAUTO_METADATA_ACTIVITY_PRODUCTS
+	 */
+	public void setProductIdByProductName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/productId", ProductInfo.getActivityProductIDByName(value));}
 //	/**
 //	 * Sets the product ID in the SOAP Request
 //	 * @param value - product ID
 //	 */
-//	public void setActivityProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/productId", value);}	
+//	public void setProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/productId", value);}	
 	/**
 	 * Sets the product type in the SOAP Request
 	 * @param value - product type
 	 */
-	public void setActivityProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/productType", value);}	
+	public void setProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/productType", value);}	
 //	/**
 //	 * Sets the service period ID in the SOAP Request
 //	 * @param value - service period ID
 //	 */
-//	public void setActivityServicePeriosId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/servicePeriodId", value);}	
+//	public void setServicePeriosId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/servicePeriodId", value);}	
 	/**
 	 * Sets the sign-in location in the SOAP Request
 	 * @param value - sign-in location
 	 */
-	public void setActivitySignInLocation(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/signInLocation", value);}	
+	public void setSignInLocation(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/signInLocation", value);}	
 	/**
 	 * Sets the addOn component type in the SOAP Request
 	 * @param value addOn component type
 	 */
-	public void setActivityAddOnComponentType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/componentPrices/componentType", value);}	
+	public void setAddOnComponentType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/componentPrices/componentType", value);}	
 	/**
 	 * Sets the addON component ID in the SOAP Request
 	 * @param value - addOn component ID
 	 */
-	public void setActivityAddOnComponentId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/componentPrices/componentId", value);}	
+	public void setAddOnComponentId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/componentPrices/componentId", value);}	
 	/**
 	 * Sets the addOn Revenue Classification ID in the SOAP Request
 	 * @param value - addOn revenue classification ID
 	 */
-	public void setActivityAddOnRevenueClassificationId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/componentPrices/revenueClassification/id", value);}	
+	public void setAddOnRevenueClassificationId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/componentPrices/revenueClassification/id", value);}	
 	/**
 	 * Sets the addOn revenue classification name in the SOAP Request
 	 * @param value - addOn revenue classification name
 	 */
-	public void setActivityAddOnRevenueClassificaitonName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/componentPrices/revenueClassification/name", value);}	
+	public void setAddOnRevenueClassificaitonName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/componentPrices/revenueClassification/name", value);}	
 	/**
 	 * Sets the addOn product ID in the SOAP Request
 	 * @param value - addOn product ID
 	 */
-	public void setActivityAddOnProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/productId", value);}	
+	public void setAddOnProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/productId", value);}	
 	/**
 	 * Sets the addOn product type in the SOAP Request
 	 * @param value - addOn product type
 	 */
-	public void setActivityAddOnProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/productType", value);}	
+	public void setAddOnProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/addOnComponents/productType", value);}	
 	/**
 	 * Sets the primary guest address line 1 in the SOAP Request
 	 * @param value - primary guest address line 1
 	 */
-	public void setActivityPrimaryGuestAddress1(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/addressDetails/addressLine1", value);}	
+	public void setPrimaryGuestAddress1(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/addressDetails/addressLine1", value);}	
 //	/**
 //	 * Sets the primary guest city in the SOAP Request
 //	 * @param value - primary guest city
 //	 */
-//	public void setActivityPrimaryGuestCity(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/addressDetails/city", value);}	
+//	public void setPrimaryGuestCity(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/addressDetails/city", value);}	
 //	/**
 //	 * Sets the primary guest country in the SOAP Request
 //	 * @param value - primary guest country
 //	 */
-//	public void setActivityPrimaryGuestCountry(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/addressDetails/country", value);}	
+//	public void setPrimaryGuestCountry(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/addressDetails/country", value);}	
 //	/**
 //	 * Sets the primary guest postal code in the SOAP Request
 //	 * @param value - primary guest postal code
 //	 */
-//	public void setActivityPrimaryGuestPostalCode(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/addressDetails/postalCode", value);}	
+//	public void setPrimaryGuestPostalCode(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/addressDetails/postalCode", value);}	
 //	/**
 //	 * Sets the primary guest state in the SOAP Request
 //	 * @param value - primary guest postal code
 //	 */
-//	public void setActivityPrimaryGuestState(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/addressDetails/state", value);}		
+//	public void setPrimaryGuestState(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/primaryGuest/addressDetails/state", value);}		
 	/**
 	 * Sets the primary guest city in the SOAP Request
 	 * @param value - primary guest city
@@ -300,6 +320,11 @@ public class Book extends ActivityService{
 	 */
 	public String getRequestProductId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/productId");}
 	/**
+	 * Gets the product type from the SOAP response
+	 * @return product type
+	 */
+	public String getRequestProductType(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/productType");}
+	/**
 	 * Sets the facility ID in the SOAP Request
 	 * @param value - facility ID
 	 */
@@ -313,7 +338,7 @@ public class Book extends ActivityService{
 	 * Sets the service period ID in the SOAP request
 	 * @param value - service period ID
 	 */
-	public void setServicePeriosId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/servicePeriodId", value);}
+	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/servicePeriodId", value);}
 	/**
 	 * Sets the service start dateTime in the SOAP request
 	 * @param value service start dateTime
@@ -493,7 +518,7 @@ public class Book extends ActivityService{
 				setPrimaryGuestAddressLocatorId("0");
 				setPrimaryGuestAddressGuestLocatorId("0");
 				setPrimaryGuestAddressIsPrimary(address.isPrimary() ? "true":"false");
-				setActivityPrimaryGuestAddress1(address.getAddress1());
+				setPrimaryGuestAddress1(address.getAddress1());
 				if(address.getAddress2().isEmpty()) setPrimaryGuestAddress2(BaseSoapCommands.REMOVE_NODE.toString());
 				else setPrimaryGuestAddress2(address.getAddress2());
 				setPrimaryGuestCity(address.getCity());

@@ -1,6 +1,7 @@
 package com.disney.api.soapServices.showDiningService.operations;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.showDiningService.ShowDiningService;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.guestFactory.Address;
@@ -293,17 +294,17 @@ public class Book extends ShowDiningService {
 			if(currentGuest == 1)	partyRolePosition="";
 			else partyRolePosition = "[" + currentGuest + "]";
 			
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/age", guest.getAge().toString());
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/ageType", guest.isChild() ? "CHILD" : "ADULT");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/firstName", guest.getFirstName());
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/lastName", guest.getLastName());
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/partyId", party.primaryGuest().getPartyId());
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/doNotMailIndicator", guest.primaryAddress().isOptIn() ? "true" :"false");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/doNotPhoneIndicator", "true");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/dclGuestId", "0");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/guestId", "0");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/active", "true");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/correlationID", "0");
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/age", guest.getAge().toString());}catch(XPathNotFoundException e){}
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/ageType", guest.isChild() ? "CHILD" : "ADULT");}catch(XPathNotFoundException e){}
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/firstName", guest.getFirstName());}catch(XPathNotFoundException e){}
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/lastName", guest.getLastName());}catch(XPathNotFoundException e){}
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/partyId", party.primaryGuest().getPartyId());}catch(XPathNotFoundException e){}
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/doNotMailIndicator", guest.primaryAddress().isOptIn() ? "true" :"false");}catch(XPathNotFoundException e){}
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/doNotPhoneIndicator", "true");}catch(XPathNotFoundException e){}
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/dclGuestId", "0");}catch(XPathNotFoundException e){}
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/guestId", "0");}catch(XPathNotFoundException e){}
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/guest/active", "true");}catch(XPathNotFoundException e){}
+			try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles"+partyRolePosition + "/correlationID", "0");}catch(XPathNotFoundException e){}
 
 			currentGuest++;
 		}
@@ -410,10 +411,10 @@ public class Book extends ShowDiningService {
 		int position = 1;		
 		for(Email email : guest.getAllEmails()){
 			if(position == 1){
-				setPrimaryGuestEmailAddressLocatorId("0");
-				setPrimaryGuestEmailAddressGuestLocatorId("0");
-				setPrimaryGuestEmailAddressIsPrimary(email.isPrimary() ? "true":"false");
-				setPrimaryGuestEmailAddress(email.getEmail());
+				try{setPrimaryGuestEmailAddressLocatorId("0");}catch(XPathNotFoundException e){}
+				try{setPrimaryGuestEmailAddressGuestLocatorId("0");}catch(XPathNotFoundException e){}
+				try{setPrimaryGuestEmailAddressIsPrimary(email.isPrimary() ? "true":"false");}catch(XPathNotFoundException e){}
+				try{setPrimaryGuestEmailAddress(email.getEmail());}catch(XPathNotFoundException e){}
 				
 			}else{
 				setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails[" + position + "]/primary", email.isPrimary() ? "true":"false");
@@ -475,7 +476,13 @@ public class Book extends ShowDiningService {
 	 * Sets primary guest middle name in the SOAP request
 	 * @param value - primary guest middle name
 	 */
-	public void setPrimaryGuestMiddleName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/middleName", value);}	
+	public void setPrimaryGuestMiddleName(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/middleName", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest", "fx:addNode;node:middleName");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/middleName", value);
+		}
+	}
 	/**
 	 * Sets flag to determine a primary guest address is the primary address in the SOAP request
 	 * @param value - flag to determine a primary guest address is the primary address
@@ -495,7 +502,13 @@ public class Book extends ShowDiningService {
 	 * Sets primary guest address line 2 in the SOAP request
 	 * @param value - primary guest address line 2
 	 */
-	public void setPrimaryGuestAddress2(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/addressLine2", value);}		
+	public void setPrimaryGuestAddress2(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/addressLine2", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails", "fx:addNode;node:addressLine2");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/addressDetails/addressLine2", value);
+		}
+	}		
 	/**
 	 * Sets primary guest party ID in the SOAP request
 	 * @param value - primary guest party ID 
@@ -510,7 +523,13 @@ public class Book extends ShowDiningService {
 	 * Sets primary guest email address locator ID in the SOAP request
 	 * @param value - primary guest email address locator ID
 	 */
-	public void setPrimaryGuestEmailAddressLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/locatorId", value);}		
+	public void setPrimaryGuestEmailAddressLocatorId(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/locatorId", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails", "fx:addNode;node:locatorId");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/emailDetails/locatorId", value);
+		}
+	}		
 	/**
 	 * Sets primary guest email address guest locator ID in the SOAP request
 	 * @param value - primary guest email address guest locator ID
@@ -525,12 +544,24 @@ public class Book extends ShowDiningService {
 	 * Sets the primary guest suffix in the SOAP request
 	 * @param value - primary guest suffix
 	 */
-	public void setPrimaryGuestSuffix(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/suffix", value);}
+	public void setPrimaryGuestSuffix(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/suffix", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest", "fx:addNode;node:suffix");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/suffix", value);
+		}
+	}
 	/**
 	 * Sets the primary guest title in the SOAP request
 	 * @param value - primary guest title
 	 */	
-	public void setPrimaryGuestTitle(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/title", value);}
+	public void setPrimaryGuestTitle(String value){
+		try{setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/title", value);}
+		catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest", "fx:addNode;node:title");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/primaryGuest/title", value);
+		}
+	}
 	/**
 	 * Sets the contact name in the SOAP request
 	 * @param value - contact name
@@ -546,4 +577,15 @@ public class Book extends ShowDiningService {
 	 * @param value - party role age type
 	 */
 	public void setPartyRoleAgeType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles/ageType", value);}
+	
+	
+	public void addSpecialRequest(String id, String type){
+		int existingSpecialRequest = XMLTools.getNodeList(getRequestDocument(), "/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails").getLength();
+		int nextNodeindex = existingSpecialRequest + 1;
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage", "fx:addNode;node:profileDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails["+nextNodeindex+"]", "fx:addNode;node:id");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails["+nextNodeindex+"]", "fx:addNode;node:type");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails["+nextNodeindex+"]/id", id);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails["+nextNodeindex+"]/type", type);
+	}
 }

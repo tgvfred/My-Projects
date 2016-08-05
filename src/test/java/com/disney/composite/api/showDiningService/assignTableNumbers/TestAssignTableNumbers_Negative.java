@@ -1,12 +1,14 @@
 package com.disney.composite.api.showDiningService.assignTableNumbers;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.AutomationException;
+import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.showDiningService.operations.AssignTableNumbers;
 import com.disney.api.soapServices.showDiningService.operations.Cancel;
@@ -23,13 +25,15 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 	protected ScheduledEventReservation res = null;
 	
 	@Override
-	@BeforeMethod(alwaysRun=true)
+	@BeforeClass(alwaysRun=true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		res = new ShowDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		res = new ShowDiningReservation(environment, hh);
+		try{
+			res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		}catch(AutomationException ae){}
 	}
 	
 	@AfterMethod(alwaysRun = true)
@@ -49,7 +53,7 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		TestReporter.logStep("Test Missing Reservation Number");
 		AssignTableNumbers assign = assign();
 		assign.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", assign);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH 0", DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, assign);
 	}
     
     @Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -57,7 +61,7 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		TestReporter.logStep("Test Missing Party Size");
 		AssignTableNumbers assign = assign();
 		assign.setPartySize(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE.", assign);
+		sendRequestAndValidateFaultString("Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE.", DiningErrorCode.INVALID_PARTYMIX, assign);
     }
     
     @Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -65,7 +69,7 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		TestReporter.logStep("Test Missing Inventory Details");
 		AssignTableNumbers assign = assign();
 		assign.setRequestNodeValueByXPath("/Envelope/Body/assignTableNumbers/assignTableNumbersRequest/inventoryDetails", BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("INVALID REQUEST ! : INVENTORY DETAILS MISSING. CANNOT ASSIGN TABLE NUMBERS !", assign);
+		sendRequestAndValidateFaultString("INVALID REQUEST ! : INVENTORY DETAILS MISSING. CANNOT ASSIGN TABLE NUMBERS !", DiningErrorCode.INVALID_REQUEST, assign);
     }
     
     @Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -73,7 +77,7 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		TestReporter.logStep("Test Missing Sales Channel");
 		AssignTableNumbers assign = assign();
 		assign.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("Sales Channel is required : null", assign);
+		sendRequestAndValidateFaultString("Sales Channel is required : null", DiningErrorCode.SALES_CHANNEL_REQUIRED, assign);
     }
     
     @Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -81,7 +85,7 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		TestReporter.logStep("Test Missing Communications Channel");
 		AssignTableNumbers assign = assign();
 		assign.setCommunicationsChannel(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestAndValidateFaultString("communication Channel is required : null", assign);
+		sendRequestAndValidateFaultString("communication Channel is required : null", DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED, assign);
 	}
     
     @Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -90,7 +94,7 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		TestReporter.logStep("Test Invalid Reservation Number Using a String");
 		AssignTableNumbers assign = assign();
 		assign.setTravelPlanSegmentId(number);
-		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, assign);
+		sendRequestAndValidateFaultString("RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION, assign);
 	}
     
     @Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -99,7 +103,7 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		TestReporter.logStep("Test Invalid Party Size Using a Large Party");
 		AssignTableNumbers assign = assign();
 		assign.setPartySize(size);
-		sendRequestAndValidateFaultString("Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE.", assign);
+		sendRequestAndValidateFaultString("Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE.", DiningErrorCode.INVALID_PARTYMIX, assign);
     }
     
     @Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -108,7 +112,7 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		TestReporter.logStep("Test Invalid Sales Channel");
 		AssignTableNumbers assign = assign();
 		assign.setSalesChannel(channel);
-		sendRequestAndValidateFaultString("Sales Channel is required : null", assign);
+		sendRequestAndValidateFaultString("Sales Channel is required : null", DiningErrorCode.SALES_CHANNEL_REQUIRED, assign);
 	}
     
     @Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -117,10 +121,12 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		TestReporter.logStep("Test Invalid Communications Channel");
 		AssignTableNumbers assign = assign();
 		assign.setCommunicationsChannel(channel);
-		sendRequestAndValidateFaultString("communication Channel is required : null", assign);
+		sendRequestAndValidateFaultString("communication Channel is required : null", DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED, assign);
 	}
     
     private AssignTableNumbers assign(){
+    	if(res.getConfirmationNumber() == null) throw new AutomationException("Failed to creating booking");
+
 		AssignTableNumbers assign = new AssignTableNumbers(environment, "Main");
 		assign.setPartySize(String.valueOf(hh.getAllGuests().size()));
 		assign.setTravelPlanSegmentId(res.getConfirmationNumber());
@@ -128,8 +134,9 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		return assign;
     }
     
-    private void sendRequestAndValidateFaultString(String fault, AssignTableNumbers assign){
+    private void sendRequestAndValidateFaultString(String fault, ApplicationErrorCode error, AssignTableNumbers assign){
 		assign.sendRequest();
+		validateApplicationError(assign, error);
     	TestReporter.logAPI(!assign.getFaultString().contains(fault), assign.getFaultString() ,assign);
 		logItems(assign);
     }
