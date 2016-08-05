@@ -40,6 +40,4 @@ public class ExternalReference {
 	public void setReferenceValue(String referenceValue) {
 		this.referenceValue = referenceValue;
 	}
-
-
 }

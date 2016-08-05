@@ -234,5 +234,4 @@ public class CommonChargeAccountResponse {
 		this.pinAvailable = pinAvailable;
 	}
 
-
 }

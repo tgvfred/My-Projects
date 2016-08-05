@@ -3,11 +3,8 @@ package com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.r
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Generated;
-
 import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.retrieve.response.objects.RootChargeAccountResponse;
 
-@Generated("org.jsonschema2pojo")
 public class RetrieveResponse {
 
 	private RootChargeAccountResponse rootChargeAccountResponse;
@@ -48,5 +45,4 @@ public class RetrieveResponse {
 	public void setNodeChargeAccountResponse(Object nodeChargeAccountResponse) {
 		this.nodeChargeAccountResponse = nodeChargeAccountResponse;
 	}
-
 }

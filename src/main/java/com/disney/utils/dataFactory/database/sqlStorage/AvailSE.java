@@ -19,4 +19,15 @@ public class AvailSE {
 				 " and rownum = 1 " + 
 				 " order by fsell_invtry_srvc_dts";
 	}
+	
+	public static String getReservableResourceByFacilityAndDate(String facilityId, String date){
+		return "select Resource_ID from "
+				+ "( select a.RSRVBL_RSRC_ID Resource_ID "
+				+ "from AVAILSE.fsell_invtry a, AVAILSE.rsrvbl_rsrc b "
+				+ "where a.rsrvbl_rsrc_id = b.rsrvbl_rsrc_id "
+				+ "and b.ENTRPRS_FAC_ID = '"+facilityId+"' "
+				+ "and to_char(a.FSELL_INVTRY_SRVC_DTS, 'yyyy-mm-dd') = '"+date+"' "
+				+ "order by dbms_random.value ) "
+				+ "where rownum = 1";
+	}
 }

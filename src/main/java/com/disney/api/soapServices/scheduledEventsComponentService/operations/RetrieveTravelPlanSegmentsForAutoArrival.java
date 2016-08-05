@@ -23,4 +23,8 @@ public class RetrieveTravelPlanSegmentsForAutoArrival extends ScheduledEventsCom
 	public String getTravelPlanIdByIndex(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveTravelPlanSegmentsForAutoArrivalResponse/return["+index+"]/travelPlanId");}
 	public String getTravelPlanSegmentIdByIndex(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveTravelPlanSegmentsForAutoArrivalResponse/return["+index+"]/travelPlanSegmentId");}
 	public NodeList getAllReturnNodes(){return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveTravelPlanSegmentsForAutoArrivalResponse/return");}
+	
+	public NodeList getAllReservationNumbers(){
+		return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveTravelPlanSegmentsForAutoArrivalResponse/return/travelPlanSegmentId");
+	}
 }

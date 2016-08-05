@@ -157,6 +157,4 @@ public class GuestInfoTO {
 	public void setAddress(Object address) {
 		this.address = address;
 	}
-
-
 }
