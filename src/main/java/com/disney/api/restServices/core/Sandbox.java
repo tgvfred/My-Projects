@@ -33,13 +33,12 @@ public class Sandbox {
 		//Navigating response json to get specific data
 		RetrieveResponse[] retrieveResponse = response.mapJSONToObject(RetrieveResponse[].class);
 		for(RetrieveResponse chargeAccount : retrieveResponse){
-			for(RootChargeAccountResponse rootCA : chargeAccount.getRootChargeAccountResponse()){
-				System.out.println("Charge Account Id: " + rootCA.getCommonChargeAccountResponse().getId());
-				System.out.println("Charge Account Status: " + rootCA.getCommonChargeAccountResponse().getStatus());
-				GuestInfoTO guest = rootCA.getCommonChargeAccountResponse().getGuestInfoTO().get(0);
+				System.out.println("Charge Account Id: " + chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getId());
+				System.out.println("Charge Account Status: " + chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getStatus());
+				GuestInfoTO guest = chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getGuestInfoTO().get(0);
 				System.out.println("Charge Account Guest Name: " + guest.getFirstName() + " " + guest.getLastName());
 				System.out.println();
-			}
+			//}
 		}
 	}
 }

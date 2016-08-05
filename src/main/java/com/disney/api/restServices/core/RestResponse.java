@@ -76,7 +76,7 @@ public class RestResponse {
 		} catch (JsonMappingException e) {
 			// TODO Auto-generated catch block
 			// TODO Auto-generated catch block
-			throw new AutomationException("Failed to read response:" + stringResponse, e);
+			throw new AutomationException("Failed to map json properly: " + e.getMessage(), e);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			// TODO Auto-generated catch block
