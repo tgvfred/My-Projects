@@ -88,7 +88,12 @@ public class Book extends ShowDiningService {
 	}
 	
 	public void setFacilityName(String value){
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/facilityName", value);
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/facilityName", value);
+		}catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage", "fx:addnode;node:facilityName");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/facilityName", value);
+		}
 	}
 	
 	public String getFacilityName(){
@@ -103,7 +108,7 @@ public class Book extends ShowDiningService {
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/productType", value);
 	}
 	
-	public void setServicePeriosId(String value){
+	public void setServicePeriodId(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/servicePeriodId", value);
 	}
 	

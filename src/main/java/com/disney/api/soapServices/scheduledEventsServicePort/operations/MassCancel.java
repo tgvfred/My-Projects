@@ -11,6 +11,14 @@ public class MassCancel extends ScheduledEventsServicePort{
 		removeComments() ;
 		removeWhiteSpace();
 	}
+	public MassCancel(String environment, String scenario) {
+		super(environment);
+		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("massCancel")));			
+		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
+		generateServiceContext();
+		removeComments() ;
+		removeWhiteSpace();
+	}
 	
 	public void setFacilityId(String value){setRequestNodeValueByXPath("/Envelope/Body/massCancel/massCancelRequest/facilityId", value);}
 	public void setServiceDate(String value){setRequestNodeValueByXPath("/Envelope/Body/massCancel/massCancelRequest/serviceDate", value);}

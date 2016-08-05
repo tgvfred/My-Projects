@@ -20,7 +20,7 @@ public class TestAutoCancel extends BaseTest{
 	private String expected_TCG;
 	private String actual_TCG;
 	
-	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testRetrieveNonGuaranteedGuestChargeGroups(){
 		retrieve = new RetrieveNonGuaranteedGuestChargeGroups(environment);
 		retrieve.setRunDate(date);
@@ -33,7 +33,7 @@ public class TestAutoCancel extends BaseTest{
 		validateLogs(retrieve, logValidItems, 10000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "batch"}, dependsOnMethods="testRetrieveNonGuaranteedGuestChargeGroups")
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"}, dependsOnMethods="testRetrieveNonGuaranteedGuestChargeGroups")
 	public void testAutoCancel(){		
 		if(retrieve.getAllReservations().size() == 0)
 			throw new SkipException("No reservations were returned by RetrieveNonGuaranteedGuestChargeGroups for the date ["+date+"] and source accounting center ["+sourceAccountingCenter+"].");
@@ -55,7 +55,7 @@ public class TestAutoCancel extends BaseTest{
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateLogs(cancel, logValidItems, 10000);
 	}
-	@Test(groups = {"api", "regression", "dining", "batch", "negative"}, dependsOnMethods="testAutoCancel")
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoCancel")
 	public void testAutoCancel_InvalidReservationStatus(){
 		if(expected_TCG == null)expected_TCG = retrieve.getAllReservations().get("1");
 		AutoCancel cancel = new AutoCancel(environment, "Main");
@@ -74,7 +74,7 @@ public class TestAutoCancel extends BaseTest{
 		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateNotInLogs(cancel, logInvalidItems);
 	}
-	@Test(groups = {"api", "regression", "dining", "batch"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testAutoCancel_MissingRunDate(){
 		RetrieveNonGuaranteedGuestChargeGroups retrieve = new RetrieveNonGuaranteedGuestChargeGroups(environment);
 		retrieve.setRunDate(BaseSoapCommands.REMOVE_NODE.toString());
@@ -86,7 +86,7 @@ public class TestAutoCancel extends BaseTest{
 		logValidItems.addItem("ChargeGroupIF", "retrieveNonGuaranteedGuestChargeGroups", false);
 		validateLogs(retrieve, logValidItems, 10000);
 	}
-	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCancel_MissingSourceAccountingCenter(){
 		RetrieveNonGuaranteedGuestChargeGroups retrieve = new RetrieveNonGuaranteedGuestChargeGroups(environment);
 		retrieve.setRunDate(date);
@@ -100,7 +100,7 @@ public class TestAutoCancel extends BaseTest{
 		logValidItems.addItem("ChargeGroupIF", "retrieveNonGuaranteedGuestChargeGroups", true);
 		validateLogs(retrieve, logValidItems);
 	}
-	@Test(groups = {"api", "regression", "dining", "batch"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testAutoCancel_NoData(){
 		RetrieveNonGuaranteedGuestChargeGroups retrieve = new RetrieveNonGuaranteedGuestChargeGroups(environment);
 		retrieve.setRunDate(BaseSoapCommands.REMOVE_NODE.toString());
@@ -112,7 +112,7 @@ public class TestAutoCancel extends BaseTest{
 		logValidItems.addItem("ChargeGroupIF", "retrieveNonGuaranteedGuestChargeGroups", true);		
 		validateLogs(retrieve, logValidItems, 10000);
 	}	
-	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCancel_InvalidTcg(){
 		AutoCancel cancel = new AutoCancel(environment, "Main");
 		cancel.setTravelComponentGroupingId("1");
@@ -124,7 +124,7 @@ public class TestAutoCancel extends BaseTest{
 		logValidItems.addItem("ScheduledEventsComponentServiceIF", "autoCancel", true);
 		validateLogs(cancel, logValidItems, 10000);
 	}
-	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCancel_MissingTcg(){
 		AutoCancel cancel = new AutoCancel(environment, "Main");
 		cancel.setTravelComponentGroupingId(BaseSoapCommands.REMOVE_NODE.toString());

@@ -19,7 +19,7 @@ public class TestAutoCheckin extends BaseTest{
 	private String reservation;
 	private String sourceAccountingCenter = "3";
 	
-	@Test(groups = {"api", "regression", "dining", "batch"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testRetrieveTravelPlanSegmentsForAutoArrival(){
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(date);
@@ -34,7 +34,7 @@ public class TestAutoCheckin extends BaseTest{
 		validateLogs(retrieve, logValidItems, 10000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "batch"}, dependsOnMethods="testRetrieveTravelPlanSegmentsForAutoArrival")
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"}, dependsOnMethods="testRetrieveTravelPlanSegmentsForAutoArrival")
 	public void testAutoArrived(){
 		reservation = reservations.item(0).getTextContent();
 		AutoArrived aa = new AutoArrived(environment, "Main");
@@ -49,7 +49,7 @@ public class TestAutoCheckin extends BaseTest{
 		validateLogs(aa, logValidItems, 10000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "batch", "negative"}, dependsOnMethods="testAutoArrived")
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoArrived")
 	public void testAutoArrived_InvalidReservationStatus_Arrived(){	
 		AutoArrived aa = new AutoArrived(environment, "Main");
 		aa.setTpsId(reservation);	
@@ -67,7 +67,7 @@ public class TestAutoCheckin extends BaseTest{
 		validateNotInLogs(aa, logValidItems);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoArrived_InvalidReservationNumber(){		
 		AutoArrived aa = new AutoArrived(environment, "Main");
 		aa.setTpsId("1");
@@ -85,7 +85,7 @@ public class TestAutoCheckin extends BaseTest{
 		validateNotInLogs(aa, logValidItems);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "batch"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testAutoArrived_MissingTpsId(){		
 		AutoArrived aa = new AutoArrived(environment, "Main");
 		aa.setTpsId(BaseSoapCommands.REMOVE_NODE.toString());
@@ -97,7 +97,7 @@ public class TestAutoCheckin extends BaseTest{
 		validateLogs(aa, logValidItems);
 	}	
 	
-	@Test(groups = {"api", "regression", "dining", "batch"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testAutoArrived_MissingProcessDate(){
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(BaseSoapCommands.REMOVE_NODE.toString());
@@ -111,7 +111,7 @@ public class TestAutoCheckin extends BaseTest{
 		logValidItems.addItem("ScheduledEventsComponentServiceIF", "retrieveTravelPlanSegmentsForAutoArrival", false);
 		validateLogs(retrieve, logValidItems, 10000);		
 	}
-	@Test(groups = {"api", "regression", "dining", "batch"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testAutoArrived_InvalidSourceAccountingCenter(){
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(date);
@@ -124,7 +124,7 @@ public class TestAutoCheckin extends BaseTest{
 		logValidItems.addItem("ScheduledEventsComponentServiceIF", "retrieveTravelPlanSegmentsForAutoArrival", false);
 		validateLogs(retrieve, logValidItems, 10000);
 	}
-	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoArrived_MissingSourceAccountingCenter(){
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(date);
@@ -137,7 +137,7 @@ public class TestAutoCheckin extends BaseTest{
 		logValidItems.addItem("ScheduledEventsComponentServiceIF", "retrieveTravelPlanSegmentsForAutoArrival", true);
 		validateLogs(retrieve, logValidItems, 10000);
 	}
-	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoArrived_NoData(){
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(BaseSoapCommands.REMOVE_NODE.toString());
