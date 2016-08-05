@@ -1,4 +1,4 @@
-package com.disney.composite.api.diningBatch;
+package com.disney.composite.api.scheduledEventsBatchService;
 
 import org.testng.annotations.Test;
 import org.w3c.dom.NodeList;
@@ -6,14 +6,14 @@ import org.w3c.dom.NodeList;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.scheduledEventsComponentService.operations.AutoArrived;
-import com.disney.api.soapServices.scheduledEventsComponentService.operations.RetrieveTravelPlanSegmentsForAutoArrival;
+import com.disney.api.soapServices.scheduledEventsBatchService.operations.AutoArrived;
+import com.disney.api.soapServices.scheduledEventsBatchService.operations.RetrieveTravelPlanSegmentsForAutoArrival;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 
-public class AutoCheckin extends BaseTest{
+public class TestAutoCheckin extends BaseTest{
 	private String date = Randomness.generateCurrentXMLDatetime(1);
 	private NodeList reservations;
 	private String reservation;

@@ -1,4 +1,4 @@
-package com.disney.composite.api.diningBatch;
+package com.disney.composite.api.scheduledEventsBatchService;
 
 import org.testng.SkipException;
 import org.testng.annotations.Test;
@@ -7,7 +7,7 @@ import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.chargeGroup.operations.RetrieveNonGuaranteedGuestChargeGroups;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.scheduledEventsComponentService.operations.AutoCancel;
+import com.disney.api.soapServices.scheduledEventsBatchService.operations.AutoCancel;
 import com.disney.composite.BaseTest;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;

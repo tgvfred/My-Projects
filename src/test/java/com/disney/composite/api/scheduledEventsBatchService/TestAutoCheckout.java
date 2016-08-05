@@ -1,11 +1,11 @@
-package com.disney.composite.api.diningBatch;
+package com.disney.composite.api.scheduledEventsBatchService;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -13,32 +13,37 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.scheduledEventsServicePort.operations.Checkout;
-import com.disney.api.soapServices.scheduledEventsServicePort.operations.RetrieveReservationsForAutoCheckout;
+import com.disney.api.soapServices.scheduledEventsBatchService.operations.Checkout;
+import com.disney.api.soapServices.scheduledEventsBatchService.operations.RetrieveReservationsForAutoCheckout;
 import com.disney.composite.BaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 
-public class AutoCheckout extends BaseTest{
-	private String date = Randomness.generateCurrentXMLDatetime(1);
+public class TestAutoCheckout extends BaseTest{
+	private String date;
 	private Map<String, String> reservations = new HashMap<String, String>();
 	private String reservation;
 	private Checkout checkout;
 	private LogItems logValidItems;
 	private String invalidNumber = "1";
+	private int maxDaysOut = 45;
 	
 	@Override
-	@BeforeMethod(alwaysRun=true)
+	@BeforeTest(alwaysRun=true)
 	@Parameters("environment")
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		RetrieveReservationsForAutoCheckout retrieve = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
-		retrieve.setProcessDate(date);
-		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving reservations for auto checkout: " + retrieve.getFaultString(), retrieve);
-		if(reservation == null)reservations = retrieve.getAllReservationNumbers();
+		int daysOut = 0;
+		do{
+			daysOut++;
+			date = Randomness.generateCurrentXMLDatetime(daysOut);
+			retrieve.setProcessDate(date);
+			retrieve.sendRequest();
+			TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving reservations for auto checkout: " + retrieve.getFaultString(), retrieve);
+			reservations = retrieve.getAllReservationNumbers();
+		}while(reservations.size() == 0 && daysOut <= maxDaysOut);
 		TestReporter.assertTrue(reservations.size() > 0, "No reservations were returned for the date ["+date+"]");
 	}
 	
@@ -115,8 +120,8 @@ public class AutoCheckout extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
 	public void testAutoCheckout_MissingProcessDate(){
-		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
-			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
+//		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
+//			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
 		TestReporter.logStep("Retrieve Reservations for Auto Checkout");
 		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
 		retrieveReservationForAutoCheckout.setProcessDate(BaseSoapCommands.REMOVE_NODE.toString());
@@ -130,8 +135,8 @@ public class AutoCheckout extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
 	public void testAutoCheckout_InvalidDateEqualCondition(){
-		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
-			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
+//		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
+//			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
 		TestReporter.logStep("Retrieve Reservations for Auto Checkout");
 		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
 		retrieveReservationForAutoCheckout.setDateEqualCondition_Negative("==");
@@ -145,8 +150,8 @@ public class AutoCheckout extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "batch", "negative"})
 	public void testAutoCheckout_MissingDateEqualCondition(){
-		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
-			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
+//		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
+//			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
 		TestReporter.logStep("Retrieve Reservations for Auto Checkout");
 		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
 		retrieveReservationForAutoCheckout.setDateEqualCondition_Negative(BaseSoapCommands.REMOVE_NODE.toString());
