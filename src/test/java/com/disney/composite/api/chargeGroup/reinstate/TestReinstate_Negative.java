@@ -74,7 +74,7 @@ public class TestReinstate_Negative extends BaseTest{
 	
 	private CreateChargeGroupsAndPostCharges create(){
 		String number = String.valueOf(Randomness.randomNumber(12));
-		CreateChargeGroupsAndPostCharges create = new CreateChargeGroupsAndPostCharges("Development", "MinimalInfo");
+		CreateChargeGroupsAndPostCharges create = new CreateChargeGroupsAndPostCharges(environment, "MinimalInfo");
 		create.setGuestFirstName(hh.primaryGuest().getFirstName());
 		create.setGuestLastName(hh.primaryGuest().getLastName());
 		create.setTravelPlanComponentGroupId(number);

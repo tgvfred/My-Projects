@@ -3,6 +3,7 @@ package com.disney.api.soapServices.tableServiceDiningServicePort.operations;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.tableServiceDiningServicePort.TableServiceDiningServicePort;
+import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
@@ -99,7 +100,14 @@ public class Modify extends TableServiceDiningServicePort {
 	 * Gets the status from modifying the reservation from the SOAP response
 	 * @return status from modifying the reservation
 	 */
-	public String getResponseStatus(){return getResponseNodeValueByXPath("/Envelope/Body/modifyTableServiceResponse/status");}
+	public String getResponseStatus(){
+		try{
+			return getResponseNodeValueByXPath("/Envelope/Body/modifyTableServiceResponse/status");
+		}catch(XPathNotFoundException e ){
+			TestReporter.logAPI(true, "Status node not found in response", this);
+			return "";
+		}
+	}
 	/**
 	 * Gets the facility ID in the SOAP request
 	 * @return facility ID
