@@ -60,7 +60,7 @@ public class AutoCheckin extends BaseTest{
 		validateLogs(aa, logValidItems, 10000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "batch"}, dependsOnMethods="autoArrived")
+	@Test(groups = {"api", "regression", "dining", "batch"}, dependsOnMethods="testAutoArrived")
 	public void testAutoArrived_InvalidReservationStatus_Arrived(){		
 		aa.sendRequest();
 		validateApplicationError(aa, DiningErrorCode.INVALID_TRAVEL_STATUS);
