@@ -25,7 +25,7 @@ public class Test_PostCharges extends BaseTest{
 		//TestReporter.setDebugLevel(1);
 		this.environment = environment;
 	}
-	@Test
+	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "ostCharges",})
 	public void testPostCharges(){
 		hh = new HouseHold(1);
 		ScheduledEventReservation res = new EventDiningReservation(environment, hh);
@@ -45,8 +45,6 @@ public class Test_PostCharges extends BaseTest{
 			}
 		}
 		
-		rs.print();
-		
 		PostCharges postCharges = new PostCharges(environment, "MinimalInfo");
 		postCharges.setAllAmounts("200", "USD");
 		postCharges.setProduct(res.getProductId(), productTypeName);
@@ -58,7 +56,7 @@ public class Test_PostCharges extends BaseTest{
 		String chargeId = postCharges.getChargeId();
 		
 		TestReporter.logAPI(!postCharges.getResponseStatusCode().contains("200"), postCharges.getFaultString() ,postCharges);
-		TestReporter.assertTrue(Regex.match("[0-9]+", postCharges.getChargeId()), "The Charge ID ["+postCharges.getChargeId()+"] is not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", chargeId), "The Charge ID ["+chargeId+"] is not numeric as expected.");
 		
 	}
 }

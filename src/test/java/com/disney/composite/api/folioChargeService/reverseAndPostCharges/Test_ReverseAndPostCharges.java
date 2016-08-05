@@ -20,7 +20,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReserva
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class Test_ReverseAndPostCharges extends BaseTest{
-	@Test(groups = {"api", "regression", "como", "folioCharge", "reverseAndPostCharges", "s140763"})
+	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "reverseAndPostCharges", "s140763"})
 	public void testReverseAndPostChargesWithAddon(){
 		String tcId = "";
 		String tcgId = "";	
@@ -66,7 +66,7 @@ public class Test_ReverseAndPostCharges extends BaseTest{
 		TestReporter.assertTrue(rsNewChargeId.getValue("CHRG_AM").equals(updatedChargeAmount) , "Validiate Charge Amount in DB[" + rsNewChargeId.getValue("CHRG_AM")+"] equals [" + updatedChargeAmount +"]");
 	}
 	
-	@Test(groups = {"api", "regression", "como", "folioCharge", "reverseAndPostCharges", "s140763"})
+	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "reverseAndPostCharges", "s140763"})
 	public void testReverseAndPostChargesWithNoAddon(){
 		String tcId = "";
 		String tcgId = "";	
@@ -111,7 +111,7 @@ public class Test_ReverseAndPostCharges extends BaseTest{
 		TestReporter.assertTrue(rsNewChargeId.getRowCount() > 0 , "Validate Charge items are returned in query [" + Dreams.getChargeInfo(postCharges.getChargeId()) +"]. Records found [" +rsNewChargeId.getRowCount() +"]");
 		TestReporter.assertTrue(rsNewChargeId.getValue("CHRG_AM").equals(updatedChargeAmount) , "Validiate Charge Amount in DB[" + rsNewChargeId.getValue("CHRG_AM")+"] equals [" + updatedChargeAmount +"]");
 	}
-	@Test(groups = {"api", "regression", "como", "folioCharge", "reverseAndPostCharges", "s140763"})
+	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "reverseAndPostCharges", "s140763"})
 	public void testReverseAndPostCharges_Status_Approved(){
 		String tcId = "";
 		String tcgId = "";	
@@ -158,7 +158,7 @@ public class Test_ReverseAndPostCharges extends BaseTest{
 		TestReporter.assertTrue(rsNewChargeId.getValue("CHRG_AM").equals(updatedChargeAmount) , "Validiate Charge Amount in DB[" + rsNewChargeId.getValue("CHRG_AM")+"] equals [" + updatedChargeAmount +"]");
 	}
 
-	@Test(groups = {"api", "regression", "como", "folioCharge", "reverseAndPostCharges", "s140763"})
+	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "reverseAndPostCharges", "s140763"})
 	public void testReverseAndPostCharges_Status_NotApproved(){
 		String tcId = "";
 		String tcgId = "";	
@@ -206,7 +206,7 @@ public class Test_ReverseAndPostCharges extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "como", "folioCharge", "reverseAndPostCharges", "s140763"})
+	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "reverseAndPostCharges", "s140763"})
 	public void testReverseAndPostCharges_Status_Deleted(){
 		String tcId = "";
 		String tcgId = "";	
@@ -254,7 +254,7 @@ public class Test_ReverseAndPostCharges extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "como", "folioCharge", "reverseAndPostCharges", "s140763"})
+	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "reverseAndPostCharges", "s140763"})
 	public void testReverseAndPostCharges_Status_Processed(){
 		String tcId = "";
 		String tcgId = "";	
@@ -302,7 +302,7 @@ public class Test_ReverseAndPostCharges extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "como", "folioCharge", "reverseAndPostCharges", "s140763"})
+	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "reverseAndPostCharges", "s140763"})
 	public void testReverseAndPostCharges_Status_ADDRESS_REQUIRED(){
 		String tcId = "";
 		String tcgId = "";	
@@ -350,7 +350,7 @@ public class Test_ReverseAndPostCharges extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "como", "folioCharge", "reverseAndPostCharges", "s140763"})
+	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "reverseAndPostCharges", "s140763"})
 	public void testReverseAndPostCharges_Status_Failed(){
 		String tcId = "";
 		String tcgId = "";	
