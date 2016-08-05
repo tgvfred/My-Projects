@@ -1,8 +1,5 @@
 package com.disney.composite.api.folioChargeService.postCharges;
 
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.folioCharge.operations.PostCharges;
@@ -18,14 +15,8 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReserva
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class Test_PostCharges extends BaseTest{
-	@BeforeClass
-	@Parameters({ "environment" })
-	@Override
-	public void setup(@Optional String environment){
-		//TestReporter.setDebugLevel(1);
-		this.environment = environment;
-	}
-	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "ostCharges",})
+
+	@Test(groups = {"api", "regression", "como", "folio", "folioCharge", "postCharges",})
 	public void testPostCharges(){
 		hh = new HouseHold(1);
 		ScheduledEventReservation res = new EventDiningReservation(environment, hh);
