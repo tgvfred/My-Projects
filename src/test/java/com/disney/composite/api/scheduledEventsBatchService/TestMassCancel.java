@@ -5,12 +5,14 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.MassCancel;
 import com.disney.api.soapServices.scheduledEventsServicePort.operations.RetrieveMassCancelReasons;
 import com.disney.api.soapServices.showDiningService.operations.Book;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
@@ -43,7 +45,8 @@ public class TestMassCancel extends BaseTest{
 		RetrieveMassCancelReasons reasons = new RetrieveMassCancelReasons(environment);
 		reasons.sendRequest();
 		TestReporter.logAPI(!reasons.getResponseStatusCode().equals("200"), "An error occurred retrieving mass cancel reasons: " + reasons.getFaultString(), reasons);
-		massCancelReason = reasons.getMassCancelIds().get("0");
+		try{massCancelReason = reasons.getMassCancelIds().get("0");}
+		catch(Exception e){}
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
@@ -51,8 +54,31 @@ public class TestMassCancel extends BaseTest{
 		MassCancel cancel = new MassCancel(environment, "Main");
 		cancel.setFacilityId(facilityId);
 		cancel.setServiceDate(serviceDate);
+		if(massCancelReason != null)cancel.setMassCancelReasonId(massCancelReason);
+		cancel.sendRequest();
+		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred invoking Mass Cancel: " + cancel.getFaultString(), cancel);
+		
+		LogItems logValidItems = new LogItems();
+		logValidItems.addItem("ScheduledEventsServiceIF", "massCancel", false);
+		validateLogs(cancel, logValidItems, 10000);
+	}
+	
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
+	public void testMassCancel_InvalidStatus(){
+		MassCancel cancel = new MassCancel(environment, "Main");
+		cancel.setFacilityId(facilityId);
+		cancel.setServiceDate(serviceDate);
 		cancel.setMassCancelReasonId(massCancelReason);
 		cancel.sendRequest();
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred invoking Mass Cancel: " + cancel.getFaultString(), cancel);
+		validateApplicationError(cancel, DiningErrorCode.INVALID_TRAVEL_STATUS);
+		TestReporter.logAPI(!cancel.getFaultString().contains("INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO ARRIVED"), cancel.getFaultString() ,cancel);
+
+		LogItems logValidItems = new LogItems();
+		logValidItems.addItem("ScheduledEventsServiceIF", "massCancel", true);
+		validateLogs(cancel, logValidItems, 10000);
+		
+		logValidItems = new LogItems();
+		validateNotInLogs(cancel, logValidItems);
 	}
 }
