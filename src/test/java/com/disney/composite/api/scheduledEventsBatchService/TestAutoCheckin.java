@@ -19,8 +19,9 @@ public class TestAutoCheckin extends BaseTest{
 	private String reservation;
 	private String sourceAccountingCenter = "3";
 	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testRetrieveTravelPlanSegmentsForAutoArrival(){
+		TestReporter.logScenario("RetrieveTravelPlanSegmentsForAutoArrival");
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(date);
 		retrieve.setSourceAccountingCenter(sourceAccountingCenter);
@@ -34,8 +35,9 @@ public class TestAutoCheckin extends BaseTest{
 		validateLogs(retrieve, logValidItems, 10000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"}, dependsOnMethods="testRetrieveTravelPlanSegmentsForAutoArrival")
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testRetrieveTravelPlanSegmentsForAutoArrival")
 	public void testAutoArrived(){
+		TestReporter.logScenario("AutoArrived");
 		reservation = reservations.item(0).getTextContent();
 		AutoArrived aa = new AutoArrived(environment, "Main");
 		aa.setTpsId(reservation);
@@ -51,6 +53,7 @@ public class TestAutoCheckin extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoArrived")
 	public void testAutoArrived_InvalidReservationStatus_Arrived(){	
+		TestReporter.logScenario("AutoArrived_InvalidReservationStatus_Arrived");
 		AutoArrived aa = new AutoArrived(environment, "Main");
 		aa.setTpsId(reservation);	
 		aa.sendRequest();
@@ -68,7 +71,8 @@ public class TestAutoCheckin extends BaseTest{
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
-	public void testAutoArrived_InvalidReservationNumber(){		
+	public void testAutoArrived_InvalidReservationNumber(){	
+		TestReporter.logScenario("AutoArrived_InvalidReservationNumber");	
 		AutoArrived aa = new AutoArrived(environment, "Main");
 		aa.setTpsId("1");
 		aa.sendRequest();
@@ -86,7 +90,8 @@ public class TestAutoCheckin extends BaseTest{
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
-	public void testAutoArrived_MissingTpsId(){		
+	public void testAutoArrived_MissingTpsId(){	
+		TestReporter.logScenario("AutoArrived_MissingTpsId");	
 		AutoArrived aa = new AutoArrived(environment, "Main");
 		aa.setTpsId(BaseSoapCommands.REMOVE_NODE.toString());
 		aa.sendRequest();
@@ -99,6 +104,7 @@ public class TestAutoCheckin extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testAutoArrived_MissingProcessDate(){
+		TestReporter.logScenario("RetrieveTravelPlanSegmentsForAutoArrival_MissingProcessDate");
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(BaseSoapCommands.REMOVE_NODE.toString());
 		retrieve.setSourceAccountingCenter(sourceAccountingCenter);
@@ -113,6 +119,7 @@ public class TestAutoCheckin extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testAutoArrived_InvalidSourceAccountingCenter(){
+		TestReporter.logScenario("RetrieveTravelPlanSegmentsForAutoArrival_InvalidSourceAccountingCenter");
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(date);
 		retrieve.setSourceAccountingCenter("1");
@@ -126,6 +133,7 @@ public class TestAutoCheckin extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoArrived_MissingSourceAccountingCenter(){
+		TestReporter.logScenario("RetrieveTravelPlanSegmentsForAutoArrival_MissingSourceAccountingCenter");
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(date);
 		retrieve.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
@@ -139,6 +147,7 @@ public class TestAutoCheckin extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoArrived_NoData(){
+		TestReporter.logScenario("RetrieveTravelPlanSegmentsForAutoArrival_NoData");
 		RetrieveTravelPlanSegmentsForAutoArrival  retrieve = new RetrieveTravelPlanSegmentsForAutoArrival(environment, "Main");
 		retrieve.setProcessDate(BaseSoapCommands.REMOVE_NODE.toString());
 		retrieve.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());

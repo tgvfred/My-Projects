@@ -27,6 +27,7 @@ public class TestAutoCheckout extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testRetrieveReservationsForAutoCheckout(){
+		TestReporter.logScenario("RetrieveReservationsForAutoCheckout");
 		RetrieveReservationsForAutoCheckout retrieve = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
 		int daysOut = 0;
 		do{
@@ -46,6 +47,7 @@ public class TestAutoCheckout extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"}, dependsOnMethods="testRetrieveReservationsForAutoCheckout")
 	public void testAutoCheckout(){
+		TestReporter.logScenario("Checkout");
 		if(reservations.size() == 0) throw new SkipException("No reservations were returned for the date ["+date+"].");
 		Iterator<String> it = reservations.values().iterator();
 		reservation = it.next().toString();
@@ -66,6 +68,7 @@ public class TestAutoCheckout extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoCheckout")
 	public void testAutoCheckout_InvalidReservationStatus_PastVisit(){
+		TestReporter.logScenario("Checkout_InvalidReservationStatus_PastVisit");
 		if(checkout == null) checkout = new Checkout(environment); 
 		checkout = new Checkout(environment);
 		checkout.setTravelPlanSegmentId(reservation);
@@ -85,6 +88,7 @@ public class TestAutoCheckout extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCheckout_InvalidReservationNumber(){
+		TestReporter.logScenario("Checkout_InvalidReservationNumber");
 		Checkout checkout = new Checkout(environment);
 		checkout.setTravelPlanSegmentId(invalidNumber);
 		checkout.sendRequest();	
@@ -103,6 +107,7 @@ public class TestAutoCheckout extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCheckout_MissingTravelPlanSegmentId(){
+		TestReporter.logScenario("Checkout_MissingTravelPlanSegmentId");
 		Checkout checkout = new Checkout(environment);
 		checkout.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
 		checkout.sendRequest();	
@@ -111,6 +116,7 @@ public class TestAutoCheckout extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCheckout_MissingCheckoutRequestNode(){
+		TestReporter.logScenario("Checkout_MissingCheckoutRequestNode");
 		Checkout checkout = new Checkout(environment);
 		checkout.setRequestNodeValueByXPath("/Envelope/Body/checkout/checkoutRequest", BaseSoapCommands.REMOVE_NODE.toString());
 		checkout.sendRequest();	
@@ -118,8 +124,7 @@ public class TestAutoCheckout extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCheckout_MissingProcessDate(){
-//		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
-//			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
+		TestReporter.logScenario("RetrieveReservationsForAutoCheckout_MissingProcessDate");
 		TestReporter.logStep("Retrieve Reservations for Auto Checkout");
 		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
 		retrieveReservationForAutoCheckout.setProcessDate(BaseSoapCommands.REMOVE_NODE.toString());
@@ -133,8 +138,7 @@ public class TestAutoCheckout extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCheckout_InvalidDateEqualCondition(){
-//		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
-//			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
+		TestReporter.logScenario("RetrieveReservationsForAutoCheckout_InvalidDateEqualCondition");
 		TestReporter.logStep("Retrieve Reservations for Auto Checkout");
 		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
 		retrieveReservationForAutoCheckout.setDateEqualCondition_Negative("==");
@@ -148,8 +152,7 @@ public class TestAutoCheckout extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCheckout_MissingDateEqualCondition(){
-//		if(Environment.getEnvironmentName(environment).equalsIgnoreCase("bashful_cm"))
-//			throw new SkipException("This test is not valid to run in latest since 'DEV3 is not in EBR where as other env are in EBR'");
+		TestReporter.logScenario("RetrieveReservationsForAutoCheckout_MissingDateEqualCondition");
 		TestReporter.logStep("Retrieve Reservations for Auto Checkout");
 		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
 		retrieveReservationForAutoCheckout.setDateEqualCondition_Negative(BaseSoapCommands.REMOVE_NODE.toString());
