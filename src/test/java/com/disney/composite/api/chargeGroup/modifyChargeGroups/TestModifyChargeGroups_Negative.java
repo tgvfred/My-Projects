@@ -2,7 +2,6 @@ package com.disney.composite.api.chargeGroup.modifyChargeGroups;
 
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;

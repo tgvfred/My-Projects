@@ -3,7 +3,6 @@ package com.disney.composite.api.eventDiningService.book;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.eventDiningService.operations.Book;
-import com.disney.api.soapServices.eventDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;

@@ -2,15 +2,14 @@ package com.disney.composite.api.activityService.retrieve;
 
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.activityServicePort.operations.Retrieve;
 import com.disney.api.soapServices.applicationError.ActivityErrorCode;
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
