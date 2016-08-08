@@ -1,7 +1,7 @@
 package com.disney.composite.api.scheduledEventsServicePort.searchByVenue;
 
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -23,7 +23,7 @@ public class TestSearchByVenue extends BaseTest{
 	private String TPS_ID;
 	
 	@Override
-	@BeforeClass(alwaysRun = true)
+	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(String environment){
 		this.environment = environment;
@@ -37,7 +37,7 @@ public class TestSearchByVenue extends BaseTest{
 		TPS_ID = res.getTravelPlanSegmentId();
 	}
 	
-	@AfterClass(alwaysRun = true)
+	@AfterMethod(alwaysRun = true)
 	public void closeSession() {
 		if(TPS_ID != null)
 			if(!TPS_ID.isEmpty()){
