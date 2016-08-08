@@ -4,7 +4,7 @@ package com.disney.utils.dataFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.__OLD__eventDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.guestAccessControlService.operations.RetrieveDetails;
 import com.disney.utils.TestReporter;

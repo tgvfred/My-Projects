@@ -3,15 +3,15 @@ package com.disney.utils.dataFactory.staging.bookSEReservation;
 import com.disney.AutomationException;
 import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.showDiningService.operations.Arrived;
-import com.disney.api.soapServices.showDiningService.operations.AssignTableNumbers;
-import com.disney.api.soapServices.showDiningService.operations.Book;
-import com.disney.api.soapServices.showDiningService.operations.Cancel;
-import com.disney.api.soapServices.showDiningService.operations.NoShow;
-import com.disney.api.soapServices.showDiningService.operations.PrintTicket;
-import com.disney.api.soapServices.showDiningService.operations.ReprintTicket;
-import com.disney.api.soapServices.showDiningService.operations.Retrieve;
-import com.disney.api.soapServices.showDiningService.operations.ValidateBooking;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Arrived;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.AssignTableNumbers;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.NoShow;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.PrintTicket;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.ReprintTicket;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Retrieve;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.ValidateBooking;
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -491,7 +491,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		 * is performed to allow information to be retrieved for validation purposes.
 		 */
 		private void modify(){
-			com.disney.api.soapServices.showDiningService.operations.Modify modify = new com.disney.api.soapServices.showDiningService.operations.Modify(getEnvironment(), modifyScenario);
+			com.disney.api.soapServices.diningModule.showDiningService.operations.Modify modify = new com.disney.api.soapServices.diningModule.showDiningService.operations.Modify(getEnvironment(), modifyScenario);
 			modify.setReservationNumber(getConfirmationNumber());
 			modify.setTravelPlanId(getTravelPlanId());
 
@@ -612,7 +612,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		public void modifyScenario(String scenario) {
 			TestReporter.logStep("Modify show Dining Reservation Scenario From ["+this.modifyScenario+"] to ["+scenario+"].");
 			this.modifyScenario = scenario;
-			com.disney.api.soapServices.showDiningService.operations.Modify modify = new com.disney.api.soapServices.showDiningService.operations.Modify(getEnvironment(), modifyScenario);
+			com.disney.api.soapServices.diningModule.showDiningService.operations.Modify modify = new com.disney.api.soapServices.diningModule.showDiningService.operations.Modify(getEnvironment(), modifyScenario);
 			ShowDiningReservation.this.serviceStartDate = modify.getRequestServiceStartDate();
 			ShowDiningReservation.this.servicePeriod = modify.getRequestServicePeriodId();
 			ShowDiningReservation.this.facilityId = modify.getRequestFacilityId();

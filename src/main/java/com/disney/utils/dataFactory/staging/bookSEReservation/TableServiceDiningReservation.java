@@ -3,12 +3,12 @@ package com.disney.utils.dataFactory.staging.bookSEReservation;
 import com.disney.AutomationException;
 import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Arrived;
-import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Book;
-import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Cancel;
-import com.disney.api.soapServices.tableServiceDiningServicePort.operations.NoShow;
-import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Retrieve;
-import com.disney.api.soapServices.tableServiceDiningServicePort.operations.ValidateBooking;
+import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Arrived;
+import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Book;
+import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Cancel;
+import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.NoShow;
+import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Retrieve;
+import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.ValidateBooking;
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -417,7 +417,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		 * is performed to allow information to be retrieved for validation purposes.
 		 */
 		private void modify(){
-			com.disney.api.soapServices.tableServiceDiningServicePort.operations.Modify modify = new com.disney.api.soapServices.tableServiceDiningServicePort.operations.Modify(getEnvironment(), modifyScenario);
+			com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Modify modify = new com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Modify(getEnvironment(), modifyScenario);
 			modify.setReservationNumber(getConfirmationNumber());
 			modify.setTravelPlanId(getTravelPlanId());
 
@@ -537,7 +537,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		public void modifyScenario(String scenario) {
 			TestReporter.logStep("Modify Event Dining Reservation Scenario From ["+this.modifyScenario+"] to ["+scenario+"].");
 			this.modifyScenario = scenario;
-			com.disney.api.soapServices.tableServiceDiningServicePort.operations.Modify modify = new com.disney.api.soapServices.tableServiceDiningServicePort.operations.Modify(getEnvironment(), modifyScenario);
+			com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Modify modify = new com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Modify(getEnvironment(), modifyScenario);
 			TableServiceDiningReservation.this.serviceStartDate = modify.getRequestServiceStartDate();
 			TableServiceDiningReservation.this.servicePeriod = modify.getRequestServicePeriodId();
 			TableServiceDiningReservation.this.facilityId = modify.getRequestFacilityId();
