@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestSearchGuestIDByExternalReference_Suite" parallel="methods" thread-count="200">
+	<parameter name="environment" value="Development" />
+	<test name="TestSearchGuestIDByExternalReference">
+		<classes>
+			<class name="com.disney.composite.api.partyModule.partyV3.searchGuestIDByExternalReference.TestSearchGuestIDByExternalReference"/>
+		</classes>
+	</test>
+</suite>

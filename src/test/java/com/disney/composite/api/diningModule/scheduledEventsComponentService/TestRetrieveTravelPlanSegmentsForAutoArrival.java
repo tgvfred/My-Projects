@@ -10,7 +10,7 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.Bo
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.scheduledEventsComponentService.operations.AutoArrived;
 import com.disney.api.soapServices.diningModule.scheduledEventsComponentService.operations.RetrieveTravelPlanSegmentsForAutoArrival;
-import com.disney.api.soapServices.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
+import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Datatable;
 import com.disney.utils.Randomness;
 import com.disney.utils.RetrieveComponentProductIdByFacilityId;

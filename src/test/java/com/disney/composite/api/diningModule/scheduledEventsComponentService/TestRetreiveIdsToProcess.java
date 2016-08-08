@@ -4,7 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationBatchServicePort.operation.RetrieveProcessSummary;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.RetrieveProcessSummary;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.diningModule.scheduledEventsComponentService.operations.RetreiveIdsToProcess;
 import com.disney.utils.Randomness;

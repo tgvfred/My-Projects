@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestProfileServicePort_Suite" parallel="classes" thread-count="20">
+	<parameter name="environment" value="${environment}" />
+	<test name="TestProfileServicePort">
+		<classes>
+			<class name="com.disney.composite.api.profileModule.profileServicePort.retrieveProfilesByCode.TestRetrieveProfilesByCode_Negative"/>
+			<class name="com.disney.composite.api.profileModule.profileServicePort.retrieveProfilesByCode.TestRetrieveProfilesByCode"/>
+			<class name="com.disney.composite.api.profileModule.profileServicePort.retrieveProfilesByRoutingType.TestRetrieveProfilesByRoutingType"/>
+			<class name="com.disney.composite.api.profileModule.profileServicePort.retrieveProfilesByRoutingType.TestRetrieveProfilesByRoutingType_Negative"/>
+		</classes>
+	</test>
+</suite>

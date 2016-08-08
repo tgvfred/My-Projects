@@ -1,7 +1,7 @@
 package com.disney.utils.dataFactory.staging.bookSEReservation;
 
 import com.disney.AutomationException;
-import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
+import com.disney.api.soapServices.availSEModule.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Arrived;
 import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Book;

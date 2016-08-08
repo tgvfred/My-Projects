@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.NodeList;
 
 import com.disney.AutomationException;
-import com.disney.api.soapServices.accommodationBatchServicePort.operation.RetrieveProcessSummary;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.RetrieveProcessSummary;
 import com.disney.api.soapServices.diningModule.scheduledEventsComponentService.operations.GetStagedRecordsForReservationMassProcess;
 import com.disney.api.soapServices.diningModule.scheduledEventsComponentService.operations.RetreiveIdsToProcess;
 import com.disney.utils.Randomness;
