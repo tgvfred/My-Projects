@@ -2,7 +2,7 @@ package com.disney.composite.api.diningModule.scheduledEventsServicePort.searchB
 
 import java.util.List;
 
-import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -31,7 +31,7 @@ public class TestSearchByAgency extends BaseTest{
 	}
 	
 
-	@AfterClass(alwaysRun = true)
+	@AfterMethod(alwaysRun = true)
 	public synchronized void closeSession() {
 		try{book.cancel();}
 		catch (Exception e){}

@@ -2,7 +2,7 @@ package com.disney.composite.api.diningModule.scheduledEventsServicePort.retriev
 
 import java.util.Map;
 
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -17,7 +17,7 @@ public class TestRetrieveAll extends BaseTest{
 	protected RetrieveAll retrieveAll;
 	
 	@Override
-	@BeforeClass
+	@BeforeTest(alwaysRun=true)
 	@Parameters("environment")
 	public void setup(@Optional String environment){
 		this.environment = environment;
