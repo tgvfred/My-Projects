@@ -455,7 +455,7 @@ public class EventDiningReservation implements ScheduledEventReservation {
 				Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 				modify.sendRequest();
 			}
-			TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred modifying an event dining service reservation", modify);
+			TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred modifying an event dining service reservation: " + modify.getFaultString(), modify);
 			retrieve();
 		}
 		
