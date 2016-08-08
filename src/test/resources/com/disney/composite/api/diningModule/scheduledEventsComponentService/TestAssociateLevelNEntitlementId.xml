@@ -5,7 +5,7 @@
 	<test name="TestAssociateLevelNEntitlementId">
 		<classes>
 			<class
-				name="com.disney.composite.api.diningModue.scheduledEventsComponentService.TestAssociateLevelNEntitlementId"/>
+				name="com.disney.composite.api.diningModule.scheduledEventsComponentService.TestAssociateLevelNEntitlementId"/>
 		</classes>
 	</test>
 </suite>

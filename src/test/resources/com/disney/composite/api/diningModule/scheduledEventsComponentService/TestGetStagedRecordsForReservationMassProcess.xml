@@ -5,7 +5,7 @@
 	<test name="TestGetStagedRecordsForReservationMassProcess">
 		<classes>
 			<class
-				name="com.disney.composite.api.diningModue.scheduledEventsComponentService.TestGetStagedRecordsForReservationMassProcess"/>
+				name="com.disney.composite.api.diningModule.scheduledEventsComponentService.TestGetStagedRecordsForReservationMassProcess"/>
 		</classes>
 	</test>
 </suite>

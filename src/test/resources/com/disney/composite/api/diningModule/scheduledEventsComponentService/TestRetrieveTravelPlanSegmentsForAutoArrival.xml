@@ -5,7 +5,7 @@
 	<test name="TestRetrieveTravelPlanSegmentsForAutoArrival">
 		<classes>
 			<class
-				name="com.disney.composite.api.diningModue.scheduledEventsComponentService.TestRetrieveTravelPlanSegmentsForAutoArrival"/>
+				name="com.disney.composite.api.diningModule.scheduledEventsComponentService.TestRetrieveTravelPlanSegmentsForAutoArrival"/>
 		</classes>
 	</test>
 </suite>

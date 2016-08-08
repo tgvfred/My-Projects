@@ -5,7 +5,7 @@
 	<test name="TestRetreiveIdsToProcess">
 		<classes>
 			<class
-				name="com.disney.composite.api.diningModue.scheduledEventsComponentService.TestRetreiveIdsToProcess"/>
+				name="com.disney.composite.api.diningModule.scheduledEventsComponentService.TestRetreiveIdsToProcess"/>
 		</classes>
 	</test>
 </suite>

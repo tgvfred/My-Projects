@@ -5,7 +5,7 @@
 	<test name="TestAutoArrived">
 		<classes>
 			<class
-				name="com.disney.composite.api.diningModue.scheduledEventsComponentService.TestAutoArrived"/>
+				name="com.disney.composite.api.diningModule.scheduledEventsComponentService.TestAutoArrived"/>
 		</classes>
 	</test>
 </suite>

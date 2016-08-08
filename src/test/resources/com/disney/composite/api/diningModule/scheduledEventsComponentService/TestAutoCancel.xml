@@ -5,7 +5,7 @@
 	<test name="TestAutoCancel">
 		<classes>
 			<class
-				name="com.disney.composite.api.diningModue.scheduledEventsComponentService.TestAutoCancel"/>
+				name="com.disney.composite.api.diningModule.scheduledEventsComponentService.TestAutoCancel"/>
 		</classes>
 	</test>
 </suite>
