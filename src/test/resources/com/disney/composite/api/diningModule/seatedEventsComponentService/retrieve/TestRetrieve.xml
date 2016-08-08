@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestRetrieve_Suite">
+	<parameter name="environment" value="Bashful_CM" />
+	<test name="TestRetrieve">
+		<classes>
+			<class name="com.disney.composite.api.diningModule.seatedEventsComponentService.retrieve.TestRetrieve"/>
+		</classes>
+	</test>
+</suite>
