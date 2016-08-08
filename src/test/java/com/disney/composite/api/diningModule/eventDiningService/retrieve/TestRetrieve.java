@@ -30,6 +30,7 @@ public class TestRetrieve extends BaseTest{
 		book = new Book(this.environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 	}
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testRetrieve(){
