@@ -24,7 +24,7 @@ public class UpdateInventoryForScheduledEvents extends AccommodationInventoryReq
 	 * Sets assignment request details date
 	 * @param value - assignment request details date
 	 */
-	public void setAssignmentRequestDetailsDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/assignmentRequestDetails/date", value);}
+	public void setAssignmentRequestDetailsDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/assignmentRequestDetails/date", value.replace(" ", "T"));}
 	/**
 	 * assignment request details is all day flag
 	 * @param value - request details is all day flag
@@ -103,7 +103,7 @@ public class UpdateInventoryForScheduledEvents extends AccommodationInventoryReq
 	 * Sets owner details booking date
 	 * @param value - owner details booking date
 	 */
-	public void setOwnerDetailsBookingDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/ownerDetails/bookingDate", value);}
+	public void setOwnerDetailsBookingDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/ownerDetails/bookingDate", value.replace(" ", "T"));}
 	/**
 	 * Sets owner details name
 	 * @param value - owner details name 
@@ -133,12 +133,12 @@ public class UpdateInventoryForScheduledEvents extends AccommodationInventoryReq
 	 * Sets owner details period end date
 	 * @param value - owner details period end date 
 	 */
-	public void setOwnerDetailsPeriodEndDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/ownerDetails/period/endDate", value);}
+	public void setOwnerDetailsPeriodEndDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/ownerDetails/period/endDate", value.replace(" ", "T"));}
 	/**
 	 * Sets owner details period start date
 	 * @param value - owner details period start date 
 	 */
-	public void setOwnerDetailsPeriodStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/ownerDetails/period/startDate", value);}
+	public void setOwnerDetailsPeriodStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/ownerDetails/period/startDate", value.replace(" ", "T"));}
 	
 
 	//***************************
@@ -152,12 +152,12 @@ public class UpdateInventoryForScheduledEvents extends AccommodationInventoryReq
 	 * Sets the period end date
 	 * @param value - period end date
 	 */
-	public void setPeriodEndDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/period/endDate", value);}
+	public void setPeriodEndDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/period/endDate", value.replace(" ", "T"));}
 	/**
 	 * Sets the period start date
 	 * @param value - period start date
 	 */
-	public void setPeriodStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/period/startDate", value);}
+	public void setPeriodStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/newAssignmentOwners/period/startDate", value.replace(" ", "T"));}
 	
 
 	//************************************
@@ -181,7 +181,7 @@ public class UpdateInventoryForScheduledEvents extends AccommodationInventoryReq
 	 * Sets the update inventory type info new service start date
 	 * @param value - update inventory type info new service start date
 	 */
-	public void setUpdateInventoryTypeInfoNewServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/updateInventoryTypeInfo/newServiceStartDate", value);}
+	public void setUpdateInventoryTypeInfoNewServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/updateInventoryTypeInfo/newServiceStartDate", value.replace(" ", "T"));}
 	/**
 	 * Sets the update inventory type info old duration
 	 * @param value - update inventory type info old duration
@@ -191,7 +191,7 @@ public class UpdateInventoryForScheduledEvents extends AccommodationInventoryReq
 	 * Sets the update inventory type info old service start date
 	 * @param value - update inventory type info old service start date
 	 */
-	public void setUpdateInventoryTypeInfoOldServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/updateInventoryTypeInfo/oldServiceStartDate", value);}
+	public void setUpdateInventoryTypeInfoOldServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/updateInventoryForScheduledEvents/request/updateInventoryTypeInfo/oldServiceStartDate", value.replace(" ", "T"));}
 	
 	//******************************
 	//******************************

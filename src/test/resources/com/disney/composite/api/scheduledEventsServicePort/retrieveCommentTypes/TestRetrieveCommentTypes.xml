@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestRetrieveCommentTypes_Suite">
+	<parameter name="environment" value="sleepy" />
+	<test name="TestRetrieveCommentTypes">
+		<classes>
+			<class name="com.disney.composite.api.scheduledEventsServicePort.retrieveCommentTypes.TestRetrieveCommentTypes"/>
+		</classes>
+	</test>
+</suite>

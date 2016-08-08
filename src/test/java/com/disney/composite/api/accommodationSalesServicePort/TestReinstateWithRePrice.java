@@ -1,6 +1,7 @@
 package com.disney.composite.api.accommodationSalesServicePort;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -15,7 +16,7 @@ public class TestReinstateWithRePrice {
 	    private String environment = "";
 		private Book book = null;
 		
-		@BeforeTest(alwaysRun = true)
+		@BeforeClass(alwaysRun = true)
 		@Parameters({"environment" })
 		public void setup(String environment) {
 			this.environment = environment;

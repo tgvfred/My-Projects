@@ -39,7 +39,7 @@ public class TestFulfill_Negative extends BaseTest{
 		book.setPrimaryGuestPhoneNumber(hh.primaryGuest().primaryPhone().getNumber());
 		book.setServiceStartDate(bookingDate);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking.", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TPS_ID = book.getReservationNumber();
 	}	
 	
@@ -47,6 +47,7 @@ public class TestFulfill_Negative extends BaseTest{
 	public void invalidCommunicationsChannel(){
 		TestReporter.logScenario("Invalid Communications Channel");
 		Fulfill fulfill = new Fulfill(environment, "Main");
+		fulfill.setReservationNumber(TPS_ID);
 		fulfill.setCommunicationChannel(invalidValue);
 		sendRequestValidateLogs(fulfill, "communication Channel is required : null", DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 	}
@@ -54,6 +55,7 @@ public class TestFulfill_Negative extends BaseTest{
 	public void missingCommunicationsChannel(){
 		TestReporter.logScenario("Missing Communications Channel");
 		Fulfill fulfill = new Fulfill(environment, "Main");
+		fulfill.setReservationNumber(TPS_ID);
 		fulfill.setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestValidateLogs(fulfill, "communication Channel is required : null", DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 	}
@@ -61,13 +63,15 @@ public class TestFulfill_Negative extends BaseTest{
 	public void invalidOperatingArea(){
 		TestReporter.logScenario("Invalid Operating Area");
 		Fulfill fulfill = new Fulfill(environment, "Main");
+		fulfill.setReservationNumber(TPS_ID);
 		fulfill.setOperatingArea(invalidValue);
-		sendRequestValidateLogs(fulfill, "Unexpected Error occurred : fulfill : org.hibernate.exception.DataException: could not extract ResultSet : org.hibernate.exception.DataException: could not extract ResultSet; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not extract ResultSet", LiloSystemErrorCode.UNEXPECTED_ERROR);
+		sendRequestValidateLogs(fulfill, "Unexpected Error occurred : An Error Occured while translation from PMSR XML to NexusXML: Can't find resource for bundle java.util.PropertyResourceBundle, key INVALID -- Parent Exception: An Error Occured while translation from PMSR XML to NexusXML: Can't find resource for bundle java.util.PropertyResourceBundle, key INVALID", LiloSystemErrorCode.UNEXPECTED_ERROR);
 	}
 	@Test(groups = {"api", "regression", "dining", "seatedEventsComponentService", "negative"})
 	public void missingOperatingArea(){
 		TestReporter.logScenario("Missing Operating Area");
 		Fulfill fulfill = new Fulfill(environment, "Main");
+		fulfill.setReservationNumber(TPS_ID);
 		fulfill.setOperatingArea(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestValidateLogs(fulfill, "No detials provided to fulfill will call request : Operating area is required!", DiningErrorCode.NO_WILL_CALL_DETAILS_PROVIDED);
 	}
@@ -85,7 +89,7 @@ public class TestFulfill_Negative extends BaseTest{
 		Fulfill fulfill = new Fulfill(environment, "Main");
 		fulfill.setExternalReferenceNumber("0");
 		fulfill.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestValidateLogs(fulfill, "Unexpected Error occurred : fulfill : org.hibernate.exception.DataException: could not extract ResultSet : org.hibernate.exception.DataException: could not extract ResultSet; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not extract ResultSet", LiloSystemErrorCode.UNEXPECTED_ERROR);
+		sendRequestValidateLogs(fulfill, "org.hibernate.exception.DataException: could not extract ResultSet", LiloSystemErrorCode.UNEXPECTED_ERROR);
 	}
 	@Test(groups = {"api", "regression", "dining", "seatedEventsComponentService", "negative"})
 	public void missingExternalReferenceAndResNumber(){
@@ -99,6 +103,7 @@ public class TestFulfill_Negative extends BaseTest{
 	public void invalidSalesChannel(){
 		TestReporter.logScenario("Invalid Sales Channel");
 		Fulfill fulfill = new Fulfill(environment, "Main");
+		fulfill.setReservationNumber(TPS_ID);
 		fulfill.setSalesChannel(invalidValue);
 		sendRequestValidateLogs(fulfill, "Sales Channel is required : null", DiningErrorCode.SALES_CHANNEL_REQUIRED);
 	}
@@ -106,6 +111,7 @@ public class TestFulfill_Negative extends BaseTest{
 	public void missingSalesChannel(){
 		TestReporter.logScenario("Missing Sales Channel");
 		Fulfill fulfill = new Fulfill(environment, "Main");
+		fulfill.setReservationNumber(TPS_ID);
 		fulfill.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestValidateLogs(fulfill, "Sales Channel is required : null", DiningErrorCode.SALES_CHANNEL_REQUIRED);
 	}
@@ -116,7 +122,7 @@ public class TestFulfill_Negative extends BaseTest{
 		TestReporter.logAPI(!fulfill.getFaultString().contains(faultString), fulfill.getFaultString(), fulfill);
 		
 		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("SeatedEventsComponentService", "book", true);
+		logValidItems.addItem("SeatedEventsComponentService", "fulfill", true);
 		validateLogs(fulfill, logValidItems, 10000);
 		
 //		LogItems logInvalidItems = new LogItems();	

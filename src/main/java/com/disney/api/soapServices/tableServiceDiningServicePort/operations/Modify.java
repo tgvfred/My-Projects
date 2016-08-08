@@ -62,7 +62,14 @@ public class Modify extends TableServiceDiningServicePort {
 	 * Sets the product ID in the SOAP request
 	 * @param value - service period ID
 	 */
-	public void setProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/productId", value);}
+	public void setProductId(String value){
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/productId", value);
+		}catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService","fx:AddNode;Node:productId");
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/productId", value);
+		}
+	}
 	/**
 	 * Sets the product type in the SOAP request
 	 * @param value - service period ID
@@ -345,4 +352,16 @@ public class Modify extends TableServiceDiningServicePort {
 	 * @param value service start dateTime
 	 */
 	public void setServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/serviceStartDate", value);}
+
+	public void setAllergies(String value, String index){
+		// Determine if the index exists. If not, create it and the necessary
+		// child nodes. If so, then set the child node values
+		try{
+			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/allergies["+index+"]");
+		}catch(Exception e){
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService", "fx:AddNode;Node:allergies");
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/allergies["+index+"]", value);
+		}
+	}	
+
 }

@@ -1,5 +1,6 @@
 package com.disney.composite.api.activityService.modify;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
@@ -31,9 +32,12 @@ public class TestModify_Negative extends BaseTest{
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 	
-	@AfterTest(alwaysRun = true)
-	public synchronized void closeSession() {res.cancel();}
 
+	@AfterClass(alwaysRun = true)
+	public synchronized void closeSession() {try{
+		res.cancel();
+	}catch (Exception e){}
+	}
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void invalidFacilityId(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");

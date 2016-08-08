@@ -752,11 +752,11 @@ public static boolean validateNodeContainsValueByXPath(Document doc, String xpat
 			expr = xPath.compile(xpath);
 			nList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 		} catch (XPathExpressionException xpe) {
-			throw new RuntimeException("Xpath evaluation failed with xpath [ " + xpath + " ] ", xpe.getCause());	
+			throw new XPathNotFoundException("Xpath evaluation failed with xpath [ " + xpath + " ] ");	
 		}
 		
 		//Ensure an element was found, if not then throw error and fail
-		if (nList.item(0) == null) throw new RuntimeException("No xpath was found with the path [ " + xpath + " ] ");
+		if (nList.item(0) == null) throw new XPathNotFoundException("No xpath was found with the path [ " + xpath + " ] ");
 
 		return nList;
 	}

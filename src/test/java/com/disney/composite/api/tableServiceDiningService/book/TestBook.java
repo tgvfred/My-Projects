@@ -3,6 +3,7 @@ package com.disney.composite.api.tableServiceDiningService.book;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.scheduledEventsServicePort.operations.RetrieveAllergies;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Book;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Cancel;
 import com.disney.composite.BaseTest;
@@ -12,6 +13,7 @@ import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestBook extends BaseTest{
 	// Defining global variables
@@ -70,6 +72,56 @@ public class TestBook extends BaseTest{
 		TestReporter.logScenario("12 Adults");
 		hh = new HouseHold(12);		
 		addAndValidateLogs(bookAndValidate(hh));
+	}
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService", "it4", "s138180" })
+	public void testAddAllergy(){
+		Book book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+
+		book.setParty(hh);
+		book.setAllergies("Egg", "1");
+		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
+		TPS_ID.set(book.getTravelPlanSegmentId());
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", TPS_ID.get()), "The reservation number ["+TPS_ID.get()+"] was not numeric as expected.");
+	
+	}
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService", "it4", "s138180" })
+	public void testAddTwoAllergies(){
+		Book book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+
+		book.setParty(hh);
+		book.setAllergies("Egg", "1");
+		book.setAllergies("Corn", "2");
+		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
+		TPS_ID.set(book.getTravelPlanSegmentId());
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", TPS_ID.get()), "The reservation number ["+TPS_ID.get()+"] was not numeric as expected.");
+		
+	}
+	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService", "it4", "s138180" })
+	public void testAddAllAllergies(){
+		Book book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+
+		book.setParty(hh);
+		RetrieveAllergies retrieveAllergies = new RetrieveAllergies(environment);
+		retrieveAllergies.sendRequest();
+		
+		int index = 1;
+		for(String allergy : retrieveAllergies.getAllergies().values()){
+			book.setAllergies(allergy,String.valueOf(index));
+			index++;
+		}		
+		
+		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
+		
+		TPS_ID.set(book.getTravelPlanSegmentId());
+		TestReporter.assertTrue(Regex.match("[0-9]+",  book.getTravelPlanId()), "The travel plan ID ["+ book.getTravelPlanId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", TPS_ID.get()), "The reservation number ["+TPS_ID.get()+"] was not numeric as expected.");
+		
+		
 	}
 	
 	private Book bookAndValidate(HouseHold hh){

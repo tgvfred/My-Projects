@@ -6,6 +6,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.showDiningService.operations.Book;
 import com.disney.api.soapServices.showDiningService.operations.Cancel;
 import com.disney.api.soapServices.showDiningService.operations.Modify;
@@ -52,29 +53,110 @@ public class TestModify extends BaseTest{
 		HouseHold hh2 = new HouseHold(hh.getAllGuests().size() + 1);
 		sendRequestAndvalidateLogs(book(), hh2);
 	}	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void testModifyWith2Adults(){
 		TestReporter.logStep("Book a show dining reservation with 2 adults.");
 		HouseHold hh2 = new HouseHold("2 Adults");
 		sendRequestAndvalidateLogs(book(), hh2);
 	}
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void testModifyWith4Adults(){
 		TestReporter.logStep("Book a show dining reservation with 4 adults.");
 		HouseHold hh2 = new HouseHold("4 Adults");
 		sendRequestAndvalidateLogs(book(), hh2);
 	}
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void testModifyWith2Adults2Child(){
 		TestReporter.logStep("Book a show dining reservation with 2 adults and 2 children.");
 		HouseHold hh2 = new HouseHold("2 Adults 2 Child");
 		sendRequestAndvalidateLogs(book(), hh2);
 	}
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService"})
 	public void testModifyWith12InParty(){
 		TestReporter.logStep("Book a show dining reservation with 12 adults.");
 		HouseHold hh2 = new HouseHold(12);
 		sendRequestAndvalidateLogs(book(), hh2);
+	}
+
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "it4", "s138180" })
+	public void testModifyAddAllergy(){
+		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		book.setParty(hh);		
+		book.sendRequest();
+		Modify modify = new Modify(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		modify.setReservationNumber(book.getTravelPlanSegmentId());
+		modify.setTravelPlanId(book.getTravelPlanId());
+		modify.setParty(hh);
+		modify.setFacilityId(book.getRequestFacilityId());
+		modify.setServiceStartDate(book.getRequestServiceStartDate());
+		modify.setServicePeriodId(book.getRequestServicePeriodId());
+		modify.setProductId(book.getRequestProductId());
+		modify.setAllergies("Egg", "1");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("ShowDiningServiceIF", "modify", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems, 10000);
+	}
+
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "it4", "s138180" })
+	public void testModifyAddAdditionalAllergy(){
+		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		book.setParty(hh);		
+		book.setAllergies("Egg", "1");
+		book.sendRequest();
+		Modify modify = new Modify(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		modify.setReservationNumber(book.getTravelPlanSegmentId());
+		modify.setTravelPlanId(book.getTravelPlanId());
+		modify.setParty(hh);
+		modify.setFacilityId(book.getRequestFacilityId());
+		modify.setServiceStartDate(book.getRequestServiceStartDate());
+		modify.setServicePeriodId(book.getRequestServicePeriodId());
+		modify.setProductId(book.getRequestProductId());
+		modify.setAllergies("Egg", "1");
+		modify.setAllergies("Corn", "2");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("ShowDiningServiceIF", "modify", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems, 10000);
+	}
+	
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "it4", "s138180" })
+	public void testModifyRemoveAllergy(){
+		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		book.setParty(hh);		
+		book.setAllergies("Egg", "1");
+		book.sendRequest();
+		Modify modify = new Modify(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		modify.setReservationNumber(book.getTravelPlanSegmentId());
+		modify.setTravelPlanId(book.getTravelPlanId());
+		modify.setParty(hh);
+		modify.setFacilityId(book.getRequestFacilityId());
+		modify.setServiceStartDate(book.getRequestServiceStartDate());
+		modify.setServicePeriodId(book.getRequestServicePeriodId());
+		modify.setProductId(book.getRequestProductId());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("ShowDiningServiceIF", "modify", false);
+		validateLogs(modify, logItems, 10000);
 	}
 	
 	private Book book(){

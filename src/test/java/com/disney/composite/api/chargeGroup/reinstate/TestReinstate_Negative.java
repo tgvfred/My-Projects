@@ -1,5 +1,6 @@
 package com.disney.composite.api.chargeGroup.reinstate;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
@@ -21,7 +22,7 @@ public class TestReinstate_Negative extends BaseTest{
 	private String invalidName = "abcd";
 	private String invalidValue = invalidName;
 	
-	@BeforeTest(alwaysRun=true)
+	@BeforeClass(alwaysRun=true)
 	@Parameters("environment")
 	public void testSetup(@Optional String environment){
 		this.environment = environment;

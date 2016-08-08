@@ -264,4 +264,7 @@ public class DiningErrorCode {
 			
 			public static final ApplicationErrorCode TICKETING_SERVICE_ERROR = new ApplicationErrorCode("Dining", 9061,
 		            "Ticketing Service Error");
+			
+			public static final ApplicationErrorCode TCG_NOT_FOUND = new ApplicationErrorCode("Dining", 9039,
+		            "Travel Component Grouping not found");
 }

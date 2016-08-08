@@ -596,5 +596,4 @@ public class TestBook_Negative extends BaseTest{
 		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateNotInLogs(book, logInvalidItems);
 	}
-
 }

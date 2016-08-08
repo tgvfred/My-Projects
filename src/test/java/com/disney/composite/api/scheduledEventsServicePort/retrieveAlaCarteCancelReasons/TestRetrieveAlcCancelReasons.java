@@ -11,7 +11,7 @@ import com.disney.utils.dataFactory.database.LogItems;
 
 public class TestRetrieveAlcCancelReasons extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
-	public void testRetrieveAlcCancelReasons(){
+	public void testRetrieveAlaCarteCancelReasons(){
 		TestReporter.logStep("Retrieve Ala Carte Cancel Reasons");
 		RetrieveAlaCarteCancelReasons retrieveAlcCancelReasons = new RetrieveAlaCarteCancelReasons(environment);
 		retrieveAlcCancelReasons.sendRequest();

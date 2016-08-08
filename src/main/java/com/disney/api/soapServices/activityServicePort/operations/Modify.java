@@ -4,6 +4,8 @@ import com.disney.api.soapServices.activityServicePort.ActivityService;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
+import com.disney.utils.dataFactory.FacilityInfo;
+import com.disney.utils.dataFactory.ProductInfo;
 import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
 import com.disney.utils.dataFactory.guestFactory.Guest;
@@ -60,6 +62,24 @@ public class Modify extends ActivityService {
 	 * @param value - product ID
 	 */
 	public void setProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/productId", value);}
+	/**
+	 * Sets the facility ID in the SOAP Request by using a known Facility Name
+	 * @param name - facility name to find Id for and insert into request
+	 * @see http://fldcvpswa6204.wdw.disney.com/TDOD/public/gdo/row/QAAUTO_METADATA_ACTIVITIES_FACILITIES
+	 */
+	public void setFacilityIdByFacilityName(String name){setRequestNodeValueByXPath("/Envelope/Body/book/modifyActivityComponentRequest/activity/facilityId", FacilityInfo.getActivityFacilityIDByName(name));}
+	/**
+	 * Sets the facility name in the SOAP Request by using known Facility ID
+	 * @param id - facility id to find facility name for
+	 * @see http://fldcvpswa6204.wdw.disney.com/TDOD/public/gdo/row/QAAUTO_METADATA_ACTIVITY_FACILITIES
+	 */
+	public void setFacilityNameByFacilityId(String id){setRequestNodeValueByXPath("/Envelope/Body/book/modifyActivityComponentRequest/activity/facilityName", FacilityInfo.getActivityFacilityNameById(id));}
+	/**
+	 * Sets the product id in the SOAP Request by using known Product Name
+	 * @param value - facility id to find facility name for
+	 * @see http://fldcvpswa6204.wdw.disney.com/TDOD/public/gdo/row/QAAUTO_METADATA_ACTIVITY_PRODUCTS
+	 */
+	public void setProductIdByProductName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/modifyActivityComponentRequest/activity/productId", ProductInfo.getActivityProductIDByName(value));}
 	/**
 	 * Sets the product type in the SOAP request
 	 * @param value - product type 

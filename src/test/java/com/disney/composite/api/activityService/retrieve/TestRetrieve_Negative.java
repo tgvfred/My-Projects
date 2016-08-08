@@ -36,8 +36,9 @@ public class TestRetrieve_Negative  extends BaseTest{
 	@AfterTest(alwaysRun=true)
 	public void teardown(){
 		if(res != null)
-			if(!res.getConfirmationNumber().isEmpty())
-				res.cancel();
+			if(res.getConfirmationNumber() != null)
+				if(!res.getConfirmationNumber().isEmpty())
+					res.cancel();
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})

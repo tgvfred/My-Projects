@@ -4,12 +4,18 @@ package com.disney.utils.dataFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.eventDiningService.operations.Book;
 import com.disney.api.soapServices.guestAccessControlService.operations.RetrieveDetails;
+import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams.ProductIds;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.GenerateReservation;
 import com.disney.utils.dataFactory.staging.Reservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class sandbox {
 	String environment = "Sleepy";
@@ -180,8 +186,14 @@ public class sandbox {
 	
 	@Test
 	public void test(){
-System.out.println(ResortInfo.getFacilityID(ResortColumns.RESORT_NAME,"Disney's Contemporary Resort"));
-		//new TdodClientUtil().stageGoMasterGuest("", "", null, false);
+		TestReporter.setDebugLevel(1);
+		HouseHold hh = new HouseHold(1);
+		ScheduledEventReservation res = new EventDiningReservation("Stage",hh);
+		res.book("TableServiceAddOn");
+		//System.out.println(book.getResponse());
+		System.out.println(res.getConfirmationNumber());
+		
+	
 	}
 	
 }

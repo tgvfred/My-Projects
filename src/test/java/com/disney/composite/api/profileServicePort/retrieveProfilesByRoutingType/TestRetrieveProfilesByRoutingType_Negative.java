@@ -1,5 +1,6 @@
 package com.disney.composite.api.profileServicePort.retrieveProfilesByRoutingType;
 
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -15,7 +16,7 @@ import com.disney.utils.TestReporter;
 public class TestRetrieveProfilesByRoutingType_Negative extends BaseTest{
 	
 	@Override
-	@BeforeTest
+	@BeforeClass
 	@Parameters("environment")
 	public void setup(@Optional String environment){this.environment = environment;}
 	

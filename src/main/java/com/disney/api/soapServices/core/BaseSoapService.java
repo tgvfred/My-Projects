@@ -518,7 +518,7 @@ public abstract class BaseSoapService{
 			request = messageFactory.createMessage(new MimeHeaders(), new StringBufferInputStream(getRequest()));			
 //			request.writeTo(System.out);
 		//	System.out.println();
-
+			
 			// Send out Soap Request to the endopoint
 			TestReporter.logDebug("Initializing Soap Connection Factory");
 			connectionFactory = SOAPConnectionFactory.newInstance();
@@ -538,6 +538,7 @@ public abstract class BaseSoapService{
 					"Operation given did not match any operations in the service"
 							+ uoe.getCause());
 		} catch (SOAPException soape) {
+			TestReporter.logAPI(true, soape.getMessage(), this);
 			throw new RuntimeException(soape.getMessage(), soape.getCause());
 		} catch (IOException ioe) {
 			throw new RuntimeException("Failed to read the request properly"
@@ -1014,7 +1015,7 @@ public abstract class BaseSoapService{
 		setRequestDocument(XMLTools.removeWhiteSpace(getRequestDocument()));
 	}
 
-	private String getFirstNodeValueByTagName(Document doc, String tag) {
+	public static String getFirstNodeValueByTagName(Document doc, String tag) {
 		NodeList nList = doc.getElementsByTagName(tag);
 		return nList.item(0).getTextContent();
 	}

@@ -14,6 +14,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class TestModifyChargeGroups_Negative extends BaseTest{
@@ -68,6 +69,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_DESC);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing Description : Invalid Charge Group - missing description"), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void expiredPeriodEndDate(){
@@ -78,6 +83,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PERIOD);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group Period : ChargeGroup period provided is invalid."), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPeriod(){
@@ -88,6 +97,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PERIOD);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group Period : Invalid Charge Group - missing Period"), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReferenceName(){
@@ -98,6 +111,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PRI_REF);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.<null>,"+super.number.get()), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReferenceValue(){
@@ -106,6 +123,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 			modify.setRootPrimaryReferenceValue(BaseSoapCommands.REMOVE_NODE.toString());
 			modify.sendRequest();
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.DREAMS_TP,<null>"), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReference(){
@@ -116,6 +137,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PRI_REF);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : Invalid Charge Group - missing primary reference"), modify.getFaultString(), modify);				
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 	}
 	
@@ -129,6 +154,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_DESC);						
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing Description : Invalid Charge Group - missing description"), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPeriod(){
@@ -139,6 +168,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PERIOD);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group Period : Invalid Charge Group - missing Period"), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReferenceName(){
@@ -149,6 +182,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PRI_REF);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.<null>,"+super.number.get()), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReferenceValue(){
@@ -159,6 +196,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PRI_REF);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.DREAMS_TPS,<null>"), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReference(){
@@ -169,6 +210,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PRI_REF);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : Invalid Charge Group - missing primary reference"), modify.getFaultString(), modify);			
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingSourceAccountingCenter(){
@@ -179,6 +224,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.REQ_FIELD_MISSING);
 			TestReporter.logAPI(!modify.getFaultString().contains("Missing required fields. : Invalid GuestChargeGroupContainerRequest. RootReference, SourceAccountingCenterID and ResponsibleParty fields are required."), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingRootReference(){
@@ -189,6 +238,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.REQ_FIELD_MISSING);
 			TestReporter.logAPI(!modify.getFaultString().contains("Missing required fields. : Invalid GuestChargeGroupContainerRequest. RootReference, SourceAccountingCenterID and ResponsibleParty fields are required."), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 	}
 	
@@ -202,6 +255,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_DESC);						
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing Description : Invalid Charge Group - missing description"), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPeriod(){
@@ -212,6 +269,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PERIOD);						
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group Period : Invalid Charge Group - missing Period"), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReferenceName(){
@@ -222,6 +283,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PRI_REF);
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.<null>,"+super.number.get()), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReferenceValue(){
@@ -232,6 +297,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PRI_REF);			
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : ReferenceName and ReferenceValue is required for PrimaryReference.DREAMS_TCG,<null>"), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingPrimaryReference(){
@@ -242,6 +311,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.INV_CHRG_GRP_PRI_REF);			
 			TestReporter.logAPI(!modify.getFaultString().contains("Invalid Charge Group - missing primary reference : Invalid Charge Group - missing primary reference"), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingAncestorReference(){
@@ -252,6 +325,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.REQ_FIELD_MISSING);			
 			TestReporter.logAPI(!modify.getFaultString().contains("Missing required fields. : Invalid GuestChargeGroupContainedRequest. Ancestor, Root, GuaranteeType and TransactionFacility are required fields."), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 		@Test(groups = {"api", "regression", "folio", "chargeGroupServicePort", "negative"})
 		public void missingRootReference(){
@@ -262,6 +339,10 @@ public class TestModifyChargeGroups_Negative extends BaseTest{
 
 			validateApplicationError(modify, FolioErrorCode.REQ_FIELD_MISSING);			
 			TestReporter.logAPI(!modify.getFaultString().contains("Missing required fields. : Invalid GuestChargeGroupContainedRequest. Ancestor, Root, GuaranteeType and TransactionFacility are required fields."), modify.getFaultString(), modify);
+
+			LogItems logItems = new LogItems();
+			logItems.addItem("ChargeGroupIF", "modifyChargeGroups", true);
+			validateLogs(modify, logItems);
 		}
 	}
 }

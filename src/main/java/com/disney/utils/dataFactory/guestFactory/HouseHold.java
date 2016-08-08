@@ -32,7 +32,7 @@ public class HouseHold {
 		TestReporter.logInfo("Creating party with ["+numberOfGuests+"] guests");
 		
 		for (int x = 0; x < numberOfGuests; x++) {
-			TestReporter.logDebug("Generating Guest [" + (numberOfGuests+1) + "]");	
+			TestReporter.logDebug("Generating Guest [" + (x+1) + "]");	
 			addGuest(new Guest());
 
 			TestReporter.logDebug("Setting Guest [" +(x+1)+"] Address, Phone and Email to primary Guest");

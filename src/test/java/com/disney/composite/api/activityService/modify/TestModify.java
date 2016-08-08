@@ -117,6 +117,6 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PackagingService", "getProducts", false);
 		logItems.addItem("PricingService", "priceComponents", false);
 		logItems.addItem("GuestServiceV1", "create", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 8000);
 	}
 }

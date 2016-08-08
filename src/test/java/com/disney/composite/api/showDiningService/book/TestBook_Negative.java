@@ -218,7 +218,7 @@ public class TestBook_Negative  extends BaseTest{
 		expectedLogs.get()[0] = "FacilityMasterServiceSEI;findFacilityByEnterpriseID";
 		TestReporter.logScenario("Missing Service Period ID");
 		Book book = book();
-		book.setServicePeriosId(BaseSoapCommands.REMOVE_NODE.toString());
+		book.setServicePeriodId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED.", DiningErrorCode.SERVICE_PERIOD_REQUIRED, book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})

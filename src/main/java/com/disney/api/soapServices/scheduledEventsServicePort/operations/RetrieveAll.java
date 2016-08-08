@@ -9,55 +9,72 @@ import com.disney.api.soapServices.scheduledEventsServicePort.ScheduledEventsSer
 import com.disney.utils.XMLTools;
 
 public class RetrieveAll extends ScheduledEventsServicePort{
+	// Allergies
 	Map<String, String> allergies = new HashMap<String, String>();
 	int numAllergies = -1;
+	// Booking Status Values
 	Map<String, String> bookingStatusValues = new HashMap<String, String>();
 	int numBookingStatusValues = -1;
+	// Cancel Reasons
 	Map<String, String> cancelReasonCodes = new HashMap<String, String>();
 	Map<String, String> cancelReasonDescriptions = new HashMap<String, String>();
 	Map<String, String> cancelReasonIds= new HashMap<String, String>();
 	int numCancelReasons = -1;
+	// Change Reasons
 	Map<String, String> changeReasonDescriptions = new HashMap<String, String>();
 	Map<String, String> changeReasonIds = new HashMap<String, String>();
 	int numChangeReasons = -1;
+	// Communication Channels
 	Map<String, String> communicationChannels = new HashMap<String, String>();
 	int numCommunicationChannels = -1;
+	// Guest Requests
 	Map<String, String> guestRequestsCodes = new HashMap<String, String>();
 	Map<String, String> guestRequestsDescriptions = new HashMap<String, String>();
 	Map<String, String> guestRequestsIds = new HashMap<String, String>();
 	int numGuestRequests = -1;
+	// Mass Cancel Reasons
 	Map<String, String> massCancelReasonsCode = new HashMap<String, String>();
 	Map<String, String> massCancelReasonsDescriptions = new HashMap<String, String>();
 	Map<String, String> massCancelReasonsIds = new HashMap<String, String>();
 	int numMassCancelsReasons = -1;
+	// Reprint Reasons
 	Map<String, String> reprintReasonsCodes = new HashMap<String, String>();
 	Map<String, String> reprintReasonsDescriptions = new HashMap<String, String>();
 	Map<String, String> reprintReasonsIds = new HashMap<String, String>();
 	int numReprintReasons = -1;
+	// Roles
 	Map<String, String> roles = new HashMap<String, String>();
 	int numRoles = -1;
+	// Sales Channels
 	Map<String, String> salesChannels = new HashMap<String, String>();
-	int numSalesChannels = -1;	
+	int numSalesChannels = -1;
+	// Special Events
 	Map<String, String> specialEventsCodes = new HashMap<String, String>();
 	Map<String, String> specialEventsDescriptions = new HashMap<String, String>();
 	Map<String, String> specialEventsIds = new HashMap<String, String>();
-	int numSpecialEvents = -1;	
+	int numSpecialEvents = -1;
+	// Special Needs
 	Map<String, String> specialNeedsCodes = new HashMap<String, String>();
 	Map<String, String> specialNeedsDescriptions = new HashMap<String, String>();
 	Map<String, String> specialNeedsIds = new HashMap<String, String>();
-	int numSpecialNeeds = -1;	
+	int numSpecialNeeds = -1;
+	// Tax Exempt Types
 	Map<String, String> taxExemptTypes = new HashMap<String, String>();
 	int numTaxExemptTypes = -1;
+	// Comment Types
 	Map<String, String> commentTypes = new HashMap<String, String>();
-	int numCommentTypes = -1;	
+	int numCommentTypes = -1;
+	// Inventory Overide Reasons
 	Map<String, String> inventoryOverideReasonsCodes = new HashMap<String, String>();
 	Map<String, String> inventoryOverideReasonsDescriptions = new HashMap<String, String>();
 	Map<String, String> inventoryOverideReasonsIds = new HashMap<String, String>();
-	int numInventoryTypes = -1;	
+	int numInventoryOverideReasons = -1;
+	// Ala Carte Cancel Reasons
 	Map<String, String> alaCarteCancelReasonsCodes = new HashMap<String, String>();
 	Map<String, String> alaCarteCancelReasonsDescriptions = new HashMap<String, String>();
 	Map<String, String> alaCarteCancelReasonsIds = new HashMap<String, String>();
 	int numAlaCarteCancelReasons = -1;
+	// Celebrations Codes
 	Map<String, String> celebrationsCodes = new HashMap<String, String>();
 	Map<String, String> celebrationsDescriptions = new HashMap<String, String>();
 	Map<String, String> celebrationsIds = new HashMap<String, String>();
@@ -71,14 +88,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		generateServiceContext();
 		removeComments() ;
 		removeWhiteSpace();
-	}
+	}	
 	
-	
-	
-	
-	
-	
-	
+	//**************************************
+	//**************************************
+	//				Allergies
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all allergies
 	 * @return - all allergies
@@ -98,7 +114,14 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	public int getNumberOfAllergies(){
 		numAllergies = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/allergies").getLength();
 		return numAllergies;
-	}	
+	}
+	
+	
+	//**************************************
+	//**************************************
+	//		Booking Status Values
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all booking status values
 	 * @return - all booking status values
@@ -118,13 +141,20 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	public int getNumberOfBookingStatusValues(){
 		numBookingStatusValues = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/bookingStatusValues").getLength();
 		return numBookingStatusValues;
-	}	
+	}
+
+	
+	//**************************************
+	//**************************************
+	//			Cancel Reasons
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all cancel reason codes
 	 * @return - all cancel reason codes
 	 */
 	public Map<String, String> getCancelReasonCodes(){
-		if(numCancelReasons == -1) getNumberOfBookingStatusValues();
+		if(numCancelReasons == -1) getNumberOfCancelReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/cancelReasons/optionCode");
 		for(int i = 0; i < numCancelReasons; i++){
 			cancelReasonCodes.put(String.valueOf(i), nodes.item(i).getTextContent());
@@ -136,7 +166,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 * @return - all cancel reason descriptions
 	 */
 	public Map<String, String> getCancelReasonDescriptions(){
-		if(numCancelReasons == -1) getNumberOfBookingStatusValues();
+		if(numCancelReasons == -1) getNumberOfCancelReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/cancelReasons/optionDescription");
 		for(int i = 0; i < numCancelReasons; i++){
 			cancelReasonDescriptions.put(String.valueOf(i), nodes.item(i).getTextContent());
@@ -148,7 +178,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 * @return - all cancel reason ids
 	 */
 	public Map<String, String> getCancelReasonIds(){
-		if(numCancelReasons == -1) getNumberOfBookingStatusValues();
+		if(numCancelReasons == -1) getNumberOfCancelReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/cancelReasons/optionId");
 		for(int i = 0; i < numCancelReasons; i++){
 			cancelReasonIds.put(String.valueOf(i), nodes.item(i).getTextContent());
@@ -162,7 +192,14 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	public int getNumberOfCancelReasons(){
 		numCancelReasons = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/cancelReasons").getLength();
 		return numCancelReasons;
-	}	
+	}
+
+	
+	//**************************************
+	//**************************************
+	//			Change Reasons
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all change reason descriptions
 	 * @return - all change reason descriptions
@@ -171,9 +208,9 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		if(numChangeReasons == -1) getNumberOfChangeReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/changeReasons/optionCode");
 		for(int i = 0; i < numChangeReasons; i++){
-			cancelReasonDescriptions.put(String.valueOf(i), nodes.item(i).getTextContent());
+			changeReasonDescriptions.put(String.valueOf(i), nodes.item(i).getTextContent());
 		}
-		return cancelReasonDescriptions;
+		return changeReasonDescriptions;
 	}
 	/**
 	 * Retrieves all change reason descriptions
@@ -195,6 +232,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numChangeReasons = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/changeReasons").getLength();
 		return numChangeReasons;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//		Communication Channels
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all communication channels
 	 * @return - all communication channels
@@ -215,6 +259,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numCommunicationChannels = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/communicationChannels").getLength();
 		return numCommunicationChannels;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//			Guest Requests
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all guest request codes
 	 * @return - all guest request codes
@@ -259,6 +310,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numGuestRequests = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/guestRequests").getLength();
 		return numGuestRequests;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//			Mass Cancel
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all mass cancel codes
 	 * @return - all mass cancel codes
@@ -303,6 +361,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numMassCancelsReasons = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/massCancelReasons").getLength();
 		return numMassCancelsReasons;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//			Reprint Reasons
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all reprint reasons codes
 	 * @return - all reprint reasons codes
@@ -347,6 +412,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numReprintReasons = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/reprintReasons").getLength();
 		return numReprintReasons;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//				Roles
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all roles
 	 * @return - all roles
@@ -367,6 +439,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numRoles = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/roles").getLength();
 		return numRoles;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//			Sales Channels
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all sales channels
 	 * @return - all sales channels
@@ -387,6 +466,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numSalesChannels = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/salesChannels").getLength();
 		return numSalesChannels;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//			Special Events
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all special events codes
 	 * @return - all special events codes
@@ -430,7 +516,14 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	public int getNumberOfSpecialEvents(){
 		numSpecialEvents = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/specialEvents").getLength();
 		return numSpecialEvents;
-	}	
+	}
+	
+
+	//**************************************
+	//**************************************
+	//			Special Needs
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all special needs codes
 	 * @return - all special needs codes
@@ -475,6 +568,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numSpecialNeeds = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/specialNeeds").getLength();
 		return numSpecialNeeds;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//			Tax Exempt Types
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all tax exempt types
 	 * @return - all tax exempt types
@@ -495,6 +595,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numTaxExemptTypes = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/taxExemptTypes").getLength();
 		return numTaxExemptTypes;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//			Comment Types
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all comment types
 	 * @return - all comment types
@@ -515,14 +622,21 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numCommentTypes = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/commentTypes").getLength();
 		return numCommentTypes;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//		Inventory Overide Reasons
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all inventory overide reason codes
 	 * @return - all inventory overide reason codes
 	 */
 	public Map<String, String> getInventoryOverideReasonsCodes(){
-		if(numInventoryTypes == -1) getNumberOfInventoryOverideReasons();
+		if(numInventoryOverideReasons == -1) getNumberOfInventoryOverideReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/inventoryOverideReasons/optionCode");
-		for(int i = 0; i < numInventoryTypes; i++){
+		for(int i = 0; i < numInventoryOverideReasons; i++){
 			inventoryOverideReasonsCodes.put(String.valueOf(i), nodes.item(i).getTextContent());
 		}
 		return inventoryOverideReasonsCodes;
@@ -532,9 +646,9 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 * @return - all inventory overide reason descriptions
 	 */
 	public Map<String, String> getInventoryOverideReasonsDescriptions(){
-		if(numInventoryTypes == -1) getNumberOfInventoryOverideReasons();
+		if(numInventoryOverideReasons == -1) getNumberOfInventoryOverideReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/inventoryOverideReasons/optionDescription");
-		for(int i = 0; i < numInventoryTypes; i++){
+		for(int i = 0; i < numInventoryOverideReasons; i++){
 			inventoryOverideReasonsDescriptions.put(String.valueOf(i), nodes.item(i).getTextContent());
 		}
 		return inventoryOverideReasonsDescriptions;
@@ -544,9 +658,9 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 * @return - all inventory overide reason ids
 	 */
 	public Map<String, String> getInventoryOverideReasonsIds(){
-		if(numInventoryTypes == -1) getNumberOfInventoryOverideReasons();
+		if(numInventoryOverideReasons == -1) getNumberOfInventoryOverideReasons();
 		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/inventoryOverideReasons/optionId");
-		for(int i = 0; i < numInventoryTypes; i++){
+		for(int i = 0; i < numInventoryOverideReasons; i++){
 			inventoryOverideReasonsIds.put(String.valueOf(i), nodes.item(i).getTextContent());
 		}
 		return inventoryOverideReasonsIds;
@@ -556,9 +670,16 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 * @return - number of inventory overide reason codes
 	 */
 	public int getNumberOfInventoryOverideReasons(){
-		numInventoryTypes = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/inventoryOverideReasons").getLength();
-		return numInventoryTypes;
+		numInventoryOverideReasons = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/inventoryOverideReasons").getLength();
+		return numInventoryOverideReasons;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//		Ala Carte Cancel Reasons
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all Ala Carte Cancel Reasons codes
 	 * @return - all Ala Carte Cancel Reasons codes
@@ -603,6 +724,13 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 		numAlaCarteCancelReasons = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/alaCarteCancelReasons").getLength();
 		return numAlaCarteCancelReasons;
 	}
+	
+
+	//**************************************
+	//**************************************
+	//			Celebrations
+	//**************************************
+	//**************************************
 	/**
 	 * Retrieves all Celebrations codes
 	 * @return - all Celebrations codes
@@ -621,7 +749,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 */
 	public Map<String, String> getCelebrationsDescriptions(){
 		if(numCelebrations == -1) getNumberOfCelebrations();
-		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/alaCarteCancelReasons/optionDescription");
+		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/celebrations/optionDescription");
 		for(int i = 0; i < numCelebrations; i++){
 			celebrationsDescriptions.put(String.valueOf(i), nodes.item(i).getTextContent());
 		}
@@ -633,7 +761,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 */
 	public Map<String, String> getCelebrationsIds(){
 		if(numCelebrations == -1) getNumberOfCelebrations();
-		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/alaCarteCancelReasons/optionId");
+		NodeList nodes =  XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/celebrations/optionId");
 		for(int i = 0; i < numCelebrations; i++){
 			celebrationsIds.put(String.valueOf(i), nodes.item(i).getTextContent());
 		}
@@ -644,7 +772,7 @@ public class RetrieveAll extends ScheduledEventsServicePort{
 	 * @return - number of Celebrations
 	 */
 	public int getNumberOfCelebrations(){
-		numCelebrations = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/alaCarteCancelReasons").getLength();
+		numCelebrations = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveAllResponse/allOptions/celebrations").getLength();
 		return numCelebrations;
 	}
 }

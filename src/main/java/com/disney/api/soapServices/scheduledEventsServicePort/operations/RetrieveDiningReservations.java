@@ -2,6 +2,7 @@ package com.disney.api.soapServices.scheduledEventsServicePort.operations;
 
 import org.w3c.dom.NodeList;
 
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.scheduledEventsServicePort.ScheduledEventsServicePort;
 import com.disney.utils.XMLTools;
 
@@ -36,4 +37,38 @@ public class RetrieveDiningReservations extends ScheduledEventsServicePort{
 	public String getPaidInFull(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations/paidInFull");}
 	public String getDepositPaid(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations/depositPaid");}
 	public NodeList getDiningReservations(){return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveDiningReservationsResponse/diningReservations");}
+	public int getNumberOfReservations(){
+		try{return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveDiningReservationsResponse/diningReservations/facilityId").getLength();}
+		catch(XPathNotFoundException e){return 0;}
+	}
+	
+	public String getFacilityID(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/facilityId");}
+	public String getGuestDetailsAge(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/guestDetails/age");}
+	public String getGuestDetailsAgeType(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/guestDetails/ageType");}
+	public String getGuestDetailsFirstName(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/guestDetails/guestFirstName");}
+	public String getGuestDetailsLastName(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/guestDetails/guestLastName");}
+	public String getPrimaryGuestFirstName(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/primaryGuestFirstName");}
+	public String getPrimaryGuestLastName(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/primaryGuestLastName");}
+	public String getProductId(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/productDetails/productId");}
+	public String getProductName(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/productDetails/productName");}
+	public String getReservationDate(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/reservationDate");}
+	public String getReservationStatus(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/reservationStatus");}
+	public String getReservationTime(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/reservationTime");}
+	public String getReservableResourceId(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/inventoryDetails/reservableResourceId");}
+	public String getInventoryDetailsFeatures(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveDiningReservationsResponse/diningReservations["+index+"]/inventoryDetails/features");}
+	
+	public boolean areReservationsReturned(){
+		String errorCode = null;
+		String errorMessage = null;
+		try{
+			errorCode = getErrorCode();
+			errorMessage = getErrorMessage();
+		}catch(Exception e){}
+		
+		if(errorCode != null || errorMessage != null){
+			return false;
+		}else{
+			return true;
+		}
+	}
 }

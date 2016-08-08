@@ -2,6 +2,7 @@ package com.disney.api.soapServices.scheduledEventsComponentService.operations;
 
 import org.w3c.dom.NodeList;
 
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.scheduledEventsComponentService.ScheduledEventsComponentService;
 import com.disney.utils.XMLTools;
 
@@ -23,4 +24,16 @@ public class RetrieveTravelPlanSegmentsForAutoArrival extends ScheduledEventsCom
 	public String getTravelPlanIdByIndex(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveTravelPlanSegmentsForAutoArrivalResponse/return["+index+"]/travelPlanId");}
 	public String getTravelPlanSegmentIdByIndex(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveTravelPlanSegmentsForAutoArrivalResponse/return["+index+"]/travelPlanSegmentId");}
 	public NodeList getAllReturnNodes(){return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveTravelPlanSegmentsForAutoArrivalResponse/return");}
+	
+	public NodeList getAllReservationNumbers(){
+		return XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/retrieveTravelPlanSegmentsForAutoArrivalResponse/return/travelPlanSegmentId");
+	}
+	
+	public int getNumberOfReservations(){
+		try{
+			return getAllReservationNumbers().getLength();
+		}catch(XPathNotFoundException e){
+			return 0;
+		}
+	}
 }

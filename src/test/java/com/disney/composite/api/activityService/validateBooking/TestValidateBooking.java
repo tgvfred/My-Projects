@@ -29,7 +29,7 @@ public class TestValidateBooking extends BaseTest{
 		ValidateBooking validate = setupValidateBookingInstance(book.getRequestFacilityId(), book.getRequestProductId(), book.getRequestServiceStartDate(), book.getRequestServicePeriodId());
 		TestReporter.logAPI(!validate.getResponseStatusCode().equals("200"), validate.getFaultString(), validate);
 		TestReporter.logAPI(!validate.getStopReservation().equals("false"), "The Stop Reservation Status was not false as expected",validate);
-		logItems(validate);	
+		logItems(validate, false);	
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
@@ -39,7 +39,7 @@ public class TestValidateBooking extends BaseTest{
 		TestReporter.assertEquals(validate.getStopReservation(),"true", "The 'Stop Reservation' value ["+validate.getStopReservation()+"] was not 'true' as expected.");
 		TestReporter.assertEquals(validate.getStopReason(),"Destination/Time Zone is not configured in drools for the given facility Id : 0", "Verify the stop reason ["+validate.getStopReason()+"] matches that which is expected [Destination/Time Zone is not configured in drools for the given facility Id : 0]");
 		TestReporter.assertEquals(validate.getRulesFired(),"FacilityToDestinationLookup", "Verify the rules fired ["+validate.getRulesFired()+"] matches that which is expected [FacilityToDestinationLookup].");
-		logItems(validate);		
+		logItems(validate, true);		
 	}
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void invalidFacilityId_Integer(){
@@ -49,7 +49,7 @@ public class TestValidateBooking extends BaseTest{
 		TestReporter.assertEquals(validate.getStopReservation(),"true", "The 'Stop Reservation' value ["+validate.getStopReservation()+"] was not 'true' as expected.");
 		TestReporter.assertEquals(validate.getStopReason(),"Destination/Time Zone is not configured in drools for the given facility Id : "+facilityId, "Verify the stop reason ["+validate.getStopReason()+"] matches that which is expected [Destination/Time Zone is not configured in drools for the given facility Id : "+facilityId+"].");
 		TestReporter.assertEquals(validate.getRulesFired(),"FacilityToDestinationLookup", "Verify the rules fired ["+validate.getRulesFired()+"] matches that which is expected [FacilityToDestinationLookup].");
-		logItems(validate);	
+		logItems(validate, true);	
 	}
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void expiredServiceStartDate(){
@@ -58,7 +58,7 @@ public class TestValidateBooking extends BaseTest{
 		TestReporter.assertEquals(validate.getStopReservation(),"true", "The 'Stop Reservation' value ["+validate.getStopReservation()+"] was not 'true' as expected.");
 		TestReporter.assertEquals(validate.getStopReason(),"Book Date is greater than Service date", "Verify the stop reason ["+validate.getStopReason()+"] matches that which is expected [Book Date is greater than Service date].");
 		TestReporter.assertEquals(validate.getRulesFired(),"BookDate_ServiceDate_Check_1", "Verify the rules fired ["+validate.getRulesFired()+"] matches that which is expected [BookDate_ServiceDate_Check_1].");
-		logItems(validate);
+		logItems(validate, true);
 	}
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void bookDateBeyond180Days(){
@@ -67,7 +67,7 @@ public class TestValidateBooking extends BaseTest{
 		TestReporter.assertEquals(validate.getStopReservation(),"true", "The 'Stop Reservation' value ["+validate.getStopReservation()+"] was not 'true' as expected.");
 		TestReporter.assertEquals(validate.getStopReason(),"Day Guest cannot book a Dining Reservation beyond 180 days from booking date", "Verify the stop reason ["+validate.getStopReason()+"] matches that which is expected [Day Guest cannot book a Dining Reservation beyond 180 days from booking date].");
 		TestReporter.assertEquals(validate.getRulesFired(),"OneEighty_Ten_Rule_DAY_GUEST_2", "Verify the rules fired ["+validate.getRulesFired()+"] matches that which is expected [OneEighty_Ten_Rule_DAY_GUEST_2].");
-		logItems(validate);
+		logItems(validate, true);
 	}
 	
 	private ValidateBooking setupValidateBookingInstance(String facilityId, String productId, String serviceStartDate, String servicePeriodId){
@@ -81,9 +81,10 @@ public class TestValidateBooking extends BaseTest{
 		return validate;
 	}
 	
-	private void logItems(ValidateBooking validate){
+	private void logItems(ValidateBooking validate, boolean expectError){
 		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("ActivityServiceIF", "validateBooking", false);
+//		logValidItems.addItem("ActivityServiceIF", "validateBooking", expectError);
+		logValidItems.addItem("EventDiningServiceIF", "validateBooking", expectError);
 		validateLogs(validate, logValidItems);
 	}
 }
