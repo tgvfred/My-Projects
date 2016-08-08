@@ -1,12 +1,10 @@
 package com.disney.api.soapServices.diningModule.scheduledEventsComponentService.operations;
 
-import org.testng.annotations.Test;
-
 import com.disney.api.soapServices.diningModule.scheduledEventsComponentService.ScheduledEventsComponentService;
-import com.disney.utils.dataFactory.database.Recordset;
-import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class AutoCancel extends ScheduledEventsComponentService{
 

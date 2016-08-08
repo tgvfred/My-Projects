@@ -5,14 +5,14 @@
 	<test name="Phase 1">
 		<packages>
 			<package name="com.disney.composite.api.activityService.*"></package>
-			<package name="com.disney.composite.api.eventDiningService.*"></package>
-			<package name="com.disney.composite.api.scheduledEventsServicePort.*"></package>
-			<package name="com.disney.composite.api.seatedEventsComponentService.*"></package>
-			<package name="com.disney.composite.api.showDiningService.*"></package>
-			<package name="com.disney.composite.api.tableServiceDiningService.*"></package>
+			<package name="com.disney.composite.api.diningModule.eventDiningService.*"></package>
+			<package name="com.disney.composite.api.diningModule.scheduledEventsServicePort.*"></package>
+			<package name="com.disney.composite.api.diningModule.seatedEventsComponentService.*"></package>
+			<package name="com.disney.composite.api.diningModule.showDiningService.*"></package>
+			<package name="com.disney.composite.api.diningModule.tableServiceDiningService.*"></package>
 			<package name="com.disney.composite.api.travelPlanSalesOrderServiceV1.*"></package>
-			<package name="com.disney.composite.api.scheduledEventsServicePort.*"></package>
-			<package name="com.disney.composite.api.scheduledEventsComponentService.*"></package>
+			<package name="com.disney.composite.api.diningModule.scheduledEventsServicePort.*"></package>
+			<package name="com.disney.composite.api.diningModue.scheduledEventsComponentService.*"></package>
 		</packages>
 	</test>
 </suite>
