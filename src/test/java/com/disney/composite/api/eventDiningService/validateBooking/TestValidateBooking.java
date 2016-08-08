@@ -5,9 +5,9 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.__OLD__eventDiningService.operations.Book;
+import com.disney.api.soapServices.__OLD__eventDiningService.operations.ValidateBooking;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.eventDiningService.operations.Book;
-import com.disney.api.soapServices.eventDiningService.operations.ValidateBooking;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;

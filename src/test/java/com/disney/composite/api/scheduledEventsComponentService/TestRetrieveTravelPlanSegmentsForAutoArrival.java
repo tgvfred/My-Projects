@@ -6,8 +6,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.eventDiningService.operations.Book;
-import com.disney.api.soapServices.eventDiningService.operations.Cancel;
+import com.disney.api.soapServices.__OLD__eventDiningService.operations.Book;
+import com.disney.api.soapServices.__OLD__eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.scheduledEventsComponentService.operations.AutoArrived;
 import com.disney.api.soapServices.scheduledEventsComponentService.operations.RetrieveTravelPlanSegmentsForAutoArrival;
 import com.disney.api.soapServices.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;

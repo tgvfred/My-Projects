@@ -1,6 +1,6 @@
 package com.disney.api.soapServices.activityServicePort.operations;
 
-import com.disney.api.soapServices.eventDiningService.EventDiningService;
+import com.disney.api.soapServices.diningModule.eventDiningService.EventDiningService;
 import com.disney.utils.XMLTools;
 
 public class ValidateBooking extends EventDiningService {

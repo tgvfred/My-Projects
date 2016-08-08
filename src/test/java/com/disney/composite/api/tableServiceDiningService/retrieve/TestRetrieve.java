@@ -6,9 +6,9 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.__OLD__eventDiningService.operations.Modify;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.eventDiningService.operations.Modify;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Book;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Cancel;
 import com.disney.api.soapServices.tableServiceDiningServicePort.operations.Retrieve;

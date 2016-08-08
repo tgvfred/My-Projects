@@ -5,7 +5,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.eventDiningService.operations.Arrived;
+import com.disney.api.soapServices.__OLD__eventDiningService.operations.Arrived;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
