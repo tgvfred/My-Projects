@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Sleepy" />
 	<test name="Phase 1">
 		<packages>
-			<package name="com.disney.composite.api.activityService.*"></package>
+			<package name="com.disney.composite.api.activityModule.activityService.*"></package>
 			<package name="com.disney.composite.api.diningModule.eventDiningService.*"></package>
 			<package name="com.disney.composite.api.diningModule.scheduledEventsServicePort.*"></package>
 			<package name="com.disney.composite.api.diningModule.seatedEventsComponentService.*"></package>

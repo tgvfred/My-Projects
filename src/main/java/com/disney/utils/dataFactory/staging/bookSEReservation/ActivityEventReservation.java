@@ -2,12 +2,12 @@ package com.disney.utils.dataFactory.staging.bookSEReservation;
 
 import com.disney.AutomationException;
 import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
-import com.disney.api.soapServices.activityServicePort.operations.Arrived;
-import com.disney.api.soapServices.activityServicePort.operations.Book;
-import com.disney.api.soapServices.activityServicePort.operations.Cancel;
-import com.disney.api.soapServices.activityServicePort.operations.NoShow;
-import com.disney.api.soapServices.activityServicePort.operations.Retrieve;
-import com.disney.api.soapServices.activityServicePort.operations.ValidateBooking;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Arrived;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Book;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Cancel;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.NoShow;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Retrieve;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.ValidateBooking;
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -425,7 +425,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		 * is performed to allow information to be retrieved for validation purposes.
 		 */
 		private void modify(){
-			com.disney.api.soapServices.activityServicePort.operations.Modify modify = new com.disney.api.soapServices.activityServicePort.operations.Modify(getEnvironment(), modifyScenario);
+			com.disney.api.soapServices.activityModule.activityServicePort.operations.Modify modify = new com.disney.api.soapServices.activityModule.activityServicePort.operations.Modify(getEnvironment(), modifyScenario);
 			modify.setReservationNumber(getConfirmationNumber());
 			modify.setTravelPlanId(getTravelPlanId());
 
@@ -547,7 +547,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		public void modifyScenario(String scenario) {
 			TestReporter.logStep("Modify Activity Event Reservation Scenario From ["+this.modifyScenario+"] to ["+scenario+"].");
 			this.modifyScenario = scenario;
-			com.disney.api.soapServices.activityServicePort.operations.Modify modify = new com.disney.api.soapServices.activityServicePort.operations.Modify(getEnvironment(), modifyScenario);
+			com.disney.api.soapServices.activityModule.activityServicePort.operations.Modify modify = new com.disney.api.soapServices.activityModule.activityServicePort.operations.Modify(getEnvironment(), modifyScenario);
 			ActivityEventReservation.this.serviceStartDate = modify.getRequestServiceStartDate();
 			ActivityEventReservation.this.servicePeriod = modify.getRequestServicePeriodId();
 			ActivityEventReservation.this.facilityId = modify.getRequestFacilityId();
