@@ -432,9 +432,11 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
 			resource.setFacilityId(getFacilityId());
 			resource.sendRequest();
-			resource.getReservableResources();
-			
-			modify.setReservableResourceId(resource.getFirstReservableResourceId());
+			try{
+				resource.getReservableResources();				
+				modify.setReservableResourceId(resource.getFirstReservableResourceId());	
+			}
+			catch(Exception e){}
 			modify.setParty(party());
 			modify.setFacilityId(getFacilityId());
 			modify.setServiceStartDate(getServiceStartDate());
