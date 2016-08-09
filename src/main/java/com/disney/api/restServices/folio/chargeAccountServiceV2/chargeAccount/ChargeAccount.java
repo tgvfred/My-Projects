@@ -1,8 +1,8 @@
 package com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount;
 
 import com.disney.api.restServices.core.RestService;
-import com.disney.api.restServices.folio.chargeAccountServiceV2.ChargeAccountServiceV2;
 import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.retrieve.Retrieve;
+import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.retrieveGuests.retrieveGuests;
 
 public class ChargeAccount{
 	private RestService restService;
@@ -13,5 +13,9 @@ public class ChargeAccount{
 	
 	public Retrieve retrieve(){
 		return new Retrieve(restService,resource);
+	}
+	
+	public retrieveGuests retrieveGuests(){
+		return new retrieveGuests(restService,resource);
 	}
 }
