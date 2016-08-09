@@ -18,9 +18,7 @@ public class TestQuickBook {
 	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
-	public void setup(String environment) {
-		TestReporter.setDebugLevel(Integer.parseInt(System.getenv("debugLevel")));
-		this.environment = environment;}
+	public void setup(String environment) {this.environment = environment;}
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
