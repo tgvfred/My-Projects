@@ -513,13 +513,15 @@ public abstract class BaseSoapService{
 			messageFactory = MessageFactory.newInstance(SOAPConstants.DEFAULT_SOAP_PROTOCOL);
 			
 			String header = System.getenv("header");
-			if(header != null) {
-				TestReporter.logInfo("Sending request to Dark Side");
+			if(header != null) {				
 				header = header.equalsIgnoreCase("Dark") ? "SHADOW" : "";
 				header = header.equalsIgnoreCase("Shadow") ? "SHADOW" : "";
+				
+				if(header.equals("SHADOW")) TestReporter.logInfo("Sending request to Dark Side");
+				else TestReporter.logInfo("Sending request to Lite Side");
 			}
 			else {
-				TestReporter.logInfo("Sending request to Light Side");
+				TestReporter.logInfo("Sending request to Lite Side");
 				header = "";
 			}
 			
