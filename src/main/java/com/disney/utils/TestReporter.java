@@ -133,7 +133,7 @@ public class TestReporter {
 	 */
 	public static void logDebug(String message) {
 		if(debugLevel >= DEBUG){
-			//Reporter.log(getTimestamp().replace(" ::", "") + ":: DEBUG ::" + getClassPath() + " > "+ message + "<br />");
+			logNoXmlTrim(getTimestamp().replace(" ::", "") + ":: DEBUG ::" + getClassPath() + " > "+ message + "<br />");
 			//if(getPrintToConsole()) System.out.println(getTimestamp()replace(" ::", "") + "::DEBUG:: " + trimHtml(message.trim()));
 			System.out.println(getTimestamp().replace(" ::", "") + ":: DEBUG :: " + getClassPath() + " > "+  (message.trim()));
 		}
@@ -145,7 +145,7 @@ public class TestReporter {
 	 */
 	public static void logInfo(String message) {
 		if(debugLevel >= INFO){
-			//logNoXmlTrim(getTimestamp() + ":: INFO :: "+ getClassPath() + " > " + message + "<br />");
+			logNoXmlTrim(getTimestamp().replace(" ::", "") + ":: INFO :: "+ getClassPath() + " > " + message + "<br />");
 			//if(getPrintToConsole()) System.out.println(getTimestamp().replace(" ::", "") + "::INFO:: " + trimHtml(message.trim()));
 			System.out.println(getTimestamp().replace(" ::", "") + ":: INFO :: "  + getClassPath() + " > "+ message.trim());
 		}

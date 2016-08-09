@@ -40,37 +40,10 @@ public class BaseTest {
 	protected int logTimeout = 3000;
 	protected int defaultTimeout = 3000;
 	@BeforeSuite
-	public void updateJenkinsBuildName(){
-	//	TestReporter.setDebugLevel(1);
-	/*	try{
-			TestReporter.logDebug("Checking if executed from Jenkins");
-			String buildId = System.getenv("BUILD_ID");
-			URI url = null;
-			if(buildId != null && !buildId.isEmpty()){
-				TestReporter.logDebug("Is executed from Jenkins, updating build name");
-				//String buildId = System.getenv("BUILD_ID");
-				String buildUrl = System.getenv("BUILD_URL") + "configSubmit";
-				String buildEnv = System.getenv("environment");
-				try {
-					url = new URI(buildUrl);
-				} catch ( URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				RestService rest = new RestService();
-				String json = "{\"displayName\": \"#" + buildId + " - " + buildEnv + "\", \"description\": \"\", \"core:apply\": \"\"}";
-				
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				params.add(new BasicNameValuePair("Submit", "Save"));
-				params.add(new BasicNameValuePair("displayName", "#" + buildId + " - " + buildEnv));
-				params.add(new BasicNameValuePair("json", json));
-				params.add(new BasicNameValuePair("description", ""));
-				params.add(new BasicNameValuePair("core:apply", ""));
-				rest.sendPostRequest(url, HeaderType.JENKINS, params);
-				
-			}
-		}catch(Exception e){}*/
+	public void preSuite(){
+		try{
+			TestReporter.setDebugLevel(Integer.parseInt(System.getenv("debugLevel")));
+		}catch(Exception e){}		
 	}
 	
 	@BeforeMethod(alwaysRun = true)

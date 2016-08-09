@@ -7,7 +7,7 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.Ca
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.NoShow;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Retrieve;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.ValidateBooking;
-import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
+import com.disney.api.soapServices.availSEModule.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;

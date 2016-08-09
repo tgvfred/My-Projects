@@ -1,13 +1,13 @@
 package com.disney.utils.dataFactory.staging.bookSEReservation;
 
 import com.disney.AutomationException;
-import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.Arrived;
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.Book;
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.Cancel;
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.NoShow;
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.Retrieve;
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.ValidateBooking;
+import com.disney.api.soapServices.availSEModule.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
