@@ -1,5 +1,6 @@
 package com.disney.composite.api.diningModule.scheduledEventsComponentService;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -28,6 +29,10 @@ public class TestRetreiveIdsToProcess {
 	
 	@Test(groups = {"api", "regression", "dining", "ScheduledEventsComponentService"})
 	public void testRetreiveIdsToProcess(){
+
+		if(environment.toLowerCase().contains("_cm")){
+			throw new SkipException("The Service#operation [ScheduledEventsComponentService#RetreiveIdsToProcess] does not exist in the ["+environment+"] environment.");
+		}
 		TestReporter.logStep("Retrieve Process Summary");
 		retrieve = new RetrieveProcessSummary(environment, "Main");
 		retrieve.setFromDate(fromDate);

@@ -1,10 +1,12 @@
 package com.disney.composite.api.diningModule.scheduledEventsComponentService;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Retrieve;
@@ -88,6 +90,9 @@ public class TestAutoArrived {
 
 		// Grab the @Test method name and use it to define the test name
 		testName.set(new Object() {}.getClass().getEnclosingMethod().getName());
+		if(environment.get().toLowerCase().contains("_cm")){
+			throw new SkipException("The Service#operation [ScheduledEventsComponentService#AutoArrived] does not exist in the ["+environment.get()+"] environment.");
+		}
 
 		if(iteration < maxIterations){
 			if (ServiceStyle.equalsIgnoreCase("TableService")) {
@@ -129,9 +134,10 @@ public class TestAutoArrived {
 				eventDiningBook.get().setAddOnServiceStartDateTime(bookingDate.get());
 				eventDiningBook.get().setComponentUnitPriceDateTime(bookingDate.get());
 				eventDiningBook.get().setServiceStartDateTime(bookingDate.get());
+				eventDiningBook.get().setPrimaryGuestSuffix(BaseSoapCommands.REMOVE_NODE.toString());
 				Sleeper.sleep(Randomness.randomNumberBetween(1, 10));
 				eventDiningBook.get().sendRequest();
-				TestReporter.logAPI(!eventDiningBook.get().getResponseStatusCode().equals("200"), "An error occurred during booking.", eventDiningBook.get());
+				TestReporter.logAPI(!eventDiningBook.get().getResponseStatusCode().equals("200"), "An error occurred during booking: " + eventDiningBook.get().getFaultString(), eventDiningBook.get());
 				TestReporter.assertEquals(eventDiningBook.get().getResponseStatusCode(), "200",	"An error occurred during booking. \nRequest:"+eventDiningBook.get().getRequest()+"\nResponse:\n" + eventDiningBook.get().getResponse());
 				TPS_ID.set(eventDiningBook.get().getTravelPlanSegmentId());
 				salesChannel.set(eventDiningBook.get().getSalesChannel());

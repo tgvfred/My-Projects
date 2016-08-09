@@ -1,5 +1,6 @@
 package com.disney.composite.api.diningModule.scheduledEventsComponentService;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -32,6 +33,11 @@ public class TestGetStagedRecordsForReservationMassProcess {
 	
 	@Test(groups = {"api", "regression", "dining", "ScheduledEventsComponentService"})
 	public void testGetStagedRecordsForReservationMassProcess(){
+
+		if(environment.toLowerCase().contains("_cm")){
+			throw new SkipException("The Service#operation [ScheduledEventsComponentService#GetStagedRecordsForReservationMassProcess] does not exist in the ["+environment+"] environment.");
+		}
+		
 		retrieve = new RetrieveProcessSummary(environment, "Main");
 		retrieve.setFromDate(fromDate);
 		retrieve.setToDate(toDate);
