@@ -512,14 +512,26 @@ public abstract class BaseSoapService{
 			TestReporter.logDebug("Initializing Soap Message Factory");
 			messageFactory = MessageFactory.newInstance(SOAPConstants.DEFAULT_SOAP_PROTOCOL);
 			
+			String header = System.getenv("header");
+			if(header != null) {
+				TestReporter.logInfo("Sending request to Dark Side");
+				header = header.equalsIgnoreCase("Dark") ? "SHADOW" : "";
+				header = header.equalsIgnoreCase("Shadow") ? "SHADOW" : "";
+			}
+			else {
+				TestReporter.logInfo("Sending request to Light Side");
+				header = "";
+			}
+			
 			// Convert XML Request to SoapMessage
 			TestReporter.logInfo("Request to send: \n" + getRequest());
 			TestReporter.logDebug("Convertting request to a Soap Message");
-			request = messageFactory.createMessage(new MimeHeaders(), new StringBufferInputStream(getRequest()));			
-//			request.writeTo(System.out);
-		//	System.out.println();
 			
-			// Send out Soap Request to the endopoint
+			request = messageFactory.createMessage(new MimeHeaders(), new StringBufferInputStream(getRequest()));		
+			MimeHeaders soapHeader = request.getMimeHeaders();
+			soapHeader.addHeader("X-Disney-Internal-PoolOverride", header);		
+			
+			// Send out Soap Request to the endpoint
 			TestReporter.logDebug("Initializing Soap Connection Factory");
 			connectionFactory = SOAPConnectionFactory.newInstance();
 			
