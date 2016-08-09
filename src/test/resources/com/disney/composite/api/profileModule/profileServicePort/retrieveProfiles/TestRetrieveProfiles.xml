@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Development" />
 	<test name="TestRetrieveProfiles">
 		<classes>
-			<class name="com.disney.composite.api.profileModule.profileServicePort.getOptions.TestRetrieveProfiles"/>
+			<class name="com.disney.composite.api.profileModule.profileServicePort.retrieveProfiles.TestRetrieveProfiles"/>
 		</classes>
 	</test>
 </suite>
