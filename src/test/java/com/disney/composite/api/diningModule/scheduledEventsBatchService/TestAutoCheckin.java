@@ -159,5 +159,4 @@ public class TestAutoCheckin extends BaseTest{
 		logValidItems.addItem("ScheduledEventsComponentServiceIF", "retrieveTravelPlanSegmentsForAutoArrival", true);
 		validateLogs(retrieve, logValidItems, 10000);
 	}
-
 }

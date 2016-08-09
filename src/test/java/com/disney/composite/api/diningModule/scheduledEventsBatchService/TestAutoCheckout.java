@@ -38,7 +38,7 @@ public class TestAutoCheckout extends BaseTest{
 			TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving reservations for auto checkout: " + retrieve.getFaultString(), retrieve);
 			reservations = retrieve.getAllReservationNumbers();
 		}while(reservations.size() == 0 && daysOut <= maxDaysOut);
-		TestReporter.assertTrue(reservations.size() > 0, "No reservations were returned for the date ["+date+"]");
+		TestReporter.assertTrue(reservations.size() > 0, "Verify reservations were returned between ["+Randomness.generateCurrentXMLDatetime(0)+"] and ["+Randomness.generateCurrentXMLDatetime(maxDaysOut)+"].");
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ScheduledEventsServiceIF", "retrieveReservationsForAutoCheckout", false);			
