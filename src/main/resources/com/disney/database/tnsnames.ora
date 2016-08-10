@@ -762,12 +762,12 @@ DEV3.AVAILSE=
 	(DESCRIPTION =
 		(ADDRESS = 
 			(PROTOCOL = TCP)
-			(HOST = lnxu010dvh-scan.wdw.disney.com)
+			(HOST = lnxu010dvj-scan.wdw.disney.com)
 			(PORT = 1541)
 		)
 		(CONNECT_DATA =
 			(SERVER = DEDICATED)
-			(SERVICE_NAME = avlq.wdw.disney.com)
+			(SERVICE_NAME = avld.wdw.disney.com)
 		)
 	)
 ############################################

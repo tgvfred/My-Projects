@@ -21,7 +21,7 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	private ScheduledEventReservation book = null;
 	String invalidValue = "INVALID";
 	
-	@BeforeMethod(alwaysRun = true)
+	@BeforeMethod(firstTimeOnly=true, alwaysRun = true)
 	@Parameters({ "environment" })
 	public void preReq_BookReservation(String environment) {
 		this.environment = environment;

@@ -91,7 +91,6 @@ public class TestRetrieveTravelPlanSegmentsForAutoArrival {
 
 		// Log the test scenario name in the reporter
 		TestReporter.logScenario(Scenario);
-		TestReporter.setDebugLevel(1);
 		// Grab the @Test method name and use it to define the test name
 		testName.set(new Object() {}.getClass().getEnclosingMethod().getName());
 
