@@ -54,14 +54,14 @@ public class TestGetStagedRecordsForReservationMassProcess {
 			ids = new RetreiveIdsToProcess(environment, "Main");
 			ids.setProcessId(processIds.item(i).getTextContent());
 			ids.sendRequest();
-			TestReporter.logAPI(!ids.getResponseStatusCode().equals("200"), "An error occurred retrieve ids to process with process id ["+retrieve.getFirstProcessId(), ids);
+			TestReporter.logAPI(!ids.getResponseStatusCode().equals("200"), "An error occurred retrieve ids to process with process id ["+retrieve.getFirstProcessId()+"]: " + ids.getFaultString(), ids);
 			try{	
 				processDataId = ids.getProcessDataIdList();
 				if(processDataId != null){
 					records = new GetStagedRecordsForReservationMassProcess(environment, "Main");
 					records.setProcessDataId(processDataId);
 					records.sendRequest();
-					TestReporter.logAPI(!records.getResponseStatusCode().equals("200"), "An error occurred retrieving records for process data list id ["+processDataId+"].", records);
+					TestReporter.logAPI(!records.getResponseStatusCode().equals("200"), "An error occurred retrieving records for process data list id ["+processDataId+"]: " + records.getFaultString(), records);
 					break;
 				}
 			}

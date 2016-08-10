@@ -1,7 +1,7 @@
 package com.disney.composite.api.diningModule.scheduledEventsServicePort.searchByAgency;
 
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -21,7 +21,7 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	private ScheduledEventReservation book = null;
 	String invalidValue = "INVALID";
 	
-	@BeforeMethod(firstTimeOnly=true, alwaysRun = true)
+	@BeforeClass(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void preReq_BookReservation(String environment) {
 		this.environment = environment;
@@ -33,7 +33,7 @@ public class TestSearchByAgency_Negative extends BaseTest{
 		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 	
-	@AfterMethod(alwaysRun=true)
+	@AfterClass(alwaysRun=true)
 	public void cancelReservation(){
 		try{book.cancel();}
 		catch(Exception e){}

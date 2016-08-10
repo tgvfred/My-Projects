@@ -159,14 +159,14 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		logItems.addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false);
+//		logItems.addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false);
 		logItems.addItem("PartyIF", "createAndRetrieveParty", false);
 		logItems.addItem("PartyIF", "retrieveParties", false);
 		logItems.addItem("PartyIF", "retrieveParty", false);
 		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
 		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "updateInventoryForScheduledEvents", false);
 		logItems.addItem("FacilityMasterServiceSEI", "findFacilityByEnterpriseID", false);
-		logItems.addItem("GuestLinkServiceV1", "createEntitlementReference", false);
+//		logItems.addItem("GuestLinkServiceV1", "createEntitlementReference", false);
 		logItems.addItem("GuestServiceV1", "create", false);
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("UpdateInventory", "updateInventory", false);

@@ -114,7 +114,7 @@ public class TestNoShow_Negative extends BaseTest{
 		Arrived arrived = new Arrived(environment, "ContactCenter");
 		arrived.setReservationNumber(book.getTravelPlanSegmentId());
 		arrived.sendRequest();
-		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'Arrived'", arrived);
+		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'Arrived': " + arrived.getFaultString(), arrived);
 		
 		noShow.setReservationNumber(book.getTravelPlanSegmentId());
 		sendRequestAndValidateFaultString("Travel Status is invalid  : INVALID RESERVATION STATUS.CANNOT CHANGE THE STATUS TO NO-SHOW!", DiningErrorCode.INVALID_TRAVEL_STATUS, noShow);
@@ -137,7 +137,7 @@ public class TestNoShow_Negative extends BaseTest{
 		Book book = new Book(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking a show dining event", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking a show dining event: " + book.getFaultString(), book);
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		return book;
 	}

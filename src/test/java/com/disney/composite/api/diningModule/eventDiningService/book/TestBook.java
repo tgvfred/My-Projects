@@ -243,7 +243,7 @@ public class TestBook extends BaseTest{
 		TPS_ID=book.getTravelPlanSegmentId();
 		
 		LogItems logItems = new LogItems();
-		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+//		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
 		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
 		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
 		logItems.addItem("TravelPlanServiceV3", "create", false);

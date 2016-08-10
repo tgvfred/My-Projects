@@ -249,7 +249,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
 		logItems.addItem("EventDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+//		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems);
 	}
 	
