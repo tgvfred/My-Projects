@@ -690,7 +690,7 @@ BASHFUL.AVAILSE=
 	(DESCRIPTION =
 		(ADDRESS = 
 			(PROTOCOL = TCP)
-			(HOST = lnxs006dve-scan.wdw.disney.com)
+			(HOST = lnxu010dvh-scan.wdw.disney.com)
 			(PORT = 1541)
 		)
 		(CONNECT_DATA =
@@ -756,6 +756,18 @@ EVIL_QUEEN.AVAILSE=
 		(CONNECT_DATA =
 			(SERVER = DEDICATED)
 			(SERVICE_NAME = avle.wdw.disney.com)
+		)
+	)
+DEV3.AVAILSE=
+	(DESCRIPTION =
+		(ADDRESS = 
+			(PROTOCOL = TCP)
+			(HOST = lnxu010dvh-scan.wdw.disney.com)
+			(PORT = 1541)
+		)
+		(CONNECT_DATA =
+			(SERVER = DEDICATED)
+			(SERVICE_NAME = avlq.wdw.disney.com)
 		)
 	)
 ############################################
