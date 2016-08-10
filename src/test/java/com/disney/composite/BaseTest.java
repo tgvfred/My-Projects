@@ -1,26 +1,11 @@
 package com.disney.composite;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.Header;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 import com.disney.AutomationException;
-import com.disney.api.restServices.core.Headers.HeaderType;
-import com.disney.api.restServices.core.RestService;
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.test.utils.Sleeper;
