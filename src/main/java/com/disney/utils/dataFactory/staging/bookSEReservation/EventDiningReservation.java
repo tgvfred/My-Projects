@@ -278,8 +278,9 @@ public class EventDiningReservation implements ScheduledEventReservation {
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		eventDiningBook.sendRequest();
 		if(eventDiningBook.getResponse().contains("Row was updated or deleted by another transaction")|| 
-				eventDiningBook.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")){
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+				eventDiningBook.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")||
+				eventDiningBook.getResponse().toLowerCase().contains("constraintviolationexception")){
+			Sleeper.sleep(Randomness.randomNumberBetween(3, 10) * 1000);
 			eventDiningBook.sendRequest();
 		}
 		TestReporter.logAPI(!eventDiningBook.getResponseStatusCode().equals("200"), "An error occurred booking an event dining service reservation: " + eventDiningBook.getFaultString(), eventDiningBook);

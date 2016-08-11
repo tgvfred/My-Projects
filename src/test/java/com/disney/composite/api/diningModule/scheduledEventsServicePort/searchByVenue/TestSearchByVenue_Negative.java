@@ -1,7 +1,7 @@
 package com.disney.composite.api.diningModule.scheduledEventsServicePort.searchByVenue;
 
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -20,23 +20,23 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class TestSearchByVenue_Negative extends BaseTest{
-	protected ScheduledEventReservation res = null;
+	protected ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	
 	@Override
-	@BeforeClass(alwaysRun = true)
+	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(
 		String environment){this.environment = environment;
 		hh = new HouseHold(1);
 		hh.sendToApi(this.environment);
-		res = new EventDiningReservation(environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 	
-	@AfterClass(alwaysRun = true)
+	@AfterMethod(alwaysRun = true)
 	public void closeSession() {
 		try{
-			res.cancel();
+			res.get().cancel();
 		}catch(Exception e){}
 	}	
 	
@@ -44,7 +44,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	public void testFacilityIdOnly(){
 		TestReporter.logStep("Facility ID Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
-		search.setFacilityId(res.getFacilityId());
+		search.setFacilityId(res.get().getFacilityId());
 		search.setServiceWindowEnd(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setServiceWindowStart(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
@@ -57,33 +57,33 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	public void testFacilityAndProductIdOnly(){
 		TestReporter.logStep("Facility And Product ID Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
-		search.setFacilityId(res.getFacilityId());
+		search.setFacilityId(res.get().getFacilityId());
 		search.setServiceWindowEnd(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setServiceWindowStart(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setServiceDate(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
-		search.setProductIds(res.getProductId());
+		search.setProductIds(res.get().getProductId());
 		sendRequestAndValidateLogs(search, "Search Criteria is Invalid : INVALID SEARCH CRITERIA", DiningErrorCode.INVALID_SEARCH_CRITERIA);
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityAndProductIdAndReservationStatusOnly(){
 		TestReporter.logStep("Facility And Product ID And Reservation Status Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
-		search.setFacilityId(res.getFacilityId());
+		search.setFacilityId(res.get().getFacilityId());
 		search.setServiceWindowEnd(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setServiceWindowStart(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setReservationStatus("Booked");
 		search.setServiceWindowStart(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
-		search.setProductIds(res.getProductId());
+		search.setProductIds(res.get().getProductId());
 		sendRequestAndValidateLogs(search, "Search Criteria is Invalid : INVALID SEARCH CRITERIA", DiningErrorCode.INVALID_SEARCH_CRITERIA);
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityIdAndDateInPast(){
 		TestReporter.logStep("Facility ID And Service Date In The Past");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
-		search.setFacilityId(res.getFacilityId());
+		search.setFacilityId(res.get().getFacilityId());
 		search.setServiceWindowEnd(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setServiceWindowStart(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
@@ -109,7 +109,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	public void testFacilityIdAndWindowEndDateOnly(){
 		TestReporter.logStep("Facility ID And Window End Date Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
-		search.setFacilityId(res.getFacilityId());
+		search.setFacilityId(res.get().getFacilityId());
 		search.setServiceWindowEnd(Randomness.generateCurrentXMLDatetime(0));
 		search.setServiceWindowStart(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
@@ -122,7 +122,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	public void testFacilityIdAndWindowStartDateOnly(){
 		TestReporter.logStep("Facility ID And Window Start Date Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
-		search.setFacilityId(res.getFacilityId());
+		search.setFacilityId(res.get().getFacilityId());
 		search.setServiceWindowEnd(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setServiceWindowStart(Randomness.generateCurrentXMLDatetime(0));
 		search.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
@@ -135,12 +135,12 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	public void testFacilityIdAndSourceAccountingCenterOnly(){
 		TestReporter.logStep("Facility ID And Source Accounting Center Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
-		search.setFacilityId(res.getFacilityId());
+		search.setFacilityId(res.get().getFacilityId());
 		search.setServiceWindowEnd(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setServiceWindowStart(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setServiceDate(BaseSoapCommands.REMOVE_NODE.toString());
-		search.setSourceAccountingCenter(res.getSourceAccountingCenter());
+		search.setSourceAccountingCenter(res.get().getSourceAccountingCenter());
 		search.setProductIds(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(search, "Search Criteria is Invalid : INVALID SEARCH CRITERIA", DiningErrorCode.INVALID_SEARCH_CRITERIA);
 	}
@@ -150,7 +150,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId("80010835");
 		search.setServiceWindowEnd(Randomness.generateCurrentXMLDatetime(30));
-		search.setServiceWindowStart(res.getServiceStartDate());
+		search.setServiceWindowStart(res.get().getServiceStartDate());
 		search.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setServiceDate(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
@@ -163,10 +163,10 @@ public class TestSearchByVenue_Negative extends BaseTest{
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId("80010835");
 		search.setServiceWindowEnd(Randomness.generateCurrentXMLDatetime(30));
-		search.setServiceWindowStart(res.getServiceStartDate());
+		search.setServiceWindowStart(res.get().getServiceStartDate());
 		search.setReservationStatus(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setServiceDate(BaseSoapCommands.REMOVE_NODE.toString());
-		search.setSourceAccountingCenter(res.getSourceAccountingCenter());
+		search.setSourceAccountingCenter(res.get().getSourceAccountingCenter());
 		search.setProductIds(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(search, "No travel plan data found. : NO RESULTS FOUND", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);
 	}

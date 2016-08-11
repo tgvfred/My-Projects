@@ -1,49 +1,42 @@
 package com.disney.composite.api.diningModule.scheduledEventsServicePort.searchByGuest;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.SearchByGuest;
 import com.disney.composite.BaseTest;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestSearchByGuest_Negative extends BaseTest{
-	protected ScheduledEventReservation res = null;
+	protected ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();;
 	protected String invalidNumber = "1";
 	protected String invalidString = "INVALID";
-	
-	@Override
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(
-		String environment){this.environment = environment;
-		hh = new HouseHold(1);
-		hh.sendToApi(this.environment);
-		res = new EventDiningReservation(environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-	}
+	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>(); 
 	
 	@AfterMethod(alwaysRun = true)
 	public void teardown() {
 		try{
-			res.cancel();
+			Cancel cancel = new Cancel(environment, "CancelEventDining");
+			cancel.setReservationNumber(TPS_ID.get());
+			cancel.sendRequest();
 		}catch(Exception e){}					
 	}
 	
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testNoData(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("No Data");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -52,6 +45,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidCancellationNumberOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Cancellation Number Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -60,6 +56,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidEmailOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Email Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -69,6 +68,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidFirstNameOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid First Name Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -78,6 +80,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidLastNameOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Last Name Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -87,6 +92,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidPhoneNumberOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Phone Number Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -96,6 +104,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidPostalCodeOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Postal Code Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -105,6 +116,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidReservationNumberOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Reservation Number Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(invalidNumber);
@@ -113,6 +127,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidReservationStatusOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Reservation Status Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -122,6 +139,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidGuestOdsIdOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Guest ODS IDs Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -131,6 +151,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidServiceStartDateOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Service Start Date Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -140,6 +163,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidServiceWindowEndOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Service Window End Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -149,6 +175,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidServiceWindowStartOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Service Window End Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -158,6 +187,9 @@ public class TestSearchByGuest_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidSourceAccountingCenterOnly(){
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(res.get().getConfirmationNumber());
 		TestReporter.logStep("Invalid Service Window End Only");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
