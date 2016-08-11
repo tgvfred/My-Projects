@@ -27,6 +27,7 @@ public class BaseTest {
 	@BeforeSuite
 	public void preSuite(){
 		try{
+//			TestReporter.setDebugLevel(0);
 			TestReporter.setDebugLevel(Integer.parseInt(System.getenv("debugLevel")));
 		}catch(Exception e){}		
 	}
