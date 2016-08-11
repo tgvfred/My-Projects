@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestArrived_Suite" parallel="methods" thread-count="200" >
-	<parameter name="environment" value="Sleepy" />
-	<test name="TestArrived">
+<suite name="TestBook_Suite" parallel="methods" thread-count="10" >
+	<parameter name="environment" value="Latest_CM" />
+	<test name="TestBook">
 		<classes>
 			<class
-				name="com.disney.composite.api.diningModule.eventDiningService.book.TestBook_Negative"/>
+				name="com.disney.composite.api.diningModule.eventDiningService.book.TestBook"/>
 		</classes>
 	</test>
 </suite>

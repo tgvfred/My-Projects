@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestModify" data-provider-thread-count="200">
-	<parameter name="environment" value="Development" />
+<suite name="TestModify" parallel="methods" thread-count="10">
+	<parameter name="environment" value="Latest_CM" />
 	<test name="TestModify">
 		<classes>
 			<class

@@ -8,6 +8,8 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify;
 import com.disney.composite.BaseTest;
+import com.disney.test.utils.Sleeper;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -40,6 +42,10 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setProductId(res.getProductId());
 		modify.sendRequest();
+		if(modify.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			modify.sendRequest();
+		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
@@ -67,6 +73,10 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
 		modify.sendRequest();
+		if(modify.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			modify.sendRequest();
+		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
@@ -95,6 +105,10 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
 		modify.sendRequest();
+		if(modify.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			modify.sendRequest();
+		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
@@ -124,6 +138,10 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
 		modify.sendRequest();
+		if(modify.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			modify.sendRequest();
+		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
@@ -153,6 +171,10 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
 		modify.sendRequest();
+		if(modify.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			modify.sendRequest();
+		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
@@ -182,6 +204,10 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
 		modify.sendRequest();
+		if(modify.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			modify.sendRequest();
+		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
@@ -212,6 +238,10 @@ public class TestModify extends BaseTest{
 		modify.setProductId(book.getRequestProductId());
 		modify.setAllergies("Egg", "1");
 		modify.sendRequest();
+		if(modify.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			modify.sendRequest();
+		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
@@ -241,6 +271,10 @@ public class TestModify extends BaseTest{
 		modify.setAllergies("Egg", "1");
 		modify.setAllergies("Corn", "2");
 		modify.sendRequest();
+		if(modify.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			modify.sendRequest();
+		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
@@ -268,6 +302,10 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		modify.setProductId(book.getRequestProductId());
 		modify.sendRequest();
+		if(modify.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			modify.sendRequest();
+		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
