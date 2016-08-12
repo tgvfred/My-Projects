@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -16,7 +17,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservat
  * @author Justin Phlegar
  *
  */
-public class TestModifyPartyMix {
+public class TestModifyPartyMix extends BaseTest{
 	private String environment;
 	private String travelPlanId;
 	private String reservationNumber;

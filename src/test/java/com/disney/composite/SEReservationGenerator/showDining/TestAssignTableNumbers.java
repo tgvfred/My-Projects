@@ -41,7 +41,7 @@ public class TestAssignTableNumbers extends BaseTest{
 		tableNumber.set(res.get().getTableNumber());
 		res.get().assignTableNumbers();
 		TestReporter.assertEquals(res.get().getAssignTableNumberStatus(), "SUCCESS", "The status ["+res.get().getStatus()+"] was not 'SUCCESS' as expected.");
-		TestReporter.assertEquals(tableNumber, res.get().getTableNumber(), "The table number ["+res.get().getTableNumber()+"] did not match the expected table number ["+tableNumber+"].");
+		TestReporter.assertEquals(tableNumber.get(), res.get().getTableNumber(), "The table number ["+res.get().getTableNumber()+"] did not match the expected table number ["+tableNumber.get()+"].");
 	}
 	
 	@Test
@@ -49,7 +49,7 @@ public class TestAssignTableNumbers extends BaseTest{
 		tableNumber.set(String.valueOf(Randomness.randomNumberBetween(1, 99)));
 		res.get().assignTableNumbers(tableNumber.get());
 		TestReporter.assertEquals(res.get().getAssignTableNumberStatus(), "SUCCESS", "The status ["+res.get().getStatus()+"] was not 'SUCCESS' as expected.");
-		TestReporter.assertEquals(tableNumber, res.get().getTableNumber(), "The table number ["+res.get().getTableNumber()+"] did not match the expected table number ["+tableNumber+"].");
+		TestReporter.assertEquals(tableNumber.get(), res.get().getTableNumber(), "The table number ["+res.get().getTableNumber()+"] did not match the expected table number ["+tableNumber.get()+"].");
 	}
 	
 	private void book(){
