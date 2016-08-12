@@ -1,10 +1,9 @@
 package com.disney.composite.SEReservationGenerator.activityService;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
@@ -17,12 +16,8 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  * @author Justin Phlegar
  *
  */
-public class TestAddTravelAgency {
-	private String environment;
-	private String travelPlanId;
-	private String reservationNumber;
-	private ScheduledEventReservation res;
-	private HouseHold party;
+public class TestAddTravelAgency extends BaseTest{
+	protected ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	/**
 	 * Recreation activity fields
 	 */
@@ -31,44 +26,37 @@ public class TestAddTravelAgency {
 	private String resServicePeriod = "0";
 	private String resProductType = "RecreationActivityProduct";
 	
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(String environment){this.environment = environment;}
-	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty())
-				res.cancel();
+		try{res.get().cancel();}
+		catch(Exception e){}
 	}
 	
 	@Test
 	public void testAddTravelAgency_ChildActivity(){
-		party = new HouseHold("1 Child");
-		party.primaryGuest().setAge("9");
-		res = new ActivityEventReservation(environment, party);
-		res.addTravelAgency();
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		
-		travelPlanId = res.getTravelPlanId();
-		reservationNumber = res.getConfirmationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", travelPlanId), "The travel plan ID ["+travelPlanId+"] was not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", reservationNumber), "The reservation number ["+reservationNumber+"] was not numeric as expected.");
-		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
+		hh = new HouseHold("1 Child");
+		hh.primaryGuest().setAge("9");
+		res.set(new ActivityEventReservation(environment, hh));
+		res.get().addTravelAgency();
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		verifyValues(res);
 	}
 	
 	@Test
 	public void testAddTravelAgency_RecreationActivity(){
-		HouseHold party = new HouseHold("1 Child");
-		res = new ActivityEventReservation(environment, party);
-		res.addTravelAgency();
-		res.setProductType(resProductType);
-		res.book(recFacilityId, Randomness.generateCurrentXMLDatetime(45), resServicePeriod, recProductId);
-		
-		travelPlanId = res.getTravelPlanId();
-		reservationNumber = res.getConfirmationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", travelPlanId), "The travel plan ID ["+travelPlanId+"] was not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", reservationNumber), "The reservation number ["+reservationNumber+"] was not numeric as expected.");
-		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
+		res.set(new ActivityEventReservation(environment, hh));
+		res.get().setProductType(resProductType);
+		res.get().addTravelAgency();
+		res.get().book(recFacilityId, Randomness.generateCurrentXMLDatetime(45), resServicePeriod, recProductId);
+		verifyValues(res);
+	}
+	
+	private void verifyValues(ThreadLocal<ScheduledEventReservation> res){		
+		String travelPlanId = res.get().getTravelPlanId();
+		String reservationNumber = res.get().getConfirmationNumber();
+		String status = res.get().getStatus();
+		TestReporter.assertTrue(Regex.match("[0-9]+", travelPlanId), "Verify the travel plan ID ["+travelPlanId+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", reservationNumber), "Verifey the reservation number ["+reservationNumber+"] is numeric as expected.");
+		TestReporter.assertEquals(status, "Booked", "Verify the reservation status ["+status+"] is [Booked] as expected.");
 	}
 }
