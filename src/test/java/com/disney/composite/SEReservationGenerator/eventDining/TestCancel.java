@@ -4,7 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.AutomationException;
+import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -16,33 +16,29 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  * @author Justin Phlegar
  *
  */
-public class TestCancel {
-	private String reservationNumber;
-	private String cancellationNumber;
+public class TestCancel extends BaseTest{
 	private ScheduledEventReservation res;
+	private String cancellationNumber;
 	
+	@Override
 	@BeforeMethod(alwaysRun=true)
 	@Parameters("environment")
 	public void setup(String environment){
+		this.environment = environment;
 		HouseHold party = new HouseHold(4);
 		party.sendToApi(environment);
 		
-		res = new EventDiningReservation(environment,party);
+		res = new EventDiningReservation(environment, party);
 		res.book("BookGuaranteedTS");
-		reservationNumber = res.getConfirmationNumber();
 	}
 	
 	@Test
 	public void testCancel(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty()){
-				TestReporter.log("Travel Plan ID: " + res.getTravelPlanId());
-				TestReporter.log("Reservation Number: " + res.getConfirmationNumber());
-				res.cancel();
-				cancellationNumber = res.getCancellationNumber();
-				TestReporter.assertTrue(new Regex().match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
-				TestReporter.assertEquals(res.getStatus(), "Cancelled", "The reservation status ["+res.getStatus()+"] was not 'Cancelled' as expected.");
-			}else throw new AutomationException("The reservation number was blank, possibly indicating an error during the prerequisite booking.");
-		else throw new AutomationException("The reservation number was null, possibly indicating an error during the prerequisite booking.");
+		TestReporter.log("Travel Plan ID: " + res.getTravelPlanId());
+		TestReporter.log("Reservation Number: " + res.getConfirmationNumber());
+		res.cancel();
+		cancellationNumber = res.getCancellationNumber();
+		TestReporter.assertTrue(Regex.match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
+		TestReporter.assertEquals(res.getStatus(), "Cancelled", "The reservation status ["+res.getStatus()+"] was not 'Cancelled' as expected.");
 	}
 }
