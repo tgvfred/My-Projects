@@ -74,7 +74,7 @@ public class TestCancel_Negative extends BaseTest{
 		Arrived arrived = new Arrived(environment, "ContactCenter");
 		arrived.setReservationNumber(book.getTravelPlanSegmentId());
 		arrived.sendRequest();
-		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'Arrived'", arrived);
+		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'Arrived': " + arrived.getFaultString(), arrived);
 		
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
@@ -87,7 +87,7 @@ public class TestCancel_Negative extends BaseTest{
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 		cancel.sendRequest();
-		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation the first time.", cancel);
+		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation the first time: " + cancel.getFaultString(), cancel);
 		
 		cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
@@ -110,7 +110,7 @@ public class TestCancel_Negative extends BaseTest{
 		Book book = new Book(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking a show dining reservation.", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking a show dining reservation: " + book.getFaultString(), book);
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		return book;
 	}

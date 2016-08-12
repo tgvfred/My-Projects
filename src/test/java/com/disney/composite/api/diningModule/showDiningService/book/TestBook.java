@@ -37,12 +37,9 @@ public class TestBook extends BaseTest{
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
 		try{
-			if(TPS_ID.get() != null)
-				if(!TPS_ID.get().isEmpty()){
-					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-					cancel.setTravelPlanSegmentId(TPS_ID.get());
-					cancel.sendRequest();
-				}			
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(TPS_ID.get());
+			cancel.sendRequest();			
 		}catch(Exception e){}
 	}
 	
@@ -91,7 +88,7 @@ public class TestBook extends BaseTest{
 		book.setParty(hh);
 		book.setAllergies("Egg", "1");
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TP_ID = book.getTravelPlanId();
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		TestReporter.assertTrue(Regex.match("[0-9]+", TP_ID), "The travel plan ID ["+TP_ID+"] was not numeric as expected.");
@@ -99,7 +96,7 @@ public class TestBook extends BaseTest{
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ShowDiningServiceIF", "book", false);
-		logValidItems.addItem("TravelPlanServiceV3SEI", "create", false);
+//		logValidItems.addItem("TravelPlanServiceV3SEI", "create", false);
 		logValidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
 		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);	
@@ -116,7 +113,7 @@ public class TestBook extends BaseTest{
 		book.setAllergies("Egg", "1");
 		book.setAllergies("Corn", "2");
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TP_ID = book.getTravelPlanId();
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		TestReporter.assertTrue(Regex.match("[0-9]+", TP_ID), "The travel plan ID ["+TP_ID+"] was not numeric as expected.");
@@ -148,7 +145,7 @@ public class TestBook extends BaseTest{
 		}		
 		
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TP_ID = book.getTravelPlanId();
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		TestReporter.assertTrue(Regex.match("[0-9]+", TP_ID), "The travel plan ID ["+TP_ID+"] was not numeric as expected.");
@@ -170,7 +167,7 @@ public class TestBook extends BaseTest{
 		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TP_ID = book.getTravelPlanId();
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		TestReporter.assertTrue(Regex.match("[0-9]+", TP_ID), "The travel plan ID ["+TP_ID+"] was not numeric as expected.");

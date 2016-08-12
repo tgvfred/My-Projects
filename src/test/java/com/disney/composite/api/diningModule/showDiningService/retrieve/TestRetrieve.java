@@ -1,16 +1,13 @@
 package com.disney.composite.api.diningModule.showDiningService.retrieve;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.diningModule.showDiningService.operations.Modify;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Modify;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Retrieve;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
@@ -21,15 +18,6 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 
 public class TestRetrieve extends BaseTest{
 	private Book book;
-	protected HouseHold hh = null;
-	
-	@Override
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(@Optional String environment){
-		this.environment = environment;
-		hh = new HouseHold(1);
-	}
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){

@@ -1,46 +1,42 @@
 package com.disney.composite.api.diningModule.scheduledEventsServicePort.searchByAgency;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.SearchByAgency;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestSearchByAgency_Negative extends BaseTest{
-	private ScheduledEventReservation book = null;
-	String invalidValue = "INVALID";
-	
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void preReq_BookReservation(String environment) {
-		this.environment = environment;
-		hh = new HouseHold(1);
-		//hh.sendToApi(environment);
-		book = new EventDiningReservation(environment);
-		book.setParty(hh);
-		book.addTravelAgency();
-		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-	}
+	protected String invalidValue = "INVALID";
+	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>(); 
 	
 	@AfterMethod(alwaysRun=true)
 	public void cancelReservation(){
-		try{book.cancel();}
+		try{
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setReservationNumber(TPS_ID.get());
+			cancel.sendRequest();
+		}
 		catch(Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidAgencyNumber(){
+		ScheduledEventReservation book = new EventDiningReservation(environment);
+		book.setParty(hh);
+		book.addTravelAgency();
+		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(book.getConfirmationNumber());
+	
 		TestReporter.logStep("Invalid Agency Number");
 		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
 		search.setAgencyIataNumber("99");
@@ -51,6 +47,12 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testMissingAgencyNumber(){
+		ScheduledEventReservation book = new EventDiningReservation(environment);
+		book.setParty(hh);
+		book.addTravelAgency();
+		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(book.getConfirmationNumber());
+	
 		TestReporter.logStep("Missing Agancy Number");
 		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
 		search.setAgencyIataNumber(BaseSoapCommands.REMOVE_NODE.toString());
@@ -61,6 +63,12 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidSourceAccountingCenter(){
+		ScheduledEventReservation book = new EventDiningReservation(environment);
+		book.setParty(hh);
+		book.addTravelAgency();
+		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(book.getConfirmationNumber());
+	
 		TestReporter.logStep("Invalid Source Accounting Center");
 		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
 		search.setAgencyIataNumber(book.getTravelAgencyId());
@@ -71,6 +79,12 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidGuestName(){
+		ScheduledEventReservation book = new EventDiningReservation(environment);
+		book.setParty(hh);
+		book.addTravelAgency();
+		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(book.getConfirmationNumber());
+	
 		TestReporter.logStep("Invalid Guest Name");
 		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
 		search.setAgencyIataNumber(book.getTravelAgencyId());
@@ -81,6 +95,12 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidReservationStatus(){
+		ScheduledEventReservation book = new EventDiningReservation(environment);
+		book.setParty(hh);
+		book.addTravelAgency();
+		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(book.getConfirmationNumber());
+	
 		TestReporter.logStep("Invalid Reservation Status");
 		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
 		search.setAgencyIataNumber(book.getTravelAgencyId());
@@ -91,6 +111,12 @@ public class TestSearchByAgency_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testNoData(){
+		ScheduledEventReservation book = new EventDiningReservation(environment);
+		book.setParty(hh);
+		book.addTravelAgency();
+		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		TPS_ID.set(book.getConfirmationNumber());
+	
 		TestReporter.logStep("No Data");
 		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
 		search.setAgencyIataNumber(BaseSoapCommands.REMOVE_NODE.toString());

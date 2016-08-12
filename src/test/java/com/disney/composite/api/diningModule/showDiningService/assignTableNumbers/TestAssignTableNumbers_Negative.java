@@ -1,6 +1,6 @@
 package com.disney.composite.api.diningModule.showDiningService.assignTableNumbers;
 
-import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -20,7 +20,7 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
-public class TestAssignTableNumbers_Negative extends BaseTest{
+public class TestAssignTableNumbers_Negative extends BaseTest {
 	protected String tableNumber = String.valueOf(Randomness.randomNumberBetween(1, 99));
 	protected ScheduledEventReservation res = null;
 	
@@ -31,20 +31,15 @@ public class TestAssignTableNumbers_Negative extends BaseTest{
 		this.environment = environment;
 		hh = new HouseHold(1);
 		res = new ShowDiningReservation(environment, hh);
-		try{
-			res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-		}catch(AutomationException ae){}
+		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 	}
 	
-	@AfterMethod(alwaysRun = true)
+	@AfterClass(alwaysRun = true)
 	public void teardown(){
 		try{
-			if(res != null)
-				if(!res.getConfirmationNumber().isEmpty()){
-					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-					cancel.setTravelPlanSegmentId(res.getConfirmationNumber());
-					cancel.sendRequest();
-				}
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(res.getConfirmationNumber());
+			cancel.sendRequest();
 		}catch(Exception e){}
 	}
 

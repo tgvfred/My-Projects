@@ -1,9 +1,6 @@
 package com.disney.composite.api.diningModule.showDiningService.arrived;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
@@ -19,11 +16,6 @@ public class TestArrived_Negative  extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	protected ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
-	
-	@Override
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(@Optional String environment){this.environment = environment;}
 
 	@AfterMethod(alwaysRun = true)
 	public void teardown(){

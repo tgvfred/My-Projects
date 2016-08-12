@@ -82,6 +82,7 @@ public class TestModify extends BaseTest{
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);		
 		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking a show dining reservation: " + book.getFaultString(), book);
 		Modify modify = new Modify(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		modify.setTravelPlanId(book.getTravelPlanId());
@@ -110,6 +111,7 @@ public class TestModify extends BaseTest{
 		book.setParty(hh);		
 		book.setAllergies("Egg", "1");
 		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking a show dining reservation: " + book.getFaultString(), book);
 		Modify modify = new Modify(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		modify.setTravelPlanId(book.getTravelPlanId());
@@ -139,6 +141,7 @@ public class TestModify extends BaseTest{
 		book.setParty(hh);		
 		book.setAllergies("Egg", "1");
 		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking a show dining reservation: " + book.getFaultString(), book);
 		Modify modify = new Modify(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		modify.setTravelPlanId(book.getTravelPlanId());
@@ -174,12 +177,12 @@ public class TestModify extends BaseTest{
 		modify.setReservationNumber(TPS_ID.get());
 		modify.setParty(hh);
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred during modification", modify);
+		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred during modification: " + modify.getFaultString(), modify);
 		TestReporter.assertEquals(modify.getResponseStatus(), "SUCCESS", "The status ["+modify.getResponseStatus()+"] was not 'SUCCESS' as expected.");
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ShowDiningServiceIF", "modify", false);
-		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+//		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		logValidItems.addItem("ChargeGroupIF", "modifyGuestContainedChargeGroup", false);
 		logValidItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
 		logValidItems.addItem("PartyIF", "createAndRetrieveParty", false);

@@ -30,13 +30,13 @@ public class TestNoShow extends BaseTest{
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 
 		TestReporter.logStep("Update a show dining reservation to [No Show].");
 		NoShow noShow = new NoShow(environment, "GuestFacing");
 		noShow.setReservationNumber(book.getTravelPlanSegmentId());
 		noShow.sendRequest();
-		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [No Show]", noShow);
+		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [No Show]: " + noShow.getFaultString(), noShow);
 		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationConfirmationNumber()), "The cancellation number ["+noShow.getCancellationConfirmationNumber()+"] was not numeric as expected.");
 		logItems(noShow);
 	}
@@ -44,7 +44,7 @@ public class TestNoShow extends BaseTest{
 	private void logItems(NoShow noShow){
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ShowDiningServiceIF", "noShow", false);
-		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+//		logValidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		logValidItems.addItem("ChargeGroupIF", "processNoShow", false);
 		logValidItems.addItem("PartyIF", "retrieveParty", false);
 		logValidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);

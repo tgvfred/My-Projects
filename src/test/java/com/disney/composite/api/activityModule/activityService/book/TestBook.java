@@ -92,7 +92,7 @@ public class TestBook extends BaseTest{
 		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
 		logItems.addItem("TravelPlanServiceV3", "create", false);
 		logItems.addItem("UpdateInventory", "updateInventory", false);
-		logItems.addItem("ActivityServiceIF", "retrieve", false);
+//		logItems.addItem("ActivityServiceIF", "retrieve", false);
 		logItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
 		logItems.addItem("TravelPlanServiceV3SEI", "create", false);
 		logItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
