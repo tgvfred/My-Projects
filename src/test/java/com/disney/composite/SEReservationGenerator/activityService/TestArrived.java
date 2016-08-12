@@ -1,8 +1,6 @@
 package com.disney.composite.SEReservationGenerator.activityService;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.composite.BaseTest;
@@ -19,10 +17,6 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  */
 public class TestArrived extends BaseTest{
 	private ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
-	private ScheduledEventReservation childRes;
-	private ScheduledEventReservation recRes;
-	private HouseHold childParty;
-	private HouseHold recParty;
 	/**
 	 * Recreation activity fields
 	 */
@@ -30,18 +24,6 @@ public class TestArrived extends BaseTest{
 	private String recProductId = "53972";
 	private String recServicePeriod = "0";
 	private String recProductType = "RecreationActivityProduct";
-
-	@Override
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(String environment){
-		this.environment = environment;
-		childParty = new HouseHold("1 Child");
-		childParty.primaryGuest().setAge("9");
-		childRes = new ActivityEventReservation(this.environment, childParty);
-		recParty = new HouseHold(1);
-		recRes = new ActivityEventReservation(this.environment, recParty);
-	}
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
@@ -51,15 +33,20 @@ public class TestArrived extends BaseTest{
 	
 	@Test
 	public void testArrived_ChildActivity(){
-		childRes.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		verifyValues(childRes);
+		HouseHold childParty = new HouseHold("1 Child");
+		childParty.primaryGuest().setAge("9");
+		res.set(new ActivityEventReservation(this.environment, childParty));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		verifyValues(res.get());
 	}
 	
 	@Test
 	public void testArrived_RecreationActivity(){
-		recRes.setProductType(recProductType);
-		recRes.book(recFacilityId, Randomness.generateCurrentXMLDatetime(45), recServicePeriod, recProductId);
-		verifyValues(recRes);
+		HouseHold recParty = new HouseHold(1);
+		res.set(new ActivityEventReservation(this.environment, recParty));
+		res.get().setProductType(recProductType);
+		res.get().book(recFacilityId, Randomness.generateCurrentXMLDatetime(45), recServicePeriod, recProductId);
+		verifyValues(res.get());
 	}
 	
 	private void verifyValues(ScheduledEventReservation localRes){		
