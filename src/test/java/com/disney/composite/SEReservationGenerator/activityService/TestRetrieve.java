@@ -1,8 +1,6 @@
 package com.disney.composite.SEReservationGenerator.activityService;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.composite.BaseTest;
@@ -19,10 +17,6 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 public class TestRetrieve extends BaseTest{
 	private ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	private int partySize = 1;
-	
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(String environment){this.environment = environment;}
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
