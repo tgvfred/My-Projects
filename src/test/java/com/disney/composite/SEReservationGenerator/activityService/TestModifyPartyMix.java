@@ -1,10 +1,9 @@
 package com.disney.composite.SEReservationGenerator.activityService;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReservation;
@@ -15,10 +14,8 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  * @author Justin Phlegar
  *
  */
-public class TestModifyPartyMix {
-	private String environment;
-	private String reservationNumber;
-	private ScheduledEventReservation res;
+public class TestModifyPartyMix extends BaseTest{
+	private ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	private HouseHold childParty;
 	private HouseHold recParty;
 	private String childAge = "9";
@@ -26,15 +23,10 @@ public class TestModifyPartyMix {
 	private int recPartySize = 1;
 	private int recModPartySize = 2;
 	
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(String environment){this.environment = environment;}
-	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty())
-				res.cancel();
+		try{res.get().cancel();}
+		catch(Exception e){}
 	}
 	
 	@Test
@@ -42,26 +34,24 @@ public class TestModifyPartyMix {
 		childParty = new HouseHold("1 Child");
 		childParty.primaryGuest().setAge(childAge);
 		
-		res = new ActivityEventReservation(environment, childParty);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		reservationNumber = res.getConfirmationNumber();
+		res.set(new ActivityEventReservation(environment, childParty));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		
 		childParty = new HouseHold("1 Child");
 		childParty.primaryGuest().setAge(modChildAge);
-		res.modify().modifyPartyMix(childParty);
-		TestReporter.assertEquals(modChildAge, res.getPrimaryGuestAge(), "The primary guest age ["+res.getPrimaryGuestAge()+"] did not match the expected age ["+modChildAge+"].");
+		res.get().modify().modifyPartyMix(childParty);
+		TestReporter.assertEquals(modChildAge, res.get().getPrimaryGuestAge(), "The primary guest age ["+res.get().getPrimaryGuestAge()+"] did not match the expected age ["+modChildAge+"].");
 	}
 	
 	@Test
 	public void testModifyPartyMix_RecreationActivity(){
 		recParty = new HouseHold(recPartySize);
 		
-		res = new ActivityEventReservation(environment, recParty);
-		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-		reservationNumber = res.getConfirmationNumber();
+		res.set(new ActivityEventReservation(environment, recParty));
+		res.get().book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		
 		recParty = new HouseHold(recModPartySize);
-		res.modify().modifyPartyMix(recParty, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-		TestReporter.assertEquals(recModPartySize, res.getNumberOfGuests(), "The number of guests ["+res.getNumberOfGuests()+"] did not match the expected party size ["+recModPartySize+"].");
+		res.get().modify().modifyPartyMix(recParty, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		TestReporter.assertEquals(recModPartySize, res.get().getNumberOfGuests(), "The number of guests ["+res.get().getNumberOfGuests()+"] did not match the expected party size ["+recModPartySize+"].");
 	}
 }

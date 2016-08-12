@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReservation;
@@ -15,10 +16,8 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  * @author Justin Phlegar
  *
  */
-public class TestRetrieve {
-	private String environment;
-	private String reservationNumber;
-	private ScheduledEventReservation res;
+public class TestRetrieve extends BaseTest{
+	private ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	private int partySize = 1;
 	
 	@BeforeMethod(alwaysRun=true)
@@ -27,30 +26,27 @@ public class TestRetrieve {
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty())
-				res.cancel();
+		try{res.get().cancel();}
+		catch(Exception e){}
 	}
 	
 	@Test
 	public void testRetrieve_ChildActivity(){	
 		HouseHold party = new HouseHold(1);
 		party.primaryGuest().setAge("9");
-		res = new ActivityEventReservation(environment, party);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		reservationNumber = res.getConfirmationNumber();
+		res.set(new ActivityEventReservation(environment, party));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 
-		res.retrieve();
-		TestReporter.assertEquals(partySize, res.getNumberOfGuests(), "The number of guests ["+res.getNumberOfGuests()+"] did not match the expected number of guests ["+partySize+"].");
+		res.get().retrieve();
+		TestReporter.assertEquals(partySize, res.get().getNumberOfGuests(), "The number of guests ["+res.get().getNumberOfGuests()+"] did not match the expected number of guests ["+partySize+"].");
 	}
 	
 	@Test
 	public void testRetrieve_RecreationActivity(){		
-		res = new ActivityEventReservation(environment);
-		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-		reservationNumber = res.getConfirmationNumber();
+		res.set(new ActivityEventReservation(environment));
+		res.get().book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 
-		res.retrieve();
-		TestReporter.assertEquals(partySize, res.getNumberOfGuests(), "The number of guests ["+res.getNumberOfGuests()+"] did not match the expected number of guests ["+partySize+"].");		
+		res.get().retrieve();
+		TestReporter.assertEquals(partySize, res.get().getNumberOfGuests(), "The number of guests ["+res.get().getNumberOfGuests()+"] did not match the expected number of guests ["+partySize+"].");		
 	}
 }
