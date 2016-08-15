@@ -1,8 +1,8 @@
-package com.disney.composite.api.folioChargeService.postCharges;
+package com.disney.composite.api.folioModule.folioChargeService.postCharges;
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.folioCharge.operations.PostCharges;
+import com.disney.api.soapServices.folioModule.folioCharge.operations.PostCharges;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;

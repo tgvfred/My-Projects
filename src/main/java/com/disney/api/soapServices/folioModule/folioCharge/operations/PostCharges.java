@@ -1,7 +1,7 @@
-package com.disney.api.soapServices.folioCharge.operations;
+package com.disney.api.soapServices.folioModule.folioCharge.operations;
 
 import com.disney.api.soapServices.core.exceptions.XPathNullNodeValueException;
-import com.disney.api.soapServices.folioCharge.FolioChargeService;
+import com.disney.api.soapServices.folioModule.folioCharge.FolioChargeService;
 import com.disney.utils.XMLTools;
 
 public class PostCharges extends FolioChargeService{

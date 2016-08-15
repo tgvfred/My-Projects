@@ -1,4 +1,4 @@
-package com.disney.api.soapServices.folioCharge;
+package com.disney.api.soapServices.folioModule.folioCharge;
 
 import com.disney.api.soapServices.core.BaseSoapService;
 

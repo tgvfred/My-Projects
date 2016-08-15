@@ -1,4 +1,4 @@
-package com.disney.composite.api.folioChargeService.reverseAndPostCharges;
+package com.disney.composite.api.folioModule.folioChargeService.reverseAndPostCharges;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
@@ -11,8 +11,8 @@ import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.FolioErrorCode;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.folioCharge.operations.PostCharges;
-import com.disney.api.soapServices.folioCharge.operations.ReverseAndPostCharges;
+import com.disney.api.soapServices.folioModule.folioCharge.operations.PostCharges;
+import com.disney.api.soapServices.folioModule.folioCharge.operations.ReverseAndPostCharges;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;

@@ -4,7 +4,7 @@
 	<parameter name="environment" value="stage" />
 	<test name="ShowDiningService">
 		<packages>
-			<package name="com.disney.composite.api.*"></package>
+			<package name="com.disney.composite.api.folioModule.*"></package>
 		</packages>
 			<groups>
 				<run>
