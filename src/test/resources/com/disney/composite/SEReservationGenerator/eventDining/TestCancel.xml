@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Bashful" />
 	<test name="TestCancel">
 		<classes>
-			<class name="com.disney.test.composite.SEReservationGenerator.eventDining.TestCancel"/>
+			<class name="com.disney.composite.SEReservationGenerator.eventDining.TestCancel"/>
 		</classes>
 	</test>
 </suite>

@@ -6,7 +6,7 @@ import java.util.Map;
 import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNullNodeValueException;
-import com.disney.api.soapServices.folioServicePort.operations.RetrieveFolioBalanceDue;
+import com.disney.api.soapServices.folioModule.folioServicePort.operations.RetrieveFolioBalanceDue;
 import com.disney.utils.Datatable;
 import com.disney.utils.GenerateCard;
 import com.disney.utils.TestReporter;

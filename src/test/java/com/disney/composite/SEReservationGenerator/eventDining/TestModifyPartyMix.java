@@ -1,10 +1,9 @@
 package com.disney.composite.SEReservationGenerator.eventDining;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -16,53 +15,41 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  * @author Justin Phlegar
  *
  */
-public class TestModifyPartyMix {
-	private String environment;
-	private String travelPlanId;
-	private String reservationNumber;
-	private ScheduledEventReservation res;
-	private HouseHold party;
-	
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(String environment){
-		this.environment = environment;
-	}
+public class TestModifyPartyMix extends BaseTest{
+	private ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
+	private ThreadLocal<HouseHold> party = new ThreadLocal<HouseHold>();
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty())
-				res.cancel();
+		try{res.get().cancel();}
+		catch(Exception e){}
 	}
 	
 	@Test
 	public void testModifyFacility(){
-		party = new HouseHold(4);
+		party.set(new HouseHold(4));
 		book();
-		party = new HouseHold(3);
-		res.modify().modifyPartyMix(party);
-		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
+		party.set(new HouseHold(3));
+		res.get().modify().modifyPartyMix(party.get());
+		TestReporter.assertEquals(res.get().getStatus(), "Booked", "The reservation status ["+res.get().getStatus()+"] was not 'Booked' as expected.");
 	}
 	
 	@Test
 	public void testModifyFacility_UpdatePartyRoles(){
-		party = new HouseHold(4);
-		party.sendToApi(environment);
+		party.set(new HouseHold(4));
+		party.get().sendToApi(environment);
 		book();	
-		party = new HouseHold(3);
-		party.sendToApi(environment);
-		res.modify().modifyPartyMix(party);
-		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
+		party.set(new HouseHold(3));
+		party.get().sendToApi(environment);
+		res.get().modify().modifyPartyMix(party.get());
+		TestReporter.assertEquals(res.get().getStatus(), "Booked", "The reservation status ["+res.get().getStatus()+"] was not 'Booked' as expected.");
 	}
 	
 	private void book(){
-		res = new EventDiningReservation(environment, party);
-		res.book("BookGuaranteedTS");
-		travelPlanId = res.getTravelPlanId();
-		reservationNumber = res.getConfirmationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", travelPlanId), "The travel plan ID ["+travelPlanId+"] was not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", reservationNumber), "The travel plan ID ["+reservationNumber+"] was not numeric as expected.");
-		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
+		res.set(new EventDiningReservation(environment, party.get()));
+		res.get().book("BookGuaranteedTS");
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.get().getTravelPlanId()), "The travel plan ID ["+res.get().getTravelPlanId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.get().getConfirmationNumber()), "The travel plan ID ["+res.get().getConfirmationNumber()+"] was not numeric as expected.");
+		TestReporter.assertEquals(res.get().getStatus(), "Booked", "The reservation status ["+res.get().getStatus()+"] was not 'Booked' as expected.");
 	}
 }

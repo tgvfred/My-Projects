@@ -1,13 +1,13 @@
 package com.disney.utils.dataFactory.staging.bookSEReservation;
 
 import com.disney.AutomationException;
-import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
-import com.disney.api.soapServices.activityServicePort.operations.Arrived;
-import com.disney.api.soapServices.activityServicePort.operations.Book;
-import com.disney.api.soapServices.activityServicePort.operations.Cancel;
-import com.disney.api.soapServices.activityServicePort.operations.NoShow;
-import com.disney.api.soapServices.activityServicePort.operations.Retrieve;
-import com.disney.api.soapServices.activityServicePort.operations.ValidateBooking;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Arrived;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Book;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Cancel;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.NoShow;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Retrieve;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.ValidateBooking;
+import com.disney.api.soapServices.availSEModule.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -41,6 +41,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	private String primaryGuestAge;	// Primary guest address as it is found in the #retrieve() method response; expected to be contained in the first 'partyRole' node 
 	private String modifyStatus;	// Status in the response from modify a reservation 
 	private String sourceAccountingCenter;	// Source Accounting Center ID
+	private String facilityName;	// Facility name for the current reservation
 	/*
 	 * Travel Agency Fields
 	 */
@@ -51,6 +52,9 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	private String guestAgentId = "0";	// Travel Agent ID associated with the guest
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
+	public ScheduledEventsServices ses(){
+		return new ScheduledEventsServices(environment);
+	};
 	/**
 	 * Constructor that defines the environment under test and defines a default household for the reservation
 	 * @param environment - environment under test
@@ -113,6 +117,16 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 */
 	@Override public String getFacilityId(){return this.facilityId;}
 	/**
+	 * Retrieves the facility ID of the current reservation
+	 * @return String, facility of the current reservation
+	 */
+	@Override public String getFacilityName(){return this.facilityName;}
+	/**
+	 * Sets the facility name of the current reservation
+	 * @param - facility name of the current reservation
+	 */
+	@Override public void setFacilityName(String name){this.facilityName = name;}
+	/**
 	 * Retrieves the product ID of the current reservation
 	 * @return String, product ID of the current reservation
 	 */
@@ -132,6 +146,11 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * @return String, service start date of the current reservation
 	 */
 	@Override public String getServiceStartDate(){return this.serviceStartDate;}
+	/**
+	 * Sets the service start date of the current reservation
+	 * @return String, service start date of the current reservation
+	 */
+	@Override public void setServiceStartDate(String date){this.serviceStartDate = date;}
 	/**
 	 * Retrieves the number of guests of the current reservation
 	 * @return int, number of guests of the current reservation
@@ -241,6 +260,8 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		book.setFacilityId(getFacilityId());		//FAC.FAC_ID
 		book.setProductId(getProductId());          //PROD.PROD_ID
 		book.setProductType(getProductType());
+		if(facilityName != null)
+			if(!facilityName.isEmpty()) book.setFacilityName(facilityName);
 		if(!this.productType.isEmpty()) book.setProductType(this.productType);
 		book.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		book.setServiceStartDateTime(getServiceStartDate());
@@ -257,7 +278,8 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
 		if(book.getResponse().contains("Row was updated or deleted by another transaction")|| 
-				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")){
+				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated") ||
+				book.getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			book.sendRequest();
 		}
@@ -407,16 +429,18 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		 * is performed to allow information to be retrieved for validation purposes.
 		 */
 		private void modify(){
-			com.disney.api.soapServices.activityServicePort.operations.Modify modify = new com.disney.api.soapServices.activityServicePort.operations.Modify(getEnvironment(), modifyScenario);
+			com.disney.api.soapServices.activityModule.activityServicePort.operations.Modify modify = new com.disney.api.soapServices.activityModule.activityServicePort.operations.Modify(getEnvironment(), modifyScenario);
 			modify.setReservationNumber(getConfirmationNumber());
 			modify.setTravelPlanId(getTravelPlanId());
 
 			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
 			resource.setFacilityId(getFacilityId());
 			resource.sendRequest();
-			resource.getReservableResources();
-			
-			modify.setReservableResourceId(resource.getFirstReservableResourceId());
+			try{
+				resource.getReservableResources();				
+				modify.setReservableResourceId(resource.getFirstReservableResourceId());	
+			}
+			catch(Exception e){}
 			modify.setParty(party());
 			modify.setFacilityId(getFacilityId());
 			modify.setServiceStartDate(getServiceStartDate());
@@ -529,7 +553,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		public void modifyScenario(String scenario) {
 			TestReporter.logStep("Modify Activity Event Reservation Scenario From ["+this.modifyScenario+"] to ["+scenario+"].");
 			this.modifyScenario = scenario;
-			com.disney.api.soapServices.activityServicePort.operations.Modify modify = new com.disney.api.soapServices.activityServicePort.operations.Modify(getEnvironment(), modifyScenario);
+			com.disney.api.soapServices.activityModule.activityServicePort.operations.Modify modify = new com.disney.api.soapServices.activityModule.activityServicePort.operations.Modify(getEnvironment(), modifyScenario);
 			ActivityEventReservation.this.serviceStartDate = modify.getRequestServiceStartDate();
 			ActivityEventReservation.this.servicePeriod = modify.getRequestServicePeriodId();
 			ActivityEventReservation.this.facilityId = modify.getRequestFacilityId();
