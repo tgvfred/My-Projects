@@ -1,13 +1,11 @@
 package com.disney.composite.SEReservationGenerator.showDining;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
@@ -16,25 +14,13 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservat
  * @author Justin Phlegar
  *
  */
-public class TestBookWithDefaultHouseHold {
-	private String environment;
-	private String travelPlanId;
-	private String reservationNumber;
-	private ScheduledEventReservation res;
-	private HouseHold party;
-	
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(String environment){
-		this.environment = environment;
-		party = new HouseHold(4);
-	}
+public class TestBookWithDefaultHouseHold extends BaseTest{
+	private ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty())
-				res.cancel();
+		try{res.get().cancel();}
+		catch(Exception e){}
 	}
 	
 	@Test
@@ -44,17 +30,15 @@ public class TestBookWithDefaultHouseHold {
 	
 	@Test
 	public void testBookWithDefaultHouseHold_UpdatePartyRoles(){
-//		party.sendToApi(environment);
+		hh.sendToApi(environment);
 		book();
 	}
 	
 	private void book(){
-		res = new ShowDiningReservation(environment, party);
-		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-		travelPlanId = res.getTravelPlanId();
-		reservationNumber = res.getConfirmationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", travelPlanId), "The travel plan ID ["+travelPlanId+"] was not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", reservationNumber), "The reservation number ["+reservationNumber+"] was not numeric as expected.");
-		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
+		res.set(new ShowDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.get().getTravelPlanId()), "The travel plan ID ["+res.get().getTravelPlanId()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.get().getConfirmationNumber()), "The reservation number ["+res.get().getConfirmationNumber()+"] was not numeric as expected.");
+		TestReporter.assertEquals(res.get().getStatus(), "Booked", "The reservation status ["+res.get().getStatus()+"] was not 'Booked' as expected.");
 	}
 }

@@ -3,14 +3,16 @@ package com.disney.composite.SEReservationGenerator.activityService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
-public class TestValidateBooking {
+public class TestValidateBooking extends BaseTest{
 	private String environment;
 	private ScheduledEventReservation res;
 	
+	@Override
 	@BeforeMethod(alwaysRun=true)
 	@Parameters("environment")
 	public void setup(String environment){

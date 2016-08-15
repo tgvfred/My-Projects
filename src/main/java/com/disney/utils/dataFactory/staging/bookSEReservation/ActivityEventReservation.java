@@ -52,6 +52,9 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	private String guestAgentId = "0";	// Travel Agent ID associated with the guest
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
+	public ScheduledEventsServices ses(){
+		return new ScheduledEventsServices(environment);
+	};
 	/**
 	 * Constructor that defines the environment under test and defines a default household for the reservation
 	 * @param environment - environment under test
