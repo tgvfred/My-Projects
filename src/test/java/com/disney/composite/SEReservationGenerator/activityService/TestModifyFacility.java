@@ -1,10 +1,9 @@
 package com.disney.composite.SEReservationGenerator.activityService;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -16,10 +15,10 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  * @author Justin Phlegar
  *
  */
-public class TestModifyFacility {
-	private String environment;
+public class TestModifyFacility extends BaseTest{
 	private ScheduledEventReservation childRes;
 	private ScheduledEventReservation recRes;
+	private ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	private HouseHold childParty;
 	private HouseHold recParty;
 	/**
@@ -31,31 +30,17 @@ public class TestModifyFacility {
 	private String recProductType = "RecreationActivityProduct";
 	private String recModFacilityId = "80007944";
 	private String recModProductId = "53921";
-	private String recReservationNumber;
 	/**
 	 * Child activity fields
 	 */
 	private String childFacilityId = "80008181";
 	private String childProductId = "53937";
-//	private String childServicePeriod = "0";
 	private String childProductType = "ChildActivityProduct";
-	private String childReservationNumber;
-	
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(String environment){this.environment = environment;}
 	
 	@AfterMethod
 	public void teardown(){
-		if(childReservationNumber != null)
-			if(!childReservationNumber.isEmpty()){
-				childRes.cancel();
-				childReservationNumber = null;
-			}
-		
-		if(recReservationNumber != null)
-			if(!recReservationNumber.isEmpty())
-				recRes.cancel();
+		try{res.get().cancel();}
+		catch(Exception e){}
 	}
 	
 	@Test
@@ -67,8 +52,8 @@ public class TestModifyFacility {
 		childRes.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		
 		childRes.modify().modifyFacility(childFacilityId, childProductId);
-		childReservationNumber = childRes.getConfirmationNumber();
 		TestReporter.assertEquals(childRes.getRetrieveResponseFacilityID(), childFacilityId, "The modified facility ID ["+childRes.getRetrieveResponseFacilityID()+"] did not match the expected facility ID ["+childFacilityId+"].");
+		res.set(childRes);
 	}
 	
 	@Test
@@ -80,7 +65,7 @@ public class TestModifyFacility {
 		
 		recRes.setBookingScenario(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		recRes.modify().modifyFacility(recModFacilityId, recModProductId);
-		recReservationNumber = recRes.getConfirmationNumber();
 		TestReporter.assertEquals(recRes.getRetrieveResponseFacilityID(), recModFacilityId, "The modified facility ID ["+recRes.getRetrieveResponseFacilityID()+"] did not match the expected facility ID ["+recModFacilityId+"].");
+		res.set(recRes);
 	}
 }

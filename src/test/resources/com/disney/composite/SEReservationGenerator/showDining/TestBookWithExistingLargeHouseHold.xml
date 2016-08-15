@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestBookWithExistingLargeHouseHold_Suite" parallel="false" thread-count="2">
+<suite name="TestBookWithExistingLargeHouseHold_Suite" parallel="methods" thread-count="5">
 	<parameter name="environment" value="Grumpy" />
 	<test name="TestBookWithExistingLargeHouseHold">
 		<classes>
-			<class name="com.disney.test.composite.SEReservationGenerator.showDining.TestBookWithExistingLargeHouseHold"/>
+			<class name="com.disney.composite.SEReservationGenerator.showDining.TestBookWithExistingLargeHouseHold"/>
 		</classes>
 	</test>
 </suite>

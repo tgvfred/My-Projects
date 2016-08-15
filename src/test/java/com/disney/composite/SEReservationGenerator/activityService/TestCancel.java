@@ -1,9 +1,8 @@
 package com.disney.composite.SEReservationGenerator.activityService;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
@@ -16,10 +15,8 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  * @author Justin Phlegar
  *
  */
-public class TestCancel {
-	private String environment;
-	private ScheduledEventReservation childRes;
-	private ScheduledEventReservation recRes;
+public class TestCancel extends BaseTest{
+	private ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	private HouseHold childParty;
 	private HouseHold recParty;
 	/**
@@ -36,34 +33,27 @@ public class TestCancel {
 	private String childProductId = "53905";
 	private String childServicePeriod = "0";
 	private String childProductType = "ChildActivityProduct";
-	private String cancellationNumber;
-	
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(String environment){this.environment = environment;}
 	
 	@Test
 	public void testCancel_ChildActivity(){		
 		childParty = new HouseHold("1 Child");
 		childParty.primaryGuest().setAge("9");
-		childRes = new ActivityEventReservation(this.environment, childParty);
-		childRes.setProductType(childProductType);
-		childRes.book(childFacilityId, Randomness.generateCurrentXMLDatetime(45), childServicePeriod, childProductId);
-		childRes.cancel();
-		cancellationNumber = childRes.getCancellationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
-		TestReporter.assertEquals(childRes.getStatus(), "Cancelled", "The reservation status ["+childRes.getStatus()+"] was not 'Cancelled' as expected.");
+		res.set(new ActivityEventReservation(this.environment, childParty));
+		res.get().setProductType(childProductType);
+		res.get().book(childFacilityId, Randomness.generateCurrentXMLDatetime(45), childServicePeriod, childProductId);
+		res.get().cancel();
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.get().getCancellationNumber()), "The cancellation number ["+res.get().getCancellationNumber()+"] was not numeric as expected.");
+		TestReporter.assertEquals(res.get().getStatus(), "Cancelled", "The reservation status ["+res.get().getStatus()+"] was not 'Cancelled' as expected.");
 	}
 	
 	@Test
 	public void testCancel_RecreationActivity(){
 		recParty = new HouseHold(1);
-		recRes = new ActivityEventReservation(this.environment, recParty);
-		recRes.setProductType(recProductType);
-		recRes.book(recFacilityId, Randomness.generateCurrentXMLDatetime(45), recServicePeriod, recProductId);
-		recRes.cancel();
-		cancellationNumber = recRes.getCancellationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", cancellationNumber), "The cancellation number ["+cancellationNumber+"] was not numeric as expected.");
-		TestReporter.assertEquals(recRes.getStatus(), "Cancelled", "The reservation status ["+recRes.getStatus()+"] was not 'Cancelled' as expected.");
+		res.set(new ActivityEventReservation(this.environment, recParty));
+		res.get().setProductType(recProductType);
+		res.get().book(recFacilityId, Randomness.generateCurrentXMLDatetime(45), recServicePeriod, recProductId);
+		res.get().cancel();
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.get().getCancellationNumber()), "The cancellation number ["+res.get().getCancellationNumber()+"] was not numeric as expected.");
+		TestReporter.assertEquals(res.get().getStatus(), "Cancelled", "The reservation status ["+res.get().getStatus()+"] was not 'Cancelled' as expected.");
 	}
 }

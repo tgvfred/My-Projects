@@ -73,4 +73,6 @@ public interface ScheduledEventReservation{
 	public void reprintTicket();
 	// Interface for a sub-class that will contain methods to modify scheduled event reservations
 	public Modify modify();
+	// ScheduldeEventsService interface
+	public ScheduledEventsServices ses();
 }

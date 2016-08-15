@@ -34,36 +34,36 @@ public class TestBook extends BaseTest{
 		HouseHold hh = new HouseHold("1 Adult");
 		bookAndValidateLogs(hh, false, false);
 	}
-	@Test(groups = {"api", "regression", "activity", "activityService"})
-	public void testBookWith2Adults(){
-		TestReporter.logScenario("2 Adults");
-		HouseHold hh = new HouseHold("2 Adults");
-		bookAndValidateLogs(hh, false, false);
-	}
-	@Test(groups = {"api", "regression", "activity", "activityService"})
-	public void testBookWith4Adults(){
-		TestReporter.logScenario("4 Adults");
-		HouseHold hh = new HouseHold("4 Adults");
-		bookAndValidateLogs(hh, false, false);
-	}
-	@Test(groups = {"api", "regression", "activity", "activityService"})
-	public void testBookWith2Adults2Child(){
-		TestReporter.logScenario("2 Adults, 2 Children");
-		HouseHold hh = new HouseHold("2 Adults 2 Child");
-		bookAndValidateLogs(hh, false, false);
-	}
-	@Test(groups = {"api", "regression", "activity", "activityService"})
-	public void testBookWith4Adults2Child2Infant(){
-		TestReporter.logScenario("4 Adults, 2 Children, 2 Infants");
-		HouseHold hh = new HouseHold("4 Adults 2 Child 2 Infant");
-		bookAndValidateLogs(hh, false, false);
-	}
-	@Test(groups = {"api", "regression", "activity", "activityService"})
-	public void testBookWith12InParty(){
-		TestReporter.logScenario("12 Adults");
-		HouseHold hh = new HouseHold(12);
-		bookAndValidateLogs(hh, false, false);
-	}
+//	@Test(groups = {"api", "regression", "activity", "activityService"})
+//	public void testBookWith2Adults(){
+//		TestReporter.logScenario("2 Adults");
+//		HouseHold hh = new HouseHold("2 Adults");
+//		bookAndValidateLogs(hh, false, false);
+//	}
+//	@Test(groups = {"api", "regression", "activity", "activityService"})
+//	public void testBookWith4Adults(){
+//		TestReporter.logScenario("4 Adults");
+//		HouseHold hh = new HouseHold("4 Adults");
+//		bookAndValidateLogs(hh, false, false);
+//	}
+//	@Test(groups = {"api", "regression", "activity", "activityService"})
+//	public void testBookWith2Adults2Child(){
+//		TestReporter.logScenario("2 Adults, 2 Children");
+//		HouseHold hh = new HouseHold("2 Adults 2 Child");
+//		bookAndValidateLogs(hh, false, false);
+//	}
+//	@Test(groups = {"api", "regression", "activity", "activityService"})
+//	public void testBookWith4Adults2Child2Infant(){
+//		TestReporter.logScenario("4 Adults, 2 Children, 2 Infants");
+//		HouseHold hh = new HouseHold("4 Adults 2 Child 2 Infant");
+//		bookAndValidateLogs(hh, false, false);
+//	}
+//	@Test(groups = {"api", "regression", "activity", "activityService"})
+//	public void testBookWith12InParty(){
+//		TestReporter.logScenario("12 Adults");
+//		HouseHold hh = new HouseHold(12);
+//		bookAndValidateLogs(hh, false, false);
+//	}
 	
 	private void bookAndValidateLogs(HouseHold hh, boolean oneHundredEighty, boolean past){
 		Book book = new Book(environment, "NoComponentsNoAddOns");

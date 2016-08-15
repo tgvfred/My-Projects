@@ -1,10 +1,9 @@
 package com.disney.composite.SEReservationGenerator.activityService;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReservation;
@@ -15,41 +14,32 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  * @author Justin Phlegar
  *
  */
-public class TestModifyScenario {
-	private String environment;
-	private String reservationNumber;
-	private ScheduledEventReservation res;
-	
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(String environment){this.environment = environment;}
+public class TestModifyScenario extends BaseTest{
+	private ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty())
-				res.cancel();
+		try{res.get().cancel();}
+		catch(Exception e){}
 	}
 	
 	@Test
 	public void testModifyScenario_ChildActivity(){	
 		HouseHold party = new HouseHold(1);
 		party.primaryGuest().setAge("9");
-		res = new ActivityEventReservation(environment, party);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		reservationNumber = res.getConfirmationNumber();
+		res.set(new ActivityEventReservation(environment, party));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		
-		res.modify().modifyScenario(ScheduledEventReservation.NOCOMPONENTSNOADDONSTWOADULTS);
-		TestReporter.assertEquals(res.getModifyResponseStatus(), "SUCCESS", "The status from modification ["+res.getModifyResponseStatus()+"] was not 'SUCCESS' as expected.");
+		res.get().modify().modifyScenario(ScheduledEventReservation.NOCOMPONENTSNOADDONSTWOADULTS);
+		TestReporter.assertEquals(res.get().getModifyResponseStatus(), "SUCCESS", "The status from modification ["+res.get().getModifyResponseStatus()+"] was not 'SUCCESS' as expected.");
 	}
 	
 	@Test
 	public void testModifyScenario_RecreationActivity(){		
-		res = new ActivityEventReservation(environment);
-		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-		reservationNumber = res.getConfirmationNumber();
+		res.set(new ActivityEventReservation(environment));
+		res.get().book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		
-		res.modify().modifyScenario(ScheduledEventReservation.ONECOMPONENTSNOADDONSTWOADULTS);
-		TestReporter.assertEquals(res.getModifyResponseStatus(), "SUCCESS", "The status from modification ["+res.getModifyResponseStatus()+"] was not 'SUCCESS' as expected.");		
+		res.get().modify().modifyScenario(ScheduledEventReservation.ONECOMPONENTSNOADDONSTWOADULTS);
+		TestReporter.assertEquals(res.get().getModifyResponseStatus(), "SUCCESS", "The status from modification ["+res.get().getModifyResponseStatus()+"] was not 'SUCCESS' as expected.");		
 	}
 }

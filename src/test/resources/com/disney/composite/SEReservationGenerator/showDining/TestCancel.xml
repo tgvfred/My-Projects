@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Grumpy" />
 	<test name="TestCancel">
 		<classes>
-			<class name="com.disney.test.composite.SEReservationGenerator.showDining.TestCancel"/>
+			<class name="com.disney.composite.SEReservationGenerator.showDining.TestCancel"/>
 		</classes>
 	</test>
 </suite>

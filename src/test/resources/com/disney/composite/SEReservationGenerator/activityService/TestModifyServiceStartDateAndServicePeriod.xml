@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestModifyServiceStartDateAndServicePeriod_Suite" parallel="tests" thread-count="2">
+<suite name="TestModifyServiceStartDateAndServicePeriod_Suite" parallel="methods" thread-count="5">
 	<parameter name="environment" value="Grumpy" />
 	<test name="TestModifyServiceStartDateAndServicePeriod">
 		<classes>
-			<class name="com.disney.test.composite.SEReservationGenerator.activityService.TestModifyServiceStartDateAndServicePeriod"/>
+			<class name="com.disney.composite.SEReservationGenerator.activityService.TestModifyServiceStartDateAndServicePeriod"/>
 		</classes>
 	</test>
 </suite>

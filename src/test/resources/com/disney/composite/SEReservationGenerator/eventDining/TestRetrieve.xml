@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Grumpy" />
 	<test name="TestRetrieve">
 		<classes>
-			<class name="com.disney.test.composite.SEReservationGenerator.eventDining.TestRetrieve"/>
+			<class name="com.disney.composite.SEReservationGenerator.eventDining.TestRetrieve"/>
 		</classes>
 	</test>
 </suite>
