@@ -21,8 +21,8 @@ public class TestRetrieveReservationsForAutoCheckout_Negative extends BaseTest{
 		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
 		retrieveReservationForAutoCheckout.setProcessDate(BaseSoapCommands.REMOVE_NODE.toString());
 		retrieveReservationForAutoCheckout.sendRequest();
-		validateApplicationError(retrieveReservationForAutoCheckout, LiloSystemErrorCode.UNEXPECTED_ERROR);
 		TestReporter.logAPI(!retrieveReservationForAutoCheckout.getFaultString().contains("Unexpected Error occurred : retrieveReservationsForAutoCheckout : java.lang.NullPointerException"), retrieveReservationForAutoCheckout.getFaultString(), retrieveReservationForAutoCheckout);
+		validateApplicationError(retrieveReservationForAutoCheckout, LiloSystemErrorCode.UNEXPECTED_ERROR);
 		
 		LogItems logItems = new LogItems();
 		logItems.addItem("ScheduledEventsServiceIF", "retrieveReservationsForAutoCheckout", true);	
@@ -37,8 +37,8 @@ public class TestRetrieveReservationsForAutoCheckout_Negative extends BaseTest{
 		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
 		retrieveReservationForAutoCheckout.setDateEqualCondition_Negative("==");
 		retrieveReservationForAutoCheckout.sendRequest();
-		validateApplicationError(retrieveReservationForAutoCheckout, LiloSystemErrorCode.UNEXPECTED_ERROR);
 		TestReporter.logAPI(!retrieveReservationForAutoCheckout.getFaultString().contains("Unexpected Error occurred : retrieveReservationsForAutoCheckout : org.hibernate.exception.SQLGrammarException: could not extract ResultSet : org.hibernate.exception.SQLGrammarException: could not extract ResultSet; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.SQLGrammarException: could not extract ResultSet"), retrieveReservationForAutoCheckout.getFaultString(), retrieveReservationForAutoCheckout);
+		validateApplicationError(retrieveReservationForAutoCheckout, LiloSystemErrorCode.UNEXPECTED_ERROR);
 		
 		LogItems logItems = new LogItems();
 		logItems.addItem("ScheduledEventsServiceIF", "retrieveReservationsForAutoCheckout", true);	
@@ -52,8 +52,8 @@ public class TestRetrieveReservationsForAutoCheckout_Negative extends BaseTest{
 		RetrieveReservationsForAutoCheckout retrieveReservationForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW");
 		retrieveReservationForAutoCheckout.setDateEqualCondition_Negative(BaseSoapCommands.REMOVE_NODE.toString());
 		retrieveReservationForAutoCheckout.sendRequest();
-		validateApplicationError(retrieveReservationForAutoCheckout, LiloSystemErrorCode.UNEXPECTED_ERROR);
 		TestReporter.logAPI(!retrieveReservationForAutoCheckout.getFaultString().contains("Unexpected Error occurred : retrieveReservationsForAutoCheckout : org.hibernate.exception.SQLGrammarException: could not extract ResultSet : org.hibernate.exception.SQLGrammarException: could not extract ResultSet; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.SQLGrammarException: could not extract ResultSet"), retrieveReservationForAutoCheckout.getFaultString(), retrieveReservationForAutoCheckout);
+		validateApplicationError(retrieveReservationForAutoCheckout, LiloSystemErrorCode.UNEXPECTED_ERROR);
 		
 		LogItems logItems = new LogItems();
 		logItems.addItem("ScheduledEventsServiceIF", "retrieveReservationsForAutoCheckout", true);	

@@ -16,7 +16,7 @@ public class TestRetrieveReprintReasons extends BaseTest{
 		TestReporter.logStep("Retrieve Reprint Reasons");
 		RetrieveReprintReasons retrieveReprintReasons = new RetrieveReprintReasons(environment);
 		retrieveReprintReasons.sendRequest();
-		TestReporter.logAPI(!retrieveReprintReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveReprintReasons);
+		TestReporter.logAPI(!retrieveReprintReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveReprintReasons.getFaultString(), retrieveReprintReasons);
 		TestReporter.assertTrue(retrieveReprintReasons.getNumberOfReprintReasons() > 0, "Verify reprint reasons are returned.");
 		TestReporter.assertTrue(retrieveReprintReasons.getReprintReasonCodes().size() == retrieveReprintReasons.getNumberOfReprintReasons(), "Verify the number of reprint reason codes is ["+retrieveReprintReasons.getNumberOfReprintReasons()+"].");
 		reportValues("Reprint Reasons", retrieveReprintReasons.getNumberOfReprintReasons(), retrieveReprintReasons.getReprintReasonCodes());
