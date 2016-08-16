@@ -45,7 +45,7 @@ public class TestPrintTicket extends BaseTest{
 		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		
 		TestReporter.logStep("Print Ticket for Show Dining Reservation");
 		PrintTicket print = new PrintTicket(environment, "Main");
