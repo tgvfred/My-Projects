@@ -267,7 +267,8 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		book.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		if(getEnvironment().equalsIgnoreCase("Development")&& !getEnvironment().contains("_CM") ){
+		
+		if(isPartyV3 || environment.equalsIgnoreCase("Development") || environment.equalsIgnoreCase("Latest_CM")){
 			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
 			resource.setFacilityId(getFacilityId());
 			resource.sendRequest();
