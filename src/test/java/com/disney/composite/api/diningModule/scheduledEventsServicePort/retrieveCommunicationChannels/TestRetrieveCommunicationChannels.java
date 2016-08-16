@@ -16,7 +16,7 @@ public class TestRetrieveCommunicationChannels extends BaseTest{
 		TestReporter.logStep("Retrieve Communication Channels");
 		RetrieveCommunicationChannels retrieveCommunicationChannels = new RetrieveCommunicationChannels(environment);
 		retrieveCommunicationChannels.sendRequest();
-		TestReporter.logAPI(!retrieveCommunicationChannels.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveCommunicationChannels);
+		TestReporter.logAPI(!retrieveCommunicationChannels.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveCommunicationChannels.getFaultString(), retrieveCommunicationChannels);
 		TestReporter.assertTrue(retrieveCommunicationChannels.getNumberOfCommunicationChannels() > 0, "Verify communication channels are returned.");
 		TestReporter.assertTrue(retrieveCommunicationChannels.getCommunicationChannels().size() == retrieveCommunicationChannels.getNumberOfCommunicationChannels(), "Verify the number of change reason codes is ["+retrieveCommunicationChannels.getNumberOfCommunicationChannels()+"].");
 		reportValues("Communication Channels", retrieveCommunicationChannels.getNumberOfCommunicationChannels(), retrieveCommunicationChannels.getCommunicationChannels());

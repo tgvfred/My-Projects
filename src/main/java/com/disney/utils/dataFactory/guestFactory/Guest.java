@@ -104,7 +104,7 @@ public class Guest {
 			}
 			}
 		Sleeper.sleep(2000);
-		if(isPartyV3 || environment.equalsIgnoreCase("Development") || environment.contains("_CM")){
+		if(isPartyV3 || environment.equalsIgnoreCase("Development") || environment.equalsIgnoreCase("Latest_CM")){
 			com.disney.api.soapServices.partyModule.partyV3.operations.CreateParty partyV3 = null;
 			partyV3 = new com.disney.api.soapServices.partyModule.partyV3.operations.CreateParty(environment, "SampleCreate");
 			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){

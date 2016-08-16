@@ -15,7 +15,7 @@ public class TestRetrieveAlcCancelReasons extends BaseTest{
 		TestReporter.logStep("Retrieve Ala Carte Cancel Reasons");
 		RetrieveAlaCarteCancelReasons retrieveAlcCancelReasons = new RetrieveAlaCarteCancelReasons(environment);
 		retrieveAlcCancelReasons.sendRequest();
-		TestReporter.logAPI(!retrieveAlcCancelReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveAlcCancelReasons);
+		TestReporter.logAPI(!retrieveAlcCancelReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveAlcCancelReasons.getFaultString(), retrieveAlcCancelReasons);
 		TestReporter.assertGreaterThanZero(retrieveAlcCancelReasons.getNumberOfAlcCancelReasons());
 		
 		LogItems logItems = new LogItems();

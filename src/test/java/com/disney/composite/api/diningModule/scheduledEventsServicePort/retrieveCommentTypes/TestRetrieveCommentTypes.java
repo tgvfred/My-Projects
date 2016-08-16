@@ -24,7 +24,7 @@ public class TestRetrieveCommentTypes extends BaseTest{
 		TestReporter.logStep("Retrieve Comment Types");
 		RetrieveCommentTypes retrieveCommentTypes = new RetrieveCommentTypes(environment);
 		retrieveCommentTypes.sendRequest();
-		TestReporter.logAPI(!retrieveCommentTypes.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveCommentTypes);
+		TestReporter.logAPI(!retrieveCommentTypes.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveCommentTypes.getFaultString(), retrieveCommentTypes);
 		TestReporter.assertTrue(retrieveCommentTypes.getNumberOfCommentTypes() > 0, "Verify comment types are returned.");
 		TestReporter.assertTrue(retrieveCommentTypes.getCommentTypes().size() == retrieveCommentTypes.getNumberOfCommentTypes(), "Verify the number of comment types is ["+retrieveCommentTypes.getNumberOfCommentTypes()+"].");
 		reportValues("Comment Types", retrieveCommentTypes.getNumberOfCommentTypes(), retrieveCommentTypes.getCommentTypes());

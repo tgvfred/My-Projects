@@ -16,7 +16,7 @@ public class TestRetrieveBookingStatusValues extends BaseTest{
 		TestReporter.logStep("Retrieve Booking Status Values");
 		RetrieveBookingStatusValues retrieveBookingStatusValues = new RetrieveBookingStatusValues(environment);
 		retrieveBookingStatusValues.sendRequest();
-		TestReporter.logAPI(!retrieveBookingStatusValues.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveBookingStatusValues);
+		TestReporter.logAPI(!retrieveBookingStatusValues.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveBookingStatusValues.getFaultString(), retrieveBookingStatusValues);
 		TestReporter.assertTrue(retrieveBookingStatusValues.getNumberOfBookingStatusValues() > 0, "Verify booking status values are returned.");
 		TestReporter.assertTrue(retrieveBookingStatusValues.getBookingStatusValues().size() == retrieveBookingStatusValues.getNumberOfBookingStatusValues(), "Verify the number of booking status values is ["+retrieveBookingStatusValues.getNumberOfBookingStatusValues()+"].");
 		

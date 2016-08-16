@@ -11,7 +11,12 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.SearchByAgency;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.LogItems;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.AvailSE;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
@@ -19,16 +24,16 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 public class TestSearchByAgency extends BaseTest{
 	private ScheduledEventReservation book = null;
 	
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void preReq_BookReservation(String environment) {
-		this.environment = environment;
-
-		book = new EventDiningReservation(environment);
-		book.setParty(new HouseHold(1));
-		book.addTravelAgency("9999999998");
-		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-	}
+//	@BeforeMethod(alwaysRun = true)
+//	@Parameters({ "environment" })
+//	public void preReq_BookReservation(String environment) {
+//		this.environment = environment;
+//
+//		book = new EventDiningReservation(environment);
+//		book.setParty(new HouseHold(1));
+//		book.addTravelAgency("9999999998");
+//		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+//	}
 	
 
 	@AfterMethod(alwaysRun = true)
@@ -39,6 +44,7 @@ public class TestSearchByAgency extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testSearchByAgency(){
+		preReq();
 		TestReporter.logStep("Search By Agency");
 		SearchByAgency search = new SearchByAgency(environment, "OnlyAgency");
 		search.setAgencyIataNumber("9999999998");
@@ -78,5 +84,12 @@ public class TestSearchByAgency extends BaseTest{
 		logItems.addItem("ScheduledEventsServiceIF", "searchByAgency", false);	
 		logItems.addItem("PartyIF", "retrieveParty", false);	
 		validateLogs(search, logItems);
+	}
+	
+	private void preReq(){
+		book = new EventDiningReservation(environment);
+		book.setParty(new HouseHold(1));
+		book.addTravelAgency("9999999998");
+		book.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 }

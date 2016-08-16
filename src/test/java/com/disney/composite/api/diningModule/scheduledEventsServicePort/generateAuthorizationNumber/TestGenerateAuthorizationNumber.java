@@ -14,7 +14,7 @@ public class TestGenerateAuthorizationNumber extends BaseTest{
 		TestReporter.logStep("Generate Authrization Number");
 		GenerateAuthorizationNumber generateAuthorizationNumber = new GenerateAuthorizationNumber(environment);
 		generateAuthorizationNumber.sendRequest();
-		TestReporter.logAPI(!generateAuthorizationNumber.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", generateAuthorizationNumber);
+		TestReporter.logAPI(!generateAuthorizationNumber.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + generateAuthorizationNumber.getFaultString(), generateAuthorizationNumber);
 		TestReporter.assertTrue(!generateAuthorizationNumber.getAuthorizationNumber().isEmpty(), "Verify that an authorization number was generated.");
 		TestReporter.log("Authorization Number: " + generateAuthorizationNumber.getAuthorizationNumber());
 		

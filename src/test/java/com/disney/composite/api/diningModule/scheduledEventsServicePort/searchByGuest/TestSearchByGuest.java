@@ -17,16 +17,16 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 public class TestSearchByGuest extends BaseTest{
 	protected ScheduledEventReservation res = null;
 	
-	@Override
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(
-		String environment){this.environment = environment;
-		hh = new HouseHold(1);
-		hh.sendToApi(this.environment);
-		res = new EventDiningReservation(environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-	}
+//	@Override
+//	@BeforeMethod(alwaysRun = true)
+//	@Parameters({ "environment" })
+//	public void setup(String environment){
+//		this.environment = environment;
+//		hh = new HouseHold(1);
+//		hh.sendToApi(this.environment);
+//		res = new EventDiningReservation(environment, hh);
+//		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+//	}
 	
 	@AfterMethod(alwaysRun = true)
 	public void closeSession(ITestResult test) {
@@ -38,6 +38,7 @@ public class TestSearchByGuest extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testSearchByGuest(){
+		preReq();
 		TestReporter.logStep("Search By Guest");
 		SearchByGuest search = new SearchByGuest(environment, "Main");
 		search.setReservationNumber(res.getConfirmationNumber());
@@ -50,5 +51,11 @@ public class TestSearchByGuest extends BaseTest{
 		logItems.addItem("ScheduledEventsServiceIF", "searchByGuest", false);
 		logItems.addItem("PartyIF", "retrieveParty", false);		
 		validateLogs(search, logItems);
+	}
+	
+	private void preReq(){
+		hh.sendToApi(this.environment);
+		res = new EventDiningReservation(environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 }
