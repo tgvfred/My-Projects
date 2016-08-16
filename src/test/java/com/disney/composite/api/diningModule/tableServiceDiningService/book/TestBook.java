@@ -107,6 +107,7 @@ public class TestBook extends BaseTest{
 		book.setParty(hh);
 		RetrieveAllergies retrieveAllergies = new RetrieveAllergies(environment);
 		retrieveAllergies.sendRequest();
+		TestReporter.logAPI(!retrieveAllergies.getResponseStatusCode().equals("200"), "An error occurred during booking: " + retrieveAllergies.getFaultString(), retrieveAllergies);
 		
 		int index = 1;
 		for(String allergy : retrieveAllergies.getAllergies().values()){
