@@ -30,4 +30,13 @@ public class AvailSE {
 				+ "order by dbms_random.value ) "
 				+ "where rownum = 1";
 	}
+	
+	public static String getFreezeId(String resourceId, String date){
+		return "select RSRVBL_RSRC_ID, FSELL_INVTRY_SRVC_DTS, FREEZE_ID "
+			 + "from AVAILSE.fsell_invtry a, "
+		     + "AVAILSE.FREEZE_FSELL_INVTRY b "
+		     + "WHERE a.FSELL_INVTRY_ID = b.FSELL_INVTRY_ID "
+		     + "AND a.RSRVBL_RSRC_ID =  '" + resourceId + "' " 
+		     + "and to_char(a.FSELL_INVTRY_SRVC_DTS, 'yyyy-mm-dd') = '"+date+"'  ";
+	}
 }
