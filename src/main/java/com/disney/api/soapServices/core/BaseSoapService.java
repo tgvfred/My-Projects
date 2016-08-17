@@ -916,7 +916,7 @@ public abstract class BaseSoapService{
 			e.printStackTrace();
 		}
 
-		setServiceURL(getFirstNodeValueByTagName(responseDoc, "endPoint") + "?wsdl");
+		setServiceURL(getFirstNodeValueByTagName(responseDoc, "endPoint"));
 
 	}
 	
@@ -925,7 +925,7 @@ public abstract class BaseSoapService{
 	protected void setEnvironmentServiceURL(String service, String environment, String url) {
 		setEnvironment(environment);
 		setService(service);
-		setServiceURL(url + "?wsdl");
+		setServiceURL(url);
 	}
 	
 	//DJS - This was added as proof of concept for endpoints utilizing Service Virtualization
