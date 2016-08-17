@@ -267,14 +267,14 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		book.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		if(getEnvironment().equalsIgnoreCase("Development")&& !getEnvironment().contains("_CM") ){
+		if(!getEnvironment().equalsIgnoreCase("Development")&& !getEnvironment().toLowerCase().contains("latest_cm") ){
 			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
 			resource.setFacilityId(getFacilityId());
 			resource.sendRequest();
 			resource.getReservableResources();
 			book.setReservableResourceId(resource.getFirstReservableResourceId());
 		}
-		
+		book.setFreezeId();
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
 		if(book.getResponse().contains("Row was updated or deleted by another transaction")|| 

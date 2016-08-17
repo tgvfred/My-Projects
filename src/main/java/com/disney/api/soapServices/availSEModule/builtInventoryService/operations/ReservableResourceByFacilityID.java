@@ -16,7 +16,7 @@ import com.disney.utils.XMLTools;
 public class ReservableResourceByFacilityID extends BuiltInventoryService{
 	ReservableResource firstReservableResource;
 	String firstReservableResourceId;
-	
+	int availibleResources = 0;
 	public ReservableResourceByFacilityID(String environment, String scenario) {
 		super(environment);
 
@@ -32,22 +32,22 @@ public class ReservableResourceByFacilityID extends BuiltInventoryService{
 	public Map<String, ReservableResource> getReservableResources(){
 		Map<String, ReservableResource> resources = new HashMap<String, ReservableResource>();
 		NodeList reservableResourceArrays = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/reservableResourceByFacilityIDResponse/reservableResourceArray");
-		
-		for(int node = 0; node < reservableResourceArrays.getLength() - 1; node++){
+		availibleResources = reservableResourceArrays.getLength();
+		for(int node = 0; node <= reservableResourceArrays.getLength() - 1; node++){
 			resources.put("resource" + String.valueOf(node), new ReservableResource(reservableResourceArrays.item(node)));
 		}
 		firstReservableResource  = resources.get("resource0");
 		firstReservableResourceId = firstReservableResource.getReservableResourceId();
 		return resources;
 	}
-	
+	public int getAvailibleResources(){return availibleResources;}
 	public ReservableResource getFirstReservableResource(){return firstReservableResource;}
 	public String getFirstReservableResourceId(){
 		if(firstReservableResourceId == null) getReservableResources();
 		return firstReservableResourceId;
 	}
 	
-	class ReservableResource{
+	public class ReservableResource{
 		String effStartDateTime;
 		String facilityId;
 		String reservableResourceId;

@@ -1,11 +1,23 @@
 package com.disney.api.soapServices.activityModule.activityServicePort.operations;
 
+import java.util.Map;
+
 import com.disney.api.soapServices.activityModule.activityServicePort.ActivityService;
+import com.disney.api.soapServices.availSEModule.builtInventoryService.operations.ReservableResourceByFacilityID;
+import com.disney.api.soapServices.availSEModule.builtInventoryService.operations.ReservableResourceByFacilityID.ReservableResource;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
+import com.disney.test.utils.Sleeper;
+import com.disney.utils.Randomness;
+import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.FacilityInfo;
 import com.disney.utils.dataFactory.ProductInfo;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.AvailSE;
 import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
 import com.disney.utils.dataFactory.guestFactory.Guest;
@@ -349,6 +361,40 @@ public class Book extends ActivityService{
 	 * @param value reservable resource ID
 	 */
 	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", value);}
+	/**
+	 * Retrieves and set a random reservable resource ID in the SOAP request based on Facility ID
+	 */
+	public void setReservableResourceId(){
+		ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
+		resource.setFacilityId(getRequestFacilityId());
+		resource.sendRequest();
+		TestReporter.logAPI(!resource.getResponseStatusCode().equals("200"), "Failed to get Reservable Resource ID", resource);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", resource.getFirstReservableResourceId());		
+	}
+	public String getRequestReservableResourceId(){ return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId");	}
+	
+	public void setFreezeId(){
+		String freezeId = "";
+		Freeze freeze = new Freeze(getEnvironment(), "Main");
+		freeze.setReservableResourceId(getRequestReservableResourceId());
+		freeze.setStartDate(getRequestServiceStartDate().substring(0,getRequestServiceStartDate().indexOf("T")));			
+		freeze.sendRequest();
+		TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
+		if(freeze.getSuccess().equals("failure")){
+			Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+			Recordset rs = new Recordset(db.getResultSet(AvailSE.getFreezeId(getRequestReservableResourceId(), getRequestServiceStartDate().substring(0,getRequestServiceStartDate().indexOf("T")))));
+			
+			rs.print();
+			//for (rs.moveFirst(); rs.hasNext() ; rs.moveNext()){
+			//	if(rs.getValue("FSELL_INVTRY_SRVC_DTS").contains(getRequestServiceStartDate().replace("T", " "))){
+					freezeId = rs.getValue("FREEZE_ID");
+			//	}
+			//}
+		}else {
+			freezeId = freeze.getFreezeID();
+		}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/freezeId", freezeId);
+	}
 	/**
 	 * Sets the primary guest suffix in the SOAP request
 	 * @param value - primary guest suffix

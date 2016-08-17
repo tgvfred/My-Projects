@@ -127,6 +127,8 @@ public class TestBook extends BaseTest{
 	private Book bookAndValidate(HouseHold hh){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setReservableResourceId();
+		book.setFreezeId();
 		book.sendRequest();
 		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10)*1000);
