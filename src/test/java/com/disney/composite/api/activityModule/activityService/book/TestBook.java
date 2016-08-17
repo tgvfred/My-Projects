@@ -74,7 +74,7 @@ public class TestBook extends BaseTest{
 		if(oneHundredEighty) book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(200));
 		if(past) book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(-1));
 		book.setReservableResourceId();
-		book.setFreezeId();
+		//book.setFreezeId();
 		book.sendRequest();
 		
 		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred")){
