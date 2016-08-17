@@ -54,6 +54,7 @@ public class TestSearchByGuest extends BaseTest{
 	}
 	
 	private void preReq(){
+		hh = new HouseHold(1);
 		hh.sendToApi(this.environment);
 		res = new EventDiningReservation(environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);

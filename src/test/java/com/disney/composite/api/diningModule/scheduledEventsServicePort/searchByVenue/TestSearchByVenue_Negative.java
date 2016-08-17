@@ -215,6 +215,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	
 	private void preReq(){
+		hh = new HouseHold(1);
 		hh.sendToApi(this.environment);
 		res.set(new EventDiningReservation(environment, hh));
 		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
