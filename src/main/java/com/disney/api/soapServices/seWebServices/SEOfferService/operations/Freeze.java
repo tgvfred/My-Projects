@@ -19,6 +19,14 @@ public class Freeze extends SEOfferService{
 		setRequestNodeValueByXPath("/Envelope/Body/freezeRequest/serviceContext/@conversationId", Randomness.generateConversationId());
 	}
 
+	public String getRequestServiceStartDate(){
+		return getRequestNodeValueByXPath("/Envelope/Body/freezeRequest/OfferToFreeze/RequestedStartDate");
+	}
+	
+	public String getRequestServiceStartTime(){
+		return getRequestNodeValueByXPath("/Envelope/Body/freezeRequest/OfferToFreeze/RequestedStartTime");
+	}
+	
 	public void setServiceContextRequestorId(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/freezeRequest/serviceContext/requestor/@id", value);
 	}

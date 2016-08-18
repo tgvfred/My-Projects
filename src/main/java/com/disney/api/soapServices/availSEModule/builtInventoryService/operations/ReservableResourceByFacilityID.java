@@ -10,6 +10,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.disney.api.soapServices.availSEModule.builtInventoryService.BuiltInventoryService;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 
@@ -45,6 +46,22 @@ public class ReservableResourceByFacilityID extends BuiltInventoryService{
 	public String getFirstReservableResourceId(){
 		if(firstReservableResourceId == null) getReservableResources();
 		return firstReservableResourceId;
+	}
+	
+	public String getRandomReservableResourceId(){
+		Map<String, ReservableResource> resources = getReservableResources();
+		int randomId = Randomness.randomNumberBetween(0, resources.size());
+		int currentId = 0;
+		String resourceId = getFirstReservableResourceId();
+		for (ReservableResource resource : resources.values()){
+			if(currentId == randomId){
+				resourceId = resource.getReservableResourceId();
+				break;
+			}
+
+			currentId++;
+		}
+		return resourceId;
 	}
 	
 	public class ReservableResource{
