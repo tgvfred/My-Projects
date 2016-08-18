@@ -15,7 +15,7 @@ public class TestBook_Negative extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidFacilityId(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
@@ -246,7 +246,7 @@ public class TestBook_Negative extends BaseTest{
 		validateNotInLogs(book, logInvalidItems);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidBookDateExceeds180DaysInFuture(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
@@ -403,6 +403,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingFacilityId(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId();
 		book.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.INVALID_FACILITY);
@@ -469,6 +470,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingServiceStartDate(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId();
 		book.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.SERVICE_START_DATE_REQUIRED);
@@ -491,6 +493,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingFreeze(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId();
 		book.setRequestNodeValueByXPath("//freezeId",BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.FREEZE_ID_REQUIRED);
@@ -513,6 +516,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingReservableResourceID(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId();
 		book.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.NO_RESERVABLE_RESOURCE_ID);

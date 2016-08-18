@@ -97,7 +97,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setCommunicationsChannel("abcd");
 		sendRequestAndValidateLogs(modify, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED,"communication Channel is required : null");
 	}
-	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
+	//@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidFacilityId(){	
 		TestReporter.logScenario("Invalid Facility ID");
 		Modify modify = modify();
@@ -151,6 +151,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingFacilityId(){
 		TestReporter.logScenario("Missing Facility ID");
 		Modify modify = modify();
+		modify.setFreezeId();
 		modify.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.INVALID_FACILITY,"FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!");
 	}
@@ -207,6 +208,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingReservableResourceID(){
 		TestReporter.logScenario("Missing Reservable Resource ID");
 		Modify modify = modify();
+		modify.setFreezeId();
 		modify.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
 		logValidItems.get().addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);	
 		sendRequestAndValidateLogs(modify, DiningErrorCode.NO_RESERVABLE_RESOURCE_ID,"RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!");
@@ -229,6 +231,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingServiceStartDate(){
 		TestReporter.logScenario("Missing Service Start Date");
 		Modify modify = modify();
+		modify.setFreezeId();
 		modify.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.SERVICE_START_DATE_REQUIRED,"INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!");
 	}
