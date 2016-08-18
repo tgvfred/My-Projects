@@ -369,32 +369,43 @@ public class Book extends ActivityService{
 		resource.setFacilityId(getRequestFacilityId());
 		resource.sendRequest();
 		TestReporter.logAPI(!resource.getResponseStatusCode().equals("200"), "Failed to get Reservable Resource ID", resource);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", resource.getFirstReservableResourceId());		
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", resource.getRandomReservableResourceId());		
 	}
 	public String getRequestReservableResourceId(){ return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId");	}
 	
 	public void setFreezeId(){
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rs = null;
 		String freezeId = "";
 		Freeze freeze = new Freeze(getEnvironment(), "Main");
-		freeze.setReservableResourceId(getRequestReservableResourceId());
-		freeze.setStartDate(getRequestServiceStartDate().substring(0,getRequestServiceStartDate().indexOf("T")));			
-		freeze.sendRequest();
-		TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
-		if(freeze.getSuccess().equals("failure")){
-			Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
-			Recordset rs = new Recordset(db.getResultSet(AvailSE.getFreezeId(getRequestReservableResourceId(), getRequestServiceStartDate().substring(0,getRequestServiceStartDate().indexOf("T")))));
-			
-			rs.print();
-			//for (rs.moveFirst(); rs.hasNext() ; rs.moveNext()){
-			//	if(rs.getValue("FSELL_INVTRY_SRVC_DTS").contains(getRequestServiceStartDate().replace("T", " "))){
-					freezeId = rs.getValue("FREEZE_ID");
-			//	}
-			//}
-		}else {
-			freezeId = freeze.getFreezeID();
-		}
+		//rs = new Recordset(db.getResultSet(AvailSE.getFreezeId(getRequestReservableResourceId(), freeze.getRequestServiceStartDate() + " " + freeze.getRequestServiceStartTime())));
+
+	//	if(rs.getRowCount() == 0){
+			Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getResourceAvailibleTimesByIdAndDate(getRequestReservableResourceId(), getRequestServiceStartDate())));
+			rsInventory.print();
+			String startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+			String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			freeze.setReservableResourceId(getRequestReservableResourceId());	
+			freeze.setStartDate(startdate);	
+			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+			freeze.sendRequest();
+			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
+			if(freeze.getSuccess().equals("failure")){				
+				rs = new Recordset(db.getResultSet(AvailSE.getFreezeId(getRequestReservableResourceId(), getRequestServiceStartDate().substring(0,getRequestServiceStartDate().indexOf("T")))));
+				freezeId = rs.getValue("FREEZE_ID");
+				setServiceStartDateTime(rs.getValue("FSELL_INVTRY_SRVC_DTS").replace(".0", "").replace(" ", "T"));
+			}else {
+				freezeId = freeze.getFreezeID();
+				setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+			}
+	/*	}else{
+			freezeId = rs.getValue("FREEZE_ID");
+			setServiceStartDateTime(rs.getValue("FSELL_INVTRY_SRVC_DTS").replace(".0", "").replace(" ", "T"));
+		}*/
+		
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/freezeId", freezeId);
 	}
+	
 	/**
 	 * Sets the primary guest suffix in the SOAP request
 	 * @param value - primary guest suffix

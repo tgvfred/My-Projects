@@ -103,7 +103,7 @@ public class BaseTest {
 		boolean isValid = false;
 		boolean containsRequest = false;
 		boolean containsResponse = false;
-		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development") && !environment.toLowerCase().contains("_cm")){
+		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development") && !environment.toLowerCase().contains("Latest_cm")){
 				
 			Recordset rs = getLogs(environment, soap.getConversationID());
 			
