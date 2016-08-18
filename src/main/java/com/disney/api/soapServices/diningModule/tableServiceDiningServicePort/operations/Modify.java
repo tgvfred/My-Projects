@@ -99,6 +99,11 @@ public class Modify extends TableServiceDiningServicePort {
 	public void sendRequest(){
 		if(notSetFreezeId) 	setFreezeId();
 		super.sendRequest();
+
+		if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint")){
+			if(notSetFreezeId) 	setFreezeId();
+			super.sendRequest();	
+		}
 	}
 	public void setFreezeId(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
