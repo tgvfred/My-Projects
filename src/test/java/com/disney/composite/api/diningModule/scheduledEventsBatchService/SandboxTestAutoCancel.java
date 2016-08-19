@@ -13,7 +13,7 @@ import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 
-public class TestAutoCancel extends BaseTest{
+public class SandboxTestAutoCancel extends BaseTest{
 	private String date = Randomness.generateCurrentXMLDate(45);
 	private String sourceAccountingCenter = "3";
 	private RetrieveNonGuaranteedGuestChargeGroups retrieve;
@@ -39,7 +39,8 @@ public class TestAutoCancel extends BaseTest{
 		TestReporter.logScenario("AutoCancel");	
 		if(retrieve.getAllReservations().size() == 0)
 			throw new SkipException("No reservations were returned by RetrieveNonGuaranteedGuestChargeGroups for the date ["+date+"] and source accounting center ["+sourceAccountingCenter+"].");
-		expected_TCG = retrieve.getAllReservations().get("1");		
+		expected_TCG = retrieve.getAllReservations().get("1");
+		
 		
 		AutoCancel cancel = new AutoCancel(environment, "Main");
 		cancel.setTravelComponentGroupingId(expected_TCG);
@@ -56,11 +57,10 @@ public class TestAutoCancel extends BaseTest{
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateLogs(cancel, logValidItems, 10000);
 	}
-	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoCancel")
 	public void testAutoCancel_InvalidReservationStatus(){
 		TestReporter.logScenario("AutoCancel_InvalidReservationStatus");
-//		if(expected_TCG == null)expected_TCG = retrieve.getAllReservations().get("1");
+		if(expected_TCG == null)expected_TCG = retrieve.getAllReservations().get("1");
 		AutoCancel cancel = new AutoCancel(environment, "Main");
 		cancel.setTravelComponentGroupingId(expected_TCG);
 		cancel.sendRequest();
