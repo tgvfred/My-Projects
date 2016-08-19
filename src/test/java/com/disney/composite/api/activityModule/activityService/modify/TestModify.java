@@ -18,12 +18,9 @@ public class TestModify extends BaseTest{
 	@AfterMethod(alwaysRun=true)
 	public void setup(){
 		try{
-			if(TPS_ID.get() != null)
-				if(!TPS_ID.get().isEmpty()){
-					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-					cancel.setReservationNumber(TPS_ID.get());
-					cancel.sendRequest();
-				}
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setReservationNumber(TPS_ID.get());
+			cancel.sendRequest();
 		}catch(Exception e){}
 	}
 	

@@ -1,5 +1,6 @@
 package com.disney.composite.api.activityModule.activityService.arrived;
 
+import org.junit.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -28,6 +29,12 @@ public class TestArrived_Negative  extends BaseTest{
 		hh.primaryGuest().setAge("6");
 		res = new ActivityEventReservation(this.environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+	}
+	
+	@AfterClass
+	public void teardown(){
+		try{res.cancel();}
+		catch(Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})

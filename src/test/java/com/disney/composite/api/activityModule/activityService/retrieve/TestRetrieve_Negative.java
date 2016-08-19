@@ -1,6 +1,6 @@
 package com.disney.composite.api.activityModule.activityService.retrieve;
 
-import org.testng.annotations.AfterTest;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -33,12 +33,10 @@ public class TestRetrieve_Negative  extends BaseTest{
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 
-	@AfterTest(alwaysRun=true)
+	@AfterClass(alwaysRun=true)
 	public void teardown(){
-		if(res != null)
-			if(res.getConfirmationNumber() != null)
-				if(!res.getConfirmationNumber().isEmpty())
-					res.cancel();
+		try{res.cancel();}
+		catch(Exception e){}
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
