@@ -1439,7 +1439,7 @@ public abstract class BaseSoapService{
 		case "fx:getdate":
 			daysOut = params[1].split(":");
 			if (daysOut[0].trim().equalsIgnoreCase("DaysOut")) {
-				return Randomness.generateCurrentXMLDatetime(Integer.parseInt(daysOut[1]));
+				return Randomness.generateCurrentXMLDate(Integer.parseInt(daysOut[1]));
 			} else{
 				// report error 
 			}

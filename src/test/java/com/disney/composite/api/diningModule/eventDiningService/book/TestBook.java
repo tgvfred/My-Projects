@@ -21,6 +21,8 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold(1);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setReservableResourceId();
+		book.setFreezeId();
 		book.sendRequest();
 		if(book.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
@@ -50,11 +52,10 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold("2 Adults");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setReservableResourceId();
+		book.setFreezeId();
 		book.sendRequest();
-		if(book.getResponse().toLowerCase().contains("unique constraint")){
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
-			book.sendRequest();
-		}
+		
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is not numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is not numeric as expected.");
@@ -79,6 +80,8 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold("4 Adults");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setReservableResourceId();
+		book.setFreezeId();
 		book.sendRequest();
 		if(book.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
@@ -108,6 +111,8 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold("2 Adults 2 Child");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setReservableResourceId();
+		book.setFreezeId();
 		book.sendRequest();
 		if(book.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
@@ -137,6 +142,8 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold("4 Adults 2 Child 2 Infant");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setReservableResourceId();
+		book.setFreezeId();
 		book.sendRequest();
 		if(book.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
@@ -167,6 +174,8 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold(12);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setReservableResourceId();
+		book.setFreezeId();
 		book.sendRequest();
 		if(book.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
@@ -196,6 +205,8 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold("1 Adult");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setReservableResourceId();
+		book.setFreezeId();
 		book.setAllergies("Egg","1");
 		book.sendRequest();
 		if(book.getResponse().toLowerCase().contains("unique constraint")){
@@ -227,6 +238,7 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold("1 Adult");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId();
 		book.setAllergies("Egg","1");
 		book.setAllergies("Corn","2");		
 		book.sendRequest();
@@ -260,6 +272,7 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold(1);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId();
 		
 		RetrieveAllergies retrieveAllergies = new RetrieveAllergies(environment);
 		retrieveAllergies.sendRequest();
@@ -272,10 +285,7 @@ public class TestBook extends BaseTest{
 		}
 		
 		book.sendRequest();
-		if(book.getResponse().toLowerCase().contains("unique constraint")){
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
-			book.sendRequest();
-		}
+		
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), "An error occurred bookingan event dining reservation: " + book.getFaultString() ,book);
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is not numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is not numeric as expected.");

@@ -5,6 +5,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.SoapException;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
@@ -27,7 +28,11 @@ public class TestCancel extends BaseTest{
 		this.environment = environment;
 		hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		try{
+			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		}catch (SoapException se){
+			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		}
 	}
 
 	@Test( groups = {"api", "regression", "dining", "eventDiningService"})

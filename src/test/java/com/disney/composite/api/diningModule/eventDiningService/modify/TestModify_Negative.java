@@ -6,11 +6,13 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.SoapException;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.composite.BaseTest;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -27,7 +29,11 @@ public class TestModify_Negative extends BaseTest{
 		this.environment = environment;
 		HouseHold hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		try{
+			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		}catch(SoapException e){
+			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		}
 	}
 	
 	@AfterClass(alwaysRun = true)
@@ -39,6 +45,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidFacilityId(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -65,6 +72,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidCommunicationChannel(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -94,6 +102,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidTravelPlanIdFormat(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId("Invalid Id");
 		modify.setParty(res.party());
@@ -109,6 +118,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidReservationNumberFormat(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber("Invalid Id");
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -121,35 +131,11 @@ public class TestModify_Negative extends BaseTest{
 		TestReporter.logAPI(!modify.getFaultString().contains("Unmarshalling Error: For input string: \"Invalid Id\""), modify.getFaultString() ,modify);
 	}
 
-	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
-	public void invalidTravelPlanId(){
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
-		modify.setReservationNumber(res.getConfirmationNumber());
-		modify.setTravelPlanId("11223");
-		modify.setParty(res.party());
-		modify.setFacilityId(res.getFacilityId());
-		modify.setServiceStartDate(res.getServiceStartDate());
-		modify.setServicePeriodId(res.getServicePeriodId());
-		modify.setProductId(res.getProductId());
-		modify.sendRequest();
-		validateApplicationError(modify, DiningErrorCode.TRAVEL_PLAN_NOT_FOUND);
-		TestReporter.logAPI(!modify.getFaultString().contains("TRAVEL_PLAN_NOT_FOUND : TRAVEL PLAN NOT FOUND"), modify.getFaultString() ,modify);
 
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("EventDiningServiceIF", "modify", true);
-		validateLogs(modify, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
-		logInvalidItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-		logInvalidItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateNotInLogs(modify, logInvalidItems);
-	}
-	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidReservationNumber(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber("12345678910");
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -178,6 +164,7 @@ public class TestModify_Negative extends BaseTest{
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res2.getConfirmationNumber());
 		modify.setTravelPlanId(res2.getTravelPlanId());
 		res2.party().primaryGuest().setTitle("Mre.");
@@ -206,17 +193,19 @@ public class TestModify_Negative extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidPrimaryGuestCountry(){
-		ScheduledEventReservation res2 = new EventDiningReservation(this.environment,new HouseHold(1));
-		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		//ScheduledEventReservation res2 = new EventDiningReservation(this.environment,new HouseHold(1));
+		//res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
-		modify.setReservationNumber(res2.getConfirmationNumber());
-		modify.setTravelPlanId(res2.getTravelPlanId());
-		res2.party().primaryGuest().primaryAddress().setCountry("Randland");
-		modify.setParty(res2.party());
-		modify.setFacilityId(res2.getFacilityId());
-		modify.setServiceStartDate(res2.getServiceStartDate());
-		modify.setServicePeriodId(res2.getServicePeriodId());
-		modify.setProductId(res2.getProductId());
+		modify.setFreezeId(Randomness.generateMessageId());
+		modify.setReservationNumber(res.getConfirmationNumber());
+		modify.setTravelPlanId(res.getTravelPlanId());
+		HouseHold party = new HouseHold(1);
+		party.primaryGuest().primaryAddress().setCountry("Randland");
+		modify.setParty(party);
+		modify.setFacilityId(res.getFacilityId());
+		modify.setServiceStartDate(res.getServiceStartDate());
+		modify.setServicePeriodId(res.getServicePeriodId());
+		modify.setProductId(res.getProductId());
 		modify.sendRequest();
 
 		validateApplicationError(modify, PartyErrorCode.CREATE_PARTY_ERROR);
@@ -238,6 +227,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidSalesChannel(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -266,6 +256,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidAuthorizationNumber(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -294,6 +285,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidProductId(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -321,6 +313,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidEnterpriseFacilityId(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -348,6 +341,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidBookDateInPast(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -375,6 +369,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidBookDateExceeds180DaysInFuture(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -402,6 +397,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingPrimaryGuest(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -429,6 +425,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingPrimaryGuestLastName(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -456,6 +453,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingPrimaryGuestFirstName(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -483,6 +481,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingSalesChannel(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -511,6 +510,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingCommunicationChannel(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -535,39 +535,11 @@ public class TestModify_Negative extends BaseTest{
 		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateNotInLogs(modify, logInvalidItems);
 	}
-	
-	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
-	public void missingSourceAccountingCenter(){
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
-		modify.setReservationNumber(res.getConfirmationNumber());
-		modify.setTravelPlanId(res.getTravelPlanId());
-		modify.setParty(res.party());
-		modify.setFacilityId(res.getFacilityId());
-		modify.setServiceStartDate(res.getServiceStartDate());
-		modify.setServicePeriodId(res.getServicePeriodId());
-		modify.setProductId(res.getProductId());
-		modify.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
-		modify.sendRequest();
-		System.out.println(modify.getResponse());
-		validateApplicationError(modify, DiningErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED);
-		TestReporter.logAPI(!modify.getFaultString().contains("SOURCER ACCOUNTING CENTER IS REQUIRED! : SOURCER ACCOUNTING CENTER IS REQUIRED!"), modify.getFaultString() ,modify);
-		
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("EventDiningServiceIF", "modify", true);
-		validateLogs(modify, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);	
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(modify, logInvalidItems);
-	}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingFacilityId(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -596,6 +568,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingProductId(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -623,6 +596,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingProductType(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -651,6 +625,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingServiceStartDate(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -676,9 +651,10 @@ public class TestModify_Negative extends BaseTest{
 		validateNotInLogs(modify, logInvalidItems);
 	}
 
-	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingFreeze(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -707,6 +683,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingReservableResourceID(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -735,6 +712,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingPartyRoles(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -763,6 +741,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingPartyRoleAgeType(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -791,6 +770,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void missingServicePeriodId(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -821,6 +801,7 @@ public class TestModify_Negative extends BaseTest{
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res2.getConfirmationNumber());
 		modify.setTravelPlanId(res2.getTravelPlanId());
 		modify.setParty(res2.party());
@@ -846,41 +827,13 @@ public class TestModify_Negative extends BaseTest{
 		validateNotInLogs(modify, logInvalidItems);
 	}
 
-	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
-	public void cancelledReservation(){
-		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
-		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
-		modify.setReservationNumber(res2.getConfirmationNumber());
-		modify.setTravelPlanId(res2.getTravelPlanId());
-		modify.setParty(res2.party());
-		modify.setFacilityId(res2.getFacilityId());
-		modify.setServiceStartDate(res2.getServiceStartDate());
-		modify.setServicePeriodId(res2.getServicePeriodId());
-		modify.setProductId(res2.getProductId());
-		res2.cancel();
-		modify.sendRequest();
-		validateApplicationError(modify, DiningErrorCode.INVALID_TRAVEL_STATUS);
-		TestReporter.logAPI(!modify.getFaultString().contains("Travel Status is invalid  : INVALID RESERVATION STATUS."), modify.getFaultString() ,modify);
-		
-		LogItems logValidItems = new LogItems();
-		logValidItems.addItem("EventDiningServiceIF", "modify", true);
-		validateLogs(modify, logValidItems);
-		
-		LogItems logInvalidItems = new LogItems();
-		logInvalidItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logInvalidItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-		logInvalidItems.addItem("PartyIF", "createAndRetrieveParty", false);	
-		logInvalidItems.addItem("TravelPlanServiceV3", "create", false);
-		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
-		validateNotInLogs(modify, logInvalidItems);
-	}
-
+	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void noShowReservation(){
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId(Randomness.generateMessageId());
 		modify.setReservationNumber(res2.getConfirmationNumber());
 		modify.setTravelPlanId(res2.getTravelPlanId());
 		modify.setParty(res2.party());

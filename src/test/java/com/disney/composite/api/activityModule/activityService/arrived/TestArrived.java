@@ -1,5 +1,6 @@
 package com.disney.composite.api.activityModule.activityService.arrived;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -26,6 +27,12 @@ public class TestArrived  extends BaseTest{
 		res = new ActivityEventReservation(this.environment, hh);
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
+	
+	@AfterMethod(alwaysRun=true)
+	public void teardown(){
+		try{res.cancel();}
+		catch(Exception e){}
+	}
 
 	@Test(groups = {"api", "regression", "activity", "activityService"})
 	public void testArrived(){
@@ -35,8 +42,7 @@ public class TestArrived  extends BaseTest{
 		arrived.setReservationNumber(res.getConfirmationNumber());
 		arrived.sendRequest();
 		TestReporter.logAPI(!arrived.getResponseStatusCode().contains("200"), arrived.getFaultString() ,arrived);
-		TestReporter.logAPI(!arrived.getArrivalStatus().equals("SUCCESS"), "The response ["+arrived.getArrivalStatus()+"] was not 'SUCCESS' as expected.", arrived);
-		
+		TestReporter.logAPI(!arrived.getArrivalStatus().equals("SUCCESS"), "The response ["+arrived.getArrivalStatus()+"] was not 'SUCCESS' as expected.", arrived);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ActivityServiceIF", "arrived", false);

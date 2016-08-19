@@ -29,6 +29,7 @@ public class BaseTest {
 		try{
 			TestReporter.setDebugLevel(Integer.parseInt(System.getenv("debugLevel")));
 		}catch(Exception e){}		
+	//	TestReporter.setDebugLevel(1);
 	}
 	
 	@BeforeMethod(alwaysRun = true)
