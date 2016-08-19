@@ -19,18 +19,14 @@ public class TestBook extends BaseTest{
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
 		try{
-			if(TPS_ID.get() != null)
-				if(!TPS_ID.get().isEmpty()){
-					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-					cancel.setReservationNumber(TPS_ID.get());
-					cancel.sendRequest();
-				}
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setReservationNumber(TPS_ID.get());
+			cancel.sendRequest();
 		}catch(Exception e){}
 	}
 	
 	@Test(groups = {"api", "regression", "activity", "activityService"})
 	public void testBook(){
-	//	TestReporter.setDebugLevel(1);
 		TestReporter.logScenario("1 Adult");
 		HouseHold hh = new HouseHold("1 Adult");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -86,8 +82,8 @@ public class TestBook extends BaseTest{
 		book.setProductType("RecreationActivityProduct");
 		if(oneHundredEighty) book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(200));
 		if(past) book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(-1));
-		book.setReservableResourceId();
-		book.setFreezeId();
+//		book.setReservableResourceId();
+//		book.setFreezeId();
 		book.sendRequest();
 		
 		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred")){
