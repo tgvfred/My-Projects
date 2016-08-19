@@ -135,8 +135,9 @@ public class Book extends EventDiningService {
 	public void sendRequest(){
 		if(notSetFreezeId) 	setFreezeId();
 		super.sendRequest();
-		if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint")){
-			if(notSetFreezeId) 	setFreezeId();
+		if(		getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
+				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
+			setFreezeId();
 			super.sendRequest();	
 		}
 	}
@@ -145,11 +146,9 @@ public class Book extends EventDiningService {
 		Recordset rs = null;
 		String freezeId = "";
 		Freeze freeze = new Freeze(getEnvironment(), "Main");
-		//rs = new Recordset(db.getResultSet(AvailSE.getFreezeId(getRequestReservableResourceId(), freeze.getRequestServiceStartDate() + " " + freeze.getRequestServiceStartTime())));
 
-	//	if(rs.getRowCount() == 0){
 			Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-			rsInventory.print();
+			
 			String startdate = rsInventory.getValue("START_DATE").contains(" ") 
 							   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
 						       : rsInventory.getValue("START_DATE");
@@ -161,9 +160,10 @@ public class Book extends EventDiningService {
 			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
 			freeze.sendRequest();
 			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
-			if(freeze.getSuccess().equals("failure")){				
+			int timesTried = 0;
+			while(freeze.getSuccess().equals("failure") && timesTried < 5){				
 				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-				rsInventory.print();
+				
 				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
 				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
 				setReservableResourceId(rsInventory.getValue("Resource_ID"));
@@ -171,17 +171,19 @@ public class Book extends EventDiningService {
 				freeze.setStartDate(startdate);	
 				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
 				freeze.sendRequest();	
-				freezeId = freeze.getFreezeID();
-				//setServiceStartDateTime(rs.getValue("FSELL_INVTRY_SRVC_DTS").replace(".0", "").replace(" ", "T"));
-			}else {
-				freezeId = freeze.getFreezeID();
-				setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+				if(freeze.getSuccess().equals("failure")) timesTried++;
 			}
-	/*	}else{
-			freezeId = rs.getValue("FREEZE_ID");
-			setServiceStartDateTime(rs.getValue("FSELL_INVTRY_SRVC_DTS").replace(".0", "").replace(" ", "T"));
-		}*/
+
+			if(freeze.getSuccess().equals("failure")){
+				TestReporter.logAPI(true, "Could not Freeze Inventory", freeze);
+			}
+			freezeId = freeze.getFreezeID();
+			setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
 		
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		notSetFreezeId = false;
+	}
+	public void setFreezeId(String freezeId){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
 		notSetFreezeId = false;
 	}

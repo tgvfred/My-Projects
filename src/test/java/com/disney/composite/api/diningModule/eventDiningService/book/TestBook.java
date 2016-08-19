@@ -55,10 +55,7 @@ public class TestBook extends BaseTest{
 		book.setReservableResourceId();
 		book.setFreezeId();
 		book.sendRequest();
-		if(book.getResponse().toLowerCase().contains("unique constraint")){
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
-			book.sendRequest();
-		}
+		
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is not numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is not numeric as expected.");
@@ -287,10 +284,6 @@ public class TestBook extends BaseTest{
 		}
 		
 		book.sendRequest();
-		if(book.getResponse().toLowerCase().contains("unique constraint")){
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
-			book.sendRequest();
-		}
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is not numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is not numeric as expected.");

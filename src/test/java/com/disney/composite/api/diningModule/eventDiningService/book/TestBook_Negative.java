@@ -7,6 +7,7 @@ import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.composite.BaseTest;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -15,11 +16,12 @@ public class TestBook_Negative extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	
-	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidFacilityId(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setFacilityId("1010");
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.INVALID_FACILITY_ID);
 		TestReporter.logAPI(!book.getFaultString().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY!! : INVALID FACILITY ID"), book.getFaultString() ,book);
@@ -42,6 +44,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setCommunicationChannel("Invalid Center");
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("communication Channel is required : null"), book.getFaultString() ,book);
@@ -63,6 +66,7 @@ public class TestBook_Negative extends BaseTest{
 	public void invalidTravelPlanIdFormat(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setTravelPlanId("Invalid Id");
 		book.sendRequest();
 		TestReporter.logAPI(!book.getFaultString().contains("Unmarshalling Error: For input string: \"Invalid Id\""), book.getFaultString() ,book);
@@ -73,6 +77,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setTravelPlanId("1111111");
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_NOT_FOUND);
 		TestReporter.logAPI(!book.getFaultString().contains("TRAVEL_PLAN_NOT_FOUND : TRAVEL PLAN NOT FOUND"), book.getFaultString() ,book);
@@ -96,6 +101,7 @@ public class TestBook_Negative extends BaseTest{
 		HouseHold party = new HouseHold(1);
 		party.primaryGuest().setTitle("Mre.");
 		book.setParty(party);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, PartyErrorCode.SALUTATION_INVALID);
 		TestReporter.logAPI(!book.getFaultString().contains("Salutation is invalid : Salutation Mre. is invalid"), book.getFaultString() ,book);
@@ -119,6 +125,7 @@ public class TestBook_Negative extends BaseTest{
 		HouseHold party = new HouseHold(1);
 		party.primaryGuest().primaryAddress().setCountry("Randland");
 		book.setParty(party);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, PartyErrorCode.CREATE_PARTY_ERROR);
 		TestReporter.logAPI(!book.getFaultString().contains("Create Party Error : Please enter valid country code"), book.getFaultString() ,book);
@@ -141,6 +148,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setSalesChannel("blah");
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.SALES_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("Sales Channel is required : null"), book.getFaultString() ,book);
@@ -163,6 +171,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setRequestNodeValueByXPath("//authorizationNumber", "12345431");
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.INVALID_AUTHORIZATION_CODE);
 		TestReporter.logAPI(!book.getFaultString().contains("INVALID AUTHORIZATION CODE !! : INVALID AUTHORIZATION CODE !"), book.getFaultString() ,book);
@@ -185,6 +194,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setProductId( "1491863");
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.DATA_NOT_FOUND_SERVICE_EXCEPTION);
 		TestReporter.logAPI(!book.getFaultString().contains("Data not found. : No Product could be found for  productTypes [] productID=1491863"), book.getFaultString() ,book);
@@ -207,6 +217,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setRequestNodeValueByXPath("//enterpriseProductId",  "12214");
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.DATA_NOT_FOUND_SERVICE_EXCEPTION);
 		TestReporter.logAPI(!book.getFaultString().contains("Data not found. : No Product could be found for  productTypes [] productID=149863 enterpriseProductID=12214"), book.getFaultString() ,book);
@@ -229,6 +240,7 @@ public class TestBook_Negative extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("-30"));
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.EXCEPTION_RULE_FIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("RESManagement suggests to stop this reservation : Book Date is greater than Service date"), book.getFaultString() ,book);
@@ -246,11 +258,12 @@ public class TestBook_Negative extends BaseTest{
 		validateNotInLogs(book, logInvalidItems);
 	}
 	
-	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})
 	public void invalidBookDateExceeds180DaysInFuture(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
 		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("182"));
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.EXCEPTION_RULE_FIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date"), book.getFaultString() ,book);
@@ -271,6 +284,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingPrimaryGuest(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//primaryGuest", BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
@@ -293,6 +307,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingPrimaryGuestLastName(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//primaryGuest/lastName", BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
@@ -315,6 +330,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingPrimaryGuestFirstName(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//primaryGuest/firstName", BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
@@ -337,6 +353,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingSalesChannel(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.SALES_CHANNEL_REQUIRED);
@@ -359,6 +376,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingCommunicationChannel(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
@@ -381,6 +399,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingSourceAccountingCenter(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED);
@@ -403,8 +422,8 @@ public class TestBook_Negative extends BaseTest{
 	public void missingFacilityId(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.setFreezeId();
 		book.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
+		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.INVALID_FACILITY);
 		TestReporter.logAPI(!book.getFaultString().contains("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!"), book.getFaultString() ,book);
@@ -426,6 +445,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingProductId(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setProductId(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.PRODUCT_ID_REQUIRED);
@@ -448,6 +468,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingProductType(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setProductType(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.PRODUCT_TYPE_NAME_REQUIRED);
@@ -470,7 +491,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingServiceStartDate(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.setFreezeId();
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.SERVICE_START_DATE_REQUIRED);
@@ -493,7 +514,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingFreeze(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.setFreezeId();
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//freezeId",BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.FREEZE_ID_REQUIRED);
@@ -516,7 +537,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingReservableResourceID(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.setFreezeId();
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.NO_RESERVABLE_RESOURCE_ID);
@@ -539,6 +560,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingPartyRoles(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//partyRoles",BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.INVALID_PARTYMIX);
@@ -561,6 +583,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingPartyRoleAgeType(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//partyRoles/ageType",BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.AGE_TYPE_REQUIRED);
@@ -583,6 +606,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingServicePeriodId(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId(Randomness.generateMessageId());
 		book.setServicePeriodId(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		validateApplicationError(book, DiningErrorCode.SERVICE_PERIOD_REQUIRED);

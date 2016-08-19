@@ -5,6 +5,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.SoapException;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify;
 import com.disney.composite.BaseTest;
@@ -27,7 +29,11 @@ public class TestModify extends BaseTest{
 		this.environment = environment;
 		hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		try{
+			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		}catch (SoapException se){
+			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		}
 	}
 	
 
@@ -58,6 +64,22 @@ public class TestModify extends BaseTest{
 		validateLogs(modify, logItems);
 	}
 	
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testReinstate(){
+		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		res2.cancel();
+		modify.sendRequest();
+	}
+
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo2Adults(){
@@ -73,10 +95,6 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
 		modify.sendRequest();
-		if(modify.getResponse().toLowerCase().contains("unique constraint")){
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
-			modify.sendRequest();
-		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
