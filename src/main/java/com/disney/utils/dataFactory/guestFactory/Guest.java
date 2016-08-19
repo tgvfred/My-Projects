@@ -76,7 +76,7 @@ public class Guest {
 	}
 	
 	public void sendToApi(String environment, boolean isPartyV3) {
-		if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+		if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM") && !environment.contains("_cm")){
 			guest = new Create(environment, "Main");
 			guest.setPrefix(title);
 			guest.setFirstName(firstName);
@@ -107,7 +107,7 @@ public class Guest {
 		if(isPartyV3 || environment.equalsIgnoreCase("Development") || environment.equalsIgnoreCase("Latest_CM")){
 			com.disney.api.soapServices.partyModule.partyV3.operations.CreateParty partyV3 = null;
 			partyV3 = new com.disney.api.soapServices.partyModule.partyV3.operations.CreateParty(environment, "SampleCreate");
-			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM") && !environment.contains("_cm")){
 				odsId = guest.getOdsGuestId();
 				addresses.get(0).setZipCode(guest.getPostalCode());
 				addresses.get(0).setLocatorId(guest.getAddressLocatorId());
@@ -142,7 +142,7 @@ public class Guest {
 			this.partyId = partyV3.getPartyid();
 		}else{
 			CreateParty party = null;
-			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM") && !environment.contains("_cm")){
 				odsId = guest.getOdsGuestId();
 				addresses.get(0).setZipCode(guest.getPostalCode());
 				addresses.get(0).setLocatorId(guest.getAddressLocatorId());

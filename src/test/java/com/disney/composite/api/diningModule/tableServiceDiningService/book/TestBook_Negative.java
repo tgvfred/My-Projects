@@ -261,8 +261,8 @@ public class TestBook_Negative extends BaseTest{
 
 	private void sendRequestAndValidateLogs(Book book, ApplicationErrorCode error, String fault){
 		book.sendRequest();
-		validateApplicationError(book, error);
 		TestReporter.logAPI(!book.getFaultString().contains(fault), book.getFaultString() ,book);
+		validateApplicationError(book, error);
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("TableServiceDiningServiceIF", "book", true);		

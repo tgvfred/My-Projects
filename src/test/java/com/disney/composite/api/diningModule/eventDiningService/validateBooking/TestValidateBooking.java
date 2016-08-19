@@ -73,9 +73,9 @@ public class TestValidateBooking extends BaseTest{
 		validate.setFacilityId(facilityId);
 		validate.setProductId(productId);		
 		validate.setServiceStartDate(serviceStartDate);
-		validate.setServicePeriodId(servicePeriodId);
+		validate.setServicePeriodId(servicePeriodId); 
 		validate.sendRequest();
-		TestReporter.logAPI(!validate.getResponseStatusCode().equals("200"), "An error occurred validating an show dining service reservation", validate);
+		TestReporter.logAPI(!validate.getResponseStatusCode().equals("200"), "An error occurred validating an event dining service reservation: " + validate.getFaultString(), validate);
 		return validate;
 	}
 	

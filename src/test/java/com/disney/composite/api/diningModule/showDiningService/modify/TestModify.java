@@ -162,7 +162,7 @@ public class TestModify extends BaseTest{
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		return book;
 	}

@@ -80,6 +80,14 @@ public class TestBook extends BaseTest{
 		book.setParty(hh);
 		book.setAllergies("Egg", "1");
 		book.sendRequest();
+		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges") ||
+				book.getResponse().contains("Row was updated or deleted by another transaction")|| 
+				book.getResponse().contains("existingRootChargeBookEvent") ||
+				book.getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY")||
+				book.getResponse().toLowerCase().contains("org.hibernate.exception.constraintviolationexception")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 10)*1000);
+			book.sendRequest();
+		}
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] was not numeric as expected.");
@@ -94,6 +102,14 @@ public class TestBook extends BaseTest{
 		book.setAllergies("Egg", "1");
 		book.setAllergies("Corn", "2");
 		book.sendRequest();
+		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges") ||
+				book.getResponse().contains("Row was updated or deleted by another transaction")|| 
+				book.getResponse().contains("existingRootChargeBookEvent") ||
+				book.getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY")||
+				book.getResponse().toLowerCase().contains("org.hibernate.exception.constraintviolationexception")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 10)*1000);
+			book.sendRequest();
+		}
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TPS_ID.set(book.getTravelPlanSegmentId());
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] was not numeric as expected.");
@@ -107,6 +123,7 @@ public class TestBook extends BaseTest{
 		book.setParty(hh);
 		RetrieveAllergies retrieveAllergies = new RetrieveAllergies(environment);
 		retrieveAllergies.sendRequest();
+		TestReporter.logAPI(!retrieveAllergies.getResponseStatusCode().equals("200"), "An error occurred during booking: " + retrieveAllergies.getFaultString(), retrieveAllergies);
 		
 		int index = 1;
 		for(String allergy : retrieveAllergies.getAllergies().values()){
@@ -115,6 +132,14 @@ public class TestBook extends BaseTest{
 		}		
 		
 		book.sendRequest();
+		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges") ||
+				book.getResponse().contains("Row was updated or deleted by another transaction")|| 
+				book.getResponse().contains("existingRootChargeBookEvent") ||
+				book.getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY")||
+				book.getResponse().toLowerCase().contains("org.hibernate.exception.constraintviolationexception")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 10)*1000);
+			book.sendRequest();
+		}
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		
 		TPS_ID.set(book.getTravelPlanSegmentId());
@@ -130,7 +155,11 @@ public class TestBook extends BaseTest{
 		book.setReservableResourceId();
 	//	book.setFreezeId();
 		book.sendRequest();
-		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges")){
+		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges") ||
+				book.getResponse().contains("Row was updated or deleted by another transaction")|| 
+				book.getResponse().contains("existingRootChargeBookEvent") ||
+				book.getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY")||
+				book.getResponse().toLowerCase().contains("org.hibernate.exception.constraintviolationexception")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10)*1000);
 			book.sendRequest();
 		}

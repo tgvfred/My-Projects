@@ -36,8 +36,7 @@ public class TestRetrieve extends BaseTest{
 			book.setFreezeId();
 			book.sendRequest();
 		}
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), book.getFaultString(), book);
-		
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking a prerequisite table service reservation: " + book.getFaultString(), book);
 		TPS_ID = book.getTravelPlanSegmentId();
 	}
 	

@@ -23,8 +23,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFacilityId("1010");
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.INVALID_FACILITY_ID);
 		TestReporter.logAPI(!book.getFaultString().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY!! : INVALID FACILITY ID"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.INVALID_FACILITY_ID);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -46,8 +46,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setCommunicationChannel("Invalid Center");
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("communication Channel is required : null"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -79,8 +79,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setTravelPlanId("1111111");
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_NOT_FOUND);
 		TestReporter.logAPI(!book.getFaultString().contains("TRAVEL_PLAN_NOT_FOUND : TRAVEL PLAN NOT FOUND"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_NOT_FOUND);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -103,8 +103,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setParty(party);
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, PartyErrorCode.SALUTATION_INVALID);
 		TestReporter.logAPI(!book.getFaultString().contains("Salutation is invalid : Salutation Mre. is invalid"), book.getFaultString() ,book);
+		validateApplicationError(book, PartyErrorCode.SALUTATION_INVALID);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -127,8 +127,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setParty(party);
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, PartyErrorCode.CREATE_PARTY_ERROR);
 		TestReporter.logAPI(!book.getFaultString().contains("Create Party Error : Please enter valid country code"), book.getFaultString() ,book);
+		validateApplicationError(book, PartyErrorCode.CREATE_PARTY_ERROR);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -150,8 +150,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setSalesChannel("blah");
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.SALES_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("Sales Channel is required : null"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.SALES_CHANNEL_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -173,8 +173,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setRequestNodeValueByXPath("//authorizationNumber", "12345431");
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.INVALID_AUTHORIZATION_CODE);
 		TestReporter.logAPI(!book.getFaultString().contains("INVALID AUTHORIZATION CODE !! : INVALID AUTHORIZATION CODE !"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.INVALID_AUTHORIZATION_CODE);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -196,8 +196,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setProductId( "1491863");
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.DATA_NOT_FOUND_SERVICE_EXCEPTION);
 		TestReporter.logAPI(!book.getFaultString().contains("Data not found. : No Product could be found for  productTypes [] productID=1491863"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.DATA_NOT_FOUND_SERVICE_EXCEPTION);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -219,8 +219,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setRequestNodeValueByXPath("//enterpriseProductId",  "12214");
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.DATA_NOT_FOUND_SERVICE_EXCEPTION);
 		TestReporter.logAPI(!book.getFaultString().contains("Data not found. : No Product could be found for  productTypes [] productID=149863 enterpriseProductID=12214"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.DATA_NOT_FOUND_SERVICE_EXCEPTION);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -242,8 +242,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("-30"));
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.EXCEPTION_RULE_FIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("RESManagement suggests to stop this reservation : Book Date is greater than Service date"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.EXCEPTION_RULE_FIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -265,8 +265,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setServiceStartDateTime(BaseSoapCommands.GET_DATE_TIME.commandAppend("182"));
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.EXCEPTION_RULE_FIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.EXCEPTION_RULE_FIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -287,8 +287,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//primaryGuest", BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -310,8 +310,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//primaryGuest/lastName", BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -333,8 +333,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//primaryGuest/firstName", BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -356,8 +356,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.SALES_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("Sales Channel is required : null"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.SALES_CHANNEL_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -379,8 +379,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("communication Channel is required : null"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -402,8 +402,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setSourceAccountingCenter(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("SOURCER ACCOUNTING CENTER IS REQUIRED! : SOURCER ACCOUNTING CENTER IS REQUIRED!"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.SRC_ACCOUNTING_CENTER_REQUIRED);
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -425,8 +425,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
 		book.setFreezeId(Randomness.generateMessageId());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.INVALID_FACILITY);
 		TestReporter.logAPI(!book.getFaultString().contains("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.INVALID_FACILITY);
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -448,8 +448,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setProductId(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.PRODUCT_ID_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.PRODUCT_ID_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -471,8 +471,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setProductType(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.PRODUCT_TYPE_NAME_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("PRODUCT TYPE NAME IS REQUIRED!! : PRODUCT TYPE NAME IS REQUIRED!!"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.PRODUCT_TYPE_NAME_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -494,8 +494,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.SERVICE_START_DATE_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.SERVICE_START_DATE_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -517,8 +517,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//freezeId",BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.FREEZE_ID_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("Freeze Id is required : FREEZE ID IS REQUIRED"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.FREEZE_ID_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -540,8 +540,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.NO_RESERVABLE_RESOURCE_ID);
 		TestReporter.logAPI(!book.getFaultString().contains("RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.NO_RESERVABLE_RESOURCE_ID);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -563,8 +563,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//partyRoles",BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.INVALID_PARTYMIX);
 		TestReporter.logAPI(!book.getFaultString().contains("Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE"), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.INVALID_PARTYMIX);
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -586,8 +586,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setRequestNodeValueByXPath("//partyRoles/ageType",BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.AGE_TYPE_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("Age Type is required : AGE TYPE IS REQUIRED."), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.AGE_TYPE_REQUIRED);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);
@@ -609,8 +609,8 @@ public class TestBook_Negative extends BaseTest{
 		book.setFreezeId(Randomness.generateMessageId());
 		book.setServicePeriodId(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
-		validateApplicationError(book, DiningErrorCode.SERVICE_PERIOD_REQUIRED);
 		TestReporter.logAPI(!book.getFaultString().contains("ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED."), book.getFaultString() ,book);
+		validateApplicationError(book, DiningErrorCode.SERVICE_PERIOD_REQUIRED);
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("EventDiningServiceIF", "book", true);

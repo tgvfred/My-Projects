@@ -61,7 +61,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("EventDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
@@ -106,7 +106,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
@@ -138,7 +138,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 
@@ -171,7 +171,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 
@@ -204,7 +204,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 
@@ -237,7 +237,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 
@@ -269,7 +269,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("EventDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
@@ -302,7 +302,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("EventDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 //		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
@@ -333,7 +333,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("EventDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 }

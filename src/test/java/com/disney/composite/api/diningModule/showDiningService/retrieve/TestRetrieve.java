@@ -34,7 +34,7 @@ public class TestRetrieve extends BaseTest{
 		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);		
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);		
 		
 		TestReporter.logStep("Retrieve a show dining reservation.");
 		Retrieve retrieve = new Retrieve(environment, "RetrieveDiningEvent");
