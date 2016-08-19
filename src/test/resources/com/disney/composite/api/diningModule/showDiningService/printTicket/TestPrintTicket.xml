@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestPrintTicket_Suite" data-provider-thread-count="3">
-	<parameter name="environment" value="Development" />
+	<parameter name="environment" value="stage_cm" />
 	<test name="TestPrintTicket">
 		<classes>
 			<class name="com.disney.composite.api.diningModule.showDiningService.printTicket.TestPrintTicket"/>

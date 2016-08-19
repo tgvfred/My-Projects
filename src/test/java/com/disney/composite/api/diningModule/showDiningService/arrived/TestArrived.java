@@ -17,12 +17,9 @@ public class TestArrived extends BaseTest{
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
 		try{
-			if(book != null)
-				if(!book.getTravelPlanSegmentId().isEmpty()){
-					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-					cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
-					cancel.sendRequest();
-				}
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
+			cancel.sendRequest();
 		}catch(Exception e){}
 	}
 	

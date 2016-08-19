@@ -43,12 +43,9 @@ public class TestCancel_Negative extends BaseTest{
 	@AfterTest(alwaysRun=true)
 	public void teardown(){
 		try{
-			if(TPS_ID.get() != null)
-				if(!TPS_ID.get().isEmpty()){
-					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-					cancel.setTravelPlanSegmentId(TPS_ID.get());
-					cancel.sendRequest();
-				}
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(TPS_ID.get());
+			cancel.sendRequest();
 		}catch(Exception e){}
 	}
 	

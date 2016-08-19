@@ -1,5 +1,6 @@
 package com.disney.composite.api.diningModule.showDiningService.noShow;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
@@ -34,15 +35,12 @@ public class TestNoShow_Negative extends BaseTest{
 		//logValidItems.set(new LogItems());
 	}
 	
-	@AfterMethod(alwaysRun = true)
+	@AfterClass(alwaysRun = true)
 	public void teardown(){
 		try{
-			if(TPS_ID.get() != null)
-				if(!TPS_ID.get().isEmpty()){
-					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-					cancel.setTravelPlanSegmentId(TPS_ID.get());
-					cancel.sendRequest();
-				}
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(TPS_ID.get());
+			cancel.sendRequest();
 		}catch(Exception e){}
 	}
 
