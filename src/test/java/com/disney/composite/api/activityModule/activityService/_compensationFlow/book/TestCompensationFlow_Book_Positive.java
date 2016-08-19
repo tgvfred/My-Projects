@@ -6,7 +6,7 @@ import com.disney.composite.BaseTest;
 
 public class TestCompensationFlow_Book_Positive extends BaseTest{
 	
-	@Test(groups = {"api", "regression", "activity", "activityService"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "compensation"})
 	public void testCompensationFlow_Positive(){
 		
 	}
