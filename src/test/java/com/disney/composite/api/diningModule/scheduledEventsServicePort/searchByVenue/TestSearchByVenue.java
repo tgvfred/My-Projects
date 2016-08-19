@@ -79,5 +79,6 @@ public class TestSearchByVenue extends BaseTest{
 		res.sendRequest();
 		TestReporter.logAPI(!res.getResponseStatusCode().equals("200"), "An error occurred booking a table service reservation: " + res.getFaultString(), res);
 		TPS_ID = res.getTravelPlanSegmentId();
+		serviceDate = res.getRequestServiceStartDate();
 	}
 }
