@@ -259,13 +259,13 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 			if(!facilityName.isEmpty()) book.setFacilityName(facilityName);
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		if(!environment.equalsIgnoreCase("development") && !getEnvironment().contains("_CM") ){
+	/*	if(!environment.equalsIgnoreCase("development") && !getEnvironment().contains("_CM") ){
 			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
 			resource.setFacilityId(getFacilityId());
 			resource.sendRequest();
 			resource.getReservableResources();
 			book.setReservableResourceId(resource.getFirstReservableResourceId());			
-		}
+		}*/
 
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
