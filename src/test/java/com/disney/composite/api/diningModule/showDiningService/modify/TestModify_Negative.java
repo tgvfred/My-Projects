@@ -45,8 +45,8 @@ public class TestModify_Negative extends BaseTest{
 		hh = new HouseHold(1);
 		book.setParty(hh);
 		book.sendRequest();
-		/*TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
-		TPS_ID.set(book.getTravelPlanSegmentId());*/
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
+		TPS_ID.set(book.getTravelPlanSegmentId());
 	}
 	
 	@Override
@@ -60,12 +60,9 @@ public class TestModify_Negative extends BaseTest{
 	@AfterMethod(alwaysRun = true)
 	public void teardown(){
 		try{
-			if(TPS_ID.get() != null)
-				if(!TPS_ID.get().isEmpty()){
-					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-					cancel.setTravelPlanSegmentId(TPS_ID.get());
-					cancel.sendRequest();
-				}
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(TPS_ID.get());
+			cancel.sendRequest();
 		}catch(Exception e){}
 	}	
 	
@@ -73,6 +70,7 @@ public class TestModify_Negative extends BaseTest{
 	public void invalidAuthorizationNumber(){		
 		TestReporter.logScenario("Invalid Authorization Number");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setAuthorizationNumber("1");
 		sendRequestAndValidateLogs(modify, DiningErrorCode.INVALID_AUTHORIZATION_CODE, "INVALID AUTHORIZATION CODE !! : INVALID AUTHORIZATION CODE !");
 	}
@@ -80,6 +78,7 @@ public class TestModify_Negative extends BaseTest{
 	public void invalidBookDateExceeds180DaysInFuture(){		
 		TestReporter.logScenario("Booking Date Exceeds 180 Days");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(182));
 		sendRequestAndValidateLogs(modify, DiningErrorCode.EXCEPTION_RULE_FIRED,"RESManagement suggests to stop this reservation : Day Guest cannot book a Dining Reservation beyond 180 days from booking date");
 	}
@@ -87,6 +86,7 @@ public class TestModify_Negative extends BaseTest{
 	public void invalidBookDateInPast(){		
 		TestReporter.logScenario("Booking Date In The Past");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(-1));
 		sendRequestAndValidateLogs(modify, DiningErrorCode.EXCEPTION_RULE_FIRED,"RESManagement suggests to stop this reservation : Book Date is greater than Service date");
 	}
@@ -94,6 +94,7 @@ public class TestModify_Negative extends BaseTest{
 	public void invalidCommunicationChannel(){	
 		TestReporter.logScenario("Invalid Communications Channel");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setCommunicationsChannel("abcd");
 		sendRequestAndValidateLogs(modify, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED,"communication Channel is required : null");
 	}
@@ -101,6 +102,7 @@ public class TestModify_Negative extends BaseTest{
 	public void invalidFacilityId(){	
 		TestReporter.logScenario("Invalid Facility ID");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setFacilityId("-1");
 		sendRequestAndValidateLogs(modify, DiningErrorCode.INVALID_FACILITY,"FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!");
 	}
@@ -108,6 +110,7 @@ public class TestModify_Negative extends BaseTest{
 	public void invalidPrimaryGuestCountry(){	
 		TestReporter.logScenario("Invalid Primary Guest Country");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setPrimaryGuestCountry("abcd");
 		sendRequestAndValidateLogs(modify, PartyErrorCode.CREATE_PARTY_ERROR, "Create Party Error : Please enter valid country code");
 	}
@@ -115,6 +118,7 @@ public class TestModify_Negative extends BaseTest{
 	public void invalidPrimaryGuestTitle(){
 		TestReporter.logScenario("Invalid Primary Guest Title");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setPrimaryGuestTitle("abcd");
 		sendRequestAndValidateLogs(modify, PartyErrorCode.SALUTATION_INVALID, "Salutation is invalid : Salutation abcd is invalid");
 	}
@@ -122,6 +126,7 @@ public class TestModify_Negative extends BaseTest{
 	public void invalidProductId(){
 		TestReporter.logScenario("Invalid Product ID");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setProductId("-1");
 		sendRequestAndValidateLogs(modify, DiningErrorCode.PRODUCT_ID_REQUIRED,"PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!");
 	}
@@ -129,6 +134,7 @@ public class TestModify_Negative extends BaseTest{
 	public void invalidSalesChannel(){
 		TestReporter.logScenario("Invalid Sales Channel");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setSalesChannel("abcd");
 		sendRequestAndValidateLogs(modify, DiningErrorCode.SALES_CHANNEL_REQUIRED,"Sales Channel is required : null");
 	}
@@ -137,6 +143,7 @@ public class TestModify_Negative extends BaseTest{
 		String number = "-1";
 		TestReporter.logScenario("Invalid Reservation Number");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setReservationNumber(number);
 		sendRequestAndValidateLogs(modify, DiningErrorCode.RECORD_NOT_FOUND_EXCEPTION,"RECORD NOT FOUND : NO RESERVATION FOUND WITH "+number);
 	}
@@ -144,6 +151,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingCommunicationChannel(){
 		TestReporter.logScenario("Missing Communication Channel");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setCommunicationsChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED,"communication Channel is required : null");
 	}
@@ -151,6 +159,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingFacilityId(){
 		TestReporter.logScenario("Missing Facility ID");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setFreezeId();
 		modify.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.INVALID_FACILITY,"FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!");
@@ -159,6 +168,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingPartyRoleAgeType(){
 		TestReporter.logScenario("Missing Party Role Age Type");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setPartyRoleAgeType(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.AGE_TYPE_REQUIRED,"Age Type is required : AGE TYPE IS REQUIRED.");
 	}
@@ -166,6 +176,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingPartyRoles(){
 		TestReporter.logScenario("Missing Party Role");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/partyRoles", BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.INVALID_PARTYMIX,"Invalid PartyMix. Please send valid partymix : INVALID PARTY SIZE.");
 	}
@@ -173,6 +184,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingPrimaryGuest(){
 		TestReporter.logScenario("Missing Primary Guest");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/primaryGuest", BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED,"Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
 	}
@@ -180,6 +192,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingPrimaryGuestFirstName(){
 		TestReporter.logScenario("Missing Primary Guest First Name");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setPrimaryGuestFirstName(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED,"Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
 	}
@@ -187,6 +200,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingPrimaryGuestLastName(){
 		TestReporter.logScenario("Missing Primary Guest Last Name");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setPrimaryGuestLastName(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.TRAVEL_PLAN_GUEST_REQUIRED,"Travel Plan Guest is required : TRAVEL PLAN GUEST REQUIRED");
 	}
@@ -194,6 +208,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingProductId(){
 		TestReporter.logScenario("Missing Product ID");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setProductId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.PRODUCT_ID_REQUIRED,"PRODUCT ID IS REQUIRED !! : DREAMS/ENTERPRISE PRODUCT ID IS REQUIRED!!");
 	}
@@ -201,6 +216,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingProductType(){
 		TestReporter.logScenario("Missing Product Type");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setProductType(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.PRODUCT_TYPE_NAME_REQUIRED,"PRODUCT TYPE NAME IS REQUIRED!! : PRODUCT TYPE NAME IS REQUIRED!!");
 	}
@@ -208,6 +224,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingReservableResourceID(){
 		TestReporter.logScenario("Missing Reservable Resource ID");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setFreezeId();
 		modify.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
 		logValidItems.get().addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);	
@@ -217,6 +234,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingSalesChannel(){
 		TestReporter.logScenario("Missing Sales Channel");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.SALES_CHANNEL_REQUIRED,"Sales Channel is required : null");
 	}
@@ -224,6 +242,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingServicePeriodId(){
 		TestReporter.logScenario("Missing Service Period ID");
 		Modify modify = modify();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
 		modify.setServicePeriodId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.SERVICE_PERIOD_REQUIRED,"ENTERPRISE SERVICE PERIOD ID IS REQUIRED.! : ENTERPRISE SERVICE PERIOD ID IS REQUIRED.");
 	}
@@ -231,7 +250,8 @@ public class TestModify_Negative extends BaseTest{
 	public void missingServiceStartDate(){
 		TestReporter.logScenario("Missing Service Start Date");
 		Modify modify = modify();
-		modify.setFreezeId();
+		modify.setFreezeId(Randomness.randomAlphaNumeric(36));
+//		modify.setFreezeId();
 		modify.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(modify, DiningErrorCode.SERVICE_START_DATE_REQUIRED,"INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!");
 	}

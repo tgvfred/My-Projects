@@ -379,7 +379,8 @@ public class Book extends ActivityService{
 		if(notSetFreezeId) 	setFreezeId();
 		super.sendRequest();
 		if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
-				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint")){
+				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
+				getResponse().contains("Inconsitent Data : getBookingDate : CampusId is Not found for Location")){
 			if(notSetFreezeId) 	setFreezeId();
 			super.sendRequest();	
 		}
@@ -444,7 +445,7 @@ public class Book extends ActivityService{
 		Freeze freeze = new Freeze(getEnvironment(), "Main");
 
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-		rsInventory.print();
+//		rsInventory.print();
 		String startdate = rsInventory.getValue("START_DATE").contains(" ") 
 				? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
 				: rsInventory.getValue("START_DATE");
@@ -458,7 +459,7 @@ public class Book extends ActivityService{
 		int timesTried = 0;
 		while(freeze.getSuccess().equals("failure") && timesTried < 5){
 			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-			rsInventory.print();
+//			rsInventory.print();
 			startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
 			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
 			setReservableResourceId(rsInventory.getValue("Resource_ID"));

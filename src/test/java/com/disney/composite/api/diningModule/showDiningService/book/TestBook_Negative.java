@@ -1,5 +1,6 @@
 package com.disney.composite.api.diningModule.showDiningService.book;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -10,6 +11,7 @@ import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -23,6 +25,7 @@ public class TestBook_Negative  extends BaseTest{
 			"FacilityMasterServiceSEI;findFacilityByEnterpriseID",
 			"PackagingService;getProducts"};
 	protected ThreadLocal<String[]> expectedLogs = new ThreadLocal<String[]>();
+	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
 	@Override
 	@BeforeMethod(alwaysRun = true)
@@ -31,6 +34,15 @@ public class TestBook_Negative  extends BaseTest{
 		this.environment = environment;
 		hh = new HouseHold(1);
 		logValidItems.set(new LogItems());
+	}
+	
+	@AfterMethod(alwaysRun=true)
+	public void teardown(){
+		try{
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(TPS_ID.get());
+			cancel.sendRequest();			
+		}catch(Exception e){}
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -62,7 +74,7 @@ public class TestBook_Negative  extends BaseTest{
 		book.setCommunicationChannel(Randomness.randomString(4));
 		sendRequestAndValidateFaultString("communication Channel is required : null",  DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED, book);
 	}
-//	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidFacilityId(){
 		expectedLogs.set(new String[1]);
 		TestReporter.logScenario("Invalid Facility ID");
@@ -115,7 +127,6 @@ public class TestBook_Negative  extends BaseTest{
 		expectedLogs.set(new String[1]);
 		TestReporter.logScenario("Missing Facility ID");
 		Book book = book();
-		book.setFreezeId();
 		book.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!",  DiningErrorCode.INVALID_FACILITY, book);
 	}
@@ -126,7 +137,6 @@ public class TestBook_Negative  extends BaseTest{
 		expectedLogs.get()[1] = "PackagingService;getProducts";
 		TestReporter.logScenario("Missing Freeze ID");
 		Book book = book();
-		book.setFreezeId();
 		book.setFreezeId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("Freeze Id is required : FREEZE ID IS REQUIRED",  DiningErrorCode.FREEZE_ID_REQUIRED, book);
 	}
@@ -203,7 +213,6 @@ public class TestBook_Negative  extends BaseTest{
 		expectedLogs.get()[1] = "PackagingService;getProducts";
 		TestReporter.logScenario("Missing Reservable Resource ID");
 		Book book = book();
-		book.setFreezeId();
 		book.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!", DiningErrorCode.NO_RESERVABLE_RESOURCE_ID,book);
 	}
@@ -230,7 +239,6 @@ public class TestBook_Negative  extends BaseTest{
 		expectedLogs.get()[0] = "FacilityMasterServiceSEI;findFacilityByEnterpriseID";
 		TestReporter.logScenario("Missing Service Start Date");
 		Book book = book();
-		book.setFreezeId();
 		book.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!", DiningErrorCode.SERVICE_START_DATE_REQUIRED, book);
 	}
@@ -256,11 +264,14 @@ public class TestBook_Negative  extends BaseTest{
 	private Book book(){
 		Book book = new Book(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
+		book.setFreezeId(Randomness.randomAlphaNumeric(36));
 		return book;
 	}
 	
     private void sendRequestAndValidateFaultString(String fault, ApplicationErrorCode error, Book book){
     	book.sendRequest();
+    	try{TPS_ID.set(book.getTravelPlanSegmentId());}
+    	catch(Exception e){}
 		validateApplicationError(book, error);
     	TestReporter.logAPI(!book.getFaultString().contains(fault), book.getFaultString() ,book);
 		logItems(book);
