@@ -123,6 +123,6 @@ public class TestBook extends BaseTest{
 			
 		}
 			
-		validateLogs(book, logItems, 8000);
+	//	validateLogs(book, logItems, 8000);
 	}
 }

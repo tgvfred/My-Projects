@@ -16,7 +16,7 @@ public class TestBook_Negative extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	
-	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
+//	@Test(groups = {"api", "regression", "dining", "TableServiceDiningService", "negative"})
 	public void invalidFacilityId(){
 		TestReporter.logScenario("Invalid Facility ID");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -167,6 +167,7 @@ public class TestBook_Negative extends BaseTest{
 		TestReporter.logScenario("Missing Facility ID");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId();
 		book.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(book,  DiningErrorCode.INVALID_FACILITY,"FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!");
 	}
@@ -185,6 +186,7 @@ public class TestBook_Negative extends BaseTest{
 		TestReporter.logScenario("Missing Service Start Date");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId();
 		book.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(book,  DiningErrorCode.SERVICE_START_DATE_REQUIRED,"INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!");
 	}
@@ -193,6 +195,7 @@ public class TestBook_Negative extends BaseTest{
 	public void missingFreeze(){
 		TestReporter.logScenario("Missing Freeze ID");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setFreezeId();
 		book.setParty(hh);
 		book.setRequestNodeValueByXPath("//freezeId",BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(book,  DiningErrorCode.FREEZE_ID_REQUIRED,"Freeze Id is required : FREEZE ID IS REQUIRED");
@@ -203,6 +206,7 @@ public class TestBook_Negative extends BaseTest{
 		TestReporter.logScenario("Missing Reservable Resource ID");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setFreezeId();
 		book.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateLogs(book,  DiningErrorCode.NO_RESERVABLE_RESOURCE_ID,"RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!");
 	}

@@ -41,6 +41,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void invalidFacilityId(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId();
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -328,6 +329,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void invalidBookDateExceeds180DaysInFuture(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId();
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -492,6 +494,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void missingFacilityId(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId();
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -575,6 +578,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void missingServiceStartDate(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId();
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -603,6 +607,7 @@ public class TestModify_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative"})
 	public void missingReservableResourceID(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId();
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());

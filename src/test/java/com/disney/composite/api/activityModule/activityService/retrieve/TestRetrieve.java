@@ -27,6 +27,8 @@ public class TestRetrieve extends BaseTest{
 		hh.primaryGuest().setAge("6");
 		book = new Book(this.environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+		book.setReservableResourceId();
+		book.setFreezeId();
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an activity event service reservation: " + book.getFaultString(), book);
 	}
