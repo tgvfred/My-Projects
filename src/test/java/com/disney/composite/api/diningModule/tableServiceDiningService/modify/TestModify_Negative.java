@@ -467,6 +467,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingFacilityId(){
 		TestReporter.logScenario("Missing Facility ID");
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId();
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -523,6 +524,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingServiceStartDate(){
 		TestReporter.logScenario("Missing Service Start Date");
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId();
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());
@@ -551,6 +553,7 @@ public class TestModify_Negative extends BaseTest{
 	public void missingReservableResourceID(){
 		TestReporter.logScenario("Missing Reservable Resource ID");
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setFreezeId();
 		modify.setReservationNumber(res.getConfirmationNumber());
 		modify.setTravelPlanId(res.getTravelPlanId());
 		modify.setParty(res.party());

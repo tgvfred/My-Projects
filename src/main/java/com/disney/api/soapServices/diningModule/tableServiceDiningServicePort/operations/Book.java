@@ -1,14 +1,22 @@
 package com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations;
 
+import com.disney.api.soapServices.availSEModule.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.TableServiceDiningServicePort;
+import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
+import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.AvailSE;
 import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class Book extends TableServiceDiningServicePort {
+	private boolean notSetFreezeId = true;
 	public Book(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
@@ -481,6 +489,88 @@ public class Book extends TableServiceDiningServicePort {
 	 * @param value reservable resource ID
 	 */
 	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails/reservableResourceId", value);}
+	/**
+	 * Retrieves and set a random reservable resource ID in the SOAP request based on Facility ID
+	 */
+	public void setReservableResourceId(){
+		ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
+		resource.setFacilityId(getRequestFacilityId());
+		resource.sendRequest();
+		TestReporter.logAPI(!resource.getResponseStatusCode().equals("200"), "Failed to get Reservable Resource ID", resource);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails/reservableResourceId", resource.getRandomReservableResourceId());		
+	}
+	public String getRequestReservableResourceId(){ return getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails/reservableResourceId");	}
+	
+	@Override
+	public void sendRequest(){
+		if(notSetFreezeId) 	setFreezeId();
+		super.sendRequest();
+
+		if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint")){
+			if(notSetFreezeId) 	setFreezeId();
+			super.sendRequest();	
+		}
+	}
+	public void setFreezeId(){
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rs = null;
+		String freezeId = "";
+		Freeze freeze = new Freeze(getEnvironment(), "Main");
+		//rs = new Recordset(db.getResultSet(AvailSE.getFreezeId(getRequestReservableResourceId(), freeze.getRequestServiceStartDate() + " " + freeze.getRequestServiceStartTime())));
+
+	//	if(rs.getRowCount() == 0){
+			Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+			rsInventory.print();
+			String startdate = rsInventory.getValue("START_DATE").contains(" ") 
+							   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
+						       : rsInventory.getValue("START_DATE");
+							   
+			String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+			freeze.setStartDate(startdate);	
+			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+			freeze.sendRequest();
+			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
+			if(freeze.getSuccess().equals("failure")){				
+				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+				rsInventory.print();
+				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+				setReservableResourceId(rsInventory.getValue("Resource_ID"));
+				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+				freeze.setStartDate(startdate);	
+				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+				freeze.sendRequest();	
+				if(freeze.getSuccess().equals("failure")){				
+					rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+					rsInventory.print();
+					startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+					startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+					setReservableResourceId(rsInventory.getValue("Resource_ID"));
+					freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+					freeze.setStartDate(startdate);	
+					freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+					freeze.sendRequest();	
+					freezeId = freeze.getFreezeID();
+					//setServiceStartDateTime(rs.getValue("FSELL_INVTRY_SRVC_DTS").replace(".0", "").replace(" ", "T"));
+				}else {
+					freezeId = freeze.getFreezeID();
+					setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+				}
+			}else {
+				freezeId = freeze.getFreezeID();
+				setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+			}
+	/*	}else{
+			freezeId = rs.getValue("FREEZE_ID");
+			setServiceStartDateTime(rs.getValue("FSELL_INVTRY_SRVC_DTS").replace(".0", "").replace(" ", "T"));
+		}*/
+		
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/freezeId", freezeId);
+		notSetFreezeId = false;
+	}
+	
 	/**
 	 * Adds travel agency in the SOAP request
 	 * @param agencyIataNumber - travel agency IATA number

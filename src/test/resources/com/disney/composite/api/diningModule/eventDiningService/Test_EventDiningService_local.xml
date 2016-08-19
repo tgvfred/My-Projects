@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<<<<<<< HEAD
 <suite name="EventDiningService_Suite" parallel="methods" thread-count="20" configfailurepolicy="continue">
 	<parameter name="environment" value="stage_cm" />
+=======
+<suite name="EventDiningService_Suite" parallel="methods" thread-count="20" >
+	<parameter name="environment" value="Stage_CM" />
+>>>>>>> 0dafa45bf0b48ab8f47929842e2a075a23eefc44
 	<test name="EventDiningService">
 		<packages>
 			<package name="com.disney.composite.api.diningModule.eventDiningService.*"></package>

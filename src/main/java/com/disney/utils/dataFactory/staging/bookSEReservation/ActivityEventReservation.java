@@ -267,20 +267,20 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		book.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		
-		if(!environment.equalsIgnoreCase("Development") && !environment.equalsIgnoreCase("Latest_CM")){
+		if(!getEnvironment().equalsIgnoreCase("Development")&& !getEnvironment().toLowerCase().contains("latest_cm") ){
 			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
 			resource.setFacilityId(getFacilityId());
 			resource.sendRequest();
 			resource.getReservableResources();
 			book.setReservableResourceId(resource.getFirstReservableResourceId());
 		}
-		
+		book.setFreezeId();
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
 		if(book.getResponse().contains("Row was updated or deleted by another transaction")|| 
-				book.getResponse().contains("existingRootChargeBookEvent") ||
-				book.getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY")){
+				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated") ||
+				book.getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||
+				book.getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			book.sendRequest();
 		}

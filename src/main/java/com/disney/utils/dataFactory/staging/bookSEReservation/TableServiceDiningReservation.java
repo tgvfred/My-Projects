@@ -269,10 +269,12 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
-		if(book.getResponse().contains("Row was updated or deleted by another transaction") || 
-				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")||
-				book.getResponse().contains("Inconsitent Data : Booking Date Not Found for CampusId")){
+		if(book.getResponse().contains("Row was updated or deleted by another transaction") ||
+				book.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID") || 
+				book.getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint ") || 				
+				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+			book.setFreezeId();
 			book.sendRequest();
 		}
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an table service dining service reservation: " + book.getFaultString(), book);

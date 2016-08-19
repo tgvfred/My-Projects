@@ -62,7 +62,7 @@ public class TestBook_Negative  extends BaseTest{
 		book.setCommunicationChannel(Randomness.randomString(4));
 		sendRequestAndValidateFaultString("communication Channel is required : null",  DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED, book);
 	}
-	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
+//	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidFacilityId(){
 		expectedLogs.set(new String[1]);
 		TestReporter.logScenario("Invalid Facility ID");
@@ -115,6 +115,7 @@ public class TestBook_Negative  extends BaseTest{
 		expectedLogs.set(new String[1]);
 		TestReporter.logScenario("Missing Facility ID");
 		Book book = book();
+		book.setFreezeId();
 		book.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("FACILITY ID/NAME IS REQUIRED! : FACILITY ID IS REQUIRED!",  DiningErrorCode.INVALID_FACILITY, book);
 	}
@@ -125,6 +126,7 @@ public class TestBook_Negative  extends BaseTest{
 		expectedLogs.get()[1] = "PackagingService;getProducts";
 		TestReporter.logScenario("Missing Freeze ID");
 		Book book = book();
+		book.setFreezeId();
 		book.setFreezeId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("Freeze Id is required : FREEZE ID IS REQUIRED",  DiningErrorCode.FREEZE_ID_REQUIRED, book);
 	}
@@ -201,6 +203,7 @@ public class TestBook_Negative  extends BaseTest{
 		expectedLogs.get()[1] = "PackagingService;getProducts";
 		TestReporter.logScenario("Missing Reservable Resource ID");
 		Book book = book();
+		book.setFreezeId();
 		book.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!", DiningErrorCode.NO_RESERVABLE_RESOURCE_ID,book);
 	}
@@ -227,6 +230,7 @@ public class TestBook_Negative  extends BaseTest{
 		expectedLogs.get()[0] = "FacilityMasterServiceSEI;findFacilityByEnterpriseID";
 		TestReporter.logScenario("Missing Service Start Date");
 		Book book = book();
+		book.setFreezeId();
 		book.setServiceStartDateTime(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("INVALID  SERVICE START DATE!! : INVALID SERVICE START DATE!!", DiningErrorCode.SERVICE_START_DATE_REQUIRED, book);
 	}
