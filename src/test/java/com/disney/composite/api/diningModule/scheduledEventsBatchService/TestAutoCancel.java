@@ -11,10 +11,13 @@ import com.disney.api.soapServices.folioModule.chargeGroup.operations.RetrieveNo
 import com.disney.composite.BaseTest;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.LogItems;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestAutoCancel extends BaseTest{
-	private String date = Randomness.generateCurrentXMLDate(1);
+	private String date = Randomness.generateCurrentXMLDate(150);
 	private String sourceAccountingCenter = "3";
 	private RetrieveNonGuaranteedGuestChargeGroups retrieve;
 	private String expected_TCG;
@@ -34,12 +37,27 @@ public class TestAutoCancel extends BaseTest{
 		validateLogs(retrieve, logValidItems, 10000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testRetrieveNonGuaranteedGuestChargeGroups")
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCancel(){	
 		TestReporter.logScenario("AutoCancel");	
-		if(retrieve.getAllReservations().size() == 0)
-			throw new SkipException("No reservations were returned by RetrieveNonGuaranteedGuestChargeGroups for the date ["+date+"] and source accounting center ["+sourceAccountingCenter+"].");
-		expected_TCG = retrieve.getAllReservations().get("1");		
+		
+		String ids = "";
+		for(String id : retrieve.getAllReservations().values()){
+			ids += id + ", ";
+		}
+		
+		ids = ids.substring(0,ids.lastIndexOf(","));
+		String sql = "SELECT tcg.TPS_ID, tcg.TC_GRP_NB, tps.TPS_ARVL_DT FROM RES_MGMT.TPS, RES_MGMT.TC_GRP tcg WHERE TPS.TPS_ID = tcg.TPS_ID and tc_grp_nb"
+				+ " in( "+ ids + ") and tcg.CREATE_USR_ID_CD = 'AutoJUnit.us' and tps.TPS_ARVL_DT like ('%:00')";
+		Database db = new OracleDatabase(environment, Database.DREAMS);
+		Recordset rs = new Recordset(db.getResultSet(sql));
+		
+		if(rs.getRowCount() == 0)
+			throw new SkipException("No automated CoMo reservations were returned by RetrieveNonGuaranteedGuestChargeGroups for the date ["+date+"] and source accounting center ["+sourceAccountingCenter+"].");
+		
+		
+		expected_TCG =rs.getValue("TC_GRP_NB");
+		
 		
 		AutoCancel cancel = new AutoCancel(environment, "Main");
 		cancel.setTravelComponentGroupingId(expected_TCG);
