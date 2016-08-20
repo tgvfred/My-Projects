@@ -47,7 +47,7 @@ public class AutoCancel extends ScheduledEventsBatchService{
 		Recordset resultSet;
 		resultSet = new Recordset(odb.getResultSet(query));
 
-		resultSet.print();
+		//resultSet.print();
 		TestReporter.assertTrue(resultSet.getRowCount() > 0, "No Travel Component Group ID was found to be associated with TPS_ID ["+tps_id+"] in the ["+environment+"] environment.");
 		int column = resultSet.getColumnIndex("TCG");
 		return resultSet.getValue(column, 1);

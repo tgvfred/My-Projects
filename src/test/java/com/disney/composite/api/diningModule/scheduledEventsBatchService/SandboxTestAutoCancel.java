@@ -22,6 +22,7 @@ public class SandboxTestAutoCancel extends BaseTest{
 	
 	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testRetrieveNonGuaranteedGuestChargeGroups(){
+		this.environment = "Stage_CM";
 		TestReporter.logScenario("RetrieveNonGuaranteedGuestChargeGroups");
 		retrieve = new RetrieveNonGuaranteedGuestChargeGroups(environment);
 		retrieve.setRunDate(date);
@@ -40,11 +41,20 @@ public class SandboxTestAutoCancel extends BaseTest{
 		if(retrieve.getAllReservations().size() == 0)
 			throw new SkipException("No reservations were returned by RetrieveNonGuaranteedGuestChargeGroups for the date ["+date+"] and source accounting center ["+sourceAccountingCenter+"].");
 		expected_TCG = retrieve.getAllReservations().get("1");
-		
+
+		this.environment = "Stage_CM";
 		
 		AutoCancel cancel = new AutoCancel(environment, "Main");
-		cancel.setTravelComponentGroupingId(expected_TCG);
-		cancel.sendRequest();
+		for(int size = 1;  size <= retrieve.getAllReservations().size() ; size++){
+			
+			expected_TCG = retrieve.getAllReservations().get(String.valueOf(size));
+			cancel.setTravelComponentGroupingId(expected_TCG);
+			cancel.sendRequest();
+			System.out.println(size);
+			if(cancel.getResponseStatusCode().equals("200")) break;
+		}
+
+
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred checking out a reservation: " + cancel.getFaultString(), cancel);
 		actual_TCG = cancel.getTravelComponentGroupIdUsingTPS(cancel.getTravelPlanSegmentId());
 		TestReporter.assertEquals(expected_TCG, actual_TCG, "Verify that the actual travel component grouping number ["+actual_TCG+"] matches the expected travel component grouping number ["+expected_TCG+"].");
@@ -57,8 +67,9 @@ public class SandboxTestAutoCancel extends BaseTest{
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateLogs(cancel, logValidItems, 10000);
 	}
-	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoCancel")
+//	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoCancel")
 	public void testAutoCancel_InvalidReservationStatus(){
+		this.environment = "Stage_CM";
 		TestReporter.logScenario("AutoCancel_InvalidReservationStatus");
 		if(expected_TCG == null)expected_TCG = retrieve.getAllReservations().get("1");
 		AutoCancel cancel = new AutoCancel(environment, "Main");
