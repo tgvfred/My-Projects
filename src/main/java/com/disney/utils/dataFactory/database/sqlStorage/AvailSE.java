@@ -19,8 +19,8 @@ public class AvailSE {
 				 " and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd') >= '" +date + "' " +
 				 " and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd') <  to_Char(sysdate + 30, 'yyyy-mm-dd') " +
 				 " and b.RSRVBL_RSRC_ID = '" + resourceId + "' " +
-				 " and (AUTH_INVTRY_CN > 0 AND (BK_CN + FREEZE_CN) < AUTH_INVTRY_CN) " +
-				 " and rownum = 1 " + 
+				 " and (AUTH_INVTRY_CN > 0 AND (BK_CN + FREEZE_CN) < AUTH_INVTRY_CN)) " +
+				 " where rownum = 1 " + 
 				 " order by fsell_invtry_srvc_dts";
 	}
 	
