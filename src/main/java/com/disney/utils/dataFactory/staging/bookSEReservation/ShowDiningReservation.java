@@ -277,19 +277,14 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		book.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		if(!getEnvironment().equalsIgnoreCase("Development") && !getEnvironment().contains("_CM") ){
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			resource.getReservableResources();
-			book.setReservableResourceId(resource.getFirstReservableResourceId());
-		}
-		
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
 		if(book.getResponse().contains("Row was updated or deleted by another transaction")|| 
+				book.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID") || 
+				book.getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint ") || 	
 				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+			book.setFreezeId();
 			book.sendRequest();
 		}
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an show dining service reservation: " +book.getFaultString(), book);

@@ -24,7 +24,6 @@ import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.opera
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveInventoryOverideReasons;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveMassCancelReasons;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveReprintReasons;
-import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveReservationsForAutoCheckout;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveRoles;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveSalesChannels;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveSpecialEvents;
@@ -145,15 +144,6 @@ public class ScheduledEventsServices {
 		RetrieveReprintReasons retrieveReprintReasons = new RetrieveReprintReasons(environment);
 		sendRequestAndValidateResponse(retrieveReprintReasons, "An error occurred retrieving reprint reasons: ");
 		return retrieveReprintReasons;
-	}
-	public RetrieveReservationsForAutoCheckout retrieveReservationsForAutoCheckout(String environment, String scenario, String dateEqualCondition, 
-			String processionDateDaysOut, String sourceAccountingCenter){
-		RetrieveReservationsForAutoCheckout retrieveReservationsForAutoCheckout = new RetrieveReservationsForAutoCheckout(environment, scenario);
-		if(!dateEqualCondition.isEmpty())retrieveReservationsForAutoCheckout.setDateEqualCondition(dateEqualCondition);
-		if(!processionDateDaysOut.isEmpty())retrieveReservationsForAutoCheckout.setProcessDateDaysOut(processionDateDaysOut);
-		if(!sourceAccountingCenter.isEmpty())retrieveReservationsForAutoCheckout.setSourceAccountingCenter(sourceAccountingCenter);
-		sendRequestAndValidateResponse(retrieveReservationsForAutoCheckout, "An error occurred retrieving reservations for autocheckout: ");
-		return retrieveReservationsForAutoCheckout;
 	}
 	public RetrieveRoles retrieveRoles(String environment){
 		RetrieveRoles retrieveRoles = new RetrieveRoles(environment);
@@ -488,13 +478,6 @@ public class ScheduledEventsServices {
 		TestReporter.assertTrue(searchByAgency.getNumberOfReservation() > 0, "Verify that reservations were returned for IATA ["+iataNumber+"]");
 		try{book.cancel();}
 		catch (Exception e){}
-	}
-	@Test
-	public void testRetrieveReservationsForAutoCheckout(){
-		TestReporter.logScenario("Retrieve Reservations For Auto Checkout");
-		RetrieveReservationsForAutoCheckout retrieve = ses.get().retrieveReservationsForAutoCheckout(environment, "ForAcctCntrSE_WDW", "!=", "", "");
-		int number = retrieve.getNumberOfReservations();
-		TestReporter.assertTrue(number > 0, "Verify that reservations were returned.");
 	}
 	@Test
 	public void testRetrieveDiningReservations(){

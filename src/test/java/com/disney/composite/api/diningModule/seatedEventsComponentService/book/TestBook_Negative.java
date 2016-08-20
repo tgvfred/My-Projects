@@ -158,8 +158,8 @@ public class TestBook_Negative extends BaseTest{
 	
 	private void sendRequestValidateLogs(Book book, String faultString, ApplicationErrorCode errorCode){
 		book.sendRequest();
-		validateApplicationError(book, errorCode);
 		TestReporter.logAPI(!book.getFaultString().contains(faultString), book.getFaultString(), book);
+		validateApplicationError(book, errorCode);
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("SeatedEventsComponentService", "book", true);

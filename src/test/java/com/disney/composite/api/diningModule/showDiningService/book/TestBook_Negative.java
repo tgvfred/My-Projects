@@ -1,5 +1,6 @@
 package com.disney.composite.api.diningModule.showDiningService.book;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -10,6 +11,7 @@ import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.PartyErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -23,6 +25,7 @@ public class TestBook_Negative  extends BaseTest{
 			"FacilityMasterServiceSEI;findFacilityByEnterpriseID",
 			"PackagingService;getProducts"};
 	protected ThreadLocal<String[]> expectedLogs = new ThreadLocal<String[]>();
+	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
 	@Override
 	@BeforeMethod(alwaysRun = true)
@@ -31,6 +34,15 @@ public class TestBook_Negative  extends BaseTest{
 		this.environment = environment;
 		hh = new HouseHold(1);
 		logValidItems.set(new LogItems());
+	}
+	
+	@AfterMethod(alwaysRun=true)
+	public void teardown(){
+		try{
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(TPS_ID.get());
+			cancel.sendRequest();			
+		}catch(Exception e){}
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
@@ -252,11 +264,14 @@ public class TestBook_Negative  extends BaseTest{
 	private Book book(){
 		Book book = new Book(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
+		book.setFreezeId(Randomness.randomAlphaNumeric(36));
 		return book;
 	}
 	
     private void sendRequestAndValidateFaultString(String fault, ApplicationErrorCode error, Book book){
     	book.sendRequest();
+    	try{TPS_ID.set(book.getTravelPlanSegmentId());}
+    	catch(Exception e){}
 		validateApplicationError(book, error);
     	TestReporter.logAPI(!book.getFaultString().contains(fault), book.getFaultString() ,book);
 		logItems(book);

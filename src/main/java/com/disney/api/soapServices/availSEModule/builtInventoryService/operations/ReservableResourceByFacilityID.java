@@ -10,13 +10,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.disney.api.soapServices.availSEModule.builtInventoryService.BuiltInventoryService;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 
 public class ReservableResourceByFacilityID extends BuiltInventoryService{
 	ReservableResource firstReservableResource;
 	String firstReservableResourceId;
-	
+	int availibleResources = 0;
 	public ReservableResourceByFacilityID(String environment, String scenario) {
 		super(environment);
 
@@ -33,21 +34,37 @@ public class ReservableResourceByFacilityID extends BuiltInventoryService{
 		Map<String, ReservableResource> resources = new HashMap<String, ReservableResource>();
 		NodeList reservableResourceArrays = XMLTools.getNodeList(getResponseDocument(), "/Envelope/Body/reservableResourceByFacilityIDResponse/reservableResourceArray");
 		
-		for(int node = 0; node < reservableResourceArrays.getLength() - 1; node++){
+		for(int node = 0; node < reservableResourceArrays.getLength() ; node++){
 			resources.put("resource" + String.valueOf(node), new ReservableResource(reservableResourceArrays.item(node)));
 		}
 		firstReservableResource  = resources.get("resource0");
 		firstReservableResourceId = firstReservableResource.getReservableResourceId();
 		return resources;
 	}
-	
+	public int getAvailibleResources(){return availibleResources;}
 	public ReservableResource getFirstReservableResource(){return firstReservableResource;}
 	public String getFirstReservableResourceId(){
 		if(firstReservableResourceId == null) getReservableResources();
 		return firstReservableResourceId;
 	}
 	
-	class ReservableResource{
+	public String getRandomReservableResourceId(){
+		Map<String, ReservableResource> resources = getReservableResources();
+		int randomId = Randomness.randomNumberBetween(0, resources.size());
+		int currentId = 0;
+		String resourceId = getFirstReservableResourceId();
+		for (ReservableResource resource : resources.values()){
+			if(currentId == randomId){
+				resourceId = resource.getReservableResourceId();
+				break;
+			}
+
+			currentId++;
+		}
+		return resourceId;
+	}
+	
+	public class ReservableResource{
 		String effStartDateTime;
 		String facilityId;
 		String reservableResourceId;
