@@ -20,7 +20,7 @@ public class SandboxTestAutoCancel extends BaseTest{
 	private String expected_TCG;
 	private String actual_TCG;
 	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
+	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testRetrieveNonGuaranteedGuestChargeGroups(){
 		TestReporter.logScenario("RetrieveNonGuaranteedGuestChargeGroups");
 		retrieve = new RetrieveNonGuaranteedGuestChargeGroups(environment);
@@ -34,7 +34,7 @@ public class SandboxTestAutoCancel extends BaseTest{
 		validateLogs(retrieve, logValidItems, 10000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testRetrieveNonGuaranteedGuestChargeGroups")
+	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testRetrieveNonGuaranteedGuestChargeGroups")
 	public void testAutoCancel(){	
 		TestReporter.logScenario("AutoCancel");	
 		if(retrieve.getAllReservations().size() == 0)
@@ -57,7 +57,7 @@ public class SandboxTestAutoCancel extends BaseTest{
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateLogs(cancel, logValidItems, 10000);
 	}
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoCancel")
+	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoCancel")
 	public void testAutoCancel_InvalidReservationStatus(){
 		TestReporter.logScenario("AutoCancel_InvalidReservationStatus");
 		if(expected_TCG == null)expected_TCG = retrieve.getAllReservations().get("1");
@@ -77,7 +77,7 @@ public class SandboxTestAutoCancel extends BaseTest{
 		logInvalidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateNotInLogs(cancel, logInvalidItems);
 	}
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
+	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testAutoCancel_MissingRunDate(){
 		TestReporter.logScenario("RetrieveNonGuaranteedGuestChargeGroups_MissingRunDate");
 		RetrieveNonGuaranteedGuestChargeGroups retrieve = new RetrieveNonGuaranteedGuestChargeGroups(environment);
@@ -90,7 +90,7 @@ public class SandboxTestAutoCancel extends BaseTest{
 		logValidItems.addItem("ChargeGroupIF", "retrieveNonGuaranteedGuestChargeGroups", false);
 		validateLogs(retrieve, logValidItems, 10000);
 	}
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
+	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCancel_MissingSourceAccountingCenter(){
 		TestReporter.logScenario("RetrieveNonGuaranteedGuestChargeGroups_MissingSourceAccountingCenter");
 		RetrieveNonGuaranteedGuestChargeGroups retrieve = new RetrieveNonGuaranteedGuestChargeGroups(environment);
@@ -105,7 +105,7 @@ public class SandboxTestAutoCancel extends BaseTest{
 		logValidItems.addItem("ChargeGroupIF", "retrieveNonGuaranteedGuestChargeGroups", true);
 		validateLogs(retrieve, logValidItems);
 	}
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
+	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
 	public void testAutoCancel_NoData(){
 		TestReporter.logScenario("RetrieveNonGuaranteedGuestChargeGroups_NoData");
 		RetrieveNonGuaranteedGuestChargeGroups retrieve = new RetrieveNonGuaranteedGuestChargeGroups(environment);
@@ -118,7 +118,7 @@ public class SandboxTestAutoCancel extends BaseTest{
 		logValidItems.addItem("ChargeGroupIF", "retrieveNonGuaranteedGuestChargeGroups", true);		
 		validateLogs(retrieve, logValidItems, 10000);
 	}	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
+	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCancel_InvalidTcg(){
 		TestReporter.logScenario("AutoCancel_InvalidTcg");
 		AutoCancel cancel = new AutoCancel(environment, "Main");
@@ -131,7 +131,7 @@ public class SandboxTestAutoCancel extends BaseTest{
 		logValidItems.addItem("ScheduledEventsComponentServiceIF", "autoCancel", true);
 		validateLogs(cancel, logValidItems, 10000);
 	}
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
+	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testAutoCancel_MissingTcg(){
 		TestReporter.logScenario("AutoCancel_MissingTcg");
 		AutoCancel cancel = new AutoCancel(environment, "Main");
