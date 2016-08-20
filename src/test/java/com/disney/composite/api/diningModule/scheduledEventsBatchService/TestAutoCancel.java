@@ -14,7 +14,7 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 
 public class TestAutoCancel extends BaseTest{
-	private String date = Randomness.generateCurrentXMLDate(45);
+	private String date = Randomness.generateCurrentXMLDate(1);
 	private String sourceAccountingCenter = "3";
 	private RetrieveNonGuaranteedGuestChargeGroups retrieve;
 	private String expected_TCG;
@@ -39,15 +39,11 @@ public class TestAutoCancel extends BaseTest{
 		TestReporter.logScenario("AutoCancel");	
 		if(retrieve.getAllReservations().size() == 0)
 			throw new SkipException("No reservations were returned by RetrieveNonGuaranteedGuestChargeGroups for the date ["+date+"] and source accounting center ["+sourceAccountingCenter+"].");
+		expected_TCG = retrieve.getAllReservations().get("1");		
+		
 		AutoCancel cancel = new AutoCancel(environment, "Main");
-		for(int size = 1;  size <= retrieve.getAllReservations().size() ; size++){
-			
-			expected_TCG = retrieve.getAllReservations().get(String.valueOf(size));
-			cancel.setTravelComponentGroupingId(expected_TCG);
-			cancel.sendRequest();
-			if(cancel.getResponseStatusCode().equals("200")) break;
-		}
-
+		cancel.setTravelComponentGroupingId(expected_TCG);
+		cancel.sendRequest();
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred checking out a reservation: " + cancel.getFaultString(), cancel);
 		actual_TCG = cancel.getTravelComponentGroupIdUsingTPS(cancel.getTravelPlanSegmentId());
 		TestReporter.assertEquals(expected_TCG, actual_TCG, "Verify that the actual travel component grouping number ["+actual_TCG+"] matches the expected travel component grouping number ["+expected_TCG+"].");
