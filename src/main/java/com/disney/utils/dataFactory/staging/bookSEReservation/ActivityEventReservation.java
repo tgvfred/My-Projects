@@ -52,6 +52,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	private String guestAgentId = "0";	// Travel Agent ID associated with the guest
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
+	private String freezeStartDate;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -116,6 +117,11 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * @return String, facility of the current reservation
 	 */
 	@Override public String getFacilityId(){return this.facilityId;}
+	
+	@Override
+	public void setFreezeStartDate(String startDate){
+		this.freezeStartDate = startDate;
+	}
 	/**
 	 * Retrieves the facility ID of the current reservation
 	 * @return String, facility of the current reservation
@@ -209,6 +215,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * Retrieve the status from the response of modifying a reservation
 	 * @return String, status from modifying a reservation
 	 */
+	@Override public void setTravelPlanId(String tpId) {travelPlanId= tpId;}
 	@Override public String getModifyResponseStatus(){return ActivityEventReservation.this.modifyStatus;}
 	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
 	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
@@ -264,7 +271,8 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 			if(!facilityName.isEmpty()) book.setFacilityName(facilityName);
 		if(!this.productType.isEmpty()) book.setProductType(this.productType);
 		book.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
-		book.setServiceStartDateTime(getServiceStartDate());
+		book.setServiceStartDateTime(getServiceStartDate());	
+		if(freezeStartDate != null) book.setFreezeId("",freezeStartDate);
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
 		book.setFreezeId();

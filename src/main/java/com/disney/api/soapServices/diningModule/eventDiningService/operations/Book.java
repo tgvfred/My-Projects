@@ -183,6 +183,49 @@ public class Book extends EventDiningService {
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
 		notSetFreezeId = false;
 	}
+	
+	public void setFreezeId(String throwaway, String startdate){
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rs = null;
+		Freeze freeze = new Freeze(getEnvironment(), "Main");
+		String freezeId = "";
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndSpecificDate(getRequestFacilityId(), startdate)));
+		
+		startdate = rsInventory.getValue("START_DATE").contains(" ") 
+						   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
+					       : rsInventory.getValue("START_DATE");
+						   
+		String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+		setReservableResourceId(rsInventory.getValue("Resource_ID"));
+		freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+		freeze.setStartDate(startdate);	
+		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+		freeze.sendRequest();
+		TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
+		int timesTried = 0;
+		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
+			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+			
+			startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+			freeze.setStartDate(startdate);	
+			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+			freeze.sendRequest();	
+			if(freeze.getSuccess().equals("failure")) timesTried++;
+		}
+
+		if(freeze.getSuccess().equals("failure")){
+			TestReporter.logAPI(true, "Could not Freeze Inventory", freeze);
+		}
+		freezeId = freeze.getFreezeID();
+		setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+		
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		notSetFreezeId = false;
+	}
+	
 	public void setFreezeId(String freezeId){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
 		notSetFreezeId = false;

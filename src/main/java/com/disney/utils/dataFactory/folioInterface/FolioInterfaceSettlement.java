@@ -22,6 +22,11 @@ public class FolioInterfaceSettlement extends FolioInterface{
 		setTravelPlanId(seRes.getTravelPlanId());
 		setLocationId("9");  // This is the location ID for "System-WDW Scheduled Events - Guest  Facing" as it is found in the Dreams.RSRC_INV.WRK_LOC table
 	}
+	public FolioInterfaceSettlement(ScheduledEventReservation seRes, String env){
+		setEnvironment(env);
+		setTravelPlanId(seRes.getTravelPlanId());
+		setLocationId("9");  // This is the location ID for "System-WDW Scheduled Events - Guest  Facing" as it is found in the Dreams.RSRC_INV.WRK_LOC table
+	}
 	/**
 	 * Constructor intended for use with an instance of the ReservationDecorator which contains a booked Resort reservation
 	 * @param resDec - ReservationDecorator, an instance of the ReservationDecorator which should contain a booked Resort reservation

@@ -53,6 +53,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	private String guestAgentId = "0";	// Travel Agent ID associated with the guest
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
+	private String freezeStartDate;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -213,10 +214,14 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 */
 	@Override
 	public String getModifyResponseStatus(){return this.modifyStatus;}
-	
+	@Override public void setTravelPlanId(String tpId) {travelPlanId= tpId;}
 	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
 	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
-	@Override public String getTravelAgencyId(){return agencyId;}
+	@Override public String getTravelAgencyId(){return agencyId;}	
+	@Override
+	public void setFreezeStartDate(String startDate){
+		this.freezeStartDate = startDate;
+	}
 	/**
 	 * Defines the facility ID, service start date, service period, and product ID for the current 
 	 * reservation and invokes a method that books the reservation
@@ -225,6 +230,8 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 * @param servicePeriod - service period ID for the current reservation
 	 * @param productId - product ID for the current reservation
 	 */
+
+	
 	@Override
 	public void book(String facilityID, String startDate, String servicePeriod, String productId) {
 		this.facilityId = facilityID;
@@ -265,10 +272,11 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		if(facilityName != null)
 			if(!facilityName.isEmpty()) eventDiningBook.setFacilityName(facilityName);
 		if(this.productType != null) if(!this.productType.isEmpty()) eventDiningBook.setProductType(this.productType);
+		if(travelPlanId != null) eventDiningBook.setTravelPlanId(travelPlanId);
 		eventDiningBook.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		eventDiningBook.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){eventDiningBook.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
-		
+		if(freezeStartDate != null) eventDiningBook.setFreezeId("",freezeStartDate);
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		eventDiningBook.sendRequest();
 		if(eventDiningBook.getResponse().contains("Row was updated or deleted by another transaction")|| 

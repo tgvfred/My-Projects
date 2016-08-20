@@ -52,6 +52,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	private String guestAgentId = "0";	// Travel Agent ID associated with the guest
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
+	private String freezeStartDate;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -83,6 +84,10 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 * @return String, current travel plan ID
 	 */
 	@Override public String getTravelPlanId(){return this.travelPlanId;}
+	@Override
+	public void setFreezeStartDate(String startDate){
+		this.freezeStartDate = startDate;
+	}
 	/**
 	 * Retrieves the confirmation number (also known as the reservation number or travel plan segment ID)
 	 * @return String, current confirmation number
@@ -202,6 +207,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	/**
 	 * Returns the primary guest age
 	 */
+	@Override public void setTravelPlanId(String tpId) {travelPlanId= tpId;}
 	@Override public String getPrimaryGuestAge() {return this.primaryGuestAge;}
 	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
 	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
@@ -255,6 +261,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		book.setFacilityId(getFacilityId());		//FAC.FAC_ID
 		book.setServicePeriosId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		book.setServiceStartDateTime(getServiceStartDate());
+		if(freezeStartDate != null) book.setFreezeId("",freezeStartDate);
 		if(facilityName != null)
 			if(!facilityName.isEmpty()) book.setFacilityName(facilityName);
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	

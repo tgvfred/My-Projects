@@ -43,10 +43,12 @@ public interface ScheduledEventReservation{
 	public void setFacilityId(String facilityId);
 	public void setProductId(String productId);
 	public void setProductType(String productType);
+	public void setTravelPlanId(String travelPlanId);
 	public void setBookingScenario(String scenario);
 	public void setSourceAccountingCenter(String sourceAccountingcenter);
 	public void setServiceStartDate(String date);
 	public void setFacilityName(String name);
+	public void setFreezeStartDate(String startDate);
 	// Interfaces for methods to generate and set a household
 	public HouseHold party();
 	public void setParty(HouseHold party);	

@@ -59,6 +59,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	private String guestAgentId = "0";	// Travel Agent ID associated with the guest
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
+	private String freezeStartDate;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -79,6 +80,10 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	public ShowDiningReservation(String environment, HouseHold party){
 		this.environment = environment;
 		this.party = party;
+	}
+	@Override
+	public void setFreezeStartDate(String startDate){
+		this.freezeStartDate = startDate;
 	}
 	/**
 	 * Retrieves the environment under test
@@ -219,6 +224,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	 * Retrieve the status from the response of modifying a reservation
 	 * @return String, status from modifying a reservation
 	 */
+	@Override public void setTravelPlanId(String tpId) {travelPlanId= tpId;}
 	@Override
 	public String getModifyResponseStatus(){return this.modifyStatus;}
 	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
@@ -275,8 +281,9 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 			if(!this.productType.isEmpty()) book.setProductType(this.productType);
 		book.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		book.setServiceStartDateTime(getServiceStartDate());
+		if(freezeStartDate != null) book.setFreezeId("",freezeStartDate);
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
-
+		if(travelPlanId != null) book.setTravelPlanId(travelPlanId);
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
 		if(book.getResponse().contains("Row was updated or deleted by another transaction")|| 
