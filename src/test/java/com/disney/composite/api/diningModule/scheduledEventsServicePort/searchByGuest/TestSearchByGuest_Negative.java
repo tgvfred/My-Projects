@@ -147,7 +147,7 @@ public class TestSearchByGuest_Negative extends BaseTest{
 		search.setReservationNumber(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setCancellationNumber(BaseSoapCommands.REMOVE_NODE.toString());
 		search.setGuestOdsIds("-1");
-		sendRequestAndValidateLogs(search, "No travel plan data found", LiloSystemErrorCode.UNEXPECTED_ERROR);
+		sendRequestAndValidateLogs(search, "No travel plan data found", DiningErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testInvalidServiceStartDateOnly(){

@@ -21,7 +21,7 @@ public class AvailSE {
 				 " and b.RSRVBL_RSRC_ID = '" + resourceId + "' " +
 				 " and (AUTH_INVTRY_CN > 0 AND (BK_CN + FREEZE_CN) < AUTH_INVTRY_CN)) " +
 				 " where rownum = 1 " + 
-				 " order by fsell_invtry_srvc_dts";
+				 " order by Start_Date";
 	}
 	
 	public static String getReservableResourceByFacilityAndDate(String facilityId, String date){
