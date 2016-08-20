@@ -37,7 +37,7 @@ public class TestAutoCancel extends BaseTest{
 		validateLogs(retrieve, logValidItems, 10000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testRetrieveNonGuaranteedGuestChargeGroups")
 	public void testAutoCancel(){	
 		TestReporter.logScenario("AutoCancel");	
 		
