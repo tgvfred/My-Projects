@@ -469,10 +469,12 @@ public class FolioInterface {
 	 */
 	protected void retrieveFolioBalanceDue(){
 		retrieveBalance = new RetrieveFolioBalanceDue(getEnvironment(), "UI booking");
+		TestReporter.logStep("Get Folio information for Travel Plan [" + getTravelPlanId() + "]");
 		retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getTravelPlanId());
 		retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
 		try{retrieveBalance.setLocationId(getLocationId());}
 		catch(XPathNullNodeValueException e){retrieveBalance.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());}
+		TestReporter.logStep("Get Folio information for Travel Plan [" + getTravelPlanId() + "]");
 		retrieveBalance.sendRequest();
 		TestReporter.logAPI(!retrieveBalance.getResponseStatusCode().equals("200"), "An error occurred retrieving the folio balance due.", retrieveBalance);	
 		setBalanceDue(retrieveBalance.getPaymentRequired());

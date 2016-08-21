@@ -1,5 +1,6 @@
 package com.disney.utils.dataFactory.staging.bookSEReservation;
 
+import com.disney.utils.dataFactory.folioInterface.Folio;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 /**
  * This class contains interfaces that will be implemented by dining and activity service generators
@@ -16,6 +17,8 @@ public interface ScheduledEventReservation{
 	public static final String ADDON = "DinnerShowWithAddOn";
 	public static final String SPECIALREQUESTS = "SpecialRequests";
 	
+	public Folio folio();
+	public Folio folio(String environment);
 	// Getters used to retrieve field values
 	public String getEnvironment();
 	public String getConfirmationNumber();

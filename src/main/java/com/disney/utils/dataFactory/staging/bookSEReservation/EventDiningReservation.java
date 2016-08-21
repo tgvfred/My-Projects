@@ -12,6 +12,7 @@ import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.folioInterface.Folio;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 /**
@@ -54,6 +55,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
 	private String freezeStartDate;
+	private Folio folio;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -73,6 +75,17 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	public EventDiningReservation(String environment, HouseHold party){
 		this.environment = environment;
 		this.party = party;
+	}
+	
+
+	public Folio folio() {
+		if(folio == null) return new Folio(this);
+		return folio;
+	}
+
+	public Folio folio(String environment) {
+		if(folio == null) return new Folio(this, environment);
+		return folio;
 	}
 	/**
 	 * Retrieves the environment under test
@@ -264,7 +277,6 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 * retrieval is performed to allow information to be retrieved for validation purposes.
 	 */
 	private void book(){
-		TestReporter.logStep("Book an event dining reservation.");
 		Book eventDiningBook = new Book(getEnvironment(), this.bookingScenario);
 		eventDiningBook.setParty(party());		
 		eventDiningBook.setFacilityId(getFacilityId());		//FAC.FAC_ID
@@ -277,7 +289,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		eventDiningBook.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){eventDiningBook.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 		if(freezeStartDate != null) eventDiningBook.setFreezeId("",freezeStartDate);
-		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+		TestReporter.logStep("Book an Event dining reservation");
 		eventDiningBook.sendRequest();
 		if(eventDiningBook.getResponse().contains("Row was updated or deleted by another transaction")|| 
 				eventDiningBook.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")||
@@ -343,7 +355,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 */
 	@Override
 	public void retrieve(){		
-		TestReporter.logStep("Retrieve an event dining reservation.");
+		TestReporter.logStep("Retrieve an Event dining reservation for Reservation ["+getConfirmationNumber()+"]");
 		Retrieve retrieve = new Retrieve(getEnvironment(), "RetrieveDiningEvent");
 		retrieve.setReservationNumber(getConfirmationNumber());
 		retrieve.sendRequest();

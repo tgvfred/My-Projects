@@ -454,8 +454,9 @@ public class Book extends ActivityService{
 		freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));
 		freeze.setStartDate(startdate);
 		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+		TestReporter.logStep("Generating Freeze ID for Reservable Resource ["+rsInventory.getValue("Resource_ID")+"]");
 		freeze.sendRequest();
-		TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
+//		TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 		int timesTried = 0;
 		while(freeze.getSuccess().equals("failure") && timesTried < 5){
 			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
@@ -469,9 +470,9 @@ public class Book extends ActivityService{
 			freeze.sendRequest();
 			if(freeze.getSuccess().equals("failure")) timesTried++;
 		}
-		if(freeze.getSuccess().equals("failure")){
-			TestReporter.logAPI(true, "Could not Freeze Inventory", freeze);
-		}
+//		if(freeze.getSuccess().equals("failure")){
+			TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
+//		}
 		freezeId = freeze.getFreezeID();
 		setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/freezeId", freezeId);
@@ -494,6 +495,7 @@ public class Book extends ActivityService{
 		freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));
 		freeze.setStartDate(startdate);
 		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+		TestReporter.logStep("Generating Freeze ID for Reservable Resource ["+rsInventory.getValue("Resource_ID")+"]");
 		freeze.sendRequest();
 		TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 		int timesTried = 0;

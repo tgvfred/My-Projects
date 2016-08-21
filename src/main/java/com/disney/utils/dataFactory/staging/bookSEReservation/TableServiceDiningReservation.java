@@ -12,6 +12,7 @@ import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.op
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.folioInterface.Folio;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 /**
@@ -53,6 +54,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
 	private String freezeStartDate;
+	private Folio folio;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -73,6 +75,16 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	public TableServiceDiningReservation(String environment, HouseHold party){
 		this.environment = environment;
 		this.party = party;
+	}
+
+	public Folio folio() {
+		if(folio == null) return new Folio(this);
+		return folio;
+	}
+
+	public Folio folio(String environment) {
+		if(folio == null) return new Folio(this, environment);
+		return folio;
 	}
 	/**
 	 * Retrieves the environment under test
@@ -255,7 +267,6 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 * retrieval is performed to allow information to be retrieved for validation purposes.
 	 */
 	private void book(){
-		TestReporter.logStep("Book an table service dining reservation.");
 		Book book = new Book(getEnvironment(), this.bookingScenario);
 		book.setParty(party());		
 		book.setFacilityId(getFacilityId());		//FAC.FAC_ID
@@ -265,8 +276,8 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		if(facilityName != null)
 			if(!facilityName.isEmpty()) book.setFacilityName(facilityName);
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
-
-		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+		if(travelPlanId != null) book.setTravelPlanId(travelPlanId);
+		TestReporter.logStep("Book an table service dining reservation.");
 		book.sendRequest();
 		
 		if(book.getResponse().contains("Row was updated or deleted by another transaction") || 
@@ -331,7 +342,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 */
 	@Override
 	public void retrieve(){		
-		TestReporter.logStep("Retrieve an table service dining reservation.");
+		TestReporter.logStep("Retrieve an Table Service dining reservation for Reservation ["+getConfirmationNumber()+"]");
 		Retrieve retrieve = new Retrieve(getEnvironment(), "Main");
 		retrieve.setReservationNumber(getConfirmationNumber());
 		retrieve.sendRequest();

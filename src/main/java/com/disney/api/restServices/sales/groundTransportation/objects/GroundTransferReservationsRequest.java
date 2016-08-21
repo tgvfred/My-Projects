@@ -28,23 +28,23 @@ public class GroundTransferReservationsRequest {
 	public void addRoundTripTransfer(Reservation res, String destinationLocationId, String originalLocationId, String firstPickupDate, String secondPickUpDate){
 		this.res = res;
 		this.travelPlanId = res.getTravelPlanId();
-		this.startDate = res.getArrivalDate();
-		this.endDate = res.getDepartureDate();
+		this.startDate = res.getArrivalDate() + "T00:00:00.000-04:00";
+		this.endDate = res.getDepartureDate() + "T00:00:00.000-04:00";
 		groundTransfers.get(0).addTransfer(res, "Inbound" , destinationLocationId, originalLocationId, firstPickupDate);
 		groundTransfers.get(0).addTransfer(res, "Outbound" , originalLocationId, destinationLocationId, secondPickUpDate);
 	}
 	public void addInboundTransfer(Reservation res, String destinationLocationId, String originalLocationId, String pickupDate){
 		this.res = res;
 		this.travelPlanId = res.getTravelPlanId();
-		this.startDate = res.getArrivalDate();
-		this.endDate = res.getDepartureDate();
+		this.startDate = res.getArrivalDate() + "T00:00:00.000-04:00";
+		this.endDate = res.getDepartureDate() + "T00:00:00.000-04:00";
 		groundTransfers.get(0).addTransfer(res, "Inbound" , destinationLocationId, originalLocationId, pickupDate);
 	}
 	public void addOutboundTransfer(Reservation res, String destinationLocationId, String originalLocationId, String pickupDate){
 		this.res = res;
 		this.travelPlanId = res.getTravelPlanId();
-		this.startDate = res.getArrivalDate();
-		this.endDate = res.getDepartureDate();
+		this.startDate = res.getArrivalDate() + "T00:00:00.000-04:00";
+		this.endDate = res.getDepartureDate() + "T00:00:00.000-04:00";
 		groundTransfers.get(0).addTransfer(res, "Outbound" , destinationLocationId, originalLocationId, pickupDate);
 	}
 	public GroundTransferReservationsRequest(Reservation res){
@@ -149,8 +149,8 @@ public class GroundTransferReservationsRequest {
 				this.type = type;
 				this.destLocId = destinationLocationId;
 				this.origLocId = originalLocationId;
-				this.transferDate = transferDate;
-				flight = new Flight(transferDate);
+				this.transferDate = transferDate + "T00:00:00.000-04:00";
+				flight = new Flight(this.transferDate);
 				room = new Room(res);
 			}
 			private String type= "Inbound";

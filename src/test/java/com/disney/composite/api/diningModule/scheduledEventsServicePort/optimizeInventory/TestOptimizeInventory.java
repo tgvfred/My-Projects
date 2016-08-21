@@ -69,7 +69,8 @@ public class TestOptimizeInventory extends BaseTest{
 		optimize.setPartyMixChildCount(hh.numberOfChildren());
 		optimize.setPartyMixInfantCount(hh.numberOfInfants());
 		optimize.setInventoryGot(inventoryGot);
-		optimize.setInventoryWant(inventoryWant);		
+		optimize.setInventoryWant(inventoryWant);
+		optimize.setFreezeId(inventoryWant, res.getServiceStartDate());;
 		optimize.sendRequest();
 		TestReporter.logAPI(!optimize.getResponseStatusCode().equals("200"), "An error occurred optimizing inventory: " + optimize.getFaultString(), optimize);
 		TestReporter.assertTrue(optimize.isSuccessful(), "Verify that the invetory optimization was successful.");

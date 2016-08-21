@@ -3,7 +3,6 @@ package com.disney.composite.api.diningModule.scheduledEventsBatchService;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -12,31 +11,21 @@ import com.disney.api.soapServices.folioModule.chargeGroup.operations.RetrieveNo
 import com.disney.composite.BaseTest;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.LogItems;
-import com.disney.utils.dataFactory.database.Recordset;
-import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
-public class TestAutoCancel extends BaseTest{
-	private String date = Randomness.generateCurrentXMLDate(150);
+public class SandboxTestAutoCancel extends BaseTest{
+	private String date = Randomness.generateCurrentXMLDate(45);
 	private String sourceAccountingCenter = "3";
 	private RetrieveNonGuaranteedGuestChargeGroups retrieve;
 	private String expected_TCG;
 	private String actual_TCG;
 	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
+	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testRetrieveNonGuaranteedGuestChargeGroups(){
-		TestReporter.setDebugLevel(1);
-		Book res = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		res.setParty(new HouseHold(1));
-		res.setFreezeId("", date);
-		res.sendRequest();
-		
+		this.environment = "Stage_CM";
 		TestReporter.logScenario("RetrieveNonGuaranteedGuestChargeGroups");
 		retrieve = new RetrieveNonGuaranteedGuestChargeGroups(environment);
-		retrieve.setRunDate(Randomness.generateCurrentXMLDate(3));
+		retrieve.setRunDate(date);
 		retrieve.setSourceAccountingCenter(sourceAccountingCenter);
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving non-guaranteed guest charge groups: " + retrieve.getFaultString(), retrieve);
@@ -46,31 +35,26 @@ public class TestAutoCancel extends BaseTest{
 		validateLogs(retrieve, logValidItems, 10000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testRetrieveNonGuaranteedGuestChargeGroups")
+	//@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testRetrieveNonGuaranteedGuestChargeGroups")
 	public void testAutoCancel(){	
 		TestReporter.logScenario("AutoCancel");	
-		
-		String ids = "";
-		for(String id : retrieve.getAllReservations().values()){
-			ids += id + ", ";
-		}
-		
-		ids = ids.substring(0,ids.lastIndexOf(","));
-		String sql = "SELECT tcg.TPS_ID, tcg.TC_GRP_NB, tps.TPS_ARVL_DT FROM RES_MGMT.TPS, RES_MGMT.TC_GRP tcg WHERE TPS.TPS_ID = tcg.TPS_ID and tc_grp_nb"
-				+ " in( "+ ids + ") and tcg.CREATE_USR_ID_CD = 'AutoJUnit.us' and tps.TPS_ARVL_DT like ('%:00')";
-		Database db = new OracleDatabase(environment, Database.DREAMS);
-		Recordset rs = new Recordset(db.getResultSet(sql));
-		
-		if(rs.getRowCount() == 0)
-			throw new SkipException("No automated CoMo reservations were returned by RetrieveNonGuaranteedGuestChargeGroups for the date ["+date+"] and source accounting center ["+sourceAccountingCenter+"].");
-		
-		
-		expected_TCG =rs.getValue("TC_GRP_NB");
-		
+		if(retrieve.getAllReservations().size() == 0)
+			throw new SkipException("No reservations were returned by RetrieveNonGuaranteedGuestChargeGroups for the date ["+date+"] and source accounting center ["+sourceAccountingCenter+"].");
+		expected_TCG = retrieve.getAllReservations().get("1");
+
+		this.environment = "Stage_CM";
 		
 		AutoCancel cancel = new AutoCancel(environment, "Main");
-		cancel.setTravelComponentGroupingId(expected_TCG);
-		cancel.sendRequest();
+		for(int size = 1;  size <= retrieve.getAllReservations().size() ; size++){
+			
+			expected_TCG = retrieve.getAllReservations().get(String.valueOf(size));
+			cancel.setTravelComponentGroupingId(expected_TCG);
+			cancel.sendRequest();
+			System.out.println(size);
+			if(cancel.getResponseStatusCode().equals("200")) break;
+		}
+
+
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred checking out a reservation: " + cancel.getFaultString(), cancel);
 		actual_TCG = cancel.getTravelComponentGroupIdUsingTPS(cancel.getTravelPlanSegmentId());
 		TestReporter.assertEquals(expected_TCG, actual_TCG, "Verify that the actual travel component grouping number ["+actual_TCG+"] matches the expected travel component grouping number ["+expected_TCG+"].");
@@ -83,11 +67,11 @@ public class TestAutoCancel extends BaseTest{
 		logValidItems.addItem("UpdateInventory", "updateInventory", false);
 		validateLogs(cancel, logValidItems, 10000);
 	}
-
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoCancel")
+//	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"}, dependsOnMethods="testAutoCancel")
 	public void testAutoCancel_InvalidReservationStatus(){
+		this.environment = "Stage_CM";
 		TestReporter.logScenario("AutoCancel_InvalidReservationStatus");
-//		if(expected_TCG == null)expected_TCG = retrieve.getAllReservations().get("1");
+		if(expected_TCG == null)expected_TCG = retrieve.getAllReservations().get("1");
 		AutoCancel cancel = new AutoCancel(environment, "Main");
 		cancel.setTravelComponentGroupingId(expected_TCG);
 		cancel.sendRequest();

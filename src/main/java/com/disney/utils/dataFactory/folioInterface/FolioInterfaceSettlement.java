@@ -7,7 +7,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 
 public class FolioInterfaceSettlement extends FolioInterface{
 	private String expressCheckout;	// Flag to determine if Express Checkout should be used for the settlement method
-	public String defaultSettlementScenario = "Main";
+	public static String defaultSettlementScenario = "Pay total amount due with valid visa with incidentals";
 	
 	/**
 	 * Dummy constructor

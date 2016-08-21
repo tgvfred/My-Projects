@@ -4,22 +4,22 @@ import com.disney.utils.XMLTools;
 
 public class SearchMemberships extends MembershipService {
 	
-	public SearchMemberships(String environment, String scenario) throws Exception {
+	public SearchMemberships(String environment, String scenario) {
 		super(environment);
 		
 		//Generate a request from a project xml file
-		setRequestDocument(XMLTools.loadXMLFromProject("/services/membershipService/searchMemberships/searchMembershipsTemplate.xml"));
-		System.out.println(getRequest());
+		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("searchMemberships")));
+//		System.out.println(getRequest());
 		
 		//Generate a dynamic request from the wsdl
 		
-		System.out.println(getRequest());
+//		System.out.println(getRequest());
 		
-		//setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
-		System.out.println(getRequest());
-		sendRequest();
+		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
+//		System.out.println(getRequest());
 		removeComments() ;
 		removeWhiteSpace();
+//		sendRequest();
 	}
 	
 	public void setMembershipID(String membershipID){

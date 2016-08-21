@@ -59,30 +59,30 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 		Recordset rsResourceId= new Recordset(db.getResultSet(Dreams.getTcReservableResourceID(rsBaseInfo.getValue("TC_ID"))));
 		
 		Database availDb = new OracleDatabase(environment, Database.AVAIL_SE);
-		Recordset rsInventory = new Recordset(availDb.getResultSet(AvailSE.getResourceAvailibleTimesByIdAndDate(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"), res.getServiceStartDate())));
+		Recordset rsInventory = new Recordset(availDb.getResultSet(AvailSE.getReservableResourceByFacilityAndDate(res.getFacilityId(), res.getServiceStartDate())));
 		if (rsInventory.getRowCount() == 0) {
-			rsInventory = new Recordset(availDb.getResultSet(AvailSE.getResourceAvailibleTimesById(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"))));
+			rsInventory = new Recordset(availDb.getResultSet(AvailSE.getResourceAvailibleTimesById(rsResourceId.getValue("Resource_ID"))));
 		}
 		
 		String tcId = rsBaseInfo.getValue("TC_ID");
 		UpdateInventoryForScheduledEvents update = new UpdateInventoryForScheduledEvents(environment, "MinimalInfo");
-		update.setAssignmentRequestDetailsDate(rsInventory.getValue("START_DATE"));
+		update.setAssignmentRequestDetailsDate(rsInventory.getValue("Start_Date").replace(".0", ""));
 		update.setAssignmentOwnerId(BaseSoapCommands.REMOVE_NODE.toString());
-		update.setFacilityId(rsInventory.getValue("FACILITY_ID"));
-		update.setOwnerDetailsBookingDate(res.getServiceStartDate());
+		update.setFacilityId(res.getFacilityId());
+		update.setOwnerDetailsBookingDate(rsInventory.getValue("Start_Date").replace(".0", ""));
 		update.setOwnerDetailsOwnerName(res.party().primaryGuest().getFullName());
 		update.setOwnerDetailsOwnerReferenceNumber(tcId);
 		update.setOwnerDetailsTravelPlanId(Randomness.randomNumber(12));
 		update.setOwnerDetailsTravelPlanSegmentId(Randomness.randomNumber(12));
-		update.setOwnerDetailsPeriodStartDate(rsInventory.getValue("START_DATE"));
-		update.setOwnerDetailsPeriodEndDate(rsInventory.getValue("START_DATE"));
-		update.setPeriodStartDate(rsInventory.getValue("START_DATE"));
-		update.setPeriodEndDate(rsInventory.getValue("START_DATE"));
-		update.setResourceTypeCode(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"));
+		update.setOwnerDetailsPeriodStartDate(rsInventory.getValue("Start_Date").replace(".0", ""));
+		update.setOwnerDetailsPeriodEndDate(rsInventory.getValue("Start_Date").replace(".0", ""));
+		update.setPeriodStartDate(rsInventory.getValue("Start_Date").replace(".0", ""));
+		update.setPeriodEndDate(rsInventory.getValue("Start_Date").replace(".0", ""));
+		update.setResourceTypeCode(rsInventory.getValue("Resource_ID"));
 		update.setTpId(Randomness.randomNumber(12));
-		update.setUpdateInventoryTypeInfoReservableResourceId(rsResourceId.getValue("RSRC_INVTRY_TYP_CD"));
-		update.setUpdateInventoryTypeInfoOldServiceStartDate(rsInventory.getValue("START_DATE"));
-		update.setUpdateInventoryTypeInfoNewServiceStartDate(rsInventory.getValue("START_DATE"));
+		update.setUpdateInventoryTypeInfoReservableResourceId(rsInventory.getValue("Resource_ID"));
+		update.setUpdateInventoryTypeInfoOldServiceStartDate(rsInventory.getValue("Start_Date").replace(".0", ""));
+		update.setUpdateInventoryTypeInfoNewServiceStartDate(rsInventory.getValue("Start_Date").replace(".0", ""));
 		update.setUpdateInventoryTypeInfoNewDuration("1");
 		update.sendRequest();
 		

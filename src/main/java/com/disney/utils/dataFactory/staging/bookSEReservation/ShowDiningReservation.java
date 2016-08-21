@@ -15,6 +15,7 @@ import com.disney.api.soapServices.diningModule.showDiningService.operations.Val
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.folioInterface.Folio;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 /**
@@ -60,6 +61,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
 	private String freezeStartDate;
+	private Folio folio;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -80,6 +82,17 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	public ShowDiningReservation(String environment, HouseHold party){
 		this.environment = environment;
 		this.party = party;
+	}
+	
+
+	public Folio folio() {
+		if(folio == null) return new Folio(this);
+		return folio;
+	}
+
+	public Folio folio(String environment) {
+		if(folio == null) return new Folio(this, environment);
+		return folio;
 	}
 	@Override
 	public void setFreezeStartDate(String startDate){
@@ -270,7 +283,6 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	 * retrieval is performed to allow information to be retrieved for validation purposes.
 	 */
 	private void book(){
-		TestReporter.logStep("Book an show dining reservation.");
 		Book book = new Book(getEnvironment(), this.bookingScenario);
 		book.setParty(party());		
 		book.setFacilityId(getFacilityId());		//FAC.FAC_ID
@@ -284,7 +296,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		if(freezeStartDate != null) book.setFreezeId("",freezeStartDate);
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 		if(travelPlanId != null) book.setTravelPlanId(travelPlanId);
-		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+		TestReporter.logStep("Book an Show dining reservation.");
 		book.sendRequest();
 		if(book.getResponse().contains("Row was updated or deleted by another transaction")|| 
 				book.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID") || 
@@ -349,7 +361,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	 */
 	@Override
 	public void retrieve(){		
-		TestReporter.logStep("Retrieve an show dining reservation.");
+		TestReporter.logStep("Retrieve an Show dining reservation for Reservation ["+getConfirmationNumber()+"]");
 		Retrieve retrieve = new Retrieve(getEnvironment(), "RetrieveDiningEvent");
 		retrieve.setReservationNumber(getConfirmationNumber());
 		retrieve.sendRequest();
@@ -427,7 +439,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		assign.setTravelPlanSegmentId(confirmationNumber);
 		assign.setTableNumber(tableNumber);
 		assign.sendRequest();
-		TestReporter.logAPI(!assign.getResponseStatusCode().equals("200"), "An error occurred while assigning table numbers to the reservation.", assign);
+		TestReporter.logAPI(!assign.getResponseStatusCode().equals("200"), assign.getFaultString(), assign);
 		assignTableNumberStatus = assign.getStatus();
 		retrieve();
 	}

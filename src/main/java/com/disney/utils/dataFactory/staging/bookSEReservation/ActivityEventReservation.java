@@ -11,6 +11,7 @@ import com.disney.api.soapServices.availSEModule.builtInventoryService.operation
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.folioInterface.Folio;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 /**
@@ -21,6 +22,7 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
  *
  */
 public class ActivityEventReservation implements ScheduledEventReservation {
+	private Folio folio = null;
 	private HouseHold party;	// Household field containing guests to be used for a reservation
 	private String environment;	// Environment under test
 	private String travelPlanId;	// Travel Plan ID
@@ -72,6 +74,16 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	public ActivityEventReservation(String environment, HouseHold party){
 		this.environment = environment;
 		this.party = party;
+	}
+	
+	public Folio folio() {
+		if(folio == null) return new Folio(this);
+		return folio;
+	}
+
+	public Folio folio(String environment) {
+		if(folio == null) return new Folio(this, environment);
+		return folio;
 	}
 	/**
 	 * Retrieves the environment under test
@@ -261,7 +273,6 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * retrieval is performed to allow information to be retrieved for validation purposes.
 	 */
 	private void book(){
-		TestReporter.logStep("Book an activity event reservation.");
 		Book book = new Book(getEnvironment(), this.bookingScenario);
 		book.setParty(party());		
 		book.setFacilityId(getFacilityId());		//FAC.FAC_ID
@@ -274,9 +285,9 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 		book.setServiceStartDateTime(getServiceStartDate());	
 		if(freezeStartDate != null) book.setFreezeId("",freezeStartDate);
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
-
+		if(travelPlanId != null) book.setTravelPlanId(travelPlanId);
 		book.setFreezeId();
-		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+		TestReporter.logStep("Book an activity event reservation.");
 		book.sendRequest();
 		if(book.getResponse().contains("Row was updated or deleted by another transaction")|| 
 				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated") ||
@@ -340,7 +351,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 */
 	@Override
 	public void retrieve(){		
-		TestReporter.logStep("Retrieve an activity event reservation.");
+		TestReporter.logStep("Retrieve an Activity reservation for Reservation ["+getConfirmationNumber()+"]");
 		Retrieve retrieve = new Retrieve(getEnvironment(), "RetrieveDiningEvent");
 		retrieve.setReservationNumber(getConfirmationNumber());
 		retrieve.sendRequest();

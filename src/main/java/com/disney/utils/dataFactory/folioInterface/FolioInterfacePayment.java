@@ -427,6 +427,7 @@ public class FolioInterfacePayment extends FolioInterface{
 			postPayment.setRetreivalReferenceNumber();
 			convoMapKey = "payment";
 		}	
+		TestReporter.logStep("Make card payment on Folio [" + getFolioId() +"] for the amount of [" + getBalanceDue() +"]");
 		postPayment.sendRequest();
 		getConversationIdMap().put(convoMapKey, postPayment.getConversationID());
 		if(getIsNegativeScenario().equalsIgnoreCase("true")){
@@ -481,6 +482,7 @@ public class FolioInterfacePayment extends FolioInterface{
 		//Set payment metadata from the post payment response
 		setValuesFromPostPaymentResponse(postPayment);
 		setPaidAmount(getPaidAmount() + Double.parseDouble(getAmountToPay()));		
+		TestReporter.logStep("Make check payment on Folio [" + getFolioId() +"] for the amount of [" + getBalanceDue() +"]");
 		return postPayment;
 	}
 	/**
