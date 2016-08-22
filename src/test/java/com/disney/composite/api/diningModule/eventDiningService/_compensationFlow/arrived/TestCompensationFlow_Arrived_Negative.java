@@ -44,9 +44,14 @@ public class TestCompensationFlow_Arrived_Negative extends BaseTest{
 //		logItems.addItem("EventDiningServiceIF", "arrived", false);
 //		logItems.addItem("PartyIF", "retrieveParty", false);
 //		logItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
-//		logItems.addItem("ChargeGroupIF", "checkIn", false);
 //		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 //		validateLogs(arrived, logItems, 5000);
+//		logItems = new LogItems();
+//		logItems.addItem("ChargeGroupIF", "checkIn", false);
+//		logItems.addItem("ChargeAccountService", "processNoShowToArrived", false);
+//		validateNotInLogs(arrived, logItems);		
+//		res.retrieve();
+//		TestReporter.assertEquals(res.getStatus(), "Booked", "Verify the reservation status ["+res.getStatus()+"] is [Booked] as expected.");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative", "compensation"})
@@ -60,6 +65,9 @@ public class TestCompensationFlow_Arrived_Negative extends BaseTest{
 //		logItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
 //		logItems.addItem("ChargeGroupIF", "checkIn", false);
 //		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-//		validateLogs(arrived, logItems, 5000);
+//		logItems.addItem("ChargeAccountService", "processNoShowToArrived", false);
+//		validateLogs(arrived, logItems, 5000);		
+//		res.retrieve();
+//		TestReporter.assertEquals(res.getStatus(), "Booked", "Verify the reservation status ["+res.getStatus()+"] is [Booked] as expected.");
 	}
 }

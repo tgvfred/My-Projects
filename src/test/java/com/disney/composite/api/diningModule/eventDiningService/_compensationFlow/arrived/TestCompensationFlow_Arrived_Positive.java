@@ -10,7 +10,6 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.Ar
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
@@ -43,7 +42,9 @@ public class TestCompensationFlow_Arrived_Positive extends BaseTest{
 		arrived.setReservationNumber(res.getConfirmationNumber());
 		arrived.sendRequest();
 		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'Arrived'", arrived);
-		TestReporter.logAPI(!arrived.getArrivalStatus().equals("SUCCESS"), "The response ["+arrived.getArrivalStatus()+"] was not 'SUCCESS' as expected.", arrived);
+		TestReporter.logAPI(!arrived.getArrivalStatus().equals("SUCCESS"), "The response ["+arrived.getArrivalStatus()+"] was not 'SUCCESS' as expected.", arrived);		
+		res.retrieve();
+		TestReporter.assertEquals(res.getStatus(), "Arrived", "Verify the reservation status ["+res.getStatus()+"] is [Arrived] as expected.");
 		
 		// Validate records in the logs
 //		LogItems logItems = new LogItems();
@@ -52,6 +53,7 @@ public class TestCompensationFlow_Arrived_Positive extends BaseTest{
 //		logItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
 //		logItems.addItem("ChargeGroupIF", "checkIn", false);
 //		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+//		logItems.addItem("ChargeAccountService", "processNoShowToArrived", false);
 //		validateLogs(arrived, logItems, 5000);
 	}
 }

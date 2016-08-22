@@ -32,6 +32,8 @@ public class TestCompensationFlow_Book_Positive extends BaseTest{
 		
 		LogItems logItems = new LogItems();
 		logItems.addItem("EventDiningServiceIF", "book", false);
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
 //		validateLogs(book, logItems, 5000);
 	}
 }

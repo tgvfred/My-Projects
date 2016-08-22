@@ -9,7 +9,6 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.Ca
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.LogItems;
 
 public class TestCompensationFlow_Book_Negative extends BaseTest{
 	private Book book;
@@ -33,34 +32,38 @@ public class TestCompensationFlow_Book_Negative extends BaseTest{
 		TestReporter.logAPI(!book.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID"), book.getFaultString() ,book);
 		TestReporter.assertTrue(Integer.parseInt(book.getInventoryCountBefore()) == Integer.parseInt(book.getInventoryCountAfter()), "Verify the booked inventory count ["+book.getInventoryCountAfter()+"] for reservable resource ID ["+book.getReservableResourceId()+"] does not increment from the count prior to booking ["+book.getInventoryCountBefore()+"]");
 		
-		LogItems logItems = new LogItems();
-		logItems.addItem("EventDiningServiceIF", "book", false);
+//		LogItems logItems = new LogItems();
+//		logItems.addItem("EventDiningServiceIF", "book", true);
+//		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", true);
 //		validateLogs(book, logItems, 5000);
+//		// Validate records ate not in the logs
+//		logItems = new LogItems();
+//		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+//		validateNotInLogs(book, logItems, 5000);
 	}
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
 	public void testDineFailure(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 		
-		// Validate records in the logs
 //		LogItems logItems = new LogItems();
-//		logItems.addItem("EventDiningServiceIF", "book", false);
+//		logItems.addItem("EventDiningServiceIF", "book", true);
+//		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", true);
+//		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", true);
 //		validateLogs(book, logItems, 5000);
-		// Validate records ate not in the logs
+//		// Validate records ate not in the logs
 //		logItems = new LogItems();
-//		logItems.addItem("EventDiningServiceIF", "book", false);
+//		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
 //		validateNotInLogs(book, logItems, 5000);
 	}
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
 	public void testFolioFailure(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 		
-		// Validate records in the logs
 //		LogItems logItems = new LogItems();
-//		logItems.addItem("EventDiningServiceIF", "book", false);
+//		logItems.addItem("EventDiningServiceIF", "book", true);
+//		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", true);
+//		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", true);
+//		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", true);
 //		validateLogs(book, logItems, 5000);
-		// Validate records ate not in the logs
-//		logItems = new LogItems();
-//		logItems.addItem("EventDiningServiceIF", "book", false);
-//		validateNotInLogs(book, logItems, 5000);
 	}
 }
