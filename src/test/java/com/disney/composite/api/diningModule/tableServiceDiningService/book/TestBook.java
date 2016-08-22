@@ -19,17 +19,17 @@ public class TestBook extends BaseTest{
 	// Defining global variables
 	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
 	
-	@AfterMethod(alwaysRun=true)
-	public void teardown(){
-		try{
-			if(TPS_ID.get() != null)
-				if(!TPS_ID.get().isEmpty()){
-					Cancel cancel = new Cancel(environment, "Main");
-					cancel.setReservationNumber(TPS_ID.get());
-					cancel.sendRequest();
-				}
-		}catch(Exception e){}
-	}
+//	@AfterMethod(alwaysRun=true)
+//	public void teardown(){
+//		try{
+//			if(TPS_ID.get() != null)
+//				if(!TPS_ID.get().isEmpty()){
+//					Cancel cancel = new Cancel(environment, "Main");
+//					cancel.setReservationNumber(TPS_ID.get());
+//					cancel.sendRequest();
+//				}
+//		}catch(Exception e){}
+//	}
 	
 	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testBook(){

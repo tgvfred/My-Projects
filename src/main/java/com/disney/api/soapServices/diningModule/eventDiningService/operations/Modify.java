@@ -20,6 +20,13 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class Modify extends EventDiningService {
 	private boolean notSetFreezeId = true;
+	private boolean invokeRimError = false;
+	protected String reservableResourceId;
+	protected String dateTime;
+	protected String inventoryBefore;
+	protected String inventoryAfter;
+	protected String startDate;
+	protected String startTime;
 	public Modify(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("modify")));
@@ -152,7 +159,10 @@ public class Modify extends EventDiningService {
 		}
 	}
 	
-	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);}
+	public void setReservableResourceId(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);
+		reservableResourceId = value;
+	}
 	public void setPrimaryGuestTitle(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/primaryGuest/title", value);}
 	public void setPrimaryGuestSuffix(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/primaryGuest/suffix", value);}
 	public void setContactName(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/contactName", value);}
@@ -175,13 +185,33 @@ public class Modify extends EventDiningService {
 	@Override
 	public void sendRequest(){
 		if(notSetFreezeId) 	setFreezeId();
+		boolean failure = false;
+		try{setInventoryCountBefore(getInventory());}
+		catch(Exception e){failure = true;}
+		if(!failure) setInventoryCountAfter(getInventory());
 		super.sendRequest();
 		if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
 				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
 				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
 			if(notSetFreezeId) 	setFreezeId();
+			setInventoryCountBefore(getInventory());
 			super.sendRequest();	
+			setInventoryCountAfter(getInventory());
 		}
+	}
+	private void setInventoryCountBefore(String before){inventoryBefore = before;}
+	public String getInventoryCountBefore(){return inventoryBefore;}
+	private void setInventoryCountAfter(String after){inventoryAfter = after;}
+	public String getInventoryCountAfter(){return inventoryAfter;}
+	public String getReservableResourceId(){return reservableResourceId;}
+	public String getDateTime(){return dateTime;}
+	public void setStartTime(String time){startTime = time;}
+	public void setStartDate(String date){startDate = date;}
+	private String getInventory(){
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, startTime)));
+		rsInventory.print();
+		return rsInventory.getValue("BK_CN");
 	}
 	public void setFreezeId(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
@@ -189,49 +219,50 @@ public class Modify extends EventDiningService {
 		String freezeId = "";
 		Freeze freeze = new Freeze(getEnvironment(), "Main");
 		//rs = new Recordset(db.getResultSet(AvailSE.getFreezeId(getRequestReservableResourceId(), freeze.getRequestServiceStartDate() + " " + freeze.getRequestServiceStartTime())));
-
-	//	if(rs.getRowCount() == 0){
-			Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+		Recordset rsInventory;
+		if(reservableResourceId == null){
+			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
 			rsInventory.print();
-			String startdate = rsInventory.getValue("START_DATE").contains(" ") 
+			startDate = rsInventory.getValue("START_DATE").contains(" ") 
 							   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
 						       : rsInventory.getValue("START_DATE");
 							   
-			String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			reservableResourceId = rsInventory.getValue("Resource_ID");
+		}
+		freeze.setReservableResourceId(reservableResourceId);	
+		freeze.setStartDate(startDate);	
+		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+		freeze.sendRequest();
+		int timesTried = 0;
+		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
+			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+			rsInventory.print();
+			startDate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
 			setReservableResourceId(rsInventory.getValue("Resource_ID"));
 			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
-			freeze.setStartDate(startdate);	
+			freeze.setStartDate(startDate);	
 			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-			freeze.sendRequest();
-//			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
-			int timesTried = 0;
-			while(freeze.getSuccess().equals("failure") && timesTried < 5){				
-				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-				rsInventory.print();
-				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
-				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
-				setReservableResourceId(rsInventory.getValue("Resource_ID"));
-				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
-				freeze.setStartDate(startdate);	
-				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-				freeze.sendRequest();	
-				if(freeze.getSuccess().equals("failure")) timesTried++;
-			}
-
-//			if(freeze.getSuccess().equals("failure")){
-				TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
-//			}
-			freezeId = freeze.getFreezeID();
-			setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+			freeze.sendRequest();	
+			if(freeze.getSuccess().equals("failure")) timesTried++;
+		}
+		TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
+		freezeId = freeze.getFreezeID();
+		setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
 			
 		
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		if(!invokeRimError) setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
 		notSetFreezeId = false;
 	}
 
 	public void setFreezeId(String freezeId){
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
 		notSetFreezeId = false;
+	}
+	public void setFreezeIdForError(String freezeId){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		invokeRimError = true;
 	}
 	
 	public void setParty(HouseHold party){
