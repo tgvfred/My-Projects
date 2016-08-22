@@ -60,7 +60,8 @@ public class AvailSE {
 	}
 	
 	public static String getAvailableResourceCount(String rrId, String dateTime){
-		return "select a.AUTH_INVTRY_CN , a.BLK_CN, a.BLK_ADJ_CN, a.BK_CN "
+//		return "select a.AUTH_INVTRY_CN , a.BLK_CN, a.BLK_ADJ_CN, a.BK_CN "
+		return "select * "
 				+ "from availse.fsell_invtry a "
 				+ "where a.RSRVBL_RSRC_ID = '"+rrId+"' "
 				+ "and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd HH24:MI:SS') =  '"+dateTime+"'";

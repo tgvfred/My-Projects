@@ -20,7 +20,11 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class Book extends EventDiningService {
 	private boolean notSetFreezeId = true;
-	private String reservableResourceId;
+	private boolean invokeRimError = false;
+	protected String reservableResourceId;
+	protected String dateTime;
+	protected String inventoryBefore;
+	protected String inventoryAfter;
 	public Book(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
@@ -135,69 +139,79 @@ public class Book extends EventDiningService {
 	@Override
 	public void sendRequest(){
 		if(notSetFreezeId) 	setFreezeId();
+		boolean failure = false;
+		try{setInventoryCountBefore(getInventory());}
+		catch(Exception e){failure = true;}
 		super.sendRequest();
-		if(		getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
-				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
-			setFreezeId();
-			super.sendRequest();	
+		if(!failure) setInventoryCountAfter(getInventory());
+		if(!invokeRimError){
+			if(getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
+					getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
+				setFreezeId();
+				setInventoryCountBefore(getInventory());
+				super.sendRequest();	
+				setInventoryCountAfter(getInventory());
+			}
 		}
 	}
+	private void setInventoryCountBefore(String before){inventoryBefore = before;}
+	public String getInventoryCountBefore(){return inventoryBefore;}
+	private void setInventoryCountAfter(String after){inventoryAfter = after;}
+	public String getInventoryCountAfter(){return inventoryAfter;}
+	public String getReservableResourceId(){return reservableResourceId;}
+	private String getInventory(){
+	Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+	Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, dateTime)));
+	rsInventory.print();
+	return rsInventory.getValue("BK_CN");
+}
+	
 	public void setFreezeId(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
-		Recordset rs = null;
 		String freezeId = "";
 		Freeze freeze = new Freeze(getEnvironment(), "Main");
 
-			Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+		
+		String startdate = rsInventory.getValue("START_DATE").contains(" ") 
+						   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
+					       : rsInventory.getValue("START_DATE");
+						   
+		String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+		setReservableResourceId(rsInventory.getValue("Resource_ID"));
+		freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));			
+		reservableResourceId = rsInventory.getValue("Resource_ID");
+		dateTime = rsInventory.getValue("START_DATE").replace(".0", "");
+		freeze.setStartDate(startdate);	
+		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+		freeze.sendRequest();
+		int timesTried = 0;
+		while(freeze.getSuccess().equals("failure") && timesTried < 5){	
+			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
 			
-			String startdate = rsInventory.getValue("START_DATE").contains(" ") 
-							   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
-						       : rsInventory.getValue("START_DATE");
-							   
-			String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
 			setReservableResourceId(rsInventory.getValue("Resource_ID"));
-			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));
-			
-			
-			
-			String reservableResourceId = rsInventory.getValue("Resource_ID");
-			String dateTime = rsInventory.getValue("START_DATE").replace(".0", "");
-			rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, dateTime)));
-			rsInventory.print();
-			String inventoryBefore = rsInventory.getValue("BK_CN");
-			
-			
-			
+			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
 			freeze.setStartDate(startdate);	
 			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-			freeze.sendRequest();
-//			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
-			int timesTried = 0;
-			while(freeze.getSuccess().equals("failure") && timesTried < 5){	
-				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-				
-				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
-				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
-				setReservableResourceId(rsInventory.getValue("Resource_ID"));
-				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
-				freeze.setStartDate(startdate);	
-				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-				freeze.sendRequest();	
-				if(freeze.getSuccess().equals("failure"))timesTried++;
-			}
-
-//			if(freeze.getSuccess().equals("failure")){
-				TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
-//			}
-			freezeId = freeze.getFreezeID();
-			setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+			freeze.sendRequest();	
+			if(freeze.getSuccess().equals("failure"))timesTried++;
+		}
+		TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
+		freezeId = freeze.getFreezeID();
+		setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
 		
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		if(!invokeRimError) setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
 		notSetFreezeId = false;
 	}
 	public void setFreezeId(String freezeId){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
 		notSetFreezeId = false;
+	}
+	public void setFreezeIdForError(String freezeId){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		invokeRimError = true;
 	}
 	
 	public void setProfileDetailIdAndType(String id, String type, String index){
