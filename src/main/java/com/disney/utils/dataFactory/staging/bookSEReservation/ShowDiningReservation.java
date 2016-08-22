@@ -277,14 +277,6 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		book.setServiceStartDateTime(getServiceStartDate());
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		if(!environment.equalsIgnoreCase("Development") && !environment.equalsIgnoreCase("Latest_CM")){
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			resource.getReservableResources();
-			book.setReservableResourceId(resource.getFirstReservableResourceId());
-		}
-		
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
 		if(book.getResponse().contains("Row was updated or deleted by another transaction")|| 

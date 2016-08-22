@@ -259,20 +259,12 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 			if(!facilityName.isEmpty()) book.setFacilityName(facilityName);
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		if(!environment.equalsIgnoreCase("Development") && !environment.equalsIgnoreCase("Latest_CM")){
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			resource.getReservableResources();
-			book.setReservableResourceId(resource.getFirstReservableResourceId());			
-		}
-
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
-		if(book.getResponse().contains("Row was updated or deleted by another transaction") ||
-				book.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID") || 
-				book.getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint ") || 				
-				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")){
+		
+		if(book.getResponse().contains("Row was updated or deleted by another transaction") || 
+				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")||
+				book.getResponse().contains("Inconsitent Data : Booking Date Not Found for CampusId")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			book.setFreezeId();
 			book.sendRequest();
