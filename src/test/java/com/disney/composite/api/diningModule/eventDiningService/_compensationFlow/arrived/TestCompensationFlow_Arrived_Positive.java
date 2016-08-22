@@ -7,15 +7,18 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Arrived;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.Retrieve;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
-import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestCompensationFlow_Arrived_Positive extends BaseTest{
-	private ScheduledEventReservation res;
+	private Book book;
+	private String reservableResourceId;
+	private String dateTime;
 	
 	@Override
 	@BeforeMethod(alwaysRun = true)
@@ -23,15 +26,19 @@ public class TestCompensationFlow_Arrived_Positive extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		res = new EventDiningReservation(environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		book.setParty(hh);
+		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
+		reservableResourceId = book.getReservableResourceId();
+		dateTime = book.getDateTime();
 	}
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
 		try{
 			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-			cancel.setReservationNumber(res.getConfirmationNumber());
+			cancel.setReservationNumber(book.getTravelPlanSegmentId());
 			cancel.sendRequest();
 		}catch(Exception e){}
 	}
@@ -39,21 +46,15 @@ public class TestCompensationFlow_Arrived_Positive extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
 	public void testCompensationFlow_Arrived_Positive(){
 		Arrived arrived = new Arrived(environment, "Main");
-		arrived.setReservationNumber(res.getConfirmationNumber());
-		arrived.sendRequest();
+		arrived.setReservationNumber(book.getTravelPlanSegmentId());
+		arrived.sendRequest(reservableResourceId, dateTime);
 		TestReporter.logAPI(!arrived.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'Arrived'", arrived);
-		TestReporter.logAPI(!arrived.getArrivalStatus().equals("SUCCESS"), "The response ["+arrived.getArrivalStatus()+"] was not 'SUCCESS' as expected.", arrived);		
-		res.retrieve();
-		TestReporter.assertEquals(res.getStatus(), "Arrived", "Verify the reservation status ["+res.getStatus()+"] is [Arrived] as expected.");
+		TestReporter.logAPI(!arrived.getArrivalStatus().equals("SUCCESS"), "The response ["+arrived.getArrivalStatus()+"] was not 'SUCCESS' as expected.", arrived);
+		TestReporter.assertTrue(Integer.parseInt(arrived.getInventoryCountBefore()) == Integer.parseInt(arrived.getInventoryCountAfter()), "Verify the booked inventory count ["+arrived.getInventoryCountAfter()+"] for reservable resource ID ["+reservableResourceId+"] equals the count prior to setting the reservation to 'Arrived' ["+arrived.getInventoryCountBefore()+"]");
 		
-		// Validate records in the logs
-//		LogItems logItems = new LogItems();
-//		logItems.addItem("EventDiningServiceIF", "arrived", false);
-//		logItems.addItem("PartyIF", "retrieveParty", false);
-//		logItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
-//		logItems.addItem("ChargeGroupIF", "checkIn", false);
-//		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-//		logItems.addItem("ChargeAccountService", "processNoShowToArrived", false);
-//		validateLogs(arrived, logItems, 5000);
+		Retrieve retrieve = new Retrieve(environment, "RetrieveDiningEvent");
+		retrieve.setReservationNumber(book.getTravelPlanSegmentId());
+		retrieve.sendRequest();
+		TestReporter.assertEquals(retrieve.getStatus(), "Arrived", "Verify the reservation status ["+retrieve.getStatus()+"] is [Arrived] as expected.");
 	}
 }

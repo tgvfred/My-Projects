@@ -29,11 +29,5 @@ public class TestCompensationFlow_Book_Positive extends BaseTest{
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		TestReporter.assertTrue(Integer.parseInt(book.getInventoryCountBefore()) < Integer.parseInt(book.getInventoryCountAfter()), "Verify the booked inventory count ["+book.getInventoryCountAfter()+"] for reservable resource ID ["+book.getReservableResourceId()+"] increments from the count prior to booking ["+book.getInventoryCountBefore()+"]");
-		
-		LogItems logItems = new LogItems();
-		logItems.addItem("EventDiningServiceIF", "book", false);
-		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
-		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
-//		validateLogs(book, logItems, 5000);
 	}
 }

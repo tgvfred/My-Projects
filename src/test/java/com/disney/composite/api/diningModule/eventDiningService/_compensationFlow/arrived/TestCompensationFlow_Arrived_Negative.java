@@ -38,36 +38,10 @@ public class TestCompensationFlow_Arrived_Negative extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative", "compensation"})
 	public void TestCompensationFlow_Arrived_Negative_DineFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
-		
-		// Validate records in the logs
-//		LogItems logItems = new LogItems();
-//		logItems.addItem("EventDiningServiceIF", "arrived", false);
-//		logItems.addItem("PartyIF", "retrieveParty", false);
-//		logItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
-//		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-//		validateLogs(arrived, logItems, 5000);
-//		logItems = new LogItems();
-//		logItems.addItem("ChargeGroupIF", "checkIn", false);
-//		logItems.addItem("ChargeAccountService", "processNoShowToArrived", false);
-//		validateNotInLogs(arrived, logItems);		
-//		res.retrieve();
-//		TestReporter.assertEquals(res.getStatus(), "Booked", "Verify the reservation status ["+res.getStatus()+"] is [Booked] as expected.");
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative", "compensation"})
 	public void TestCompensationFlow_Arrived_Negative_FolioFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
-		
-		// Validate records in the logs
-//		LogItems logItems = new LogItems();
-//		logItems.addItem("EventDiningServiceIF", "arrived", false);
-//		logItems.addItem("PartyIF", "retrieveParty", false);
-//		logItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
-//		logItems.addItem("ChargeGroupIF", "checkIn", false);
-//		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
-//		logItems.addItem("ChargeAccountService", "processNoShowToArrived", false);
-//		validateLogs(arrived, logItems, 5000);		
-//		res.retrieve();
-//		TestReporter.assertEquals(res.getStatus(), "Booked", "Verify the reservation status ["+res.getStatus()+"] is [Booked] as expected.");
 	}
 }

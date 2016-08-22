@@ -159,12 +159,13 @@ public class Book extends EventDiningService {
 	private void setInventoryCountAfter(String after){inventoryAfter = after;}
 	public String getInventoryCountAfter(){return inventoryAfter;}
 	public String getReservableResourceId(){return reservableResourceId;}
+	public String getDateTime(){return dateTime;}
 	private String getInventory(){
-	Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
-	Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, dateTime)));
-	rsInventory.print();
-	return rsInventory.getValue("BK_CN");
-}
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, dateTime)));
+		rsInventory.print();
+		return rsInventory.getValue("BK_CN");
+	}
 	
 	public void setFreezeId(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
