@@ -20,6 +20,7 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class Book extends EventDiningService {
 	private boolean notSetFreezeId = true;
+	private String reservableResourceId;
 	public Book(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
@@ -156,11 +157,31 @@ public class Book extends EventDiningService {
 							   
 			String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
 			setReservableResourceId(rsInventory.getValue("Resource_ID"));
-			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			
+			
+			
+			String reservableResourceId = rsInventory.getValue("Resource_ID");
+			String dateTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, dateTime)));
+			rsInventory.print();
+			String inventoryBefore = rsInventory.getValue("BK_CN");
+			
+			
+			
 			freeze.setStartDate(startdate);	
 			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
 			freeze.sendRequest();
 			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
+			
+			
+			
+			rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, dateTime)));
+			rsInventory.print();
+			String inventoryAfter = rsInventory.getValue("BK_CN");
+			
+			
+			
 			if(freeze.getSuccess().equals("failure")){				
 				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
 				rsInventory.print();

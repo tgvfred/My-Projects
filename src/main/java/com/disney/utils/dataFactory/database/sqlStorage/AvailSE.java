@@ -55,4 +55,11 @@ public class AvailSE {
 		     + "AND a.RSRVBL_RSRC_ID =  '" + resourceId + "' " 
 		     + "and to_char(a.FSELL_INVTRY_SRVC_DTS, 'yyyy-mm-dd') = '"+date+"'  ";
 	}
+	
+	public static String getAvailableResourceCount(String rrId, String dateTime){
+		return "select a.AUTH_INVTRY_CN , a.BLK_CN, a.BLK_ADJ_CN, a.BK_CN "
+				+ "from availse.fsell_invtry a "
+				+ "where a.RSRVBL_RSRC_ID = '"+rrId+"' "
+				+ "and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd HH24:MI:SS') =  '"+dateTime+"'";
+	}
 }
