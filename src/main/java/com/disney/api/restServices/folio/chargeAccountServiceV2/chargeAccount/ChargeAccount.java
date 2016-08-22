@@ -1,6 +1,7 @@
 package com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount;
 
 import com.disney.api.restServices.core.RestService;
+import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.create.create;
 import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.retrieve.Retrieve;
 import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.retrieveGuests.retrieveGuests;
 import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.updatePin.updatePin;
@@ -10,6 +11,10 @@ public class ChargeAccount{
 	private String resource = "/chargeaccount";
 	public ChargeAccount(RestService restService){
 		this.restService = restService;
+	}
+	
+	public create create() {
+		return new create(restService,resource);
 	}
 	
 	public Retrieve retrieve(){

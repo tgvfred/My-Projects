@@ -5,6 +5,7 @@ import org.apache.http.message.BasicHeader;
 
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
+import com.disney.api.restServices.core.Headers.HeaderType;
 import com.disney.test.utils.Randomness;
 
 public class Retrieve {
@@ -17,6 +18,6 @@ public class Retrieve {
 	
 	public RestResponse sendPutRequest(String json){	
 		
-		return restService.sendPutRequest(resource, json);		
+		return restService.sendPutRequest(resource, HeaderType.REST, json);		
 	}
 }

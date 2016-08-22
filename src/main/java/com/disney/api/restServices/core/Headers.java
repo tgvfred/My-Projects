@@ -21,11 +21,14 @@ public class Headers {
 	 *     		Connection: keep-alive <br/>
 	 *     		ConversationId:  Random Alphanumic string  <br/>
 	 *     		requestedTimestamp: Current timestamp<br/><br/>
+	 * REST :<br/>
+	 * 			Authorization: BEARER and generated token<br/>    
 	 *
 	 */
 	public static enum HeaderType {
 	  	JENKINS,
-	    BASIC_CONVO;
+	    BASIC_CONVO,
+	    REST;
 	}
 	/*  private Header[] getHeaders(){
 		  return headers;
@@ -54,6 +57,12 @@ public class Headers {
 		    	   		    ,new BasicHeader("conversationId",  Randomness.generateConversationId())
 		    	   		    ,new BasicHeader("requestedTimestamp", Randomness.generateCurrentXMLDatetime() + ".000-04:00")
 		    	   		};
+		        	break;
+		        case REST:
+		        	TestReporter.logInfo("Creating headers for [REST]");
+		        	headers = new Header []{
+		        			new BasicHeader("Authorization","BEARER 3mEvHUS1u5BcmKva8Zzj7w")
+		        	};
 		        	break;
 	            default:
 	                break;
