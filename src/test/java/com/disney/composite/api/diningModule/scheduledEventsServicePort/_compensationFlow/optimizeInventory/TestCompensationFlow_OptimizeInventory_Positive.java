@@ -37,7 +37,6 @@ public class TestCompensationFlow_OptimizeInventory_Positive extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "compensation"})
 	public void testCompensationFlow_OptimizeInventory_Positive(){
-		TestReporter.setDebugLevel(1);
 		preReq();
 		OptimizeInventory optimize = new OptimizeInventory(environment, "Main");
 		optimize.setTravelPlanSegmentId(res.getConfirmationNumber());

@@ -46,8 +46,8 @@ public class TestCompensationFlow_MassCancel_Negative extends BaseTest{
 		try{massCancelReason = reasons.getMassCancelIds().get("0");}
 		catch(Exception e){}
 	}
-	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
+
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative", "compensation"})
 	public void TestCompensationFlow_MassCancel_Negative_RIMFail(){
 		//******************************************************************
 		//******************************************************************
@@ -65,8 +65,8 @@ public class TestCompensationFlow_MassCancel_Negative extends BaseTest{
 		//******************************************************************
 		throw new SkipException("Tests for the MassCancel operation will return errors until a fix can be identified, implemented, and passed to the lower environments for the production issue");
 	}
-	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
+
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative", "compensation"})
 	public void TestCompensationFlow_MassCancel_Negative_DineFail(){
 		//******************************************************************
 		//******************************************************************
@@ -84,8 +84,8 @@ public class TestCompensationFlow_MassCancel_Negative extends BaseTest{
 		//******************************************************************
 		throw new SkipException("Tests for the MassCancel operation will return errors until a fix can be identified, implemented, and passed to the lower environments for the production issue");
 	}
-	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
+
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative", "compensation"})
 	public void TestCompensationFlow_MassCancel_Negative_FolioFail(){
 		//******************************************************************
 		//******************************************************************

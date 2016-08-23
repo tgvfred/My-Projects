@@ -43,7 +43,7 @@ public class TestCompensationFlow_AutoCancel_Positive extends BaseTest{
 		logValidItems.addItem("ChargeGroupIF", "retrieveNonGuaranteedGuestChargeGroups", false);
 		validateLogs(retrieve, logValidItems, 10000);
 	}
-	
+
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "compensation"})
 	public void testCompensationFlow_AutoCancel_Positive(){	
 		TestReporter.logScenario("AutoCancel");	

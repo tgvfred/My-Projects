@@ -46,8 +46,8 @@ public class TestCompensationFlow_MassCancel_Positive extends BaseTest{
 		try{massCancelReason = reasons.getMassCancelIds().get("0");}
 		catch(Exception e){}
 	}
-	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService"})
+
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "compensation"})
 	public void testCompensationFlow_MassCancel_Positive(){
 		//******************************************************************
 		//******************************************************************

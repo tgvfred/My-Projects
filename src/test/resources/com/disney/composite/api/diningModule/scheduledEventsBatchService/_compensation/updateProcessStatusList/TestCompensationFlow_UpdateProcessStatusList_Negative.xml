@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestCompensationFlow_UpdateProcessStatusList_Negative_Suite" parallel="methods" thread-count="10">
+	<parameter name="environment" value="Stage_CM" />
+	<test name="TestCompensationFlow_UpdateProcessStatusList_Negative">
+		<classes>
+			<class name="com.disney.composite.api.diningModule.scheduledEventsBatchService._compensationFlow.updateProcessStatusList.TestCompensationFlow_UpdateProcessStatusList_Negative"/>
+		</classes>
+	</test>
+</suite>

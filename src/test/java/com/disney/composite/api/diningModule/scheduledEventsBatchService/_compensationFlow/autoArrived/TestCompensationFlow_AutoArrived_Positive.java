@@ -39,7 +39,7 @@ public class TestCompensationFlow_AutoArrived_Positive extends BaseTest{
 		if(reservation == null)reservations = retrieve.getAllReservationNumbers();
 		TestReporter.assertTrue(reservations.getLength() > 0, "No reservations were returned for the date ["+date+"]");
 	}
-	
+
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "compensation"})
 	public void testCompensationFlow_AutoArrived_Positive(){
 		TestReporter.logScenario("AutoArrived");

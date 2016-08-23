@@ -49,7 +49,7 @@ public class TestCompensationFlow_Checkout_Positive extends BaseTest{
 		}while(reservations.size() == 0 && daysOut <= maxDaysOut);
 		TestReporter.assertTrue(reservations.size() > 0, "Verify reservations were returned between ["+Randomness.generateCurrentXMLDatetime(0)+"] and ["+Randomness.generateCurrentXMLDatetime(maxDaysOut)+"].");
 	}
-	
+
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "compensation"})
 	public void testCompensationFlow_Checkout_Positive(){
 		TestReporter.logScenario("Checkout");
