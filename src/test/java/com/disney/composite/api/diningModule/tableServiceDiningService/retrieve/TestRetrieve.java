@@ -17,6 +17,8 @@ import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.TableServiceDiningReservation;
 
 public class TestRetrieve extends BaseTest{
 	// Defining global variables
@@ -69,6 +71,7 @@ public class TestRetrieve extends BaseTest{
 		logItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
 		validateLogs(retrieve, logItems);
 	}
+
 	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testReservationWithAllergy(){

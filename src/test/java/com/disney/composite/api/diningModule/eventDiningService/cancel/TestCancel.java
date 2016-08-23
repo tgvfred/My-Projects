@@ -19,24 +19,12 @@ public class TestCancel extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	protected ScheduledEventReservation res = null;
-	
-	
-	@Override
-	@BeforeClass(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(@Optional String environment){
-		this.environment = environment;
-		hh = new HouseHold(1);
-		res = new EventDiningReservation(this.environment, hh);
-		try{
-			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		}catch (SoapException se){
-			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		}
-	}
 
 	@Test( groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testCancel() {
+		hh = new HouseHold(1);
+		ScheduledEventReservation res = new EventDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setReservationNumber(res.getConfirmationNumber());
 		cancel.sendRequest();
@@ -50,4 +38,21 @@ public class TestCancel extends BaseTest{
 		validateLogs(cancel, logItems);
 	}
 
+	@Test( groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testCancel_DLR() {
+		hh = new HouseHold(1);
+		ScheduledEventReservation res = new EventDiningReservation(this.environment, hh);
+		res.book("DLRTableServiceOneChild");
+		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+		cancel.setReservationNumber(res.getConfirmationNumber());
+		cancel.sendRequest();
+		TestReporter.assertTrue(Regex.match("[0-9]+", cancel.getCancellationConfirmationNumber()), "The cancellation number ["+cancel.getCancellationConfirmationNumber()+"] was not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);
+		logItems.addItem("ChargeGroupIF", "cancelChargeGroups", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "cancelOrder", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		validateLogs(cancel, logItems);
+	}
 }

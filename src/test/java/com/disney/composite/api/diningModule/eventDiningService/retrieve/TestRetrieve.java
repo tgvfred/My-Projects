@@ -15,6 +15,9 @@ import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.TableServiceDiningReservation;
 
 public class TestRetrieve extends BaseTest{
 	// Defining global variables
@@ -48,6 +51,26 @@ public class TestRetrieve extends BaseTest{
 		logItems.addItem("PackagingService", "getProducts", false);
 		logItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
 		logItems.addItem("PricingService", "priceComponents", false);
+		validateLogs(retrieve, logItems);
+	}
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testRetrieve_DLR(){
+		TestReporter.logScenario("Retrieve");
+		ScheduledEventReservation res = new EventDiningReservation(this.environment, hh);
+		res.book("DLRTableServiceOneChild");
+		Retrieve retrieve = new Retrieve(this.environment, "Main");
+		retrieve.setReservationNumber(res.getConfirmationNumber());
+		retrieve.sendRequest();
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), retrieve.getFaultString(), retrieve);
+		TestReporter.logAPI(!Regex.match("[0-9]+", retrieve.getPartyId()), "The Party Id ["+retrieve.getPartyId()+"] was not numeric as expected.",retrieve);
+		LogItems logItems = new LogItems();
+		
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "retrieveAssignmentOwner", false);
+		logItems.addItem("TableServiceDiningServiceIF", "retrieve", false);
+		logItems.addItem("FolioServiceIF", "retrieveAccountingTransactions", false);
+		logItems.addItem("PartyIF", "retrieveParty", false);
+		logItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
 		validateLogs(retrieve, logItems);
 	}
 	

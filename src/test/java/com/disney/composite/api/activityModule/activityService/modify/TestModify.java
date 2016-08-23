@@ -11,6 +11,7 @@ import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class TestModify extends BaseTest{
 	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
@@ -23,7 +24,22 @@ public class TestModify extends BaseTest{
 			cancel.sendRequest();
 		}catch(Exception e){}
 	}
-	
+	@Test(groups = {"api", "regression", "dining", "activityService"})
+	public void testReinstate(){
+		ScheduledEventReservation res2 = bookOriginalRes();
+		Modify modify = new Modify(this.environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		res2.cancel();
+		modify.sendRequest();
+		res2.retrieve();
+		TestReporter.logAPI(!res2.getStatus().equals("Booked"), "Reservation status was not [Booked] instead [" + res2.getStatus() + "]", modify);
+	}
 	@Test(groups = {"api", "regression", "activity", "activityService"})
 	public void testModify(){
 		TestReporter.logScenario("1 Adult");

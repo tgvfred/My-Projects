@@ -16,21 +16,13 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.TableServiceDining
 
 public class TestNoShow extends BaseTest{
 	// Defining global variables
-	protected String TPS_ID = null;
-	protected ScheduledEventReservation res = null;	
-	
-	@Override
-	@BeforeClass(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(@Optional String environment){
-		this.environment = environment;
-		hh = new HouseHold(1);
-		res = new TableServiceDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-	}
+
 
 	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService"})
 	public void testNoShow(){
+		hh = new HouseHold(1);
+		ScheduledEventReservation res = new TableServiceDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		TestReporter.logScenario("NoShow");
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber(res.getConfirmationNumber());
@@ -53,4 +45,6 @@ public class TestNoShow extends BaseTest{
 		}		
 		validateLogs(noShow, logItems);
 	}
+	
+
 }

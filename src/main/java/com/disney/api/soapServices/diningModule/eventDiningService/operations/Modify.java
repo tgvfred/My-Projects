@@ -208,7 +208,7 @@ public class Modify extends EventDiningService {
 			int timesTried = 0;
 			while(freeze.getSuccess().equals("failure") && timesTried < 5){				
 				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-				rsInventory.print();
+				//rsInventory.print();
 				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
 				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
 				setReservableResourceId(rsInventory.getValue("Resource_ID"));

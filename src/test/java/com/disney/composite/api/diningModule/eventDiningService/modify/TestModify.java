@@ -1,5 +1,6 @@
 package com.disney.composite.api.diningModule.eventDiningService.modify;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -36,6 +37,12 @@ public class TestModify extends BaseTest{
 		}
 	}
 	
+	@AfterClass(alwaysRun = true)
+	public void cleanup(){
+		try{
+			res.cancel();
+		}catch(Exception e ){}
+	}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModify(){
@@ -64,7 +71,37 @@ public class TestModify extends BaseTest{
 		validateLogs(modify, logItems, 5000);
 	}
 	
-	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModify_DLR(){
+		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		modify.sendRequest();
+		if(modify.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			modify.sendRequest();
+		}
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems, 5000);
+	}
+	
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testReinstate(){
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
@@ -78,8 +115,30 @@ public class TestModify extends BaseTest{
 		modify.setProductId(res2.getProductId());
 		res2.cancel();
 		modify.sendRequest();
+		res2.retrieve();
+		TestReporter.logAPI(!res2.getStatus().equals("Booked"), "Reservation status was not [Booked] instead [" + res2.getStatus() + "]", modify);
 	}
 
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testReinstate_DLR(){
+		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
+		res2.book("DLRTableServiceOneChild");
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		modify.setSignInLocation("334223");
+		res2.cancel();
+		
+		modify.sendRequest();
+		res2.retrieve();
+		TestReporter.logAPI(!res2.getStatus().equals("Booked"), "Reservation status was not [Booked] instead [" + res2.getStatus() + "]", modify);
+	}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo2Adults(){

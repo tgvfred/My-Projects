@@ -731,7 +731,7 @@ public class Book extends ShowDiningService {
 	public void setPartyRoleAgeType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/partyRoles/ageType", value);}
 	
 	
-	public void addSpecialRequest(String id, String type){
+	public void addProfileDetails(String id, String type){
 		int existingSpecialRequest = XMLTools.getNodeList(getRequestDocument(), "/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails").getLength();
 		int nextNodeindex = existingSpecialRequest + 1;
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage", "fx:addNode;node:profileDetails");

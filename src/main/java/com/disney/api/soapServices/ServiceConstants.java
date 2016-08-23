@@ -70,6 +70,59 @@ public class ServiceConstants {
 		public static final String UNAGROUPMASTER = "UNAGROUPMASTER";
 		public static final String UNAGUESTBOOKING = "UNAGUESTBOOKING";
 	}
+	
+	public static class SeGuestRequests{
+
+		public static final String BOOSTER_SEAT = "Booster Seat";
+		public static final String BOOSTER_SEAT_ID = "400";
+		public static final String BOOSTER_SEAT_CODE = "GRBS";
+
+		public static final String HIGH_CHAIR = "High Chair";
+		public static final String HIGH_CHAIR_ID = "404";
+		public static final String HIGH_CHAIR_CODE = "GRHC";
+
+		public static final String REQUEST_HIGH_CHAIR = "REQUEST HIGH CHAIR";
+		public static final String REQUEST_HIGH_CHAIR_ID = "1068";
+		public static final String REQUEST_HIGH_CHAIR_CODE = "!HC";
+
+		public static final String REQUEST_TWO_HIGH_CHAIRS = "REQUEST TWO HIGH CHAIRS";
+		public static final String REQUEST_TWO_HIGH_CHAIRS_ID = "1069";
+		public static final String REQUEST_TWO_HIGH_CHAIRS_CODE = "!HC2";
+	}
+	
+	public static class SeSpecialNeeds{
+		public static final String SPECIAL_DIETARY_REQUEST = "Special Dietary Request";
+		public static final String SPECIAL_DIETARY_REQUEST_ID = "819";
+		public static final String SPECIAL_DIETARY_REQUEST_CODE = "SNDR";
+
+		public static final String HEARING_LOSS = "Hearing loss";
+		public static final String HEARING_LOSS_ID = "821";
+		public static final String HEARING_LOSS_CODE = "SNHL";
+
+		public static final String LIMITED_MOBILITY = "Limited mobility";
+		public static final String LIMITED_MOBILITY_ID = "822";
+		public static final String LIMITED_MOBILITY_CODE = "SNLM";
+
+		public static final String NON_APPARENT_DISABILITY = "Non-apparent disability";
+		public static final String NON_APPARENT_DISABILITY_ID = "823";
+		public static final String NON_APPARENT_DISABILITY_CODE = "SNND";
+
+		public static final String OXYGEN_TANK_USE = "Oxygen tank use";
+		public static final String OXYGEN_TANK_USE_ID = "824";
+		public static final String OXYGEN_TANK_USE_CODE = "SNOTU";
+
+		public static final String SERVICE_ANIMAL = "Service Animal";
+		public static final String SERVICE_ANIMAL_ID = "825";
+		public static final String SERVICE_ANIMAL_CODE = "SNSA";
+
+		public static final String VISUAL_DISABILITY = "Visual disability";
+		public static final String VISUAL_DISABILITY_ID = "826";
+		public static final String VISUAL_DISABILITY_CODE = "SNVD";
+		
+		public static final String WHEELCHAIR_ACCESSIBILITY = "Wheelchair accessibility";
+		public static final String WHEELCHAIR_ACCESSIBILITY_ID = "827";
+		public static final String WHEELCHAIR_ACCESSIBILITY_CODE = "SNWA";
+	}
 }
 
 /*	public enum bookingSource{
