@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestCompensationFlow_GenerateAuthorizationNumber_Negative_Suite">
+	<parameter name="environment" value="Stage_CM" />
+	<test name="TestCompensationFlow_GenerateAuthorizationNumber_Negative">
+		<classes>
+			<class name="com.disney.composite.api.diningModule.scheduledEventsServicePort._compensationFlow.generateAuthorizationNumber.TestCompensationFlow_GenerateAuthorizationNumber_Negative"/>
+		</classes>
+	</test>
+</suite>

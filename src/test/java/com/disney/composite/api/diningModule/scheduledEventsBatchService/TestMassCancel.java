@@ -1,4 +1,4 @@
-package com.disney.composite.api.diningModule.scheduledEventsBatchService;
+/*package com.disney.composite.api.diningModule.scheduledEventsBatchService;
 //******************************************************************
 //******************************************************************
 //******************************************************************
@@ -100,3 +100,4 @@ package com.disney.composite.api.diningModule.scheduledEventsBatchService;
 //		validateNotInLogs(cancel, logValidItems);
 //	}
 //}
+*/

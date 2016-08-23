@@ -35,12 +35,12 @@ public class TestCompensationFlow_AutoArrived_Negative extends BaseTest{
 		TestReporter.assertTrue(reservations.getLength() > 0, "No reservations were returned for the date ["+date+"]");
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative", "compensation"})
 	public void TestCompensationFlow_AutoArrived_Negative_DineFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative", "compensation"})
 	public void TestCompensationFlow_AutoArrived_Negative_FolioFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}

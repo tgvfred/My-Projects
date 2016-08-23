@@ -3,6 +3,7 @@ package com.disney.api.soapServices.diningModule.scheduledEventsServicePort.oper
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.ScheduledEventsServicePort;
 import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
+import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.database.Database;
@@ -13,6 +14,10 @@ import com.disney.utils.dataFactory.database.sqlStorage.AvailSE;
 public class OptimizeInventory extends ScheduledEventsServicePort{
 	
 	private boolean notSetFreezeId = true;
+	private String inventoryBefore;
+	private String inventoryAfter;
+	private String existingInventoryBefore;
+	private String existingInventoryAfter;
 	public OptimizeInventory(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("optimizeInventory")));
@@ -52,10 +57,13 @@ public class OptimizeInventory extends ScheduledEventsServicePort{
 
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getResourceAvailibleTimesByIdAndDate(rrId, date)));
 		rsInventory.print();
+		date = date.replace(" ", "T");
 		String startdate = date.contains("T") 
 				? date.substring(0,date.indexOf("T"))
 				: date;
-		String startTime = rsInventory.getValue("START_DATE").substring(rsInventory.getValue("START_DATE").indexOf(" ")+1, rsInventory.getValue("START_DATE").length()).replace(".0", "");
+		String startTime = rsInventory.getValue("START_DATE");
+		startTime = startTime.substring(rsInventory.getValue("START_DATE").indexOf(" ")+1, rsInventory.getValue("START_DATE").length());
+		startTime = startTime.replace(".0", "");
 //		setReservableResourceId(rsInventory.getValue("Resource_ID"));
 		freeze.setReservableResourceId(rrId);
 		freeze.setStartDate(startdate);
@@ -63,18 +71,18 @@ public class OptimizeInventory extends ScheduledEventsServicePort{
 		freeze.sendRequest();
 //		TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 		int timesTried = 0;
-//		while(freeze.getSuccess().equals("failure") && timesTried < 5){
-////			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-////			rsInventory.print();
-//			startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
-//			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
-////			setReservableResourceId(rsInventory.getValue("Resource_ID"));
-//			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));
-//			freeze.setStartDate(startdate);
-//			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-//			freeze.sendRequest();
-//			if(freeze.getSuccess().equals("failure")) timesTried++;
-//		}
+		while(freeze.getSuccess().equals("failure") && timesTried < 5){
+//			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+//			rsInventory.print();
+			startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+//			setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			freeze.setStartDate(startdate);
+			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+			freeze.sendRequest();
+			if(freeze.getSuccess().equals("failure")) timesTried++;
+		}
 //		if(freeze.getSuccess().equals("failure")){
 			TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
 //		}
@@ -83,4 +91,22 @@ public class OptimizeInventory extends ScheduledEventsServicePort{
 		setRequestNodeValueByXPath("/Envelope/Body/optimizeInventory/optimizeInventoryRequest/freezeId", freezeId);
 		notSetFreezeId = false;
 	}
+	
+	public void sendRequest(String rrId, String dateTime, String existingRrId){
+		existingInventoryBefore = getInventory(existingRrId, dateTime);
+		inventoryBefore = getInventory(rrId, dateTime);
+		super.sendRequest();		
+		inventoryAfter = getInventory(rrId, dateTime);	
+		existingInventoryAfter = getInventory(existingRrId, dateTime);
+	}
+	private String getInventory(String rrId, String dateTime){
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(rrId, dateTime)));
+		rsInventory.print();
+		return rsInventory.getValue("BK_CN");
+	}
+	public String getInventoryCountBefore(){return inventoryBefore;}
+	public String getInventoryCountAfter(){return inventoryAfter;}
+	public String getExistingInventoryCountBefore(){return existingInventoryBefore;}
+	public String getExistingInventoryCountAfter(){return existingInventoryAfter;}
 }
