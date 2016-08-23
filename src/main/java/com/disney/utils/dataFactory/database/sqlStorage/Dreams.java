@@ -74,6 +74,14 @@ public class Dreams {
 		return " select * from folio.chrg where CHRG_ID = " + id;
 	}
 	
+	public static String getTcgTypeByTcg(String tcg){
+		return "select TC_GRP_TYP_NM from res_mgmt.tc_grp a where a.tc_grp_nb = '"+tcg+"'";
+	}
+	
+	public static String getTpsByTcg(String tcg){
+		return "select a.TPS_ID from res_mgmt.tc_grp a where a.tc_grp_nb = '"+tcg+"'";
+	}
+	
 	/**
 	 * This subclass of queries is intended to query the Dreams database for product IDs for a given facility ID.  
 	 * The genesis of this class occurred to resolve the issue of scheduled events (i.e. ALC) reservation product IDs not being consistent across environments.
