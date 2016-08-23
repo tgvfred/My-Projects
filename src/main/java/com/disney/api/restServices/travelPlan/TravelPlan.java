@@ -8,10 +8,10 @@ public class TravelPlan {
 	
 	public TravelPlan(RestService restService){
 		this.restService = restService;
+		this.restService.setMainResource("TravelPlan");
 	}
 	
-	public TravelPlanService TravelPlanService(){
-		return null;
-		/**return new TravelPlanService(restService) ; **/
+	public TravelPlanService travelPlanService(){
+		return new TravelPlanService(restService) ; 
 	}
 }

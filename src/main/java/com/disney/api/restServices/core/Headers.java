@@ -2,6 +2,14 @@ package com.disney.api.restServices.core;
 
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -27,6 +35,7 @@ public class Headers {
 	 */
 	public static enum HeaderType {
 	  	JENKINS,
+	  	AUTH,
 	    BASIC_CONVO,
 	    REST;
 	}
@@ -46,6 +55,12 @@ public class Headers {
 		        	headers = new Header[] {
 		    	   		    new BasicHeader("Content-type", "application/x-www-form-urlencoded")};
 		        	break;
+		        case AUTH:		        	
+        			TestReporter.logInfo("Creating headers for [AUTH]");
+
+		        	headers= new Header[] {
+		    	   		     new BasicHeader("Content-type", "application/x-www-form-urlencoded")};
+		        	break;
 		        case BASIC_CONVO:
         			TestReporter.logInfo("Creating headers for [BASIC_CONVO]");
 		        	headers = new Header[] {
@@ -60,8 +75,21 @@ public class Headers {
 		        	break;
 		        case REST:
 		        	TestReporter.logInfo("Creating headers for [REST]");
+		        	List<NameValuePair> params = new ArrayList<NameValuePair>();
+		        	params.add(new BasicNameValuePair("grant_type", "password"));
+		        	params.add(new BasicNameValuePair("username", "mdxcontc@ngetestmail.com"));
+		        	params.add(new BasicNameValuePair("password", "mickey1"));
+		        	params.add(new BasicNameValuePair("client_id", "SE_TEST_EXTERNAL_PASSWORD"));
+		        	AuthToken authToken = null;
+					try {
+						authToken = new RestService().sendPostRequest(new URI("https://stg.authorization.go.com/token"), HeaderType.AUTH, params).mapJSONToObject(AuthToken.class);
+					} catch (URISyntaxException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        
 		        	headers = new Header []{
-		        			new BasicHeader("Authorization","BEARER 3mEvHUS1u5BcmKva8Zzj7w")
+		        			new BasicHeader("Authorization", authToken.getTokenType() + " " + authToken.getAccessToken())
 		        	};
 		        	break;
 	            default:

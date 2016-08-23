@@ -266,7 +266,7 @@ public class RestService {
 		TestReporter.logDebug("Getting Rest endpoint from TDM");
 		String url = getTdmURL(resource);
 		TestReporter.logDebug("Creating Http PUT instance with URL of ["+url+"]");
-		HttpPut httpPut = new HttpPut(url);
+		HttpPut httpPut = new HttpPut("http://www.google.com");
 		if(type != null){
 			httpPut.setHeaders(Headers.createHeader(type));
 	    }

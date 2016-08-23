@@ -6,7 +6,7 @@ import com.disney.api.restServices.travelPlan.travelPlanService.retrieveDetails.
 public class TravelPlanService {
 	private RestService restService;
 	private String resource = "/travelPlanService";
-	public void travelPlanService(RestService restService){
+	public TravelPlanService(RestService restService){
 		this.restService = restService;
 	}
 	
