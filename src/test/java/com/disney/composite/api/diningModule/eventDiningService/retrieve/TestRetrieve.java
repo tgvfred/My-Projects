@@ -59,7 +59,7 @@ public class TestRetrieve extends BaseTest{
 		TestReporter.logScenario("Retrieve");
 		ScheduledEventReservation res = new EventDiningReservation(this.environment, hh);
 		res.book("DLRTableServiceOneChild");
-		Retrieve retrieve = new Retrieve(this.environment, "Main");
+		Retrieve retrieve = new Retrieve(this.environment, "RetrieveDiningEvent");
 		retrieve.setReservationNumber(res.getConfirmationNumber());
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), retrieve.getFaultString(), retrieve);

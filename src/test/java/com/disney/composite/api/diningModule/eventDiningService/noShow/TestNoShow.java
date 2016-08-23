@@ -15,30 +15,41 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReserva
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestNoShow extends BaseTest{
-	// Defining global variables
-	protected String TPS_ID = null;
-	protected ScheduledEventReservation res = null;
-	
-	
-	@Override
-	@BeforeClass(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(@Optional String environment){
-		this.environment = environment;
-		hh = new HouseHold(1);
-		res = new EventDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-	}
+
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testNoShow(){
+		hh = new HouseHold(1);
+		ScheduledEventReservation res = new EventDiningReservation(this.environment, hh);
+		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		NoShow noShow = new NoShow(environment, "Main");
 		noShow.setReservationNumber(res.getConfirmationNumber());
 		noShow.sendRequest();
 		
 		TestReporter.logAPI(!noShow.getResponseStatusCode().contains("200"), noShow.getFaultString() ,noShow);
-		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationNumber()), "The cancellation number ["+noShow.getCancellationNumber()+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationNumber()), "The cancellation number ["+noShow.getCancellationNumber()+"] was not numeric as expected.");		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "processNoShow", false);
+		logItems.addItem("EventDiningServiceIF", "noShow", false);
+		logItems.addItem("PricingService", "getCancellationCharges", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		validateLogs(noShow, logItems);
+	}
+
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testNoShow_DLR(){
+		hh = new HouseHold(1);
+		ScheduledEventReservation res = new EventDiningReservation(this.environment, hh);
+		res.book("DLRTableServiceOneChild");
+		NoShow noShow = new NoShow(environment, "Main");
+		noShow.setReservationNumber(res.getConfirmationNumber());
+		noShow.sendRequest();
 		
+		TestReporter.logAPI(!noShow.getResponseStatusCode().contains("200"), noShow.getFaultString() ,noShow);
+		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationNumber()), "The cancellation number ["+noShow.getCancellationNumber()+"] was not numeric as expected.");		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "processNoShow", false);

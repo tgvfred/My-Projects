@@ -75,11 +75,10 @@ public class TestModify extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModify_DLR(){
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
-		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		res2.book("DLRTableServiceOneChild");
+		Modify modify = new Modify(this.environment, "DLRRemoveAddOnOneChild");
 		modify.setReservationNumber(res2.getConfirmationNumber());
 		modify.setTravelPlanId(res2.getTravelPlanId());
-		modify.setParty(res2.party());
 		modify.setFacilityId(res2.getFacilityId());
 		modify.setServiceStartDate(res2.getServiceStartDate());
 		modify.setServicePeriodId(res2.getServicePeriodId());
@@ -124,10 +123,10 @@ public class TestModify extends BaseTest{
 	public void testReinstate_DLR(){
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
 		res2.book("DLRTableServiceOneChild");
-		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		Modify modify = new Modify(this.environment, "DLRRemoveAddOnOneChild");
 		modify.setReservationNumber(res2.getConfirmationNumber());
 		modify.setTravelPlanId(res2.getTravelPlanId());
-		modify.setParty(res2.party());
+		//modify.setParty(res2.party());
 		modify.setFacilityId(res2.getFacilityId());
 		modify.setServiceStartDate(res2.getServiceStartDate());
 		modify.setServicePeriodId(res2.getServicePeriodId());

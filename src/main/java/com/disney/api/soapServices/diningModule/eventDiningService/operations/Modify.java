@@ -345,6 +345,7 @@ public class Modify extends EventDiningService {
 		
 		for(Email email : guest.getAllEmails()){
 			if(position == 1){
+				
 				setPrimaryGuestEmailAddressLocatorId("0");
 				setPrimaryGuestEmailAddressGuestLocatorId("0");
 				setPrimaryGuestEmailAddressIsPrimary(email.isPrimary() ? "true":"false");

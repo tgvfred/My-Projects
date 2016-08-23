@@ -2,6 +2,7 @@ package com.disney.composite.api.diningModule.eventDiningService.book;
 
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveAllergies;
 import com.disney.composite.BaseTest;
@@ -11,12 +12,14 @@ import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.dataFactory.staging.GenerateReservation;
+import com.disney.utils.dataFactory.staging.Reservation;
 
 public class TestBook extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBook(){
 		hh = new HouseHold(1);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -45,7 +48,229 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithGuestRequests(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.BOOSTER_SEAT_ID, "GuestRequest");
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+	
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithComments(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setComments("Internal Comments", "Internal");
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithMultipleComments(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setComments("Internal Comments", "Internal");
+		book.setComments("More Internal Comments", "External");
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithMultipleGuestRequests(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.BOOSTER_SEAT_ID, "GuestRequest");
+		book.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.REQUEST_TWO_HIGH_CHAIRS_ID, "GuestRequest");
+		book.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.HIGH_CHAIR_ID, "GuestRequest");
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+	
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithSpecialNeeds(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.HEARING_LOSS_ID, "SeSpecialNeed");
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+	
+
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithMultipleSpecialNeeds(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.HEARING_LOSS_ID, "SeSpecialNeed");
+		book.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.LIMITED_MOBILITY_ID, "SeSpecialNeed");
+		book.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.OXYGEN_TANK_USE_ID, "SeSpecialNeed");
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+	
+
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithMultipleGuestRequestsAndSpecialNeedsAndComments(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.BOOSTER_SEAT_ID, "GuestRequest");
+		book.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.REQUEST_TWO_HIGH_CHAIRS_ID, "GuestRequest");
+		book.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.HIGH_CHAIR_ID, "GuestRequest");
+		book.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.HEARING_LOSS_ID, "SeSpecialNeed");
+		book.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.LIMITED_MOBILITY_ID, "SeSpecialNeed");
+		book.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.OXYGEN_TANK_USE_ID, "SeSpecialNeed");
+		book.setComments("Internal Comments", "Internal");
+		book.setComments("More Internal Comments", "External");
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBook_DLR(){
 		hh = new HouseHold(1);
 		Book book = new Book(environment, "DLRTableServiceOneChild");
@@ -70,8 +295,193 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
+
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithVipLevel2(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setVipLevel("2");
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithInventoryOverride(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setInventoryOverrideReasonId("800060");
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithMembership(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "GuestWithMembership");
+		book.setParty(hh);
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithDefaultTravelAgency(){
+		hh = new HouseHold(1);
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.addTravelAgency("99999998");
+		book.setParty(hh);
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+	
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithRoomReservation(){
+		hh = new HouseHold(1);
+		Reservation res = new GenerateReservation().bookResortReservation().CONTEMPORARY(environment.toUpperCase().replace("_CM", ""));
+		res.setGuestInfo(hh.primaryGuest());
+		res.quickBook();
+		
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setTravelPlanId(res.getTravelPlanId());
+		book.setParty(hh);
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
 	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testBookWithOneComponent(){
+		hh = new HouseHold(1);
+		Reservation res = new GenerateReservation().bookResortReservation().CONTEMPORARY(environment.toUpperCase().replace("_CM", ""));
+		res.setGuestInfo(hh.primaryGuest());
+		res.quickBook();
+		
+		Book book = new Book(environment, "OneComponentNoAddOns");
+		book.setTravelPlanId(res.getTravelPlanId());
+		book.setParty(hh);
+		book.sendRequest();
+		if(book.getResponse().toLowerCase().contains("unique constraint")){
+			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
+			book.sendRequest();
+		}
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		TPS_ID=book.getTravelPlanSegmentId();
+		
+		LogItems logItems = new LogItems();
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "createInventory", false);
+		logItems.addItem("ChargeGroupIF", "createChargeGroupAndPostCharges", false);
+		logItems.addItem("PartyIF", "createAndRetrieveParty", false);	
+		logItems.addItem("TravelPlanServiceV3", "create", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestServiceV1", "create", false); //Sleepy only
+		}
+			
+		validateLogs(book, logItems);
+	}
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBookWith2Adults(){
 		hh = new HouseHold("2 Adults");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -97,7 +507,7 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBookWith4Adults(){
 		hh = new HouseHold("4 Adults");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -126,7 +536,7 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBookWith2Adults2Child(){
 		hh = new HouseHold("2 Adults 2 Child");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -155,7 +565,7 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBookWith4Adults2Child2Infant(){
 		hh = new HouseHold("4 Adults 2 Child 2 Infant");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -185,7 +595,7 @@ public class TestBook extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBookWith12InParty(){
 		hh = new HouseHold(12);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -214,7 +624,7 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testAddAllergy(){
 		hh = new HouseHold("1 Adult");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -245,7 +655,7 @@ public class TestBook extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testAddTwoAllergies(){
 		hh = new HouseHold("1 Adult");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -278,7 +688,7 @@ public class TestBook extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testAddAllAllergies(){
 		hh = new HouseHold(1);
 		Book book = new Book(environment, "NoComponentsNoAddOns");

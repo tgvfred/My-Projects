@@ -5,6 +5,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.diningModule.eventDiningService.EventDiningService;
 import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
+import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.FacilityInfo;
@@ -39,7 +40,8 @@ public class Book extends EventDiningService {
 			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/travelPlanId", value);
 		}
 	}
-	
+
+	public void setVipLevel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/vipLevel", value);}	
 	public void setSalesChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/salesChannel", value);}	
 	public void setCommunicationChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/communicationChannel", value);}	
 	public void setUnitPriceDateTime(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/componentPrices["+index+"]/unitPrices/date", value);}	
@@ -87,7 +89,8 @@ public class Book extends EventDiningService {
 	public void setFacilityName(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/facilityName", value);}	
 	public void setProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/productId", value);}	
 	public void setProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/productType", value);}	
-	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/servicePeriodId", value);}	
+	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/servicePeriodId", value);}
+	public void setInventoryOverrideReasonId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryOverideReasonId", value);}	
 	public void setSignInLocation(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/signInLocation", value);}	
 	public void setAddOnComponentType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/addOnComponents/componentPrices/componentType", value);}	
 	public void setAddOnComponentId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/addOnComponents/componentPrices/componentId", value);}	
@@ -172,7 +175,10 @@ public class Book extends EventDiningService {
 				freeze.setStartDate(startdate);	
 				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
 				freeze.sendRequest();	
-				if(freeze.getSuccess().equals("failure"))timesTried++;
+				if(freeze.getSuccess().equals("failure")){
+					timesTried++;
+					Sleeper.sleep(3000);
+				}
 			}
 
 //			if(freeze.getSuccess().equals("failure")){
@@ -233,34 +239,34 @@ public class Book extends EventDiningService {
 		notSetFreezeId = false;
 	}
 	
-	public void setProfileDetailIdAndType(String id, String type, String index){
+	public void setProfileDetailIdAndType(String id, String type){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfProfileDetails= 1;
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/id");
-		}catch(Exception e){
-			e.printStackTrace();
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:profileDetails");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+index+"]", "fx:AddNode;Node:id");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+index+"]", "fx:AddNode;Node:type");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/id", id);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/type", type);
+			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id");
+			numberOfProfileDetails+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:profileDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:id");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:type");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id", id);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/type", type);
 	}
 	
-	public void setComments(String text, String type, String index){
-		// Determine if the index exists. If not, create it and the necessary
-		// child nodes. If so, then set the child node values
+	public void setComments(String text, String type){
+		int numberOfInternalComments= 1;
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+index+"]/commentText");
-		}catch(Exception e){
-			e.printStackTrace();
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest", "fx:AddNode;Node:internalComments");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+index+"]", "fx:AddNode;Node:commentText");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+index+"]", "fx:AddNode;Node:commentType");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+index+"]/commentText", text);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+index+"]/commentType", type);
+			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
+			numberOfInternalComments+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest", "fx:AddNode;Node:internalComments");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentText");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentType");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText", text);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentType", type);
 	}
 	
 	public void setAllergies(String value, String index){
