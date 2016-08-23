@@ -3,8 +3,13 @@
 <suite name="TestCompensationFlow_EventDining_Suite" configfailurepolicy="continue" parallel="methods" thread-count="20">
 	<parameter name="environment" value="stage_cm" />
 	<test name="TestCompensationFlow_EventDining">
-	<packages>
-		<package name="com.disney.composite.api.diningModule.eventDiningService._compensationFlow.*"></package>
-	</packages>
+		<groups>
+			<run>
+				<include name="compensation"></include>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.diningModule.eventDiningService._compensationFlow.*"></package>
+		</packages>
 	</test>
 </suite>

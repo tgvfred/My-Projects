@@ -1,6 +1,7 @@
 package com.disney.api.soapServices.diningModule.eventDiningService.operations;
 
 import com.disney.api.soapServices.diningModule.eventDiningService.EventDiningService;
+import com.disney.test.utils.Sleeper;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -30,6 +31,7 @@ public class NoShow extends EventDiningService {
 	public void sendRequest(String rrId, String dateTime){
 		inventoryBefore = getInventory(rrId, dateTime);
 		super.sendRequest();
+		Sleeper.sleep(5000);
 		inventoryAfter = getInventory(rrId, dateTime);		
 	}
 	private String getInventory(String rrId, String dateTime){
