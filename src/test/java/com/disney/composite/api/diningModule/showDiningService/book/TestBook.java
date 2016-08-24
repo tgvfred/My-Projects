@@ -73,7 +73,7 @@ public class TestBook extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "it4", "s138180" })
 	public void testAddAllergy(){
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-
+		hh = new HouseHold(1);
 		book.setParty(hh);
 		book.setAllergies("Egg", "1");
 		book.sendRequest();
@@ -123,6 +123,7 @@ public class TestBook extends BaseTest{
 	public void testAddAllAllergies(){
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 
+		hh = new HouseHold(1);
 		book.setParty(hh);
 		RetrieveAllergies retrieveAllergies = new RetrieveAllergies(environment);
 		retrieveAllergies.sendRequest();

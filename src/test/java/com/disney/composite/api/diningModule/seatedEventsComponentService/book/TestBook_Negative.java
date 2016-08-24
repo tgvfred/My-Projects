@@ -71,7 +71,7 @@ public class TestBook_Negative extends BaseTest{
 		TestReporter.logScenario("Missing Nexus Reservation Code");
 		Book book = book();
 		book.setNexusReservationCode(BaseSoapCommands.REMOVE_NODE.toString());
-		sendRequestValidateLogs(book, "Unexpected Error occurred : The following required parameters are missing from TravelPlanServiceV3.create: travelPlanRequest.salesOrderRequests.externalReferences.value  -- Parent Exception: The following required parameters are missing from TravelPlanServiceV3.create: travelPlanRequest.salesOrderRequests.externalReferences.value", LiloSystemErrorCode.UNEXPECTED_ERROR);
+		sendRequestValidateLogs(book, "ORA-01400: cannot insert NULL into (???)", LiloSystemErrorCode.UNEXPECTED_ERROR);
 	}
 	@Test(groups = {"api", "regression", "dining", "seatedEventsComponentService", "negative"})
 	public void missingSalesChannel(){
@@ -141,7 +141,7 @@ public class TestBook_Negative extends BaseTest{
 		TestReporter.logScenario("Invalid Primary Guest Title - Non-Existent Center");
 		Book book = book();
 		book.setSourceAccountingCenter(sac);
-		sendRequestValidateLogs(book, "SQL Query Error  :  SQL Query Error in Component Service com.wdw.resmanagement.service.ejb.SeatedEventsComponentService.book", LiloSystemErrorCode.SQL_QUERY_ERROR);
+		sendRequestValidateLogs(book, "ORA-01400: cannot insert NULL into (???)", LiloSystemErrorCode.UNEXPECTED_ERROR);
 	}
 
 	private Book book(){

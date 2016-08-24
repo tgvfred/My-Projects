@@ -10,6 +10,16 @@ public class AvailSE {
 				 " order by fsell_invtry_srvc_dts";
 	}
 	
+	public static String getResourceAvailibleTimesByIdAndStartDate(String resourceId, String startDate){
+		return  "select b.ENTRPRS_FAC_ID Facility_ID, a.RSRVBL_RSRC_ID Resource_ID, a.FSELL_INVTRY_ID Inventory_ID, a.FSELL_INVTRY_SRVC_DTS Start_Date " +
+				 " from AVAILSE.fsell_invtry a, AVAILSE.rsrvbl_rsrc b " +
+				 " where a.rsrvbl_rsrc_id = b.rsrvbl_rsrc_id " +
+				 " and b.RSRVBL_RSRC_ID = '" + resourceId + "' " +
+				 " and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd') = '" +startDate + "' " +
+				 " and rownum = 1 " + 
+				 " order by fsell_invtry_srvc_dts";
+	}
+	
 	public static String getResourceAvailibleTimesByIdAndDate(String resourceId, String startDate){
 		String date = startDate.contains("T") ? startDate.substring(0, startDate.indexOf("T")) : startDate;
 		return  "select Facility_ID, Resource_ID, Inventory_ID, Start_Date " +
@@ -57,5 +67,10 @@ public class AvailSE {
 		     + "WHERE a.FSELL_INVTRY_ID = b.FSELL_INVTRY_ID "
 		     + "AND a.RSRVBL_RSRC_ID =  '" + resourceId + "' " 
 		     + "and to_char(a.FSELL_INVTRY_SRVC_DTS, 'yyyy-mm-dd') = '"+date+"'  ";
+	}
+	
+	public static String getReservableResourceByProductId(final String productId){
+		return "SELECT * FROM AVAILSE.PROD_RSRVBL_RSRC_XREF"
+				+ " WHERE PROD_ID = " + productId;
 	}
 }

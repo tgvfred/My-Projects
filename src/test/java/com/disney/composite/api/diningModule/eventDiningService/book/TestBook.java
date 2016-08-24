@@ -2,6 +2,7 @@ package com.disney.composite.api.diningModule.eventDiningService.book;
 
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveAllergies;
 import com.disney.composite.BaseTest;
@@ -16,7 +17,7 @@ public class TestBook extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBook(){
 		hh = new HouseHold(1);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -47,7 +48,7 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBookWith2Adults(){
 		hh = new HouseHold("2 Adults");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -75,7 +76,7 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBookWith4Adults(){
 		hh = new HouseHold("4 Adults");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -106,7 +107,7 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBookWith2Adults2Child(){
 		hh = new HouseHold("2 Adults 2 Child");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -137,7 +138,7 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBookWith4Adults2Child2Infant(){
 		hh = new HouseHold("4 Adults 2 Child 2 Infant");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -169,7 +170,7 @@ public class TestBook extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBookWith12InParty(){
 		hh = new HouseHold(12);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -200,7 +201,7 @@ public class TestBook extends BaseTest{
 		validateLogs(book, logItems);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testAddAllergy(){
 		hh = new HouseHold("1 Adult");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -233,7 +234,7 @@ public class TestBook extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testAddTwoAllergies(){
 		hh = new HouseHold("1 Adult");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
@@ -272,8 +273,7 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold(1);
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.setFreezeId();
-		
+		book.addDetailsByFacilityNameAndProductName("Pioneer Hall", "Hoop-Dee-Doo-Cat 1-1st Show");
 		RetrieveAllergies retrieveAllergies = new RetrieveAllergies(environment);
 		retrieveAllergies.sendRequest();
 		TestReporter.logAPI(!retrieveAllergies.getResponseStatusCode().contains("200"), "An error occurred retrieving allergies: " + retrieveAllergies.getFaultString() ,retrieveAllergies);
@@ -283,9 +283,8 @@ public class TestBook extends BaseTest{
 			book.setAllergies(allergy,String.valueOf(index));
 			index++;
 		}
-		
+
 		book.sendRequest();
-		
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), "An error occurred bookingan event dining reservation: " + book.getFaultString() ,book);
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is not numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is not numeric as expected.");

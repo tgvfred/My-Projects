@@ -32,7 +32,6 @@ public class TestBookWithAddOns extends BaseTest{
 	public void testBookWithAddOns(){
 		Book book = new Book(environment, ScheduledEventReservation.ADDON);
 		book.setParty(hh);
-		book.setSignInLocation(BaseSoapCommands.REMOVE_NODE.toString());
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		TP_ID = book.getTravelPlanId();

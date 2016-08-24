@@ -615,7 +615,18 @@ public abstract class BaseSoapService{
 	public void setRequestNodeValueByXPath(String xpath, String value) {
 			setRequestNodeValueByXPath(getRequestDocument(),xpath,value);
 	}
-
+	
+	public void setRequestNodeValueByXPathAndAddNode(String xpath, String value){
+		try{
+			setRequestNodeValueByXPath(xpath, value);
+		}catch(Exception e){
+			String node = xpath.substring(xpath.lastIndexOf("/") + 1,  xpath.length());
+			xpath = xpath.substring(0, xpath.lastIndexOf("/"));
+			if(node.contains("@"))	node = node.substring(0,node.indexOf("@"));
+			setRequestNodeValueByXPath(xpath, "fx:AddNode;Node:" + node);
+			setRequestNodeValueByXPath(xpath, value);
+		}
+	}
 	/**
 	 * @summary Update multiple XPath nodes or attributes based on the value. The value
 	 *          is not limited to simple values, but may also call various
