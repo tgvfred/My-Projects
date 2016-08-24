@@ -56,11 +56,13 @@ import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 
 import com.disney.AutomationException;
+import com.disney.api.WebServiceException;
 import com.disney.api.restServices.core.Headers.HeaderType;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -266,7 +268,7 @@ public class RestService {
 		TestReporter.logDebug("Getting Rest endpoint from TDM");
 		String url = getTdmURL(resource);
 		TestReporter.logDebug("Creating Http PUT instance with URL of ["+url+"]");
-		HttpPut httpPut = new HttpPut("http://www.google.com");
+		HttpPut httpPut = new HttpPut(url);
 		if(type != null){
 			httpPut.setHeaders(Headers.createHeader(type));
 	    }
@@ -448,4 +450,13 @@ public class RestService {
 		TestReporter.logDebug("Returning RestResponse to calling method");
 		return response;
 	}
+	
+	public String getJsonFromObject(Object request){
+		ObjectMapper mapper = new ObjectMapper();
+			try {
+	            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request);
+	        } catch (JsonProcessingException e) {
+	            throw new WebServiceException("Failed to convert object to json");
+	    }
+	 }
 }

@@ -2,7 +2,7 @@ package com.disney.api.restServices;
 
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.folio.Folio;
-import com.disney.api.restServices.folio.chargeAccountServiceV2.ChargeAccountServiceV2;
+import com.disney.api.restServices.folio.chargeAccountService.ChargeAccountService;
 import com.disney.api.restServices.sales.Sales;
 import com.disney.api.restServices.travelPlan.TravelPlan;
 

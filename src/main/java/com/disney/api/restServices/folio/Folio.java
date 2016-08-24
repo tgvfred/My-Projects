@@ -1,7 +1,7 @@
 package com.disney.api.restServices.folio;
 
 import com.disney.api.restServices.core.RestService;
-import com.disney.api.restServices.folio.chargeAccountServiceV2.ChargeAccountServiceV2;
+import com.disney.api.restServices.folio.chargeAccountService.ChargeAccountService;
 import com.disney.api.restServices.folio.folioService.FolioService;
 
 public class Folio {
@@ -11,8 +11,8 @@ public class Folio {
 		this.restService = restService;
 	}
 	
-	public ChargeAccountServiceV2 chargeAccountServiceV2(){
-		return new ChargeAccountServiceV2(restService);
+	public ChargeAccountService chargeAccountService(){
+		return new ChargeAccountService(restService);
 	}
 	
 	public FolioService FolioService(){
