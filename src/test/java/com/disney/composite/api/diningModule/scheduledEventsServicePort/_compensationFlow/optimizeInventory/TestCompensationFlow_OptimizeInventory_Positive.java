@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.OptimizeInventory;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Retrieve;
 import com.disney.composite.BaseTest;
-import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -24,7 +23,6 @@ public class TestCompensationFlow_OptimizeInventory_Positive extends BaseTest{
 	private Recordset rsResourceId;
 	private Database availDb;
 	private Recordset rsInventory;
-	private String date = Randomness.generateCurrentXMLDate(1);
 	private Database db;
 	private String startDateTime;
 	
@@ -113,6 +111,12 @@ public class TestCompensationFlow_OptimizeInventory_Positive extends BaseTest{
 		default:
 			tcgTypeFound = false;
 			break;
+		}
+		if(tcgTypeFound){
+			if(!startDateTime.substring(startDateTime.lastIndexOf(":")).equals("00")){
+				startDateTime = startDateTime.substring(0, startDateTime.length()-2);
+				startDateTime = startDateTime + "00";
+			}
 		}
 		return tcgTypeFound;
 	}
