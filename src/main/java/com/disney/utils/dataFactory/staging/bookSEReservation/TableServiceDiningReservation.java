@@ -30,6 +30,8 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	private String status;	// Current reservation status
 	private String arrivedStatus;	// Status from updating a reservation to 'Arrived'
 	private String facilityId;	// Facility ID for the current reservation
+	private String productId;	// Product ID for the current reservation
+	private String productName;	// Product Name for the current reservation
 	private String servicePeriod;	// Service periods for the current reservation
 	private String serviceStartDate;	// Service start date for the current reservation, A.K.A. the date of the reservation, not to be confused with the date that the reservation was booked
 	private String bookingScenario = NOCOMPONENTSNOADDONS;	// Default booking scenario, intended to have all extraneous elements (components, add-ons, comments, etc.) removed
@@ -133,6 +135,11 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 */
 	@Override public String getProductId(){throw new AutomationException(productIdExceptionMessage);}
 	/**
+	 * Retrieves the product ID of the current reservation
+	 * @return String, product ID of the current reservation
+	 */
+	@Override public String getProductName(){throw new AutomationException(productIdExceptionMessage);}
+	/**
 	 * Retrieves the product type of the current reservation
 	 * @return String, product type of the current reservation
 	 */
@@ -186,6 +193,10 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 * Throws an automation exception as Table Service reservations do not expect product types
 	 */
 	@Override public void setProductId(String productId) {throw new AutomationException(productIdExceptionMessage);}
+	/**
+	 * Throws an automation exception as Table Service reservations do not expect product types
+	 */
+	@Override public void setProductName(String productNAme) {throw new AutomationException(productIdExceptionMessage);}
 	/**
 	 * Throws an automation exception as Table Service reservations do not expect product types
 	 */

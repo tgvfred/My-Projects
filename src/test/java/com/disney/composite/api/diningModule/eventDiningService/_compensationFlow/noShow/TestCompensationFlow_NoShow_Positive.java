@@ -12,6 +12,10 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.No
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
@@ -51,5 +55,9 @@ public class TestCompensationFlow_NoShow_Positive extends BaseTest{
 		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'NoShow'", noShow);
 		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationNumber()), "Verify the concellation number ["+noShow.getCancellationNumber()+"] is numeric.");
 		TestReporter.assertTrue(Integer.parseInt(noShow.getInventoryCountAfter()) < Integer.parseInt(noShow.getInventoryCountBefore()), "Verify the booked inventory count ["+noShow.getInventoryCountAfter()+"] decrements from the previous value ["+noShow.getInventoryCountBefore()+"].");
+		
+		Database db = new OracleDatabase(environment, "Dreams");
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(book.getTravelPlanSegmentId())));
+		TestReporter.assertEquals(rs.getValue("TPS_TRAVEL_STATUS"), "No Show", "Verify that the travel plan segment status ["+rs.getValue("TPS_TRAVEL_STATUS")+"] is [No Show] as expected.");
 	}
 }

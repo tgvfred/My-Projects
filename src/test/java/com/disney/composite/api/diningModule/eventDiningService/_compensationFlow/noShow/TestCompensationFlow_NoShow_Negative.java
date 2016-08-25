@@ -9,9 +9,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.NoShow;
 import com.disney.composite.BaseTest;
-import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
@@ -44,10 +42,10 @@ public class TestCompensationFlow_NoShow_Negative extends BaseTest{
 		}catch(Exception e){}
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negtive", "compensation"})
-	public void TestCompensationFlow_NoShow_Negative_RIMFail(){
-		throw new SkipException("The testing solution for this scenario has not been determined.");
-	}
+//	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negtive", "compensation"})
+//	public void TestCompensationFlow_NoShow_Negative_RIMFail(){
+//		throw new SkipException("The testing solution for this scenario has not been determined.");
+//	}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negtive", "compensation"})
 	public void TestCompensationFlow_NoShow_Negative_DineFail(){

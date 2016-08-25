@@ -37,7 +37,7 @@ public class TestModify extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	////@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModify(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(res.getConfirmationNumber());
@@ -64,7 +64,7 @@ public class TestModify extends BaseTest{
 		validateLogs(modify, logItems, 5000);
 	}
 	
-	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	////@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testReinstate(){
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
@@ -81,7 +81,7 @@ public class TestModify extends BaseTest{
 	}
 
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo2Adults(){
 		HouseHold newParty = new HouseHold("2 Adults");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -109,7 +109,7 @@ public class TestModify extends BaseTest{
 		validateLogs(modify, logItems, 5000);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo4Adults(){
 		HouseHold newParty = new HouseHold("4 Adults");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -142,7 +142,7 @@ public class TestModify extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo2Adults2Child(){
 		HouseHold newParty = new HouseHold("2 Adults 2 Child");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -175,7 +175,7 @@ public class TestModify extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo4Adults2Child2Infant(){
 		HouseHold newParty = new HouseHold("4 Adults 2 Child 2 Infant");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -208,7 +208,7 @@ public class TestModify extends BaseTest{
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo12Adults(){
 		HouseHold newParty = new HouseHold(12);
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -245,15 +245,14 @@ public class TestModify extends BaseTest{
 	public void testModifyAddAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		
+		book.addDetailsByFacilityNameAndProductName("Biergarten Restaurant", "Biergarten Lunch");
 		book.sendRequest();
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		modify.setTravelPlanId(book.getTravelPlanId());
 		modify.setParty(hh);
-		modify.setFacilityId(book.getRequestFacilityId());
-		modify.setServiceStartDate(book.getRequestServiceStartDate());
-		modify.setServicePeriodId(book.getRequestServicePeriodId());
-		modify.setProductId(book.getRequestProductId());
+		modify.setServiceStartDateTime(book.getRequestServiceStartDate());
+		modify.addDetailsByFacilityNameAndProductName("Biergarten Restaurant", "Biergarten Dinner");
 		modify.setAllergies("Egg", "1");
 		modify.sendRequest();
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
@@ -272,7 +271,7 @@ public class TestModify extends BaseTest{
 		validateLogs(modify, logItems, 5000);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testModifyAddAdditionalAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		
@@ -305,7 +304,7 @@ public class TestModify extends BaseTest{
 		validateLogs(modify, logItems, 5000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testModifyRemoveAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		

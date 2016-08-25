@@ -10,6 +10,7 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.Ar
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
+import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -31,6 +32,7 @@ public class TestCompensationFlow_Arrived_Positive extends BaseTest{
 		hh = new HouseHold(1);
 		book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		book.setParty(hh);
+		book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(15));
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		reservableResourceId = book.getReservableResourceId();

@@ -414,6 +414,7 @@ public class FolioInterfacePayment extends FolioInterface{
 			postPayment.setRetreivalReferenceNumber();
 			convoMapKey = "payment";
 		}	
+		postPayment.setCardNumber( "************" + getCardNumber().substring(12));
 		postPayment.sendRequest();
 		getConversationIdMap().put(convoMapKey, postPayment.getConversationID());
 		if(getIsNegativeScenario().equalsIgnoreCase("true")){

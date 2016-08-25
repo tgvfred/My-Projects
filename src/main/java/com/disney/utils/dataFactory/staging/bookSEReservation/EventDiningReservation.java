@@ -31,6 +31,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	private String arrivedStatus;	// Status from updating a reservation to 'Arrived'
 	private String facilityId;	// Facility ID for the current reservation
 	private String productId;	// Product ID for the current reservation
+	private String productName;	// Product Name for the current reservation
 	private String productType;	//Product Type for the current reservation
 	private String servicePeriod;	// Service periods for the current reservation
 	private String serviceStartDate;	// Service start date for the current reservation, A.K.A. the date of the reservation, not to be confused with the date that the reservation was booked
@@ -133,6 +134,11 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 */
 	@Override public String getProductId(){return this.productId;}
 	/**
+	 * Retrieves the product name of the current reservation
+	 * @return String, product name of the current reservation
+	 */
+	@Override public String getProductName(){return this.productId;}
+	/**
 	 * Retrieves the product type of the current reservation
 	 * @return String, product type of the current reservation
 	 */
@@ -188,6 +194,11 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 * @param productId - product ID for the current reservation
 	 */
 	@Override public void setProductId(String productId){this.productId = productId;}
+	/**
+	 * Set the product name for the current reservation
+	 * @param productId - product name for the current reservation
+	 */
+	@Override public void setProductName(String productName){this.productName = productName;}
 	/**
 	 * Set the product type for the current reservation
 	 * @param productType - product type for the current reservation
@@ -260,13 +271,9 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		TestReporter.logStep("Book an event dining reservation.");
 		Book eventDiningBook = new Book(getEnvironment(), this.bookingScenario);
 		eventDiningBook.setParty(party());		
-		eventDiningBook.setFacilityId(getFacilityId());		//FAC.FAC_ID
-		eventDiningBook.setProductId(getProductId());          //PROD.PROD_ID
-		if(facilityName != null)
-			if(!facilityName.isEmpty()) eventDiningBook.setFacilityName(facilityName);
-		if(this.productType != null) if(!this.productType.isEmpty()) eventDiningBook.setProductType(this.productType);
 		eventDiningBook.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		eventDiningBook.setServiceStartDateTime(getServiceStartDate());
+		eventDiningBook.addDetailsByFacilityNameAndProductName(facilityName, productName);
 		if(!agencyId.equals("0")){eventDiningBook.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 		
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
@@ -435,18 +442,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 			modify.setReservationNumber(getConfirmationNumber());
 			modify.setTravelPlanId(getTravelPlanId());
 
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			resource.getReservableResources();
-			
-			modify.setReservableResourceId(resource.getFirstReservableResourceId());
-			modify.setParty(party());
-			modify.setFacilityId(getFacilityId());
-			modify.setServiceStartDate(getServiceStartDate());
-			modify.setServicePeriodId(getServicePeriodId());
-			modify.setProductId(getProductId());
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+			modify.addDetailsByFacilityNameAndProductName(facilityName, productName);
 			modify.sendRequest();
 			if(modify.getResponse().contains("Row was updated or deleted by another transaction")){
 				Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);

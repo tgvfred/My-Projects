@@ -92,7 +92,7 @@ public class CreateSettlementMethod extends FolioService {
 	}
 	
 	public void setCardNumber(String value){
-		setRequestNodeValueByXPath("/Envelope/Body/createSettlementMethod/settlementMethod/card/creditCardNumber", value);
+		setRequestNodeValueByXPath("/Envelope/Body/createSettlementMethod/settlementMethod/card/creditCardNumber", "************" + value.substring(12));
 	}
 	
 	public void setCardName(String value){
