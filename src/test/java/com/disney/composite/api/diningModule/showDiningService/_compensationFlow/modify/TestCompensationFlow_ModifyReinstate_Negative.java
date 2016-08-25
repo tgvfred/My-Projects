@@ -15,7 +15,7 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
-	private Book book;
+	private ThreadLocal<Book> book = new ThreadLocal<Book>();
 	protected String startDate;
 	protected String startTime;
 	
@@ -25,13 +25,13 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-		book.setParty(hh);
-		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
+		book.set(new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS));
+		book.get().setParty(hh);
+		book.get().sendRequest();
+		TestReporter.logAPI(!book.get().getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.get().getFaultString(), book.get());
 		
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
+		cancel.setTravelPlanSegmentId(book.get().getTravelPlanSegmentId());
 		cancel.sendRequest();
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred during cancelling: " + cancel.getFaultString(), cancel);
 	}
@@ -40,7 +40,7 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 	public void teardown(){
 		try{
 			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-			cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
+			cancel.setTravelPlanSegmentId(book.get().getTravelPlanSegmentId());
 			cancel.sendRequest();
 		}catch(Exception e){}
 	}
