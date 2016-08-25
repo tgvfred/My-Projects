@@ -10,6 +10,7 @@ import org.apache.http.message.BasicHeader;
 import com.disney.api.restServices.core.Headers.HeaderType;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
 import com.disney.test.utils.Randomness;
 
 public class retrieveGuests {
@@ -21,8 +22,8 @@ public class retrieveGuests {
 		this.resource = resource + this.resource;
 	}
 	
-	public RestResponse sendPutRequest(String json){	
-		
+	public RestResponse sendPutRequest(RetrieveGuestsRequest request){	
+		String json = restService.getJsonFromObject(request);
 		return restService.sendPutRequest(resource, HeaderType.REST,json);		
 	}
 	

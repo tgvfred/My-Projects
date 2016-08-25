@@ -3,6 +3,9 @@ package com.disney.composite.api.RestServices.folio.chargeAccount.chargeAccount.
 import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
 import static org.testng.AssertJUnit.assertTrue;
+
+import java.io.IOException;
+
 import org.testng.annotations.Test;
 import static org.testng.AssertJUnit.assertTrue;
 import org.testng.annotations.BeforeMethod;
@@ -11,6 +14,8 @@ import org.testng.annotations.Parameters;
 
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.core.RestResponse;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieveGuests.request.objects.ExternalReferenceTO;
 import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
@@ -40,10 +45,22 @@ private String environment = "Development";
 	
 	
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieveGuests"})
-	public void testretrieveGuests(){
+	public void testretrieveGuests()throws IOException{
+		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		String json = "{\"externalReferenceTO\": [{\"referenceName\": \"DREAMS_TP\",\"referenceValue\": \"462143359419\"},\"sourceAccountingCenter\": \"2\"}]}";		
-RestResponse response= Rest.folio("Development").chargeAccountService().chargeAccount().retrieveGuests().sendPutRequest(json);
+		
+		//create the json message
+		RetrieveGuestsRequest request = new RetrieveGuestsRequest();
+		
+		//Adding data for the different nodes
+		//Added External Reference Type
+		
+		//Add External Reference Value
+		
+		//Add SourceAccountingCenter
+		request.setSourceAccountingCenter("2");
+				
+RestResponse response= Rest.folio("Development").chargeAccountService().chargeAccount().retrieveGuests().sendPutRequest(request);
 TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 
 	}

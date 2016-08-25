@@ -17,10 +17,6 @@ public class Retrieve {
 		this.resource = resource + this.resource;
 	}
 	
-	/**public RestResponse sendPutRequest(String json){	
-		
-		return restService.sendPutRequest(resource, HeaderType.REST, json);		
-	}**/
 	public RestResponse sendPutRequest(RetrieveRequest request){	
 		String json = restService.getJsonFromObject(request);
 		return restService.sendPutRequest(resource, HeaderType.REST, json);		

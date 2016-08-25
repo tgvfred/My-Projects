@@ -17,6 +17,7 @@ import org.testng.annotations.Parameters;
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.updatePin.request.UpdatePinRequest;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.updatePin.response.UpdatePinResponse;
 import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
@@ -58,7 +59,8 @@ private String environment = "Development";
 	
 	RestResponse response= Rest.folio("Development").chargeAccountService().chargeAccount().updatePin().sendPutRequest(request);
 	TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
-
+	TestReporter.assertTrue(response.getResponse().contains("Success"), "Update Pin status of was [Success]");
+		
 	}
 
 }
