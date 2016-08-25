@@ -58,6 +58,9 @@ public class TestCompensationFlow_OptimizeInventory_Positive extends BaseTest{
 			TestReporter.assertTrue(Integer.parseInt(optimize.getExistingInventoryCountAfter()) < Integer.parseInt(optimize.getExistingInventoryCountBefore()), 
 					"Verify the booked inventory count ["+optimize.getExistingInventoryCountAfter()+"] for the old reservable reservation ID ["+inventoryGot+"] is decremented from the previous value ["+optimize.getExistingInventoryCountBefore()+"].");
 		}
+		Database db = new OracleDatabase(environment, "Dreams");
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(res.getConfirmationNumber())));
+		TestReporter.assertEquals(rs.getValue("TPS_TRAVEL_STATUS"), "Booked", "Verify that the travel plan segment status ["+rs.getValue("TPS_TRAVEL_STATUS")+"] is [Booked] as expected.");
 	}
 	
 	private void preReq(){

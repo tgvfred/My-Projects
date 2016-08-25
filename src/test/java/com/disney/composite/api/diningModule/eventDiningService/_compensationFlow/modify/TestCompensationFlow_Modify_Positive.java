@@ -10,6 +10,7 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.Bo
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify;
 import com.disney.composite.BaseTest;
+import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
@@ -42,17 +43,19 @@ public class TestCompensationFlow_Modify_Positive extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
 	public void testCompensationFlow_Modify_Positive(){
-		hh = new HouseHold("2 Adults");
 		Modify modify = new Modify(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		modify.setTravelPlanId(book.getTravelPlanId());
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		modify.setParty(hh);
-		modify.setReservableResourceId(book.getReservableResourceId());
-		modify.setStartDate(book.getStartDate());
-		modify.setStartTime(book.getStartTime());
+		modify.setReservableResourceId(book.getReservableResourceId(), true);
+		modify.setServiceStartDate(Randomness.generateCurrentXMLDate(30));
+//		modify.setStartDate(book.getStartDate());
+//		modify.setStartTime(book.getStartTime());
+		modify.setExistingRRID(book.getReservableResourceId());
+		modify.setExistingStartDateTime(book.getStartTime());
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred modifying reservation ["+book.getTravelPlanSegmentId()+"]:" + modify.getFaultString(), modify);
 		TestReporter.assertEquals(modify.getResponseStatus(), "SUCCESS", "Verify that the modification status ["+modify.getResponseStatus()+"] is [SUCCESS].");
-		TestReporter.assertTrue(Integer.parseInt(modify.getInventoryCountBefore()) == Integer.parseInt(modify.getInventoryCountAfter()), "Verify the booked inventory count ["+modify.getInventoryCountBefore()+"] remains the same as the value prior to modifying ["+modify.getInventoryCountAfter()+"].");
+		TestReporter.assertTrue(Integer.parseInt(modify.getInventoryCountBefore()) < Integer.parseInt(modify.getInventoryCountAfter()), "Verify the booked inventory count ["+modify.getInventoryCountBefore()+"] remains the same as the value prior to modifying ["+modify.getInventoryCountAfter()+"].");
 	}
 }

@@ -7,10 +7,13 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Retrieve;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
@@ -42,10 +45,8 @@ public class TestCompensationFlow_Cancel_Positive extends BaseTest{
 		TestReporter.logAPI(!Regex.match("[0-9]+", cancel.getCancellationConfirmationNumber()), "Verify the cancellation confirmation number ["+cancel.getCancellationConfirmationNumber()+"] is numeric as expected.", cancel);		
 		TestReporter.assertTrue(Integer.parseInt(cancel.getInventoryCountBefore()) > Integer.parseInt(cancel.getInventoryCountAfter()), "Verify the booked inventory count ["+cancel.getInventoryCountAfter()+"] for reservable resource ID ["+reservableResourceId+"] decrements from the count prior to cancelling ["+cancel.getInventoryCountBefore()+"]");
 		
-		Retrieve retrieve = new Retrieve(environment, "RetrieveDiningEvent");
-		retrieve.setReservationNumber(book.getTravelPlanSegmentId());
-		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving reservation number ["+book.getTravelPlanSegmentId()+"].", retrieve);
-		TestReporter.assertEquals(retrieve.getStatus(), "Cancelled", "Verify the reservation status ["+retrieve.getStatus()+"] is [Cancelled] as expected.");
+		Database db = new OracleDatabase(environment, "Dreams");
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(book.getTravelPlanSegmentId())));
+		TestReporter.assertEquals(rs.getValue("TPS_TRAVEL_STATUS"), "Cancelled", "Verify that the travel plan segment status ["+rs.getValue("TPS_TRAVEL_STATUS")+"] is [Cancelled] as expected.");
 	}
 }

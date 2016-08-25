@@ -27,6 +27,11 @@ public class Modify extends EventDiningService {
 	protected String inventoryAfter;
 	protected String startDate;
 	protected String startTime;
+	private boolean newDateTime;
+	private String existingInventoryBefore;
+	private String existingInventoryAfter;
+	private String existingRRID;
+	private String existingStartDateTime;
 	public Modify(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("modify")));
@@ -163,6 +168,12 @@ public class Modify extends EventDiningService {
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);
 		reservableResourceId = value;
 	}
+	
+	public void setReservableResourceId(String value, boolean newDateTime){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);
+		reservableResourceId = value;
+		this.newDateTime = newDateTime;
+	}
 	public void setPrimaryGuestTitle(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/primaryGuest/title", value);}
 	public void setPrimaryGuestSuffix(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/primaryGuest/suffix", value);}
 	public void setContactName(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/contactName", value);}
@@ -184,12 +195,15 @@ public class Modify extends EventDiningService {
 
 	@Override
 	public void sendRequest(){
+		setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));
 		if(notSetFreezeId) 	setFreezeId();
 		boolean failure = false;
 		try{setInventoryCountBefore(getInventory());}
 		catch(Exception e){failure = true;}
-		if(!failure) setInventoryCountAfter(getInventory());
 		super.sendRequest();
+		if(!failure) setInventoryCountAfter(getInventory());
+		setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
+		
 		if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
 				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
 				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
@@ -199,6 +213,14 @@ public class Modify extends EventDiningService {
 			setInventoryCountAfter(getInventory());
 		}
 	}
+	public void setExistingRRID(String rrid){existingRRID = rrid;}
+	public void setExistingStartDateTime(String dateTime){existingStartDateTime = dateTime;}
+	private void setExistingInventoryCountBefore(String before){existingInventoryBefore = before;}
+	public String getExistingInventoryCountBefore(){return existingInventoryBefore;}
+	private void setExistingInventoryCountAfter(String after){existingInventoryAfter = after;}
+	public String getExistingInventoryCountAfter(){return existingInventoryAfter;}
+	
+	
 	private void setInventoryCountBefore(String before){inventoryBefore = before;}
 	public String getInventoryCountBefore(){return inventoryBefore;}
 	private void setInventoryCountAfter(String after){inventoryAfter = after;}
@@ -209,7 +231,13 @@ public class Modify extends EventDiningService {
 	public void setStartDate(String date){startDate = date;}
 	private String getInventory(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
-		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, startTime)));
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, startTime.replace("T", " "))));
+		rsInventory.print();
+		return rsInventory.getValue("BK_CN");
+	}
+	private String getInventory(String existingRRID, String existingStartDateTime){
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(existingRRID, existingStartDateTime)));
 		rsInventory.print();
 		return rsInventory.getValue("BK_CN");
 	}
@@ -220,15 +248,16 @@ public class Modify extends EventDiningService {
 		Freeze freeze = new Freeze(getEnvironment(), "Main");
 		//rs = new Recordset(db.getResultSet(AvailSE.getFreezeId(getRequestReservableResourceId(), freeze.getRequestServiceStartDate() + " " + freeze.getRequestServiceStartTime())));
 		Recordset rsInventory;
-		if(reservableResourceId == null){
-			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+		if(reservableResourceId == null || newDateTime == true){
+			if(reservableResourceId == null)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+			else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId)));
 			rsInventory.print();
 			startDate = rsInventory.getValue("START_DATE").contains(" ") 
 							   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
 						       : rsInventory.getValue("START_DATE");
 							   
 			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
-			reservableResourceId = rsInventory.getValue("Resource_ID");
+			if(reservableResourceId == null) reservableResourceId = rsInventory.getValue("Resource_ID");
 		}
 		freeze.setReservableResourceId(reservableResourceId);	
 		freeze.setStartDate(startDate);	

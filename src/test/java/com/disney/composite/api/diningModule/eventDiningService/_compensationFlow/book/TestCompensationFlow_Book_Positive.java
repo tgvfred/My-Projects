@@ -7,7 +7,10 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.Bo
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.LogItems;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
 
 public class TestCompensationFlow_Book_Positive extends BaseTest{
 	private Book book;
@@ -29,5 +32,9 @@ public class TestCompensationFlow_Book_Positive extends BaseTest{
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		TestReporter.assertTrue(Integer.parseInt(book.getInventoryCountBefore()) < Integer.parseInt(book.getInventoryCountAfter()), "Verify the booked inventory count ["+book.getInventoryCountAfter()+"] for reservable resource ID ["+book.getReservableResourceId()+"] increments from the count prior to booking ["+book.getInventoryCountBefore()+"]");
+		
+		Database db = new OracleDatabase(environment, "Dreams");
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(book.getTravelPlanSegmentId())));
+		TestReporter.assertEquals(rs.getValue("TPS_TRAVEL_STATUS"), "Booked", "Verify that the travel plan segment status ["+rs.getValue("TPS_TRAVEL_STATUS")+"] is [Booked] as expected.");
 	}
 }

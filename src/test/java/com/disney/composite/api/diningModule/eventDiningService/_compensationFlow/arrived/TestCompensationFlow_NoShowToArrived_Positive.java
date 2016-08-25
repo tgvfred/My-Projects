@@ -10,9 +10,12 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.Ar
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.NoShow;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Retrieve;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
@@ -58,9 +61,8 @@ public class TestCompensationFlow_NoShowToArrived_Positive extends BaseTest{
 		TestReporter.logAPI(!arrived.getArrivalStatus().equals("SUCCESS"), "The response ["+arrived.getArrivalStatus()+"] was not 'SUCCESS' as expected.", arrived);
 		TestReporter.assertTrue(Integer.parseInt(arrived.getInventoryCountBefore()) == Integer.parseInt(arrived.getInventoryCountAfter()), "Verify the booked inventory count ["+arrived.getInventoryCountAfter()+"] for reservable resource ID ["+reservableResourceId+"] equals the count prior to setting the reservation to 'Arrived' ["+arrived.getInventoryCountBefore()+"]");
 		
-		Retrieve retrieve = new Retrieve(environment, "RetrieveDiningEvent");
-		retrieve.setReservationNumber(book.getTravelPlanSegmentId());
-		retrieve.sendRequest();
-		TestReporter.assertEquals(retrieve.getStatus(), "Arrived", "Verify the reservation status ["+retrieve.getStatus()+"] is [Arrived] as expected.");
+		Database db = new OracleDatabase(environment, "Dreams");
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(book.getTravelPlanSegmentId())));
+		TestReporter.assertEquals(rs.getValue("TPS_TRAVEL_STATUS"), "Arrived", "Verify that the travel plan segment status ["+rs.getValue("TPS_TRAVEL_STATUS")+"] is [Arrived] as expected.");
 	}
 }
