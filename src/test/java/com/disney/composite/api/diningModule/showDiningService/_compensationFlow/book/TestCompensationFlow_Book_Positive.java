@@ -3,14 +3,15 @@ package com.disney.composite.api.diningModule.showDiningService._compensationFlo
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestCompensationFlow_Book_Positive extends BaseTest{
 	private Book book;
@@ -19,7 +20,7 @@ public class TestCompensationFlow_Book_Positive extends BaseTest{
 	public void teardown(){
 		try{
 			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-			cancel.setReservationNumber(book.getTravelPlanSegmentId());
+			cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 			cancel.sendRequest();
 		}catch(Exception e){}
 	}
@@ -27,7 +28,7 @@ public class TestCompensationFlow_Book_Positive extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
 	public void testCompensationFlow_Book_Positive(){
 		TestReporter.logScenario("Test Positive Activity Book Compensation Flow");
-		book = new Book(environment, "NoComponentsNoAddOns");
+		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);

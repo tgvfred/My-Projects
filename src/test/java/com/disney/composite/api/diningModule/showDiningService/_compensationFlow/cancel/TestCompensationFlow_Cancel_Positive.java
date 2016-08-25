@@ -5,8 +5,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
@@ -28,7 +28,7 @@ public class TestCompensationFlow_Cancel_Positive extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
@@ -39,7 +39,7 @@ public class TestCompensationFlow_Cancel_Positive extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
 	public void testCompensationFlow_Cancel_Positive(){
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-		cancel.setReservationNumber(book.getTravelPlanSegmentId());
+		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 		cancel.sendRequest(reservableResourceId, dateTime);
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
 		TestReporter.logAPI(!Regex.match("[0-9]+", cancel.getCancellationConfirmationNumber()), "Verify the cancellation confirmation number ["+cancel.getCancellationConfirmationNumber()+"] is numeric as expected.", cancel);		

@@ -7,8 +7,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -25,13 +25,13 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-		cancel.setReservationNumber(book.getTravelPlanSegmentId());
+		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 		cancel.sendRequest();
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred during cancelling: " + cancel.getFaultString(), cancel);
 	}
@@ -40,7 +40,7 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 	public void teardown(){
 		try{
 			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-			cancel.setReservationNumber(book.getTravelPlanSegmentId());
+			cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 			cancel.sendRequest();
 		}catch(Exception e){}
 	}

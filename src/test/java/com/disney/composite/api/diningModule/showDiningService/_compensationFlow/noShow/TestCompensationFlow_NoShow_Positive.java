@@ -6,9 +6,9 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.NoShow;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.NoShow;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
@@ -30,7 +30,7 @@ public class TestCompensationFlow_NoShow_Positive extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
@@ -42,18 +42,18 @@ public class TestCompensationFlow_NoShow_Positive extends BaseTest{
 	public void teardown(){
 		try{
 			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-			cancel.setReservationNumber(book.getTravelPlanSegmentId());
+			cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
 			cancel.sendRequest();
 		}catch(Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
 	public void testCompensationFlow_NoShow_Positive(){
-		NoShow noShow = new NoShow(environment, "Main");
+		NoShow noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(book.getTravelPlanSegmentId());
 		noShow.sendRequest(reservableResourceId, dateTime);
 		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'NoShow'", noShow);
-		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationNumber()), "Verify the concellation number ["+noShow.getCancellationNumber()+"] is numeric.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationConfirmationNumber()), "Verify the concellation number ["+noShow.getCancellationConfirmationNumber()+"] is numeric.");
 		TestReporter.assertTrue(Integer.parseInt(noShow.getInventoryCountAfter()) < Integer.parseInt(noShow.getInventoryCountBefore()), "Verify the booked inventory count ["+noShow.getInventoryCountAfter()+"] decrements from the previous value ["+noShow.getInventoryCountBefore()+"].");
 		
 		Database db = new OracleDatabase(environment, "Dreams");

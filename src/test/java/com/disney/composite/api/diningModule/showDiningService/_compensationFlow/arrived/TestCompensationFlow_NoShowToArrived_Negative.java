@@ -7,9 +7,9 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.NoShow;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.NoShow;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -26,14 +26,14 @@ public class TestCompensationFlow_NoShowToArrived_Negative extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
-		book.set(new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS));
+		book.set(new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS));
 		book.get().setParty(hh);
 		book.get().sendRequest();
 		TestReporter.logAPI(!book.get().getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.get().getFaultString(), book.get());
 		reservableResourceId = book.get().getReservableResourceId();
 		dateTime = book.get().getDateTime();
 		
-		NoShow noShow = new NoShow(environment, "Main");
+		NoShow noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(book.get().getTravelPlanSegmentId());
 		noShow.sendRequest();
 		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred setting the reservation to 'NoShow': " + noShow.getFaultString(), noShow);
@@ -43,7 +43,7 @@ public class TestCompensationFlow_NoShowToArrived_Negative extends BaseTest{
 	public void teardown(){
 		try{
 			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-			cancel.setReservationNumber(book.get().getTravelPlanSegmentId());
+			cancel.setTravelPlanSegmentId(book.get().getTravelPlanSegmentId());
 			cancel.sendRequest();
 		}catch(Exception e){}
 	}
