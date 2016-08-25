@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestCompensationFlow_Book_Negative_Suite">
+	<parameter name="environment" value="stage_cm" />
+	<test name="TestCompensationFlow_Book_Negative">
+		<classes>
+			<class name="com.disney.composite.api.diningModule.seatedEventsComponentService._compensationFlow.book.TestCompensationFlow_Book_Negative"/>
+		</classes>
+	</test>
+</suite>

@@ -1,5 +1,6 @@
 package com.disney.composite.api.diningModule.scheduledEventsBatchService._compensationFlow.checkout;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -66,6 +67,9 @@ public class TestCompensationFlow_Checkout_Positive extends BaseTest{
 		TestReporter.assertTrue(checkout.isSuccessfullyCheckedOut(), "Verify the reservation is successfully checked out.");
 		TestReporter.assertEquals(reservation, checkout.getReservationNumber(), "Verify the actual reservation number ["+checkout.getReservationNumber()+"] matches the expected reservation number ["+reservation+"].");
 		TestReporter.assertTrue(Integer.parseInt(checkout.getInventoryCountAfter()) == Integer.parseInt(checkout.getInventoryCountBefore()), "Verify the booked inventory ["+checkout.getInventoryCountAfter()+"] is equal to the previous value ["+checkout.getInventoryCountBefore()+"].");
+		Database db = new OracleDatabase(environment, "Dreams");
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(reservation)));
+		TestReporter.assertEquals(rs.getValue("TPS_TRAVEL_STATUS"), "Past Visit", "Verify that the travel plan segment status ["+rs.getValue("TPS_TRAVEL_STATUS")+"] is [Past Visit] as expected.");
 	}
 	
 	private String retrieveTcgType(String tps){
@@ -84,6 +88,7 @@ public class TestCompensationFlow_Checkout_Positive extends BaseTest{
 			retrieveShow.sendRequest();
 			rrId = retrieveShow.getReservableResourceId();
 			tcgTypeFound = !retrieveShow.getServiceStartDate().contains("T00:00:00");
+//			tcgTypeFound = testForLaterDate(retrieveShow.getServiceStartDate());
 			if(tcgTypeFound) startDateTime = retrieveShow.getServiceStartDate().replace("T", " ");
 			break;
 		case "TABLESERVICEDINING":
@@ -92,6 +97,7 @@ public class TestCompensationFlow_Checkout_Positive extends BaseTest{
 			retrieveTable.sendRequest();
 			rrId = retrieveTable.getReservableResourceId();
 			tcgTypeFound = !retrieveTable.getServiceStartDate().contains("T00:00:00");
+//			tcgTypeFound = testForLaterDate(retrieveTable.getServiceStartDate());
 			if(tcgTypeFound) startDateTime = retrieveTable.getServiceStartDate().replace("T", " ");
 			break;
 		case "EVENTDINING":
@@ -100,12 +106,29 @@ public class TestCompensationFlow_Checkout_Positive extends BaseTest{
 			retrieveEvent.sendRequest();
 			rrId = retrieveEvent.getReservableResourceId();
 			tcgTypeFound = !retrieveEvent.getServiceStartDate().contains("T00:00:00");
+//			tcgTypeFound = testForLaterDate(retrieveEvent.getServiceStartDate());
 			if(tcgTypeFound) startDateTime = retrieveEvent.getServiceStartDate().replace("T", " ");
 			break;
 		default:
 			tcgTypeFound = false;
 			break;
 		}
+		if(tcgTypeFound){
+			if(!startDateTime.substring(startDateTime.lastIndexOf(":")).equals("00")){
+				startDateTime = startDateTime.substring(0, startDateTime.length()-2);
+				startDateTime = startDateTime + "00";
+			}
+		}
 		return tcgTypeFound;
+	}
+	
+	private boolean testForLaterDate(String date){
+		String[] todaysDateParts = Randomness.generateCurrentDatetime().split(" ")[0].split("-");
+		String[] testDateParts = date.split("T")[0].split("-");
+		Calendar today = Calendar.getInstance();
+		today.set(Integer.parseInt(todaysDateParts[0]), Integer.parseInt(todaysDateParts[1]), Integer.parseInt(todaysDateParts[2]));
+		Calendar testDate = Calendar.getInstance();
+		testDate.set(Integer.parseInt(testDateParts[0]), Integer.parseInt(testDateParts[1]), Integer.parseInt(testDateParts[2]));
+		return testDate.after(today);
 	}
 }

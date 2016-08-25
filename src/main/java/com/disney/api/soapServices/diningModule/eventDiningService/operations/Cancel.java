@@ -1,6 +1,7 @@
 package com.disney.api.soapServices.diningModule.eventDiningService.operations;
 
 import com.disney.api.soapServices.diningModule.eventDiningService.EventDiningService;
+import com.disney.test.utils.Sleeper;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -32,7 +33,13 @@ public class Cancel extends EventDiningService {
 	public void sendRequest(String rrId, String dateTime){
 		inventoryBefore = getInventory(rrId, dateTime);
 		super.sendRequest();
-		inventoryAfter = getInventory(rrId, dateTime);		
+		int maxTries = 10;
+		int tries = 0;
+		do{
+			Sleeper.sleep(1000);
+			tries++;
+			inventoryAfter = getInventory(rrId, dateTime);
+		}while(tries <= maxTries && !inventoryAfter.equals(inventoryBefore));		
 	}
 	private String getInventory(String rrId, String dateTime){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);

@@ -5,6 +5,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.diningModule.eventDiningService.EventDiningService;
 import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
+import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.FacilityInfo;
@@ -152,8 +153,14 @@ public class Book extends EventDiningService {
 					getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
 				setFreezeId();
 				setInventoryCountBefore(getInventory());
-				super.sendRequest();	
-				setInventoryCountAfter(getInventory());
+				super.sendRequest();
+				int maxTries = 10;
+				int tries = 0;
+				do{
+					Sleeper.sleep(1000);
+					tries++;
+					setInventoryCountAfter(getInventory());
+				}while(tries <= maxTries && getInventoryCountBefore() == getInventoryCountAfter());
 			}
 		}
 	}

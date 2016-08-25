@@ -1,5 +1,7 @@
 package com.disney.api.soapServices.diningModule.scheduledEventsBatchService.operations;
 
+import org.testng.SkipException;
+
 import com.disney.api.soapServices.diningModule.scheduledEventsBatchService.ScheduledEventsBatchService;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.database.Database;
@@ -32,7 +34,11 @@ public class AutoArrived extends ScheduledEventsBatchService{
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(rrId, dateTime)));
 		rsInventory.print();
-		return rsInventory.getValue("BK_CN");
+		try{
+			return rsInventory.getValue("BK_CN");
+		}catch(ArrayIndexOutOfBoundsException e){
+			throw new SkipException("No inventory was found for RR id ["+rrId+"] and datetime ["+dateTime+"].");
+		}
 	}
 	public String getInventoryCountBefore(){return inventoryBefore;}
 	public String getInventoryCountAfter(){return inventoryAfter;}

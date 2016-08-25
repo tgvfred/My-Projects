@@ -1,5 +1,7 @@
 package com.disney.composite.api.diningModule.scheduledEventsBatchService._compensationFlow.autoArrived;
 
+import java.util.Calendar;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -45,15 +47,20 @@ public class TestCompensationFlow_AutoArrived_Positive extends BaseTest{
 		TestReporter.logScenario("AutoArrived");
 		
 		AutoArrived aa = null;
+//		System.out.println(reservations.getLength());
 		for(int i = 0; i < reservations.getLength(); i++){
 			reservation = reservations.item(i).getTextContent();
+//			System.out.println(reservation);
 			if(retrieveResourceReservationId(retrieveTcgType(reservation))) break;
 		}	
 		aa = new AutoArrived(environment, "Main");
 		aa.setTpsId(reservation);	
 		aa.sendRequest(rrId, startDateTime);
 		TestReporter.logAPI(!aa.getResponseStatusCode().equals("200"), "An error occurred setting a reservation to AutoArrived: " + aa.getFaultString(), aa);
-		TestReporter.assertEquals(aa.getInventoryCountAfter(), aa.getInventoryCountBefore(), "Verify that the booked inventory count ["+aa.getInventoryCountAfter()+"] did not change from teh previous value ["+aa.getInventoryCountBefore()+"].");
+		TestReporter.assertEquals(aa.getInventoryCountAfter(), aa.getInventoryCountBefore(), "Verify that the booked inventory count ["+aa.getInventoryCountAfter()+"] did not change from the previous value ["+aa.getInventoryCountBefore()+"].");
+		Database db = new OracleDatabase(environment, "Dreams");
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(reservation)));
+		TestReporter.assertEquals(rs.getValue("TPS_TRAVEL_STATUS"), "Auto Arrived", "Verify that the travel plan segment status ["+rs.getValue("TPS_TRAVEL_STATUS")+"] is [Auto Arrived] as expected.");
 	}
 	
 	private String retrieveTcgType(String tps){
@@ -72,6 +79,7 @@ public class TestCompensationFlow_AutoArrived_Positive extends BaseTest{
 			retrieveShow.sendRequest();
 			rrId = retrieveShow.getReservableResourceId();
 			tcgTypeFound = !retrieveShow.getServiceStartDate().contains("T00:00:00");
+//			tcgTypeFound = testForLaterDate(retrieveShow.getServiceStartDate());
 			if(tcgTypeFound) startDateTime = retrieveShow.getServiceStartDate().replace("T", " ");
 			break;
 		case "TABLESERVICEDINING":
@@ -80,6 +88,7 @@ public class TestCompensationFlow_AutoArrived_Positive extends BaseTest{
 			retrieveTable.sendRequest();
 			rrId = retrieveTable.getReservableResourceId();
 			tcgTypeFound = !retrieveTable.getServiceStartDate().contains("T00:00:00");
+//			tcgTypeFound = testForLaterDate(retrieveTable.getServiceStartDate());
 			if(tcgTypeFound) startDateTime = retrieveTable.getServiceStartDate().replace("T", " ");
 			break;
 		case "EVENTDINING":
@@ -88,12 +97,29 @@ public class TestCompensationFlow_AutoArrived_Positive extends BaseTest{
 			retrieveEvent.sendRequest();
 			rrId = retrieveEvent.getReservableResourceId();
 			tcgTypeFound = !retrieveEvent.getServiceStartDate().contains("T00:00:00");
+//			tcgTypeFound = testForLaterDate(retrieveEvent.getServiceStartDate());
 			if(tcgTypeFound) startDateTime = retrieveEvent.getServiceStartDate().replace("T", " ");
 			break;
 		default:
 			tcgTypeFound = false;
 			break;
 		}
+		if(tcgTypeFound){
+			if(!startDateTime.substring(startDateTime.lastIndexOf(":")).equals("00")){
+				startDateTime = startDateTime.substring(0, startDateTime.length()-2);
+				startDateTime = startDateTime + "00";
+			}
+		}
 		return tcgTypeFound;
+	}
+	
+	private boolean testForLaterDate(String date){
+		String[] todaysDateParts = Randomness.generateCurrentDatetime().split(" ")[0].split("-");
+		String[] testDateParts = date.split("T")[0].split("-");
+		Calendar today = Calendar.getInstance();
+		today.set(Integer.parseInt(todaysDateParts[0]), Integer.parseInt(todaysDateParts[1]), Integer.parseInt(todaysDateParts[2]));
+		Calendar testDate = Calendar.getInstance();
+		testDate.set(Integer.parseInt(testDateParts[0]), Integer.parseInt(testDateParts[1]), Integer.parseInt(testDateParts[2]));
+		return testDate.after(today);
 	}
 }

@@ -17,8 +17,6 @@ public class TestCompensationFlow_AutoArrived_Negative extends BaseTest{
 	private NodeList reservations;
 	private String reservation;
 	private String sourceAccountingCenter = "3";
-	private String rrId;
-	private String startDateTime;
 
 	@Override
 	@BeforeMethod(alwaysRun = true)
