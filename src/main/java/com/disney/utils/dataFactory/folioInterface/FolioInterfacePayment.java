@@ -428,6 +428,7 @@ public class FolioInterfacePayment extends FolioInterface{
 			convoMapKey = "payment";
 		}	
 		TestReporter.logStep("Make card payment on Folio [" + getFolioId() +"] for the amount of [" + getBalanceDue() +"]");
+		postPayment.setCardNumber( "************" + getCardNumber().substring(12));
 		postPayment.sendRequest();
 		getConversationIdMap().put(convoMapKey, postPayment.getConversationID());
 		if(getIsNegativeScenario().equalsIgnoreCase("true")){

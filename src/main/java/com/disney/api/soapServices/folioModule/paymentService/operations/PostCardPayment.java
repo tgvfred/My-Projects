@@ -184,7 +184,7 @@ public class PostCardPayment extends PaymentService{
 	
 	
 	public void setCardNumber(String cardNumber){
-		setRequestNodeValueByXPath("/Envelope/Body/postCardPayment/pmtInfo/cardNumber", cardNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/postCardPayment/pmtInfo/cardNumber",cardNumber);
 	}
 	
 	public void setExpirationDate(String expDate){

@@ -6,6 +6,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.SoapException;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
@@ -13,6 +14,7 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.Mo
 import com.disney.composite.BaseTest;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.Randomness;
+import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -44,7 +46,7 @@ public class TestModify extends BaseTest{
 		}catch(Exception e ){}
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModify(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(res.getConfirmationNumber());
@@ -70,9 +72,8 @@ public class TestModify extends BaseTest{
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems, 5000);
 	}
-	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModify_DLR(){
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
 		res2.book("DLRTableServiceOneChild");
@@ -98,9 +99,10 @@ public class TestModify extends BaseTest{
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems, 5000);
+		res2.cancel();
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testReinstate(){
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
@@ -114,32 +116,220 @@ public class TestModify extends BaseTest{
 		modify.setProductId(res2.getProductId());
 		res2.cancel();
 		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		res2.retrieve();
 		TestReporter.logAPI(!res2.getStatus().equals("Booked"), "Reservation status was not [Booked] instead [" + res2.getStatus() + "]", modify);
+	//	res2.cancel();
 	}
 
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testReinstate_DLR(){
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
 		res2.book("DLRTableServiceOneChild");
 		Modify modify = new Modify(this.environment, "DLRRemoveAddOnOneChild");
 		modify.setReservationNumber(res2.getConfirmationNumber());
 		modify.setTravelPlanId(res2.getTravelPlanId());
-		//modify.setParty(res2.party());
 		modify.setFacilityId(res2.getFacilityId());
 		modify.setServiceStartDate(res2.getServiceStartDate());
 		modify.setServicePeriodId(res2.getServicePeriodId());
 		modify.setProductId(res2.getProductId());
-		modify.setSignInLocation("334223");
 		res2.cancel();
 		
 		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		res2.retrieve();
-		TestReporter.logAPI(!res2.getStatus().equals("Booked"), "Reservation status was not [Booked] instead [" + res2.getStatus() + "]", modify);
+		TestReporter.logAPI(!res2.getStatus().equals("Booked"), "Reservation [" + res2.getConfirmationNumber() + "] status was not [Booked] it was instead [" + res2.getStatus() + "]", modify);
+		res2.cancel();
 	}
 
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyWithComments(){
+		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
+		res2.setFacilityName("Biergarten Restaurant");
+		res2.setProductName("Biergarten Lunch");
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		modify.addInternalComments("Internal Comments", "Internal");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems, 5000);
+		res2.cancel();
+	}
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyWithMultipleComments(){
+		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
+		res2.setFacilityName("Biergarten Restaurant");
+		res2.setProductName("Biergarten Lunch");
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		modify.addInternalComments("Internal Comments", "Internal");
+		modify.addInternalComments("More Internal Comments", "External");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems, 5000);
+		res2.cancel();
+	}
+	
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyWithGuestRequests(){
+		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
+		res2.setFacilityName("Biergarten Restaurant");
+		res2.setProductName("Biergarten Lunch");
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		modify.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.BOOSTER_SEAT_ID, "GuestRequest");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems, 5000);
+		res2.cancel();
+	}
+	
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyWithMultipleGuestRequests(){
+		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
+		res2.setFacilityName("Biergarten Restaurant");
+		res2.setProductName("Biergarten Lunch");
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		modify.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.BOOSTER_SEAT_ID, "GuestRequest");
+		modify.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.REQUEST_TWO_HIGH_CHAIRS_ID, "SecondGuestRequest");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems, 5000);
+		res2.cancel();
+	}
+	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyWithGuestSpecialNeeds(){
+		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
+		res2.setFacilityName("Biergarten Restaurant");
+		res2.setProductName("Biergarten Lunch");
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		modify.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.HEARING_LOSS_ID, "SeSpecialNeed");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems, 5000);
+	}
+	
+	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testModifyWithMultipleSpecialNeeds(){
+		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
+		res2.setFacilityName("Biergarten Restaurant");
+		res2.setProductName("Biergarten Lunch");
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		modify.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.HEARING_LOSS_ID, "SeSpecialNeed");
+		modify.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.LIMITED_MOBILITY_ID, "SeSpecialNeed");
+		modify.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.OXYGEN_TANK_USE_ID, "SeSpecialNeed");
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
+		logItems.addItem("ChargeGroupIF", "modifyRootChargeGroup", false);
+		logItems.addItem("EventDiningServiceIF", "modify", false);
+		logItems.addItem("GuestServiceV1", "create", false);
+		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(modify, logItems, 5000);
+	}
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo2Adults(){
 		HouseHold newParty = new HouseHold("2 Adults");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -165,9 +355,10 @@ public class TestModify extends BaseTest{
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems, 5000);
+		originalRes.cancel();
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo4Adults(){
 		HouseHold newParty = new HouseHold("4 Adults");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -197,10 +388,11 @@ public class TestModify extends BaseTest{
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems, 5000);
+		originalRes.cancel();
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo2Adults2Child(){
 		HouseHold newParty = new HouseHold("2 Adults 2 Child");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -230,10 +422,11 @@ public class TestModify extends BaseTest{
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems, 5000);
+		originalRes.cancel();
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo4Adults2Child2Infant(){
 		HouseHold newParty = new HouseHold("4 Adults 2 Child 2 Infant");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -263,10 +456,11 @@ public class TestModify extends BaseTest{
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems, 5000);
+		originalRes.cancel();
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo12Adults(){
 		HouseHold newParty = new HouseHold(12);
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -296,22 +490,22 @@ public class TestModify extends BaseTest{
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
 		validateLogs(modify, logItems, 5000);
+		originalRes.cancel();
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testModifyAddAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		
+		book.addDetailsByFacilityNameAndProductName("Biergarten Restaurant", "Biergarten Lunch");
 		book.sendRequest();
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		modify.setTravelPlanId(book.getTravelPlanId());
 		modify.setParty(hh);
-		modify.setFacilityId(book.getRequestFacilityId());
-		modify.setServiceStartDate(book.getRequestServiceStartDate());
-		modify.setServicePeriodId(book.getRequestServicePeriodId());
-		modify.setProductId(book.getRequestProductId());
+		modify.setServiceStartDateTime(book.getRequestServiceStartDate());
+		modify.addDetailsByFacilityNameAndProductName("Biergarten Restaurant", "Biergarten Dinner");
 		modify.setAllergies("Egg", "1");
 		modify.sendRequest();
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
@@ -330,7 +524,7 @@ public class TestModify extends BaseTest{
 		validateLogs(modify, logItems, 5000);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testModifyAddAdditionalAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		
@@ -363,7 +557,7 @@ public class TestModify extends BaseTest{
 		validateLogs(modify, logItems, 5000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testModifyRemoveAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		

@@ -163,11 +163,11 @@ public class TestBook extends BaseTest{
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10)*1000);
 			book.sendRequest();
 		}
-	/*	TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is not numeric as expected.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is not numeric as expected.");
 		TPS_ID.set(book.getTravelPlanSegmentId());
-		*/return book;
+		return book;
 	}
 	
 	private void addAndValidateLogs(Book book){
