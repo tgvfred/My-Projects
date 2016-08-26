@@ -3,6 +3,7 @@ package com.disney.composite.api.activityModule.activityService._compensationFlo
 import org.testng.SkipException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -21,7 +22,7 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 	private String facilityId = "210507";
 	
 	@Override
-	@BeforeClass(alwaysRun = true)
+	@BeforeMethod(alwaysRun = true)
 	@Parameters("environment")
 	public void setup(@Optional String environment){
 		this.environment = environment;

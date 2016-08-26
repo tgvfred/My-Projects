@@ -3,6 +3,7 @@ package com.disney.composite.api.activityModule.activityService._compensationFlo
 import org.testng.SkipException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -17,7 +18,7 @@ public class TestCompensationFlow_Arrived_Negative extends BaseTest{
 	private ScheduledEventReservation res;
 	
 	@Override
-	@BeforeClass(alwaysRun = true)
+	@BeforeMethod(alwaysRun = true)
 	@Parameters("environment")
 	public void setup(@Optional String environment){
 		this.environment = environment;
