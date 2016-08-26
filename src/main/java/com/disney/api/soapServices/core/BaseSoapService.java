@@ -1155,7 +1155,9 @@ public abstract class BaseSoapService{
 		String error= "";
 		try{
 			error = getResponseNodeValueByXPath("//ServiceException/applicationErrors/applicationFaultCode/message");
-		}catch(XPathNotFoundException xpe){}
+		}catch(XPathNotFoundException xpe){
+			System.out.println();
+		}
 		
 		return error;
 	}

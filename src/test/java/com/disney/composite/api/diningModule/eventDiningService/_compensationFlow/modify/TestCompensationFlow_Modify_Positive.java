@@ -21,8 +21,6 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 
 public class TestCompensationFlow_Modify_Positive extends BaseTest{
 	private Book book;
-	protected String startDate;
-	protected String startTime;
 	
 	@Override
 	@BeforeMethod(alwaysRun = true)

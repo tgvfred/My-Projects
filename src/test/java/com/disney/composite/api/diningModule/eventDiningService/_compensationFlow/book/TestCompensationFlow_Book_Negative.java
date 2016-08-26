@@ -4,6 +4,7 @@ import org.testng.SkipException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.FolioErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
@@ -48,7 +49,7 @@ public class TestCompensationFlow_Book_Negative extends BaseTest{
 		book.get().setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/componentPrices[1]/unitPrices/taxes/revenueType", BaseSoapCommands.REMOVE_NODE.toString());
 		book.get().sendRequest();
 		TestReporter.logAPI(!book.get().getFaultString().contains("Invalid input fields"), book.get().getFaultString() ,book.get());
-		validateApplicationError(book.get(), FolioErrorCode.INVALID_INPUT);
+		validateApplicationError(book.get(), DiningErrorCode.FOLIO_MANAGEMENT_SERVICE_FAILURE);
 		TestReporter.assertTrue(Integer.parseInt(book.get().getInventoryCountBefore()) == Integer.parseInt(book.get().getInventoryCountAfter()), "Verify the booked inventory count ["+book.get().getInventoryCountAfter()+"] for reservable resource ID ["+book.get().getReservableResourceId()+"] increments from the count prior to booking ["+book.get().getInventoryCountBefore()+"]");
 	}
 }
