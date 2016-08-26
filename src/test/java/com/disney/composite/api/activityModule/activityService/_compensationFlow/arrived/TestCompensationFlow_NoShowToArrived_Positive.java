@@ -6,10 +6,10 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Arrived;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.NoShow;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Arrived;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Book;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Cancel;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.NoShow;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;

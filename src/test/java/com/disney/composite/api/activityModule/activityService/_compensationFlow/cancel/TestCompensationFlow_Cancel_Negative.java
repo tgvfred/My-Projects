@@ -6,7 +6,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Book;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -37,7 +37,7 @@ public class TestCompensationFlow_Cancel_Negative extends BaseTest{
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
-	public void TestCompensationFlow_Cancel_Negative_DineFail(){
+	public void TestCompensationFlow_Cancel_Negative_ActivityFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
