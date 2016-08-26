@@ -15,7 +15,7 @@ public class Folio {
 		return new ChargeAccountService(restService);
 	}
 	
-	public FolioService FolioService(){
+	public FolioService folioService(){
 		return new FolioService(restService);
 	}
 }

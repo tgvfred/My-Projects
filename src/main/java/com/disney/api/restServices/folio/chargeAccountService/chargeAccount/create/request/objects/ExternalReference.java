@@ -1,7 +1,6 @@
-package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieveGuests.request.objects;
+package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
-public class ExternalReferenceTO {
-	
+public class ExternalReference {
 	private String referenceName;
 	private String referenceValue;
 
@@ -11,9 +10,8 @@ public class ExternalReferenceTO {
 	* The referenceName
 	*/
 	public String getReferenceName() {
-		return referenceName;
+	return referenceName;
 	 }
-	
 
 	/**
 	* 
@@ -21,7 +19,8 @@ public class ExternalReferenceTO {
 	* The referenceName
 	*/
 	public void setReferenceName(String referenceName) {
-		this.referenceName = referenceName;
+		referenceName = "SWID";
+	this.referenceName = referenceName;
 	 }
 
 	/**
@@ -39,7 +38,7 @@ public class ExternalReferenceTO {
 	* The referenceValue
 	*/
 	public void setReferenceValue(String referenceValue) {
-		this.referenceValue = referenceValue;
+		referenceValue = "{9AA2F8BE-530B-4BAB-93ED-7758B06AC4A3}";
+	this.referenceValue = referenceValue;
 	 }
-
 }

@@ -1,4 +1,4 @@
-package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieveGuests.request.objects;
+package com.disney.api.restServices.folio.folioService.folio.retrieveGuests.request.objects;
 
 public class ExternalReferenceTO {
 	

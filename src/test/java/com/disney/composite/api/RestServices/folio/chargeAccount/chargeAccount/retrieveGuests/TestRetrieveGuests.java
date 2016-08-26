@@ -54,8 +54,10 @@ private String environment = "Development";
 		
 		//Adding data for the different nodes
 		//Added External Reference Type
+		request.addExternalReferenceTO();
+
+		//Add External Reference value
 		
-		//Add External Reference Value
 		
 		//Add SourceAccountingCenter
 		request.setSourceAccountingCenter("2");

@@ -1,0 +1,86 @@
+package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class GuestInfoTO {
+	private String firstName;
+	private String lastName;
+	private String txnGuestId;
+	private List<ExternalReference> externalReference = new ArrayList<ExternalReference>();
+
+	/**
+	* 
+	* @return
+	* The firstName
+	*/
+	public String getFirstName() {
+	return firstName;
+	 }
+
+	/**
+	* 
+	* @param firstName
+	* The firstName
+	*/
+	public void setFirstName(String firstName) {
+		firstName = "Marisol";
+	this.firstName = firstName;
+	 }
+
+	/**
+	* 
+	* @return
+	* The lastName
+	*/
+	public String getLastName() {
+	return lastName;
+	 }
+
+	/**
+	* 
+	* @param lastName
+	* The lastName
+	*/
+	public void setLastName(String lastName) {
+		lastName = "Centeno";
+	this.lastName = lastName;
+	 }
+
+	/**
+	* 
+	* @return
+	* The txnGuestId
+	*/
+	public String getTxnGuestId() {
+	return txnGuestId;
+	 }
+
+	/**
+	* 
+	* @param txnGuestId
+	* The txnGuestId
+	*/
+	public void setTxnGuestId(String txnGuestId) {
+		txnGuestId = "0";
+	this.txnGuestId = txnGuestId;
+	 }
+
+	/**
+	* 
+	* @return
+	* The externalReference
+	*/
+	public List<ExternalReference> getExternalReference() {
+	return externalReference;
+	 }
+
+	/**
+	* 
+	* @param externalReference
+	* The externalReference
+	*/
+	public void setExternalReference(List<ExternalReference> externalReference) {
+	this.externalReference = externalReference;
+	 }
+}
