@@ -31,8 +31,7 @@ public class TestCompensationFlow_Checkout_Positive extends BaseTest{
 	private String rrId;
 	private String startDateTime;
 	
-	@Override
-	
+	@Override	
 	@BeforeMethod(alwaysRun = true)
 	@Parameters("environment")
 	public void setup(@Optional String environment){
