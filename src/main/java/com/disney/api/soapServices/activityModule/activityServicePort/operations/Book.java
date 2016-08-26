@@ -375,7 +375,10 @@ public class Book extends ActivityService{
 	 * Sets the reservable resource ID in the SOAP request
 	 * @param value reservable resource ID
 	 */
-	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", value);}
+	public void setReservableResourceId(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", value);
+		reservableResourceId = getRequestReservableResourceId();
+	}
 	/**
 	 * Retrieves and set a random reservable resource ID in the SOAP request based on Facility ID
 	 */
@@ -612,7 +615,7 @@ public class Book extends ActivityService{
 		TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
 		freezeId = freeze.getFreezeID();
 		setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());		
-		if(!invokeRimError) setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		if(!invokeRimError) setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/freezeId", freezeId);
 		notSetFreezeId = false;
 	}
 	public void setFreezeIdForError(String freezeId){

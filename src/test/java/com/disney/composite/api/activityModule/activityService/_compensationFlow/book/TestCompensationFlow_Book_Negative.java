@@ -4,11 +4,9 @@ import org.testng.SkipException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Book;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Cancel;
 import com.disney.composite.BaseTest;
-import com.disney.utils.Randomness;
-import com.disney.utils.TestReporter;
 
 public class TestCompensationFlow_Book_Negative extends BaseTest{
 	private Book book;
@@ -24,14 +22,17 @@ public class TestCompensationFlow_Book_Negative extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
 	public void TestCompensationFlow_Book_Negative_RIMFail(){
+		hh.primaryGuest().setAge("9");
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
-	public void TestCompensationFlow_Book_Negative_DineFail(){
+	public void TestCompensationFlow_Book_Negative_ActivityFail(){
+		hh.primaryGuest().setAge("9");
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
 	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
 	public void TestCompensationFlow_Book_Negative_FolioFail(){
+		hh.primaryGuest().setAge("9");
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
 }

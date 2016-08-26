@@ -155,6 +155,7 @@ public class Book extends EventDiningService {
 		try{setInventoryCountBefore(getInventory());}
 		catch(Exception e){failure = true;}
 		super.sendRequest();
+		Sleeper.sleep(5000);
 		if(!failure) setInventoryCountAfter(getInventory());
 		if(!invokeRimError){
 			if(getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||

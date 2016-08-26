@@ -30,6 +30,7 @@ public class TestCompensationFlow_Arrived_Positive extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
+		hh.primaryGuest().setAge("9");
 		book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(15));
@@ -48,7 +49,7 @@ public class TestCompensationFlow_Arrived_Positive extends BaseTest{
 		}catch(Exception e){}
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "compensation"})
 	public void testCompensationFlow_Arrived_Positive(){
 		Arrived arrived = new Arrived(environment, "Main");
 		arrived.setReservationNumber(book.getTravelPlanSegmentId());

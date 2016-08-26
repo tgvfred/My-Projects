@@ -30,6 +30,7 @@ public class TestCompensationFlow_NoShowToArrived_Positive extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
+		hh.primaryGuest().setAge("9");
 		book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
@@ -52,7 +53,7 @@ public class TestCompensationFlow_NoShowToArrived_Positive extends BaseTest{
 		}catch(Exception e){}
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "compensation"})
 	public void testCompensationFlow_NoShowToArrived_Positive(){
 		Arrived arrived = new Arrived(environment, "Main");
 		arrived.setReservationNumber(book.getTravelPlanSegmentId());

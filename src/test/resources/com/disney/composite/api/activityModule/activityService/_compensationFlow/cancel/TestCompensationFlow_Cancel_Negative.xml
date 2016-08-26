@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestCompensationFlow_Cancel_Negative_Suite" parallel="methods" thread-count="5" configfailurepolicy="continue">
+	<parameter name="environment" value="stage_cm" />
+	<test name="TestCompensationFlow_Cancel_Negative">
+		<classes>
+			<class
+				name="com.disney.composite.api.activityModule.activityService._compensationFlow.cancel.TestCompensationFlow_Cancel_Negative"/>
+		</classes>
+	</test>
+</suite>

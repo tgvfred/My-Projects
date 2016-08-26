@@ -23,6 +23,7 @@ public class TestCompensationFlow_Cancel_Negative extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
+		hh.primaryGuest().setAge("9");
 		book.set(new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS));
 		book.get().setParty(hh);
 		book.get().sendRequest();
@@ -31,15 +32,15 @@ public class TestCompensationFlow_Cancel_Negative extends BaseTest{
 		dateTime = book.get().getDateTime();
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative", "compensation"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
 	public void TestCompensationFlow_Cancel_Negative_RIMFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative", "compensation"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
 	public void TestCompensationFlow_Cancel_Negative_DineFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative", "compensation"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
 	public void TestCompensationFlow_Cancel_Negative_FolioFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}

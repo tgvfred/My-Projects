@@ -3,8 +3,8 @@ package com.disney.composite.api.activityModule.activityService._compensationFlo
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
-import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Book;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -24,8 +24,9 @@ public class TestCompensationFlow_Book_Positive extends BaseTest{
 		}catch(Exception e){}
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "compensation"})
 	public void testCompensationFlow_Book_Positive(){
+		hh.primaryGuest().setAge("9");
 		TestReporter.logScenario("Test Positive Activity Book Compensation Flow");
 		book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
