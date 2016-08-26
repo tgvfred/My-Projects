@@ -619,7 +619,7 @@ public class Book extends ActivityService{
 		notSetFreezeId = false;
 	}
 	public void setFreezeIdForError(String freezeId){
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/freezeId", freezeId);
 		invokeRimError = true;
 	}
 	
@@ -721,7 +721,7 @@ public class Book extends ActivityService{
 		else if(facilityId != null ) sql=Pricing.getProductInfoByFacilityIdAndProdName(facilityId, productName);
 		if(sql != ""){	
 			Recordset rsPricing = new Recordset(dreamsDb.getResultSet(sql));
-			
+			rsPricing.print();
 			if(rsPricing.getRowCount() == 0) throw new AutomationException("Failed to retreive data for Facility name ["+facilityName+"] and Product Name ["+productName+"].\n SQL: "  +sql);
 			setFacilityName(rsPricing.getValue("FAC_NM"));
 			setFacilityId(rsPricing.getValue("FAC_ID"));

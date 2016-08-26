@@ -312,9 +312,9 @@ public class Modify extends ActivityService {
 		if(!failure) setInventoryCountAfter(getInventory());
 		setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
 		
-		if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
+		if((getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
 				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
-				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
+				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")) && !invokeRimError){
 			if(notSetFreezeId) 	setFreezeId();
 			setInventoryCountBefore(getInventory());
 			super.sendRequest();	
@@ -353,6 +353,12 @@ public class Modify extends ActivityService {
 	public void setFreezeId(String freezeId){
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/freezeId", freezeId);
 		notSetFreezeId = false;
+	}
+	
+	public void setFreezeIdForError(String freezeId){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/freezeId", freezeId);
+		notSetFreezeId = false;
+		invokeRimError = true;
 	}
 //	public void setFreezeId(){
 //		if(notSetFreezeId){

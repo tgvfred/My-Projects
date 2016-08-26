@@ -5,7 +5,7 @@
 	<test name="TestCompensationFlow_Book_Negative">
 		<classes>
 			<class
-				name="com.disney.composite.api.diningModule.eventDiningService._compensationFlow.book.TestCompensationFlow_Book_Negative"/>
+				name="com.disney.composite.api.activityModule.activityService._compensationFlow.book.TestCompensationFlow_Book_Negative"/>
 		</classes>
 	</test>
 </suite>

@@ -9,8 +9,14 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.Book;
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.Cancel;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Modify;
 import com.disney.composite.BaseTest;
+import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
@@ -18,6 +24,7 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 	private ThreadLocal<Book> book = new ThreadLocal<Book>();
 	protected String startDate;
 	protected String startTime;
+	private String facilityId = "210507";
 	
 	@Override
 	@BeforeMethod(alwaysRun = true)
@@ -48,7 +55,22 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "compensation"})
 	public void TestCompensationFlow_ModifyReinstate_Negative_RIMFail(){
-		throw new SkipException("The testing solution for this scenario has not been determined.");
+		Modify modify = new Modify(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		modify.setTravelPlanId(book.get().getTravelPlanId());
+		modify.setReservationNumber(book.get().getTravelPlanSegmentId());
+		modify.setParty(hh);
+		modify.setFacilityId(facilityId);
+		modify.setFreezeIdForError(Randomness.randomAlphaNumeric(36));
+		modify.setReservableResourceId(book.get().getReservableResourceId(), true);
+		modify.setServiceStartDate(Randomness.generateCurrentXMLDate(30));
+		modify.setExistingRRID(book.get().getReservableResourceId());
+		modify.setExistingStartDateTime(book.get().getStartTime());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID"), modify.getFaultString(), modify);
+		TestReporter.assertTrue(Integer.parseInt(modify.getExistingInventoryCountBefore()) == Integer.parseInt(modify.getExistingInventoryCountAfter()), "Verify the booked inventory count ["+modify.getExistingInventoryCountBefore()+"] remains the same as the value prior to modifying ["+modify.getExistingInventoryCountAfter()+"].");
+		Database db = new OracleDatabase(environment, "Dreams");
+		Recordset rs = new Recordset(db.getResultSet(Dreams.getReservationInfoByTpsId(book.get().getTravelPlanSegmentId())));
+		TestReporter.assertEquals(rs.getValue("TPS_TRAVEL_STATUS"), "Cancelled", "Verify that the travel plan segment status ["+rs.getValue("TPS_TRAVEL_STATUS")+"] is [Cancelled] as expected.");
 	}
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "compensation"})

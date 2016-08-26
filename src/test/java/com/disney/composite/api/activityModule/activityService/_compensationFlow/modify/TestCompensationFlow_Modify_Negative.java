@@ -9,13 +9,16 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.Book;
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.Cancel;
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Modify;
 import com.disney.composite.BaseTest;
+import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestCompensationFlow_Modify_Negative extends BaseTest{
 	private ThreadLocal<Book> book = new ThreadLocal<Book>();
+	private String facilityId = "210507";
 	
 	@Override
 	@BeforeClass(alwaysRun = true)
@@ -26,8 +29,14 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 		hh.primaryGuest().setAge("9");
 		book.set(new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS));
 		book.get().setParty(hh);
+		book.get().setFacilityId(facilityId);
 		book.get().sendRequest();
 		TestReporter.logAPI(!book.get().getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.get().getFaultString(), book.get());
+		
+		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+		cancel.setReservationNumber(book.get().getTravelPlanSegmentId());
+		cancel.sendRequest();
+		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred during cancelling: " + cancel.getFaultString(), cancel);
 	}
 	
 	@AfterMethod(alwaysRun=true)
@@ -41,7 +50,19 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "negtive", "compensation"})
 	public void TestCompensationFlow_Modify_Negative_RIMFail(){
-		throw new SkipException("The testing solution for this scenario has not been determined.");
+		Modify modify = new Modify(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		modify.setTravelPlanId(book.get().getTravelPlanId());
+		modify.setReservationNumber(book.get().getTravelPlanSegmentId());
+		modify.setParty(hh);
+		modify.setFacilityId(facilityId);
+		modify.setFreezeIdForError(Randomness.randomAlphaNumeric(36));
+		modify.setReservableResourceId(book.get().getReservableResourceId(), true);
+		modify.setServiceStartDate(Randomness.generateCurrentXMLDate(30));
+		modify.setExistingRRID(book.get().getReservableResourceId());
+		modify.setExistingStartDateTime(book.get().getStartTime());
+		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID"), modify.getFaultString(), modify);
+		TestReporter.assertTrue(Integer.parseInt(modify.getExistingInventoryCountBefore()) == Integer.parseInt(modify.getExistingInventoryCountAfter()), "Verify the existing booked inventory count ["+modify.getExistingInventoryCountBefore()+"] decrements from the value prior to modifying ["+modify.getExistingInventoryCountAfter()+"].");
 	}
 
 	@Test(groups = {"api", "regression", "activity", "activityService", "negtive", "compensation"})
