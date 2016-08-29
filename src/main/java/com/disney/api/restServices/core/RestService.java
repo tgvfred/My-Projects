@@ -444,7 +444,7 @@ public class RestService {
 		}
 	}
 	
-	private RestResponse sendRequest(HttpUriRequest request){
+	public RestResponse sendRequest(HttpUriRequest request){
 		RestResponse response = null;
 		try {
 			TestReporter.logDebug("Sending request");
