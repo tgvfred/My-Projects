@@ -1,11 +1,11 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class ChargeAccountPaymentMethodDetail {
-	private String active;
-	private String paymentMethodName;
-	private String paymentMethodTypeName;
-	private String chargingPrivilegesIndicator;
-	private String isSubAccountPaymentMethod;
+	private String active = "true";
+	private String paymentMethodName = "Visa";
+	private String paymentMethodTypeName = "CreditCard";
+	private String chargingPrivilegesIndicator = "false";
+	private String isSubAccountPaymentMethod = "false";
 	private CardDetailTO cardDetailTO;
 
 	/**
@@ -23,7 +23,6 @@ public class ChargeAccountPaymentMethodDetail {
 	* The active
 	*/
 	public void setActive(String active) {
-		active = "true";
 	this.active = active;
 	 }
 
@@ -42,7 +41,6 @@ public class ChargeAccountPaymentMethodDetail {
 	* The paymentMethodName
 	*/
 	public void setPaymentMethodName(String paymentMethodName) {
-		paymentMethodName = "Visa";
 	this.paymentMethodName = paymentMethodName;
 	 }
 
@@ -61,7 +59,6 @@ public class ChargeAccountPaymentMethodDetail {
 	* The paymentMethodTypeName
 	*/
 	public void setPaymentMethodTypeName(String paymentMethodTypeName) {
-		paymentMethodName = "CreditCard";
 	this.paymentMethodTypeName = paymentMethodTypeName;
 	 }
 
@@ -80,7 +77,6 @@ public class ChargeAccountPaymentMethodDetail {
 	* The chargingPrivilegesIndicator
 	*/
 	public void setChargingPrivilegesIndicator(String chargingPrivilegesIndicator) {
-		chargingPrivilegesIndicator = "false";
 	this.chargingPrivilegesIndicator = chargingPrivilegesIndicator;
 	 }
 
@@ -99,7 +95,6 @@ public class ChargeAccountPaymentMethodDetail {
 	* The isSubAccountPaymentMethod
 	*/
 	public void setIsSubAccountPaymentMethod(String isSubAccountPaymentMethod) {
-		isSubAccountPaymentMethod = "false";
 	this.isSubAccountPaymentMethod = isSubAccountPaymentMethod;
 	 }
 

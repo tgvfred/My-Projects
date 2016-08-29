@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChargeAccountCommonRequest {
-	private String description;
+	private String description = "From Booking";
 	private Period period;
-	private String active;
+	private String active ="true";
 	private List<ChargeAccountPaymentMethodDetail> chargeAccountPaymentMethodDetail = new ArrayList<ChargeAccountPaymentMethodDetail>();
 	private List<GuestInfoTO> guestInfoTO = new ArrayList<GuestInfoTO>();
 
@@ -25,7 +25,7 @@ public class ChargeAccountCommonRequest {
 	* The description
 	*/
 	public void setDescription(String description) {
-		description = "From Booking";
+	
 	this.description = description;
 	 }
 
@@ -45,7 +45,7 @@ public class ChargeAccountCommonRequest {
 	* The period
 	*/
 	public void setPeriod(Period period) {
-		period.setStartDate("2016-08-27T14:34:07-04:00");
+		period.setStartDate("2016-08-29T14:34:07-04:00");
 	this.period = period;
 	 }
 
@@ -64,7 +64,6 @@ public class ChargeAccountCommonRequest {
 	* The active
 	*/
 	public void setActive(String active) {
-		active ="true";
 	this.active = active;
 	 }
 

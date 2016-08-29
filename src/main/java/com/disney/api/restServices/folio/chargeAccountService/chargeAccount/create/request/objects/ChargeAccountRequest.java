@@ -1,7 +1,7 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class ChargeAccountRequest {
-	private String chargeAccountType;
+	private String chargeAccountType = "GUEST_ACCOUNT";
 	private RootChargeAccountRequest rootChargeAccountRequest;
 
 	/**

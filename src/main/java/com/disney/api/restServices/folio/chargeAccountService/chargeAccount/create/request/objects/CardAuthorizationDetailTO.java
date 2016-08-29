@@ -1,10 +1,10 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class CardAuthorizationDetailTO {
-	private String expirationMonth;
-	private String expirationYear;
-	private String retrievalReferenceNumber;
-	private String retrievalReferenceNumberKey;
+	private String expirationMonth = "6";
+	private String expirationYear = "20";
+	private String retrievalReferenceNumber = "423730003693";
+	private String retrievalReferenceNumberKey = "HGBkD8";
 
 	/**
 	* 
@@ -21,7 +21,7 @@ public class CardAuthorizationDetailTO {
 	* The expirationMonth
 	*/
 	public void setExpirationMonth(String expirationMonth) {
-		expirationMonth = "6";
+
 	this.expirationMonth = expirationMonth;
 	 }
 
@@ -40,7 +40,7 @@ public class CardAuthorizationDetailTO {
 	* The expirationYear
 	*/
 	public void setExpirationYear(String expirationYear) {
-		expirationYear = "20";
+		
 	this.expirationYear = expirationYear;
 	 }
 
@@ -59,7 +59,7 @@ public class CardAuthorizationDetailTO {
 	* The retrievalReferenceNumber
 	*/
 	public void setRetrievalReferenceNumber(String retrievalReferenceNumber) {
-		retrievalReferenceNumber = "423730003693";
+		
 	this.retrievalReferenceNumber = retrievalReferenceNumber;
 	 }
 
@@ -78,7 +78,7 @@ public class CardAuthorizationDetailTO {
 	* The retrievalReferenceNumberKey
 	*/
 	public void setRetrievalReferenceNumberKey(String retrievalReferenceNumberKey) {
-		retrievalReferenceNumberKey = "HGBkD8";
+		
 	this.retrievalReferenceNumberKey = retrievalReferenceNumberKey;
 	 }
 }

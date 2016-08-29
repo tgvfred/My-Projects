@@ -1,10 +1,10 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class CardDetailTO {
-	private String cardStatus;
-	private String creditCardNumber;
-	private String cvvNumber;
-	private String name;
+	private String cardStatus = "Valid";
+	private String creditCardNumber = "xxxxxxxxxxxx7840";
+	private String cvvNumber = "423";
+	private String name = "Marisol Centeno";
 	private Address address;
 	private CardAuthorizationDetailTO cardAuthorizationDetailTO;
 
@@ -23,7 +23,6 @@ public class CardDetailTO {
 	* The cardStatus
 	*/
 	public void setCardStatus(String cardStatus) {
-		cardStatus = "Valid";
 	this.cardStatus = cardStatus;
 	 }
 
@@ -42,7 +41,6 @@ public class CardDetailTO {
 	* The creditCardNumber
 	*/
 	public void setCreditCardNumber(String creditCardNumber) {
-		creditCardNumber = "xxxxxxxxxxxx7840";
 	this.creditCardNumber = creditCardNumber;
 	 }
 
@@ -61,7 +59,7 @@ public class CardDetailTO {
 	* The cvvNumber
 	*/
 	public void setCvvNumber(String cvvNumber) {
-		cvvNumber = "423";
+
 	this.cvvNumber = cvvNumber;
 	 }
 
@@ -80,7 +78,7 @@ public class CardDetailTO {
 	* The name
 	*/
 	public void setName(String name) {
-		name = "Marisol Centeno";
+	
 	this.name = name;
 	 }
 

@@ -16,6 +16,7 @@ import org.testng.annotations.Parameters;
 
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.core.RestResponse;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.response.CreateResponse;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.updatePin.request.UpdatePinRequest;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.updatePin.response.UpdatePinResponse;
 import com.disney.utils.TestReporter;
@@ -23,7 +24,7 @@ import com.disney.utils.TestReporter;
 @SuppressWarnings("unused")
 public class TestUpdatePin {
 private String environment = "Development";
-	
+private CreateResponse caCreate = null;	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
 	 * @param environment - Valid environments for active testing are bashful, sleepy and grumpy
@@ -55,7 +56,7 @@ private String environment = "Development";
 		//Adding Charge Accounts to look for
 		request.addChargeAccountId("2938");
 		//Update value for Pin
-		request.setPinNumber("2365");
+		request.setPinNumber("1357");
 	
 	RestResponse response= Rest.folio("Development").chargeAccountService().chargeAccount().updatePin().sendPutRequest(request);
 	TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");

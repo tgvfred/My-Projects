@@ -1,11 +1,11 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class Address {
-	private String addressLineOne;
-	private String city;
-	private String country;
-	private String postalCode;
-	private String state;
+	private String addressLineOne ="3395 NE 9th Dr";
+	private String city = "Homestead";
+	private String country =  "US";
+	private String postalCode = "33033";
+	private String state = "FL";
 
 	/**
 	* 
@@ -22,7 +22,6 @@ public class Address {
 	* The addressLineOne
 	*/
 	public void setAddressLineOne(String addressLineOne) {
-		addressLineOne = "3395 NE 9th Dr";
 	this.addressLineOne = addressLineOne;
 	 }
 
@@ -40,8 +39,7 @@ public class Address {
 	* @param city
 	* The city
 	*/
-	public void setCity(String city) {
-		city = "Homestead";
+	public void setCity(String city) {		
 	this.city = city;
 	 }
 
@@ -60,7 +58,6 @@ public class Address {
 	* The country
 	*/
 	public void setCountry(String country) {
-		country = "US";
 	this.country = country;
 	 }
 
@@ -79,7 +76,6 @@ public class Address {
 	* The postalCode
 	*/
 	public void setPostalCode(String postalCode) {
-		postalCode = "33033";
 	this.postalCode = postalCode;
 	 }
 
@@ -98,7 +94,6 @@ public class Address {
 	* The state
 	*/
 	public void setState(String state) {
-		state = "FL";
 	this.state = state;
 	 }
 

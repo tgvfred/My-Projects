@@ -1,7 +1,7 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class Period {
-	private String startDate;
+	private String startDate = "2016-08-27T14:34:07-04:00";
 
 	/**
 	* 

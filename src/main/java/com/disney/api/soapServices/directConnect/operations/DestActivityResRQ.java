@@ -64,6 +64,7 @@ public class DestActivityResRQ extends DirectConnect{
 	public void setContactRhp(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/Contact/@RPH", value);}
 	
 	/** Item Array - tickets 
+	 * 
 	* public void setPaylodRetryIndicator(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item[1]/@ItemCode", value);}
 	* public void setPaylodRetryIndicator(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item[1]/@OptionCode", value);}
 	* public void setPaylodRetryIndicator(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item[1]/@Quantity", value);}
@@ -74,5 +75,6 @@ public class DestActivityResRQ extends DirectConnect{
 	* public void setPaylodRetryIndicator(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item[1]/ItemReferences/ItemReference/@ID", value);}
 	* public void setPaylodRetryIndicator(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item[1]/SubAllocation/@TravelerRPH", value);}
 	**/
+	
 
 }

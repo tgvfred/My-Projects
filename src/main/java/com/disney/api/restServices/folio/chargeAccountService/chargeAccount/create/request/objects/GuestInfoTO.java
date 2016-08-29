@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuestInfoTO {
-	private String firstName;
-	private String lastName;
-	private String txnGuestId;
+	private String firstName = "Marisol";
+	private String lastName = "Centeno";
+	private String txnGuestId = "0";
 	private List<ExternalReference> externalReference = new ArrayList<ExternalReference>();
 
 	/**
@@ -24,7 +24,6 @@ public class GuestInfoTO {
 	* The firstName
 	*/
 	public void setFirstName(String firstName) {
-		firstName = "Marisol";
 	this.firstName = firstName;
 	 }
 
@@ -43,7 +42,6 @@ public class GuestInfoTO {
 	* The lastName
 	*/
 	public void setLastName(String lastName) {
-		lastName = "Centeno";
 	this.lastName = lastName;
 	 }
 
@@ -62,7 +60,6 @@ public class GuestInfoTO {
 	* The txnGuestId
 	*/
 	public void setTxnGuestId(String txnGuestId) {
-		txnGuestId = "0";
 	this.txnGuestId = txnGuestId;
 	 }
 
