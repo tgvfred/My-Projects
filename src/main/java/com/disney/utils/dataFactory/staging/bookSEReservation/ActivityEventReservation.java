@@ -56,6 +56,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
 	private String freezeStartDate;
+	private String reservableResourceId;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -175,6 +176,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * @return String, service start date of the current reservation
 	 */
 	@Override public void setServiceStartDate(String date){this.serviceStartDate = date;}
+	@Override public String getReservableResourceId(){return this.reservableResourceId;}
 	/**
 	 * Retrieves the number of guests of the current reservation
 	 * @return int, number of guests of the current reservation

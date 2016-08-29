@@ -7,13 +7,16 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.NoShow;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Retrieve;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.composite.BaseTest;
+import com.disney.test.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
+import com.disney.utils.dataFactory.folioInterface.FolioInterfaceSettlement;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
@@ -57,10 +60,17 @@ public class TestRetrieve extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testRetrieve_DLR(){
 		TestReporter.logScenario("Retrieve");
-		ScheduledEventReservation res = new EventDiningReservation(this.environment, hh);
-		res.book("DLRTableServiceOneChild");
+		Book book = new Book(environment, "DLRTableServiceOneChild");
+		book.setParty(hh);
+		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(1));
+		book.sendRequest();
+		
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		
 		Retrieve retrieve = new Retrieve(this.environment, "RetrieveDiningEvent");
-		retrieve.setReservationNumber(res.getConfirmationNumber());
+		retrieve.setReservationNumber(book.getTravelPlanSegmentId());
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), retrieve.getFaultString(), retrieve);
 		TestReporter.logAPI(!Regex.match("[0-9]+", retrieve.getPartyId()), "The Party Id ["+retrieve.getPartyId()+"] was not numeric as expected.",retrieve);
@@ -79,7 +89,7 @@ public class TestRetrieve extends BaseTest{
 		hh = new HouseHold("1 Adult");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.setAllergies("Egg","1");
+		book.setAllergies("Egg");
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		
@@ -101,7 +111,7 @@ public class TestRetrieve extends BaseTest{
 	public void testReservationWithRemovedAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		
-		book.setAllergies("Egg", "1");
+		book.setAllergies("Egg");
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		
@@ -113,7 +123,7 @@ public class TestRetrieve extends BaseTest{
 		modify.setServiceStartDate(book.getRequestServiceStartDate());
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		modify.setProductId(book.getRequestProductId());
-		modify.setAllergies(BaseSoapCommands.REMOVE_NODE.toString(), "1");
+		modify.setAllergies(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().contains("200"), modify.getFaultString() ,modify);
 		

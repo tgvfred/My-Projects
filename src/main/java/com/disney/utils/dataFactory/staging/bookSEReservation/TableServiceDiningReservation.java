@@ -45,6 +45,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	private String modifyStatus;	// Status in the response from modify a reservation
 	private String sourceAccountingCenter;	// Source Accounting Center ID  
 	private String facilityName;	// Facility name for the current reservation
+	private String reservableResourceId;
 	/*
 	 * Travel Agency Fields
 	 */
@@ -161,6 +162,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 * @return String, product type of the current reservation
 	 */
 	@Override public String getProductType(){throw new AutomationException(productIdExceptionMessage);}
+	@Override public String getReservableResourceId(){return this.reservableResourceId;}
 	/**
 	 * Retrieves the service period ID of the current reservation
 	 * @return String, service period ID of the current reservation
@@ -301,6 +303,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an table service dining service reservation: " + book.getFaultString(), book);
 		this.travelPlanId = book.getTravelPlanId();
 		this.confirmationNumber = book.getTravelPlanSegmentId();
+		this.reservableResourceId = book.getRequestReservableResourceId();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
 		TestReporter.log("Reservation Number: " + getConfirmationNumber());
 		retrieve();
@@ -318,6 +321,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling an table service dining service reservation: " + cancel.getFaultString(), cancel);
 		this.cancellationNumber = cancel.getCancellationConfirmationNumber();
 		retrieve();
+		this.reservableResourceId = null;
 	}
 
 	/**
@@ -346,6 +350,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an table service dining service reservation to [No Show]: " + noShow.getFaultString(), noShow);
 		this.cancellationNumber = noShow.getCancellationNumber();
 		retrieve();
+		this.reservableResourceId = null;
 	}
 	
 	/**
@@ -447,6 +452,7 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 			com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Modify modify = new com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Modify(getEnvironment(), modifyScenario);
 			modify.setReservationNumber(getConfirmationNumber());
 			modify.setTravelPlanId(getTravelPlanId());
+			modify.setReservableResourceId(reservableResourceId);
 
 			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
 			resource.setFacilityId(getFacilityId());

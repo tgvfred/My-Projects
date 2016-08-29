@@ -78,7 +78,7 @@ public class TestRetrieve extends BaseTest{
 		hh = new HouseHold("1 Adult");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.setAllergies("Egg","1");
+		book.setAllergies("Egg");
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		
@@ -100,7 +100,7 @@ public class TestRetrieve extends BaseTest{
 	public void testReservationWithRemovedAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		
-		book.setAllergies("Egg", "1");
+		book.setAllergies("Egg");
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		
@@ -112,7 +112,7 @@ public class TestRetrieve extends BaseTest{
 		modify.setServiceStartDate(book.getRequestServiceStartDate());
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		//modify.setProductId(book.getRequestProductId());
-		modify.setAllergies(BaseSoapCommands.REMOVE_NODE.toString(), "1");
+		modify.setAllergies(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().contains("200"), modify.getFaultString() ,modify);
 		

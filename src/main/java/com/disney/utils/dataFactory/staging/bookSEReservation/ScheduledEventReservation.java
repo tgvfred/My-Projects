@@ -42,6 +42,7 @@ public interface ScheduledEventReservation{
 	public String getPrimaryGuestAge();
 	public String getModifyResponseStatus();
 	public String getSourceAccountingCenter();
+	public String getReservableResourceId();
 	public String getFacilityName();
 	// Setters used to set field values
 	public void setFacilityId(String facilityId);

@@ -28,7 +28,7 @@ public class sandbox {
 		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(19));
 		book.setReservableResourceId("7277b7e0-226e-453b-8524-7f4edf312ccd");
 		book.addDetailsByFacilityNameAndProductName("The Hollywood Brown Derby", "Brown Derby Lunch F! 1st Show");
-		book.addSpecialEventByProductName("Fantasmic! Viewing 1st Show", "4cafc352-62d4-4e88-98f3-16474db25aa7");
+		book.addSpecialEventByProductName("Fantasmic! Viewing 1st Show");
 		book.sendRequest();
 
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);

@@ -10,6 +10,7 @@ import com.disney.api.soapServices.diningModule.showDiningService.operations.Boo
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.NoShow;
 import com.disney.composite.BaseTest;
+import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
@@ -53,7 +54,26 @@ public class TestNoShow extends BaseTest{
 		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationConfirmationNumber()), "The cancellation number ["+noShow.getCancellationConfirmationNumber()+"] was not numeric as expected.");
 		logItems(noShow);
 	}
-	
+
+	@Test(groups = {"api", "regression", "dining", "showDiningService"})
+	public void testNoShow_DLR(){
+		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+		book.setParty(hh);
+		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(1));
+		book.sendRequest();
+		
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		
+		TestReporter.logStep("Update a show dining reservation to [No Show].");
+		NoShow noShow = new NoShow(environment, "GuestFacing");
+		noShow.setReservationNumber(book.getTravelPlanSegmentId());
+		noShow.sendRequest();
+		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [No Show]: " + noShow.getFaultString(), noShow);
+		TestReporter.assertTrue(Regex.match("[0-9]+", noShow.getCancellationConfirmationNumber()), "The cancellation number ["+noShow.getCancellationConfirmationNumber()+"] was not numeric as expected.");
+		logItems(noShow);
+	}
 	private void logItems(NoShow noShow){
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ShowDiningServiceIF", "noShow", false);

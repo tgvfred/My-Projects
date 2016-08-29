@@ -45,6 +45,9 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	private String modifyStatus;	// Status in the response from modify a reservation 
 	private String sourceAccountingCenter;	// Source Accounting Center ID
 	private String facilityName;	// Facility name for the current reservation
+	private String freezeStartDate;
+	private String reservableResourceId;
+	private boolean isReservableResourceIdSet = false;  
 	/*
 	 * Travel Agency Fields
 	 */
@@ -55,7 +58,10 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	private String guestAgentId = "0";	// Travel Agent ID associated with the guest
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
-	private String freezeStartDate;
+	
+	/*
+	 * 
+	 */
 	private Folio folio;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
@@ -103,6 +109,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 * @return String, current confirmation number
 	 */
 	@Override public String getConfirmationNumber(){return this.confirmationNumber;}
+
 	/**
 	 * Retrieves the cancellation number of a cancelled reservation, or a reservation that has been updated to 'No Show'
 	 * @return String, cancellation number
@@ -223,6 +230,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 * @return String, the facility ID from the #retrieve() response 
 	 */
 	@Override public String getRetrieveResponseFacilityID(){return this.retrievedFacilityId;}
+	@Override public String getReservableResourceId(){return this.reservableResourceId;}	
 	/**
 	 * Sets the booking scenario
 	 */
@@ -242,10 +250,8 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
 	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
 	@Override public String getTravelAgencyId(){return agencyId;}	
-	@Override
-	public void setFreezeStartDate(String startDate){
-		this.freezeStartDate = startDate;
-	}
+	@Override public void setFreezeStartDate(String startDate){	this.freezeStartDate = startDate;}
+
 	/**
 	 * Defines the facility ID, service start date, service period, and product ID for the current 
 	 * reservation and invokes a method that books the reservation
@@ -309,6 +315,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		this.travelPlanId = eventDiningBook.getTravelPlanId();
 		this.confirmationNumber = eventDiningBook.getTravelPlanSegmentId();
 		this.sourceAccountingCenter = eventDiningBook.getSourceAccountingCenter();
+		this.reservableResourceId = eventDiningBook.getRequestReservableResourceId();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
 		TestReporter.log("Reservation Number: " + getConfirmationNumber());
 		retrieve();
@@ -325,6 +332,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		cancel.sendRequest();
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling an event dining service reservation", cancel);
 		this.cancellationNumber = cancel.getCancellationConfirmationNumber();
+		this.reservableResourceId = null;
 		retrieve();
 	}
 
@@ -353,6 +361,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		noShow.sendRequest();
 		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an event dining service reservation to [No Show]", noShow);
 		this.cancellationNumber = noShow.getCancellationNumber();
+		this.reservableResourceId =null;
 		retrieve();
 	}
 	
@@ -462,6 +471,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 			modify.setTravelPlanId(getTravelPlanId());
 
 			modify.addDetailsByFacilityNameAndProductName(facilityName, productName);
+			modify.setReservableResourceId(reservableResourceId);
 			modify.sendRequest();
 			if(modify.getResponse().contains("Row was updated or deleted by another transaction")){
 				Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);

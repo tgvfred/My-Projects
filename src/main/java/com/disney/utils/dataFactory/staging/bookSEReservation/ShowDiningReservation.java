@@ -63,6 +63,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
 	private String freezeStartDate;
 	private Folio folio;
+	private String reservableResourceId;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -183,6 +184,8 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 	 * @return String, service start date of the current reservation
 	 */
 	@Override public void setServiceStartDate(String date){this.serviceStartDate = date;}
+	
+	@Override public String getReservableResourceId(){return this.reservableResourceId;}
 	/**
 	 * Retrieves the number of guests of the current reservation
 	 * @return int, number of guests of the current reservation
@@ -314,6 +317,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an show dining service reservation: " +book.getFaultString(), book);
 		this.travelPlanId = book.getTravelPlanId();
 		this.confirmationNumber = book.getTravelPlanSegmentId();
+		this.reservableResourceId = book.getRequestReservableResourceId();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
 		TestReporter.log("Reservation Number: " + getConfirmationNumber());
 		retrieve();
@@ -330,6 +334,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		cancel.sendRequest();
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling an show dining service reservation: " +cancel.getFaultString(), cancel);
 		this.cancellationNumber = cancel.getCancellationConfirmationNumber();
+		this.reservableResourceId = null;
 		retrieve();
 	}
 
@@ -358,6 +363,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 		noShow.sendRequest();
 		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an show dining service reservation to [No Show]: " +noShow.getFaultString(), noShow);
 		this.cancellationNumber = noShow.getCancellationConfirmationNumber();
+		this.reservableResourceId = null;
 		retrieve();
 	}
 	
@@ -518,6 +524,7 @@ public class ShowDiningReservation implements ScheduledEventReservation {
 			modify.setTravelPlanId(getTravelPlanId());
 
 			modify.addDetailsByFacilityNameAndProductName(facilityName, productName);
+			modify.setReservableResourceId(reservableResourceId);
 			modify.sendRequest();
 			if(modify.getResponse().contains("Row was updated or deleted by another transaction")){
 				Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
