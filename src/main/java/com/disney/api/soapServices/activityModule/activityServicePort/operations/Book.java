@@ -35,6 +35,7 @@ public class Book extends ActivityService{
 	
 	private boolean notSetFreezeId = true;
 	private boolean rrIdSetInAddDetails = false;
+	private HouseHold party;
 	public Book(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("book")));
@@ -384,6 +385,10 @@ public class Book extends ActivityService{
 		TestReporter.logAPI(!resource.getResponseStatusCode().equals("200"), "Failed to get Reservable Resource ID", resource);
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", resource.getRandomReservableResourceId());		
 	}
+	
+	public void setVipLevel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/vipLevel", value);}
+	public void setInventoryOverrideReasonId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryOverideReasonId", value);}
+	
 	public String getRequestReservableResourceId(){ return getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId");	}
 	
 	@Override
@@ -402,54 +407,7 @@ public class Book extends ActivityService{
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/freezeId", freezeId);
 		notSetFreezeId = false;
 	}
-	
-//	public void setFreezeId(){
-//		if(notSetFreezeId){
-//			Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
-//			Recordset rs = null;
-//			String freezeId = "";
-//			Freeze freeze = new Freeze(getEnvironment(), "Main");
-//			//rs = new Recordset(db.getResultSet(AvailSE.getFreezeId(getRequestReservableResourceId(), freeze.getRequestServiceStartDate() + " " + freeze.getRequestServiceStartTime())));
-//
-//		//	if(rs.getRowCount() == 0){
-//			Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-//			rsInventory.print();
-//			String startdate = rsInventory.getValue("START_DATE").contains(" ") 
-//							   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
-//						       : rsInventory.getValue("START_DATE");
-//							   
-//			String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
-//			setReservableResourceId(rsInventory.getValue("Resource_ID"));
-//			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
-//			freeze.setStartDate(startdate);	
-//			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-//			freeze.sendRequest();
-//			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
-//			if(freeze.getSuccess().equals("failure")){				
-//				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-//				rsInventory.print();
-//				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
-//				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
-//				setReservableResourceId(rsInventory.getValue("Resource_ID"));
-//				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
-//				freeze.setStartDate(startdate);	
-//				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-//				freeze.sendRequest();	
-//				freezeId = freeze.getFreezeID();
-//				//setServiceStartDateTime(rs.getValue("FSELL_INVTRY_SRVC_DTS").replace(".0", "").replace(" ", "T"));
-//			}else {
-//				freezeId = freeze.getFreezeID();
-//				setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
-//			}
-//		/*	}else{
-//				freezeId = rs.getValue("FREEZE_ID");
-//				setServiceStartDateTime(rs.getValue("FSELL_INVTRY_SRVC_DTS").replace(".0", "").replace(" ", "T"));
-//			}*/
-//			
-//			setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/freezeId", freezeId);
-//			notSetFreezeId = false;
-//		}
-//	}
+	 
 	public void setFreezeId(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rs = null;
@@ -545,6 +503,64 @@ public class Book extends ActivityService{
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/freezeId", freezeId);
 		notSetFreezeId = false;
 	}
+
+	public void setTaxExemptDetails(String certificateNumber, String taxExemptType){
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/taxExemptDetail/taxExemptType", taxExemptType);
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest", "fx:AddNode;Node:taxExemptDetail");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptCertificateNumber");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptType");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/taxExemptDetail/taxExemptType", taxExemptType);
+	}
+	
+	public void setProfileDetailIdAndType(String id, String type){
+		// Determine if the index exists. If not, create it and the necessary
+		// child nodes. If so, then set the child node values
+		int numberOfProfileDetails= 1;
+		try{
+			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/profileDetails");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]/id");
+			numberOfProfileDetails+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity", "fx:AddNode;Node:profileDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:id");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:type");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]/id", id);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]/type", type);
+	}
+	
+	public void setComments(String text, String type){
+		int numberOfInternalComments= 1;
+		try{
+			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookActivityComponentRequest/internalComments");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/internalComments["+numberOfInternalComments+"]/commentText");
+			numberOfInternalComments+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest", "fx:AddNode;Node:internalComments");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentText");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentType");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/internalComments["+numberOfInternalComments+"]/commentText", text);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/internalComments["+numberOfInternalComments+"]/commentType", type);
+	}
+	
+	public void setAllergies(String value){
+		// Determine if the index exists. If not, create it and the necessary
+		// child nodes. If so, then set the child node values
+		int numberOfAllergies= 1;
+		try{
+			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/allergies");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/allergies["+numberOfAllergies+"]");
+			numberOfAllergies+=1;;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity", "fx:AddNode;Node:allergies");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/allergies["+numberOfAllergies+"]", value);
+
+	}
+	
+	
 	/**
 	 * Sets the primary guest suffix in the SOAP request
 	 * @param value - primary guest suffix
@@ -653,14 +669,17 @@ public class Book extends ActivityService{
 			if(rsInventory.getRowCount() == 0) throw new AutomationException("No external reference data was found for Product id ["+rsPricing.getValue("PROD_ID")+"]");
 			setReservableResourceId(rsInventory.getValue("RSRVBL_RSRC_ID"));
 			rrIdSetInAddDetails = true;
+
+			PriceComponents price = null;
 			
-			PriceComponents price = new PriceComponents(getEnvironment(), "Main");
-			price.setComponentId(getRequestProductId());
-			price.setAgeType("Child");
-			price.setAge("10");
-			price.sendRequest();	
-			
-			setRequestDocument(new ComponentPriceBuilder().buildComponentPrices(this, ComponentPriceBuilder.ACTIVITY, "book", price));
+			for(Guest guest : party.getAllGuests()){
+				price = new PriceComponents(getEnvironment(), "Main");
+				price.setComponentId(getRequestProductId());
+				price.setAge(guest.getAge());
+				price.setAgeType(Integer.valueOf(guest.getAge()) > 18 ? "Adult" : "Child");
+				price.sendRequest();
+				setRequestDocument(new ComponentPriceBuilder().buildComponentPrices(this, ComponentPriceBuilder.ACTIVITY, "book", price));
+			}
 		}
 	}
 	/**
@@ -697,6 +716,7 @@ public class Book extends ActivityService{
 	 */
 	public void setParty(HouseHold party){
 		int currentGuest = 1;
+		this.party = party;
 		String partyRolePosition = "";
 		addPartyRoleNodes(party.getAllGuests().size() - 1);
 		for( Guest guest : party.getAllGuests()){

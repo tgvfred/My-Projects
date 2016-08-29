@@ -2,6 +2,7 @@ package com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.o
 
 import com.disney.api.soapServices.availSEModule.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.TableServiceDiningServicePort;
 import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
 import com.disney.utils.TestReporter;
@@ -17,6 +18,7 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class Book extends TableServiceDiningServicePort {
 	private boolean notSetFreezeId = true;
+	private String numberResources = "1";
 	public Book(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
@@ -42,6 +44,10 @@ public class Book extends TableServiceDiningServicePort {
 	public void setSalesChannel(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/salesChannel", value);
 	}
+
+	public void setVipLevel(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/vipLevel", value);
+	}
 	
 	public void setCommunicationChannel(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/communicationChannel", value);
@@ -49,6 +55,10 @@ public class Book extends TableServiceDiningServicePort {
 	
 	public void setUnitPriceDateTime(String value, String index){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/componentPrices["+index+"]/unitPrices/date", value);
+	}
+
+	public void setInventoryOverrideReasonId(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryOverideReasonId", value);
 	}
 	
 	public void setComponentUnitPriceDateTime(String value){
@@ -253,46 +263,64 @@ public class Book extends TableServiceDiningServicePort {
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/primaryGuest/emailDetails/address", value);
 	}
 
-	
-	public void setProfileDetailIdAndType(String id, String type, String index){
-		// Determine if the index exists. If not, create it and the necessary
-		// child nodes. If so, then set the child node values
+	public void setTaxExemptDetails(String certificateNumber, String taxExemptType){
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+index+"]/id");
-		}catch(Exception e){
-			e.printStackTrace();
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:profileDetails");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+index+"]", "fx:AddNode;Node:id");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+index+"]", "fx:AddNode;Node:type");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+index+"]/id", id);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+index+"]/type", type);
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail/taxExemptType", taxExemptType);
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest", "fx:AddNode;Node:taxExemptDetail");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptCertificateNumber");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptType");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail/taxExemptType", taxExemptType);
 	}
 	
-	public void setComments(String text, String type, String index){
+	public void setProfileDetailIdAndType(String id, String type){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfProfileDetails= 1;
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+index+"]/commentText");
-		}catch(Exception e){
-			e.printStackTrace();
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest", "fx:AddNode;Node:internalComments");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+index+"]", "fx:AddNode;Node:commentText");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+index+"]", "fx:AddNode;Node:commentType");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+index+"]/commentText", text);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+index+"]/commentType", type);
+			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/id");
+			numberOfProfileDetails+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:profileDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:id");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:type");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/id", id);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/type", type);
 	}
 	
-	public void setAllergies(String value, String index){
+	public void setComments(String text, String type){
+		int numberOfInternalComments= 1;
+		try{
+			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentText");
+			numberOfInternalComments+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest", "fx:AddNode;Node:internalComments");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentText");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentType");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentText", text);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentType", type);
+	}
+	
+	public void setAllergies(String value){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfAllergies= 1;
 		try{
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+index+"]", value);
-		}catch(Exception e){
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:allergies");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+index+"]", value);
-		}
+			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+numberOfAllergies+"]");
+			numberOfAllergies+=1;;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:allergies");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+numberOfAllergies+"]", value);
+
+	}
+	
+	public void setNumberOfResource(String number){
+		this.numberResources = number;
 	}
 	
 	public void setParty(HouseHold party){
@@ -553,6 +581,18 @@ public class Book extends TableServiceDiningServicePort {
 			setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
 		
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/freezeId", freezeId);
+		
+
+		for(int x = 1 ; x <= Integer.valueOf(numberResources) ; x++){
+			try{
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails["+x+"]/reservableResourceId", freeze.getReservableResourceID());
+			}catch(XPathNotFoundException e){
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService",BaseSoapCommands.ADD_NODE.commandAppend("inventoryDetails"));
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails["+x+"]",BaseSoapCommands.ADD_NODE.commandAppend("reservableResourceId"));
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails["+x+"]/reservableResourceId",freeze.getReservableResourceID());
+			}
+		}
+
 		notSetFreezeId = false;
 	}
 	public void setFreezeId(String throwaway, String startDate){
