@@ -36,7 +36,7 @@ public class TestCompensationFlow_Cancel_Positive extends BaseTest{
 		dateTime = book.getDateTime();
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "compensation"})
 	public void testCompensationFlow_Cancel_Positive(){
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
 		cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());

@@ -9,6 +9,10 @@ import com.disney.api.soapServices.activityModule.activityServicePort.operations
 import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams;
 
 public class TestCompensationFlow_Book_Negative extends BaseTest{
 	private ThreadLocal<Book> book = new ThreadLocal<Book>();

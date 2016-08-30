@@ -39,7 +39,7 @@ public class Cancel extends EventDiningService {
 			Sleeper.sleep(1000);
 			tries++;
 			inventoryAfter = getInventory(rrId, dateTime);
-		}while(tries <= maxTries && !inventoryAfter.equals(inventoryBefore));		
+		}while(tries <= maxTries && inventoryAfter.equals(inventoryBefore));		
 	}
 	private String getInventory(String rrId, String dateTime){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);

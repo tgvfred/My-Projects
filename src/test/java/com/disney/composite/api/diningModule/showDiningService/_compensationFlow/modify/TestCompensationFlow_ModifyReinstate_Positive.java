@@ -49,7 +49,7 @@ public class TestCompensationFlow_ModifyReinstate_Positive extends BaseTest{
 		}catch(Exception e){}
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "compensation"})
 	public void testCompensationFlow_ModifyReinstate_Positive(){
 		Modify modify = new Modify(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		modify.setTravelPlanId(book.getTravelPlanId());

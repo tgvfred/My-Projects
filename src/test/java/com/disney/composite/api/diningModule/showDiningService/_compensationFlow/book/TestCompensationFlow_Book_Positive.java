@@ -25,7 +25,7 @@ public class TestCompensationFlow_Book_Positive extends BaseTest{
 		}catch(Exception e){}
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "compensation"})
 	public void testCompensationFlow_Book_Positive(){
 		TestReporter.logScenario("Test Positive Activity Book Compensation Flow");
 		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);

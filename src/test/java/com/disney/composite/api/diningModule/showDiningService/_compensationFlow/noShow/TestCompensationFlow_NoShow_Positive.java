@@ -47,7 +47,7 @@ public class TestCompensationFlow_NoShow_Positive extends BaseTest{
 		}catch(Exception e){}
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "compensation"})
 	public void testCompensationFlow_NoShow_Positive(){
 		NoShow noShow = new NoShow(environment, "ContactCenter");
 		noShow.setReservationNumber(book.getTravelPlanSegmentId());

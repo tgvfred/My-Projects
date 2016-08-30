@@ -25,7 +25,7 @@ public class TestCompensationFlow_Book_Negative extends BaseTest{
 		}catch(Exception e){}
 	}
 	
-	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative", "compensation"})
 	public void TestCompensationFlow_Book_Negative_RIMFail(){
 		TestReporter.logScenario("Test Positive Activity Book Compensation Flow");
 		book.set(new Book(environment, "NoComponentsNoAddOns"));
@@ -35,11 +35,11 @@ public class TestCompensationFlow_Book_Negative extends BaseTest{
 		TestReporter.logAPI(!book.get().getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID"), book.get().getFaultString(), book.get());
 		TestReporter.assertTrue(Integer.parseInt(book.get().getInventoryCountBefore()) == Integer.parseInt(book.get().getInventoryCountAfter()), "Verify the booked inventory count ["+book.get().getInventoryCountAfter()+"] for reservable resource ID ["+book.get().getReservableResourceId()+"] increments from the count prior to booking ["+book.get().getInventoryCountBefore()+"]");
 	}
-	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative", "compensation"})
 	public void TestCompensationFlow_Book_Negative_DineFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
-	@Test(groups = {"api", "regression", "activity", "activityService", "negative", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative", "compensation"})
 	public void TestCompensationFlow_Book_Negative_FolioFail(){
 		TestReporter.logScenario("Test Positive Activity Book Compensation Flow");
 		book.set(new Book(environment, "NoComponentsNoAddOns"));

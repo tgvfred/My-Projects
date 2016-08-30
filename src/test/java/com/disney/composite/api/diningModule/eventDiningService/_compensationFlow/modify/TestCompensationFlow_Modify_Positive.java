@@ -51,8 +51,6 @@ public class TestCompensationFlow_Modify_Positive extends BaseTest{
 		modify.setParty(hh);
 		modify.setReservableResourceId(book.getReservableResourceId(), true);
 		modify.setServiceStartDate(Randomness.generateCurrentXMLDate(30));
-//		modify.setStartDate(book.getStartDate());
-//		modify.setStartTime(book.getStartTime());
 		modify.setExistingRRID(book.getReservableResourceId());
 		modify.setExistingStartDateTime(book.getStartTime());
 		modify.sendRequest();

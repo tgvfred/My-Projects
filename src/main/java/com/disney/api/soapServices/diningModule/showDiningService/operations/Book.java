@@ -206,6 +206,10 @@ public class Book extends ShowDiningService {
 	
 	public void setCommunicationChannel(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/communicationChannel", value);
+	}	
+	public void addDetailsByProductName(String productName){
+		addDetailsByFacilityIdProductName(null, getRequestFacilityId(), productName);
+			
 	}
 	public void addDetailsByFacilityNameAndProductName(String facilityName, String productName){
 		addDetailsByFacilityIdProductName(facilityName, null, productName);

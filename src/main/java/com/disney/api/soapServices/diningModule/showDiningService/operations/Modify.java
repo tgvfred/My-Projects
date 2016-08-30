@@ -77,7 +77,7 @@ public class Modify extends ShowDiningService {
 			PriceComponents price = new PriceComponents(getEnvironment(), "Main");
 			price.setComponentId(getRequestProductId());
 			price.sendRequest();
-			setRequestDocument(new ComponentPriceBuilder().buildComponentPrices(this, ComponentPriceBuilder.EVENT, "modify", price));
+			setRequestDocument(new ComponentPriceBuilder().buildComponentPrices(this, ComponentPriceBuilder.SHOW, "modify", price));
 		}
 	}
 	
@@ -266,7 +266,7 @@ public class Modify extends ShowDiningService {
 	 * @param value reservable resource ID
 	 */
 	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/inventoryDetails/reservableResourceId", value);}
-	public String getRequestReservableResourceId(){ return getRequestNodeValueByXPath("/Envelope/Body/modify/bookShowDiningRequest/dinnerShowPackage/inventoryDetails/reservableResourceId");	}
+	public String getRequestReservableResourceId(){ return getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/inventoryDetails/reservableResourceId");	}
 
 
 //	@Override
@@ -785,6 +785,10 @@ public class Modify extends ShowDiningService {
 	public void setFreezeId(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/freezeId", value);
 		notSetFreezeId = false;
+	}
+	public void setFreezeIdForError(String freezeId){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/freezeId", freezeId);
+		invokeRimError = true;
 	}
 	/**
 	 * Sets the party role age type in the SOAP request

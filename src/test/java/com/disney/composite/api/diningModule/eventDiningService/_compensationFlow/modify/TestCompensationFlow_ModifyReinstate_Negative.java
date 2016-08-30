@@ -52,7 +52,7 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 		}catch(Exception e){}
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation", "negative"})
 	public void TestCompensationFlow_ModifyReinstate_Negative_RIMFail(){
 		Modify modify = new Modify(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		modify.setTravelPlanId(book.get().getTravelPlanId());

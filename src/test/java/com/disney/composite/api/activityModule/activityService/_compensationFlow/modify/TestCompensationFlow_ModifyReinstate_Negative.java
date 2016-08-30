@@ -53,7 +53,7 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 		}catch(Exception e){}
 	}
 
-	@Test(groups = {"api", "regression", "activity", "activityService", "compensation"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "compensation", "negative"})
 	public void TestCompensationFlow_ModifyReinstate_Negative_RIMFail(){
 		Modify modify = new Modify(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		modify.setTravelPlanId(book.get().getTravelPlanId());
@@ -73,12 +73,12 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 		TestReporter.assertEquals(rs.getValue("TPS_TRAVEL_STATUS"), "Cancelled", "Verify that the travel plan segment status ["+rs.getValue("TPS_TRAVEL_STATUS")+"] is [Cancelled] as expected.");
 	}
 
-	@Test(groups = {"api", "regression", "activity", "activityService", "compensation"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "compensation", "negative"})
 	public void TestCompensationFlow_ModifyReinstate_Negative_ActivityFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
 
-	@Test(groups = {"api", "regression", "activity", "activityService", "compensation"})
+	@Test(groups = {"api", "regression", "activity", "activityService", "compensation", "negative"})
 	public void TestCompensationFlow_ModifyReinstate_Negative_FolioFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}

@@ -45,7 +45,7 @@ public class TestCompensationFlow_Modify_Positive extends BaseTest{
 		}catch(Exception e){}
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "compensation"})
 	public void testCompensationFlow_Modify_Positive(){
 		Modify modify = new Modify(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		modify.setTravelPlanId(book.getTravelPlanId());
@@ -53,8 +53,6 @@ public class TestCompensationFlow_Modify_Positive extends BaseTest{
 		modify.setParty(hh);
 		modify.setReservableResourceId(book.getReservableResourceId(), true);
 		modify.setServiceStartDate(Randomness.generateCurrentXMLDate(30));
-//		modify.setStartDate(book.getStartDate());
-//		modify.setStartTime(book.getStartTime());
 		modify.setExistingRRID(book.getReservableResourceId());
 		modify.setExistingStartDateTime(book.getStartTime());
 		modify.sendRequest();
