@@ -62,7 +62,7 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 		TestReporter.assertTrue(Integer.parseInt(modify.getExistingInventoryCountBefore()) == Integer.parseInt(modify.getExistingInventoryCountAfter()), "Verify the existing booked inventory count ["+modify.getExistingInventoryCountBefore()+"] remains the same as the value prior to modifying ["+modify.getExistingInventoryCountAfter()+"].");
 	}
 
-//	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negtive", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negtive", "compensation"})
 	public void TestCompensationFlow_Modify_Negative_DineFail(){
 		throw new SkipException("The testing solution for this scenario has not been determined.");
 	}
@@ -74,7 +74,7 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 		modify.setReservationNumber(book.get().getTravelPlanSegmentId());
 		modify.setParty(hh);
 		modify.setReservableResourceId(book.get().getReservableResourceId(), true);
-//		modify.setServiceStartDate(book.get().getRequestServiceStartDate());
+		modify.setServiceStartDate(book.get().getRequestServiceStartDate());
 		modify.setExistingRRID(book.get().getReservableResourceId());
 		modify.setExistingStartDateTime(book.get().getStartTime());
 		modify.setFacilityId("90002032");

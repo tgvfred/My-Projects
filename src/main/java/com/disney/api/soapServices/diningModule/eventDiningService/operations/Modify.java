@@ -250,9 +250,9 @@ public class Modify extends EventDiningService {
 		if(!failure) setInventoryCountAfter(getInventory());
 		setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
 		
-		if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
+		if((getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
 				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
-				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
+				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")) && !invokeRimError){
 			if(notSetFreezeId) 	setFreezeId();
 			setInventoryCountBefore(getInventory());
 			super.sendRequest();	
