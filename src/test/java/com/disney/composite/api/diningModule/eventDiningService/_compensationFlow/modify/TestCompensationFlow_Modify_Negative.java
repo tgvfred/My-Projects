@@ -44,7 +44,7 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 		}catch(Exception e){}
 	}
 
-//	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negtive", "compensation"})
+	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negtive", "compensation"})
 	public void TestCompensationFlow_Modify_Negative_RIMFail(){
 		Modify modify = new Modify(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		modify.setTravelPlanId(book.get().getTravelPlanId());
@@ -74,7 +74,7 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 		modify.setReservationNumber(book.get().getTravelPlanSegmentId());
 		modify.setParty(hh);
 		modify.setReservableResourceId(book.get().getReservableResourceId(), true);
-		modify.setServiceStartDate(book.get().getRequestServiceStartDate());
+//		modify.setServiceStartDate(book.get().getRequestServiceStartDate());
 		modify.setExistingRRID(book.get().getReservableResourceId());
 		modify.setExistingStartDateTime(book.get().getStartTime());
 		modify.setFacilityId("90002032");
