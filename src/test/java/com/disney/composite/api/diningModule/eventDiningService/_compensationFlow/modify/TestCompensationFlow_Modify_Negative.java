@@ -20,17 +20,20 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 
 public class TestCompensationFlow_Modify_Negative extends BaseTest{
 	private ThreadLocal<Book> book = new ThreadLocal<Book>();
+	private ThreadLocal<String> serviceStartDate = new ThreadLocal<String>();
 	
 	@Override
 	@BeforeMethod(alwaysRun = true)
 	@Parameters("environment")
 	public void setup(@Optional String environment){
 		this.environment = environment;
+		serviceStartDate.set(Randomness.generateCurrentXMLDate(Randomness.randomNumberBetween(30, 90)));
 		hh = new HouseHold(1);
 		book.set(new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS));
 		book.get().setParty(hh);
 		book.get().setFacilityId("90002032");
 		book.get().addDetailsByProductName("Hoop-Dee-Doo-Cat 2-1st Show");
+		book.get().setServiceStartDateTime(serviceStartDate.get());
 		book.get().sendRequest();
 		TestReporter.logAPI(!book.get().getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.get().getFaultString(), book.get());
 	}
@@ -52,6 +55,7 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 		modify.setParty(hh);
 		modify.setReservableResourceId(book.get().getReservableResourceId(), true);
 		modify.setServiceStartDate(Randomness.generateCurrentXMLDate(30));
+		modify.setFacilityId(book.get().getRequestFacilityId());
 		modify.setExistingRRID(book.get().getReservableResourceId());
 		modify.setExistingStartDateTime(book.get().getStartTime());
 		modify.setFreezeIdForError(Randomness.randomAlphaNumeric(36));
