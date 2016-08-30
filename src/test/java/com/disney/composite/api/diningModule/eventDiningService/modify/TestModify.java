@@ -5,6 +5,8 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.SoapException;
+import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify;
 import com.disney.composite.BaseTest;
@@ -27,11 +29,15 @@ public class TestModify extends BaseTest{
 		this.environment = environment;
 		hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		try{
+			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		}catch (SoapException se){
+			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		}
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	////@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModify(){
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(res.getConfirmationNumber());
@@ -55,11 +61,27 @@ public class TestModify extends BaseTest{
 		logItems.addItem("EventDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
+	////@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	public void testReinstate(){
+		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
+		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
+		modify.setReservationNumber(res2.getConfirmationNumber());
+		modify.setTravelPlanId(res2.getTravelPlanId());
+		modify.setParty(res2.party());
+		modify.setFacilityId(res2.getFacilityId());
+		modify.setServiceStartDate(res2.getServiceStartDate());
+		modify.setServicePeriodId(res2.getServicePeriodId());
+		modify.setProductId(res2.getProductId());
+		res2.cancel();
+		modify.sendRequest();
+	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo2Adults(){
 		HouseHold newParty = new HouseHold("2 Adults");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -73,10 +95,6 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
 		modify.sendRequest();
-		if(modify.getResponse().toLowerCase().contains("unique constraint")){
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
-			modify.sendRequest();
-		}
 		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
 		
 
@@ -88,10 +106,10 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo4Adults(){
 		HouseHold newParty = new HouseHold("4 Adults");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -120,11 +138,11 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo2Adults2Child(){
 		HouseHold newParty = new HouseHold("2 Adults 2 Child");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -153,11 +171,11 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo4Adults2Child2Infant(){
 		HouseHold newParty = new HouseHold("4 Adults 2 Child 2 Infant");
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -186,11 +204,11 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo12Adults(){
 		HouseHold newParty = new HouseHold(12);
 		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
@@ -219,7 +237,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("PartyIF", "updateExternalPartyAndLocatorId", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 
@@ -227,15 +245,14 @@ public class TestModify extends BaseTest{
 	public void testModifyAddAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		
+		book.addDetailsByFacilityNameAndProductName("Biergarten Restaurant", "Biergarten Lunch");
 		book.sendRequest();
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		modify.setTravelPlanId(book.getTravelPlanId());
 		modify.setParty(hh);
-		modify.setFacilityId(book.getRequestFacilityId());
-		modify.setServiceStartDate(book.getRequestServiceStartDate());
-		modify.setServicePeriodId(book.getRequestServicePeriodId());
-		modify.setProductId(book.getRequestProductId());
+		modify.setServiceStartDateTime(book.getRequestServiceStartDate());
+		modify.addDetailsByFacilityNameAndProductName("Biergarten Restaurant", "Biergarten Dinner");
 		modify.setAllergies("Egg", "1");
 		modify.sendRequest();
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
@@ -251,10 +268,10 @@ public class TestModify extends BaseTest{
 		logItems.addItem("EventDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testModifyAddAdditionalAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		
@@ -284,10 +301,10 @@ public class TestModify extends BaseTest{
 		logItems.addItem("EventDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 //		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
-	@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
+	//@Test(groups = {"api", "regression", "dining", "eventDiningService", "it4", "s138180" })
 	public void testModifyRemoveAllergy(){
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		
@@ -315,7 +332,7 @@ public class TestModify extends BaseTest{
 		logItems.addItem("EventDiningServiceIF", "modify", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
 		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
-		validateLogs(modify, logItems);
+		validateLogs(modify, logItems, 5000);
 	}
 	
 }

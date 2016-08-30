@@ -25,6 +25,7 @@ public interface ScheduledEventReservation{
 	public String getArrivedStatus();
 	public String getFacilityId();
 	public String getProductId();
+	public String getProductName();
 	public String getProductType();
 	public String getServicePeriodId();
 	public String getServiceStartDate();
@@ -41,6 +42,7 @@ public interface ScheduledEventReservation{
 	public String getFacilityName();
 	// Setters used to set field values
 	public void setFacilityId(String facilityId);
+	public void setProductName(String productName);
 	public void setProductId(String productId);
 	public void setProductType(String productType);
 	public void setBookingScenario(String scenario);

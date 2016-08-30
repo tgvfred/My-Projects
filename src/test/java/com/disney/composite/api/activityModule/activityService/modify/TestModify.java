@@ -18,12 +18,9 @@ public class TestModify extends BaseTest{
 	@AfterMethod(alwaysRun=true)
 	public void setup(){
 		try{
-			if(TPS_ID.get() != null)
-				if(!TPS_ID.get().isEmpty()){
-					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-					cancel.setReservationNumber(TPS_ID.get());
-					cancel.sendRequest();
-				}
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setReservationNumber(TPS_ID.get());
+			cancel.sendRequest();
 		}catch(Exception e){}
 	}
 	
@@ -77,9 +74,8 @@ public class TestModify extends BaseTest{
 	
 	private ScheduledEventReservation bookOriginalRes(){
 		ScheduledEventReservation originalRes = new ActivityEventReservation(this.environment, hh);
-		originalRes.setFacilityId("80008044");
-		originalRes.setProductId("53972");
-		originalRes.setProductType("RecreationActivityProduct");				
+		originalRes.setFacilityName("Bay Lake Pool");
+		originalRes.setProductName("Cabana - CO - 4 Hour Rental");
 		originalRes.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		TPS_ID.set(originalRes.getConfirmationNumber());
 		return originalRes;

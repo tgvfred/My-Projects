@@ -52,8 +52,8 @@ public class TestOptimizeInventory_Negative extends BaseTest{
 	
 	private void sendRequestValidateLogs(OptimizeInventory optimize, String falutString, ApplicationErrorCode errorCode){
 		optimize.sendRequest();
-		validateApplicationError(optimize, errorCode);
 		TestReporter.logAPI(!optimize.getFaultString().contains(falutString), optimize.getFaultString(), optimize);
+		validateApplicationError(optimize, errorCode);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ScheduledEventsServiceIF", "optimizeInventory", true);

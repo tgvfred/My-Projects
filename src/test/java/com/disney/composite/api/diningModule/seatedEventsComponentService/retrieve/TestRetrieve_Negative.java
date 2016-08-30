@@ -31,8 +31,8 @@ public class TestRetrieve_Negative extends BaseTest{
 	
 	private void sendRequestAndValidateLogs(Retrieve retrieve, String faultString, ApplicationErrorCode errorCode){
 		retrieve.sendRequest();
-		validateApplicationError(retrieve, errorCode);
 		TestReporter.logAPI(!retrieve.getFaultString().contains(faultString), retrieve.getFaultString(), retrieve);
+		validateApplicationError(retrieve, errorCode);
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("SeatedEventsComponentService", "retrieve", true);

@@ -73,8 +73,8 @@ public class TestArrived_Negative  extends BaseTest{
 	
 	private void sendRequestAndValidateLogs(Arrived arrived, ApplicationErrorCode error, String faultString){
 		arrived.sendRequest();
-		validateApplicationError(arrived, error);
 		TestReporter.logAPI(!arrived.getFaultString().contains(faultString), arrived.getFaultString() ,arrived);
+		validateApplicationError(arrived, error);
 
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("TableServiceDiningServiceIF", "arrived", true);

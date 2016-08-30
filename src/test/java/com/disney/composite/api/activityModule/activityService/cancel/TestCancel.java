@@ -1,6 +1,7 @@
 package com.disney.composite.api.activityModule.activityService.cancel;
 
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -21,7 +22,7 @@ public class TestCancel extends BaseTest{
 	
 	
 	@Override
-	@BeforeClass(alwaysRun = true)
+	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "environment" })
 	public void setup(@Optional String environment){
 		this.environment = environment;
@@ -31,7 +32,7 @@ public class TestCancel extends BaseTest{
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 
-	@Test( groups = {"api", "regression", "activity", "eventDiningService"})
+	@Test( groups = {"api", "regression", "activity", "activityService",})
 	public void testCancel() {
 		TestReporter.logScenario("Cancel");
 		TestReporter.log("Reservation Number: <b>" + res.getConfirmationNumber() + "</b>");

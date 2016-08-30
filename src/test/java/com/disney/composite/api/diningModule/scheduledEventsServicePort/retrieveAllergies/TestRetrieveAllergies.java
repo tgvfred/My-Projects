@@ -16,7 +16,7 @@ public class TestRetrieveAllergies extends BaseTest{
 		TestReporter.logStep("Retrieve Allergies");
 		RetrieveAllergies retrieveAllergies = new RetrieveAllergies(environment);
 		retrieveAllergies.sendRequest();
-		TestReporter.logAPI(!retrieveAllergies.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveAllergies);
+		TestReporter.logAPI(!retrieveAllergies.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveAllergies.getFaultString(), retrieveAllergies);
 		TestReporter.assertTrue(retrieveAllergies.getNumberOfAllergies() > 0, "Verify allergies are returned.");
 		TestReporter.assertTrue(retrieveAllergies.getAllergies().size() == retrieveAllergies.getNumberOfAllergies(), "Verify the number of allergies is ["+retrieveAllergies.getNumberOfAllergies()+"].");
 		LogItems logItems = new LogItems();

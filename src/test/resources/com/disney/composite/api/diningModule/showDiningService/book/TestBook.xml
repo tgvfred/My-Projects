@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestBook_Suite" parallel="methods" thread-count="10">
-	<parameter name="environment" value="Latest" />
+	<parameter name="environment" value="stage" />
 	<test name="TestBook">
 		<classes>
 			<class name="com.disney.composite.api.diningModule.showDiningService.book.TestBook"/>
-			
-			<!-- <groups>
-				<run>
-				<include name="s138180" />
-					
-					<exclude name="dev"  />
-				</run>
-			</groups> -->
 		</classes>
 	</test>
 </suite>

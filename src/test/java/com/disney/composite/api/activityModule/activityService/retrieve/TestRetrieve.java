@@ -1,6 +1,6 @@
 package com.disney.composite.api.activityModule.activityService.retrieve;
 
-import org.testng.annotations.AfterTest;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -27,19 +27,18 @@ public class TestRetrieve extends BaseTest{
 		hh.primaryGuest().setAge("6");
 		book = new Book(this.environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
+//		book.setReservableResourceId();
+//		book.setFreezeId();
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an activity event service reservation: " + book.getFaultString(), book);
 	}
 	
-	@AfterTest(alwaysRun=true)
+	@AfterClass(alwaysRun=true)
 	public void teardown(){
 		try{
-			if(book != null)
-				if(!book.getTravelPlanSegmentId().isEmpty()){
-					Cancel cancel = new Cancel(environment, "");
-					cancel.setReservationNumber(book.getTravelPlanSegmentId());
-					cancel.sendRequest();
-				}
+			Cancel cancel = new Cancel(environment, "");
+			cancel.setReservationNumber(book.getTravelPlanSegmentId());
+			cancel.sendRequest();
 		}catch(Exception e){}
 	}
 	

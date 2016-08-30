@@ -1,11 +1,13 @@
 package com.disney.composite.api.diningModule.showDiningService.noShow;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.NoShow;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
@@ -15,6 +17,7 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestNoShow extends BaseTest{
+	private String tpsId;
 	
 	@Override
 	@BeforeMethod(alwaysRun=true)
@@ -22,6 +25,15 @@ public class TestNoShow extends BaseTest{
 	public void setup(@Optional String environment){
 		this.environment = environment;
 		hh = new HouseHold(1);
+	}
+	
+	@AfterMethod(alwaysRun=true)
+	public void teardown(){
+		try{
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(tpsId);
+			cancel.sendRequest();
+		}catch(Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
@@ -31,7 +43,8 @@ public class TestNoShow extends BaseTest{
 		book.setParty(hh);
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
-
+		tpsId = book.getTravelPlanSegmentId();
+		
 		TestReporter.logStep("Update a show dining reservation to [No Show].");
 		NoShow noShow = new NoShow(environment, "GuestFacing");
 		noShow.setReservationNumber(book.getTravelPlanSegmentId());

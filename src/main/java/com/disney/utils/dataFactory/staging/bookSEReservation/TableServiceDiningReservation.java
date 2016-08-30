@@ -30,6 +30,8 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	private String status;	// Current reservation status
 	private String arrivedStatus;	// Status from updating a reservation to 'Arrived'
 	private String facilityId;	// Facility ID for the current reservation
+	private String productId;	// Product ID for the current reservation
+	private String productName;	// Product Name for the current reservation
 	private String servicePeriod;	// Service periods for the current reservation
 	private String serviceStartDate;	// Service start date for the current reservation, A.K.A. the date of the reservation, not to be confused with the date that the reservation was booked
 	private String bookingScenario = NOCOMPONENTSNOADDONS;	// Default booking scenario, intended to have all extraneous elements (components, add-ons, comments, etc.) removed
@@ -133,6 +135,11 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 */
 	@Override public String getProductId(){throw new AutomationException(productIdExceptionMessage);}
 	/**
+	 * Retrieves the product ID of the current reservation
+	 * @return String, product ID of the current reservation
+	 */
+	@Override public String getProductName(){throw new AutomationException(productIdExceptionMessage);}
+	/**
 	 * Retrieves the product type of the current reservation
 	 * @return String, product type of the current reservation
 	 */
@@ -186,6 +193,10 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 	 * Throws an automation exception as Table Service reservations do not expect product types
 	 */
 	@Override public void setProductId(String productId) {throw new AutomationException(productIdExceptionMessage);}
+	/**
+	 * Throws an automation exception as Table Service reservations do not expect product types
+	 */
+	@Override public void setProductName(String productNAme) {throw new AutomationException(productIdExceptionMessage);}
 	/**
 	 * Throws an automation exception as Table Service reservations do not expect product types
 	 */
@@ -259,19 +270,14 @@ public class TableServiceDiningReservation implements ScheduledEventReservation 
 			if(!facilityName.isEmpty()) book.setFacilityName(facilityName);
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		if(!environment.equalsIgnoreCase("development") && !getEnvironment().contains("_CM") ){
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			resource.getReservableResources();
-			book.setReservableResourceId(resource.getFirstReservableResourceId());			
-		}
-
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		book.sendRequest();
+		
 		if(book.getResponse().contains("Row was updated or deleted by another transaction") || 
-				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")){
+				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")||
+				book.getResponse().contains("Inconsitent Data : Booking Date Not Found for CampusId")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+			book.setFreezeId();
 			book.sendRequest();
 		}
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred booking an table service dining service reservation: " + book.getFaultString(), book);

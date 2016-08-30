@@ -14,6 +14,7 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestSearchByVenue extends BaseTest{
@@ -22,20 +23,20 @@ public class TestSearchByVenue extends BaseTest{
 	private String bookingStatus = "Booked";
 	private String TPS_ID;
 	
-	@Override
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(String environment){
-		this.environment = environment;
-		hh = new HouseHold(1);
-		Book res = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-		res.setParty(hh);
-		res.setFacilityId(facilityId);
-		res.setServiceStartDateTime(serviceDate);
-		res.sendRequest();
-		TestReporter.logAPI(!res.getResponseStatusCode().equals("200"), "An error occurred booking a table service reservation: " + res.getFaultString(), res);
-		TPS_ID = res.getTravelPlanSegmentId();
-	}
+//	@Override
+//	@BeforeMethod(alwaysRun = true)
+//	@Parameters({ "environment" })
+//	public void setup(String environment){
+//		this.environment = environment;
+//		hh = new HouseHold(1);
+//		Book res = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+//		res.setParty(hh);
+//		res.setFacilityId(facilityId);
+//		res.setServiceStartDateTime(serviceDate);
+//		res.sendRequest();
+//		TestReporter.logAPI(!res.getResponseStatusCode().equals("200"), "An error occurred booking a table service reservation: " + res.getFaultString(), res);
+//		TPS_ID = res.getTravelPlanSegmentId();
+//	}
 	
 	@AfterMethod(alwaysRun = true)
 	public void closeSession() {
@@ -49,6 +50,7 @@ public class TestSearchByVenue extends BaseTest{
 
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort"})
 	public void testSearchByVenue(){
+		preReq();
 		TestReporter.logStep("Search By Venue: Facility ID: " + facilityId);
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId(facilityId);
@@ -67,5 +69,16 @@ public class TestSearchByVenue extends BaseTest{
 		logItems.addItem("PartyIF", "retrieveParty", false);
 		logItems.addItem("PartyIF", "retrievePartyBasicInformation", false);		
 		validateLogs(search, logItems, 10000);
+	}
+	
+	private void preReq(){
+		Book res = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		res.setParty(hh);
+		res.setFacilityId(facilityId);
+		res.setServiceStartDateTime(serviceDate);
+		res.sendRequest();
+		TestReporter.logAPI(!res.getResponseStatusCode().equals("200"), "An error occurred booking a table service reservation: " + res.getFaultString(), res);
+		TPS_ID = res.getTravelPlanSegmentId();
+		serviceDate = res.getRequestServiceStartDate();
 	}
 }

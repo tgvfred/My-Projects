@@ -1,9 +1,6 @@
 package com.disney.composite.api.diningModule.showDiningService.book;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveAllergies;
@@ -25,14 +22,6 @@ public class TestBook extends BaseTest{
 			"PackagingService;getProducts"};
 	protected HouseHold hh = null;
 	protected String reservationNumber;
-	
-	@Override
-	@BeforeMethod(alwaysRun=true)
-	@Parameters("environment")
-	public void setup(@Optional String environment){
-		this.environment = environment;
-		hh = new HouseHold(1);
-	}
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
@@ -84,7 +73,7 @@ public class TestBook extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "it4", "s138180" })
 	public void testAddAllergy(){
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-
+		hh = new HouseHold(1);
 		book.setParty(hh);
 		book.setAllergies("Egg", "1");
 		book.sendRequest();
@@ -134,6 +123,7 @@ public class TestBook extends BaseTest{
 	public void testAddAllAllergies(){
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 
+		hh = new HouseHold(1);
 		book.setParty(hh);
 		RetrieveAllergies retrieveAllergies = new RetrieveAllergies(environment);
 		retrieveAllergies.sendRequest();
