@@ -4,7 +4,7 @@
 	<parameter name="environment" value="stage_cm" />
 	<test name="TestCompensationFlow_ModifyReinstate_Negative">
 		<classes>
-			<class name="com.disney.composite.api.diningModule.eventDiningService._compensationFlow.modify.TestCompensationFlow_ModifyReinstate_Negative"/>
+			<class name="com.disney.composite.api.diningModule.showDiningService._compensationFlow.modify.TestCompensationFlow_ModifyReinstate_Negative"/>
 		</classes>
 	</test>
 </suite>

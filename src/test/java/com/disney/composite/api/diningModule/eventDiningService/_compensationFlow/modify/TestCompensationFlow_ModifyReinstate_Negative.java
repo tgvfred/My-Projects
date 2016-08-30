@@ -91,17 +91,7 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 //		modify.setExistingStartDateTime(book.get().getStartTime());
 //		modify.setFacilityId("90002032");
 //		modify.addDetailsByProductName("Hoop-Dee-Doo-Cat 2-1st Show");
-//		
-//		int taxesNodes = XMLTools.getNodeList(XMLTools.loadXML(modify.getRequest()), "/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices/unitPrices/taxes/revenueType").getLength();
-//		for(int i = 1; i <= taxesNodes; i++){
-//			try{
-//				modify.setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices["+String.valueOf(i)+"]/unitPrices/baseCharge", BaseSoapCommands.REMOVE_NODE.toString());
-//			}catch(XPathNotFoundException e){
-//				System.out.println();
-//			}
-//		}
-//		
-//		
+//		modify.setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices[1]/unitPrices/taxes/revenueType", BaseSoapCommands.REMOVE_NODE.toString());
 //		modify.sendRequest();
 //		TestReporter.logAPI(!modify.getResponse().contains("Invalid input fields"), "An error occurred modifying reservation ["+book.get().getTravelPlanSegmentId()+"]:" + modify.getFaultString(), modify);
 //		validateApplicationError(modify, DiningErrorCode.FOLIO_MANAGEMENT_SERVICE_FAILURE);
