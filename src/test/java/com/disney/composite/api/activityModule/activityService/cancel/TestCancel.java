@@ -1,18 +1,14 @@
 package com.disney.composite.api.activityModule.activityService.cancel;
 
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.activityModule.activityServicePort.operations.Book;
 import com.disney.api.soapServices.activityModule.activityServicePort.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestCancel extends BaseTest{
@@ -20,24 +16,64 @@ public class TestCancel extends BaseTest{
 	protected String TPS_ID = null;
 	protected ScheduledEventReservation res = null;
 	
-	
-	@Override
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(@Optional String environment){
-		this.environment = environment;
-		hh = new HouseHold(1);
-		hh.primaryGuest().setAge("6");
-		res = new ActivityEventReservation(this.environment, hh);
-		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+	@Test(groups = {"api", "regression", "activity", "activityService"})
+	public void testCancel_Child(){
+		TestReporter.logScenario("Cancel Child Activity");
+		HouseHold hh = new HouseHold(1);
+		hh.primaryGuest().setAge("10");
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.addDetailsByFacilityNameAndProductName("Bibbidi Bobbidi Boutique - Magic Kingdom", "C E - Bibbidi Bobbidi Boutique - MK");
+		book.setProductType("ChildActivityProduct");
+		bookAndCancel(book);
 	}
+	
 
-	@Test( groups = {"api", "regression", "activity", "activityService",})
-	public void testCancel() {
-		TestReporter.logScenario("Cancel");
-		TestReporter.log("Reservation Number: <b>" + res.getConfirmationNumber() + "</b>");
+	@Test(groups = {"api", "regression", "activity", "activityService"})
+	public void testCancel_Recreation(){
+		TestReporter.logScenario("Cancel Recreation");
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.addDetailsByFacilityNameAndProductName("Bay Lake Pool", "Cabana - CO - 4 Hour Rental");
+		book.setProductType("RecreationActivityProduct");
+		bookAndCancel(book);
+	}
+	@Test(groups = {"api", "regression", "activity", "activityService"})
+	public void testCancel_Child_DLR(){
+		TestReporter.logScenario("Cancel DLR Child Activity");
+		HouseHold hh = new HouseHold(1);
+		hh.primaryGuest().setAge("10");
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setFacilityId("432145");
+		book.setProductId("162725");
+		book.setSourceAccountingCenter("5005");
+		book.setProductType("ChildActivityProduct");
+		book.setReservableResourceId("CAF43AD9-457B-7044-E043-9906F4D17044");
+		bookAndCancel(book);
+	}
+	
+
+	@Test(groups = {"api", "regression", "activity", "activityService"})
+	public void testCancel_Recreation_DLR(){
+		TestReporter.logScenario("Cancel DLR Recreation");
+		Book book = new Book(environment, "NoComponentsNoAddOns");
+		book.setParty(hh);
+		book.setFacilityId("2135034");
+		book.setProductId("162265");
+		book.setSourceAccountingCenter("5005");
+		book.setProductType("RecreationActivityProduct");
+		book.setReservableResourceId("CAF43AD9-459F-7044-E043-9906F4D17044");
+		bookAndCancel(book);
+	}
+	
+	private void bookAndCancel(Book book){
+		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString() , book);
+		
+		TestReporter.log("Reservation Number: <b>" + book.getTravelPlanSegmentId() + "</b>");
 		Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-		cancel.setReservationNumber(res.getConfirmationNumber());
+		cancel.setReservationNumber(book.getTravelPlanSegmentId());
 		cancel.sendRequest();
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred during cancellation.", cancel);
 		TestReporter.assertTrue(Regex.match("[0-9]+", cancel.getCancellationConfirmationNumber()), "The cancellation number ["+cancel.getCancellationConfirmationNumber()+"] was not numeric as expected.");

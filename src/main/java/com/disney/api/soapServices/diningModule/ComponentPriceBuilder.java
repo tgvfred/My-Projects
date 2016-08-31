@@ -3,6 +3,7 @@ package com.disney.api.soapServices.diningModule;
 import com.disney.AutomationException;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.BaseSoapService;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.pricingModule.pricingWebService.operations.PriceComponents;
 import com.disney.api.soapServices.pricingModule.pricingWebService.operations.PriceComponents.Price;
 import com.disney.api.soapServices.pricingModule.pricingWebService.operations.PriceComponents.Price.Unit;
@@ -44,11 +45,18 @@ public class ComponentPriceBuilder {
 		}
 		
 		baseXPath = "/Envelope/Body/"+operation+"/"+diningRequest+"/"+diningPackage;
-
+		int existingComponentPrices = 1;
+		
+		try{
+			if (XMLTools.getNodeList(bs.getRequestDocument(), baseXPath + "/componentPrices").getLength() >= 1){
+				existingComponentPrices += XMLTools.getNodeList(bs.getRequestDocument(), baseXPath + "/componentPrices").getLength() ;
+			}
+		}catch(XPathNotFoundException e){}
+		
 		String componentXPath; 
 		String unitXPath;
 		String chargePriceXPath="";
-		int intComponentPrice = 1;
+		int intComponentPrice = existingComponentPrices; 
 		int intUnit = 1;
 		int intBaseChargeItem= 0;
 		int intTaxChargeItem= 0;

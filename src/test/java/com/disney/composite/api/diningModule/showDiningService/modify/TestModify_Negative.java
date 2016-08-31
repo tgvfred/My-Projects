@@ -98,7 +98,7 @@ public class TestModify_Negative extends BaseTest{
 		modify.setCommunicationsChannel("abcd");
 		sendRequestAndValidateLogs(modify, DiningErrorCode.COMMUNICATION_CHANNEL_REQUIRED,"communication Channel is required : null");
 	}
-	//@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
 	public void invalidFacilityId(){	
 		TestReporter.logScenario("Invalid Facility ID");
 		Modify modify = modify();

@@ -16,6 +16,7 @@ public class AvailSE {
 				 " where a.rsrvbl_rsrc_id = b.rsrvbl_rsrc_id " +
 				 " and b.RSRVBL_RSRC_ID = '" + resourceId + "' " +
 				 " and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd') = '" +startDate + "' " +
+				 " and (AUTH_INVTRY_CN > 0 AND (BK_CN + FREEZE_CN) < AUTH_INVTRY_CN) " +
 				 " and rownum = 1 " + 
 				 " order by fsell_invtry_srvc_dts";
 	}
@@ -65,8 +66,22 @@ public class AvailSE {
 				 " FROM ( select b.ENTRPRS_FAC_ID Facility_ID, a.RSRVBL_RSRC_ID Resource_ID, a.FSELL_INVTRY_ID Inventory_ID, a.FSELL_INVTRY_SRVC_DTS Start_Date " +
 				 " from AVAILSE.fsell_invtry a, AVAILSE.rsrvbl_rsrc b " +
 				 " where a.rsrvbl_rsrc_id = b.rsrvbl_rsrc_id " +
-				 " and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd') >= '" +date + "' " +
-				 " and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd') <  to_Char(sysdate + 60, 'yyyy-mm-dd') " +
+				 " and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd') = '" +date + "' " +
+				// " and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd') <  to_Char(sysdate + 60, 'yyyy-mm-dd') " +
+				 " and b.ENTRPRS_FAC_ID = '"+facilityId+"' " +
+				 "and (AUTH_INVTRY_CN > 0 AND ((BK_CN + FREEZE_CN )< AUTH_INVTRY_CN)) " +
+				 " order by  dbms_random.value ) data" + 
+				 " WHERE rownum = 1 order by  Start_Date ";
+	}
+	
+
+	public static String getReservableResourceByFacilityAndSpecificDate(String facilityId, String startDate){
+		String date = startDate.contains("T") ? startDate.substring(0, startDate.indexOf("T")) : startDate;
+		return  "select Facility_ID, Resource_ID, Inventory_ID, Start_Date " +
+				 " FROM ( select b.ENTRPRS_FAC_ID Facility_ID, a.RSRVBL_RSRC_ID Resource_ID, a.FSELL_INVTRY_ID Inventory_ID, a.FSELL_INVTRY_SRVC_DTS Start_Date " +
+				 " from AVAILSE.fsell_invtry a, AVAILSE.rsrvbl_rsrc b " +
+				 " where a.rsrvbl_rsrc_id = b.rsrvbl_rsrc_id " +
+				 " and to_Char(a.fsell_invtry_srvc_dts, 'yyyy-mm-dd') = '" +date + "' " +
 				 " and b.ENTRPRS_FAC_ID = '"+facilityId+"' " +
 				 "and (AUTH_INVTRY_CN > 0 AND ((BK_CN + FREEZE_CN )< AUTH_INVTRY_CN)) " +
 				 " order by  dbms_random.value ) data" + 

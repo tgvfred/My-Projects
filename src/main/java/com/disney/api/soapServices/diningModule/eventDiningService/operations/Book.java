@@ -22,6 +22,7 @@ import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.dataFactory.guestFactory.Phone;
 
 public class Book extends EventDiningService {
 	private boolean notSetFreezeId = true;
@@ -33,6 +34,10 @@ public class Book extends EventDiningService {
 	protected String startDate;
 	protected String startTime;
 	private boolean rrIdSetInAddDetails = false;
+	private boolean manuallySetRRID = false;
+	private String numberResources = "1";
+	
+	private HouseHold party;
 	public Book(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
@@ -47,7 +52,8 @@ public class Book extends EventDiningService {
 	public void setTravelPlanId(String value){
 		setRequestNodeValueByXPathAndAddNode("/Envelope/Body/book/bookEventDiningRequest/travelPlanId", value);
 	}
-	
+
+	public void setVipLevel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/vipLevel", value);}	
 	public void setSalesChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/salesChannel", value);}	
 	public void setCommunicationChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/communicationChannel", value);}	
 	public void setUnitPriceDateTime(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/componentPrices["+index+"]/unitPrices/date", value);}	
@@ -99,9 +105,11 @@ public class Book extends EventDiningService {
 			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/facilityName", value);			
 		}
 	}
-	public void setProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/productId", value);}	
+	public void setProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/productId", value);}
+	public void setEnterpriseProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/enterpriseProductId", value);}	
 	public void setProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/productType", value);}	
-	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/servicePeriodId", value);}	
+	public void setServicePeriodId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/servicePeriodId", value);}
+	public void setInventoryOverrideReasonId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryOverideReasonId", value);}	
 	public void setSignInLocation(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/signInLocation", value);}	
 	public void setAddOnComponentType(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/addOnComponents/componentPrices/componentType", value);}	
 	public void setAddOnComponentId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/addOnComponents/componentPrices/componentId", value);}	
@@ -129,22 +137,27 @@ public class Book extends EventDiningService {
 	public void setPrimaryGuestEmailAddressLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/emailDetails/locatorId", value);}	
 	public void setPrimaryGuestEmailAddressGuestLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/emailDetails/guestLocatorId", value);}	
 	public void setPrimaryGuestEmailAddress(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/emailDetails/address", value);}
+	public void setPrimaryGuestPhoneIsPrimary(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails/primary", value);}
+	public void setPrimaryGuestPhoneLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails/locatorId", value);}	
+	public void setPrimaryGuestPhoneGuestLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails/guestLocatorId", value);}	
+	public void setPrimaryGuestPhoneNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails/number", value);}
 	public void setReservableResourceId(String value){
+		manuallySetRRID  = true;
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);
-		reservableResourceId = getRequestReservableResourceId();
 	}
 	public String getRequestServiceStartDate(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/serviceStartDate");}
 	public String getRequestServicePeriodId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/servicePeriodId");}
 	public String getRequestProductId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/productId");}
+	public String getRequestEnterpriseProductId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/enterpriseProductId");}
 	/**
 	 * Retrieves and set a random reservable resource ID in the SOAP request based on Facility ID
 	 */
 	public void setReservableResourceId(){
-		ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
+		/*ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
 		resource.setFacilityId(getRequestFacilityId());
 		resource.sendRequest();
 		TestReporter.logAPI(!resource.getResponseStatusCode().equals("200"), "Failed to get Reservable Resource ID", resource);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", resource.getRandomReservableResourceId());		
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", resource.getRandomReservableResourceId());*/		
 	}
 	public String getRequestReservableResourceId(){ return getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId");	}
 	
@@ -217,7 +230,7 @@ public class Book extends EventDiningService {
 		startDate = getRequestServiceStartDate().contains("T") 
 				   ? getRequestServiceStartDate().substring(0,getRequestServiceStartDate().indexOf("T"))
 			       : getRequestServiceStartDate();
-		if(!rrIdSetInAddDetails){
+		if(!rrIdSetInAddDetails && !manuallySetRRID){
 			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(),startDate)));
 			setReservableResourceId(rsInventory.getValue("Resource_ID"));
 		}else{
@@ -234,11 +247,13 @@ public class Book extends EventDiningService {
 		dateTime = startTime;
 		freeze.setStartDate(startDate);	
 		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-		freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));
+		freeze.setReservableResourceId(getRequestReservableResourceId());
+		String partySize = "1";
+		freeze.setResourceQuantity(numberResources);
 		freeze.sendRequest();
 //			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 		int timesTried = 0;
-		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
+		while(freeze.getSuccess().equals("failure") && timesTried < 5){	
 			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate()).replace("to_Char(sysdate + 60, 'yyyy-mm-dd')", "to_Char(sysdate + 120, 'yyyy-mm-dd')")));
 			try{
 				startDate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
@@ -256,8 +271,61 @@ public class Book extends EventDiningService {
 		freezeId = freeze.getFreezeID();
 		setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());		
 		if(!invokeRimError) setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		for(int x = 1 ; x <= Integer.valueOf(numberResources) ; x++){
+			try{
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryDetails["+x+"]/reservableResourceId", freeze.getReservableResourceID());
+			}catch(XPathNotFoundException e){
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage",BaseSoapCommands.ADD_NODE.commandAppend("inventoryDetails"));
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryDetails["+x+"]",BaseSoapCommands.ADD_NODE.commandAppend("reservableResourceId"));
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryDetails["+x+"]/reservableResourceId",freeze.getReservableResourceID());
+			}
+		}
 		notSetFreezeId = false;
 	}
+	
+	public void setFreezeId(String throwaway, String startdate){
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rs = null;
+		Freeze freeze = new Freeze(getEnvironment(), "Main");
+		String freezeId = "";
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndSpecificDate(getRequestFacilityId(), startdate)));
+		
+		startdate = rsInventory.getValue("START_DATE").contains(" ") 
+						   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
+					       : rsInventory.getValue("START_DATE");
+						   
+		String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+		setReservableResourceId(rsInventory.getValue("Resource_ID"));
+		freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+		TestReporter.logStep("Generating Freeze ID for Reservable Resource ["+rsInventory.getValue("Resource_ID")+"]");
+		freeze.setStartDate(startdate);	
+		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+		freeze.sendRequest();
+		TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
+		int timesTried = 0;
+		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
+			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+			
+			startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+			freeze.setStartDate(startdate);	
+			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+			freeze.sendRequest();	
+			if(freeze.getSuccess().equals("failure")) timesTried++;
+		}
+
+		if(freeze.getSuccess().equals("failure")){
+			TestReporter.logAPI(true, "Could not Freeze Inventory", freeze);
+		}
+		freezeId = freeze.getFreezeID();
+		setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+		
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		notSetFreezeId = false;
+	}
+	
 	public void setFreezeId(String freezeId){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
 		notSetFreezeId = false;
@@ -266,46 +334,60 @@ public class Book extends EventDiningService {
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/freezeId", freezeId);
 		invokeRimError = true;
 	}
-	
-	public void setProfileDetailIdAndType(String id, String type, String index){
-		// Determine if the index exists. If not, create it and the necessary
-		// child nodes. If so, then set the child node values
+	public void setTaxExemptDetails(String certificateNumber, String taxExemptType){
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/id");
-		}catch(Exception e){
-			e.printStackTrace();
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:profileDetails");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+index+"]", "fx:AddNode;Node:id");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+index+"]", "fx:AddNode;Node:type");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/id", id);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/type", type);
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/taxExemptDetail/taxExemptType", taxExemptType);
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest", "fx:AddNode;Node:taxExemptDetail");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptCertificateNumber");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptType");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/taxExemptDetail/taxExemptType", taxExemptType);
 	}
 	
-	public void setComments(String text, String type, String index){
+	public void setProfileDetailIdAndType(String id, String type){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfProfileDetails= 1;
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+index+"]/commentText");
-		}catch(Exception e){
-			e.printStackTrace();
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest", "fx:AddNode;Node:internalComments");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+index+"]", "fx:AddNode;Node:commentText");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+index+"]", "fx:AddNode;Node:commentType");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+index+"]/commentText", text);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+index+"]/commentType", type);
+			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id");
+			numberOfProfileDetails+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:profileDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:id");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:type");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id", id);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/type", type);
 	}
 	
-	public void setAllergies(String value, String index){
+	public void setComments(String text, String type){
+		int numberOfInternalComments= 1;
+		try{
+			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
+			numberOfInternalComments+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest", "fx:AddNode;Node:internalComments");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentText");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentType");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText", text);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentType", type);
+	}
+	
+	public void setAllergies(String value){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfAllergies= 1;
 		try{
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies["+index+"]", value);
-		}catch(Exception e){
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:allergies");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies["+index+"]", value);
-		}
+			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies["+numberOfAllergies+"]");
+			numberOfAllergies+=1;;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:allergies");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies["+numberOfAllergies+"]", value);
+
 	}
 	
 	public void addTravelAgency(String agencyId){
@@ -325,8 +407,8 @@ public class Book extends EventDiningService {
 		Database availDb = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		String sql= "";
 		
-		if(facilityName != null ) sql=Pricing.getProductInfoByFacilityNameAndProdName(facilityName, productName);
-		else if(facilityId != null ) sql=Pricing.getProductInfoByFacilityIdAndProdName(facilityId, productName);
+		if(facilityName != null ) sql=Pricing.getProductInfoByFacilityNameAndProdName(facilityName.replace("'", "%"), productName.replace("'", "%"));
+		else if(facilityId != null ) sql=Pricing.getProductInfoByFacilityIdAndProdName(facilityId, productName.replace("'", "%"));
 		
 		if(sql != ""){
 			Recordset rsPricing = new Recordset(dreamsDb.getResultSet(sql));
@@ -336,17 +418,64 @@ public class Book extends EventDiningService {
 			setFacilityId(rsPricing.getValue("FAC_ID"));
 			setProductId(rsPricing.getValue("PROD_ID"));
 			setProductType(rsPricing.getValue("PROD_TYP_NM"));
-			Recordset rsInventory = new Recordset(availDb.getResultSet(AvailSE.getReservableResourceByProductId(rsPricing.getValue("PROD_ID"))));
-			if(rsInventory.getRowCount() == 0) throw new AutomationException("No external reference data was found for Product id ["+rsPricing.getValue("PROD_ID")+"]");
-			setReservableResourceId(rsInventory.getValue("RSRVBL_RSRC_ID"));
+			setEnterpriseProductId(rsPricing.getValue("ENTRPRS_PROD_ID"));
+			if(!manuallySetRRID){
+				Recordset rsInventory = new Recordset(availDb.getResultSet(AvailSE.getReservableResourceByProductId(rsPricing.getValue("PROD_ID"))));
+				if(rsInventory.getRowCount() == 0) throw new AutomationException("No external reference data was found for Product id ["+rsPricing.getValue("PROD_ID")+"]");
+				setReservableResourceId(rsInventory.getValue("RSRVBL_RSRC_ID"));
+			}
 			rrIdSetInAddDetails = true;
 			
-			PriceComponents price = new PriceComponents(getEnvironment(), "Main");
-			price.setComponentId(getRequestProductId());
-			price.sendRequest();
-			
-			setRequestDocument(new ComponentPriceBuilder().buildComponentPrices(this, ComponentPriceBuilder.EVENT, "book", price));
+			PriceComponents price = null;
+		
+			for(Guest guest : party.getAllGuests()){
+				price = new PriceComponents(getEnvironment(), "Main");
+				price.setComponentId(getRequestProductId());
+				price.setAge(guest.getAge());
+				price.setAgeType(Integer.valueOf(guest.getAge()) > 18 ? "Adult" : "Child");
+				price.sendRequest();
+				setRequestDocument(new ComponentPriceBuilder().buildComponentPrices(this, ComponentPriceBuilder.EVENT, "book", price));
+			}
 		}
+	}
+	
+	public void addSpecialEventByProductName(String productName){
+		Database dreamsDb = new OracleDatabase(getEnvironment(), Database.DREAMS);
+		Database availDb = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		String facilityId = "";
+		String sql=Pricing.getProductSpecialEventByProdName(productName);
+		
+		
+		Recordset rsPricing = new Recordset(dreamsDb.getResultSet(sql));
+		
+		if(rsPricing.getRowCount() == 0) throw new AutomationException("Failed to retreive data for Product Name ["+productName+"].\n SQL: "  +sql);
+		facilityId = rsPricing.getValue("FAC_ID");
+		Recordset rsInventory = null;
+		String startdate = "";
+		String startTime = "";
+		rsInventory= new Recordset(availDb.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(facilityId, getRequestServiceStartDate())));
+		startdate = rsInventory.getValue("Start_Date").contains(" ") 
+				   ? rsInventory.getValue("Start_Date").substring(0,rsInventory.getValue("Start_Date").indexOf(" "))
+			       : rsInventory.getValue("Start_Date");
+						   
+		startTime = rsInventory.getValue("Start_Date").replace(".0", "");
+		String rrid = rsInventory.getValue("Resource_ID");
+	
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:eventInventory");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:duration");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:freezeElapsedTime");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:freezeTimeToLive");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:inventoryDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory/inventoryDetails", "fx:AddNode;Node:reservableResourceId");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory/inventoryDetails/reservableResourceId",rrid);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:unitMeasureCount");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:eventOrShowStartDate");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory/duration","1");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory/freezeElapsedTime","0");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory/freezeTimeToLive","60");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventInventory/unitMeasureCount","1");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventOrShowStartDate",rsInventory.getValue("Start_Date").replace(" " , "T"));
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/eventOrShowFacilityId",facilityId);
 	}
 	
 	public void addTravelAgency(String agencyIataNumber, String agencyOdsId, String guestAgencyId, String agentId, String guestAgentId, String confirmationLocatorValue, String guestConfirmationLocationId){
@@ -368,8 +497,13 @@ public class Book extends EventDiningService {
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/travelAgency/guestConfirmationLocationId", guestConfirmationLocationId);
 	}
 	
+	public void setNumberOfResources(String number){
+		this.numberResources = number;
+	}
+	
 	public void setParty(HouseHold party){
 		int currentGuest = 1;
+		this.party = party;
 		String partyRolePosition = "";
 		addPartyRoleNodes(party.getAllGuests().size() - 1);
 		for( Guest guest : party.getAllGuests()){
@@ -397,6 +531,7 @@ public class Book extends EventDiningService {
 					addPrimaryGuestAddresses(guest);
 				}catch(XPathNotFoundException e){}
 				addPrimaryGuestEmails(guest);
+				addPrimaryGuestPhone(guest);
 			}
 			
 			if(currentGuest == 1)	partyRolePosition="";
@@ -491,7 +626,29 @@ public class Book extends EventDiningService {
 			position++;
 		}
 	}
-	
+private void addPrimaryGuestPhone(Guest guest){
+		
+		addPrimaryGuestPhoneDetailNodes(guest.getAllPhones().size());
+		
+		int position = 1;
+		
+		for(Phone phone : guest.getAllPhones()){
+			if(position == 1){
+				try{
+					setPrimaryGuestPhoneLocatorId("0");
+					setPrimaryGuestPhoneGuestLocatorId("0");
+					setPrimaryGuestPhoneIsPrimary(phone.isPrimary() ? "true":"false");
+					setPrimaryGuestPhoneNumber(phone.getNumber());
+				}catch(XPathNotFoundException xnfe){}
+			}else{
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails[" + position + "]/primary", phone.isPrimary() ? "true":"false");
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails[" + position + "]/locatorId", "0");
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails[" + position + "]/guestLocatorId", "0");
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails[" + position + "]/number", phone.getNumber());
+			}
+			position++;
+		}
+	}
 	private void addPrimaryGuestEmailDetailNodes(int numberToAdd){
 		int position = 2;
 		for(int x=1 ; x <= numberToAdd ; x++){
@@ -502,7 +659,17 @@ public class Book extends EventDiningService {
 			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/emailDetails["+position+"]", "fx:AddNode;Node:address");
 		}
 	}
-	
+
+	private void addPrimaryGuestPhoneDetailNodes(int numberToAdd){
+		int position = 2;
+		for(int x=1 ; x <= numberToAdd ; x++){
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest", "fx:AddNode;Node:phoneDetails");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails["+x+"]", "fx:AddNode;Node:locatorId");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails["+x+"]", "fx:AddNode;Node:guestLocatorId");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails["+x+"]", "fx:AddNode;Node:primary");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails["+x+"]", "fx:AddNode;Node:number");
+		}
+	}
 	
 	private void addPartyRoleNodes(int numberToAdd){
 		int position = 2;

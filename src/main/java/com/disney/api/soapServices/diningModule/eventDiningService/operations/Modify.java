@@ -104,8 +104,16 @@ public class Modify extends EventDiningService {
 	public void setAddOnProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/addOnComponents/productId", value);}	
 	public void setAddOnProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/addOnComponents/productType", value);}	
 	public void addInternalComments(String text, String type){
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentText", text);
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentType", type);
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentText", text);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentType", type);
+		}catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest", BaseSoapCommands.ADD_NODE.commandAppend("internalComments"));
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments", BaseSoapCommands.ADD_NODE.commandAppend("commentText"));
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments", BaseSoapCommands.ADD_NODE.commandAppend("commentType"));
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentText", text);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentType", type);
+		}
 	}
 	public void setComponentPriceComponentType(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices["+index+"]/componentType", value);}	
 	public void setComponentPriceComponentId(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices["+index+"]/componentId", value);}	
@@ -121,47 +129,63 @@ public class Modify extends EventDiningService {
 	public void setPrimaryGuestPartyId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/primaryGuest/partyId", value);}	
 	public void setSalesChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/salesChannel", value);}	
 	public void setCommunicationChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/communicationChannel", value);}
-	public void setProfileDetailIdAndType(String id, String type, String index){
-		// Determine if the index exists. If not, create it and the necessary
-		// child nodes. If so, then set the child node values
+	
+	public void setTaxExemptDetails(String certificateNumber, String taxExemptType){
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/id");
-		}catch(Exception e){
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:profileDetails");
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+index+"]", "fx:AddNode;Node:id");
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+index+"]", "fx:AddNode;Node:type");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/id", id);
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/type", type);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail/taxExemptType", taxExemptType);
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest", "fx:AddNode;Node:taxExemptDetail");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptCertificateNumber");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptType");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail/taxExemptType", taxExemptType);
 	}
 	
-	public void setComments(String text, String type, String index){
+	public void setProfileDetailIdAndType(String id, String type){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfProfileDetails= 1;
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+index+"]/commentText");
-		}catch(Exception e){
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest", "fx:AddNode;Node:internalComments");
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+index+"]", "fx:AddNode;Node:commentText");
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+index+"]", "fx:AddNode;Node:commentType");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+index+"]/commentText", text);
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+index+"]/commentType", type);
+			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails");
+			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id");
+			numberOfProfileDetails+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:profileDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:id");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:type");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id", id);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/type", type);
 	}
 	
-	public void setAllergies(String value, String index){
+	public void setComments(String text, String type){
+		int numberOfInternalComments= 1;
+		try{
+			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments");
+			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
+			numberOfInternalComments+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest", "fx:AddNode;Node:internalComments");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentText");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentType");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText", text);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentType", type);
+	}
+	
+	public void setAllergies(String value){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfAllergies= 1;
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+index+"]");
-		}catch(Exception e){
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:allergies");
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+index+"]", value);
-		}
+			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies");
+			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+numberOfAllergies+"]");
+			numberOfAllergies+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:allergies");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+numberOfAllergies+"]", value);
 	}	
 
 	public int getNumberOfComponentIds(){return getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices");}
-	public int getNumberOfRequestNodesByXPath(String xpath){return XMLTools.getNodeList(getRequestDocument(), xpath).getLength();}
 	public void setComponentIdAndType(int index, String id, String type){
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices["+index+"]/componentId", id);
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices["+index+"]/componentType", type);
@@ -185,6 +209,7 @@ public class Modify extends EventDiningService {
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);
 		reservableResourceId = value;
 		this.newDateTime = newDateTime;
+		rrIdSetInAddDetails = true;
 	}
 	public void setPrimaryGuestTitle(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/primaryGuest/title", value);}
 	public void setPrimaryGuestSuffix(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/primaryGuest/suffix", value);}
@@ -237,6 +262,45 @@ public class Modify extends EventDiningService {
 			price.sendRequest();
 			setRequestDocument(new ComponentPriceBuilder().buildComponentPrices(this, ComponentPriceBuilder.EVENT, "modify", price));
 		}
+	}
+	
+	public void addSpecialEventByProductName(String productName, String rrid){
+		Database dreamsDb = new OracleDatabase(getEnvironment(), Database.DREAMS);
+		Database availDb = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		String facilityId = "";
+		String sql=Pricing.getProductSpecialEventByProdName(productName);
+		
+		
+		Recordset rsPricing = new Recordset(dreamsDb.getResultSet(sql));
+		
+		if(rsPricing.getRowCount() == 0) throw new AutomationException("Failed to retreive data for Product Name ["+productName+"].\n SQL: "  +sql);
+		facilityId = rsPricing.getValue("FAC_ID");
+		Recordset rsInventory = null;
+		String startdate = "";
+		String startTime = "";
+		rsInventory= new Recordset(availDb.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(facilityId, getRequestServiceStartDate())));
+		startdate = rsInventory.getValue("Start_Date").contains(" ") 
+				   ? rsInventory.getValue("Start_Date").substring(0,rsInventory.getValue("Start_Date").indexOf(" "))
+			       : rsInventory.getValue("Start_Date");
+						   
+		startTime = rsInventory.getValue("Start_Date").replace(".0", "");
+		rrid = rsInventory.getValue("Resource_ID");
+	
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:eventInventory");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:duration");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:freezeElapsedTime");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:freezeTimeToLive");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:inventoryDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/inventoryDetails", "fx:AddNode;Node:reservableResourceId");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/inventoryDetails/reservableResourceId",rrid);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:unitMeasureCount");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:eventOrShowStartDate");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/duration","1");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/freezeElapsedTime","0");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/freezeTimeToLive","60");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/unitMeasureCount","1");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventOrShowStartDate",rsInventory.getValue("Start_Date").replace(" " , "T"));
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventOrShowFacilityId",facilityId);
 	}
 	
 
@@ -397,7 +461,10 @@ public class Modify extends EventDiningService {
 	}
 
 	public void setFreezeId(String freezeId){
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		}catch(XPathNotFoundException e){}
+		
 		notSetFreezeId = false;
 	}
 	public void setFreezeIdForError(String freezeId){
@@ -515,6 +582,7 @@ public class Modify extends EventDiningService {
 		
 		for(Email email : guest.getAllEmails()){
 			if(position == 1){
+				
 				setPrimaryGuestEmailAddressLocatorId("0");
 				setPrimaryGuestEmailAddressGuestLocatorId("0");
 				setPrimaryGuestEmailAddressIsPrimary(email.isPrimary() ? "true":"false");

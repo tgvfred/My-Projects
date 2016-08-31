@@ -29,7 +29,7 @@ public class BaseTest {
 		try{
 			TestReporter.setDebugLevel(Integer.parseInt(System.getenv("debugLevel")));
 		}catch(Exception e){}		
-	//	TestReporter.setDebugLevel(1);
+		//TestReporter.setDebugLevel(1);
 	}
 	
 	@BeforeMethod(alwaysRun = true)
@@ -104,7 +104,7 @@ public class BaseTest {
 		boolean isValid = false;
 		boolean containsRequest = false;
 		boolean containsResponse = false;
-		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development") && !environment.toLowerCase().contains("latest_cm")){
+		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development") && !environment.toLowerCase().contains("_cm")){
 				
 			Recordset rs = getLogs(environment, soap.getConversationID());
 			

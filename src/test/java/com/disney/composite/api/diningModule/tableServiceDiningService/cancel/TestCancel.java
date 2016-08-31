@@ -5,6 +5,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Book;
 import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Cancel;
 import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
@@ -54,4 +55,35 @@ public class TestCancel extends BaseTest{
 		validateLogs(cancel, logItems, 10000);
 	}
 
+
+	@Test( groups = {"api", "regression", "dining", "tableDiningService"})
+	public void testCancel_DLR() {
+		TestReporter.logScenario("Cancel DLR Table Service Reservation");
+		Book book = new Book(environment, "DLRTableServiceOneChild");
+		hh = new HouseHold(1);
+		hh.primaryGuest().setAge("10");
+		book.setParty(hh);
+		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		
+		Cancel cancel = new Cancel(environment, "Main");
+		cancel.setReservationNumber(book.getTravelPlanSegmentId());
+		cancel.sendRequest();
+		TestReporter.assertTrue(Regex.match("[0-9]+", cancel.getCancellationConfirmationNumber()), "The cancellation number ["+cancel.getCancellationConfirmationNumber()+"] was not numeric as expected.");
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("TableServiceDiningServiceIF", "cancel", false);
+		logItems.addItem("AccommodationInventoryRequestComponentServiceIF", "releaseInventory", false);
+		logItems.addItem("ChargeGroupIF", "cancelChargeGroups", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "cancelOrder", false);
+		logItems.addItem("UpdateInventory", "updateInventory", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "cancelOrder", false);
+		logItems.addItem("ChargeGroupIF", "cancelChargeGroups", false);
+		logItems.addItem("PartyIF", "retrieveParty", false);
+		if(environment.equalsIgnoreCase("Sleepy")){
+			logItems.addItem("GuestLinkServiceV1SEI", "createEntitlementReference", false); //Sleepy only
+		}
+		validateLogs(cancel, logItems, 10000);
+	}
+	
 }

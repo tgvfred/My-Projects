@@ -34,6 +34,10 @@ public class Retrieve extends EventDiningService {
 	public String getPartyId(){
 		return getResponseNodeValueByXPath("/Envelope/Body/retrieveEventDiningResponse/EventDiningReservation/primaryGuest/partyId");
 	}
+
+	public String getGuestId(){
+		return getResponseNodeValueByXPath("/Envelope/Body/retrieveEventDiningResponse/EventDiningReservation/primaryGuest/guestId");
+	}
 	
 	public String getInternalCommentsText(){
 		return getResponseNodeValueByXPath("/Envelope/Body/retrieveEventDiningResponse/EventDiningReservation/internalComments/commentText");

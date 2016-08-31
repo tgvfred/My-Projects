@@ -65,6 +65,7 @@ public class PostCardPayment extends PaymentService{
 	
 	public void setRetreivalReferenceNumber(){
 		String amount = "";
+		TestReporter.logStep("Generate RRN for Card Payment");
 		RequestCreditCardRRN requestRRN = new RequestCreditCardRRN(getEnvironment(), "Main");
 		// Negative amounts are not allowed for the RequestCreditCardRRN
 		// operation. Therefore, make the amount positive in order to retrieve a
@@ -109,10 +110,7 @@ public class PostCardPayment extends PaymentService{
 		
 		requestRRN.setExpirationDate(expireYear+expireMonth);
 		requestRRN.sendRequest();
-		TestReporter.assertEquals(requestRRN.getResponseStatusCode(), "200", "The response code was not 200. Response message: \n" + requestRRN.getResponse());
-		TestReporter.assertEquals(requestRRN.getStatusCode(), "APPROVED", "The response code was not 200");
-		TestReporter.assertNotNull(requestRRN.getRetrievalReferenceNumber(), "The response contains a RRN");
-		TestReporter.assertNotNull(requestRRN.getRetrievalReferenceNumberKey(),  "The response contains a Travel Component ID");
+        TestReporter.logAPI(!requestRRN.getResponseStatusCode().equals("200"), "Error generating RRN: "+ requestRRN.getFaultString(), requestRRN);	
 		rrn =  requestRRN.getRetrievalReferenceNumber();
 		rrnKey = requestRRN.getRetrievalReferenceNumberKey();
 		
@@ -126,6 +124,7 @@ public class PostCardPayment extends PaymentService{
 	public void setRetreivalReferenceNumber(String cardNumber, String cardType, String expireFullDate){
 		String amount = "";
 		RequestCreditCardRRN requestRRN = new RequestCreditCardRRN(getEnvironment(), "Main");
+		TestReporter.logStep("Generate RRN for Card Payment");
 		// Negative amounts are not allowed for the RequestCreditCardRRN
 		// operation. Therefore, make the amount positive in order to retrieve a
 		// RRN

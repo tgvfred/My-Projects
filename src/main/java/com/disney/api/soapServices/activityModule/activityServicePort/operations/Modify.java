@@ -526,6 +526,7 @@ public class Modify extends ActivityService {
 		startTime = rsInventory.getValue("START_DATE").replace(".0", "");
 		freeze.setStartDate(startdate);	
 		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+		TestReporter.logStep("Generating Freeze ID for Reservable Resource ["+rsInventory.getValue("Resource_ID")+"]");
 		freeze.sendRequest();
 //			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 		int timesTried = 0;
@@ -564,6 +565,62 @@ public class Modify extends ActivityService {
 //>>>>>>> bcbd28f51f4f4d70956471a29f528c4e2d10d279
 		notSetFreezeId = false;
 	}
+	
+
+	public void setTaxExemptDetails(String certificateNumber, String taxExemptType){
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/taxExemptDetail/taxExemptType", taxExemptType);
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest", "fx:AddNode;Node:taxExemptDetail");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptCertificateNumber");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptType");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/taxExemptDetail/taxExemptType", taxExemptType);
+	}
+	
+	public void setProfileDetailIdAndType(String id, String type){
+		// Determine if the index exists. If not, create it and the necessary
+		// child nodes. If so, then set the child node values
+		int numberOfProfileDetails= 1;
+		try{
+			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/profileDetails");
+			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]/id");
+			numberOfProfileDetails+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity", "fx:AddNode;Node:profileDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:id");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:type");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]/id", id);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]/type", type);
+	}
+	
+	public void setComments(String text, String type){
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/internalComments/commentText", text);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/internalComments/commentType", type);
+		}catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest", BaseSoapCommands.ADD_NODE.commandAppend("internalComments"));
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/internalComments", BaseSoapCommands.ADD_NODE.commandAppend("commentText"));
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/internalComments", BaseSoapCommands.ADD_NODE.commandAppend("commentType"));
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/internalComments/commentText", text);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/internalComments/commentType", type);
+		}
+	}
+	
+	public void setAllergies(String value){
+		// Determine if the index exists. If not, create it and the necessary
+		// child nodes. If so, then set the child node values
+		int numberOfAllergies= 1;
+		try{
+			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/allergies");
+			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/allergies["+numberOfAllergies+"]");
+			numberOfAllergies+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity", "fx:AddNode;Node:allergies");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/allergies["+numberOfAllergies+"]", value);
+	}	
+
 	/**
 	 * Sets the primary guest title in the SOAP request
 	 * @param value - primary guest title
@@ -889,4 +946,5 @@ public class Modify extends ActivityService {
 			position++;
 		}
 	}
+	
 }

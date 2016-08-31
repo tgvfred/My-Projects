@@ -83,8 +83,8 @@ public class TestValidateBooking extends BaseTest{
 	
 	private void logItems(ValidateBooking validate, boolean expectError){
 		LogItems logValidItems = new LogItems();
-//		logValidItems.addItem("ActivityServiceIF", "validateBooking", expectError);
-		logValidItems.addItem("EventDiningServiceIF", "validateBooking", expectError);
+		logValidItems.addItem("ActivityServiceIF", "validateBooking", expectError);
+//		logValidItems.addItem("EventDiningServiceIF", "validateBooking", expectError);
 		validateLogs(validate, logValidItems);
 	}
 }

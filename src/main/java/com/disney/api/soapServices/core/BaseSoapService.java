@@ -78,6 +78,7 @@ import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.github.content.Content;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.core.exceptions.XPathNullNodeValueException;
+import com.disney.test.utils.Base64Coder;
 import com.disney.test.utils.Randomness;
 import com.disney.test.utils.Regex;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -242,7 +243,7 @@ public abstract class BaseSoapService{
 	 * @version Created: 08/28/2014
 	 * @return Returns the stored Request XML as a Document
 	 */
-	protected Document getRequestDocument() {
+	public Document getRequestDocument() {
 		return requestDocument;
 	}
 
@@ -792,7 +793,11 @@ public abstract class BaseSoapService{
 		return validateNodeValueByXPath(getResponseDocument(),
 				getTestScenario(service,operation, scenario));
 	}
-	
+
+	public boolean validateResponse(String scenario) {
+		return validateNodeValueByXPath(getResponseDocument(),
+				getTestScenario(getService(),getOperation(), scenario));
+	}
 	protected void generateServiceContext() {
 
 		XPathFactory xPathFactory = XPathFactory.newInstance();
@@ -1086,11 +1091,10 @@ public abstract class BaseSoapService{
 			HttpGet request = new HttpGet(url);
 			Content content =  new RestService().sendRequest(request).mapJSONToObject(Content.class);
 			String downloadURL = content.getDownloadUrl();
-			
+
 			TestReporter.logDebug("Retrieving WebVan Certificate");
 			InputStream is = new URL(downloadURL).openStream();
 			
-		
 			TestReporter.logDebug("Loading WebVan Certifcate into Keystore");
 			clientStore.load(is, "Disney123".toCharArray());
 
@@ -1098,8 +1102,7 @@ public abstract class BaseSoapService{
 	        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 	        kmf.init(clientStore, "Disney123".toCharArray());
 	        KeyManager[] kms = kmf.getKeyManagers();
-	       
-	       // String path = getClass().getResource("/com/disney/certificates/webvan/cacerts").getPath();
+
 	        TestReporter.logDebug("Retrieving CA Cert Store");
 	        url = "https://github.disney.com/api/v3/repos/WDPRO-QA/lilo/contents/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/cacerts" +Base64Coder.decodeString(token);
 			request = new HttpGet(url);
@@ -1139,7 +1142,7 @@ public abstract class BaseSoapService{
 		}
 		return faultString;
 	}
-	
+	public int getNumberOfRequestNodesByXPath(String xpath){return XMLTools.getNodeList(getRequestDocument(), xpath).getLength();}
 
 	public String getServiceExceptionErrorMessage(){
 		String error= "";
