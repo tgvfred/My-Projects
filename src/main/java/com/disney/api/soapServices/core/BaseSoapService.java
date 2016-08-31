@@ -1142,8 +1142,21 @@ public abstract class BaseSoapService{
 		}
 		return faultString;
 	}
-	public int getNumberOfRequestNodesByXPath(String xpath){return XMLTools.getNodeList(getRequestDocument(), xpath).getLength();}
+	public int getNumberOfRequestNodesByXPath(String xpath){
+		try{
+			return XMLTools.getNodeList(getRequestDocument(), xpath).getLength();
+		}catch(XPathNotFoundException e){
+			return 0;
+		}
+	}
 
+	public int getNumberOfResponseNodesByXPath(String xpath){
+		try{
+			return XMLTools.getNodeList(getResponseDocument(), xpath).getLength();
+		}catch(XPathNotFoundException e){
+			return 0;
+		}
+	}
 	public String getServiceExceptionErrorMessage(){
 		String error= "";
 		try{
