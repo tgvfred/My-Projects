@@ -19,7 +19,7 @@ import com.disney.utils.TestReporter;
 @Test
 @SuppressWarnings("unused")
 public class TestRetrieve {
-	private String environment = "Development";
+	private String environment = "Bashful";
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -29,7 +29,7 @@ public class TestRetrieve {
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
 		//this.environment = environment;
-		this.environment = "Development";
+		this.environment = "Bashful";
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class TestRetrieve {
 		
 
 		//Sending request and validating response
-		RestResponse response= Rest.folio("Development").chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);
+		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);
 		
 		RetreiveResponse[] retreiveResponse = response.mapJSONToObject(RetreiveResponse[].class);
 			for(RetreiveResponse chargeAccount:retreiveResponse){

@@ -19,7 +19,7 @@ import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.crea
 @SuppressWarnings("unused")
 
 public class TestCreate {
-private String environment = "Development";
+private String environment = "Bashful";
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -30,7 +30,7 @@ private String environment = "Development";
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
 	//this.environment = environment;
-	this.environment = "Development";
+	this.environment = "Bashful";
 }
 	
 	/**
@@ -51,7 +51,7 @@ private String environment = "Development";
 		// Charge Account Type
 		request.getChargeAccountRequests();
 				
-		RestResponse response= Rest.folio("Development").chargeAccountService().chargeAccount().create().sendPostRequest(request);
+		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 	}
 }

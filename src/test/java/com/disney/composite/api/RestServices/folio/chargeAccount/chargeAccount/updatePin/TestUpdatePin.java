@@ -23,7 +23,7 @@ import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 public class TestUpdatePin {
-private String environment = "Development";
+private String environment = "Bashful";
 private CreateResponse caCreate = null;	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -33,7 +33,7 @@ private CreateResponse caCreate = null;
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
 		//this.environment = environment;
-		this.environment = "Development";
+		this.environment = "Bashful";
 	}
 	
 	/**
@@ -58,7 +58,7 @@ private CreateResponse caCreate = null;
 		//Update value for Pin
 		request.setPinNumber("1357");
 	
-	RestResponse response= Rest.folio("Development").chargeAccountService().chargeAccount().updatePin().sendPutRequest(request);
+	RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().updatePin().sendPutRequest(request);
 	TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 	TestReporter.assertTrue(response.getResponse().contains("Success"), "Update Pin status of was [Success]");
 		
