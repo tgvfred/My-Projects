@@ -144,6 +144,7 @@ public class Book extends EventDiningService {
 	public void setReservableResourceId(String value){
 		manuallySetRRID  = true;
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);
+		reservableResourceId = value;
 	}
 	public String getRequestServiceStartDate(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/serviceStartDate");}
 	public String getRequestServicePeriodId(){return getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/servicePeriodId");}

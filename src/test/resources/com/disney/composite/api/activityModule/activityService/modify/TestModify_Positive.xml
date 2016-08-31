@@ -3,8 +3,8 @@
 <suite name="TestModify_Suite" parallel="methods" thread-count="10">
 	<parameter name="environment" value="Stage_CM" />
 	<test name="TestModify">
-	<packages>
-		<package name="com.disney.composite.api.activityModule.activityService.modify.*"></package>
-	</packages>
+		<classes>
+			<class name="com.disney.composite.api.activityModule.activityService.modify.TestModify"/>
+		</classes>
 	</test>
 </suite>

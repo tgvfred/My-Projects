@@ -289,6 +289,12 @@ public class Modify extends ActivityService {
 		reservableResourceId = value;
 		this.newDateTime = newDateTime;
 	}
+	
+	public void setReservableResourceIdNew(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/inventoryDetails/reservableResourceId", value);
+		rrIdSetInAddDetails = true;
+		 
+	}
 //	@Override
 //	public void sendRequest(){
 //		if(notSetFreezeId) 	setFreezeId();
@@ -303,14 +309,16 @@ public class Modify extends ActivityService {
 
 	@Override
 	public void sendRequest(){
-		setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));
+		try{setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));}
+		catch(NullPointerException e){}
 		if(notSetFreezeId) 	setFreezeId();
 		boolean failure = false;
 		try{setInventoryCountBefore(getInventory());}
 		catch(Exception e){failure = true;}
 		super.sendRequest();
 		if(!failure) setInventoryCountAfter(getInventory());
-		setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
+		try{setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));}
+		catch(NullPointerException e){}
 		
 		if((getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
 				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
@@ -515,9 +523,11 @@ public class Modify extends ActivityService {
 		}else{
 			rsInventory = new Recordset(db.getResultSet(AvailSE.getResourceAvailibleTimesByIdAndStartDate(getRequestReservableResourceId(),startdate)));			
 		}
-		if(rsInventory.getRowCount() == 0){
-			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(),startdate)));
-			setReservableResourceId(rsInventory.getValue("Resource_ID"));
+		if(reservableResourceId == null){
+			if(rsInventory.getRowCount() == 0){
+				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(),startdate)));
+				setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			}
 		}
 		startdate = rsInventory.getValue("START_DATE").contains(" ") 
 				   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))

@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 49bbb062cc50c74d46d559daa0c8e7d30cb337d3
 <suite name="ShowDiningService_Suite" parallel="methods" thread-count="20" configfailurepolicy="continue">
 	<parameter name="environment" value="Stage_CM" />
-<<<<<<< HEAD
->>>>>>> 0dafa45bf0b48ab8f47929842e2a075a23eefc44
-=======
->>>>>>> 49bbb062cc50c74d46d559daa0c8e7d30cb337d3
 	<test name="ShowDiningService">
 		<packages>
 			<package name="com.disney.composite.api.diningModule.showDiningService.*"></package>

@@ -380,6 +380,10 @@ public class Book extends ActivityService{
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", value);
 		reservableResourceId = getRequestReservableResourceId();
 	}
+	public void setReservableResourceIdForError(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/inventoryDetails/reservableResourceId", value);
+		rrIdSetInAddDetails = true;
+	}
 	/**
 	 * Retrieves and set a random reservable resource ID in the SOAP request based on Facility ID
 	 */
