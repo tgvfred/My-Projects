@@ -28,7 +28,6 @@ public class TestAutoCancel extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsBatchService", "negative"})
 	public void testRetrieveNonGuaranteedGuestChargeGroups(){
-		TestReporter.setDebugLevel(1);
 		Book res = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		res.setParty(new HouseHold(1));
 		res.setFreezeId("", date);

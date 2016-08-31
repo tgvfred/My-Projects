@@ -82,6 +82,7 @@ import com.disney.test.utils.Base64Coder;
 import com.disney.test.utils.Randomness;
 import com.disney.test.utils.Regex;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.test.utils.Base64Coder;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
@@ -792,7 +793,11 @@ public abstract class BaseSoapService{
 		return validateNodeValueByXPath(getResponseDocument(),
 				getTestScenario(service,operation, scenario));
 	}
-	
+
+	public boolean validateResponse(String scenario) {
+		return validateNodeValueByXPath(getResponseDocument(),
+				getTestScenario(getService(),getOperation(), scenario));
+	}
 	protected void generateServiceContext() {
 
 		XPathFactory xPathFactory = XPathFactory.newInstance();
@@ -1081,31 +1086,30 @@ public abstract class BaseSoapService{
 			TestReporter.logDebug("Creating Keystore Instance");
 			clientStore = KeyStore.getInstance("PKCS12");
 
-			//clientStore.load(new FileInputStream(new File(getClass().getResource("/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12").getPath())), "Disney123".toCharArray());
 			String token = "P2FjY2Vzc190b2tlbj00ZmExNzBlZjE3NTA2MTM1ZGJkZTFiMzdjYjlhZDRlNDQ1MjVjN2Vm";
 			String url = "https://github.disney.com/api/v3/repos/WDPRO-QA/lilo/contents/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12" +Base64Coder.decodeString(token);
 			HttpGet request = new HttpGet(url);
 			Content content =  new RestService().sendRequest(request).mapJSONToObject(Content.class);
 			String downloadURL = content.getDownloadUrl();
+
 			TestReporter.logDebug("Retrieving WebVan Certificate");
 			InputStream is = new URL(downloadURL).openStream();
-
+			
 			TestReporter.logDebug("Loading WebVan Certifcate into Keystore");
 			clientStore.load(is, "Disney123".toCharArray());
-	
 
 			TestReporter.logDebug("Unlocking WebVan cert with key");
 	        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 	        kmf.init(clientStore, "Disney123".toCharArray());
 	        KeyManager[] kms = kmf.getKeyManagers();
-	       
+
+	        TestReporter.logDebug("Retrieving CA Cert Store");
 	        url = "https://github.disney.com/api/v3/repos/WDPRO-QA/lilo/contents/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/cacerts" +Base64Coder.decodeString(token);
 			request = new HttpGet(url);
 			content =  new RestService().sendRequest(request).mapJSONToObject(Content.class);
 			downloadURL = content.getDownloadUrl();
-	        TestReporter.logDebug("Retrieving CA Cert Store");
 	        InputStream isCA = new URL(downloadURL).openStream();
-			
+	        
 	        TestReporter.logDebug("Unlocking CA Cert Store with key");
 	        KeyStore trustStore = KeyStore.getInstance("JKS");
 	        trustStore.load(isCA, "changeit".toCharArray());
@@ -1138,7 +1142,7 @@ public abstract class BaseSoapService{
 		}
 		return faultString;
 	}
-	
+	public int getNumberOfRequestNodesByXPath(String xpath){return XMLTools.getNodeList(getRequestDocument(), xpath).getLength();}
 
 	public String getServiceExceptionErrorMessage(){
 		String error= "";

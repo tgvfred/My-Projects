@@ -381,6 +381,8 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		}catch(XPathNotFoundException e){}
 		retrievedFacilityId = retrieve.getResponseFacilityId();
 		primaryGuestAge = retrieve.getPrimaryGuestAge();
+		party().primaryGuest().setPartyId(retrieve.getPartyId());
+		party().primaryGuest().setGuestId(retrieve.getGuestId());
 	}
 
 	/**

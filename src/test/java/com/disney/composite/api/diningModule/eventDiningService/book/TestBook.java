@@ -127,10 +127,10 @@ public class TestBook extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testBook_DLR(){
-		hh = new HouseHold(1);
 		Book book = new Book(environment, "DLRTableServiceOneChild");
+		hh = new HouseHold(1);
+		hh.primaryGuest().setAge("10");
 		book.setParty(hh);
-		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(1));
 
 		sendRequestAndvalidateLogs(book);
 	}

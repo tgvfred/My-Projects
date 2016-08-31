@@ -319,7 +319,7 @@ public class TestModify extends BaseTest{
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "tableDiningService"})
-	public void testModifyAddTaxExcempt(){
+	public void testModifyAddTaxExempt(){
 
 		ScheduledEventReservation res2 = new TableServiceDiningReservation(this.environment, new HouseHold(1));
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);

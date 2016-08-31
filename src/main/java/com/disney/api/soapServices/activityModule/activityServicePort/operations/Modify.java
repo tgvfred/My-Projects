@@ -768,5 +768,4 @@ public class Modify extends ActivityService {
 		}
 	}
 	
-	private int getNumberOfRequestNodesByXPath(String xpath){return XMLTools.getNodeList(getRequestDocument(), xpath).getLength();}
 }

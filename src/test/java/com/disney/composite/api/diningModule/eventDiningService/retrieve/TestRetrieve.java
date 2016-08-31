@@ -1,14 +1,18 @@
 package com.disney.composite.api.diningModule.eventDiningService.retrieve;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.NoShow;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Retrieve;
+import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveAllergies;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.composite.BaseTest;
@@ -24,7 +28,8 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.TableServiceDining
 
 public class TestRetrieve extends BaseTest{
 	// Defining global variables
-	protected String TPS_ID = null;
+	protected ThreadLocal<String> TPS_ID = new ThreadLocal<String>();
+	
 	Book book = null;
 	
 	@Override
@@ -38,6 +43,15 @@ public class TestRetrieve extends BaseTest{
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 	}
+
+	@AfterClass(alwaysRun = true)
+	public synchronized void closeSession() {
+		try{	Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+				cancel.setReservationNumber(TPS_ID.get());
+				cancel.sendRequest();}
+		catch (Exception e){}
+	}
+
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testRetrieve(){
 		Retrieve retrieve = new Retrieve(this.environment, "RetrieveDiningEvent");
@@ -140,5 +154,39 @@ public class TestRetrieve extends BaseTest{
 		// Passing - Do nothing	
 		}
 	}
-	
+	@Test(groups = {"api", "regression", "dining", "eventDiningService" })
+	public void testRetrieveFullResponse(){
+		Book book = new Book(environment, "GuestWithMembership");
+		book.setParty( new HouseHold(12));
+		book.addDetailsByFacilityNameAndProductName("Pioneer Hall", "Hoop-Dee-Doo-Cat 1-1st Show");
+		book.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.BOOSTER_SEAT_ID, "GuestRequest");
+		book.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.REQUEST_TWO_HIGH_CHAIRS_ID, "GuestRequest");
+		book.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.HIGH_CHAIR_ID, "GuestRequest");
+		book.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.HEARING_LOSS_ID, "SeSpecialNeed");
+		book.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.LIMITED_MOBILITY_ID, "SeSpecialNeed");
+		book.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.OXYGEN_TANK_USE_ID, "SeSpecialNeed");
+		book.setComments("Internal Comments", "Internal");
+		book.setComments("More Internal Comments", "External");
+		book.setTaxExemptDetails("123465789", "Military");
+		book.addTravelAgency("99999998");
+		RetrieveAllergies retrieveAllergies = new RetrieveAllergies(environment);
+		retrieveAllergies.sendRequest();
+		TestReporter.logAPI(!retrieveAllergies.getResponseStatusCode().contains("200"), "An error occurred retrieving allergies: " + retrieveAllergies.getFaultString() ,retrieveAllergies);
+
+		for(String allergy : retrieveAllergies.getAllergies().values()){
+			book.setAllergies(allergy);
+		}
+		
+		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), book.getFaultString(), book);
+		TPS_ID.set(book.getTravelPlanSegmentId());
+		Retrieve retrieve = new Retrieve(this.environment, "RetrieveDiningEvent");		
+		retrieve.setReservationNumber(book.getTravelPlanSegmentId());
+		retrieve.sendRequest();
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), retrieve.getFaultString(), retrieve);
+		
+		TestReporter.assertTrue(retrieve.validateResponse("RetrieveDiningEvent_Response"), "Response Validation Result");		
+		
+	}
+
 }

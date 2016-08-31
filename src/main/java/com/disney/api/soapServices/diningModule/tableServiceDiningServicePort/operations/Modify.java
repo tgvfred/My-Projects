@@ -470,9 +470,7 @@ public class Modify extends TableServiceDiningServicePort {
 	 * Sets the service start dateTime in the SOAP request
 	 * @param value service start dateTime
 	 */
-	public void setServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/serviceStartDate", value);}
-	private int getNumberOfRequestNodesByXPath(String xpath){return XMLTools.getNodeList(getRequestDocument(), xpath).getLength();}
-	
+	public void setServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/serviceStartDate", value);}	
 	public void setAllergies(String value, String index){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values

@@ -22,6 +22,7 @@ import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.dataFactory.guestFactory.Phone;
 
 public class Book extends EventDiningService {
 	private boolean notSetFreezeId = true;
@@ -129,6 +130,10 @@ public class Book extends EventDiningService {
 	public void setPrimaryGuestEmailAddressLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/emailDetails/locatorId", value);}	
 	public void setPrimaryGuestEmailAddressGuestLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/emailDetails/guestLocatorId", value);}	
 	public void setPrimaryGuestEmailAddress(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/emailDetails/address", value);}
+	public void setPrimaryGuestPhoneIsPrimary(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails/primary", value);}
+	public void setPrimaryGuestPhoneLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails/locatorId", value);}	
+	public void setPrimaryGuestPhoneGuestLocatorId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails/guestLocatorId", value);}	
+	public void setPrimaryGuestPhoneNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails/number", value);}
 	public void setReservableResourceId(String value){
 		manuallySetRRID  = true;
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);
@@ -470,6 +475,7 @@ public class Book extends EventDiningService {
 					addPrimaryGuestAddresses(guest);
 				}catch(XPathNotFoundException e){}
 				addPrimaryGuestEmails(guest);
+				addPrimaryGuestPhone(guest);
 			}
 			
 			if(currentGuest == 1)	partyRolePosition="";
@@ -564,7 +570,29 @@ public class Book extends EventDiningService {
 			position++;
 		}
 	}
-	
+private void addPrimaryGuestPhone(Guest guest){
+		
+		addPrimaryGuestPhoneDetailNodes(guest.getAllPhones().size());
+		
+		int position = 1;
+		
+		for(Phone phone : guest.getAllPhones()){
+			if(position == 1){
+				try{
+					setPrimaryGuestPhoneLocatorId("0");
+					setPrimaryGuestPhoneGuestLocatorId("0");
+					setPrimaryGuestPhoneIsPrimary(phone.isPrimary() ? "true":"false");
+					setPrimaryGuestPhoneNumber(phone.getNumber());
+				}catch(XPathNotFoundException xnfe){}
+			}else{
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails[" + position + "]/primary", phone.isPrimary() ? "true":"false");
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails[" + position + "]/locatorId", "0");
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails[" + position + "]/guestLocatorId", "0");
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails[" + position + "]/number", phone.getNumber());
+			}
+			position++;
+		}
+	}
 	private void addPrimaryGuestEmailDetailNodes(int numberToAdd){
 		int position = 2;
 		for(int x=1 ; x <= numberToAdd ; x++){
@@ -575,7 +603,17 @@ public class Book extends EventDiningService {
 			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/emailDetails["+position+"]", "fx:AddNode;Node:address");
 		}
 	}
-	
+
+	private void addPrimaryGuestPhoneDetailNodes(int numberToAdd){
+		int position = 2;
+		for(int x=1 ; x <= numberToAdd ; x++){
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest", "fx:AddNode;Node:phoneDetails");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails["+x+"]", "fx:AddNode;Node:locatorId");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails["+x+"]", "fx:AddNode;Node:guestLocatorId");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails["+x+"]", "fx:AddNode;Node:primary");
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/primaryGuest/phoneDetails["+x+"]", "fx:AddNode;Node:number");
+		}
+	}
 	
 	private void addPartyRoleNodes(int numberToAdd){
 		int position = 2;
