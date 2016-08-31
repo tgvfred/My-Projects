@@ -42,7 +42,6 @@ public class FolioInterfacePayment extends FolioInterface{
 	private String bankingAccountingCenterName;	// Banking Accounting Center Name, used for check payments, and possibly others
 	private String checkNumber;	// Document number for making a check payment
 	private double paidAmount = 0.0;	// Accrues the total amount paid
-	
 	/**
 	 * Dummy constructor
 	 */
@@ -51,8 +50,22 @@ public class FolioInterfacePayment extends FolioInterface{
 	 * Constructor intended for use with an instance of the ScheduledEventReservation which contains a booked Scheduled Event reservation
 	 * @param seRes - ScheduledEventReservation, an instance of the ScheduledEventReservation which should contain a booked Scheduled Event reservation
 	 */
+	
 	public FolioInterfacePayment(ScheduledEventReservation seRes){
 		setEnvironment(seRes.getEnvironment());
+		setTravelPlanSegmentId(seRes.getConfirmationNumber());
+		setTravelPlanId(seRes.getTravelPlanId());
+		setTravelComponentId(new RetrieveTravelComponentId(getEnvironment(), getTravelPlanSegmentId()).searchForReservationInformationByTravelPlanSegment());
+		setFacilityId(seRes.getFacilityId());
+		setLocationId("9");  // This is the location ID for "System-WDW Scheduled Events - Guest  Facing" as it is found in the Dreams.RSRC_INV.WRK_LOC table
+		setParty(seRes.party());
+		setPrimaryGuestFirstName(getParty().primaryGuest().getFirstName());
+		setPrimaryGuestLastName(getParty().primaryGuest().getLastName());
+		setPartyId(getParty().primaryGuest().getPartyId());
+	}
+
+	public FolioInterfacePayment(ScheduledEventReservation seRes, String environment){
+		setEnvironment(environment);
 		setTravelPlanSegmentId(seRes.getConfirmationNumber());
 		setTravelPlanId(seRes.getTravelPlanId());
 		setTravelComponentId(new RetrieveTravelComponentId(getEnvironment(), getTravelPlanSegmentId()).searchForReservationInformationByTravelPlanSegment());
@@ -414,6 +427,8 @@ public class FolioInterfacePayment extends FolioInterface{
 			postPayment.setRetreivalReferenceNumber();
 			convoMapKey = "payment";
 		}	
+		TestReporter.logStep("Make card payment on Folio [" + getFolioId() +"] for the amount of [" + getBalanceDue() +"]");
+		postPayment.setCardNumber( "************" + getCardNumber().substring(12));
 		postPayment.sendRequest();
 		getConversationIdMap().put(convoMapKey, postPayment.getConversationID());
 		if(getIsNegativeScenario().equalsIgnoreCase("true")){
@@ -468,6 +483,7 @@ public class FolioInterfacePayment extends FolioInterface{
 		//Set payment metadata from the post payment response
 		setValuesFromPostPaymentResponse(postPayment);
 		setPaidAmount(getPaidAmount() + Double.parseDouble(getAmountToPay()));		
+		TestReporter.logStep("Make check payment on Folio [" + getFolioId() +"] for the amount of [" + getBalanceDue() +"]");
 		return postPayment;
 	}
 	/**

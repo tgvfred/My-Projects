@@ -1,5 +1,6 @@
 package com.disney.utils.dataFactory.staging.bookSEReservation;
 
+import com.disney.utils.dataFactory.folioInterface.Folio;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 /**
  * This class contains interfaces that will be implemented by dining and activity service generators
@@ -16,6 +17,8 @@ public interface ScheduledEventReservation{
 	public static final String ADDON = "DinnerShowWithAddOn";
 	public static final String SPECIALREQUESTS = "SpecialRequests";
 	
+	public Folio folio();
+	public Folio folio(String environment);
 	// Getters used to retrieve field values
 	public String getEnvironment();
 	public String getConfirmationNumber();
@@ -25,6 +28,7 @@ public interface ScheduledEventReservation{
 	public String getArrivedStatus();
 	public String getFacilityId();
 	public String getProductId();
+	public String getProductName();
 	public String getProductType();
 	public String getServicePeriodId();
 	public String getServiceStartDate();
@@ -38,15 +42,19 @@ public interface ScheduledEventReservation{
 	public String getPrimaryGuestAge();
 	public String getModifyResponseStatus();
 	public String getSourceAccountingCenter();
+	public String getReservableResourceId();
 	public String getFacilityName();
 	// Setters used to set field values
 	public void setFacilityId(String facilityId);
+	public void setProductName(String productName);
 	public void setProductId(String productId);
 	public void setProductType(String productType);
+	public void setTravelPlanId(String travelPlanId);
 	public void setBookingScenario(String scenario);
 	public void setSourceAccountingCenter(String sourceAccountingcenter);
 	public void setServiceStartDate(String date);
 	public void setFacilityName(String name);
+	public void setFreezeStartDate(String startDate);
 	// Interfaces for methods to generate and set a household
 	public HouseHold party();
 	public void setParty(HouseHold party);	

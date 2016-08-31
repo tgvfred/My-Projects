@@ -24,7 +24,7 @@ public class TestRetrieveInventoryOverideReasons extends BaseTest{
 		TestReporter.logStep("Retrieve Inventory Overide Reasons");
 		RetrieveInventoryOverideReasons retrieveInventoryOverideReasons = new RetrieveInventoryOverideReasons(environment);
 		retrieveInventoryOverideReasons.sendRequest();
-		TestReporter.logAPI(!retrieveInventoryOverideReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveInventoryOverideReasons);
+		TestReporter.logAPI(!retrieveInventoryOverideReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveInventoryOverideReasons.getFaultString(), retrieveInventoryOverideReasons);
 		TestReporter.assertTrue(retrieveInventoryOverideReasons.getNumberOfInventoryOverideReasons() > 0, "Verify inventory overide reason codes are returned.");
 		TestReporter.assertTrue(retrieveInventoryOverideReasons.getInventoryOverideReasonsCodes().size() == retrieveInventoryOverideReasons.getNumberOfInventoryOverideReasons(), "Verify the number of overide inventory reason codes is ["+retrieveInventoryOverideReasons.getNumberOfInventoryOverideReasons()+"].");
 		reportValues("Inventory Overide Reasons", retrieveInventoryOverideReasons.getNumberOfInventoryOverideReasons(), retrieveInventoryOverideReasons.getInventoryOverideReasonsCodes());

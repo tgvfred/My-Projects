@@ -16,7 +16,7 @@ public class TestRetrieveSalesChannels extends BaseTest{
 		TestReporter.logStep("Retrieve Sales Channels");
 		RetrieveSalesChannels retrieveSalesChannels = new RetrieveSalesChannels(environment);
 		retrieveSalesChannels.sendRequest();
-		TestReporter.logAPI(!retrieveSalesChannels.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveSalesChannels);
+		TestReporter.logAPI(!retrieveSalesChannels.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveSalesChannels.getFaultString(), retrieveSalesChannels);
 		TestReporter.assertTrue(retrieveSalesChannels.getNumberOfSalesChannels() > 0, "Verify sales channels are returned.");
 		TestReporter.assertTrue(retrieveSalesChannels.getSalesChannels().size() == retrieveSalesChannels.getNumberOfSalesChannels(), "Verify the number of sales channels is ["+retrieveSalesChannels.getNumberOfSalesChannels()+"].");
 		reportValues("Sales Channels", retrieveSalesChannels.getNumberOfSalesChannels(), retrieveSalesChannels.getSalesChannels());

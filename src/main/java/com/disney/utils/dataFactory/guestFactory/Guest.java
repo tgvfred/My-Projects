@@ -53,6 +53,7 @@ public class Guest {
 	private boolean isChild = false;
 	private String odsId = "0";
 	private String partyId = "0";
+	private String guestId = "0";
 	private Create guest = null;
 	
 	private SearchByNameAndAddress search = null;
@@ -76,7 +77,7 @@ public class Guest {
 	}
 	
 	public void sendToApi(String environment, boolean isPartyV3) {
-		if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+		if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM") && !environment.contains("_cm")){
 			guest = new Create(environment, "Main");
 			guest.setPrefix(title);
 			guest.setFirstName(firstName);
@@ -104,10 +105,10 @@ public class Guest {
 			}
 			}
 		Sleeper.sleep(2000);
-		if(isPartyV3 || environment.equalsIgnoreCase("Development") || environment.contains("_CM")){
+		if(isPartyV3 || environment.equalsIgnoreCase("Development") || environment.equalsIgnoreCase("Latest_CM")){
 			com.disney.api.soapServices.partyModule.partyV3.operations.CreateParty partyV3 = null;
 			partyV3 = new com.disney.api.soapServices.partyModule.partyV3.operations.CreateParty(environment, "SampleCreate");
-			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM") && !environment.contains("_cm")){
 				odsId = guest.getOdsGuestId();
 				addresses.get(0).setZipCode(guest.getPostalCode());
 				addresses.get(0).setLocatorId(guest.getAddressLocatorId());
@@ -142,7 +143,7 @@ public class Guest {
 			this.partyId = partyV3.getPartyid();
 		}else{
 			CreateParty party = null;
-			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM") && !environment.contains("_cm")){
 				odsId = guest.getOdsGuestId();
 				addresses.get(0).setZipCode(guest.getPostalCode());
 				addresses.get(0).setLocatorId(guest.getAddressLocatorId());
@@ -205,6 +206,9 @@ public class Guest {
 		return partyId;
 	}
 
+	public String getGuestId(){
+		return guestId;
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -337,6 +341,16 @@ public class Guest {
 		this.isChild = isChild;
 	}
 
+	public void setOdsId(String odsId) {
+		this.odsId = odsId;
+	}
+	public void setPartyId(String partyId){
+		this.partyId = partyId;
+	}
+
+	public void setGuestId(String guestId){
+		this.guestId = guestId;
+	}
 	/**
 	 * @summary Return all addresses associated to the Guest
 	 * @author Justin Phlegar

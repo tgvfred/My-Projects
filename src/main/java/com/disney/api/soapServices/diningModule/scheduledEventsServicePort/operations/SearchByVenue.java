@@ -25,11 +25,14 @@ public class SearchByVenue extends ScheduledEventsServicePort{
 		}
 	}
 	public void setProductIds(String value){
-		try{setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/productIds", value);}
-		catch(XPathNotFoundException e){
-			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest", "fx:addnode;node:productIds");
-			setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/productIds", value);
-		}
+		int numberOfProductIds= 1;
+		try{
+			numberOfProductIds= getNumberOfRequestNodesByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/");
+			getRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/productIds["+numberOfProductIds +"]");
+			numberOfProductIds+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest", "fx:AddNode;Node:productIds");
+		setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/productIds["+numberOfProductIds+"]", value);
 	}
 	public void setReservationStatus(String value){
 		try{setRequestNodeValueByXPath("/Envelope/Body/searchByVenue/searchByVenueRequest/reservationStatus", value);}

@@ -16,7 +16,7 @@ public class TestRetrieveCancelReasons extends BaseTest{
 		TestReporter.logStep("Retrieve Cancel Reasons");
 		RetrieveCancelReasons retrieveCancelReasons = new RetrieveCancelReasons(environment);
 		retrieveCancelReasons.sendRequest();
-		TestReporter.logAPI(!retrieveCancelReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveCancelReasons);
+		TestReporter.logAPI(!retrieveCancelReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveCancelReasons.getFaultString(), retrieveCancelReasons);
 		
 		TestReporter.assertTrue(retrieveCancelReasons.getNumberOfCancelReasons() > 0, "Verify cancel reasons are returned.");
 		TestReporter.assertTrue(retrieveCancelReasons.getCancelReasonCodes().size() == retrieveCancelReasons.getNumberOfCancelReasons(), "Verify the number of cancel reason codes is ["+retrieveCancelReasons.getNumberOfCancelReasons()+"].");

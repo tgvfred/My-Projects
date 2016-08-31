@@ -24,10 +24,19 @@ public class OracleDatabase extends Database {
 			environment = "EVIL_QUEEN";
 			break;
 		case "development":
-		case "bashful_cm":
-		case "sleepy_cm":
-		case "grumpy_cm":
 			environment = "DEV3";
+			break;
+		case "bashful_cm":
+			environment = "BASHFUL";
+			break;
+		case "sleepy_cm":
+			environment = "SLEEPY";
+			break;
+		case "grumpy_cm":
+			environment = "GRUMPY";
+			break;
+		case "doc_cm":
+			environment = "DOC";
 			break;
 		default:
 			break;

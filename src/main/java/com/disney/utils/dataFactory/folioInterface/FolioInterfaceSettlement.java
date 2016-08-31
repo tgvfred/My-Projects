@@ -7,7 +7,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 
 public class FolioInterfaceSettlement extends FolioInterface{
 	private String expressCheckout;	// Flag to determine if Express Checkout should be used for the settlement method
-	public String defaultSettlementScenario = "Main";
+	public static String defaultSettlementScenario = "Pay total amount due with valid visa with incidentals";
 	
 	/**
 	 * Dummy constructor
@@ -19,6 +19,17 @@ public class FolioInterfaceSettlement extends FolioInterface{
 	 */
 	public FolioInterfaceSettlement(ScheduledEventReservation seRes){
 		setEnvironment(seRes.getEnvironment());
+		setTravelPlanId(seRes.getTravelPlanId());
+		setLocationId("9");  // This is the location ID for "System-WDW Scheduled Events - Guest  Facing" as it is found in the Dreams.RSRC_INV.WRK_LOC table
+	}
+	public FolioInterfaceSettlement(String environment, String tpId){
+		setEnvironment(environment);
+		setTravelPlanId(tpId);
+		setLocationId("9");  // This is the location ID for "System-WDW Scheduled Events - Guest  Facing" as it is found in the Dreams.RSRC_INV.WRK_LOC table
+	}
+	
+	public FolioInterfaceSettlement(ScheduledEventReservation seRes, String env){
+		setEnvironment(env);
 		setTravelPlanId(seRes.getTravelPlanId());
 		setLocationId("9");  // This is the location ID for "System-WDW Scheduled Events - Guest  Facing" as it is found in the Dreams.RSRC_INV.WRK_LOC table
 	}

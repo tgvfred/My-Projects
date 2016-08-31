@@ -65,10 +65,7 @@ public class CreateSettlementMethod extends FolioService {
 		requestRRN.setExpirationDate(expireYear+expireMonth);
 		requestRRN.setCardType(cardType);
 		requestRRN.sendRequest();
-		TestReporter.assertEquals(requestRRN.getResponseStatusCode(), "200", "The response code was not 200. Response:\n" + requestRRN.getResponse());
-		TestReporter.assertEquals(requestRRN.getStatusCode(), "APPROVED", "The response code was not 200");
-		TestReporter.assertNotNull(requestRRN.getRetrievalReferenceNumber(), "The response contains a RRN");
-		TestReporter.assertNotNull(requestRRN.getRetrievalReferenceNumberKey(),  "The response contains a Travel Component ID");
+		TestReporter.logAPI(!requestRRN.getResponseStatusCode().equals("200"), requestRRN.getResponse(), requestRRN);
 		rrn =  requestRRN.getRetrievalReferenceNumber();
 		rrnKey = requestRRN.getRetrievalReferenceNumberKey();
 		
@@ -92,7 +89,7 @@ public class CreateSettlementMethod extends FolioService {
 	}
 	
 	public void setCardNumber(String value){
-		setRequestNodeValueByXPath("/Envelope/Body/createSettlementMethod/settlementMethod/card/creditCardNumber", value);
+		setRequestNodeValueByXPath("/Envelope/Body/createSettlementMethod/settlementMethod/card/creditCardNumber", "************" + value.substring(12));
 	}
 	
 	public void setCardName(String value){

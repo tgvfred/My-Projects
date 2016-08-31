@@ -1,14 +1,24 @@
 package com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations;
 
+import com.disney.api.soapServices.availSEModule.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.TableServiceDiningServicePort;
+import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
+import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.AvailSE;
 import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class Book extends TableServiceDiningServicePort {
+	private boolean notSetFreezeId = true;
+	private String numberResources = "1";
 	public Book(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
@@ -34,6 +44,10 @@ public class Book extends TableServiceDiningServicePort {
 	public void setSalesChannel(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/salesChannel", value);
 	}
+
+	public void setVipLevel(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/vipLevel", value);
+	}
 	
 	public void setCommunicationChannel(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/communicationChannel", value);
@@ -41,6 +55,10 @@ public class Book extends TableServiceDiningServicePort {
 	
 	public void setUnitPriceDateTime(String value, String index){
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/componentPrices["+index+"]/unitPrices/date", value);
+	}
+
+	public void setInventoryOverrideReasonId(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryOverideReasonId", value);
 	}
 	
 	public void setComponentUnitPriceDateTime(String value){
@@ -245,46 +263,64 @@ public class Book extends TableServiceDiningServicePort {
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/primaryGuest/emailDetails/address", value);
 	}
 
-	
-	public void setProfileDetailIdAndType(String id, String type, String index){
-		// Determine if the index exists. If not, create it and the necessary
-		// child nodes. If so, then set the child node values
+	public void setTaxExemptDetails(String certificateNumber, String taxExemptType){
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+index+"]/id");
-		}catch(Exception e){
-			e.printStackTrace();
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:profileDetails");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+index+"]", "fx:AddNode;Node:id");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+index+"]", "fx:AddNode;Node:type");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+index+"]/id", id);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+index+"]/type", type);
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail/taxExemptType", taxExemptType);
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest", "fx:AddNode;Node:taxExemptDetail");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptCertificateNumber");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptType");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/taxExemptDetail/taxExemptType", taxExemptType);
 	}
 	
-	public void setComments(String text, String type, String index){
+	public void setProfileDetailIdAndType(String id, String type){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfProfileDetails= 1;
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+index+"]/commentText");
-		}catch(Exception e){
-			e.printStackTrace();
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest", "fx:AddNode;Node:internalComments");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+index+"]", "fx:AddNode;Node:commentText");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+index+"]", "fx:AddNode;Node:commentType");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+index+"]/commentText", text);
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+index+"]/commentType", type);
+			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/id");
+			numberOfProfileDetails+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:profileDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:id");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:type");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/id", id);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/type", type);
 	}
 	
-	public void setAllergies(String value, String index){
+	public void setComments(String text, String type){
+		int numberOfInternalComments= 1;
+		try{
+			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentText");
+			numberOfInternalComments+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest", "fx:AddNode;Node:internalComments");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentText");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentType");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentText", text);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentType", type);
+	}
+	
+	public void setAllergies(String value){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfAllergies= 1;
 		try{
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+index+"]", value);
-		}catch(Exception e){
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:allergies");
-			setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+index+"]", value);
-		}
+			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies");
+			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+numberOfAllergies+"]");
+			numberOfAllergies+=1;;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:allergies");
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+numberOfAllergies+"]", value);
+
+	}
+	
+	public void setNumberOfResource(String number){
+		this.numberResources = number;
 	}
 	
 	public void setParty(HouseHold party){
@@ -481,6 +517,134 @@ public class Book extends TableServiceDiningServicePort {
 	 * @param value reservable resource ID
 	 */
 	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails/reservableResourceId", value);}
+	/**
+	 * Retrieves and set a random reservable resource ID in the SOAP request based on Facility ID
+	 */
+	public void setReservableResourceId(){
+		/*ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
+		resource.setFacilityId(getRequestFacilityId());
+		resource.sendRequest();
+		TestReporter.logAPI(!resource.getResponseStatusCode().equals("200"), "Failed to get Reservable Resource ID", resource);
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails/reservableResourceId", resource.getRandomReservableResourceId());*/		
+	}
+	public String getRequestReservableResourceId(){ return getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails/reservableResourceId");	}
+	
+	@Override
+	public void sendRequest(){
+		if(notSetFreezeId) 	setFreezeId();
+		super.sendRequest();
+		if(		getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
+				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
+			setFreezeId();
+			super.sendRequest();	
+		}
+	}
+	public void setFreezeId(){
+		TestReporter.logStep("Freezing inventory");
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rs = null;
+		String freezeId = "";
+		Freeze freeze = new Freeze(getEnvironment(), "Main");
+
+			Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+			
+			String startdate = rsInventory.getValue("START_DATE").contains(" ") 
+							   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
+						       : rsInventory.getValue("START_DATE");
+							   
+			String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+			freeze.setStartDate(startdate);	
+			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+			TestReporter.logStep("Generating Freeze ID for Reservable Resource ["+rsInventory.getValue("Resource_ID")+"]");
+			freeze.sendRequest();
+//			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
+			int timesTried = 0;
+			while(freeze.getSuccess().equals("failure") && timesTried < 5){				
+				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+				
+				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+				setReservableResourceId(rsInventory.getValue("Resource_ID"));
+				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+				freeze.setStartDate(startdate);	
+				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+				freeze.sendRequest();	
+				if(freeze.getSuccess().equals("failure")) timesTried++;
+			}
+
+//			if(freeze.getSuccess().equals("failure")){
+				TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
+//			}
+			freezeId = freeze.getFreezeID();
+			setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+		
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/freezeId", freezeId);
+		
+
+		for(int x = 1 ; x <= Integer.valueOf(numberResources) ; x++){
+			try{
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails["+x+"]/reservableResourceId", freeze.getReservableResourceID());
+			}catch(XPathNotFoundException e){
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService",BaseSoapCommands.ADD_NODE.commandAppend("inventoryDetails"));
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails["+x+"]",BaseSoapCommands.ADD_NODE.commandAppend("reservableResourceId"));
+				setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/inventoryDetails["+x+"]/reservableResourceId",freeze.getReservableResourceID());
+			}
+		}
+
+		notSetFreezeId = false;
+	}
+	public void setFreezeId(String throwaway, String startDate){
+		TestReporter.logStep("Freezing inventory");
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rs = null;
+		String freezeId = "";
+		Freeze freeze = new Freeze(getEnvironment(), "Main");
+
+			Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), startDate)));
+			
+			String startdate = rsInventory.getValue("START_DATE").contains(" ") 
+							   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
+						       : rsInventory.getValue("START_DATE");
+							   
+			String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+			freeze.setStartDate(startdate);	
+			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+			TestReporter.logStep("Generating Freeze ID for Reservable Resource ["+rsInventory.getValue("Resource_ID")+"]");
+			freeze.sendRequest();
+			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
+			int timesTried = 0;
+			while(freeze.getSuccess().equals("failure") && timesTried < 5){				
+				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), startDate)));
+				
+				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+				setReservableResourceId(rsInventory.getValue("Resource_ID"));
+				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+				freeze.setStartDate(startdate);	
+				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+				freeze.sendRequest();	
+				if(freeze.getSuccess().equals("failure")) timesTried++;
+			}
+
+			if(freeze.getSuccess().equals("failure")){
+				TestReporter.logAPI(true, "Could not Freeze Inventory", freeze);
+			}
+			freezeId = freeze.getFreezeID();
+			setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+		
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/freezeId", freezeId);
+		notSetFreezeId = false;
+	}
+	public void setFreezeId(String freezeId){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/freezeId", freezeId);
+		notSetFreezeId = false;
+	}
+	
+	
 	/**
 	 * Adds travel agency in the SOAP request
 	 * @param agencyIataNumber - travel agency IATA number

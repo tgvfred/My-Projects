@@ -16,7 +16,7 @@ public class TestRetrieveChangeReasons extends BaseTest{
 		TestReporter.logStep("Retrieve Change Reasons");
 		RetrieveChangeReasons retrieveChangeReasons = new RetrieveChangeReasons(environment);
 		retrieveChangeReasons.sendRequest();
-		TestReporter.logAPI(!retrieveChangeReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveChangeReasons);
+		TestReporter.logAPI(!retrieveChangeReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveChangeReasons.getFaultString(), retrieveChangeReasons);
 		TestReporter.assertTrue(retrieveChangeReasons.getNumberOfChangeReasons() > 0, "Verify change reasons are returned.");
 		TestReporter.assertTrue(retrieveChangeReasons.getChangeReasonCodes().size() == retrieveChangeReasons.getNumberOfChangeReasons(), "Verify the number of change reason codes is ["+retrieveChangeReasons.getNumberOfChangeReasons()+"].");
 		reportValues("Change Reason Codes", retrieveChangeReasons.getNumberOfChangeReasons(), retrieveChangeReasons.getChangeReasonCodes());

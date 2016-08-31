@@ -19,11 +19,8 @@ public class TestArrived_Negative  extends BaseTest{
 
 	@AfterMethod(alwaysRun = true)
 	public void teardown(){
-		try{
-			if(res != null)
-				if(!res.get().getConfirmationNumber().isEmpty())
-					res.get().cancel();
-		}catch(Exception e){}
+		try{res.get().cancel();}
+		catch(Exception e){}
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})

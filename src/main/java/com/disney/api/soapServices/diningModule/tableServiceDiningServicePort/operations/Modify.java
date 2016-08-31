@@ -3,13 +3,20 @@ package com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.o
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.TableServiceDiningServicePort;
+import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
+import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.AvailSE;
 import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class Modify extends TableServiceDiningServicePort {
+	private boolean notSetFreezeId = true;
 	public Modify(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("modify")));
@@ -25,9 +32,53 @@ public class Modify extends TableServiceDiningServicePort {
 	public void setPrimaryGuestGuestId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/primaryGuest/guestId", value);}
 	public void setSalesChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/salesChannel", value);}
 	public void setCommunicationChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/communicationChannel", value);}
+	public void setServiceStartDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/serviceStartDate", value);}
 	public void setSourceAccountingCenter(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/sourceAccountingCenter", value);}
 	public void setReservationNumber(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/reservationNumber", value);}
 	public String getStatus(){return getResponseNodeValueByXPath("/Envelope/Body/modifyTableServiceResponse/status");}
+
+	public void setTaxExemptDetails(String certificateNumber, String taxExemptType){
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/taxExemptDetail/taxExemptType", taxExemptType);
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest", "fx:AddNode;Node:taxExemptDetail");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptCertificateNumber");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptType");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/taxExemptDetail/taxExemptType", taxExemptType);
+	}
+	
+	public void setProfileDetailIdAndType(String id, String type){
+		// Determine if the index exists. If not, create it and the necessary
+		// child nodes. If so, then set the child node values
+		int numberOfProfileDetails= 1;
+		try{
+			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/profileDetails");
+			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/id");
+			numberOfProfileDetails+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService", "fx:AddNode;Node:profileDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:id");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:type");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/id", id);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/type", type);
+	}
+	
+	public void setComments(String text, String type){
+		int numberOfInternalComments= 1;
+		try{
+			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyTableServiceRequest/internalComments");
+			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentText");
+			numberOfInternalComments+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest", "fx:AddNode;Node:internalComments");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentText");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentType");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentText", text);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentType", type);
+	}
+	
 	/**
 	 * Sets the primary guest title in the SOAP request
 	 * @param value - primary guest suffix
@@ -85,6 +136,66 @@ public class Modify extends TableServiceDiningServicePort {
 	 * @param value reservable resource ID
 	 */
 	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/inventoryDetails/reservableResourceId", value);}
+
+	@Override
+	public void sendRequest(){
+		if(notSetFreezeId) 	setFreezeId();
+		super.sendRequest();
+		if(		getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
+				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
+			setFreezeId();
+			super.sendRequest();	
+		}
+	}
+	public void setFreezeId(){
+		TestReporter.logStep("Freezing inventory");
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rs = null;
+		String freezeId = "";
+		Freeze freeze = new Freeze(getEnvironment(), "Main");
+
+			Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+			
+			String startdate = rsInventory.getValue("START_DATE").contains(" ") 
+							   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
+						       : rsInventory.getValue("START_DATE");
+							   
+			String startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+			setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+			freeze.setStartDate(startdate);	
+			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+			TestReporter.logStep("Generating Freeze ID for Reservable Resource ["+rsInventory.getValue("Resource_ID")+"]");
+			freeze.sendRequest();
+//			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
+			int timesTried = 0;
+			while(freeze.getSuccess().equals("failure") && timesTried < 5){				
+				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+				
+				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+				setReservableResourceId(rsInventory.getValue("Resource_ID"));
+				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+				freeze.setStartDate(startdate);	
+				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+				freeze.sendRequest();	
+				if(freeze.getSuccess().equals("failure")) timesTried++;
+			}
+
+//			if(freeze.getSuccess().equals("failure")){
+				TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
+//			}
+			freezeId = freeze.getFreezeID();
+			setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+		
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/freezeId", freezeId);
+		notSetFreezeId = false;
+	}
+	public void setFreezeId(String freezeId){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/freezeId", freezeId);
+		notSetFreezeId = false;
+	}
+	
 	/**
 	 * Sets the service period ID in the SOAP request
 	 * @param value - service period ID
@@ -99,7 +210,14 @@ public class Modify extends TableServiceDiningServicePort {
 	 * Gets the status from modifying the reservation from the SOAP response
 	 * @return status from modifying the reservation
 	 */
-	public String getResponseStatus(){return getResponseNodeValueByXPath("/Envelope/Body/modifyTableServiceResponse/status");}
+	public String getResponseStatus(){
+		try{
+			return getResponseNodeValueByXPath("/Envelope/Body/modifyTableServiceResponse/status");
+		}catch(XPathNotFoundException e ){
+			TestReporter.logAPI(true, "Status node not found in response", this);
+			return "";
+		}
+	}
 	/**
 	 * Gets the facility ID in the SOAP request
 	 * @return facility ID
@@ -283,6 +401,7 @@ public class Modify extends TableServiceDiningServicePort {
 	 * Adds the primary guest email address(es) to the SOAP request
 	 * @param guest - Guest-class instance for the primary guest
 	 */
+	
 	private void addPrimaryGuestEmails(Guest guest){
 		
 		addPrimaryGuestEmailDetailNodes(guest.getAllEmails().size() - 1);
@@ -351,8 +470,7 @@ public class Modify extends TableServiceDiningServicePort {
 	 * Sets the service start dateTime in the SOAP request
 	 * @param value service start dateTime
 	 */
-	public void setServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/serviceStartDate", value);}
-
+	public void setServiceStartDate(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/serviceStartDate", value);}	
 	public void setAllergies(String value, String index){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values

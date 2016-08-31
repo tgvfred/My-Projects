@@ -22,12 +22,9 @@ public class TestRetrieve extends BaseTest{
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
 		try{
-			if(book != null)
-				if(!book.getTravelPlanSegmentId().isEmpty()){
-					Cancel cancel = new Cancel(environment, "CancelDiningEvent");
-					cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
-					cancel.sendRequest();
-				}
+			Cancel cancel = new Cancel(environment, "CancelDiningEvent");
+			cancel.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
+			cancel.sendRequest();
 		}catch(Exception e){}
 	}
 	
@@ -37,7 +34,7 @@ public class TestRetrieve extends BaseTest{
 		book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
 		book.sendRequest();
-		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking", book);		
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);		
 		
 		TestReporter.logStep("Retrieve a show dining reservation.");
 		Retrieve retrieve = new Retrieve(environment, "RetrieveDiningEvent");
@@ -52,7 +49,7 @@ public class TestRetrieve extends BaseTest{
 		hh = new HouseHold("1 Adult");
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);
-		book.setAllergies("Egg","1");
+		book.setAllergies("Egg");
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		
@@ -74,7 +71,7 @@ public class TestRetrieve extends BaseTest{
 	public void testReservationWithRemovedAllergy(){
 		Book book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		book.setParty(hh);		
-		book.setAllergies("Egg", "1");
+		book.setAllergies("Egg");
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		
@@ -86,7 +83,7 @@ public class TestRetrieve extends BaseTest{
 		modify.setServiceStartDate(book.getRequestServiceStartDate());
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		modify.setProductId(book.getRequestProductId());
-		modify.setAllergies(BaseSoapCommands.REMOVE_NODE.toString(), "1");
+		modify.setAllergies(BaseSoapCommands.REMOVE_NODE.toString());
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().contains("200"), modify.getFaultString() ,modify);
 		

@@ -22,16 +22,16 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservat
 public class TestSearchByVenue_Negative extends BaseTest{
 	protected ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	
-	@Override
-	@BeforeMethod(alwaysRun = true)
-	@Parameters({ "environment" })
-	public void setup(
-		String environment){this.environment = environment;
-		hh = new HouseHold(1);
-		hh.sendToApi(this.environment);
-		res.set(new EventDiningReservation(environment, hh));
-		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
-	}
+//	@Override
+//	@BeforeMethod(alwaysRun = true)
+//	@Parameters({ "environment" })
+//	public void setup(String environment){
+//		this.environment = environment;
+//		hh = new HouseHold(1);
+//		hh.sendToApi(this.environment);
+//		res.set(new EventDiningReservation(environment, hh));
+//		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+//	}
 	
 	@AfterMethod(alwaysRun = true)
 	public void closeSession() {
@@ -42,6 +42,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityIdOnly(){
+		preReq();
 		TestReporter.logStep("Facility ID Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId(res.get().getFacilityId());
@@ -55,6 +56,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityAndProductIdOnly(){
+		preReq();
 		TestReporter.logStep("Facility And Product ID Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId(res.get().getFacilityId());
@@ -68,6 +70,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityAndProductIdAndReservationStatusOnly(){
+		preReq();
 		TestReporter.logStep("Facility And Product ID And Reservation Status Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId(res.get().getFacilityId());
@@ -81,6 +84,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityIdAndDateInPast(){
+		preReq();
 		TestReporter.logStep("Facility ID And Service Date In The Past");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId(res.get().getFacilityId());
@@ -94,6 +98,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testWindowEndDateBeforeStartDate(){
+		preReq();
 		TestReporter.logStep("Window End Date Before Start Date");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
@@ -107,6 +112,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityIdAndWindowEndDateOnly(){
+		preReq();
 		TestReporter.logStep("Facility ID And Window End Date Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId(res.get().getFacilityId());
@@ -120,6 +126,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityIdAndWindowStartDateOnly(){
+		preReq();
 		TestReporter.logStep("Facility ID And Window Start Date Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId(res.get().getFacilityId());
@@ -133,6 +140,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityIdAndSourceAccountingCenterOnly(){
+		preReq();
 		TestReporter.logStep("Facility ID And Source Accounting Center Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId(res.get().getFacilityId());
@@ -146,6 +154,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityAndServiceWindowDatesOnly(){
+		preReq();
 		TestReporter.logStep("Facility ID And Service Window Dates Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId("80010835");
@@ -159,6 +168,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testFacilityIDServiceWindowDatesAndSourceAccountingCenter(){
+		preReq();
 		TestReporter.logStep("Facility ID And Service Window Dates And Source Accounting Center Only");
 		SearchByVenue search = new SearchByVenue(environment, "Main");
 		search.setFacilityId("80010835");
@@ -172,6 +182,7 @@ public class TestSearchByVenue_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "scheduledEventsServicePort", "negative"})
 	public void testBookShowDineAndSearchForReservation(){
+		preReq();
 		TestReporter.logStep("Search For Show Dine");
 		ScheduledEventReservation res = new ShowDiningReservation(environment, hh);
 		res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
@@ -201,5 +212,12 @@ public class TestSearchByVenue_Negative extends BaseTest{
 		logInvalidItems.addItem("PartyIF", "retrieveParty", false);
 		logInvalidItems.addItem("PartyIF", "retrievePartyBasicInformation", false);
 		validateNotInLogs(search, logInvalidItems);
+	}
+	
+	private void preReq(){
+		hh = new HouseHold(1);
+		hh.sendToApi(this.environment);
+		res.set(new EventDiningReservation(environment, hh));
+		res.get().book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 	}
 }

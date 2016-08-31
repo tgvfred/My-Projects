@@ -11,6 +11,7 @@ import com.disney.api.soapServices.availSEModule.builtInventoryService.operation
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.folioInterface.Folio;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 /**
@@ -21,6 +22,7 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
  *
  */
 public class ActivityEventReservation implements ScheduledEventReservation {
+	private Folio folio = null;
 	private HouseHold party;	// Household field containing guests to be used for a reservation
 	private String environment;	// Environment under test
 	private String travelPlanId;	// Travel Plan ID
@@ -30,6 +32,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	private String arrivedStatus;	// Status from updating a reservation to 'Arrived'
 	private String facilityId;	// Facility ID for the current reservation
 	private String productId;	// Product ID for the current reservation
+	private String productName;	// Product nam for the current reservation
 	private String productType = "";	//Product Type for the current reservation
 	private String servicePeriod;	// Service periods for the current reservation
 	private String serviceStartDate;	// Service start date for the current reservation, A.K.A. the date of the reservation, not to be confused with the date that the reservation was booked
@@ -52,6 +55,8 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	private String guestAgentId = "0";	// Travel Agent ID associated with the guest
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
+	private String freezeStartDate;
+	private String reservableResourceId;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -71,6 +76,16 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	public ActivityEventReservation(String environment, HouseHold party){
 		this.environment = environment;
 		this.party = party;
+	}
+	
+	public Folio folio() {
+		if(folio == null) return new Folio(this);
+		return folio;
+	}
+
+	public Folio folio(String environment) {
+		if(folio == null) return new Folio(this, environment);
+		return folio;
 	}
 	/**
 	 * Retrieves the environment under test
@@ -116,6 +131,11 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * @return String, facility of the current reservation
 	 */
 	@Override public String getFacilityId(){return this.facilityId;}
+	
+	@Override
+	public void setFreezeStartDate(String startDate){
+		this.freezeStartDate = startDate;
+	}
 	/**
 	 * Retrieves the facility ID of the current reservation
 	 * @return String, facility of the current reservation
@@ -131,6 +151,11 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * @return String, product ID of the current reservation
 	 */
 	@Override public String getProductId(){return this.productId;}
+	/**
+	 * Retrieves the product name of the current reservation
+	 * @return String, product name of the current reservation
+	 */
+	@Override public String getProductName(){return this.productName;}
 	/**
 	 * Retrieves the product type of the current reservation
 	 * @return String, product type of the current reservation
@@ -151,6 +176,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * @return String, service start date of the current reservation
 	 */
 	@Override public void setServiceStartDate(String date){this.serviceStartDate = date;}
+	@Override public String getReservableResourceId(){return this.reservableResourceId;}
 	/**
 	 * Retrieves the number of guests of the current reservation
 	 * @return int, number of guests of the current reservation
@@ -188,6 +214,11 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 */
 	@Override public void setProductId(String productId){this.productId = productId;}
 	/**
+	 * Set the product name for the current reservation
+	 * @param productName - product ID for the current reservation
+	 */
+	@Override public void setProductName(String productName){this.productName = productName;}
+	/**
 	 * Set the product type for the current reservation
 	 * @param productType - product type for the current reservation
 	 */
@@ -209,6 +240,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * Retrieve the status from the response of modifying a reservation
 	 * @return String, status from modifying a reservation
 	 */
+	@Override public void setTravelPlanId(String tpId) {travelPlanId= tpId;}
 	@Override public String getModifyResponseStatus(){return ActivityEventReservation.this.modifyStatus;}
 	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
 	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
@@ -254,32 +286,21 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 * retrieval is performed to allow information to be retrieved for validation purposes.
 	 */
 	private void book(){
-		TestReporter.logStep("Book an activity event reservation.");
 		Book book = new Book(getEnvironment(), this.bookingScenario);
 		book.setParty(party());		
-		book.setFacilityId(getFacilityId());		//FAC.FAC_ID
-		book.setProductId(getProductId());          //PROD.PROD_ID
-		book.setProductType(getProductType());
-		if(facilityName != null)
-			if(!facilityName.isEmpty()) book.setFacilityName(facilityName);
-		if(!this.productType.isEmpty()) book.setProductType(this.productType);
 		book.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		book.setServiceStartDateTime(getServiceStartDate());
+		book.addDetailsByFacilityNameAndProductName(facilityName, productName);
 		if(!agencyId.equals("0")){book.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
-
-		if(getEnvironment().equalsIgnoreCase("Development")&& !getEnvironment().contains("_CM") ){
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			resource.getReservableResources();
-			book.setReservableResourceId(resource.getFirstReservableResourceId());
-		}
-		
-		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+		if(travelPlanId != null) book.setTravelPlanId(travelPlanId);
+		book.setFreezeId();
+		TestReporter.logStep("Book an activity event reservation.");
 		book.sendRequest();
 		if(book.getResponse().contains("Row was updated or deleted by another transaction")|| 
 				book.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated") ||
-				book.getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY")){
+				book.getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||
+				book.getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint")){
+			
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			book.sendRequest();
 		}
@@ -337,7 +358,7 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 	 */
 	@Override
 	public void retrieve(){		
-		TestReporter.logStep("Retrieve an activity event reservation.");
+		TestReporter.logStep("Retrieve an Activity reservation for Reservation ["+getConfirmationNumber()+"]");
 		Retrieve retrieve = new Retrieve(getEnvironment(), "RetrieveDiningEvent");
 		retrieve.setReservationNumber(getConfirmationNumber());
 		retrieve.sendRequest();
@@ -433,20 +454,11 @@ public class ActivityEventReservation implements ScheduledEventReservation {
 			modify.setReservationNumber(getConfirmationNumber());
 			modify.setTravelPlanId(getTravelPlanId());
 
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			try{
-				resource.getReservableResources();				
-				modify.setReservableResourceId(resource.getFirstReservableResourceId());	
-			}
-			catch(Exception e){}
 			modify.setParty(party());
-			modify.setFacilityId(getFacilityId());
 			modify.setServiceStartDate(getServiceStartDate());
 			modify.setServicePeriodId(getServicePeriodId());
-			modify.setProductId(getProductId());
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+
+			modify.addDetailsByFacilityNameAndProductName(facilityName, productName);
 			modify.sendRequest();
 			if(modify.getResponse().contains("Row was updated or deleted by another transaction")){
 				Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);

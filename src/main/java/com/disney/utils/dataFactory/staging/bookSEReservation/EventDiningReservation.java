@@ -12,6 +12,7 @@ import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.folioInterface.Folio;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 /**
@@ -31,6 +32,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	private String arrivedStatus;	// Status from updating a reservation to 'Arrived'
 	private String facilityId;	// Facility ID for the current reservation
 	private String productId;	// Product ID for the current reservation
+	private String productName;	// Product Name for the current reservation
 	private String productType;	//Product Type for the current reservation
 	private String servicePeriod;	// Service periods for the current reservation
 	private String serviceStartDate;	// Service start date for the current reservation, A.K.A. the date of the reservation, not to be confused with the date that the reservation was booked
@@ -43,6 +45,9 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	private String modifyStatus;	// Status in the response from modify a reservation 
 	private String sourceAccountingCenter;	// Source Accounting Center ID
 	private String facilityName;	// Facility name for the current reservation
+	private String freezeStartDate;
+	private String reservableResourceId;
+	private boolean isReservableResourceIdSet = false;  
 	/*
 	 * Travel Agency Fields
 	 */
@@ -53,6 +58,11 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	private String guestAgentId = "0";	// Travel Agent ID associated with the guest
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
+	
+	/*
+	 * 
+	 */
+	private Folio folio;
 	public ScheduledEventsServices ses(){
 		return new ScheduledEventsServices(environment);
 	};
@@ -73,6 +83,17 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		this.environment = environment;
 		this.party = party;
 	}
+	
+
+	public Folio folio() {
+		if(folio == null) return new Folio(this);
+		return folio;
+	}
+
+	public Folio folio(String environment) {
+		if(folio == null) return new Folio(this, environment);
+		return folio;
+	}
 	/**
 	 * Retrieves the environment under test
 	 * @return String, environment under test as a
@@ -88,6 +109,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 * @return String, current confirmation number
 	 */
 	@Override public String getConfirmationNumber(){return this.confirmationNumber;}
+
 	/**
 	 * Retrieves the cancellation number of a cancelled reservation, or a reservation that has been updated to 'No Show'
 	 * @return String, cancellation number
@@ -132,6 +154,11 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 * @return String, product ID of the current reservation
 	 */
 	@Override public String getProductId(){return this.productId;}
+	/**
+	 * Retrieves the product name of the current reservation
+	 * @return String, product name of the current reservation
+	 */
+	@Override public String getProductName(){return this.productId;}
 	/**
 	 * Retrieves the product type of the current reservation
 	 * @return String, product type of the current reservation
@@ -189,6 +216,11 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 */
 	@Override public void setProductId(String productId){this.productId = productId;}
 	/**
+	 * Set the product name for the current reservation
+	 * @param productId - product name for the current reservation
+	 */
+	@Override public void setProductName(String productName){this.productName = productName;}
+	/**
 	 * Set the product type for the current reservation
 	 * @param productType - product type for the current reservation
 	 */
@@ -198,6 +230,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 * @return String, the facility ID from the #retrieve() response 
 	 */
 	@Override public String getRetrieveResponseFacilityID(){return this.retrievedFacilityId;}
+	@Override public String getReservableResourceId(){return this.reservableResourceId;}	
 	/**
 	 * Sets the booking scenario
 	 */
@@ -213,10 +246,12 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 */
 	@Override
 	public String getModifyResponseStatus(){return this.modifyStatus;}
-	
+	@Override public void setTravelPlanId(String tpId) {travelPlanId= tpId;}
 	@Override public void setSourceAccountingCenter(String sac) {sourceAccountingCenter = sac;}
 	@Override public String getSourceAccountingCenter() {return sourceAccountingCenter;}
-	@Override public String getTravelAgencyId(){return agencyId;}
+	@Override public String getTravelAgencyId(){return agencyId;}	
+	@Override public void setFreezeStartDate(String startDate){	this.freezeStartDate = startDate;}
+
 	/**
 	 * Defines the facility ID, service start date, service period, and product ID for the current 
 	 * reservation and invokes a method that books the reservation
@@ -225,6 +260,8 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 * @param servicePeriod - service period ID for the current reservation
 	 * @param productId - product ID for the current reservation
 	 */
+
+	
 	@Override
 	public void book(String facilityID, String startDate, String servicePeriod, String productId) {
 		this.facilityId = facilityID;
@@ -257,38 +294,28 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 * retrieval is performed to allow information to be retrieved for validation purposes.
 	 */
 	private void book(){
-		TestReporter.logStep("Book an event dining reservation.");
 		Book eventDiningBook = new Book(getEnvironment(), this.bookingScenario);
 		eventDiningBook.setParty(party());		
-		eventDiningBook.setFacilityId(getFacilityId());		//FAC.FAC_ID
-		eventDiningBook.setProductId(getProductId());          //PROD.PROD_ID
-		if(facilityName != null)
-			if(!facilityName.isEmpty()) eventDiningBook.setFacilityName(facilityName);
-		if(this.productType != null) if(!this.productType.isEmpty()) eventDiningBook.setProductType(this.productType);
 		eventDiningBook.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		eventDiningBook.setServiceStartDateTime(getServiceStartDate());
+		eventDiningBook.addDetailsByFacilityNameAndProductName(facilityName, productName);
 		if(!agencyId.equals("0")){eventDiningBook.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
 
-		if(!getEnvironment().equalsIgnoreCase("Development")&& !getEnvironment().contains("_CM") ){
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			resource.getReservableResources();
-			eventDiningBook.setReservableResourceId(resource.getFirstReservableResourceId());
-		}
-		
-		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+		TestReporter.logStep("Book an Event dining reservation");
 		eventDiningBook.sendRequest();
 		if(eventDiningBook.getResponse().contains("Row was updated or deleted by another transaction")|| 
 				eventDiningBook.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")||
-				eventDiningBook.getResponse().toLowerCase().contains("constraintviolationexception")){
+				eventDiningBook.getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint ") || 
+				eventDiningBook.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
 			Sleeper.sleep(Randomness.randomNumberBetween(3, 10) * 1000);
+			eventDiningBook.setFreezeId();
 			eventDiningBook.sendRequest();
 		}
 		TestReporter.logAPI(!eventDiningBook.getResponseStatusCode().equals("200"), "An error occurred booking an event dining service reservation: " + eventDiningBook.getFaultString(), eventDiningBook);
 		this.travelPlanId = eventDiningBook.getTravelPlanId();
 		this.confirmationNumber = eventDiningBook.getTravelPlanSegmentId();
 		this.sourceAccountingCenter = eventDiningBook.getSourceAccountingCenter();
+		this.reservableResourceId = eventDiningBook.getRequestReservableResourceId();
 		TestReporter.log("Travel Plan ID: " + getTravelPlanId());
 		TestReporter.log("Reservation Number: " + getConfirmationNumber());
 		retrieve();
@@ -305,6 +332,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		cancel.sendRequest();
 		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling an event dining service reservation", cancel);
 		this.cancellationNumber = cancel.getCancellationConfirmationNumber();
+		this.reservableResourceId = null;
 		retrieve();
 	}
 
@@ -333,6 +361,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		noShow.sendRequest();
 		TestReporter.logAPI(!noShow.getResponseStatusCode().equals("200"), "An error occurred updating an event dining service reservation to [No Show]", noShow);
 		this.cancellationNumber = noShow.getCancellationNumber();
+		this.reservableResourceId =null;
 		retrieve();
 	}
 	
@@ -341,7 +370,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 	 */
 	@Override
 	public void retrieve(){		
-		TestReporter.logStep("Retrieve an event dining reservation.");
+		TestReporter.logStep("Retrieve an Event dining reservation for Reservation ["+getConfirmationNumber()+"]");
 		Retrieve retrieve = new Retrieve(getEnvironment(), "RetrieveDiningEvent");
 		retrieve.setReservationNumber(getConfirmationNumber());
 		retrieve.sendRequest();
@@ -352,6 +381,8 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		}catch(XPathNotFoundException e){}
 		retrievedFacilityId = retrieve.getResponseFacilityId();
 		primaryGuestAge = retrieve.getPrimaryGuestAge();
+		party().primaryGuest().setPartyId(retrieve.getPartyId());
+		party().primaryGuest().setGuestId(retrieve.getGuestId());
 	}
 
 	/**
@@ -441,18 +472,8 @@ public class EventDiningReservation implements ScheduledEventReservation{
 			modify.setReservationNumber(getConfirmationNumber());
 			modify.setTravelPlanId(getTravelPlanId());
 
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			resource.getReservableResources();
-			
-			modify.setReservableResourceId(resource.getFirstReservableResourceId());
-			modify.setParty(party());
-			modify.setFacilityId(getFacilityId());
-			modify.setServiceStartDate(getServiceStartDate());
-			modify.setServicePeriodId(getServicePeriodId());
-			modify.setProductId(getProductId());
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+			modify.addDetailsByFacilityNameAndProductName(facilityName, productName);
+			modify.setReservableResourceId(reservableResourceId);
 			modify.sendRequest();
 			if(modify.getResponse().contains("Row was updated or deleted by another transaction")){
 				Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);

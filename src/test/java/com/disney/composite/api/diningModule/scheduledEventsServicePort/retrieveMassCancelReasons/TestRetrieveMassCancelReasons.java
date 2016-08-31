@@ -16,7 +16,7 @@ public class TestRetrieveMassCancelReasons extends BaseTest{
 		TestReporter.logStep("Retrieve Mass Cancel Reasons");
 		RetrieveMassCancelReasons retrieveMassCancelReasons = new RetrieveMassCancelReasons(environment);
 		retrieveMassCancelReasons.sendRequest();
-		TestReporter.logAPI(!retrieveMassCancelReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval.", retrieveMassCancelReasons);
+		TestReporter.logAPI(!retrieveMassCancelReasons.getResponseStatusCode().equals("200"), "An error occurred during retrieval: " + retrieveMassCancelReasons.getFaultString(), retrieveMassCancelReasons);
 		TestReporter.assertTrue(retrieveMassCancelReasons.getNumberOfMassCancelReasons() > 0, "Verify mass cancel reasons are returned.");
 		TestReporter.assertTrue(retrieveMassCancelReasons.getMassCancelCodes().size() == retrieveMassCancelReasons.getNumberOfMassCancelReasons(), "Verify the number of mass cancel reason codes is ["+retrieveMassCancelReasons.getNumberOfMassCancelReasons()+"].");
 		reportValues("Mass Cancel Reasons", retrieveMassCancelReasons.getNumberOfMassCancelReasons(), retrieveMassCancelReasons.getMassCancelCodes());
