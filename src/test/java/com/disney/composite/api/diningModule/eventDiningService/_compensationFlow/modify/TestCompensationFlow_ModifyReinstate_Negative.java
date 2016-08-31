@@ -34,6 +34,8 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 		hh = new HouseHold(1);
 		book.set(new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS));
 		book.get().setParty(hh);
+		book.get().setFacilityId("90001833");
+		book.get().addDetailsByProductName("Spirit of Aloha-Cat 2-1st Show");
 		book.get().sendRequest();
 		TestReporter.logAPI(!book.get().getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.get().getFaultString(), book.get());
 		
@@ -58,6 +60,8 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 		modify.setTravelPlanId(book.get().getTravelPlanId());
 		modify.setReservationNumber(book.get().getTravelPlanSegmentId());
 		modify.setParty(hh);
+		modify.setFacilityId("90001833");
+		modify.addDetailsByProductName("Spirit of Aloha-Cat 2-1st Show");
 		modify.setReservableResourceId(book.get().getReservableResourceId(), true);
 		modify.setServiceStartDate(book.get().getRequestServiceStartDate());
 		modify.setExistingRRID(book.get().getReservableResourceId());

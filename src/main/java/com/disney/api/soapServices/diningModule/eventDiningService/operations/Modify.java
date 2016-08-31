@@ -8,6 +8,7 @@ import com.disney.api.soapServices.diningModule.ComponentPriceBuilder;
 import com.disney.api.soapServices.diningModule.eventDiningService.EventDiningService;
 import com.disney.api.soapServices.pricingModule.pricingWebService.operations.PriceComponents;
 import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
+import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.FacilityInfo;
@@ -245,8 +246,9 @@ public class Modify extends EventDiningService {
 		if(notSetFreezeId) 	setFreezeId();
 		boolean failure = false;
 		try{setInventoryCountBefore(getInventory());}
-		catch(Exception e){failure = true;}
+		catch(Exception e){throw new AutomationException("An error occurred finding inventory for reservable resource id ["+reservableResourceId+"] and time ["+dateTime+"].");}
 		super.sendRequest();
+		Sleeper.sleep(2000);
 		if(!failure) setInventoryCountAfter(getInventory());
 		setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
 		
@@ -350,6 +352,7 @@ public class Modify extends EventDiningService {
 			       : rsInventory.getValue("START_DATE");
 						   
 		startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+		this.startTime = startTime;
 		freeze.setStartDate(startdate);	
 		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
 		freeze.sendRequest();
@@ -357,18 +360,20 @@ public class Modify extends EventDiningService {
 		int timesTried = 0;
 		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
 			if(!newDateTime)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-			else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId)));
+			else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId).replace("to_Char(sysdate + 60, 'yyyy-mm-dd')", "to_Char(sysdate + 120, 'yyyy-mm-dd')")));
 			rsInventory.print();
-			startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
-			startDate = startdate;
-//>>>>>>> bcbd28f51f4f4d70956471a29f528c4e2d10d279
-			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
-			this.startTime = startTime;
-			if(!newDateTime)setReservableResourceId(rsInventory.getValue("Resource_ID"));
-			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
-			freeze.setStartDate(startDate);	
-			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-			freeze.sendRequest();	
+			try{
+				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+				startDate = startdate;
+	//>>>>>>> bcbd28f51f4f4d70956471a29f528c4e2d10d279
+				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+				this.startTime = startTime;
+				if(!newDateTime)setReservableResourceId(rsInventory.getValue("Resource_ID"));
+				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+				freeze.setStartDate(startDate);	
+				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+				freeze.sendRequest();
+			}catch(Exception e){}	
 			if(freeze.getSuccess().equals("failure")) timesTried++;
 		}
 //<<<<<<< HEAD

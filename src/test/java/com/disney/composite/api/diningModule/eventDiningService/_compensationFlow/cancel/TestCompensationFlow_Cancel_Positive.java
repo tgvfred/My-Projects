@@ -30,8 +30,8 @@ public class TestCompensationFlow_Cancel_Positive extends BaseTest{
 		hh = new HouseHold(1);
 		book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		book.setParty(hh);
-		book.setFacilityId("90002032");
-		book.addDetailsByProductName("Hoop-Dee-Doo-Cat 3-3rd Show");
+		book.setFacilityId("90001833");
+		book.addDetailsByProductName("Spirit of Aloha-Cat 1-2nd Show");
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		reservableResourceId = book.getReservableResourceId();

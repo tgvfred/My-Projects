@@ -151,12 +151,11 @@ public class Book extends EventDiningService {
 	@Override
 	public void sendRequest(){
 		if(notSetFreezeId) 	setFreezeId();
-		boolean failure = false;
 		try{setInventoryCountBefore(getInventory());}
-		catch(Exception e){failure = true;}
+		catch(Exception e){throw new AutomationException("An error occurred finding inventory for reservable resource id ["+reservableResourceId+"] and time ["+dateTime+"].");}
 		super.sendRequest();
-		Sleeper.sleep(5000);
-		if(!failure) setInventoryCountAfter(getInventory());
+		Sleeper.sleep(2000);
+		setInventoryCountAfter(getInventory());
 		if(!invokeRimError){
 			if(getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
 					getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
@@ -240,16 +239,17 @@ public class Book extends EventDiningService {
 //			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 		int timesTried = 0;
 		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
-			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-			
-			startDate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
-//>>>>>>> bcbd28f51f4f4d70956471a29f528c4e2d10d279
-			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
-			setReservableResourceId(rsInventory.getValue("Resource_ID"));
-			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
-			freeze.setStartDate(startDate);	
-			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-			freeze.sendRequest();	
+			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate()).replace("to_Char(sysdate + 60, 'yyyy-mm-dd')", "to_Char(sysdate + 120, 'yyyy-mm-dd')")));
+			try{
+				startDate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+	//>>>>>>> bcbd28f51f4f4d70956471a29f528c4e2d10d279
+				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+				setReservableResourceId(rsInventory.getValue("Resource_ID"));
+				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+				freeze.setStartDate(startDate);	
+				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+				freeze.sendRequest();
+			}catch(Exception e){}	
 			if(freeze.getSuccess().equals("failure"))timesTried++;
 		}
 		TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
