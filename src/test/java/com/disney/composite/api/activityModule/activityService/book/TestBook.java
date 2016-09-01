@@ -316,10 +316,11 @@ public class TestBook extends BaseTest{
 
 	@Test(groups = {"api", "regression", "activity", "activityService" })
 	public void testAddAllAllergies(){
-		hh = new HouseHold(1);
+		HouseHold hh = new HouseHold(1);
+		hh.primaryGuest().setAge("10");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.addDetailsByFacilityNameAndProductName("Pioneer Hall", "Hoop-Dee-Doo-Cat 1-1st Show");
+		book.addDetailsByFacilityNameAndProductName("Bibbidi Bobbidi Boutique - Magic Kingdom", "C E - Bibbidi Bobbidi Boutique - MK");
 		RetrieveAllergies retrieveAllergies = new RetrieveAllergies(environment);
 		retrieveAllergies.sendRequest();
 		TestReporter.logAPI(!retrieveAllergies.getResponseStatusCode().contains("200"), "An error occurred retrieving allergies: " + retrieveAllergies.getFaultString() ,retrieveAllergies);
@@ -334,7 +335,9 @@ public class TestBook extends BaseTest{
 	private void bookAndValidateLogs(Book book){
 		book.sendRequest();
 		
-		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred")){
+		if(book.getResponse().contains("existingRootChargeBookEvent :Unexpected Error occurred") ||
+				book.getResponse().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||
+				book.getResponse().contains("Booking Date Not Found for CampusId")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 			book.sendRequest();
 		}

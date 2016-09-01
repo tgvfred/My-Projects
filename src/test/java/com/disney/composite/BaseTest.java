@@ -186,13 +186,13 @@ public class BaseTest {
 						+ "ORDER BY SVC_CLASS ASC";
 		
 		// Uncomment the below line to output the SQL to the console
-//		System.out.println(sql);
+		System.out.println(sql);
 		TestReporter.logInfo("SQL to search for log \n "+ sql);
 		Database db = new OracleDatabase(environment, Database.DREAMS_LOG);
 		Recordset rs = new Recordset(db.getResultSet(sql));
 
 		// Uncomment the below line to output the recordset to the console
-//		rs.print();
+		rs.print();
 		TestReporter.logInfo("Records found \n" + rs.printString());
 
 		TestReporter.logDebug("Exiting BaseTest#getLogs");

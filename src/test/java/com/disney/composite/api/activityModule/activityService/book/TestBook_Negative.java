@@ -255,7 +255,7 @@ public class TestBook_Negative extends BaseTest{
 		TestReporter.logScenario("Missing Reservable Resource ID");
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);
-		book.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
+		book.setReservableResourceIdForError(BaseSoapCommands.REMOVE_NODE.toString());
 		book.setFreezeId(Randomness.randomAlphaNumeric(36));
 		sendRequestAndValidateLogs(book, ActivityErrorCode.NO_RESERVABLE_RESOURCE_ID, "RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!");
 	}

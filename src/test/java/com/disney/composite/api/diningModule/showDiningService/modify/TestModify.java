@@ -76,7 +76,7 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		modify.setProductId(book.getRequestProductId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -113,7 +113,7 @@ public class TestModify extends BaseTest{
 
 		
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService"})
@@ -132,6 +132,7 @@ public class TestModify extends BaseTest{
 		modify.setProductId(res2.getProductId());
 		res2.cancel();
 		modify.sendRequest();
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		res2.retrieve();
 		TestReporter.logAPI(!res2.getStatus().equals("Booked"), "Reservation status was not [Booked] instead [" + res2.getStatus() + "]", modify);
 		TPS_ID.set(res2.getConfirmationNumber());
@@ -182,7 +183,7 @@ public class TestModify extends BaseTest{
 		modify.addInternalComments("Internal Comments", "Internal");
 		modify.setReservableResourceId(res2.getReservableResourceId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);	
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -215,7 +216,7 @@ public class TestModify extends BaseTest{
 		modify.addInternalComments("More Internal Comments", "External");
 		modify.setReservableResourceId(res2.getReservableResourceId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -248,7 +249,7 @@ public class TestModify extends BaseTest{
 		modify.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.BOOSTER_SEAT_ID, "GuestRequest");
 		modify.setReservableResourceId(res2.getReservableResourceId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -282,7 +283,7 @@ public class TestModify extends BaseTest{
 		modify.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.REQUEST_TWO_HIGH_CHAIRS_ID, "SecondGuestRequest");
 		modify.setReservableResourceId(res2.getReservableResourceId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -314,7 +315,7 @@ public class TestModify extends BaseTest{
 		modify.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.HEARING_LOSS_ID, "SeSpecialNeed");
 		modify.setReservableResourceId(res2.getReservableResourceId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -348,7 +349,7 @@ public class TestModify extends BaseTest{
 		modify.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.OXYGEN_TANK_USE_ID, "SeSpecialNeed");
 		modify.setReservableResourceId(res2.getReservableResourceId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -380,7 +381,7 @@ public class TestModify extends BaseTest{
 		modify.setTaxExemptDetails("123456789", "Military");
 		modify.setReservableResourceId(res2.getReservableResourceId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -411,7 +412,7 @@ public class TestModify extends BaseTest{
 		modify.setProductId(book.getRequestProductId());
 		modify.setAllergies("Egg");
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -439,7 +440,7 @@ public class TestModify extends BaseTest{
 		modify.setProductId(book.getRequestProductId());
 		modify.setAllergies("Egg");
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -470,7 +471,7 @@ public class TestModify extends BaseTest{
 		modify.setAllergies("Egg");
 		modify.setAllergies("Corn");
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -500,7 +501,7 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		modify.setProductId(book.getRequestProductId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -527,7 +528,7 @@ public class TestModify extends BaseTest{
 		modify.setParty(hh);
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred during modification: " + modify.getFaultString(), modify);
-		TestReporter.assertEquals(modify.getResponseStatus(), "SUCCESS", "The status ["+modify.getResponseStatus()+"] was not 'SUCCESS' as expected.");
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 		LogItems logValidItems = new LogItems();
 		logValidItems.addItem("ShowDiningServiceIF", "modify", false);

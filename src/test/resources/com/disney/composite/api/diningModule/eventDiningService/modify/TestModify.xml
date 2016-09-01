@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestModify" parallel="methods" thread-count="10">
+<suite name="TestModify" parallel="methods" thread-count="10" configfailurepolicy="continue">
 	<parameter name="environment" value="Stage_CM" />
 	<test name="TestModify">
-		<classes>
-			<class
-				name="com.disney.composite.api.diningModule.eventDiningService.modify.TestModify"/>
-		</classes>
+	<packages>
+		<package name="com.disney.composite.api.diningModule.eventDiningService.modify.*"></package>
+	</packages>
 	</test>
 </suite>

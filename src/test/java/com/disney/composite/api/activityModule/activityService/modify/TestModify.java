@@ -13,7 +13,6 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReservation;
-import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 
 public class TestModify extends BaseTest{
@@ -118,7 +117,7 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		modify.setSourceAccountingCenter("5005");
 		modify.setProductType("RecreationActivityProduct");
-		modify.setReservableResourceId("CAF43AD9-459F-7044-E043-9906F4D17044");
+		modify.setReservableResourceIdNew("CAF43AD9-459F-7044-E043-9906F4D17044");
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
 
@@ -141,7 +140,7 @@ public class TestModify extends BaseTest{
 		book.setProductId("162265");
 		book.setSourceAccountingCenter("5005");
 		book.setProductType("RecreationActivityProduct");
-		book.setReservableResourceId("CAF43AD9-459F-7044-E043-9906F4D17044");
+		book.setReservableResourceIdForError("CAF43AD9-459F-7044-E043-9906F4D17044");
 		book.sendRequest();
 
 		TPS_ID.set(book.getTravelPlanSegmentId());
@@ -163,7 +162,7 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		modify.setSourceAccountingCenter("5005");
 		modify.setProductType("RecreationActivityProduct");
-		modify.setReservableResourceId("CAF43AD9-459F-7044-E043-9906F4D17044");
+		modify.setReservableResourceIdNew("CAF43AD9-459F-7044-E043-9906F4D17044");
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
 
@@ -287,7 +286,8 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(localRes.getServicePeriodId());
 		modify.setProductId(localRes.getProductId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"),"An error occurred during modification: " + modify.getFaultString(), modify);
+		TestReporter.logAPI(!modify.getStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);

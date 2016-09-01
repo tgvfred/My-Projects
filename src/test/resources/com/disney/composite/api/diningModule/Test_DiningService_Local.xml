@@ -3,15 +3,15 @@
 <suite name="ShowDiningService_Suite" parallel="methods" thread-count="100"  configfailurepolicy="continue">
 	<parameter name="environment" value="Latest_CM" />
 	<test name="ShowDiningService">
+		<groups>
+			<run>
+				<include name="dining" />
+				<exclude name="compensation"></exclude>
+				<exclude name="dev"  />
+			</run>
+		</groups>
 		<packages>
 			<package name="com.disney.composite.api.*"></package>
 		</packages>
-			<groups>
-				<run>
-				<include name="dining" />
-					
-					<exclude name="dev"  />
-				</run>
-			</groups>
 	</test>
 </suite>

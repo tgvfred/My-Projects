@@ -662,8 +662,9 @@ public class TestModify_Negative extends BaseTest{
 		modify.setServiceStartDate(res.getServiceStartDate());
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setProductId(res.getProductId());
-		modify.setRequestNodeValueByXPath("//freezeId",BaseSoapCommands.REMOVE_NODE.toString());
-		modify.sendRequest();
+//		modify.setRequestNodeValueByXPath("//freezeId",BaseSoapCommands.REMOVE_NODE.toString());
+		modify.setFreezeIdForError(BaseSoapCommands.REMOVE_NODE.toString());
+		modify.sendRequest();  //Debug: check freeze id node is missing
 		validateApplicationError(modify, DiningErrorCode.FREEZE_ID_REQUIRED);
 		TestReporter.logAPI(!modify.getFaultString().contains("Freeze Id is required : FREEZE ID IS REQUIRED"), modify.getFaultString() ,modify);
 

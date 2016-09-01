@@ -16,7 +16,6 @@ public class Environment {
 			case "stage_cm": return "Sleepy_CM";
 			case "shadow_cm": return "Grumpy_CM";
 			case "load_cm": return "Doc_CM";
-			
 			default: return env;
 		}
 	}
