@@ -6,6 +6,7 @@ import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.core.Headers.HeaderType;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.CreateRequest;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
 
 public class create {
 	private RestService restService;
@@ -20,6 +21,11 @@ public class create {
 	public RestResponse sendPostRequest(CreateRequest request){	
 		String json = restService.getJsonFromObject(request);
 		return restService.sendPostRequest(resource, HeaderType.REST, json);		
+	}
+	
+	public RestResponse sendPutRequestWithMissingAuthToken(CreateRequest request){
+		String json = restService.getJsonFromObject(request);
+		return restService.sendPutRequest(resource, HeaderType.REST_NOAuth, json);
 	}
 
 }

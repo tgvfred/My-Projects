@@ -56,7 +56,7 @@ private CreateResponse caCreate = null;
 		//Adding Charge Accounts to look for
 		request.addChargeAccountId("2938");
 		//Update value for Pin
-		request.setPinNumber("1357");
+		request.setPinNumber("1369");
 	
 	RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().updatePin().sendPutRequest(request);
 	TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");

@@ -8,7 +8,7 @@ import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.upda
 
 public class ChargeAccount{
 	private RestService restService;
-	private String resource = "/chargeaccountV2";
+	private String resource = "/chargeaccount";
 	public ChargeAccount(RestService restService){
 		this.restService = restService;
 	}

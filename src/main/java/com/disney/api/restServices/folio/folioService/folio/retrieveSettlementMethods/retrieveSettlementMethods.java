@@ -21,5 +21,10 @@ public class retrieveSettlementMethods {
 		String json = restService.getJsonFromObject(request);
 		return restService.sendPutRequest(resource, HeaderType.REST, json);		
 	}
+	
+	public RestResponse sendPutRequestWithMissingAuthToken(RetrieveSettlementMethodsRequest request){
+		String json = restService.getJsonFromObject(request);
+		return restService.sendPutRequest(resource, HeaderType.REST_NOAuth, json);
+	}
 
 }

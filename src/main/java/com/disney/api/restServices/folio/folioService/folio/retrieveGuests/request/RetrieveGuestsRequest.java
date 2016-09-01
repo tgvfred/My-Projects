@@ -17,8 +17,8 @@ public class RetrieveGuestsRequest {
 	
 	public void addExternalReferenceTO(){
 		externalReferenceTO = new ExternalReferenceTO();
-		externalReferenceTO.setReferenceName("DREAMS_TP");
-		externalReferenceTO.setReferenceValue("462143359419");
+		externalReferenceTO.setReferenceName("ODS");
+		externalReferenceTO.setReferenceValue("2505374110");
 		this.externalReferenceTO = externalReferenceTO;
 	}
 	

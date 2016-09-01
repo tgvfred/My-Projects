@@ -11,6 +11,7 @@ import com.disney.api.restServices.core.Headers.HeaderType;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.updatePin.request.UpdatePinRequest;
 import com.disney.test.utils.Randomness;
 
 public class retrieveGuests {
@@ -27,5 +28,9 @@ public class retrieveGuests {
 		return restService.sendPutRequest(resource, HeaderType.REST,json);		
 	}
 	
+	public RestResponse sendPutRequestWithMissingAuthToken(RetrieveGuestsRequest request){
+		String json = restService.getJsonFromObject(request);
+		return restService.sendPutRequest(resource, HeaderType.REST_NOAuth, json);
+	}
 	
 }

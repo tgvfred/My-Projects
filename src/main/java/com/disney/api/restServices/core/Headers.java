@@ -37,7 +37,8 @@ public class Headers {
 	  	JENKINS,
 	  	AUTH,
 	    BASIC_CONVO,
-	    REST;
+	    REST,
+		REST_NOAuth;
 	}
 	/*  private Header[] getHeaders(){
 		  return headers;
@@ -80,6 +81,7 @@ public class Headers {
 		        	params.add(new BasicNameValuePair("username", "mdxcontc@ngetestmail.com"));
 		        	params.add(new BasicNameValuePair("password", "mickey1"));
 		        	params.add(new BasicNameValuePair("client_id", "SE_TEST_EXTERNAL_PASSWORD"));
+		        	params.add(new BasicNameValuePair("assertion_type", "disneyid"));
 		        	AuthToken authToken = null;
 					try {
 						authToken = new RestService().sendPostRequest(new URI("https://stg.authorization.go.com/token"), HeaderType.AUTH, params).mapJSONToObject(AuthToken.class);
@@ -92,6 +94,11 @@ public class Headers {
 		        			new BasicHeader("Authorization", authToken.getTokenType() + " " + authToken.getAccessToken())
 		        	};
 		        	break;
+		        case REST_NOAuth:
+		        	headers = new Header []{
+		        			//No Authorization Token will be sent
+		        	};
+		        break;
 	            default:
 	                break;
 	        }

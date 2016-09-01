@@ -19,7 +19,7 @@ import com.disney.api.restServices.folio.folioService.folio.retrieveGuests.reque
 import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
-public class TestRetrieveGuests {
+public class TestRetrieveGuests_Negative {
 private String environment = "Bashful";
 	
 	/**
@@ -45,7 +45,7 @@ private String environment = "Bashful";
 	
 	
 	@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveGuests"})
-	public void testretrieveGuests()throws IOException{
+	public void testretrieveGuests_Negative_BlankReferenceName()throws IOException{
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		
@@ -62,7 +62,31 @@ private String environment = "Bashful";
 		//Add SourceAccountingCenter
 		request.setSourceAccountingCenter("2");
 		RestResponse response= Rest.folio(environment).folioService().folio().retrieveGuests().sendPutRequest(request);
-		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
+		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Name =  "), "Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Name =  ] was received");
+
+	}
+	
+	@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveGuests"})
+	public void testretrieveGuests_Negative_BlankReferenceNumber()throws IOException{
+		TestReporter.setDebugLevel(1);
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		
+		//create the json message
+		RetrieveGuestsRequest request = new RetrieveGuestsRequest();
+		
+		//Adding data for the different nodes
+		//Added External Reference Type
+		request.addExternalReferenceTO();
+
+		//Add External Reference value
+		
+		
+		//Add SourceAccountingCenter
+		request.setSourceAccountingCenter("2");
+		RestResponse response= Rest.folio(environment).folioService().folio().retrieveGuests().sendPutRequest(request);
+		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
+		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO"), "Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Value = ");
 
 	}
 }

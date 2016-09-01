@@ -42,7 +42,8 @@ public class TestRetrieve {
 	 * 		- DataScenario - data scenario used, data sheets can contain multiple scenarios.
 	 * @throws IOException 
 	 */
-	public void testretrieve() throws IOException{
+	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieve"})
+	public void testretrieve_MultipleChargeAcct() throws IOException{
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		//Creating ChargeAccount.retrieve request
 		RetrieveRequest request = new RetrieveRequest();
@@ -66,4 +67,26 @@ public class TestRetrieve {
 			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");	
 	}
 	
+	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieve"})
+	public void testretrieve_SingleChargeAcct() throws IOException{
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		//Creating ChargeAccount.retrieve request
+		RetrieveRequest request = new RetrieveRequest();
+
+		//Adding Charge Accounts to look for
+		request.addChargeAccountId("2364");
+		
+		//Sending request and validating response
+		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);
+		
+		RetreiveResponse[] retreiveResponse = response.mapJSONToObject(RetreiveResponse[].class);
+			for(RetreiveResponse chargeAccount:retreiveResponse){
+				System.out.println("Charge Account Id:"+ chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getId());
+				System.out.println("Charge Account Status:"+ chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getStatus());
+				GuestInfoTO guest = chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getGuestInfoTO().get(0);
+				System.out.println("Charge Account Guest Name: "+ guest.getFirstName()+ "" + guest.getLastName());
+				System.out.println();
+			}
+			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");	
+	}
 }
