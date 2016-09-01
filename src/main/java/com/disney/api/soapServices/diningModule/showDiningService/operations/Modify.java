@@ -34,6 +34,7 @@ public class Modify extends ShowDiningService {
 	private String startTime;
 	private String startDate;
 	private boolean invokeRimError;
+	private boolean validateInventory;
 	public Modify(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
@@ -732,28 +733,29 @@ public class Modify extends ShowDiningService {
 		setReservableResourceId(value);
 		reservableResourceId = value;
 		this.newDateTime = newDateTime;
-	}
+	}	
 	
-
+	/**
+	 * If it is desired to validate inventory before and after a booking, set this to true
+	 */
+	public void setValidateInventory(boolean validate){ this.validateInventory = validate;}
 	@Override
 	public void sendRequest(){
-		setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));
+		if(validateInventory)setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));
 		if(notSetFreezeId) 	setFreezeId();
-		boolean failure = false;
-		try{setInventoryCountBefore(getInventory());}
-		catch(Exception e){failure = true;}
+		if(validateInventory)setInventoryCountBefore(getInventory());
 		super.sendRequest();
-		if(!failure) setInventoryCountAfter(getInventory());
-		setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
+		if(validateInventory)setInventoryCountAfter(getInventory());
 		
 		if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
 				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
 				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
 			if(notSetFreezeId) 	setFreezeId();
-			setInventoryCountBefore(getInventory());
+			if(validateInventory)setInventoryCountBefore(getInventory());
 			super.sendRequest();	
-			setInventoryCountAfter(getInventory());
+			if(validateInventory)setInventoryCountAfter(getInventory());
 		}
+		if(validateInventory)setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
 	}
 	public void setExistingRRID(String rrid){existingRRID = rrid;}
 	public void setExistingStartDateTime(String dateTime){existingStartDateTime = dateTime;}

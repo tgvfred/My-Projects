@@ -286,7 +286,8 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(localRes.getServicePeriodId());
 		modify.setProductId(localRes.getProductId());
 		modify.sendRequest();
-		TestReporter.logAPI(!modify.getStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"),"An error occurred during modification: " + modify.getFaultString(), modify);
+		TestReporter.logAPI(!modify.getStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);

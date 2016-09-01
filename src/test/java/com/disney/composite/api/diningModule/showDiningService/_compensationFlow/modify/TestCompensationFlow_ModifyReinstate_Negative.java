@@ -64,6 +64,7 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 		modify.setExistingRRID(book.get().getReservableResourceId());
 		modify.setExistingStartDateTime(book.get().getStartTime());
 		modify.setFreezeIdForError(Randomness.randomAlphaNumeric(36));
+		modify.setValidateInventory(true);
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID"), modify.getFaultString() ,modify);
 		TestReporter.assertTrue(Integer.parseInt(modify.getInventoryCountBefore()) == Integer.parseInt(modify.getInventoryCountAfter()), "Verify the booked inventory count ["+modify.getInventoryCountAfter()+"] for reservable resource ID ["+modify.getReservableResourceId()+"] does not increment from the count prior to booking ["+modify.getInventoryCountBefore()+"]");
@@ -91,6 +92,7 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 //		modify.setFacilityId(book.get().getFacilityId());
 //		modify.addDetailsByProductName("Hoop-Dee-Doo-Cat 2-1st Show");
 //		modify.setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/componentPrices[1]/unitPrices/taxes/revenueType", BaseSoapCommands.REMOVE_NODE.toString());
+//		modify.setValidateInventory(true);
 //		modify.sendRequest();
 //		TestReporter.logAPI(!modify.getResponse().contains("Invalid input fields"), "An error occurred modifying reservation ["+book.get().getTravelPlanSegmentId()+"]:" + modify.getFaultString(), modify);
 //		validateApplicationError(modify, DiningErrorCode.FOLIO_MANAGEMENT_SERVICE_FAILURE);

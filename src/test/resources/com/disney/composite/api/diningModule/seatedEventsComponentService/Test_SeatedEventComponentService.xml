@@ -3,6 +3,11 @@
 <suite name="SeatedEventComponentService_Suite" parallel="methods" thread-count="10" data-provider-thread-count="10" configfailurepolicy="continue">
 	<parameter name="environment" value="${environment}" />
 	<test name="SeatedEventComponentService">
+		<groups>
+			<run>
+				<exclude name="compensation"></exclude>
+			</run>
+		</groups>
 		<packages>
 			<package name="com.disney.composite.api.diningModule.seatedEventsComponentService.*"></package>
 		</packages>

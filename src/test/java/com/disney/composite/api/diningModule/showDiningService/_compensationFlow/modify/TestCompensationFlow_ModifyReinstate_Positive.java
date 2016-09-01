@@ -59,6 +59,7 @@ public class TestCompensationFlow_ModifyReinstate_Positive extends BaseTest{
 		modify.setServiceStartDate(book.getRequestServiceStartDate());
 		modify.setExistingRRID(book.getReservableResourceId());
 		modify.setExistingStartDateTime(book.getRequestServiceStartDate());
+		modify.setValidateInventory(true);
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred modifying reservation ["+book.getTravelPlanSegmentId()+"]:" + modify.getFaultString(), modify);
 		TestReporter.assertEquals(modify.getResponseStatus(), "SUCCESS", "Verify that the modification status ["+modify.getResponseStatus()+"] is [SUCCESS].");

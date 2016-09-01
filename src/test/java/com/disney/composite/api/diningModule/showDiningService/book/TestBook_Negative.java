@@ -206,14 +206,14 @@ public class TestBook_Negative  extends BaseTest{
 		book.setProductType(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("PRODUCT TYPE NAME IS REQUIRED!! : PRODUCT TYPE NAME IS REQUIRED!!",DiningErrorCode.PRODUCT_TYPE_NAME_REQUIRED, book);
 	}
-	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})
+	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative", "debug"})
 	public void missingReservableResourceID(){
 		expectedLogs.set(new String[2]);
 		expectedLogs.get()[0] = "FacilityMasterServiceSEI;findFacilityByEnterpriseID";
 		expectedLogs.get()[1] = "PackagingService;getProducts";
 		TestReporter.logScenario("Missing Reservable Resource ID");
 		Book book = book();
-		book.setReservableResourceId(BaseSoapCommands.REMOVE_NODE.toString());
+		book.setReservableResourceIdForError(BaseSoapCommands.REMOVE_NODE.toString());
 		sendRequestAndValidateFaultString("RESERVABLE RESOURCE ID IS REQUIRED! : RESERVABLE RESOURCE ID IS REQUIRED!", DiningErrorCode.NO_RESERVABLE_RESOURCE_ID,book);
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative"})

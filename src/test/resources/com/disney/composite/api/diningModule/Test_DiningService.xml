@@ -5,8 +5,9 @@
 	<test name="ShowDiningService">
 			<groups>
 				<run>
-				<include name="dining" />					
+					<include name="dining" />					
 					<exclude name="dev"  />
+					<exclude name="compensation"></exclude>
 				</run>
 			</groups>
 		<packages>

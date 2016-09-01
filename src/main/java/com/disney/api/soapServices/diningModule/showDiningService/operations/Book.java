@@ -29,10 +29,12 @@ public class Book extends ShowDiningService {
 	private String dateTime;
 	private String startTime;
 	private String startDate;
-	private boolean invokeRimError;
+	private boolean invokeRimError = false;
 	private boolean manuallySetRRID = false;
 	private String numberResources = "1";
 	private HouseHold party;
+	private boolean validateInventory = false;
+	
 	public Book(String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
@@ -450,29 +452,41 @@ public class Book extends ShowDiningService {
 		manuallySetRRID   = true;
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/inventoryDetails/reservableResourceId", value);
 	}
+	/**
+	 * Sets the reservable resource ID in the SOAP request
+	 * @param value reservable resource ID
+	 */
+	public void setReservableResourceIdForError(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/inventoryDetails/reservableResourceId", value);
+		reservableResourceId = null;
+		manuallySetRRID   = true;
+	}
 	public String getRequestReservableResourceId(){ return getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/inventoryDetails/reservableResourceId");	}
-
+	
+	/**
+	 * If it is desired to validate inventory before and after a booking, set this to true
+	 */
+	public void setValidateInventory(boolean validate){ this.validateInventory = validate;}
+	
 	@Override
 	public void sendRequest(){
 		if(notSetFreezeId) 	setFreezeId();
-		boolean failure = false;
-		try{setInventoryCountBefore(getInventory());}
-		catch(Exception e){failure = true;}
+		if(validateInventory)setInventoryCountBefore(getInventory());
 		super.sendRequest();
-		if(!failure) setInventoryCountAfter(getInventory());
+		if(validateInventory) setInventoryCountAfter(getInventory());
 		if(!invokeRimError){
 			if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") || 
 					getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
 					getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
 				setFreezeId();
-				setInventoryCountBefore(getInventory());
+				if(validateInventory)setInventoryCountBefore(getInventory());
 				super.sendRequest();
-				int maxTries = 10;
+				int maxTries = 5;
 				int tries = 0;
 				do{
 					Sleeper.sleep(1000);
 					tries++;
-					setInventoryCountAfter(getInventory());
+					if(validateInventory)setInventoryCountAfter(getInventory());
 				}while(tries <= maxTries && getInventoryCountBefore() == getInventoryCountAfter());
 			}
 		}
@@ -642,7 +656,7 @@ public class Book extends ShowDiningService {
 		freezeId = freeze.getFreezeID();
 		setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
 		
-		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/freezeId", freezeId);
+		if(!invokeRimError)setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/freezeId", freezeId);
 		
 		for(int x = 1 ; x <= Integer.valueOf(numberResources) ; x++){
 			try{
@@ -942,15 +956,6 @@ public class Book extends ShowDiningService {
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails["+nextNodeindex+"]/id", id);
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails["+nextNodeindex+"]/type", type);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	private void setInventoryCountBefore(String before){inventoryBefore = before;}
 	public String getInventoryCountBefore(){return inventoryBefore;}
@@ -963,7 +968,7 @@ public class Book extends ShowDiningService {
 	private String getInventory(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, dateTime)));
-//		rsInventory.print();
+		if(rsInventory.getRowCount() == 0) throw new AutomationException("An error occurred finding inventory for reservable resource id ["+reservableResourceId+"] and time ["+dateTime+"].");
 		return rsInventory.getValue("BK_CN");
 	}
 }
