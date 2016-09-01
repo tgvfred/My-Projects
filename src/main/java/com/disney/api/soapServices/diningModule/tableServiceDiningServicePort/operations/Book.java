@@ -5,6 +5,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.TableServiceDiningServicePort;
 import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.database.Database;
@@ -561,18 +562,21 @@ public class Book extends TableServiceDiningServicePort {
 			freeze.sendRequest();
 //			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 			int timesTried = 0;
-			while(freeze.getSuccess().equals("failure") && timesTried < 5){				
-				rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-				
-				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
-				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
-				setReservableResourceId(rsInventory.getValue("Resource_ID"));
-				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
-				freeze.setStartDate(startdate);	
-				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-				freeze.sendRequest();	
+			while(freeze.getSuccess().equals("failure") && timesTried < 10){
+				String newDaysOut = String.valueOf(Randomness.randomNumberBetween(61, 170));
+				try{
+					rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate().replace("to_Char(sysdate + 60, 'yyyy-mm-dd')", "to_Char(sysdate + "+newDaysOut+", 'yyyy-mm-dd')"))));
+					
+					startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+					startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+					setReservableResourceId(rsInventory.getValue("Resource_ID"));
+					freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+					freeze.setStartDate(startdate);	
+					freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+					freeze.sendRequest();	
+				}catch(Exception e){}
 				if(freeze.getSuccess().equals("failure")) timesTried++;
-			}
+			}			
 
 //			if(freeze.getSuccess().equals("failure")){
 				TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);

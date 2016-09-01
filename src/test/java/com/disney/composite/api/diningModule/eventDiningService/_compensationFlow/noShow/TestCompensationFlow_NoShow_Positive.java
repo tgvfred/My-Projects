@@ -34,6 +34,7 @@ public class TestCompensationFlow_NoShow_Positive extends BaseTest{
 		book.setParty(hh);
 		book.setFacilityId("90001833");
 		book.addDetailsByProductName("Spirit of Aloha-Cat 3-1st Show");
+		book.setValidateInventory(true);
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		reservableResourceId = book.getReservableResourceId();

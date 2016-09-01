@@ -310,12 +310,7 @@ public class Modify extends EventDiningService {
 
 	@Override
 	public void sendRequest(){
-		if(validateInventory)	setInventoryCountBefore(getInventory());
-		super.sendRequest();
-		if(validateInventory){
-			Sleeper.sleep(2000);
-			setInventoryCountAfter(getInventory());
-		}
+		
 		if(validateInventory) setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));
 		if(notSetFreezeId) 	setFreezeId();
 		boolean failure = false;
@@ -332,9 +327,17 @@ public class Modify extends EventDiningService {
 				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
 				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")) && !invokeRimError){
 			if(notSetFreezeId) 	setFreezeId();
-			setInventoryCountBefore(getInventory());
+			if(validateInventory) setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));
+			if(validateInventory)setInventoryCountBefore(getInventory());
+			Sleeper.sleep(5000);
 			super.sendRequest();	
-			setInventoryCountAfter(getInventory());
+
+			if(validateInventory){
+				Sleeper.sleep(2000);
+				if(!failure) setInventoryCountAfter(getInventory());
+				setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
+				
+			}
 		}
 	}
 	public void sendRequest(String exRrid, String exDateTime){
@@ -439,7 +442,7 @@ public class Modify extends EventDiningService {
 		freeze.sendRequest();
 //			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 		int timesTried = 0;
-		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
+		while(freeze.getSuccess().equals("failure") && timesTried < 10){				
 			if(!newDateTime)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
 			else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId).replace("to_Char(sysdate + 60, 'yyyy-mm-dd')", "to_Char(sysdate + 120, 'yyyy-mm-dd')")));
 			rsInventory.print();

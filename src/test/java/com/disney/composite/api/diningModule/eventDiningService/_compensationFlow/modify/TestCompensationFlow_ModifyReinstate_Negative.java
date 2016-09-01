@@ -36,6 +36,7 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 		book.get().setParty(hh);
 		book.get().setFacilityId("90001833");
 		book.get().addDetailsByProductName("Spirit of Aloha-Cat 2-1st Show");
+		book.get().setValidateInventory(true);
 		book.get().sendRequest();
 		TestReporter.logAPI(!book.get().getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.get().getFaultString(), book.get());
 		
@@ -67,6 +68,7 @@ public class TestCompensationFlow_ModifyReinstate_Negative extends BaseTest{
 		modify.setExistingRRID(book.get().getReservableResourceId());
 		modify.setExistingStartDateTime(book.get().getRequestServiceStartDate());
 		modify.setFreezeIdForError(Randomness.randomAlphaNumeric(36));
+		modify.setValidateInventory(true);
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID"), "An error occurred modifying reservation ["+book.get().getTravelPlanSegmentId()+"]:" + modify.getFaultString(), modify);
 		validateApplicationError(modify, DiningErrorCode.INVENTORY_MANAGEMENT_SERVICE_FAILURE);

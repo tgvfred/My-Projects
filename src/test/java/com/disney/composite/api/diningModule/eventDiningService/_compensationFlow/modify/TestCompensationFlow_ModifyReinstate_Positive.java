@@ -33,6 +33,7 @@ public class TestCompensationFlow_ModifyReinstate_Positive extends BaseTest{
 		book.setParty(hh);
 		book.setFacilityId("90001833");
 		book.addDetailsByProductName("Spirit of Aloha-Cat 2-1st Show");
+		book.setValidateInventory(true);
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
 		
@@ -63,6 +64,7 @@ public class TestCompensationFlow_ModifyReinstate_Positive extends BaseTest{
 		modify.setExistingStartDateTime(book.getRequestServiceStartDate());
 		modify.setFacilityId("90001833");
 		modify.addDetailsByProductName("Spirit of Aloha-Cat 2-1st Show");
+		modify.setValidateInventory(true);
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred modifying reservation ["+book.getTravelPlanSegmentId()+"]:" + modify.getFaultString(), modify);
 		TestReporter.assertEquals(modify.getResponseStatus(), "SUCCESS", "Verify that the modification status ["+modify.getResponseStatus()+"] is [SUCCESS].");

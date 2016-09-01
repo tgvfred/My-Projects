@@ -38,6 +38,7 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 		book.get().setFacilityId("90002032");
 		book.get().addDetailsByProductName("Hoop-Dee-Doo-Cat 2-1st Show");
 		book.get().setServiceStartDateTime(serviceStartDate.get());
+		book.get().setValidateInventory(true);
 		book.get().sendRequest();
 		TestReporter.logAPI(!book.get().getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.get().getFaultString(), book.get());
 	}
@@ -63,6 +64,7 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 		modify.setExistingRRID(book.get().getReservableResourceId());
 		modify.setExistingStartDateTime(book.get().getStartTime());
 		modify.setFreezeIdForError(Randomness.randomAlphaNumeric(36));
+		modify.setValidateInventory(true);
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID"), "An error occurred modifying reservation ["+book.get().getTravelPlanSegmentId()+"]:" + modify.getFaultString(), modify);
 		validateApplicationError(modify, DiningErrorCode.INVENTORY_MANAGEMENT_SERVICE_FAILURE);
@@ -91,6 +93,7 @@ public class TestCompensationFlow_Modify_Negative extends BaseTest{
 		modify.setFacilityId("90002032");
 		modify.addDetailsByProductName("Hoop-Dee-Doo-Cat 2-1st Show");
 		modify.setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices[1]/unitPrices/taxes/revenueType", BaseSoapCommands.REMOVE_NODE.toString());
+		modify.setValidateInventory(true);
 		modify.sendRequest();
 		TestReporter.logAPI(!modify.getResponse().contains("Invalid input fields"), "An error occurred modifying reservation ["+book.get().getTravelPlanSegmentId()+"]:" + modify.getFaultString(), modify);
 		validateApplicationError(modify, DiningErrorCode.FOLIO_MANAGEMENT_SERVICE_FAILURE);

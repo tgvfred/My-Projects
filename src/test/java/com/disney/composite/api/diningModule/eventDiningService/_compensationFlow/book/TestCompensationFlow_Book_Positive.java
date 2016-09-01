@@ -31,6 +31,7 @@ public class TestCompensationFlow_Book_Positive extends BaseTest{
 		book.setParty(hh);
 		book.setFacilityId("90001833");
 		book.addDetailsByProductName("Spirit of Aloha-Cat 1-1st Show");
+		book.setValidateInventory(true);
 		book.sendRequest();
 		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
 		TestReporter.assertTrue(Integer.parseInt(book.getInventoryCountBefore()) < Integer.parseInt(book.getInventoryCountAfter()), "Verify the booked inventory count ["+book.getInventoryCountAfter()+"] for reservable resource ID ["+book.getReservableResourceId()+"] increments from the count prior to booking ["+book.getInventoryCountBefore()+"]");

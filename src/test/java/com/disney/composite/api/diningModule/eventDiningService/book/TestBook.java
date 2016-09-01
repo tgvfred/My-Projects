@@ -318,11 +318,11 @@ public class TestBook extends BaseTest{
 	public void testTrueDiningReservation(){
 		Book book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		book.setParty(new HouseHold(1));
-		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(Randomness.randomNumberBetween(1, 5)));
+		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(Randomness.randomNumberBetween(15, 25)));
 		book.setReservableResourceId("BA054CBB-D573-C672-BE95-173042178DBE");
 		book.addDetailsByFacilityNameAndProductName("The Hollywood Brown Derby", "Brown Derby Lunch F! 1st Show");
 		book.addSpecialEventByProductName("Fantasmic! Viewing 1st Show");
-		sendRequestAndvalidateLogs(book);
+		sendRequestAndvalidateLogs(book);  //Debug: could not freeze
 	}
 	
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})

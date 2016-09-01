@@ -549,6 +549,11 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDate(originalRes.getServiceStartDate());
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
+		
+		
+		modify.setReservableResourceId(originalRes.getReservableResourceId());
+		
+		
 		modify.sendRequest(originalRes.getReservableResourceId(), originalRes.getServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
@@ -607,6 +612,7 @@ public class TestModify extends BaseTest{
 		book.setAllergies("Egg");
 		book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(15, 45)));	
 		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during a prereq booking: " + book.getFaultString(), book);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		modify.setTravelPlanId(book.getTravelPlanId());
@@ -649,6 +655,11 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDate(book.getRequestServiceStartDate());
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		modify.setProductId(book.getRequestProductId());
+		
+		
+		modify.setReservableResourceId(book.getReservableResourceId());
+		
+		
 		modify.sendRequest(book.getReservableResourceId(), book.getRequestServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);

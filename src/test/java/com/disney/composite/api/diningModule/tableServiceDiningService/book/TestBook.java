@@ -67,7 +67,7 @@ public class TestBook extends BaseTest{
 		hh = new HouseHold(1);
 		hh.primaryGuest().setAge("10");
 		book.setParty(hh);
-
+		book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(30, 60)));
 		bookAndValidate(book);
 	}
 	@Test(groups = {"api", "regression", "dining", "tableServiceDiningService" })
