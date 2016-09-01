@@ -256,7 +256,7 @@ public class Book extends EventDiningService {
 		freeze.sendRequest();
 //			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 		int timesTried = 0;
-		while(freeze.getSuccess().equals("failure") && timesTried < 5){	
+		while(freeze.getSuccess().equals("failure") && timesTried < 10){	
 			String newDaysOut = String.valueOf(Randomness.randomNumberBetween(61, 170));
 			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate()).replace("to_Char(sysdate + 60, 'yyyy-mm-dd')", "to_Char(sysdate + "+newDaysOut+", 'yyyy-mm-dd')")));
 			try{

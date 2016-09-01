@@ -605,6 +605,7 @@ public class TestModify extends BaseTest{
 		Book book = new Book(environment, "NoComponentsNoAddOns");
 		book.setParty(hh);		
 		book.setAllergies("Egg");
+		book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(15, 45)));	
 		book.sendRequest();
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
