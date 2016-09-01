@@ -363,7 +363,7 @@ public class Book extends EventDiningService {
 		int numberOfProfileDetails= 1;
 		try{
 			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id");
 			numberOfProfileDetails+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:profileDetails");
@@ -377,7 +377,7 @@ public class Book extends EventDiningService {
 		int numberOfInternalComments= 1;
 		try{
 			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
 			numberOfInternalComments+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest", "fx:AddNode;Node:internalComments");
@@ -393,7 +393,7 @@ public class Book extends EventDiningService {
 		int numberOfAllergies= 1;
 		try{
 			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies["+numberOfAllergies+"]");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/allergies["+numberOfAllergies+"]");
 			numberOfAllergies+=1;;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:allergies");

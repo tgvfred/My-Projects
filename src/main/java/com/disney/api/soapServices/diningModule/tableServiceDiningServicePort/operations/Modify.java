@@ -55,7 +55,7 @@ public class Modify extends TableServiceDiningServicePort {
 		int numberOfProfileDetails= 1;
 		try{
 			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/profileDetails");
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/id");
+		//	getRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/id");
 			numberOfProfileDetails+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/tableService", "fx:AddNode;Node:profileDetails");
@@ -69,7 +69,7 @@ public class Modify extends TableServiceDiningServicePort {
 		int numberOfInternalComments= 1;
 		try{
 			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyTableServiceRequest/internalComments");
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentText");
+		//	getRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentText");
 			numberOfInternalComments+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyTableServiceRequest", "fx:AddNode;Node:internalComments");

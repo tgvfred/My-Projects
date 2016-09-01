@@ -68,7 +68,7 @@ public class Book extends ShowDiningService {
 	}
 	
 	public void setComponentUnitPriceDepositDueDateTime(String value, String index){
-		System.out.println(getRequest());
+	//	System.out.println(getRequest());
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/componentPrices["+index+"]/unitPrices/deposit/dueDate", value);
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/componentPrices["+index+"]/unitPrices/date", value);
 	}
@@ -278,7 +278,7 @@ public class Book extends ShowDiningService {
 		int numberOfProfileDetails= 1;
 		try{
 			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails["+numberOfProfileDetails+"]/id");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/profileDetails["+numberOfProfileDetails+"]/id");
 			numberOfProfileDetails+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage", "fx:AddNode;Node:profileDetails");
@@ -292,7 +292,7 @@ public class Book extends ShowDiningService {
 		int numberOfInternalComments= 1;
 		try{
 			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookShowDiningRequest/internalComments");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
 			numberOfInternalComments+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest", "fx:AddNode;Node:internalComments");
@@ -308,7 +308,7 @@ public class Book extends ShowDiningService {
 		int numberOfAllergies= 1;
 		try{
 			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/allergies");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/allergies["+numberOfAllergies+"]");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage/allergies["+numberOfAllergies+"]");
 			numberOfAllergies+=1;;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookShowDiningRequest/dinnerShowPackage", "fx:AddNode;Node:allergies");

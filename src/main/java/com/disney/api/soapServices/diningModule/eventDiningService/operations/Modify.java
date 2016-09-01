@@ -151,7 +151,7 @@ public class Modify extends EventDiningService {
 		int numberOfProfileDetails= 1;
 		try{
 			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails");
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id");
+		//	getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id");
 			numberOfProfileDetails+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:profileDetails");
@@ -165,7 +165,7 @@ public class Modify extends EventDiningService {
 		int numberOfInternalComments= 1;
 		try{
 			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments");
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
+		//	getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
 			numberOfInternalComments+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest", "fx:AddNode;Node:internalComments");
@@ -181,7 +181,7 @@ public class Modify extends EventDiningService {
 		int numberOfAllergies= 1;
 		try{
 			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies");
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+numberOfAllergies+"]");
+		//	getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+numberOfAllergies+"]");
 			numberOfAllergies+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:allergies");
@@ -370,7 +370,7 @@ public class Modify extends EventDiningService {
 	private String getInventory(String existingRRID, String existingStartDateTime){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(existingRRID, existingStartDateTime.replace("T", " "))));
-		rsInventory.print();
+	//	rsInventory.print();
 		return rsInventory.getValue("BK_CN");
 	}
 	public void setFreezeId(){
@@ -415,7 +415,7 @@ public class Modify extends EventDiningService {
 			if(reservableResourceId == null || newDateTime == true){
 				if(reservableResourceId == null)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
 				else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId)));
-				rsInventory.print();
+			//	rsInventory.print();
 				startDate = rsInventory.getValue("START_DATE").contains(" ") 
 								   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
 							       : rsInventory.getValue("START_DATE");
@@ -445,7 +445,7 @@ public class Modify extends EventDiningService {
 		while(freeze.getSuccess().equals("failure") && timesTried < 10){				
 			if(!newDateTime)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
 			else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId).replace("to_Char(sysdate + 60, 'yyyy-mm-dd')", "to_Char(sysdate + 120, 'yyyy-mm-dd')")));
-			rsInventory.print();
+		//	rsInventory.print();
 			try{
 				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
 				startDate = startdate;

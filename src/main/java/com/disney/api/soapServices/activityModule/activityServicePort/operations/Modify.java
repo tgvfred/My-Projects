@@ -348,13 +348,13 @@ public class Modify extends ActivityService {
 	private String getInventory(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, startTime.replace("T", " "))));
-		rsInventory.print();
+		if(rsInventory.getRowCount() == 0) throw new AutomationException("An error occurred finding inventory for reservable resource id ["+reservableResourceId+"] and time ["+dateTime+"].");
 		return rsInventory.getValue("BK_CN");
 	}
 	private String getInventory(String existingRRID, String existingStartDateTime){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(existingRRID, existingStartDateTime.replace("T", " "))));
-		rsInventory.print();
+		if(rsInventory.getRowCount() == 0) throw new AutomationException("An error occurred finding inventory for reservable resource id ["+existingRRID+"] and time ["+existingStartDateTime+"].");
 		return rsInventory.getValue("BK_CN");
 	}
 	
@@ -511,7 +511,7 @@ public class Modify extends ActivityService {
 			if(reservableResourceId == null || newDateTime == true){
 				if(reservableResourceId == null)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
 				else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId)));
-				rsInventory.print();
+				//rsInventory.print();
 				startDate = rsInventory.getValue("START_DATE").contains(" ") 
 								   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
 							       : rsInventory.getValue("START_DATE");
@@ -543,7 +543,7 @@ public class Modify extends ActivityService {
 		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
 			if(!newDateTime)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
 			else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId)));
-			rsInventory.print();
+			//rsInventory.print();
 			startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
 			startDate = startdate;
 //>>>>>>> bcbd28f51f4f4d70956471a29f528c4e2d10d279
@@ -595,7 +595,7 @@ public class Modify extends ActivityService {
 		int numberOfProfileDetails= 1;
 		try{
 			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/profileDetails");
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]/id");
+			//getRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]/id");
 			numberOfProfileDetails+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity", "fx:AddNode;Node:profileDetails");
@@ -624,7 +624,7 @@ public class Modify extends ActivityService {
 		int numberOfAllergies= 1;
 		try{
 			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/allergies");
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/allergies["+numberOfAllergies+"]");
+			//getRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity/allergies["+numberOfAllergies+"]");
 			numberOfAllergies+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyActivityComponentRequest/activity", "fx:AddNode;Node:allergies");

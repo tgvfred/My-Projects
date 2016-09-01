@@ -213,7 +213,7 @@ public class Modify extends ShowDiningService {
 		int numberOfProfileDetails= 1;
 		try{
 			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/profileDetails");
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/profileDetails["+numberOfProfileDetails+"]/id");
+			//getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/profileDetails["+numberOfProfileDetails+"]/id");
 			numberOfProfileDetails+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage", "fx:AddNode;Node:profileDetails");
@@ -227,7 +227,7 @@ public class Modify extends ShowDiningService {
 		int numberOfInternalComments= 1;
 		try{
 			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyShowDiningRequest/internalComments");
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
+		//	getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
 			numberOfInternalComments+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest", "fx:AddNode;Node:internalComments");
@@ -242,7 +242,7 @@ public class Modify extends ShowDiningService {
 				int numberOfAllergies= 1;
 				try{
 					numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/allergies");
-					getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/allergies["+numberOfAllergies+"]");
+				//	getRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage/allergies["+numberOfAllergies+"]");
 					numberOfAllergies+=1;
 				}catch(Exception e){}
 				setRequestNodeValueByXPath("/Envelope/Body/modify/modifyShowDiningRequest/dinnerShowPackage", "fx:AddNode;Node:allergies");
@@ -338,7 +338,7 @@ public class Modify extends ShowDiningService {
 			if(reservableResourceId == null || newDateTime == true){
 				if(reservableResourceId == null)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
 				else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId)));
-				rsInventory.print();
+		//		rsInventory.print();
 				startDate = rsInventory.getValue("START_DATE").contains(" ") 
 								   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
 							       : rsInventory.getValue("START_DATE");
@@ -368,7 +368,7 @@ public class Modify extends ShowDiningService {
 		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
 			if(!newDateTime)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
 			else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId)));
-			rsInventory.print();
+		//	rsInventory.print();
 			startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
 			startDate = startdate;
 //>>>>>>> bcbd28f51f4f4d70956471a29f528c4e2d10d279
@@ -776,13 +776,13 @@ public class Modify extends ShowDiningService {
 	private String getInventory(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, startTime.replace("T", " "))));
-		rsInventory.print();
+	//	rsInventory.print();
 		return rsInventory.getValue("BK_CN");
 	}
 	private String getInventory(String existingRRID, String existingStartDateTime){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(existingRRID, existingStartDateTime.replace("T", " "))));
-		rsInventory.print();
+	//	rsInventory.print();
 		return rsInventory.getValue("BK_CN");
 	}
 }

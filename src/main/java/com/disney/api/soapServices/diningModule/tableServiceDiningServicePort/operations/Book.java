@@ -282,7 +282,7 @@ public class Book extends TableServiceDiningServicePort {
 		int numberOfProfileDetails= 1;
 		try{
 			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/id");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/profileDetails["+numberOfProfileDetails+"]/id");
 			numberOfProfileDetails+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:profileDetails");
@@ -296,7 +296,7 @@ public class Book extends TableServiceDiningServicePort {
 		int numberOfInternalComments= 1;
 		try{
 			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentText");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/internalComments["+numberOfInternalComments+"]/commentText");
 			numberOfInternalComments+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest", "fx:AddNode;Node:internalComments");
@@ -312,7 +312,7 @@ public class Book extends TableServiceDiningServicePort {
 		int numberOfAllergies= 1;
 		try{
 			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+numberOfAllergies+"]");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService/allergies["+numberOfAllergies+"]");
 			numberOfAllergies+=1;;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookTableServiceRequest/tableService", "fx:AddNode;Node:allergies");

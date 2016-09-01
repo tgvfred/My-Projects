@@ -447,7 +447,7 @@ public class Book extends ActivityService{
 	private String getInventory(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, dateTime)));
-//		rsInventory.print();
+		if(rsInventory.getRowCount() == 0) throw new AutomationException("An error occurred finding inventory for reservable resource id ["+reservableResourceId+"] and time ["+dateTime+"].");
 		return rsInventory.getValue("BK_CN");
 	}
 	
@@ -590,7 +590,7 @@ public class Book extends ActivityService{
 		int numberOfProfileDetails= 1;
 		try{
 			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/profileDetails");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]/id");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/profileDetails["+numberOfProfileDetails+"]/id");
 			numberOfProfileDetails+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity", "fx:AddNode;Node:profileDetails");
@@ -604,7 +604,7 @@ public class Book extends ActivityService{
 		int numberOfInternalComments= 1;
 		try{
 			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookActivityComponentRequest/internalComments");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/internalComments["+numberOfInternalComments+"]/commentText");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/internalComments["+numberOfInternalComments+"]/commentText");
 			numberOfInternalComments+=1;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest", "fx:AddNode;Node:internalComments");
@@ -620,7 +620,7 @@ public class Book extends ActivityService{
 		int numberOfAllergies= 1;
 		try{
 			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/allergies");
-			getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/allergies["+numberOfAllergies+"]");
+		//	getRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity/allergies["+numberOfAllergies+"]");
 			numberOfAllergies+=1;;
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/book/bookActivityComponentRequest/activity", "fx:AddNode;Node:allergies");
@@ -727,7 +727,7 @@ public class Book extends ActivityService{
 		else if(facilityId != null ) sql=Pricing.getProductInfoByFacilityIdAndProdName(facilityId, productName);
 		if(sql != ""){	
 			Recordset rsPricing = new Recordset(dreamsDb.getResultSet(sql));
-			rsPricing.print();
+			//rsPricing.print();
 			if(rsPricing.getRowCount() == 0) throw new AutomationException("Failed to retreive data for Facility name ["+facilityName+"] and Product Name ["+productName+"].\n SQL: "  +sql);
 			setFacilityName(rsPricing.getValue("FAC_NM"));
 			setFacilityId(rsPricing.getValue("FAC_ID"));
