@@ -37,6 +37,7 @@ public class Book extends EventDiningService {
 	private boolean rrIdSetInAddDetails = false;
 	private boolean manuallySetRRID = false;
 	private String numberResources = "1";
+	private boolean validateInventory = false;
 	
 	private HouseHold party;
 	public Book(String environment, String scenario) {
@@ -163,14 +164,20 @@ public class Book extends EventDiningService {
 	}
 	public String getRequestReservableResourceId(){ return getRequestNodeValueByXPath("/Envelope/Body/book/bookEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId");	}
 	
+	/**
+	 * If it is desired to validate inventory before and after a booking, set this to true
+	 */
+	public void setValidateInventory(boolean validate){ this.validateInventory = validate;}
+	
 	@Override
 	public void sendRequest(){
 		if(notSetFreezeId) 	setFreezeId();
-		try{setInventoryCountBefore(getInventory());}
-		catch(Exception e){throw new AutomationException("An error occurred finding inventory for reservable resource id ["+reservableResourceId+"] and time ["+dateTime+"].");}
+		if(validateInventory)	setInventoryCountBefore(getInventory());
 		super.sendRequest();
-		Sleeper.sleep(2000);
-		setInventoryCountAfter(getInventory());
+		if(validateInventory){
+			Sleeper.sleep(2000);
+			setInventoryCountAfter(getInventory());
+		}
 		if(!invokeRimError){
 			if(getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
 					getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID") || 
@@ -199,7 +206,7 @@ public class Book extends EventDiningService {
 	private String getInventory(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, dateTime)));
-//		rsInventory.print();
+		if(rsInventory.getRowCount() == 0) throw new AutomationException("An error occurred finding inventory for reservable resource id ["+reservableResourceId+"] and time ["+dateTime+"].");
 		return rsInventory.getValue("BK_CN");
 	}
 	

@@ -38,6 +38,8 @@ public class Modify extends EventDiningService {
 	private String existingRRID;
 	private String existingStartDateTime;
 	private boolean rrIdSetInAddDetails = false;
+	private boolean validateInventory = false;
+	
 	public Modify(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("modify")));
@@ -48,6 +50,7 @@ public class Modify extends EventDiningService {
 		removeWhiteSpace();
 	}
 	
+	public void setValidateInventory(boolean validate){ this.validateInventory = validate;}
 	public void setAddOnComponentUnitPriceDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/addOnComponents/componentPrices/unitPrices/date", value);}	
 	public void setAddOnComponentServiceStartDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/addOnComponents/serviceStartDate", value);}	
 	public void setComponentUnitPriceDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices/unitPrices/date", value);}	
@@ -307,15 +310,23 @@ public class Modify extends EventDiningService {
 
 	@Override
 	public void sendRequest(){
-		setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));
+		if(validateInventory)	setInventoryCountBefore(getInventory());
+		super.sendRequest();
+		if(validateInventory){
+			Sleeper.sleep(2000);
+			setInventoryCountAfter(getInventory());
+		}
+		if(validateInventory) setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));
 		if(notSetFreezeId) 	setFreezeId();
 		boolean failure = false;
-		try{setInventoryCountBefore(getInventory());}
-		catch(Exception e){throw new AutomationException("An error occurred finding inventory for reservable resource id ["+reservableResourceId+"] and time ["+dateTime+"].");}
+		if(validateInventory) setInventoryCountBefore(getInventory());
 		super.sendRequest();
-		Sleeper.sleep(2000);
-		if(!failure) setInventoryCountAfter(getInventory());
-		setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
+		if(validateInventory){
+			Sleeper.sleep(2000);
+			if(!failure) setInventoryCountAfter(getInventory());
+			setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
+			
+		}
 		
 		if((getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
 				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
@@ -350,7 +361,7 @@ public class Modify extends EventDiningService {
 	private String getInventory(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, startTime.replace("T", " "))));
-		rsInventory.print();
+		if(rsInventory.getRowCount() == 0) throw new AutomationException("An error occurred finding inventory for reservable resource id ["+reservableResourceId+"] and time ["+dateTime+"].");
 		return rsInventory.getValue("BK_CN");
 	}
 	private String getInventory(String existingRRID, String existingStartDateTime){
