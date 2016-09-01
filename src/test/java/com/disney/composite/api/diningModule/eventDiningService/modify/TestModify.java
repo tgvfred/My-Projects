@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.SoapException;
-import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify;
@@ -33,6 +32,7 @@ public class TestModify extends BaseTest{
 		this.environment = environment;
 		hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
+		res.setServiceStartDate(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(30, 90)));
 		try{
 			res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		}catch (SoapException se){
@@ -58,12 +58,12 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(res.getServicePeriodId());
 		modify.setProductId(res.getProductId());
 		modify.setReservableResourceId(res.getReservableResourceId());
-		modify.sendRequest();
+		modify.sendRequest(res.getReservableResourceId(), res.getServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
 			modify.sendRequest();
 		}
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -79,7 +79,7 @@ public class TestModify extends BaseTest{
 	public void testModify_DLR(){
 		Book book = new Book(environment, "DLRTableServiceOneChild");
 		book.setParty(hh);
-		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(1));
+		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(Randomness.randomNumberBetween(15, 45)));
 		book.sendRequest();
 		Modify modify = new Modify(this.environment, "DLRRemoveAddOnOneChild");
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
@@ -88,12 +88,12 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDate(book.getRequestServiceStartDate());
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		modify.setProductId(book.getRequestProductId());
-		modify.sendRequest();
+		modify.sendRequest(book.getReservableResourceId(), book.getRequestServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
 			modify.sendRequest();
 		}
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -109,6 +109,8 @@ public class TestModify extends BaseTest{
 	public void testReinstate(){
 		ScheduledEventReservation res2 = new EventDiningReservation(this.environment, new HouseHold(1));
 		res2.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+		String rrid = res2.getReservableResourceId();
+		String dateTime = res2.getServiceStartDate();
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(res2.getConfirmationNumber());
 		modify.setTravelPlanId(res2.getTravelPlanId());
@@ -118,11 +120,12 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(res2.getServicePeriodId());
 		modify.setProductId(res2.getProductId());
 		res2.cancel();
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		modify.sendRequest(rrid, dateTime);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		res2.retrieve();
 		TestReporter.logAPI(!res2.getStatus().equals("Booked"), "Reservation status was not [Booked] instead [" + res2.getStatus() + "]", modify);
-	//	res2.cancel();
+		try{res2.cancel();}
+		catch(Exception e){}
 	}
 
 
@@ -146,9 +149,8 @@ public class TestModify extends BaseTest{
 		TestReporter.logAPI(!cancel.getResponseStatusCode().contains("200"), cancel.getFaultString() ,cancel);
 		TestReporter.assertTrue(Regex.match("[0-9]+", cancel.getCancellationConfirmationNumber()), "The cancellation number ["+cancel.getCancellationConfirmationNumber()+"] was not numeric as expected.");
 
-		
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		modify.sendRequest(book.getReservableResourceId(), book.getRequestServiceStartDate());
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 	}
 	
@@ -157,7 +159,7 @@ public class TestModify extends BaseTest{
 		Book book = new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		HouseHold party =new HouseHold(1);
 		book.setParty(party);
-		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(Randomness.randomNumberBetween(1, 45)));
+		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(Randomness.randomNumberBetween(15, 45)));
 		book.setReservableResourceId("BA054CBB-D573-C672-BE95-173042178DBE");
 		book.addDetailsByFacilityNameAndProductName("The Hollywood Brown Derby", "Brown Derby Lunch F! 1st Show");
 		book.addSpecialEventByProductName("Fantasmic! Viewing 1st Show");
@@ -177,8 +179,8 @@ public class TestModify extends BaseTest{
 		modify.setProductId(book.getRequestProductId());
 		modify.setEnterpriseProductId(book.getRequestEnterpriseProductId());
 		modify.addSpecialEventByProductName("Fantasmic! Viewing 1st Show", "4cafc352-62d4-4e88-98f3-16474db25aa7");;
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		modify.sendRequest(book.getReservableResourceId(), book.getRequestServiceStartDate());
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 	}
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyWithComments(){
@@ -196,8 +198,8 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(res2.getServicePeriodId());
 		modify.setProductId(res2.getProductId());
 		modify.addInternalComments("Internal Comments", "Internal");
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		modify.sendRequest(res2.getReservableResourceId(), res2.getServiceStartDate());
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -227,8 +229,8 @@ public class TestModify extends BaseTest{
 		modify.setProductId(res2.getProductId());
 		modify.addInternalComments("Internal Comments", "Internal");
 		modify.addInternalComments("More Internal Comments", "External");
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		modify.sendRequest(res2.getReservableResourceId(), res2.getServiceStartDate());
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -258,8 +260,8 @@ public class TestModify extends BaseTest{
 		modify.setServicePeriodId(res2.getServicePeriodId());
 		modify.setProductId(res2.getProductId());
 		modify.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.BOOSTER_SEAT_ID, "GuestRequest");
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		modify.sendRequest(res2.getReservableResourceId(), res2.getServiceStartDate());
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -290,8 +292,8 @@ public class TestModify extends BaseTest{
 		modify.setProductId(res2.getProductId());
 		modify.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.BOOSTER_SEAT_ID, "GuestRequest");
 		modify.setProfileDetailIdAndType(ServiceConstants.SeGuestRequests.REQUEST_TWO_HIGH_CHAIRS_ID, "SecondGuestRequest");
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		modify.sendRequest(res2.getReservableResourceId(), res2.getServiceStartDate());
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -322,8 +324,8 @@ public class TestModify extends BaseTest{
 		modify.setProductId(res2.getProductId());
 		modify.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.HEARING_LOSS_ID, "SeSpecialNeed");
 		modify.setReservableResourceId(res2.getReservableResourceId());
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		modify.sendRequest(res2.getReservableResourceId(), res2.getServiceStartDate());
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -356,8 +358,8 @@ public class TestModify extends BaseTest{
 		modify.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.LIMITED_MOBILITY_ID, "SeSpecialNeed");
 		modify.setProfileDetailIdAndType(ServiceConstants.SeSpecialNeeds.OXYGEN_TANK_USE_ID, "SeSpecialNeed");
 		modify.setReservableResourceId(res2.getReservableResourceId());
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		modify.sendRequest(res2.getReservableResourceId(), res2.getServiceStartDate());
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -387,8 +389,8 @@ public class TestModify extends BaseTest{
 		modify.setProductId(res2.getProductId());
 		modify.setTaxExemptDetails("1234689", "Military");
 		modify.setReservableResourceId(res2.getReservableResourceId());
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);		
+		modify.sendRequest(res2.getReservableResourceId(), res2.getServiceStartDate());
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);		
 
 		LogItems logItems = new LogItems();
 		logItems.addItem("ChargeGroupIF", "modifyGuestContainerChargeGroup", false);
@@ -414,8 +416,8 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDate(originalRes.getServiceStartDate());
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
-		modify.sendRequest();
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		modify.sendRequest(originalRes.getReservableResourceId(), originalRes.getServiceStartDate());
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -443,12 +445,12 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDate(originalRes.getServiceStartDate());
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
-		modify.sendRequest();
+		modify.sendRequest(originalRes.getReservableResourceId(), originalRes.getServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
 			modify.sendRequest();
 		}
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -467,7 +469,8 @@ public class TestModify extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo2Adults2Child(){
 		HouseHold newParty = new HouseHold("2 Adults 2 Child");
-		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
+		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);
+		originalRes.setServiceStartDate(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(15, 45)));
 		originalRes.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(originalRes.getConfirmationNumber());
@@ -477,12 +480,12 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDate(originalRes.getServiceStartDate());
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
-		modify.sendRequest();
+		modify.sendRequest(originalRes.getReservableResourceId(), originalRes.getServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
 			modify.sendRequest();
 		}
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -501,7 +504,8 @@ public class TestModify extends BaseTest{
 	@Test(groups = {"api", "regression", "dining", "eventDiningService"})
 	public void testModifyTo4Adults2Child2Infant(){
 		HouseHold newParty = new HouseHold("4 Adults 2 Child 2 Infant");
-		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);		
+		ScheduledEventReservation originalRes = new EventDiningReservation(this.environment, hh);
+		originalRes.setServiceStartDate(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(15, 45)));		
 		originalRes.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(originalRes.getConfirmationNumber());
@@ -511,12 +515,12 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDate(originalRes.getServiceStartDate());
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
-		modify.sendRequest();
+		modify.sendRequest(originalRes.getReservableResourceId(), originalRes.getServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
 			modify.sendRequest();
 		}
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -545,12 +549,12 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDate(originalRes.getServiceStartDate());
 		modify.setServicePeriodId(originalRes.getServicePeriodId());
 		modify.setProductId(originalRes.getProductId());
-		modify.sendRequest();
+		modify.sendRequest(originalRes.getReservableResourceId(), originalRes.getServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
 			modify.sendRequest();
 		}
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -579,12 +583,12 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDateTime(book.getRequestServiceStartDate());
 		modify.addDetailsByFacilityNameAndProductName("Biergarten Restaurant", "Biergarten Dinner");
 		modify.setAllergies("Egg");
-		modify.sendRequest();
+		modify.sendRequest(book.getReservableResourceId(), book.getRequestServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
 			modify.sendRequest();
 		}
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -612,12 +616,12 @@ public class TestModify extends BaseTest{
 		modify.setProductId(book.getRequestProductId());
 		modify.setAllergies("Egg");
 		modify.setAllergies("Corn");
-		modify.sendRequest();
+		modify.sendRequest(book.getReservableResourceId(), book.getRequestServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
 			modify.sendRequest();
 		}
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();
@@ -635,6 +639,7 @@ public class TestModify extends BaseTest{
 		book.setParty(hh);		
 		book.setAllergies("Egg");
 		book.sendRequest();
+		TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during the prereq booking: " + book.getFaultString(), book);
 		Modify modify = new Modify(this.environment, "NoComponentsNoAddOns");
 		modify.setReservationNumber(book.getTravelPlanSegmentId());
 		modify.setTravelPlanId(book.getTravelPlanId());
@@ -643,12 +648,12 @@ public class TestModify extends BaseTest{
 		modify.setServiceStartDate(book.getRequestServiceStartDate());
 		modify.setServicePeriodId(book.getRequestServicePeriodId());
 		modify.setProductId(book.getRequestProductId());
-		modify.sendRequest();
+		modify.sendRequest(book.getReservableResourceId(), book.getRequestServiceStartDate());
 		if(modify.getResponse().toLowerCase().contains("unique constraint")){
 			Sleeper.sleep(Randomness.randomNumberBetween(1, 5) * 1000);
 			modify.sendRequest();
 		}
-		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected", modify);
+		TestReporter.logAPI(!modify.getResponseStatus().equals("SUCCESS"),"The Response status was not SUCCESS as expected: " + modify.getFaultString(), modify);
 		
 
 		LogItems logItems = new LogItems();

@@ -9,6 +9,7 @@ import com.disney.api.soapServices.diningModule.eventDiningService.EventDiningSe
 import com.disney.api.soapServices.pricingModule.pricingWebService.operations.PriceComponents;
 import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
 import com.disney.test.utils.Sleeper;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.FacilityInfo;
@@ -172,7 +173,8 @@ public class Book extends EventDiningService {
 		setInventoryCountAfter(getInventory());
 		if(!invokeRimError){
 			if(getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
-					getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
+					getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID") || 
+					getResponse().contains("CampusId is Not found")){
 				setFreezeId();
 				setInventoryCountBefore(getInventory());
 				super.sendRequest();
@@ -255,7 +257,8 @@ public class Book extends EventDiningService {
 //			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 		int timesTried = 0;
 		while(freeze.getSuccess().equals("failure") && timesTried < 5){	
-			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate()).replace("to_Char(sysdate + 60, 'yyyy-mm-dd')", "to_Char(sysdate + 120, 'yyyy-mm-dd')")));
+			String newDaysOut = String.valueOf(Randomness.randomNumberBetween(61, 170));
+			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate()).replace("to_Char(sysdate + 60, 'yyyy-mm-dd')", "to_Char(sysdate + "+newDaysOut+", 'yyyy-mm-dd')")));
 			try{
 				startDate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
 	//>>>>>>> bcbd28f51f4f4d70956471a29f528c4e2d10d279

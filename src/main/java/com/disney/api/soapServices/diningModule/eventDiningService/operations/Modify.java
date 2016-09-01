@@ -203,6 +203,7 @@ public class Modify extends EventDiningService {
 	public void setReservableResourceId(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);
 		reservableResourceId = value;
+		rrIdSetInAddDetails = true;
 	}
 	
 	public void setReservableResourceId(String value, boolean newDateTime){
@@ -324,6 +325,11 @@ public class Modify extends EventDiningService {
 			super.sendRequest();	
 			setInventoryCountAfter(getInventory());
 		}
+	}
+	public void sendRequest(String exRrid, String exDateTime){
+		existingRRID = exRrid;
+		existingStartDateTime = exDateTime;
+		sendRequest();
 	}
 	public void setExistingRRID(String rrid){existingRRID = rrid;}
 	public void setExistingStartDateTime(String dateTime){existingStartDateTime = dateTime;}

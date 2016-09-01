@@ -130,6 +130,7 @@ public class TestBook extends BaseTest{
 		Book book = new Book(environment, "DLRTableServiceOneChild");
 		hh = new HouseHold(1);
 		hh.primaryGuest().setAge("10");
+		book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(1, 60)));
 		book.setParty(hh);
 
 		sendRequestAndvalidateLogs(book);
