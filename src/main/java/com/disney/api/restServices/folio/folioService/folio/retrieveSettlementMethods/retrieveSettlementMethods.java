@@ -22,6 +22,7 @@ public class retrieveSettlementMethods {
 		return restService.sendPutRequest(resource, HeaderType.REST, json);		
 	}
 	
+	//To submit a REST call without the authorization token information
 	public RestResponse sendPutRequestWithMissingAuthToken(RetrieveSettlementMethodsRequest request){
 		String json = restService.getJsonFromObject(request);
 		return restService.sendPutRequest(resource, HeaderType.REST_NOAuth, json);

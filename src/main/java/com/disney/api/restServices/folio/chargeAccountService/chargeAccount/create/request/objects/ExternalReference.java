@@ -1,8 +1,8 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class ExternalReference {
-	private String referenceName = "SWID";
-	private String referenceValue = "{9AA2F8BE-530B-4BAB-93ED-7758B06AC4A3}";
+	private String referenceName;
+	private String referenceValue="{" + java.util.UUID.randomUUID() +"}";
 
 	/**
 	* 

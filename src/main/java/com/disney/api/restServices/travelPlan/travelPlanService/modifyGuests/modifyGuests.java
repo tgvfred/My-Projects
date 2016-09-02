@@ -2,6 +2,7 @@ package com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests;
 
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.core.Headers.HeaderType;
+import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.request.RetrieveSettlementMethodsRequest;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests.request.ModifyGuestsRequest;
 
@@ -17,5 +18,11 @@ public class modifyGuests {
 	public RestResponse sendPutRequest(ModifyGuestsRequest request){
 		String json = restService.getJsonFromObject(request);
 		return restService.sendPutRequest(resource, HeaderType.REST, json);	
+	}
+	
+	//To submit a REST call without the authorization token information
+	public RestResponse sendPutRequestWithMissingAuthToken(ModifyGuestsRequest request){
+		String json = restService.getJsonFromObject(request);
+		return restService.sendPutRequest(resource, HeaderType.REST_NOAuth, json);
 	}
 }

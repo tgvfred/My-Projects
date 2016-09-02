@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuestInfoTO {
-	private String firstName = "Marisol";
-	private String lastName = "Centeno";
-	private String txnGuestId = "0";
+	private String firstName;
+	private String lastName;
+	private String txnGuestId;
 	private List<ExternalReference> externalReference = new ArrayList<ExternalReference>();
 
 	public GuestInfoTO(){

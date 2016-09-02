@@ -1,28 +1,29 @@
-package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
+package com.disney.api.restServices.folio.PaymentV2.folioPaymentV2.establishSettlementMethod.request.objects;
 
-public class Address {
-	private String addressLineOne;
+public class CardHolderInfo {
+	private String addressLine1;
 	private String city;
 	private String country;
+	private String name;
 	private String postalCode;
 	private String state;
 
 	/**
 	* 
 	* @return
-	* The addressLineOne
+	* The addressLine1
 	*/
-	public String getAddressLineOne() {
-	return addressLineOne;
+	public String getAddressLine1() {
+	return addressLine1;
 	 }
 
 	/**
 	* 
-	* @param addressLineOne
-	* The addressLineOne
+	* @param addressLine1
+	* The addressLine1
 	*/
-	public void setAddressLineOne(String addressLineOne) {
-	this.addressLineOne = addressLineOne;
+	public void setAddressLine1(String addressLine1) {
+	this.addressLine1 = addressLine1;
 	 }
 
 	/**
@@ -39,7 +40,7 @@ public class Address {
 	* @param city
 	* The city
 	*/
-	public void setCity(String city) {		
+	public void setCity(String city) {
 	this.city = city;
 	 }
 
@@ -59,6 +60,24 @@ public class Address {
 	*/
 	public void setCountry(String country) {
 	this.country = country;
+	 }
+
+	/**
+	* 
+	* @return
+	* The name
+	*/
+	public String getName() {
+	return name;
+	 }
+
+	/**
+	* 
+	* @param name
+	* The name
+	*/
+	public void setName(String name) {
+	this.name = name;
 	 }
 
 	/**
@@ -96,5 +115,4 @@ public class Address {
 	public void setState(String state) {
 	this.state = state;
 	 }
-
 }

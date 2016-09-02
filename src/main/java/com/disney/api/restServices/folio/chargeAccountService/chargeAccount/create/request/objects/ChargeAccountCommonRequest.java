@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChargeAccountCommonRequest {
-	private String description = "From Booking";
+	private String description;
 	private Period period;
-	private String active ="true";
+	private String active;
 	private List<ChargeAccountPaymentMethodDetail> chargeAccountPaymentMethodDetail = new ArrayList<ChargeAccountPaymentMethodDetail>();
 	private List<GuestInfoTO> guestInfoTO = new ArrayList<GuestInfoTO>();
 
