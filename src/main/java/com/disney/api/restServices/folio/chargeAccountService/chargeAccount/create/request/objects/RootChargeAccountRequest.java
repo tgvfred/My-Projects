@@ -3,6 +3,9 @@ package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.cre
 public class RootChargeAccountRequest {
 	private ChargeAccountCommonRequest chargeAccountCommonRequest;
 
+	public RootChargeAccountRequest(){
+		chargeAccountCommonRequest = new ChargeAccountCommonRequest();
+	}
 	/**
 	* 
 	* @return

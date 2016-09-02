@@ -1,7 +1,9 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
+import com.disney.test.utils.Randomness;
+
 public class Period {
-	private String startDate = "2016-08-27T14:34:07-04:00";
+	private String startDate = Randomness.generateCurrentXMLDatetime(10)+"-04:00";
 
 	/**
 	* 

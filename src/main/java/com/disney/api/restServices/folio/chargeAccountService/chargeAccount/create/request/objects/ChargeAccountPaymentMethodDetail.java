@@ -8,6 +8,9 @@ public class ChargeAccountPaymentMethodDetail {
 	private String isSubAccountPaymentMethod = "false";
 	private CardDetailTO cardDetailTO;
 
+	public ChargeAccountPaymentMethodDetail(){
+		cardDetailTO = new CardDetailTO();
+	}
 	/**
 	* 
 	* @return

@@ -10,6 +10,11 @@ public class ChargeAccountCommonRequest {
 	private List<ChargeAccountPaymentMethodDetail> chargeAccountPaymentMethodDetail = new ArrayList<ChargeAccountPaymentMethodDetail>();
 	private List<GuestInfoTO> guestInfoTO = new ArrayList<GuestInfoTO>();
 
+	public ChargeAccountCommonRequest(){
+		chargeAccountPaymentMethodDetail.add(new ChargeAccountPaymentMethodDetail());
+		guestInfoTO.add(new GuestInfoTO());
+		period = new Period();
+	}
 	/**
 	* 
 	* @return

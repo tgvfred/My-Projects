@@ -9,6 +9,9 @@ public class GuestInfoTO {
 	private String txnGuestId = "0";
 	private List<ExternalReference> externalReference = new ArrayList<ExternalReference>();
 
+	public GuestInfoTO(){
+		externalReference.add(new ExternalReference() );
+	}
 	/**
 	* 
 	* @return

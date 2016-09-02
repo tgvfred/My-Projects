@@ -4,6 +4,9 @@ public class ChargeAccountRequest {
 	private String chargeAccountType = "GUEST_ACCOUNT";
 	private RootChargeAccountRequest rootChargeAccountRequest;
 
+	public ChargeAccountRequest(){
+		rootChargeAccountRequest = new RootChargeAccountRequest();
+	}
 	/**
 	* 
 	* @return

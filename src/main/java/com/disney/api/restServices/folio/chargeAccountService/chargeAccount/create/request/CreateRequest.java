@@ -8,6 +8,9 @@ import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.crea
 public class CreateRequest {
 	private List<ChargeAccountRequest> chargeAccountRequests = new ArrayList<ChargeAccountRequest>();
 
+	public CreateRequest(){
+		chargeAccountRequests.add(new ChargeAccountRequest());
+	}
 	/**
 	* 
 	* @return

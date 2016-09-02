@@ -8,6 +8,9 @@ public class CardDetailTO {
 	private Address address;
 	private CardAuthorizationDetailTO cardAuthorizationDetailTO;
 
+	public CardDetailTO(){
+		cardAuthorizationDetailTO = new CardAuthorizationDetailTO();
+	}
 	/**
 	* 
 	* @return
