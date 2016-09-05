@@ -8,6 +8,9 @@ public class GuestReferenceDetail {
 	private String role;
 	private String correlationID;
 
+	public GuestReferenceDetail(){
+		guest = new Guest();		
+	}
 	/**
 	* 
 	* @return

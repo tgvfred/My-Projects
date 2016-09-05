@@ -7,7 +7,6 @@ import com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests.req
 
 public class ModifyGuestsRequest {
 	private List<GuestReferenceDetail> guestReferenceDetail = new ArrayList<GuestReferenceDetail>();
-
 	/**
 	* 
 	* @return

@@ -4,13 +4,38 @@ public class ChargeAccountPaymentMethodDetail {
 	private String active;
 	private String paymentMethodName;
 	private String paymentMethodTypeName;
+	private String paymentMethodStartDate;
+	private String paymentMethodEndDate;
 	private String chargingPrivilegesIndicator;
 	private String isSubAccountPaymentMethod;
+	private KttwPaymentDetail kttwPaymentDetail;
 	private CardDetailTO cardDetailTO;
 
 	public ChargeAccountPaymentMethodDetail(){
 		cardDetailTO = new CardDetailTO();
+		kttwPaymentDetail = new KttwPaymentDetail();
 	}
+	/**
+	* 
+	* @param kttwPaymentDetail
+	* @param isSubAccountPaymentMethod
+	* @param chargingPrivilegesIndicator
+	* @param active
+	* @param paymentMethodStartDate
+	* @param paymentMethodName
+	* @param paymentMethodEndDate
+	* @param paymentMethodTypeName
+	*/
+	public ChargeAccountPaymentMethodDetail(String active, String paymentMethodName, String paymentMethodTypeName, String paymentMethodStartDate, String paymentMethodEndDate, String chargingPrivilegesIndicator, String isSubAccountPaymentMethod, KttwPaymentDetail kttwPaymentDetail) {
+	this.active = active;
+	this.paymentMethodName = paymentMethodName;
+	this.paymentMethodTypeName = paymentMethodTypeName;
+	this.paymentMethodStartDate = paymentMethodStartDate;
+	this.paymentMethodEndDate = paymentMethodEndDate;
+	this.chargingPrivilegesIndicator = chargingPrivilegesIndicator;
+	this.isSubAccountPaymentMethod = isSubAccountPaymentMethod;
+	this.kttwPaymentDetail = kttwPaymentDetail;
+	 }
 	/**
 	* 
 	* @return
@@ -19,7 +44,7 @@ public class ChargeAccountPaymentMethodDetail {
 	public String getActive() {
 	return active;
 	 }
-
+	
 	/**
 	* 
 	* @param active
@@ -64,7 +89,41 @@ public class ChargeAccountPaymentMethodDetail {
 	public void setPaymentMethodTypeName(String paymentMethodTypeName) {
 	this.paymentMethodTypeName = paymentMethodTypeName;
 	 }
+	/**
+	* 
+	* @return
+	* The paymentMethodStartDate
+	*/
+	public String getPaymentMethodStartDate() {
+	return paymentMethodStartDate;
+	 }
 
+	/**
+	* 
+	* @param paymentMethodStartDate
+	* The paymentMethodStartDate
+	*/
+	public void setPaymentMethodStartDate(String paymentMethodStartDate) {
+	this.paymentMethodStartDate = paymentMethodStartDate;
+	 }
+
+	/**
+	* 
+	* @return
+	* The paymentMethodEndDate
+	*/
+	public String getPaymentMethodEndDate() {
+	return paymentMethodEndDate;
+	 }
+
+	/**
+	* 
+	* @param paymentMethodEndDate
+	* The paymentMethodEndDate
+	*/
+	public void setPaymentMethodEndDate(String paymentMethodEndDate) {
+	this.paymentMethodEndDate = paymentMethodEndDate;
+	 }
 	/**
 	* 
 	* @return
@@ -100,7 +159,23 @@ public class ChargeAccountPaymentMethodDetail {
 	public void setIsSubAccountPaymentMethod(String isSubAccountPaymentMethod) {
 	this.isSubAccountPaymentMethod = isSubAccountPaymentMethod;
 	 }
+	/**
+	* 
+	* @return
+	* The kttwPaymentDetail
+	*/
+	public KttwPaymentDetail getKttwPaymentDetail() {
+	return kttwPaymentDetail;
+	 }
 
+	/**
+	* 
+	* @param kttwPaymentDetail
+	* The kttwPaymentDetail
+	*/
+	public void setKttwPaymentDetail(KttwPaymentDetail kttwPaymentDetail) {
+	this.kttwPaymentDetail = kttwPaymentDetail;
+	 }
 	/**
 	* 
 	* @return

@@ -4,6 +4,9 @@ public class FolioIdentifierTO {
 	private ExternalReferenceTO externalReferenceTO;
 	private String folioType;
 
+	public FolioIdentifierTO(){
+		externalReferenceTO = new ExternalReferenceTO();
+	}
 	/**
 	* 
 	* @return

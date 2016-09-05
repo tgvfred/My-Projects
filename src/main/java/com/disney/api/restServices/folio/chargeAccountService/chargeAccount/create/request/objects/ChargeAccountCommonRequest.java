@@ -7,6 +7,9 @@ public class ChargeAccountCommonRequest {
 	private String description;
 	private Period period;
 	private String active;
+	private String txnFacilityId;
+	private String srcAcctCenterId;
+	private String defaultFolioRequired;
 	private List<ChargeAccountPaymentMethodDetail> chargeAccountPaymentMethodDetail = new ArrayList<ChargeAccountPaymentMethodDetail>();
 	private List<GuestInfoTO> guestInfoTO = new ArrayList<GuestInfoTO>();
 
@@ -15,6 +18,28 @@ public class ChargeAccountCommonRequest {
 		guestInfoTO.add(new GuestInfoTO());
 		period = new Period();
 	}
+	
+	/**
+	* 
+	* @param srcAcctCenterId
+	* @param chargeAccountPaymentMethodDetail
+	* @param guestInfoTO
+	* @param description
+	* @param active
+	* @param txnFacilityId
+	* @param period
+	* @param defaultFolioRequired
+	*/
+	public ChargeAccountCommonRequest(String description, Period period, String active, String txnFacilityId, String srcAcctCenterId, String defaultFolioRequired, List<ChargeAccountPaymentMethodDetail> chargeAccountPaymentMethodDetail, List<GuestInfoTO> guestInfoTO) {
+	this.description = description;
+	this.period = period;
+	this.active = active;
+	this.txnFacilityId = txnFacilityId;
+	this.srcAcctCenterId = srcAcctCenterId;
+	this.defaultFolioRequired = defaultFolioRequired;
+	this.chargeAccountPaymentMethodDetail = chargeAccountPaymentMethodDetail;
+	this.guestInfoTO = guestInfoTO;
+	 }
 	/**
 	* 
 	* @return
@@ -71,7 +96,59 @@ public class ChargeAccountCommonRequest {
 	public void setActive(String active) {
 	this.active = active;
 	 }
+	/**
+	* 
+	* @return
+	* The txnFacilityId
+	*/
+	public String getTxnFacilityId() {
+	return txnFacilityId;
+	 }
 
+	/**
+	* 
+	* @param txnFacilityId
+	* The txnFacilityId
+	*/
+	public void setTxnFacilityId(String txnFacilityId) {
+	this.txnFacilityId = txnFacilityId;
+	 }
+
+	/**
+	* 
+	* @return
+	* The srcAcctCenterId
+	*/
+	public String getSrcAcctCenterId() {
+	return srcAcctCenterId;
+	 }
+
+	/**
+	* 
+	* @param srcAcctCenterId
+	* The srcAcctCenterId
+	*/
+	public void setSrcAcctCenterId(String srcAcctCenterId) {
+	this.srcAcctCenterId = srcAcctCenterId;
+	 }
+
+	/**
+	* 
+	* @return
+	* The defaultFolioRequired
+	*/
+	public String getDefaultFolioRequired() {
+	return defaultFolioRequired;
+	 }
+
+	/**
+	* 
+	* @param defaultFolioRequired
+	* The defaultFolioRequired
+	*/
+	public void setDefaultFolioRequired(String defaultFolioRequired) {
+	this.defaultFolioRequired = defaultFolioRequired;
+	 }
 	/**
 	* 
 	* @return

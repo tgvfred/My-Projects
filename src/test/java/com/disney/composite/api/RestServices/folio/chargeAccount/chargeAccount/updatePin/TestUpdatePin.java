@@ -16,15 +16,17 @@ import org.testng.annotations.Parameters;
 
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.core.RestResponse;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.CreateRequest;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.response.CreateResponse;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.updatePin.request.UpdatePinRequest;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.updatePin.response.UpdatePinResponse;
+import com.disney.test.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 public class TestUpdatePin {
 private String environment = "Bashful";
-private CreateResponse caCreate = null;	
+private CreateResponse CreateRequest = null;	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
 	 * @param environment - Valid environments for active testing are bashful, sleepy and grumpy
@@ -34,6 +36,8 @@ private CreateResponse caCreate = null;
 	public void setup(@Optional String environment) {
 		//this.environment = environment;
 		this.environment = "Bashful";
+		
+	
 	}
 	
 	/**

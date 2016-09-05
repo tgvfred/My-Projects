@@ -11,7 +11,12 @@ public class SettlementMethodRequest {
 	private MerchantInfo merchantInfo;
 	private CreditCardInfo creditCardInfo;
 	private FolioIdentifierInfo folioIdentifierInfo;
-
+	
+	public SettlementMethodRequest(){
+		merchantInfo = new MerchantInfo();
+		creditCardInfo = new CreditCardInfo();
+		folioIdentifierInfo = new FolioIdentifierInfo();
+	}
 	/**
 	* 
 	* @return

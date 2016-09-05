@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuestInfoTO {
+	private String title;
 	private String firstName;
 	private String lastName;
 	private String txnGuestId;
@@ -12,6 +13,38 @@ public class GuestInfoTO {
 	public GuestInfoTO(){
 		externalReference.add(new ExternalReference() );
 	}
+	/**
+	* 
+	* @param lastName
+	* @param txnGuestId
+	* @param title
+	* @param externalReference
+	* @param firstName
+	*/
+	public GuestInfoTO(String firstName, String title, String lastName, String txnGuestId, List<ExternalReference> externalReference) {
+	this.firstName = firstName;
+	this.title = title;
+	this.lastName = lastName;
+	this.txnGuestId = txnGuestId;
+	this.externalReference = externalReference;
+	 }
+	/**
+	* 
+	* @return
+	* The title
+	*/
+	public String getTitle() {
+	return title;
+	 }
+
+	/**
+	* 
+	* @param title
+	* The title
+	*/
+	public void setTitle(String title) {
+	this.title = title;
+	 }
 	/**
 	* 
 	* @return

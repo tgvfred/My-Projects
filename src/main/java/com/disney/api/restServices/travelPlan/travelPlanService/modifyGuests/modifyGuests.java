@@ -2,7 +2,6 @@ package com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests;
 
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.core.Headers.HeaderType;
-import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.request.RetrieveSettlementMethodsRequest;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests.request.ModifyGuestsRequest;
 

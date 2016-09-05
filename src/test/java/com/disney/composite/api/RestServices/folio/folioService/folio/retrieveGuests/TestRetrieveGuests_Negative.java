@@ -43,8 +43,27 @@ private String environment = "Bashful";
 	 * 		- DataScenario - data scenario used, data sheets can contain multiple scenarios.
 	 */
 	
-	
-	@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveGuests"})
+	@Test(groups={"api","rest", "regression", "folio","negative", "folioService", "retrieveGuests"})
+	public void testretrieveGuests_Negative_NoAuthorization()throws IOException{
+		TestReporter.setDebugLevel(1);
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		
+		//create the json message
+		RetrieveGuestsRequest request = new RetrieveGuestsRequest();
+		
+		//Adding data for the different nodes
+		//Added External Reference Type
+		request.addExternalReferenceTO();
+
+		//Add External Reference value
+		
+		
+		//Add SourceAccountingCenter
+		request.setSourceAccountingCenter("2");
+		RestResponse response= Rest.folio(environment).folioService().folio().retrieveGuests().sendPutRequestWithMissingAuthToken(request);
+		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");
+	}	
+	@Test(groups={"api","rest", "regression", "folio","negative", "folioService", "retrieveGuests"})
 	public void testretrieveGuests_Negative_BlankReferenceName()throws IOException{
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
@@ -67,7 +86,7 @@ private String environment = "Bashful";
 
 	}
 	
-	@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveGuests"})
+	@Test(groups={"api","rest", "regression", "folio", "negative","folioService", "retrieveGuests"})
 	public void testretrieveGuests_Negative_BlankReferenceNumber()throws IOException{
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);

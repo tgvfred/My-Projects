@@ -7,6 +7,9 @@ public class CreditCardInfo {
 	private String expirationDate;
 	private CardHolderInfo cardHolderInfo;
 
+	public CreditCardInfo(){
+		cardHolderInfo = new CardHolderInfo();
+	}
 	/**
 	* 
 	* @return

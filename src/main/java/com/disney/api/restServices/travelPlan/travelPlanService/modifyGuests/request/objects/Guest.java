@@ -15,6 +15,9 @@ public class Guest {
 	private String guestId;
 	private String active;
 
+	public void addressDetails(){
+		addressDetails.add(new AddressDetail());
+	}
 	/**
 	* 
 	* @return
