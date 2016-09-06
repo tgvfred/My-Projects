@@ -1,6 +1,6 @@
-package com.disney.api.restServices.folio.folioService.folio.retrieveGuests.request;
+package com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request;
 
-import com.disney.api.restServices.folio.folioService.folio.retrieveGuests.request.objects.ExternalReferenceTO;
+import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.objects.ExternalReferenceTO;
 
 public class RetrieveGuestsRequest {
 	private ExternalReferenceTO externalReferenceTO;

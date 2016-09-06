@@ -1,4 +1,4 @@
-package com.disney.composite.api.RestServices.folio.folioService.folio.retrieveGuests;
+package com.disney.composite.api.RestServices.folio.folioService.chargeAccount.retrieveGuests;
 
 import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
@@ -14,8 +14,8 @@ import org.testng.annotations.Parameters;
 
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.core.RestResponse;
-import com.disney.api.restServices.folio.folioService.folio.retrieveGuests.request.RetrieveGuestsRequest;
-import com.disney.api.restServices.folio.folioService.folio.retrieveGuests.request.objects.ExternalReferenceTO;
+import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
+import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.objects.ExternalReferenceTO;
 import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
@@ -60,7 +60,7 @@ private String environment = "Bashful";
 		
 		//Add SourceAccountingCenter
 		request.setSourceAccountingCenter("2");
-		RestResponse response= Rest.folio(environment).folioService().folio().retrieveGuests().sendPutRequestWithMissingAuthToken(request);
+		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendPutRequestWithMissingAuthToken(request);
 		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");
 	}	
 	@Test(groups={"api","rest", "regression", "folio","negative", "folioService", "retrieveGuests"})
@@ -80,7 +80,7 @@ private String environment = "Bashful";
 		
 		//Add SourceAccountingCenter
 		request.setSourceAccountingCenter("2");
-		RestResponse response= Rest.folio(environment).folioService().folio().retrieveGuests().sendPutRequest(request);
+		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendPutRequest(request);
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Name =  "), "Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Name =  ] was received");
 
@@ -103,7 +103,7 @@ private String environment = "Bashful";
 		
 		//Add SourceAccountingCenter
 		request.setSourceAccountingCenter("2");
-		RestResponse response= Rest.folio(environment).folioService().folio().retrieveGuests().sendPutRequest(request);
+		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendPutRequest(request);
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO"), "Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Value = ");
 

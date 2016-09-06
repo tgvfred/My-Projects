@@ -1,6 +1,7 @@
 package com.disney.api.restServices.folio.folioService;
 
 import com.disney.api.restServices.core.RestService;
+import com.disney.api.restServices.folio.folioService.chargeAccount.ChargeAccount;
 import com.disney.api.restServices.folio.folioService.folio.Folio;
 
 public class FolioService {
@@ -12,6 +13,10 @@ public class FolioService {
 	
 	public Folio folio(){
 		return new Folio(restService);
+	}
+	
+	public ChargeAccount chargeAccount(){
+		return new ChargeAccount(restService);
 	}
 
 }

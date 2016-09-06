@@ -1,7 +1,7 @@
 package com.disney.api.restServices.folio.folioService.folio;
 
 import com.disney.api.restServices.core.RestService;
-import com.disney.api.restServices.folio.folioService.folio.retrieveGuests.retrieveGuests;
+import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.retrieveGuests;
 import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.retrieveSettlementMethods;
 
 public class Folio {

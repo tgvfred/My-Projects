@@ -14,9 +14,9 @@ package com.disney.composite.api.RestServices.folio.folioService.folio.retrieveS
 
 	import com.disney.api.restServices.Rest;
 	import com.disney.api.restServices.core.RestResponse;
-	import com.disney.api.restServices.folio.folioService.folio.retrieveGuests.request.RetrieveGuestsRequest;
-	import com.disney.api.restServices.folio.folioService.folio.retrieveGuests.request.objects.ExternalReferenceTO;
-	import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.request.RetrieveSettlementMethodsRequest;
+import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
+import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.objects.ExternalReferenceTO;
+import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.request.RetrieveSettlementMethodsRequest;
 	import com.disney.utils.TestReporter;
 
 	@SuppressWarnings("unused")

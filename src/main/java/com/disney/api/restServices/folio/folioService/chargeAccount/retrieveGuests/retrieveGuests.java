@@ -1,4 +1,4 @@
-package com.disney.api.restServices.folio.folioService.folio.retrieveGuests;
+package com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,7 @@ import org.apache.http.message.BasicHeader;
 import com.disney.api.restServices.core.Headers.HeaderType;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
-import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.request.RetrieveRequest;
-import com.disney.api.restServices.folio.folioService.folio.retrieveGuests.request.RetrieveGuestsRequest;
+import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
 import com.disney.test.utils.Randomness;
 
 public class retrieveGuests {
