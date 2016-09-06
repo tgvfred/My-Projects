@@ -8,9 +8,9 @@
                 <include name="regression"></include>
             </run>
         </groups>
-		<classes>
-			<class
+		<packages>
+			<package
 				name="com.disney.composite.api.RestServices.chargeAccount.chargeAccount.*"/>
-		</classes>
+		</packages>
 	</test>
 </suite>
