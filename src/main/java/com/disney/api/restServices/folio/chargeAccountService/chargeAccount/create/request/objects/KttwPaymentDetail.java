@@ -1,9 +1,9 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class KttwPaymentDetail {
-	private String campusId = "0";
-	private String kttwNumber = "991946168311680202" ;
-	private String reservationTxnGuestId = "238431649";
+	private String campusId;
+	private String kttwNumber;
+	private String reservationTxnGuestId;
 
 	/**
 	* No args constructor for use in serialization
