@@ -11,6 +11,7 @@
 ##			08/26/2013 - Ben Miller - Updated with connection to Sales for EQ.
 ##			08/26/2014 - Joseph Perrotta, Jr. - Updated Bashful.DVC_Points connection string to changes introduced 8/25/14
 ##			10/07/2014 - Justin Phlegar - Updated all remaining Bashful URLs to point to lnxu010dvh-scan with the exception of BASHFUL.DREAMS_LOG
+##			09/06/2016 - Justin Phlegar - Adding Direct Connect TNS
 ##############################
 ## Start EAI Connections    ##
 ##############################
@@ -875,6 +876,52 @@ DEV2.DVC_POINTS=
 ##################################
 ## End DVC Points Connections   ##
 ##################################
+
+#####################################
+## Start DirectConnect Connections ##
+#####################################
+BASHFUL.DIRECTCONNECT=
+ (DESCRIPTION=
+   (ADDRESS=
+     (PROTOCOL=TCP)
+     (HOST=lnxu010dvh-scan.wdw.disney.com)
+     (PORT=1541)
+   )
+   (CONNECT_DATA=
+     (SERVER=dedicated)
+     (SERVICE_NAME=ecmqsvc.wdw.disney.com)
+   )
+ )
+
+SLEEPY.DIRECTCONNECT=
+ (DESCRIPTION=
+   (ADDRESS=
+     (PROTOCOL=TCP)
+     (HOST=lnxu010dvd-scan.wdw.disney.com)
+     (PORT=1541)
+   )
+   (CONNECT_DATA=
+     (SERVER=dedicated)
+     (SERVICE_NAME=ecmisvc.wdw.disney.com)
+   )
+ )
+
+GRUMPY.DIRECTCONNECT=
+ (DESCRIPTION=
+   (ADDRESS=
+     (PROTOCOL=TCP)
+     (HOST=lnxu010dvi-scan.wdw.disney.com)
+     (PORT=1541)
+   )
+   (CONNECT_DATA=
+     (SERVER=dedicated)
+     (SERVICE_NAME=ecmgsvc.wdw.disney.com)
+   )
+ )
+
+###################################
+## End DirectConnect Connections ##
+###################################
 ##############################
 ## Start DLRLOG Connections ##
 ##############################

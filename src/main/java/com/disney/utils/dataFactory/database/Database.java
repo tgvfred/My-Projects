@@ -10,6 +10,7 @@ import java.sql.Types;
 
 public abstract class Database {
 	final public static String AVAIL_SE = "availse";
+	final public static String DIRECT_CONNECT = "directconnect";
 	final public static String DME = "dme";
 	final public static String DREAMS = "dreams";
 	final public static String DREAMS_LOG = "dreams_log";
