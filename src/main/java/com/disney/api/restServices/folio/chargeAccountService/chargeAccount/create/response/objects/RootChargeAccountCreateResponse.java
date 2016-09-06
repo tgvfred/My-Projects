@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RootChargeAccountCreateResponse {
-	private Long chargeAccountId;
+	private String chargeAccountId;
 	private Object externalReferenceTO;
 	private List<Object> nodeChargeAccountCreateResponses = new ArrayList<Object>();
 
@@ -13,7 +13,7 @@ public class RootChargeAccountCreateResponse {
 	* @return
 	* The chargeAccountId
 	*/
-	public Long getChargeAccountId() {
+	public String getChargeAccountId() {
 	return chargeAccountId;
 	 }
 
@@ -22,7 +22,7 @@ public class RootChargeAccountCreateResponse {
 	* @param chargeAccountId
 	* The chargeAccountId
 	*/
-	public void setChargeAccountId(Long chargeAccountId) {
+	public void setChargeAccountId(String chargeAccountId) {
 	this.chargeAccountId = chargeAccountId;
 	 }
 
