@@ -10,7 +10,7 @@
         </groups>
 		<packages>
 			<package
-				name="com.disney.composite.api.RestServices.chargeAccount.chargeAccount.*"/>
+				name="com.disney.composite.api.RestServices.folio.chargeAccount.chargeAccount.*"/>
 		</packages>
 	</test>
 </suite>
