@@ -24,6 +24,7 @@ public class TestRetrieve {
 	private String environment = "Bashful";
 	private String caChargeAccount1;
 	private String caChargeAccount2;
+	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
 	 * @param environment - Valid environments for active testing are bashful, sleepy and grumpy
@@ -35,17 +36,16 @@ public class TestRetrieve {
 		this.environment = "Bashful";
 		//Create new request
 		CreateRequest request = new CreateRequest();
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setCampusId("1");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setReservationTxnGuestId("238431649");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setKttwNumber("991946168311680202");
+		
 		//Submit new chargeAccount Request
 		RestResponse response= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
 		CreateResponse[] createResponse = response.mapJSONToObject(CreateResponse[].class);
-		for(CreateResponse chargeAccount:createResponse){
+		for(CreateResponse chargeAccount:createResponse){	
 		caChargeAccount1 = chargeAccount.getRootChargeAccountCreateResponse().getChargeAccountId();
 		}
 		//Create new request
 		CreateRequest request2 = new CreateRequest();
+		
 		//Submit new chargeAccount Request
 		RestResponse response2= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request2);
 		CreateResponse[] createResponse2 = response2.mapJSONToObject(CreateResponse[].class);

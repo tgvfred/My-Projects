@@ -102,7 +102,7 @@ private String environment = "Bashful";
         TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid charge account type:"), "Invalid input fields. : Invalid charge account type:");
 	}
 
-	@Test(groups={"api","rest", "regression","negative", "folio", "chargeAccountV2", "create"})
+	/*@Test(groups={"api","rest", "regression","negative", "folio", "chargeAccountV2", "create"})
 	public void testcreate_Negative_MissingKTTWFields(){
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		
@@ -145,8 +145,8 @@ private String environment = "Bashful";
         RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
         TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");    	
         TestReporter.assertTrue(response.getResponse().contains("Missing required fields. : KTTW Information is missing."), "Missing required fields. : KTTW Information is missing.");
-	}
-	@Test(groups={"api","rest", "regression","negative", "folio", "chargeAccountV2", "create"})
+	}//
+*/	@Test(groups={"api","rest", "regression","negative", "folio", "chargeAccountV2", "create"})
 	public void testcreate_Negative_MissingStartDatePaymentMethod(){
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		
