@@ -1,11 +1,11 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class Address {
-	private String addressLineOne;
-	private String city;
-	private String country;
-	private String postalCode;
-	private String state;
+	private String addressLineOne = "3395 NE 9th Dr";
+    private String city = "Homestead";
+    private String country = "US";
+    private String postalCode = "33033";
+    private String state = "FL";
 
 	/**
 	* 

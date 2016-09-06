@@ -1,13 +1,15 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
+import com.disney.test.utils.Randomness;
+
 public class ChargeAccountPaymentMethodDetail {
-	private String active;
-	private String paymentMethodName;
-	private String paymentMethodTypeName;
-	private String paymentMethodStartDate;
-	private String paymentMethodEndDate;
-	private String chargingPrivilegesIndicator;
-	private String isSubAccountPaymentMethod;
+	private String active = "true";
+	private String paymentMethodName= "Visa";
+	private String paymentMethodTypeName = "CreditCard";
+	private String paymentMethodStartDate = Randomness.generateCurrentXMLDatetime(10)+"-04:00";
+	private String paymentMethodEndDate = Randomness.generateCurrentXMLDatetime(15)+"-04:00";
+	private String chargingPrivilegesIndicator = "false";
+	private String isSubAccountPaymentMethod = "false";
 	private KttwPaymentDetail kttwPaymentDetail;
 	private CardDetailTO cardDetailTO;
 

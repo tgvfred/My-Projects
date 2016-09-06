@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChargeAccountCommonRequest {
-	private String description;
+	private String description= "From Booking";
 	private Period period;
-	private String active;
-	private String txnFacilityId;
-	private String srcAcctCenterId;
-	private String defaultFolioRequired;
+	private String active = "true";
+	private String txnFacilityId = "80010401";
+	private String srcAcctCenterId = "2";
+	private String defaultFolioRequired = "false";
 	private List<ChargeAccountPaymentMethodDetail> chargeAccountPaymentMethodDetail = new ArrayList<ChargeAccountPaymentMethodDetail>();
 	private List<GuestInfoTO> guestInfoTO = new ArrayList<GuestInfoTO>();
 

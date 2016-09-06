@@ -26,7 +26,7 @@ import com.disney.utils.TestReporter;
 @SuppressWarnings("unused")
 public class TestUpdatePin {
 private String environment = "Bashful";
-private CreateResponse CreateRequest = null;	
+private String caChargeAccount;
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
 	 * @param environment - Valid environments for active testing are bashful, sleepy and grumpy
@@ -36,6 +36,14 @@ private CreateResponse CreateRequest = null;
 	public void setup(@Optional String environment) {
 		//this.environment = environment;
 		this.environment = "Bashful";
+		//Create new request
+		CreateRequest request = new CreateRequest();
+		//Submit new chargeAccount Request
+		RestResponse response= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
+		CreateResponse[] createResponse = response.mapJSONToObject(CreateResponse[].class);
+		for(CreateResponse chargeAccount:createResponse){
+			caChargeAccount = chargeAccount.getRootChargeAccountCreateResponse().getChargeAccountId();
+		}
 		
 	
 	}
@@ -58,7 +66,7 @@ private CreateResponse CreateRequest = null;
 		UpdatePinRequest request = new UpdatePinRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("2938");
+		request.addChargeAccountId(caChargeAccount);
 		//Update value for Pin
 		request.setPinNumber("1369");
 	

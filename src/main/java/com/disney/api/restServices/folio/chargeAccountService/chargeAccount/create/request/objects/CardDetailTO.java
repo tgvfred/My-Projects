@@ -1,10 +1,10 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class CardDetailTO {
-	private String cardStatus;
-	private String creditCardNumber;
-	private String cvvNumber;
-	private String name;
+	private String cardStatus = "Valid";
+	private String creditCardNumber = "xxxxxxxxxxxx7840";
+	private String cvvNumber = "423";
+	private String name = "Marisol Centeno";
 	private Address address;
 	private CardAuthorizationDetailTO cardAuthorizationDetailTO;
 

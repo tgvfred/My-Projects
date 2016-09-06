@@ -1,8 +1,10 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
+import com.disney.test.utils.Randomness;
+
 public class Period {
-	private String startDate;
-	private String endDate;
+	private String startDate = Randomness.generateCurrentXMLDatetime(10)+"-04:00";
+	private String endDate = Randomness.generateCurrentXMLDatetime(15)+"-04:00";
 
 	/**
 	* 

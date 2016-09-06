@@ -11,6 +11,8 @@ import org.testng.annotations.Parameters;
 
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.core.RestResponse;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.CreateRequest;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.response.CreateResponse;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.request.RetrieveRequest;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.response.RetreiveResponse;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.response.objects.GuestInfoTO;
@@ -20,6 +22,8 @@ import com.disney.utils.TestReporter;
 @SuppressWarnings("unused")
 public class TestRetrieve_Negative {
 	private String environment = "Bashful";
+	private String caChargeAccount1;
+	private String caChargeAccount2;
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -30,6 +34,22 @@ public class TestRetrieve_Negative {
 	public void setup(@Optional String environment) {
 		//this.environment = environment;
 		this.environment = "Bashful";
+		//Create new request
+		CreateRequest request = new CreateRequest();
+		//Submit new chargeAccount Request
+		RestResponse response= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
+		CreateResponse[] createResponse = response.mapJSONToObject(CreateResponse[].class);
+		for(CreateResponse chargeAccount:createResponse){
+			caChargeAccount1 = chargeAccount.getRootChargeAccountCreateResponse().getChargeAccountId();
+		}
+		//Create new request
+		CreateRequest request2 = new CreateRequest();
+		//Submit new chargeAccount Request
+		RestResponse response2= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request2);
+		CreateResponse[] createResponse2 = response2.mapJSONToObject(CreateResponse[].class);
+		for(CreateResponse chargeAccount:createResponse2){
+			caChargeAccount2 = chargeAccount.getRootChargeAccountCreateResponse().getChargeAccountId();
+		}
 	}
 	
 	/**
@@ -49,7 +69,7 @@ public class TestRetrieve_Negative {
 		RetrieveRequest request = new RetrieveRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("9999");
+		request.addChargeAccountId("99999");
 		
 		//Sending request and validating response
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequestWithMissingAuthToken(request);
@@ -63,7 +83,7 @@ public class TestRetrieve_Negative {
 		RetrieveRequest request = new RetrieveRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("9999");
+		request.addChargeAccountId("99999");
 		
 		//Sending request and validating response
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);
@@ -98,7 +118,7 @@ public class TestRetrieve_Negative {
 		RetrieveRequest request = new RetrieveRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("2364");
+		request.addChargeAccountId(caChargeAccount1);
 		request.addChargeAccountId("");
 		
 		//Sending request and validating response
@@ -117,8 +137,8 @@ public class TestRetrieve_Negative {
 		RetrieveRequest request = new RetrieveRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("2364");
-		request.addChargeAccountId("9999");
+		request.addChargeAccountId(caChargeAccount1);
+		request.addChargeAccountId("99999");
 		
 		//Sending request and validating response
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);

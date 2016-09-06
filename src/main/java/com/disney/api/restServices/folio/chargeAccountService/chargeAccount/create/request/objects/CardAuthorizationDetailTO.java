@@ -1,10 +1,10 @@
 package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.objects;
 
 public class CardAuthorizationDetailTO {
-	private String expirationMonth;
-	private String expirationYear;
-	private String retrievalReferenceNumber;
-	private String retrievalReferenceNumberKey;
+	private String expirationMonth = "6";
+	private String expirationYear = "20";
+	private String retrievalReferenceNumber = "423730003693";
+	private String retrievalReferenceNumberKey = "HGBkD8";
 
 	/**
 	* 

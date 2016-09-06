@@ -35,52 +35,12 @@ private String caChargeAccount;
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		//this.environment = environment;
 		this.environment = "Bashful";
 		//Create new request
 		CreateRequest request = new CreateRequest();
-		// Charge Account Type	
-		request.getChargeAccountRequests().get(0).setChargeAccountType("GUEST_ACCOUNT");
-		//Complete the Charge Account Common Request 
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().setActive("true");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().setDescription("From Booking");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getPeriod().setStartDate(Randomness.generateCurrentXMLDatetime(10)+"-04:00");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getPeriod().setEndDate(Randomness.generateCurrentXMLDatetime(15)+"-04:00");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().setTxnFacilityId("80010401");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().setSrcAcctCenterId("2");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().setDefaultFolioRequired("false");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setFirstName("Marisol");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setLastName("Centeno");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setTxnGuestId("0");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).getExternalReference().get(0).setReferenceName("SWID");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).getExternalReference().get(0).getReferenceValue();	
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).setActive("true");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).setPaymentMethodName("Visa");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).setPaymentMethodTypeName("CreditCard");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).setPaymentMethodStartDate(Randomness.generateCurrentXMLDatetime(10)+"-04:00");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).setPaymentMethodEndDate(Randomness.generateCurrentXMLDatetime(15)+"-04:00");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).setIsSubAccountPaymentMethod("false");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).setChargingPrivilegesIndicator("false");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setCampusId("1");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setReservationTxnGuestId("238431649");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setKttwNumber("991946168311680202");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().setCardStatus("Valid");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().setCreditCardNumber("xxxxxxxxxxxx7840");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().setCvvNumber("423");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().setName("Marisol Centeno");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().getAddress().setAddressLineOne("3395 NE 9th Dr");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().getAddress().setCity("Homestead");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().getAddress().setPostalCode("33033");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().getAddress().setCountry("US");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().getAddress().setState("FL");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().getCardAuthorizationDetailTO().setExpirationMonth("6");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().getCardAuthorizationDetailTO().setExpirationYear("20");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().getCardAuthorizationDetailTO().setRetrievalReferenceNumber("423730003693");
-		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getCardDetailTO().getCardAuthorizationDetailTO().setRetrievalReferenceNumberKey("HGBkD8");
-		
-		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
+		//Submit new chargeAccount Request
+		RestResponse response= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
 		CreateResponse[] createResponse = response.mapJSONToObject(CreateResponse[].class);
 		for(CreateResponse chargeAccount:createResponse){
 			caChargeAccount = chargeAccount.getRootChargeAccountCreateResponse().getChargeAccountId();
@@ -105,7 +65,7 @@ private String caChargeAccount;
 		UpdatePinRequest request = new UpdatePinRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("2938");
+		request.addChargeAccountId(caChargeAccount);
 		//Update value for Pin
 		request.setPinNumber("1234");
 	
@@ -143,7 +103,7 @@ private String caChargeAccount;
 		UpdatePinRequest request = new UpdatePinRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("2938");
+		request.addChargeAccountId(caChargeAccount);
 		//Update value for Pin
 		request.setPinNumber("");
 	
@@ -162,7 +122,7 @@ private String caChargeAccount;
 		UpdatePinRequest request = new UpdatePinRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("2938");
+		request.addChargeAccountId(caChargeAccount);
 		//Update value for Pin
 		request.setPinNumber("1");
 	
@@ -181,7 +141,7 @@ private String caChargeAccount;
 		UpdatePinRequest request = new UpdatePinRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("2938");
+		request.addChargeAccountId(caChargeAccount);
 		//Update value for Pin
 		request.setPinNumber("19");
 	
@@ -200,7 +160,7 @@ private String caChargeAccount;
 		UpdatePinRequest request = new UpdatePinRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("2938");
+		request.addChargeAccountId(caChargeAccount);
 		//Update value for Pin
 		request.setPinNumber("196");
 	
@@ -219,7 +179,7 @@ private String caChargeAccount;
 		UpdatePinRequest request = new UpdatePinRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("2938");
+		request.addChargeAccountId(caChargeAccount);
 		//Update value for Pin
 		request.setPinNumber("19638");
 	
@@ -257,13 +217,13 @@ private String caChargeAccount;
 		UpdatePinRequest request = new UpdatePinRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("9999");
+		request.addChargeAccountId("99999");
 		//Update value for Pin
 		request.setPinNumber("6175");
 	
 	RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().updatePin().sendPutRequest(request);
 	TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-	TestReporter.assertTrue(response.getResponse().contains("Charge account not found. : For ChageAccount Id = 9999 ChargeAccountGuestExternalReferenceName: null ChargeAccountGuestExternalReferenceValue: null"), "Update Pin status of [Charge account not found. : For ChageAccount Id = 9999 ChargeAccountGuestExternalReferenceName: null ChargeAccountGuestExternalReferenceValue: null] was received");
+	TestReporter.assertTrue(response.getResponse().contains("Charge account not found. : For ChageAccount Id = 99999 ChargeAccountGuestExternalReferenceName: null ChargeAccountGuestExternalReferenceValue: null"), "Update Pin status of [Charge account not found. : For ChageAccount Id = 9999 ChargeAccountGuestExternalReferenceName: null ChargeAccountGuestExternalReferenceValue: null] was received");
 		
 	}
 	
@@ -276,7 +236,7 @@ private String caChargeAccount;
 		UpdatePinRequest request = new UpdatePinRequest();
 
 		//Adding Charge Accounts to look for
-		request.addChargeAccountId("2938");
+		request.addChargeAccountId(caChargeAccount);
 		//Update value for Pin
 		request.setPinNumber("1694");
 	
