@@ -93,4 +93,8 @@ public class Retrieve extends ShowDiningService {
 	 * @return primary guest age 
 	 */
 	public String getPrimaryGuestAge(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/partyRoles[1]/age");}
+	
+	public String getReservableResourceId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/inventoryDetails/reservableResourceId");}
+	
+	public String getServiceStartDate(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveShowDiningResponse/ShowDiningReservation/dinnerShowPackage/serviceStartDate");}
 }

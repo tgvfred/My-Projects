@@ -37,6 +37,13 @@ public class Dreams {
 				+ " where  ext.PTY_EXTNL_SRC_NM= '" + type + "' "
 				+ "    and ROWNUM = 1 ";
 	}
+
+	public static String getGuestExternalReferenceInfoByGuestId(String value){
+		return "Select ext.TXN_PTY_ID, "
+				+ "    ext.TXN_PTY_EXTNL_REF_VAL "
+				+ " from GUEST.TXN_PTY_EXTNL_REF ext "
+				+ " where  ext.TXN_PTY_ID = '" + value + "' ";
+	}
 	
 	public static String getTpsIDFromExternalReference(String externalRefVal){
 		return "SELECT TPS_ID FROM RES_MGMT.TPS_EXTNL_REF WHERE TPS_EXTNL_REF_VL = '" + externalRefVal + "'";
@@ -72,6 +79,14 @@ public class Dreams {
 	
 	public static String getChargeInfo(String id){
 		return " select * from folio.chrg where CHRG_ID = " + id;
+	}
+	
+	public static String getTcgTypeByTcg(String tcg){
+		return "select TC_GRP_TYP_NM from res_mgmt.tc_grp a where a.tc_grp_nb = '"+tcg+"'";
+	}
+	
+	public static String getTpsByTcg(String tcg){
+		return "select a.TPS_ID from res_mgmt.tc_grp a where a.tc_grp_nb = '"+tcg+"'";
 	}
 	
 	/**

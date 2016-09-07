@@ -53,6 +53,7 @@ public class Guest {
 	private boolean isChild = false;
 	private String odsId = "0";
 	private String partyId = "0";
+	private String guestId = "0";
 	private Create guest = null;
 	
 	private SearchByNameAndAddress search = null;
@@ -205,6 +206,9 @@ public class Guest {
 		return partyId;
 	}
 
+	public String getGuestId(){
+		return guestId;
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -337,6 +341,16 @@ public class Guest {
 		this.isChild = isChild;
 	}
 
+	public void setOdsId(String odsId) {
+		this.odsId = odsId;
+	}
+	public void setPartyId(String partyId){
+		this.partyId = partyId;
+	}
+
+	public void setGuestId(String guestId){
+		this.guestId = guestId;
+	}
 	/**
 	 * @summary Return all addresses associated to the Guest
 	 * @author Justin Phlegar

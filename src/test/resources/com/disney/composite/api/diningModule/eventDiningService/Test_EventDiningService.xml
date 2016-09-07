@@ -3,6 +3,11 @@
 <suite name="EventDiningService_Suite" parallel="methods" thread-count="20"  configfailurepolicy="continue">
 	<parameter name="environment" value="${environment}" />
 	<test name="EventDiningService">
+		<groups>
+			<run>
+				<exclude name="compensation"></exclude>
+			</run>
+		</groups>
 		<packages>
 			<package name="com.disney.composite.api.diningModule.eventDiningService.*"></package>
 		</packages>

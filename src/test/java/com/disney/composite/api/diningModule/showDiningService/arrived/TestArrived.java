@@ -7,6 +7,8 @@ import com.disney.api.soapServices.diningModule.showDiningService.operations.Arr
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
 import com.disney.composite.BaseTest;
+import com.disney.utils.Randomness;
+import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
@@ -46,4 +48,33 @@ public class TestArrived extends BaseTest{
 		logValidItems.addItem("PartyIF", "retrieveParty", false);
 		validateLogs(arrived, logValidItems, 10000);
 	}
+
+	@Test(groups = {"api", "regression", "dining", "showDiningService"})
+	public void testArrived_DLR(){
+		Book book = new Book(environment, "DLRDinnerShowOneAdultOneChild");
+		book.setParty(hh);
+		book.setServiceStartDateTime(Randomness.generateCurrentXMLDate(1));
+		book.sendRequest();
+		
+		TestReporter.logAPI(!book.getResponseStatusCode().contains("200"), book.getFaultString() ,book);
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanId()), "The travel plan ID ["+book.getTravelPlanId()+"] is numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", book.getTravelPlanSegmentId()), "The reservation number ["+book.getTravelPlanSegmentId()+"] is numeric as expected.");
+		
+		
+		Arrived arrived = new Arrived(this.environment,"ContactCenter");
+		arrived.setReservationNumber(book.getTravelPlanSegmentId());
+		arrived.sendRequest();
+		TestReporter.logAPI(!arrived.getResponseStatusCode().contains("200"), arrived.getFaultString() ,arrived);
+		TestReporter.logAPI(!arrived.getResponseStatus().equals("SUCCESS"), "The response ["+arrived.getResponseStatus()+"] was not 'SUCCESS' as expected.", arrived);
+		
+
+		LogItems logItems = new LogItems();
+		logItems.addItem("ChargeGroupIF", "checkIn", false);
+		logItems.addItem("EventDiningServiceIF", "arrived", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3", "updateOrder", false);
+		logItems.addItem("TravelPlanServiceCrossReferenceV3SEI", "updateOrder", false);
+		validateLogs(arrived, logItems);
+
+	}
+	
 }

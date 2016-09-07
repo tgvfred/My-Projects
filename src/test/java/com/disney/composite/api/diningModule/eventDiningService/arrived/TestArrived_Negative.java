@@ -1,5 +1,6 @@
 package com.disney.composite.api.diningModule.eventDiningService.arrived;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -9,6 +10,7 @@ import com.disney.api.soapServices.diningModule.eventDiningService.operations.Ar
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.composite.BaseTest;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -27,7 +29,14 @@ public class TestArrived_Negative  extends BaseTest{
 		this.environment = environment;
 		hh = new HouseHold(1);
 		res = new EventDiningReservation(this.environment, hh);
+		res.setServiceStartDate(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(15, 45)));
 		res.book(ScheduledEventReservation.NOCOMPONENTSNOADDONS);
+	}
+	
+	@AfterClass(alwaysRun=true)
+	public void tearDown(){
+		try{res.cancel();}
+		catch(Exception e){}
 	}
 
 	@Test(groups = {"api", "regression", "dining", "eventDiningService", "negative"})

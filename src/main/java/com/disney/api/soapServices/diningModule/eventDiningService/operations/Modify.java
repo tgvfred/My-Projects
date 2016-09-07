@@ -8,6 +8,7 @@ import com.disney.api.soapServices.diningModule.ComponentPriceBuilder;
 import com.disney.api.soapServices.diningModule.eventDiningService.EventDiningService;
 import com.disney.api.soapServices.pricingModule.pricingWebService.operations.PriceComponents;
 import com.disney.api.soapServices.seWebServices.SEOfferService.operations.Freeze;
+import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.FacilityInfo;
@@ -24,7 +25,21 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class Modify extends EventDiningService {
 	private boolean notSetFreezeId = true;
+	private boolean invokeRimError = false;
+	protected String reservableResourceId;
+	protected String dateTime;
+	protected String inventoryBefore;
+	protected String inventoryAfter;
+	protected String startDate;
+	protected String startTime;
+	private boolean newDateTime;
+	private String existingInventoryBefore;
+	private String existingInventoryAfter;
+	private String existingRRID;
+	private String existingStartDateTime;
 	private boolean rrIdSetInAddDetails = false;
+	private boolean validateInventory = false;
+	
 	public Modify(String environment, String scenario) {
 		super(environment);
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("modify")));
@@ -35,6 +50,7 @@ public class Modify extends EventDiningService {
 		removeWhiteSpace();
 	}
 	
+	public void setValidateInventory(boolean validate){ this.validateInventory = validate;}
 	public void setAddOnComponentUnitPriceDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/addOnComponents/componentPrices/unitPrices/date", value);}	
 	public void setAddOnComponentServiceStartDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/addOnComponents/serviceStartDate", value);}	
 	public void setComponentUnitPriceDateTime(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices/unitPrices/date", value);}	
@@ -91,8 +107,16 @@ public class Modify extends EventDiningService {
 	public void setAddOnProductId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/addOnComponents/productId", value);}	
 	public void setAddOnProductType(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/addOnComponents/productType", value);}	
 	public void addInternalComments(String text, String type){
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentText", text);
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentType", type);
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentText", text);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentType", type);
+		}catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest", BaseSoapCommands.ADD_NODE.commandAppend("internalComments"));
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments", BaseSoapCommands.ADD_NODE.commandAppend("commentText"));
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments", BaseSoapCommands.ADD_NODE.commandAppend("commentType"));
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentText", text);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments/commentType", type);
+		}
 	}
 	public void setComponentPriceComponentType(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices["+index+"]/componentType", value);}	
 	public void setComponentPriceComponentId(String value, String index){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices["+index+"]/componentId", value);}	
@@ -108,47 +132,63 @@ public class Modify extends EventDiningService {
 	public void setPrimaryGuestPartyId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/primaryGuest/partyId", value);}	
 	public void setSalesChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/salesChannel", value);}	
 	public void setCommunicationChannel(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/communicationChannel", value);}
-	public void setProfileDetailIdAndType(String id, String type, String index){
-		// Determine if the index exists. If not, create it and the necessary
-		// child nodes. If so, then set the child node values
+	
+	public void setTaxExemptDetails(String certificateNumber, String taxExemptType){
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/id");
-		}catch(Exception e){
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:profileDetails");
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+index+"]", "fx:AddNode;Node:id");
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+index+"]", "fx:AddNode;Node:type");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/id", id);
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+index+"]/type", type);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail/taxExemptType", taxExemptType);
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest", "fx:AddNode;Node:taxExemptDetail");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptCertificateNumber");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail", "fx:AddNode;Node:taxExemptType");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail/taxExemptCertificateNumber", certificateNumber);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/taxExemptDetail/taxExemptType", taxExemptType);
 	}
 	
-	public void setComments(String text, String type, String index){
+	public void setProfileDetailIdAndType(String id, String type){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfProfileDetails= 1;
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+index+"]/commentText");
-		}catch(Exception e){
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest", "fx:AddNode;Node:internalComments");
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+index+"]", "fx:AddNode;Node:commentText");
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+index+"]", "fx:AddNode;Node:commentType");
-		}
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+index+"]/commentText", text);
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+index+"]/commentType", type);
+			numberOfProfileDetails= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails");
+		//	getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id");
+			numberOfProfileDetails+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:profileDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:id");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]", "fx:AddNode;Node:type");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/id", id);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/profileDetails["+numberOfProfileDetails+"]/type", type);
 	}
 	
-	public void setAllergies(String value, String index){
+	public void setComments(String text, String type){
+		int numberOfInternalComments= 1;
+		try{
+			numberOfInternalComments= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments");
+		//	getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText");
+			numberOfInternalComments+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest", "fx:AddNode;Node:internalComments");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentText");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]", "fx:AddNode;Node:commentType");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentText", text);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/internalComments["+numberOfInternalComments+"]/commentType", type);
+	}
+	
+	public void setAllergies(String value){
 		// Determine if the index exists. If not, create it and the necessary
 		// child nodes. If so, then set the child node values
+		int numberOfAllergies= 1;
 		try{
-			getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+index+"]");
-		}catch(Exception e){
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:allergies");
-			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+index+"]", value);
-		}
+			numberOfAllergies= getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies");
+		//	getRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+numberOfAllergies+"]");
+			numberOfAllergies+=1;
+		}catch(Exception e){}
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:allergies");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/allergies["+numberOfAllergies+"]", value);
 	}	
 
 	public int getNumberOfComponentIds(){return getNumberOfRequestNodesByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices");}
-	public int getNumberOfRequestNodesByXPath(String xpath){return XMLTools.getNodeList(getRequestDocument(), xpath).getLength();}
 	public void setComponentIdAndType(int index, String id, String type){
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices["+index+"]/componentId", id);
 		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/componentPrices["+index+"]/componentType", type);
@@ -163,7 +203,18 @@ public class Modify extends EventDiningService {
 		}
 	}
 	
-	public void setReservableResourceId(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);}
+	public void setReservableResourceId(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);
+		reservableResourceId = value;
+		rrIdSetInAddDetails = true;
+	}
+	
+	public void setReservableResourceId(String value, boolean newDateTime){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/inventoryDetails/reservableResourceId", value);
+		reservableResourceId = value;
+		this.newDateTime = newDateTime;
+		rrIdSetInAddDetails = true;
+	}
 	public void setPrimaryGuestTitle(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/primaryGuest/title", value);}
 	public void setPrimaryGuestSuffix(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/primaryGuest/suffix", value);}
 	public void setContactName(String value){setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/contactName", value);}
@@ -217,23 +268,140 @@ public class Modify extends EventDiningService {
 		}
 	}
 	
+	public void addSpecialEventByProductName(String productName, String rrid){
+		Database dreamsDb = new OracleDatabase(getEnvironment(), Database.DREAMS);
+		Database availDb = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		String facilityId = "";
+		String sql=Pricing.getProductSpecialEventByProdName(productName);
+		
+		
+		Recordset rsPricing = new Recordset(dreamsDb.getResultSet(sql));
+		
+		if(rsPricing.getRowCount() == 0) throw new AutomationException("Failed to retreive data for Product Name ["+productName+"].\n SQL: "  +sql);
+		facilityId = rsPricing.getValue("FAC_ID");
+		Recordset rsInventory = null;
+		String startdate = "";
+		String startTime = "";
+		rsInventory= new Recordset(availDb.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(facilityId, getRequestServiceStartDate())));
+		startdate = rsInventory.getValue("Start_Date").contains(" ") 
+				   ? rsInventory.getValue("Start_Date").substring(0,rsInventory.getValue("Start_Date").indexOf(" "))
+			       : rsInventory.getValue("Start_Date");
+						   
+		startTime = rsInventory.getValue("Start_Date").replace(".0", "");
+		rrid = rsInventory.getValue("Resource_ID");
+	
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:eventInventory");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:duration");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:freezeElapsedTime");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:freezeTimeToLive");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:inventoryDetails");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/inventoryDetails", "fx:AddNode;Node:reservableResourceId");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/inventoryDetails/reservableResourceId",rrid);
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory", "fx:AddNode;Node:unitMeasureCount");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage", "fx:AddNode;Node:eventOrShowStartDate");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/duration","1");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/freezeElapsedTime","0");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/freezeTimeToLive","60");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventInventory/unitMeasureCount","1");
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventOrShowStartDate",rsInventory.getValue("Start_Date").replace(" " , "T"));
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/eventOrShowFacilityId",facilityId);
+	}
+	
 
 	@Override
 	public void sendRequest(){
+		
+		if(validateInventory) setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));
 		if(notSetFreezeId) 	setFreezeId();
+		boolean failure = false;
+		if(validateInventory) setInventoryCountBefore(getInventory());
 		super.sendRequest();
-		if(getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
-				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
-				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
-			if(notSetFreezeId) 	setFreezeId();
-			super.sendRequest();	
+		if(validateInventory){
+			Sleeper.sleep(2000);
+			if(!failure) setInventoryCountAfter(getInventory());
+			setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
+			
 		}
+		
+		if((getResponse().toUpperCase().contains("FACILITY SERVICE UNAVAILABLE OR RETURED INVALID FACILITY") ||	
+				getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint") ||
+				getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")) && !invokeRimError){
+			if(notSetFreezeId) 	setFreezeId();
+			if(validateInventory) setExistingInventoryCountBefore(getInventory(existingRRID, existingStartDateTime));
+			if(validateInventory)setInventoryCountBefore(getInventory());
+			Sleeper.sleep(5000);
+			super.sendRequest();	
+
+			if(validateInventory){
+				Sleeper.sleep(2000);
+				if(!failure) setInventoryCountAfter(getInventory());
+				setExistingInventoryCountAfter(getInventory(existingRRID, existingStartDateTime));
+				
+			}
+		}
+	}
+	public void sendRequest(String exRrid, String exDateTime){
+		existingRRID = exRrid;
+		existingStartDateTime = exDateTime;
+		sendRequest();
+	}
+	public void setExistingRRID(String rrid){existingRRID = rrid;}
+	public void setExistingStartDateTime(String dateTime){existingStartDateTime = dateTime;}
+	private void setExistingInventoryCountBefore(String before){existingInventoryBefore = before;}
+	public String getExistingInventoryCountBefore(){return existingInventoryBefore;}
+	private void setExistingInventoryCountAfter(String after){existingInventoryAfter = after;}
+	public String getExistingInventoryCountAfter(){return existingInventoryAfter;}
+	
+	
+	private void setInventoryCountBefore(String before){inventoryBefore = before;}
+	public String getInventoryCountBefore(){return inventoryBefore;}
+	private void setInventoryCountAfter(String after){inventoryAfter = after;}
+	public String getInventoryCountAfter(){return inventoryAfter;}
+	public String getReservableResourceId(){return reservableResourceId;}
+	public String getDateTime(){return dateTime;}
+	public void setStartTime(String time){startTime = time;}
+	public void setStartDate(String date){startDate = date;}
+	private String getInventory(){
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(reservableResourceId, startTime.replace("T", " "))));
+		if(rsInventory.getRowCount() == 0) throw new AutomationException("An error occurred finding inventory for reservable resource id ["+reservableResourceId+"] and time ["+dateTime+"].");
+		return rsInventory.getValue("BK_CN");
+	}
+	private String getInventory(String existingRRID, String existingStartDateTime){
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(existingRRID, existingStartDateTime.replace("T", " "))));
+	//	rsInventory.print();
+		return rsInventory.getValue("BK_CN");
 	}
 	public void setFreezeId(){
 		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
 		Recordset rs = null;
 		String freezeId = "";
 		Freeze freeze = new Freeze(getEnvironment(), "Main");
+//<<<<<<< HEAD
+		//rs = new Recordset(db.getResultSet(AvailSE.getFreezeId(getRequestReservableResourceId(), freeze.getRequestServiceStartDate() + " " + freeze.getRequestServiceStartTime())));
+//		Recordset rsInventory;
+//		if(reservableResourceId == null || newDateTime == true){
+//			if(reservableResourceId == null)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+//			else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId)));
+//			rsInventory.print();
+//			startDate = rsInventory.getValue("START_DATE").contains(" ") 
+//							   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
+//						       : rsInventory.getValue("START_DATE");
+//							   
+//			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+//			if(reservableResourceId == null) reservableResourceId = rsInventory.getValue("Resource_ID");
+//		}
+//		freeze.setReservableResourceId(reservableResourceId);	
+//		freeze.setStartDate(startDate);	
+//		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+//		freeze.sendRequest();
+//		int timesTried = 0;
+//		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
+//			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+//			rsInventory.print();
+//			startDate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+//=======
 		Recordset rsInventory = null;
 		String startdate = "";
 		String startTime = "";
@@ -242,8 +410,20 @@ public class Modify extends EventDiningService {
 			       : getRequestServiceStartDate();
 				   
 		if(!rrIdSetInAddDetails){
-			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(),startdate)));
-			setReservableResourceId(rsInventory.getValue("Resource_ID"));
+//			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(),startdate)));
+//			setReservableResourceId(rsInventory.getValue("Resource_ID"));
+			if(reservableResourceId == null || newDateTime == true){
+				if(reservableResourceId == null)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+				else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId)));
+			//	rsInventory.print();
+				startDate = rsInventory.getValue("START_DATE").contains(" ") 
+								   ? rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "))
+							       : rsInventory.getValue("START_DATE");
+								   
+				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+				this.startTime = startTime;
+				if(reservableResourceId == null) reservableResourceId = rsInventory.getValue("Resource_ID");
+			}
 		}else{
 			rsInventory = new Recordset(db.getResultSet(AvailSE.getResourceAvailibleTimesByIdAndStartDate(getRequestReservableResourceId(),startdate)));			
 		}
@@ -256,37 +436,60 @@ public class Modify extends EventDiningService {
 			       : rsInventory.getValue("START_DATE");
 						   
 		startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+		this.startTime = startTime;
 		freeze.setStartDate(startdate);	
 		freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
 		freeze.sendRequest();
 //			TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Failed to get Freeze ID", freeze);
 		int timesTried = 0;
-		while(freeze.getSuccess().equals("failure") && timesTried < 5){				
-			rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
-			rsInventory.print();
-			startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
-			startTime = rsInventory.getValue("START_DATE").replace(".0", "");
-			setReservableResourceId(rsInventory.getValue("Resource_ID"));
-			freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
-			freeze.setStartDate(startdate);	
-			freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
-			freeze.sendRequest();	
+		while(freeze.getSuccess().equals("failure") && timesTried < 10){				
+			if(!newDateTime)rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityAndDateNew(getRequestFacilityId(), getRequestServiceStartDate())));
+			else rsInventory = new Recordset(db.getResultSet(AvailSE.getReservableResourceByFacilityDateAndRRID(getRequestFacilityId(), getRequestServiceStartDate(), reservableResourceId).replace("to_Char(sysdate + 60, 'yyyy-mm-dd')", "to_Char(sysdate + 120, 'yyyy-mm-dd')")));
+		//	rsInventory.print();
+			try{
+				startdate = rsInventory.getValue("START_DATE").substring(0,rsInventory.getValue("START_DATE").indexOf(" "));
+				startDate = startdate;
+	//>>>>>>> bcbd28f51f4f4d70956471a29f528c4e2d10d279
+				startTime = rsInventory.getValue("START_DATE").replace(".0", "");
+				this.startTime = startTime;
+				if(!newDateTime)setReservableResourceId(rsInventory.getValue("Resource_ID"));
+				freeze.setReservableResourceId(rsInventory.getValue("Resource_ID"));	
+				freeze.setStartDate(startDate);	
+				freeze.setStartTime(startTime.substring(startTime.indexOf(" ") + 1,startTime.length()));
+				freeze.sendRequest();
+			}catch(Exception e){}	
 			if(freeze.getSuccess().equals("failure")) timesTried++;
 		}
-
+//<<<<<<< HEAD
 		TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
-
 		freezeId = freeze.getFreezeID();
 		setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+			
 		
-	
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		if(!invokeRimError) setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+//=======
+//
+//		TestReporter.logAPI(freeze.getSuccess().equals("failure"), "Could not Freeze Inventory", freeze);
+//
+//		freezeId = freeze.getFreezeID();
+//		setServiceStartDateTime(freeze.getRequestServiceStartDate() + "T" + freeze.getRequestServiceStartTime());
+//		
+//	
+//		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+//>>>>>>> bcbd28f51f4f4d70956471a29f528c4e2d10d279
 		notSetFreezeId = false;
 	}
 
 	public void setFreezeId(String freezeId){
-		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		}catch(XPathNotFoundException e){}
+		
 		notSetFreezeId = false;
+	}
+	public void setFreezeIdForError(String freezeId){
+		setRequestNodeValueByXPath("/Envelope/Body/modify/modifyEventDiningRequest/eventDiningPackage/freezeId", freezeId);
+		invokeRimError = true;
 	}
 	
 	public void setParty(HouseHold party){
@@ -399,6 +602,7 @@ public class Modify extends EventDiningService {
 		
 		for(Email email : guest.getAllEmails()){
 			if(position == 1){
+				
 				setPrimaryGuestEmailAddressLocatorId("0");
 				setPrimaryGuestEmailAddressGuestLocatorId("0");
 				setPrimaryGuestEmailAddressIsPrimary(email.isPrimary() ? "true":"false");

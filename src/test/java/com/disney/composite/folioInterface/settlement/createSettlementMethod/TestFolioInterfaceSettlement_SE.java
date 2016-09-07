@@ -16,7 +16,7 @@ public class TestFolioInterfaceSettlement_SE {
 	private ScheduledEventReservation res;
 	private HouseHold party;
 	
-	@BeforeMethod(alwaysRun=true)
+/*	@BeforeMethod(alwaysRun=true)
 	@Parameters("environment")
 	public void setup(String environment){
 		this.environment = environment;
@@ -31,13 +31,12 @@ public class TestFolioInterfaceSettlement_SE {
 			if(!res.getConfirmationNumber().isEmpty())
 				res.cancel();
 	}
-	
+	*/
 	@Test(groups={"SE", "api"})
 	public void testFolioPayment_SE(){
 		TestReporter.logScenario("Create a card settlement for a Scheduled Event reservation.");
-		TestReporter.log("Reservation Number: " + res.getConfirmationNumber());
-		TestReporter.log("Travel Plan Number: " + res.getTravelPlanId());
-		FolioInterfaceSettlement settlement = new FolioInterfaceSettlement(res);
+
+		FolioInterfaceSettlement settlement = new FolioInterfaceSettlement("Stage", "462350081461");
 		settlement.createSettlementMethod("Pay total amount due with valid Visa, with incidentals with CCV with Express Checkout");
 	}
 }

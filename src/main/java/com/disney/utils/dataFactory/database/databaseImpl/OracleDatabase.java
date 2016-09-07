@@ -35,6 +35,9 @@ public class OracleDatabase extends Database {
 		case "grumpy_cm":
 			environment = "GRUMPY";
 			break;
+		case "doc_cm":
+			environment = "DOC";
+			break;
 		default:
 			break;
 		}

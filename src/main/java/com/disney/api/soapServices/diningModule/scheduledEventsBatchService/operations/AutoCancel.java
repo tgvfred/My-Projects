@@ -3,8 +3,10 @@ package com.disney.api.soapServices.diningModule.scheduledEventsBatchService.ope
 import com.disney.api.soapServices.diningModule.scheduledEventsBatchService.ScheduledEventsBatchService;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
+import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.AvailSE;
 
 public class AutoCancel extends ScheduledEventsBatchService{
 
@@ -12,6 +14,8 @@ public class AutoCancel extends ScheduledEventsBatchService{
 	private String query = "select TC_GRP_NB as TCG from res_mgmt.tc_grp a where a.tps_id = '{TPS_ID}'";
 	private String database = "DREAMS";
 	private String environment;
+	protected String inventoryBefore;
+	protected String inventoryAfter;
 	
 	
 	public AutoCancel(String environment, String scenario) {
@@ -25,9 +29,7 @@ public class AutoCancel extends ScheduledEventsBatchService{
 		removeComments() ;
 		removeWhiteSpace();
 	}
-
-	public void setTravelComponentGroupingId(String value){setRequestNodeValueByXPath("/Envelope/Body/autoCancel/travelComponentGroupingId", value);}
-	
+	public void setTravelComponentGroupingId(String value){setRequestNodeValueByXPath("/Envelope/Body/autoCancel/travelComponentGroupingId", value);}	
 	public String getTravelPlanSegmentId(){return getResponseNodeValueByXPath("/Envelope/Body/autoCancelResponse/return/travelPlanSegmentId");}
 	public String getTravelStatus(){return getResponseNodeValueByXPath("/Envelope/Body/autoCancelResponse/return/travelStatus");}
 
@@ -52,4 +54,18 @@ public class AutoCancel extends ScheduledEventsBatchService{
 		int column = resultSet.getColumnIndex("TCG");
 		return resultSet.getValue(column, 1);
 	}
+	
+	public void sendRequest(String rrId, String dateTime){
+		inventoryBefore = getInventory(rrId, dateTime);
+		super.sendRequest();
+		inventoryAfter = getInventory(rrId, dateTime);		
+	}
+	private String getInventory(String rrId, String dateTime){
+		Database db = new OracleDatabase(getEnvironment(), Database.AVAIL_SE);
+		Recordset rsInventory = new Recordset(db.getResultSet(AvailSE.getAvailableResourceCount(rrId, dateTime)));
+		rsInventory.print();
+		return rsInventory.getValue("BK_CN");
+	}
+	public String getInventoryCountBefore(){return inventoryBefore;}
+	public String getInventoryCountAfter(){return inventoryAfter;}
 }

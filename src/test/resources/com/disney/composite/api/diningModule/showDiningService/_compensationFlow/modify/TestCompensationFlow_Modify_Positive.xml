@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestCompensationFlow_Modify_Positive_Suite" configfailurepolicy="continue">
+	<parameter name="environment" value="stage_cm" />
+	<test name="TestCompensationFlow_Modify_Positive">
+		<classes>
+			<class name="com.disney.composite.api.diningModule.showDiningService._compensationFlow.modify.TestCompensationFlow_Modify_Positive"/>
+		</classes>
+	</test>
+</suite>

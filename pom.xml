@@ -3,9 +3,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.gqe</groupId>
 	<artifactId>APIUtilsSoap</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>Composite API</name>
 	<description>Project for Composite Soap and Rest services along with utilities that consume them</description>
+	<distributionManagement>
+	    <repository>
+	      <id>WDPRT-latest</id>
+	      <name>WDPRT-latest</name>
+	      <url>https://nexus.disney.com/nexus/content/repositories/WDPRT-latest</url>
+	    </repository>
+	  </distributionManagement>
 	<dependencies>
 		<dependency>
 			<groupId>com.disney.gqe</groupId>
@@ -137,6 +144,55 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+				   <artifactId>maven-deploy-plugin</artifactId>
+				   <version>2.8.1</version>
+				   <executions>
+				      <execution>
+				         <id>default-deploy</id>
+				         <phase>deploy</phase>
+				         <goals>
+				            <goal>deploy</goal>
+				         </goals>
+				      </execution>
+				   </executions>
+				</plugin>
+				<plugin>
+				   <groupId>org.sonatype.plugins</groupId>
+				   <artifactId>nexus-staging-maven-plugin</artifactId>
+				   <version>1.5.1</version>
+				   <executions>
+				      <execution>
+				         <id>default-deploy</id>
+				         <phase>deploy</phase>
+				         <goals>
+				            <goal>deploy</goal>
+				         </goals>
+				      </execution>
+				   </executions>
+				   <configuration>
+				      <serverId>WDPRT-latest</serverId>
+				      <nexusUrl>https://nexus.disney.com/nexus/content/repositories/WDPRT-latest</nexusUrl>
+				      <skipStaging>true</skipStaging>
+				   </configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+					</configuration>
+					<executions>
+						<execution>
+							<id>make-assembly</id> <!-- this is used for inheritance merges -->
+							<phase>package</phase> <!-- bind to the packaging phase -->
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.12.4</version>
@@ -159,9 +215,8 @@
 		                <argLine>
 		                    -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
 		                </argLine>
-		              
-						
-						<suiteXmlFiles>
+		               <!-- <skipTests>true</skipTests> -->
+		              	<suiteXmlFiles>
 							<suiteXmlFile>${testNGSourceDirectory}/${suiteXmlFile}</suiteXmlFile>
 						</suiteXmlFiles>
 

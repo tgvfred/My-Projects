@@ -909,6 +909,7 @@ public class ReservationDecorator implements Reservation {
 	}
 	
 	public void quickBook(){
+		TestReporter.logStep("Book Resort reservation via Lilo Quickbook");
 			Quickbook quickbook = new Quickbook(getEnvironment(), "GuestBooking");
 	        
 	        quickbook.setArrivalDaysOut(getArrivalDaysOut());
@@ -927,16 +928,17 @@ public class ReservationDecorator implements Reservation {
 	        quickbook.setLocationId(getLocationId());
 	        if(getPartyId() != null) quickbook.setPrimaryGuestId(getPartyId());
 	        quickbook.sendRequest();
-	        Assert.assertEquals(quickbook.getResponseStatusCode(), "200","Response was not 200. " + quickbook.getResponse());	
+	        TestReporter.logAPI(!quickbook.getResponseStatusCode().equals("200"), "Error booking quickbook: "+ quickbook.getFaultString(), quickbook);	
 	        conversationIDs.put("api"+Randomness.randomNumber(4), quickbook.getConversationID());
 	        
 	        setTravelPlanId(quickbook.getTravelPlanId());
 	        
+	        TestReporter.logStep("Retrieve reservation information for Travel Plan [" + getTravelPlanId() + "]");
 	        Retrieve retrieve = new Retrieve(getEnvironment(), "Main");
 	        retrieve.setTravelPlanId(getTravelPlanId());        
 	        retrieve.setLocationId(getLocationId());
 	        retrieve.sendRequest();
-	        TestReporter.assertEquals(retrieve.getResponseStatusCode(), "200","Response was not 200");		
+	        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "Error retriving quickbook: "+ retrieve.getFaultString(), retrieve);		
 			
 	        setTravelPlanSegmentId(retrieve.getTravelPlanSegmentId());
 	        setTravelComponentGroupingId(retrieve.getTravelComponentGroupingId());
@@ -973,7 +975,7 @@ public class ReservationDecorator implements Reservation {
     	if(!primaryGuestPostalCode.isEmpty()) quickbook.setPrimaryGuestState(primaryGuestState);        	
         	
         quickbook.sendRequest();
-        Assert.assertEquals(quickbook.getResponseStatusCode(), "200","Response was not 200");	
+        TestReporter.logAPI(!quickbook.getResponseStatusCode().equals("200"), "Error booking quickbook: "+ quickbook.getFaultString(), quickbook);	
         
         setTravelPlanId(quickbook.getTravelPlanId());
         
@@ -981,7 +983,7 @@ public class ReservationDecorator implements Reservation {
         retrieve.setTravelPlanId(getTravelPlanId());        
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
-        TestReporter.assertEquals(retrieve.getResponseStatusCode(), "200","Response was not 200");		
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "Error retriving quickbook: "+ retrieve.getFaultString(), retrieve);	
 		
         setTravelPlanSegmentId(retrieve.getTravelPlanSegmentId());
         setTravelComponentGroupingId(retrieve.getTravelComponentGroupingId());
@@ -1291,14 +1293,14 @@ public class ReservationDecorator implements Reservation {
 	
 	
 	public void makeFullPayment(){
+		TestReporter.logStep("Get Folio information for Travel Plan [" + getTravelPlanId() + "]");
 		RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(getEnvironment(), "UI booking");
 		retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getTravelPlanId());
 		retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
 		retrieveBalance.setLocationId(getLocationId());
 		retrieveBalance.sendRequest();
-		
-		Assert.assertEquals(retrieveBalance.getResponseStatusCode(), "200","Response was not 200");	
-		
+        TestReporter.logAPI(!retrieveBalance.getResponseStatusCode().equals("200"), "Error getting balance due: "+ retrieveBalance.getFaultString(), retrieveBalance);	
+				
 		setBalanceDue(retrieveBalance.getPaymentRequired());
 		setDepositDue(retrieveBalance.getDepositRequired());
 		setFolioId(retrieveBalance.getFolioId());
@@ -1307,7 +1309,7 @@ public class ReservationDecorator implements Reservation {
 		postPayment.setAmount(getBalanceDue());
 		postPayment.setFolioId(getFolioId());
 		
-		postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TC, getTravelPlanId());
+		postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, getTravelPlanId());
 		postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, getTravelComponentId());
 		postPayment.setLocationId(getLocationId());
 		postPayment.setPartyId(getPartyId());
@@ -1315,9 +1317,10 @@ public class ReservationDecorator implements Reservation {
 		postPayment.setTravelPlanId(getTravelPlanId());
 		postPayment.setTravelPlanSegmentId(getTravelPlanSegmentId());
 		postPayment.setRetreivalReferenceNumber();
+		TestReporter.logStep("Make card payment on Folio [" + getFolioId() +"] for the amount of [" + getBalanceDue() +"]");
 		postPayment.sendRequest();
+        TestReporter.logAPI(!postPayment.getResponseStatusCode().equals("200"), "Error making payment: "+ postPayment.getFaultString(), postPayment);	
 		conversationIDs.put("payment", postPayment.getConversationID());
-		Assert.assertEquals(postPayment.getResponseStatusCode(), "200","Response was not 200");	
 		
 		setBalanceDue(postPayment.getFolioBalance());
 		setOriginalTransactionId(postPayment.getOriginalTransactionId());

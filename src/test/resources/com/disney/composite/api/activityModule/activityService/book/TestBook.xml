@@ -3,8 +3,8 @@
 <suite name="TestBook_Suite" parallel="methods" thread-count="10">
 	<parameter name="environment" value="Stage_CM" />
 	<test name="TestBook">
-		<classes>
-			<class name="com.disney.composite.api.activityModule.activityService.book.TestBook"/>
-		</classes>
+	<packages>
+		<package name="com.disney.composite.api.activityModule.activityService.book.*"></package>
+	</packages>
 	</test>
 </suite>

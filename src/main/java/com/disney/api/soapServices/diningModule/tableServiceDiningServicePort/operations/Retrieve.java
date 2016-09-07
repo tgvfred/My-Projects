@@ -49,4 +49,8 @@ public class Retrieve extends TableServiceDiningServicePort{
 	 * @return - primary guest age 
 	 */
 	public String getPrimaryGuestAge(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveTableServiceResponse/tableServiceReservation/tableService/partyRoles[1]/age");}
+	
+	public String getReservableResourceId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveTableServiceResponse/tableServiceReservation/tableService/inventoryDetails/reservableResourceId");}
+	
+	public String getServiceStartDate(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveTableServiceResponse/tableServiceReservation/tableService/serviceStartDate");}
 }
