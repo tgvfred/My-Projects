@@ -1,6 +1,6 @@
 package com.disney.utils.dataFactory.folioInterface;
 
-import com.disney.api.soapServices.folioServicePort.operations.CreateSettlementMethod;
+import com.disney.api.soapServices.folioModule.folioServicePort.operations.CreateSettlementMethod;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.staging.Reservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;

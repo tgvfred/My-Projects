@@ -63,7 +63,6 @@ public class GroundTransferReservations {
 		
 		GroundTransferReservationsResponse[] dmeRes = null;
 		dmeRes = response.mapJSONToObject(GroundTransferReservationsResponse[].class);
-		
 		return dmeRes;
 	}
 }

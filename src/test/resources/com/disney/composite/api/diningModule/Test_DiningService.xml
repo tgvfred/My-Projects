@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ShowDiningService_Suite" parallel="methods" thread-count="50"  configfailurepolicy="continue">
+	<parameter name="environment" value="${environment}" />
+	<test name="ShowDiningService">
+		<packages>
+			<package name="com.disney.composite.api.*"></package>
+		</packages>
+			<groups>
+				<run>
+				<include name="dining" />
+					
+					<exclude name="dev"  />
+				</run>
+			</groups>
+	</test>
+</suite>

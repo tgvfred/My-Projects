@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="SEGenerator_Suite" parallel="classes" thread-count="100">
-	<parameter name="environment" value="Grumpy" />
+<suite name="SEGenerator_Suite" parallel="methods" thread-count="100">
+	<parameter name="environment" value="Shadow" />
 	<test name="SEGenerator">
 		<packages>
 			<package name="com.disney.composite.SEReservationGenerator.activityService.*"></package>

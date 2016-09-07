@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
@@ -17,12 +18,8 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  * @author Justin Phlegar
  *
  */
-public class TestBookWith_FacilityId_Date_ServicePeriod_ProductId {
-	private String environment;
-	private String reservationNumber;
-	private ScheduledEventReservation res;
-	private ScheduledEventReservation childRes;
-	private ScheduledEventReservation recRes;
+public class TestBookWith_FacilityId_Date_ServicePeriod_ProductId extends BaseTest{
+	private ThreadLocal<ScheduledEventReservation> res = new ThreadLocal<ScheduledEventReservation>();
 	private HouseHold childParty;
 	private HouseHold recParty;
 	/**
@@ -39,42 +36,38 @@ public class TestBookWith_FacilityId_Date_ServicePeriod_ProductId {
 	private String childProductId = "53905";
 	private String childServicePeriod = "0";
 	private String childProductType = "ChildActivityProduct";
-	
+
+	@Override
 	@BeforeMethod(alwaysRun=true)
 	@Parameters("environment")
 	public void setup(String environment){
 		this.environment = environment;
-		childParty = new HouseHold("1 Child");
-		childParty.primaryGuest().setAge("9");
-		childRes = new ActivityEventReservation(this.environment, childParty);
-		recParty = new HouseHold(1);
-		recRes = new ActivityEventReservation(this.environment, recParty);
 	}
 	
 	@AfterMethod(alwaysRun=true)
 	public void teardown(){
-		if(reservationNumber != null)
-			if(!reservationNumber.isEmpty())
-				res.cancel();
+		try{res.get().cancel();}
+		catch(Exception e){}
 	}
 	
 	@Test
 	public void testBookWith_FacilityId_Date_ServicePeriod_ProductId_ChildActivity(){
-		childRes.setProductType(childProductType);
-		childRes.book(childFacilityId, Randomness.generateCurrentXMLDatetime(45), childServicePeriod, childProductId);
-		res = childRes;
-		reservationNumber = res.getConfirmationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getTravelPlanId()), "The travel plan ID ["+res.getTravelPlanId()+"] is not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getConfirmationNumber()), "The reservation number ["+res.getConfirmationNumber()+"] is not numeric as expected.");
+		childParty = new HouseHold("1 Child");
+		childParty.primaryGuest().setAge("9");
+		res.set(new ActivityEventReservation(this.environment, childParty));
+		res.get().setProductType(childProductType);
+		res.get().book(childFacilityId, Randomness.generateCurrentXMLDatetime(45), childServicePeriod, childProductId);
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.get().getTravelPlanId()), "The travel plan ID ["+res.get().getTravelPlanId()+"] is not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.get().getConfirmationNumber()), "The reservation number ["+res.get().getConfirmationNumber()+"] is not numeric as expected.");
 	}
 	
 	@Test
 	public void testBookWith_FacilityId_Date_ServicePeriod_ProductId_RecreationActivity(){
-		recRes.setProductType(recProductType);
-		recRes.book(recFacilityId, Randomness.generateCurrentXMLDatetime(45), recServicePeriod, recProductId);
-		res = recRes;
-		reservationNumber = res.getConfirmationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getTravelPlanId()), "The travel plan ID ["+res.getTravelPlanId()+"] is not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", res.getConfirmationNumber()), "The reservation number ["+res.getConfirmationNumber()+"] is not numeric as expected.");
+		recParty = new HouseHold(1);
+		res.set(new ActivityEventReservation(this.environment, recParty));
+		res.get().setProductType(recProductType);
+		res.get().book(recFacilityId, Randomness.generateCurrentXMLDatetime(45), recServicePeriod, recProductId);
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.get().getTravelPlanId()), "The travel plan ID ["+res.get().getTravelPlanId()+"] is not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", res.get().getConfirmationNumber()), "The reservation number ["+res.get().getConfirmationNumber()+"] is not numeric as expected.");
 	}
 }

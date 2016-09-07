@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestBookWith_FacilityId_Date_ServicePeriod_ProductId_Suite" parallel="tests" thread-count="2">
+<suite name="TestBookWith_FacilityId_Date_ServicePeriod_ProductId_Suite">
 	<parameter name="environment" value="Bashful" />
 	<test name="TestBookWith_FacilityId_Date_ServicePeriod_ProductId">
 		<classes>
-			<class name="com.disney.test.composite.SEReservationGenerator.eventDining.TestBookWith_FacilityId_Date_ServicePeriod_ProductId"/>
+			<class name="com.disney.composite.SEReservationGenerator.eventDining.TestBookWith_FacilityId_Date_ServicePeriod_ProductId"/>
 		</classes>
 	</test>
 </suite>

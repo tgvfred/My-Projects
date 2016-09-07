@@ -1,26 +1,11 @@
 package com.disney.composite;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.Header;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 import com.disney.AutomationException;
-import com.disney.api.restServices.core.Headers.HeaderType;
-import com.disney.api.restServices.core.RestService;
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.test.utils.Sleeper;
@@ -40,37 +25,11 @@ public class BaseTest {
 	protected int logTimeout = 3000;
 	protected int defaultTimeout = 3000;
 	@BeforeSuite
-	public void updateJenkinsBuildName(){
-	//	TestReporter.setDebugLevel(1);
+	public void preSuite(){
 		try{
-			TestReporter.logDebug("Checking if executed from Jenkins");
-			String buildId = System.getenv("BUILD_ID");
-			URI url = null;
-			if(buildId != null && !buildId.isEmpty()){
-				TestReporter.logDebug("Is executed from Jenkins, updating build name");
-				//String buildId = System.getenv("BUILD_ID");
-				String buildUrl = System.getenv("BUILD_URL") + "configSubmit";
-				String buildEnv = System.getenv("environment");
-				try {
-					url = new URI(buildUrl);
-				} catch ( URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				RestService rest = new RestService();
-				String json = "{\"displayName\": \"#" + buildId + " - " + buildEnv + "\", \"description\": \"\", \"core:apply\": \"\"}";
-				
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				params.add(new BasicNameValuePair("Submit", "Save"));
-				params.add(new BasicNameValuePair("displayName", "#" + buildId + " - " + buildEnv));
-				params.add(new BasicNameValuePair("json", json));
-				params.add(new BasicNameValuePair("description", ""));
-				params.add(new BasicNameValuePair("core:apply", ""));
-				rest.sendPostRequest(url, HeaderType.JENKINS, params);
-				
-			}
-		}catch(Exception e){}
+			TestReporter.setDebugLevel(Integer.parseInt(System.getenv("debugLevel")));
+		}catch(Exception e){}		
+	//	TestReporter.setDebugLevel(1);
 	}
 	
 	@BeforeMethod(alwaysRun = true)
@@ -97,6 +56,12 @@ public class BaseTest {
 	
 	protected void validateNotInLogs(BaseSoapService soap, LogItems logItems){
 		logTimeout = defaultTimeout;
+		validate(false,soap,logItems);
+	}
+	
+	
+	protected void validateNotInLogs(BaseSoapService soap, LogItems logItems, int logTimeout){
+		this.logTimeout = logTimeout;
 		validate(false,soap,logItems);
 	}
 	
@@ -139,7 +104,7 @@ public class BaseTest {
 		boolean isValid = false;
 		boolean containsRequest = false;
 		boolean containsResponse = false;
-		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+		if(!Environment.getEnvironmentName(environment).equalsIgnoreCase("Grumpy") && !environment.equalsIgnoreCase("Development") && !environment.toLowerCase().contains("_cm")){
 				
 			Recordset rs = getLogs(environment, soap.getConversationID());
 			

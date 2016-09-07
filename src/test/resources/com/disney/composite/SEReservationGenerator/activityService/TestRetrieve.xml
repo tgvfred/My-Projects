@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestRetrieve_Suite">
+<suite name="TestRetrieve_Suite" parallel="methods" thread-count="5">
 	<parameter name="environment" value="Grumpy" />
 	<test name="TestRetrieve">
 		<classes>
-			<class name="com.disney.test.composite.SEReservationGenerator.activityService.TestRetrieve"/>
+			<class name="com.disney.composite.SEReservationGenerator.activityService.TestRetrieve"/>
 		</classes>
 	</test>
 </suite>

@@ -7,10 +7,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import com.disney.api.soapServices.bussvcsModule.guestServiceV2.operations.Create;
+import com.disney.api.soapServices.bussvcsModule.guestServiceV2.operations.SearchByNameAndAddress;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.guestServiceV2.operations.Create;
-import com.disney.api.soapServices.guestServiceV2.operations.SearchByNameAndAddress;
-import com.disney.api.soapServices.partyService.operations.CreateParty;
+import com.disney.api.soapServices.partyModule.partyService.operations.CreateParty;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -76,7 +76,7 @@ public class Guest {
 	}
 	
 	public void sendToApi(String environment, boolean isPartyV3) {
-		if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+		if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM") && !environment.contains("_cm")){
 			guest = new Create(environment, "Main");
 			guest.setPrefix(title);
 			guest.setFirstName(firstName);
@@ -104,10 +104,10 @@ public class Guest {
 			}
 			}
 		Sleeper.sleep(2000);
-		if(isPartyV3 || environment.equalsIgnoreCase("Development") || environment.contains("_CM")){
-			com.disney.api.soapServices.partyV3.operations.CreateParty partyV3 = null;
-			partyV3 = new com.disney.api.soapServices.partyV3.operations.CreateParty(environment, "SampleCreate");
-			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+		if(isPartyV3 || environment.equalsIgnoreCase("Development") || environment.equalsIgnoreCase("Latest_CM")){
+			com.disney.api.soapServices.partyModule.partyV3.operations.CreateParty partyV3 = null;
+			partyV3 = new com.disney.api.soapServices.partyModule.partyV3.operations.CreateParty(environment, "SampleCreate");
+			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM") && !environment.contains("_cm")){
 				odsId = guest.getOdsGuestId();
 				addresses.get(0).setZipCode(guest.getPostalCode());
 				addresses.get(0).setLocatorId(guest.getAddressLocatorId());
@@ -142,7 +142,7 @@ public class Guest {
 			this.partyId = partyV3.getPartyid();
 		}else{
 			CreateParty party = null;
-			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM")){
+			if(!environment.equalsIgnoreCase("Development") && !environment.contains("_CM") && !environment.contains("_cm")){
 				odsId = guest.getOdsGuestId();
 				addresses.get(0).setZipCode(guest.getPostalCode());
 				addresses.get(0).setLocatorId(guest.getAddressLocatorId());

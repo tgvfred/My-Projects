@@ -34,11 +34,12 @@ public class RestResponse {
 		responseFormat = ContentType.getOrDefault(response.getEntity()).getMimeType().replace("application/", "");
 		try {
 			responseAsString = EntityUtils.toString(response.getEntity());
+
+			TestReporter.logInfo("Response Status returned [" + httpResponse.getStatusLine() +"]");
+			TestReporter.logInfo("Response returned: " +responseAsString);
 		} catch (ParseException | IOException e) {
 			throw new AutomationException(e.getMessage(), e);
 		}
-		TestReporter.logInfo("Response Status returned [" + httpResponse.getStatusLine() +"]");
-		TestReporter.logInfo("Response returned [" + responseAsString +"]");
 	}
 	
 	public int getStatusCode(){ return statusCode; }	
@@ -86,9 +87,13 @@ public class RestResponse {
 	 * @return
 	 * @throws IOException
 	 */
-	public JsonNode mapJSONToTree(String stringResponse) throws IOException {
+	public JsonNode mapJSONToTree(String stringResponse) {
 				
-		return mapper.readTree(stringResponse);
+		try {
+			return mapper.readTree(stringResponse);
+		} catch (IOException e) {
+			throw new AutomationException("Failed to read response:" + stringResponse, e);
+		}
 	}
 	
 	/**
@@ -97,7 +102,7 @@ public class RestResponse {
 	 * @return
 	 * @throws IOException
 	 */
-	public JsonNode mapJSONToTree() throws IOException {
+	public JsonNode mapJSONToTree() {
 		return mapJSONToTree(responseAsString);
 	}
 }

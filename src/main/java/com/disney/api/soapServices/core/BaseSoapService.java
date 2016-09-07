@@ -61,7 +61,9 @@ import javax.xml.xpath.XPathFactory;
 
 import jxl.read.biff.BiffException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.WordUtils;
+import org.apache.http.client.methods.HttpGet;
 import org.jaxen.SimpleNamespaceContext;
 import org.testng.Reporter;
 //import org.testng.Reporter;
@@ -72,11 +74,14 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.disney.AutomationException;
+import com.disney.api.restServices.core.RestService;
+import com.disney.api.restServices.github.content.Content;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.core.exceptions.XPathNullNodeValueException;
 import com.disney.test.utils.Randomness;
 import com.disney.test.utils.Regex;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.test.utils.Base64Coder;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
@@ -512,14 +517,28 @@ public abstract class BaseSoapService{
 			TestReporter.logDebug("Initializing Soap Message Factory");
 			messageFactory = MessageFactory.newInstance(SOAPConstants.DEFAULT_SOAP_PROTOCOL);
 			
+			String header = System.getenv("header");
+			if(header != null) {				
+				header = header.equalsIgnoreCase("Dark") ? "SHADOW" : "";
+				header = header.equalsIgnoreCase("Shadow") ? "SHADOW" : "";
+				
+				if(header.equals("SHADOW")) TestReporter.logInfo("Sending request to Dark Side");
+				else TestReporter.logInfo("Sending request to Lite Side");
+			}
+			else {
+				TestReporter.logInfo("Sending request to Lite Side");
+				header = "";
+			}
+			
 			// Convert XML Request to SoapMessage
 			TestReporter.logInfo("Request to send: \n" + getRequest());
 			TestReporter.logDebug("Convertting request to a Soap Message");
-			request = messageFactory.createMessage(new MimeHeaders(), new StringBufferInputStream(getRequest()));			
-//			request.writeTo(System.out);
-		//	System.out.println();
 			
-			// Send out Soap Request to the endopoint
+			request = messageFactory.createMessage(new MimeHeaders(), new StringBufferInputStream(getRequest()));		
+			MimeHeaders soapHeader = request.getMimeHeaders();
+			soapHeader.addHeader("X-Disney-Internal-PoolOverride", header);		
+			
+			// Send out Soap Request to the endpoint
 			TestReporter.logDebug("Initializing Soap Connection Factory");
 			connectionFactory = SOAPConnectionFactory.newInstance();
 			
@@ -601,7 +620,18 @@ public abstract class BaseSoapService{
 	public void setRequestNodeValueByXPath(String xpath, String value) {
 			setRequestNodeValueByXPath(getRequestDocument(),xpath,value);
 	}
-
+	
+	public void setRequestNodeValueByXPathAndAddNode(String xpath, String value){
+		try{
+			setRequestNodeValueByXPath(xpath, value);
+		}catch(Exception e){
+			String node = xpath.substring(xpath.lastIndexOf("/") + 1,  xpath.length());
+			xpath = xpath.substring(0, xpath.lastIndexOf("/"));
+			if(node.contains("@"))	node = node.substring(0,node.indexOf("@"));
+			setRequestNodeValueByXPath(xpath, "fx:AddNode;Node:" + node);
+			setRequestNodeValueByXPath(xpath, value);
+		}
+	}
 	/**
 	 * @summary Update multiple XPath nodes or attributes based on the value. The value
 	 *          is not limited to simple values, but may also call various
@@ -902,7 +932,7 @@ public abstract class BaseSoapService{
 			e.printStackTrace();
 		}
 
-		setServiceURL(getFirstNodeValueByTagName(responseDoc, "endPoint") + "?wsdl");
+		setServiceURL(getFirstNodeValueByTagName(responseDoc, "endPoint"));
 
 	}
 	
@@ -911,7 +941,7 @@ public abstract class BaseSoapService{
 	protected void setEnvironmentServiceURL(String service, String environment, String url) {
 		setEnvironment(environment);
 		setService(service);
-		setServiceURL(url + "?wsdl");
+		setServiceURL(url);
 	}
 	
 	//DJS - This was added as proof of concept for endpoints utilizing Service Virtualization
@@ -945,22 +975,17 @@ public abstract class BaseSoapService{
 	}
 	
 	protected String buildRequestFromWSDL(String operationName){
-		String request = "";
+		String token = "P2FjY2Vzc190b2tlbj00ZmExNzBlZjE3NTA2MTM1ZGJkZTFiMzdjYjlhZDRlNDQ1MjVjN2Vm";
 		strOperationName = operationName;
-		String url = "https://github.disney.com/raw/phlej001/TestDataOnDemand/master/TestDataOnDemand/soap-xml-storage/{environment}/{service}/{operation}.xml";
+		String url = "https://github.disney.com/api/v3/repos/phlej001/TestDataOnDemand/contents/TestDataOnDemand/soap-xml-storage/{environment}/{service}/{operation}.xml" +Base64Coder.decodeString(token);
 		url = url.replace("{environment}", WordUtils.capitalize(getEnvironment().replace("_CM",""))); 
 		url = url.replace("{service}", getService());
 		url = url.replace("{operation}", getOperation());
-		
-		try {
-			request = sendGetRequest(url);
-		} catch(FileNotFoundException fe){
-			throw new AutomationException("XML file not found in this location: " + fe.getMessage());
-		}catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return request;
+		HttpGet request = new HttpGet(url);
+		Content content =  new RestService().sendRequest(request).mapJSONToObject(Content.class);
+		String rawRequest= new String(Base64.decodeBase64(content.getContent().getBytes() ));
+	
+		return rawRequest;
 	}
 	
 	/*protected String buildRequestFromWSDL(String service, boolean oldSchool) {
@@ -1056,14 +1081,18 @@ public abstract class BaseSoapService{
 			TestReporter.logDebug("Creating Keystore Instance");
 			clientStore = KeyStore.getInstance("PKCS12");
 
-			//clientStore.load(new FileInputStream(new File(getClass().getResource("/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12").getPath())), "Disney123".toCharArray());
-
+			String token = "P2FjY2Vzc190b2tlbj00ZmExNzBlZjE3NTA2MTM1ZGJkZTFiMzdjYjlhZDRlNDQ1MjVjN2Vm";
+			String url = "https://github.disney.com/api/v3/repos/WDPRO-QA/lilo/contents/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12" +Base64Coder.decodeString(token);
+			HttpGet request = new HttpGet(url);
+			Content content =  new RestService().sendRequest(request).mapJSONToObject(Content.class);
+			String downloadURL = content.getDownloadUrl();
+			
 			TestReporter.logDebug("Retrieving WebVan Certificate");
-			InputStream is = new URL("https://github.disney.com/WDPRO-QA/lilo/raw/master/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/TWDC.WDPR.Passport.QA.p12").openStream();
-
+			InputStream is = new URL(downloadURL).openStream();
+			
+		
 			TestReporter.logDebug("Loading WebVan Certifcate into Keystore");
 			clientStore.load(is, "Disney123".toCharArray());
-	
 
 			TestReporter.logDebug("Unlocking WebVan cert with key");
 	        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -1072,8 +1101,12 @@ public abstract class BaseSoapService{
 	       
 	       // String path = getClass().getResource("/com/disney/certificates/webvan/cacerts").getPath();
 	        TestReporter.logDebug("Retrieving CA Cert Store");
-	        InputStream isCA = new URL("https://github.disney.com/WDPRO-QA/lilo/raw/master/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/cacerts").openStream();
-			
+	        url = "https://github.disney.com/api/v3/repos/WDPRO-QA/lilo/contents/end_to_end/CommerceFlow/src/main/resources/com/disney/certificates/webvan/cacerts" +Base64Coder.decodeString(token);
+			request = new HttpGet(url);
+			content =  new RestService().sendRequest(request).mapJSONToObject(Content.class);
+			downloadURL = content.getDownloadUrl();
+	        InputStream isCA = new URL(downloadURL).openStream();
+	        
 	        TestReporter.logDebug("Unlocking CA Cert Store with key");
 	        KeyStore trustStore = KeyStore.getInstance("JKS");
 	        trustStore.load(isCA, "changeit".toCharArray());
@@ -1425,7 +1458,7 @@ public abstract class BaseSoapService{
 		case "fx:getdate":
 			daysOut = params[1].split(":");
 			if (daysOut[0].trim().equalsIgnoreCase("DaysOut")) {
-				return Randomness.generateCurrentXMLDatetime(Integer.parseInt(daysOut[1]));
+				return Randomness.generateCurrentXMLDate(Integer.parseInt(daysOut[1]));
 			} else{
 				// report error 
 			}

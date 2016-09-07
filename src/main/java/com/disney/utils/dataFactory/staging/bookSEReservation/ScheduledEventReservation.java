@@ -25,6 +25,7 @@ public interface ScheduledEventReservation{
 	public String getArrivedStatus();
 	public String getFacilityId();
 	public String getProductId();
+	public String getProductName();
 	public String getProductType();
 	public String getServicePeriodId();
 	public String getServiceStartDate();
@@ -37,13 +38,17 @@ public interface ScheduledEventReservation{
 	public String getRetrieveResponseFacilityID();
 	public String getPrimaryGuestAge();
 	public String getModifyResponseStatus();
+	public String getSourceAccountingCenter();
+	public String getFacilityName();
 	// Setters used to set field values
 	public void setFacilityId(String facilityId);
+	public void setProductName(String productName);
 	public void setProductId(String productId);
 	public void setProductType(String productType);
 	public void setBookingScenario(String scenario);
 	public void setSourceAccountingCenter(String sourceAccountingcenter);
-	public String getSourceAccountingCenter();
+	public void setServiceStartDate(String date);
+	public void setFacilityName(String name);
 	// Interfaces for methods to generate and set a household
 	public HouseHold party();
 	public void setParty(HouseHold party);	
@@ -70,4 +75,6 @@ public interface ScheduledEventReservation{
 	public void reprintTicket();
 	// Interface for a sub-class that will contain methods to modify scheduled event reservations
 	public Modify modify();
+	// ScheduldeEventsService interface
+	public ScheduledEventsServices ses();
 }

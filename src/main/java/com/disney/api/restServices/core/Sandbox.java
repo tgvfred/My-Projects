@@ -1,75 +1,44 @@
 package com.disney.api.restServices.core;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;
 
 import com.disney.api.restServices.Rest;
-import com.disney.api.restServices.core.Headers.HeaderType;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.request.RetrieveRequest;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.response.RetreiveResponse;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.response.objects.GuestInfoTO;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.response.objects.RootChargeAccountResponse;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.guestFactory.Guest;
-import com.disney.utils.dataFactory.staging.GenerateReservation;
-import com.disney.utils.dataFactory.staging.Reservation;
 
 public class Sandbox {
-	
-	//@Test
-	public void test() {
-		TestReporter.setDebugLevel(2);
-		String json = "{\"chargeAccountIdentifiers\": [{\"chargeAccountId\": \"2364\"},"+
-					   " {\"chargeAccountId\": \"2365\"}]}";
-		
-		/**RestResponse response= Rest.folio("Development").chargeAccountServiceV2().chargeAccount().retrieve().sendPutRequest(json);
-		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
-	**/}
-	
-	@Test
-	public void test3() {
 
-		TestReporter.setDebugLevel(2);
-		Reservation res = new GenerateReservation().bookResortReservation().CONTEMPORARY("Sleepy");
-		res.setGuestInfo(new Guest());
-		res.quickBook();
+	@Test
+	public void test() {
+		TestReporter.setDebugLevel(1);
 		
-		res.addRoundTripDME();
-		System.out.println(res.getTravelPlanSegmentId());
+		//Creating ChargeAccount.retrieve request
+		RetrieveRequest request = new RetrieveRequest();
 		
-	}
-	
-	//@Test
-	public void test2(){
-		TestReporter.setDebugLevel(2);
-		TestReporter.logDebug("Is executed from Jenkins, updating build name");
-		//String buildId = System.getenv("BUILD_ID");
-		String buildUrl = "http://jenkins-pc.wdw-ilab.wdw.disney.com:9090/job/CoMo_API_ShowDiningSerivce/74/" + "configSubmit";
-		String buildEnv = "Latest_CM";
-		String buildId = "74";
+		//Adding Charge Accounts to look for
+		request.addChargeAccountId("2364");
+		request.addChargeAccountId("2365");
+		request.addChargeAccountId("2366");
+		request.addChargeAccountId("2367");
+		request.addChargeAccountId("2368");
+		request.addChargeAccountId("2369");
 		
-		URI url = null;
-		try {
-			url = new URI(buildUrl);
-		} catch ( URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//Sending request and validating response
+		RestResponse response= Rest.folio("Development").chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);		
+		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		
+		//Navigating response json to get specific data
+		RetreiveResponse[] retrieveResponse = response.mapJSONToObject(RetreiveResponse[].class);
+		for(RetreiveResponse chargeAccount : retrieveResponse){
+				System.out.println("Charge Account Id: " + chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getId());
+				System.out.println("Charge Account Status: " + chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getStatus());
+				GuestInfoTO guest = chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getGuestInfoTO().get(0);
+				System.out.println("Charge Account Guest Name: " + guest.getFirstName() + " " + guest.getLastName());
+				System.out.println();
+			//}
 		}
-		
-		RestService rest = new RestService();
-		String json = "{\"displayName\": \"#" + buildId + " - " + buildEnv + "\", \"description\": \"\", \"core:apply\": \"\"}";
-		
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("Submit", "Save"));
-		params.add(new BasicNameValuePair("displayName", "#" + buildId + " - " + buildEnv));
-		params.add(new BasicNameValuePair("json", json));
-		params.add(new BasicNameValuePair("description", ""));
-		params.add(new BasicNameValuePair("core:apply", ""));
-		TestReporter.logInfo(rest.sendPostRequest(url, HeaderType.JENKINS, params).getResponse());
 	}
 }

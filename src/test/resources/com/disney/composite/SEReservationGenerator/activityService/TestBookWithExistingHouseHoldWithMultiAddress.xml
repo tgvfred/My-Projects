@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestBookWithExistingHouseHoldWithMultiAddress_Suite" parallel="tests" thread-count="2">
+<suite name="TestBookWithExistingHouseHoldWithMultiAddress_Suite" parallel="methods" thread-count="5">
 	<parameter name="environment" value="Grumpy" />
 	<test name="TestBookWithExistingHouseHoldWithMultiAddress">
 		<classes>
-			<class name="com.disney.test.composite.SEReservationGenerator.activityService.TestBookWithExistingHouseHoldWithMultiAddress"/>
+			<class name="com.disney.composite.SEReservationGenerator.activityService.TestBookWithExistingHouseHoldWithMultiAddress"/>
 		</classes>
 	</test>
 </suite>

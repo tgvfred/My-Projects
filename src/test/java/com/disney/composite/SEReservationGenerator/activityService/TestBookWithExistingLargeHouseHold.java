@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
@@ -17,8 +18,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
  * @author Justin Phlegar
  *
  */
-public class TestBookWithExistingLargeHouseHold {
-	private String environment;
+public class TestBookWithExistingLargeHouseHold extends BaseTest{
 	private String travelPlanId;
 	private String reservationNumber;
 	private ScheduledEventReservation res;
@@ -31,13 +31,13 @@ public class TestBookWithExistingLargeHouseHold {
 	private String recServicePeriod = "0";
 	private String recProductType = "RecreationActivityProduct";
 	
+	@Override
 	@BeforeMethod(alwaysRun=true)
 	@Parameters("environment")
 	public void setup(String environment){
 		this.environment = environment;
 		party = new HouseHold("2 Adults 2 Child");
 		party.primaryGuest().addAddress();
-		party.primaryGuest().addEmail();
 	}
 	
 	@AfterMethod(alwaysRun=true)
@@ -64,8 +64,8 @@ public class TestBookWithExistingLargeHouseHold {
 		res.book(recFacilityId, Randomness.generateCurrentXMLDatetime(45), recServicePeriod, recProductId);
 		travelPlanId = res.getTravelPlanId();
 		reservationNumber = res.getConfirmationNumber();
-		TestReporter.assertTrue(new Regex().match("[0-9]+", travelPlanId), "The travel plan ID ["+travelPlanId+"] was not numeric as expected.");
-		TestReporter.assertTrue(new Regex().match("[0-9]+", reservationNumber), "The reservation number ["+reservationNumber+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", travelPlanId), "The travel plan ID ["+travelPlanId+"] was not numeric as expected.");
+		TestReporter.assertTrue(Regex.match("[0-9]+", reservationNumber), "The reservation number ["+reservationNumber+"] was not numeric as expected.");
 		TestReporter.assertEquals(res.getStatus(), "Booked", "The reservation status ["+res.getStatus()+"] was not 'Booked' as expected.");
 	}
 }

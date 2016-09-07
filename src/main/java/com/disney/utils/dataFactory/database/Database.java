@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 
+import com.disney.utils.TestReporter;
+
 public abstract class Database {
 	final public static String AVAIL_SE = "availse";
 	final public static String DIRECT_CONNECT = "directconnect";
@@ -95,7 +97,7 @@ public abstract class Database {
 			
 			connection = DriverManager.getConnection(getDbConnectionString(), getDbUserName(), getDbPassword());
 		
-	  //  System.out.println(query);
+	  TestReporter.logInfo(query);
 		ResultSet rs = (runQuery(connection, query));
 	  //  try {
 			return extract(rs);

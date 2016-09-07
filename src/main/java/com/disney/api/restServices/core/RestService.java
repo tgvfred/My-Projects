@@ -285,7 +285,7 @@ public class RestService {
 		    }
 			
 			if(json !=  null){
-				TestReporter.logInfo("Adding json [" + json + "]");
+				TestReporter.logInfo("Adding json " + json );
 				httpPut.setEntity( new ByteArrayEntity(json.getBytes("UTF-8")));
 			}
 		} catch (UnsupportedEncodingException e) {
@@ -437,7 +437,16 @@ public class RestService {
 		return sendRequest(httpOptions).getHeaders();
 	}
 
-	private RestResponse sendRequest(HttpUriRequest request){
+	public String getJsonFromObject(Object request){
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request);
+		} catch (JsonProcessingException e) {
+			throw new WebServiceException("Failed to convert object to json");
+		}
+	}
+	
+	public RestResponse sendRequest(HttpUriRequest request){
 		RestResponse response = null;
 		try {
 			TestReporter.logDebug("Sending request");
@@ -450,13 +459,4 @@ public class RestService {
 		TestReporter.logDebug("Returning RestResponse to calling method");
 		return response;
 	}
-	
-	public String getJsonFromObject(Object request){
-		ObjectMapper mapper = new ObjectMapper();
-			try {
-	            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request);
-	        } catch (JsonProcessingException e) {
-	            throw new WebServiceException("Failed to convert object to json");
-	    }
-	 }
 }

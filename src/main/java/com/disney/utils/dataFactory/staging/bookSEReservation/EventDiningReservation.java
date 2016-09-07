@@ -1,14 +1,14 @@
 package com.disney.utils.dataFactory.staging.bookSEReservation;
 
 import com.disney.AutomationException;
-import com.disney.api.soapServices.builtInventoryService.operations.ReservableResourceByFacilityID;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.Arrived;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.NoShow;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.Retrieve;
+import com.disney.api.soapServices.diningModule.eventDiningService.operations.ValidateBooking;
+import com.disney.api.soapServices.availSEModule.builtInventoryService.operations.ReservableResourceByFacilityID;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.eventDiningService.operations.Arrived;
-import com.disney.api.soapServices.eventDiningService.operations.Book;
-import com.disney.api.soapServices.eventDiningService.operations.Cancel;
-import com.disney.api.soapServices.eventDiningService.operations.NoShow;
-import com.disney.api.soapServices.eventDiningService.operations.Retrieve;
-import com.disney.api.soapServices.eventDiningService.operations.ValidateBooking;
 import com.disney.utils.Randomness;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -21,7 +21,7 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
  * @author Waightstill W Avery
  *
  */
-public class EventDiningReservation implements ScheduledEventReservation {
+public class EventDiningReservation implements ScheduledEventReservation{
 	private HouseHold party;	// Household field containing guests to be used for a reservation
 	private String environment;	// Environment under test
 	private String travelPlanId;	// Travel Plan ID
@@ -31,6 +31,7 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	private String arrivedStatus;	// Status from updating a reservation to 'Arrived'
 	private String facilityId;	// Facility ID for the current reservation
 	private String productId;	// Product ID for the current reservation
+	private String productName;	// Product Name for the current reservation
 	private String productType;	//Product Type for the current reservation
 	private String servicePeriod;	// Service periods for the current reservation
 	private String serviceStartDate;	// Service start date for the current reservation, A.K.A. the date of the reservation, not to be confused with the date that the reservation was booked
@@ -42,6 +43,7 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	private String primaryGuestAge;	//Primary guest address as it is found in the #retrieve() method response; expected to be contained in the first 'partyRole' node 
 	private String modifyStatus;	// Status in the response from modify a reservation 
 	private String sourceAccountingCenter;	// Source Accounting Center ID
+	private String facilityName;	// Facility name for the current reservation
 	/*
 	 * Travel Agency Fields
 	 */
@@ -52,7 +54,9 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	private String guestAgentId = "0";	// Travel Agent ID associated with the guest
 	private String confirmationLocatorValue = "0";	// Travel Agency confirmation locator value
 	private String guestConfirmationLocationId = "0";	// Travel Agency confirmation location ID
-	
+	public ScheduledEventsServices ses(){
+		return new ScheduledEventsServices(environment);
+	};
 	/**
 	 * Constructor that defines the environment under test and defines a default household for the reservation
 	 * @param environment - environment under test
@@ -115,10 +119,25 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	 */
 	@Override public String getFacilityId(){return this.facilityId;}
 	/**
+	 * Retrieves the facility ID of the current reservation
+	 * @return String, facility of the current reservation
+	 */
+	@Override public String getFacilityName(){return this.facilityName;}
+	/**
+	 * Sets the facility name of the current reservation
+	 * @param - facility name of the current reservation
+	 */
+	@Override public void setFacilityName(String name){this.facilityName = name;}
+	/**
 	 * Retrieves the product ID of the current reservation
 	 * @return String, product ID of the current reservation
 	 */
 	@Override public String getProductId(){return this.productId;}
+	/**
+	 * Retrieves the product name of the current reservation
+	 * @return String, product name of the current reservation
+	 */
+	@Override public String getProductName(){return this.productId;}
 	/**
 	 * Retrieves the product type of the current reservation
 	 * @return String, product type of the current reservation
@@ -134,6 +153,11 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	 * @return String, service start date of the current reservation
 	 */
 	@Override public String getServiceStartDate(){return this.serviceStartDate;}
+	/**
+	 * Sets the service start date of the current reservation
+	 * @return String, service start date of the current reservation
+	 */
+	@Override public void setServiceStartDate(String date){this.serviceStartDate = date;}
 	/**
 	 * Retrieves the number of guests of the current reservation
 	 * @return int, number of guests of the current reservation
@@ -170,6 +194,11 @@ public class EventDiningReservation implements ScheduledEventReservation {
 	 * @param productId - product ID for the current reservation
 	 */
 	@Override public void setProductId(String productId){this.productId = productId;}
+	/**
+	 * Set the product name for the current reservation
+	 * @param productId - product name for the current reservation
+	 */
+	@Override public void setProductName(String productName){this.productName = productName;}
 	/**
 	 * Set the product type for the current reservation
 	 * @param productType - product type for the current reservation
@@ -242,26 +271,19 @@ public class EventDiningReservation implements ScheduledEventReservation {
 		TestReporter.logStep("Book an event dining reservation.");
 		Book eventDiningBook = new Book(getEnvironment(), this.bookingScenario);
 		eventDiningBook.setParty(party());		
-		eventDiningBook.setFacilityId(getFacilityId());		//FAC.FAC_ID
-		eventDiningBook.setProductId(getProductId());          //PROD.PROD_ID
-		if(this.productType != null) if(!this.productType.isEmpty()) eventDiningBook.setProductType(this.productType);
 		eventDiningBook.setServicePeriodId(getServicePeriodId());   //PROD.ENTRPRS_PROD_ID
 		eventDiningBook.setServiceStartDateTime(getServiceStartDate());
+		eventDiningBook.addDetailsByFacilityNameAndProductName(facilityName, productName);
 		if(!agencyId.equals("0")){eventDiningBook.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
-
-		if(!getEnvironment().equalsIgnoreCase("Development")&& !getEnvironment().contains("_CM") ){
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			resource.getReservableResources();
-			eventDiningBook.setReservableResourceId(resource.getFirstReservableResourceId());
-		}
 		
 		Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 		eventDiningBook.sendRequest();
 		if(eventDiningBook.getResponse().contains("Row was updated or deleted by another transaction")|| 
-				eventDiningBook.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")){
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+				eventDiningBook.getResponse().contains("Error Invoking  Folio Management Service  :   existingRootChargeBookEvent :Unexpected Error occurred : createChargeGroupsAndPostCharges : ORA-00001: unique constraint (FOLIO.CHRG_GRP_GST_PK) violated")||
+				eventDiningBook.getResponse().toLowerCase().contains("could not execute statement; sql [n/a]; constraint ") || 
+				eventDiningBook.getResponse().contains("RELEASE INVENTORY REQUEST IS INVALID")){
+			Sleeper.sleep(Randomness.randomNumberBetween(3, 10) * 1000);
+			eventDiningBook.setFreezeId();
 			eventDiningBook.sendRequest();
 		}
 		TestReporter.logAPI(!eventDiningBook.getResponseStatusCode().equals("200"), "An error occurred booking an event dining service reservation: " + eventDiningBook.getFaultString(), eventDiningBook);
@@ -416,28 +438,17 @@ public class EventDiningReservation implements ScheduledEventReservation {
 		 * is performed to allow information to be retrieved for validation purposes.
 		 */
 		private void modify(){
-			com.disney.api.soapServices.eventDiningService.operations.Modify modify = new com.disney.api.soapServices.eventDiningService.operations.Modify(getEnvironment(), modifyScenario);
+			com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify modify = new com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify(getEnvironment(), modifyScenario);
 			modify.setReservationNumber(getConfirmationNumber());
 			modify.setTravelPlanId(getTravelPlanId());
 
-			ReservableResourceByFacilityID resource = new ReservableResourceByFacilityID(getEnvironment(), "Main");
-			resource.setFacilityId(getFacilityId());
-			resource.sendRequest();
-			resource.getReservableResources();
-			
-			modify.setReservableResourceId(resource.getFirstReservableResourceId());
-			modify.setParty(party());
-			modify.setFacilityId(getFacilityId());
-			modify.setServiceStartDate(getServiceStartDate());
-			modify.setServicePeriodId(getServicePeriodId());
-			modify.setProductId(getProductId());
-			Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
+			modify.addDetailsByFacilityNameAndProductName(facilityName, productName);
 			modify.sendRequest();
 			if(modify.getResponse().contains("Row was updated or deleted by another transaction")){
 				Sleeper.sleep(Randomness.randomNumberBetween(1, 10) * 1000);
 				modify.sendRequest();
 			}
-			TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred modifying an event dining service reservation", modify);
+			TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "An error occurred modifying an event dining service reservation: " + modify.getFaultString(), modify);
 			retrieve();
 		}
 		
@@ -537,7 +548,7 @@ public class EventDiningReservation implements ScheduledEventReservation {
 		public void modifyScenario(String scenario) {
 			TestReporter.logStep("Modify Event Dining Reservation Scenario From ["+this.modifyScenario+"] to ["+scenario+"].");
 			this.modifyScenario = scenario;
-			com.disney.api.soapServices.eventDiningService.operations.Modify modify = new com.disney.api.soapServices.eventDiningService.operations.Modify(getEnvironment(), modifyScenario);
+			com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify modify = new com.disney.api.soapServices.diningModule.eventDiningService.operations.Modify(getEnvironment(), modifyScenario);
 			EventDiningReservation.this.serviceStartDate = modify.getRequestServiceStartDate();
 			EventDiningReservation.this.servicePeriod = modify.getRequestServicePeriodId();
 			EventDiningReservation.this.facilityId = modify.getRequestFacilityId();

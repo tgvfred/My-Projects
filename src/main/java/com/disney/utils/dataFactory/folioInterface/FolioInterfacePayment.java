@@ -3,11 +3,11 @@ package com.disney.utils.dataFactory.folioInterface;
 import com.disney.AutomationException;
 import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.folioBankServicesV2.operations.IsUserBankedIn;
-import com.disney.api.soapServices.folioBankServicesV2.operations.UserBankIn;
-import com.disney.api.soapServices.folioBankServicesV2.operations.UserBankOut;
-import com.disney.api.soapServices.paymentService.operations.PostCardPayment;
-import com.disney.api.soapServices.paymentService.operations.PostCheckPayment;
+import com.disney.api.soapServices.folioModule.folioBankServicesV2.operations.IsUserBankedIn;
+import com.disney.api.soapServices.folioModule.folioBankServicesV2.operations.UserBankIn;
+import com.disney.api.soapServices.folioModule.folioBankServicesV2.operations.UserBankOut;
+import com.disney.api.soapServices.folioModule.paymentService.operations.PostCardPayment;
+import com.disney.api.soapServices.folioModule.paymentService.operations.PostCheckPayment;
 import com.disney.utils.Randomness;
 import com.disney.utils.RetrieveTravelComponentId;
 import com.disney.utils.TestReporter;
@@ -414,6 +414,7 @@ public class FolioInterfacePayment extends FolioInterface{
 			postPayment.setRetreivalReferenceNumber();
 			convoMapKey = "payment";
 		}	
+		postPayment.setCardNumber( "************" + getCardNumber().substring(12));
 		postPayment.sendRequest();
 		getConversationIdMap().put(convoMapKey, postPayment.getConversationID());
 		if(getIsNegativeScenario().equalsIgnoreCase("true")){
