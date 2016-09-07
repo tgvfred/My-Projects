@@ -45,6 +45,7 @@ public class ComponentPriceBuilder {
 		}
 		
 		baseXPath = "/Envelope/Body/"+operation+"/"+diningRequest+"/"+diningPackage;
+
 		int existingComponentPrices = 1;
 		
 		try{
@@ -57,6 +58,7 @@ public class ComponentPriceBuilder {
 		String unitXPath;
 		String chargePriceXPath="";
 		int intComponentPrice = existingComponentPrices; 
+
 		int intUnit = 1;
 		int intBaseChargeItem= 0;
 		int intTaxChargeItem= 0;

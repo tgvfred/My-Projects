@@ -1,0 +1,31 @@
+package com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve;
+
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
+
+import com.disney.api.restServices.core.RestResponse;
+import com.disney.api.restServices.core.RestService;
+import com.disney.api.restServices.core.Headers.HeaderType;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.request.RetrieveRequest;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
+import com.disney.test.utils.Randomness;
+
+public class Retrieve {
+	private RestService restService;
+	private String resource = "/retrieve";
+	public Retrieve(RestService restService, String resource){
+		this.restService = restService;
+		this.resource = resource + this.resource;
+	}
+	
+	public RestResponse sendPutRequest(RetrieveRequest request){	
+		String json = restService.getJsonFromObject(request);
+		return restService.sendPutRequest(resource, HeaderType.REST, json);		
+	
+	}
+	//To submit a REST call without the authorization token information
+	public RestResponse sendPutRequestWithMissingAuthToken(RetrieveRequest request){
+		String json = restService.getJsonFromObject(request);
+		return restService.sendPutRequest(resource, HeaderType.REST_NOAuth, json);
+	}
+}

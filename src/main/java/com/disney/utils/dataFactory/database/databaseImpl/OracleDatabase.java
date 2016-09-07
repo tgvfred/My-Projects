@@ -82,6 +82,11 @@ public class OracleDatabase extends Database {
 			setDbUserName(dbSeUsername);
 			setDbPassword(dbSePassword);
 			break;
+			
+		case "directconnect":
+			setDbUserName(dbGeneralUsername);
+			setDbPassword(dbGeneralPassword);
+			break;
 		}
 	}
 
