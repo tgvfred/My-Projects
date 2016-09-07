@@ -10,6 +10,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 
 import com.disney.AutomationException;
+import com.disney.api.WebServiceException;
 import com.disney.utils.TestReporter;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -66,22 +67,18 @@ public class RestResponse {
 	 * @return
 	 * @throws IOException
 	 */
-	public <T> T mapJSONToObject(String stringResponse, Class<T> clazz){
-		
+	public <T> T mapJSONToObject(String stringResponse, Class<T> clazz)  {
+		T map = null;
 		try {
-			return mapper.readValue(stringResponse, clazz);
+			map =  mapper.readValue(stringResponse, clazz);
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			throw new AutomationException("Failed to read response:" + stringResponse, e);
+			throw new WebServiceException("Failed to parse JSON", e);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			// TODO Auto-generated catch block
-			throw new AutomationException("Failed to map json properly: " + e.getMessage(), e);
+			throw new WebServiceException("Failed to Map JSON", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			// TODO Auto-generated catch block
-			throw new AutomationException("Failed to read response:" + stringResponse, e);
+			throw new WebServiceException("Failed to output JSON", e);
 		}
+		return map;
 	}
 	
 	/**

@@ -1,11 +1,11 @@
-package com.disney.api.restServices.folio.chargeAccountServiceV2;
+package com.disney.api.restServices.folio.chargeAccountService;
 
 import com.disney.api.restServices.core.RestService;
-import com.disney.api.restServices.folio.chargeAccountServiceV2.chargeAccount.ChargeAccount;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.ChargeAccount;
 
-public class ChargeAccountServiceV2 {
+public class ChargeAccountService {
 	private RestService restService;
-	public ChargeAccountServiceV2(RestService restService){
+	public ChargeAccountService(RestService restService){
 		this.restService = restService;
 		this.restService.setMainResource("ChargeAccountServiceV2");
 	}

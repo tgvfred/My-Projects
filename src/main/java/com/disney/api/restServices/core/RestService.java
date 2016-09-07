@@ -323,6 +323,7 @@ public class RestService {
 	public RestResponse sendPutRequest(String resource,  String json) {
 		return sendPutRequest(resource, null, json);
 	}
+
 	public RestResponse sendPatchRequest(String resource,HeaderType type,  List<NameValuePair> params, String json){
 		TestReporter.logDebug("Preparing to send PATCH request");
 		TestReporter.logDebug("Getting Rest endpoint from TDM");
@@ -333,6 +334,7 @@ public class RestService {
 			httpPatch.setHeaders(Headers.createHeader(type));
 	    }
 		
+
 		try {
 			if(params !=  null){
 		    	String allParams= "";
