@@ -14,6 +14,9 @@ import com.disney.api.soapServices.partyModule.partyService.operations.CreatePar
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.guestFactory.seeds.FemaleFirstNames;
+import com.disney.utils.dataFactory.guestFactory.seeds.LastNames;
+import com.disney.utils.dataFactory.guestFactory.seeds.MaleFirstNames;
 import com.disney.utils.date.DateTimeConversion;
 
 /**
@@ -28,13 +31,13 @@ public class Guest {
 	private ArrayList<Address> addresses = new ArrayList<Address>();
 	private ArrayList<Phone> phones = new ArrayList<Phone>();
 	private ArrayList<Email> emails = new ArrayList<Email>();
-	private String guestSeedPath = "/com/disney/utils/guestFactory/seeds/";
-	private String[] maleFirstNames = Randomness.seedReader(guestSeedPath
+	private String guestSeedPath = "/com/disney/utils/dataFactory/guestFactory/seeds/";
+	/*private String[] maleFirstNames = Randomness.seedReader(guestSeedPath
 			+ "MaleFirstNames");
 	private String[] femaleFirstNames = Randomness.seedReader(guestSeedPath
 			+ "FemaleFirstNames");
 	private String[] lastNames = Randomness.seedReader(guestSeedPath
-			+ "LastNames");
+			+ "LastNames");*/
 	private boolean isPrimary = false;
 	private String title = "";
 	private String firstName = "";
@@ -535,14 +538,14 @@ public class Guest {
 
 		if (isMale) {
 			this.title = "Mr.";
-			setFirstName((String) Randomness.randomizeArray(maleFirstNames));
+			setFirstName(MaleFirstNames.getFirstName());
 		} else {
 			this.title = "Mrs.";
-			setFirstName((String) Randomness.randomizeArray(femaleFirstNames));
+			setFirstName(FemaleFirstNames.getFirstName());
 		}
 
 		this.middleName = "Automation";
-		setLastName((String) Randomness.randomizeArray(lastNames));
+		setLastName(LastNames.getLastName());
 
 		SimpleDateFormat format = new SimpleDateFormat(
 				"yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.US);

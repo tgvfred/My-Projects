@@ -3,9 +3,9 @@ package com.disney.composite.api.diningModule.eventDiningService._compensationFl
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;

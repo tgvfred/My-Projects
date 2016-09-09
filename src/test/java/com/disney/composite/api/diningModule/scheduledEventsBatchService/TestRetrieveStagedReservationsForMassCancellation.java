@@ -3,8 +3,8 @@ package com.disney.composite.api.diningModule.scheduledEventsBatchService;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.diningModule.scheduledEventsBatchService.operations.RetrieveStagedReservationsForMassCancellation;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveStagedReservationsForMassCancellation  extends BaseTest{

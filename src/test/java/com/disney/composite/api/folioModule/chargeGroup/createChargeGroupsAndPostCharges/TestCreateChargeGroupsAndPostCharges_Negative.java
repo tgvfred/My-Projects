@@ -6,11 +6,11 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.applicationError.FolioErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.folioModule.chargeGroup.operations.CancelChargeGroup;
 import com.disney.api.soapServices.folioModule.chargeGroup.operations.CreateChargeGroupsAndPostCharges;
-import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;

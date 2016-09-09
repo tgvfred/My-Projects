@@ -3,7 +3,7 @@ package com.disney.composite.SEReservationGenerator.activityService;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import com.disney.composite.BaseTest;
+import com.disney.api.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;

@@ -3,10 +3,10 @@ package com.disney.composite.api.diningModule.showDiningService.arrived;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Arrived;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
-import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;

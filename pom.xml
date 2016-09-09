@@ -3,14 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.gqe</groupId>
 	<artifactId>APIUtilsSoap</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>Composite API</name>
 	<description>Project for Composite Soap and Rest services along with utilities that consume them</description>
 	<distributionManagement>
 	    <repository>
 	      <id>nexus</id>
-	      <name>public</name>
-	      <url>https://nexus.disney.com/nexus/content/groups/public/</url>
+	      <name>WDPRO</name>
+	      <url>https://nexus.disney.com/nexus/content/repositories/WDPRO/</url>
 	    </repository>
 	  </distributionManagement>
 	<dependencies>
@@ -141,15 +141,16 @@
 		<testNGSourceDirectory>src/test/resources</testNGSourceDirectory>
 	</properties>
 	<build>
-	<resources>
-	 <resource>
-            <directory>src/main/resources</directory>
-            <includes>
-                <include>*/tnsnames.ora</include>
-                <include>*/*.txt</include>
-            </includes>
-        </resource>
-        </resources>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.txt</include>
+					<include>**/*.ora</include>
+				</includes>
+			</resource>
+
+		</resources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -180,7 +181,7 @@
 				   </executions>
 				   <configuration>
 				      <serverId>nexus</serverId>
-				      <nexusUrl>https://nexus.disney.com/nexus/content/repositories/public</nexusUrl>
+				      <nexusUrl>https://nexus.disney.com/nexus/content/repositories/WDPRO</nexusUrl>
 				      <skipStaging>true</skipStaging>
 				   </configuration>
 				</plugin>
@@ -212,7 +213,7 @@
 								<goal>test</goal>
 							</goals>
 							<configuration>
-								<!-- <skip>true</skip> -->
+								 <skip>true</skip> 
 								<includes>
 									<!-- <include>**/Suite_Room_Only_E2E.java</include> -->
 								</includes>

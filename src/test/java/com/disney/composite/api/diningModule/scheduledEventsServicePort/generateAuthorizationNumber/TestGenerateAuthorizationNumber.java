@@ -2,8 +2,8 @@ package com.disney.composite.api.diningModule.scheduledEventsServicePort.generat
 
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.GenerateAuthorizationNumber;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 

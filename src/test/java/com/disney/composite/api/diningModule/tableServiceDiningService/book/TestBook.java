@@ -3,11 +3,11 @@ package com.disney.composite.api.diningModule.tableServiceDiningService.book;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveAllergies;
 import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Book;
 import com.disney.api.soapServices.diningModule.tableServiceDiningServicePort.operations.Cancel;
-import com.disney.composite.BaseTest;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;

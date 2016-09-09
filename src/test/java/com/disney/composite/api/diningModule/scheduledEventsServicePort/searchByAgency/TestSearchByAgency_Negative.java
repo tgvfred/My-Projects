@@ -3,13 +3,13 @@ package com.disney.composite.api.diningModule.scheduledEventsServicePort.searchB
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Cancel;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.SearchByAgency;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;

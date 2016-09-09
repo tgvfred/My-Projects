@@ -3,7 +3,7 @@ package com.disney.composite.SEReservationGenerator.activityService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 
-import com.disney.composite.BaseTest;
+import com.disney.api.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ActivityEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;

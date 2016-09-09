@@ -89,7 +89,7 @@ public abstract class Database {
 		
 	    Connection connection = null;
 		try {
-			String tns = getClass().getResource("/com/disney/database/tnsnames.ora").getPath().toString();
+			String tns = getClass().getResource("/com/disney/utils/dataFactory/database/tnsnames.ora").getPath().toString();
 			tns = tns.substring(0, tns.lastIndexOf("/"));
 			tns = tns.substring(1,tns.length());
 			tns = tns.replace("%20", " ");

@@ -1,4 +1,4 @@
-package com.disney.composite;
+package com.disney.api;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
@@ -99,7 +99,7 @@ public class BaseTest {
 	}
 	
 	private void validate(boolean shouldBeInLogs, BaseSoapService soap, LogItems logItems){
-		TestReporter.logDebug("Entering BaseTest#validate");
+		/*TestReporter.logDebug("Entering BaseTest#validate");
 
 		boolean isValid = false;
 		boolean containsRequest = false;
@@ -147,9 +147,9 @@ public class BaseTest {
 									+ rs.getValue("ERROR_CODE") + " : " +rs.getValue("LOG_MSG_TXT"));							
 								}
 							}
-						}/*else if(item.isErrorExpected()){
+						}else if(item.isErrorExpected()){
 							throw new AutomationException("Exception was not found in [" + item.getServiceClass() +"#"+ item.getServiceOperation() + "] but was expected");
-						}*/
+						}
 					}
 					
 					//Break out of loop once Request and Response is validated
@@ -169,7 +169,7 @@ public class BaseTest {
 		}else{
 			TestReporter.log("Skipping log validation for [" + environment + "] environment");
 		}
-		TestReporter.logDebug("Exiting BaseTest#validate");
+		TestReporter.logDebug("Exiting BaseTest#validate");*/
 	}
 	
 	private Recordset getLogs(String environment, String convoId){

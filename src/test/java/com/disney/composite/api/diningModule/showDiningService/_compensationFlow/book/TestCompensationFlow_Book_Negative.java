@@ -4,11 +4,11 @@ import org.testng.SkipException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Cancel;
-import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
@@ -27,7 +27,6 @@ public class TestCompensationFlow_Book_Negative extends BaseTest{
 	
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative", "compensation", "debug"})
 	public void TestCompensationFlow_Book_Negative_RIMFail(){
-		TestReporter.setDebugLevel(1);
 		TestReporter.logScenario("Test Positive Activity Book Compensation Flow");
 		book.set(new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS));
 		book.get().setParty(hh);
@@ -43,7 +42,6 @@ public class TestCompensationFlow_Book_Negative extends BaseTest{
 	}
 	@Test(groups = {"api", "regression", "dining", "showDiningService", "negative", "compensation"})
 	public void TestCompensationFlow_Book_Negative_FolioFail(){
-		TestReporter.setDebugLevel(1);
 		TestReporter.logScenario("Test Positive Activity Book Compensation Flow");
 		book.set(new Book(environment, ScheduledEventReservation.NOCOMPONENTSNOADDONS));
 		book.get().setParty(hh);

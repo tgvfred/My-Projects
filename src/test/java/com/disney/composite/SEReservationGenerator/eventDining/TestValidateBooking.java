@@ -2,7 +2,7 @@ package com.disney.composite.SEReservationGenerator.eventDining;
 
 import org.testng.annotations.Test;
 
-import com.disney.composite.BaseTest;
+import com.disney.api.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.staging.bookSEReservation.EventDiningReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;

@@ -4,9 +4,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.diningModule.seatedEventsComponentService.operations.Book;
 import com.disney.api.soapServices.diningModule.seatedEventsComponentService.operations.Retrieve;
-import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;

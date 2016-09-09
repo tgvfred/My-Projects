@@ -4,8 +4,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.pricingModule.packagingService.getProducts.GetProducts;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 
 public class TestGetProducts extends BaseTest{

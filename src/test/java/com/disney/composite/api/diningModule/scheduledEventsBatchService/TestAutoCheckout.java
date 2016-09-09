@@ -7,12 +7,12 @@ import java.util.Map;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.applicationError.DiningErrorCode;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.scheduledEventsBatchService.operations.Checkout;
 import com.disney.api.soapServices.diningModule.scheduledEventsBatchService.operations.RetrieveReservationsForAutoCheckout;
-import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;

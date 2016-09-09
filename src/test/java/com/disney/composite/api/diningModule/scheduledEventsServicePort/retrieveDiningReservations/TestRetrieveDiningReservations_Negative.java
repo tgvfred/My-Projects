@@ -2,10 +2,10 @@ package com.disney.composite.api.diningModule.scheduledEventsServicePort.retriev
 
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveDiningReservations;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 

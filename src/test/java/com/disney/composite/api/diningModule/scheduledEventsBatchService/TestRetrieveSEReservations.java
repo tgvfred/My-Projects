@@ -2,9 +2,9 @@ package com.disney.composite.api.diningModule.scheduledEventsBatchService;
 
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.SoapException;
 import com.disney.api.soapServices.diningModule.scheduledEventsBatchService.operations.RetrieveSEReservations;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveSEReservations  extends BaseTest{

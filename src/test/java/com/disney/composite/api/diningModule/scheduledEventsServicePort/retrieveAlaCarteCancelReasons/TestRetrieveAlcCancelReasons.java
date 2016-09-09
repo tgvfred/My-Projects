@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.RetrieveAlaCarteCancelReasons;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.LogItems;
 

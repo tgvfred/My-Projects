@@ -7,11 +7,11 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.profileModule.profileServicePort.operations.GetOptions;
 import com.disney.api.soapServices.profileModule.profileServicePort.operations.RetrieveProfiles;
 import com.disney.api.soapServices.profileModule.profileServicePort.operations.RetrieveProfilesByCode;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 
 /**

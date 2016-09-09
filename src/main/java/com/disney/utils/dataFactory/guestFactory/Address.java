@@ -1,6 +1,9 @@
 package com.disney.utils.dataFactory.guestFactory;
 
 import com.disney.utils.Randomness;
+import com.disney.utils.dataFactory.guestFactory.seeds.Cities;
+import com.disney.utils.dataFactory.guestFactory.seeds.States;
+import com.disney.utils.dataFactory.guestFactory.seeds.Streets;
 
 
 /**
@@ -12,25 +15,25 @@ import com.disney.utils.Randomness;
 @SuppressWarnings("unused")
 public class Address{
 
-	private String guestSeedPath = "/com/disney/utils/guestFactory/seeds/";
+	private String guestSeedPath = "/com/disney/utils/dataFactory/guestFactory/seeds/";
 	private String locatorId = "0";
-	private String[] streets = Randomness.seedReader(guestSeedPath + "Streets");
+	/*private String[] streets = Randomness.seedReader(guestSeedPath + "Streets");
 	private String[] cities = Randomness.seedReader(guestSeedPath + "Cities");
 	private String[] states = Randomness.seedReader(guestSeedPath + "States");
-	Address(){
+	*/Address(){
 		
 		this.type = "Home";
 		this.country = "United States";
 		//this.zipCode = String.valueOf(Randomness.randomNumberBetween(10000, 99999));
 		this.zipCode = "27127";
 		this.streetNumber = String.valueOf(Randomness.randomNumberBetween(100, 9999));
-		this.streetName = (String) Randomness.randomizeArray(streets);
-		this.city = (String) Randomness.randomizeArray(cities);
+		this.streetName = Streets.getStreet();
+		this.city =Cities.getCity();
 		this.state = "North Carolina" ;//(String) Randomness.randomizeArray(states);
 		this.stateAbbv = "NC";StateMapper.getStateCode(getState());
 		this.optIn = false;
 		
-		if(state == null || state.isEmpty()) this.state = (String) Randomness.randomizeArray(states);
+		if(state == null || state.isEmpty()) this.state = States.getState();
 	}
 	
 	private boolean isPrimary = false;

@@ -2,9 +2,9 @@ package com.disney.composite.api.diningModule.eventDiningService.arrived;
 
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Arrived;
 import com.disney.api.soapServices.diningModule.eventDiningService.operations.Book;
-import com.disney.composite.BaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;

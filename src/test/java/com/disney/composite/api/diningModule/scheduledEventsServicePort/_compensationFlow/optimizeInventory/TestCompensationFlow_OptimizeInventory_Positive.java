@@ -3,9 +3,9 @@ package com.disney.composite.api.diningModule.scheduledEventsServicePort._compen
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.diningModule.scheduledEventsServicePort.operations.OptimizeInventory;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Retrieve;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;

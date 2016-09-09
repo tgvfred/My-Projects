@@ -2,8 +2,8 @@ package com.disney.composite.api.profileModule.profileServicePort.retrieveProfil
 
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.profileModule.profileServicePort.operations.RetrieveProfilesById;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveProfilesById extends BaseTest{

@@ -2,10 +2,10 @@ package com.disney.composite.api.roomInventoryModule.accommodationInventoryReque
 
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.roomInventoryModule.accommodationInventoryRequestComponentServicePort.operations.CreateInventory;
 import com.disney.api.soapServices.roomInventoryModule.accommodationInventoryRequestComponentServicePort.operations.UpdateInventoryForScheduledEvents;
-import com.disney.composite.BaseTest;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;

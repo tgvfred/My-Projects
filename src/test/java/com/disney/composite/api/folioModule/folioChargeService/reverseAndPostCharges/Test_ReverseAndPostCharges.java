@@ -6,9 +6,9 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.AutomationException;
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.folioModule.folioCharge.operations.PostCharges;
 import com.disney.api.soapServices.folioModule.folioCharge.operations.ReverseAndPostCharges;
-import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;

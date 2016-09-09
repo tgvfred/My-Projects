@@ -2,9 +2,9 @@ package com.disney.composite.api.partyModule.partyV3.retrievePartyByExternalGues
 
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.partyModule.partyV3.operations.RetrievePartyByExternalGuestId;
 import com.disney.api.soapServices.partyModule.partyV3.operations.SearchGuestIDByEmail;
-import com.disney.composite.BaseTest;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 

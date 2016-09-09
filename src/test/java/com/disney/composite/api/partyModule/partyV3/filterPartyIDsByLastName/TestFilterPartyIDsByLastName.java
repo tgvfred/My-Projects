@@ -6,9 +6,9 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import org.w3c.dom.NodeList;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.partyModule.partyV3.operations.CreateAndRetrieveParty;
 import com.disney.api.soapServices.partyModule.partyV3.operations.FilterPartyIDsByLastName;
-import com.disney.composite.BaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 
