@@ -8,9 +8,9 @@
 	<description>Project for Composite Soap and Rest services along with utilities that consume them</description>
 	<distributionManagement>
 	    <repository>
-	      <id>WDPRT-latest</id>
-	      <name>WDPRT-latest</name>
-	      <url>https://nexus.disney.com/nexus/content/repositories/WDPRT-latest</url>
+	      <id>nexus</id>
+	      <name>public</name>
+	      <url>https://nexus.disney.com/nexus/content/groups/public/</url>
 	    </repository>
 	  </distributionManagement>
 	<dependencies>
@@ -141,6 +141,15 @@
 		<testNGSourceDirectory>src/test/resources</testNGSourceDirectory>
 	</properties>
 	<build>
+	<resources>
+	 <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>*/tnsnames.ora</include>
+                <include>*/*.txt</include>
+            </includes>
+        </resource>
+        </resources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -170,8 +179,8 @@
 				      </execution>
 				   </executions>
 				   <configuration>
-				      <serverId>WDPRT-latest</serverId>
-				      <nexusUrl>https://nexus.disney.com/nexus/content/repositories/WDPRT-latest</nexusUrl>
+				      <serverId>nexus</serverId>
+				      <nexusUrl>https://nexus.disney.com/nexus/content/repositories/public</nexusUrl>
 				      <skipStaging>true</skipStaging>
 				   </configuration>
 				</plugin>
@@ -203,7 +212,7 @@
 								<goal>test</goal>
 							</goals>
 							<configuration>
-								<skip>true</skip>
+								<!-- <skip>true</skip> -->
 								<includes>
 									<!-- <include>**/Suite_Room_Only_E2E.java</include> -->
 								</includes>
@@ -215,7 +224,7 @@
 		                <argLine>
 		                    -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
 		                </argLine>
-		               <!-- <skipTests>true</skipTests> -->
+		                <skipTests>true</skipTests> 
 		              	<suiteXmlFiles>
 							<suiteXmlFile>${testNGSourceDirectory}/${suiteXmlFile}</suiteXmlFile>
 						</suiteXmlFiles>
