@@ -21,7 +21,7 @@ import com.disney.test.utils.Randomness;
 @SuppressWarnings("unused")
 
 public class TestCreate_Negative {
-private String environment = "Bashful";
+private String environment;
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -31,8 +31,8 @@ private String environment = "Bashful";
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-	//this.environment = environment;
-	this.environment = "Bashful";
+	this.environment = environment;
+	//this.environment = "Bashful";
 }
 	
 	/**

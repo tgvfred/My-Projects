@@ -25,7 +25,7 @@ import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 public class TestUpdatePin {
-private String environment = "Bashful";
+private String environment;
 private String caChargeAccount;
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -34,8 +34,8 @@ private String caChargeAccount;
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		//this.environment = environment;
-		this.environment = "Bashful";
+		this.environment = environment;
+		//this.environment = "Bashful";
 		//Create new request
 		CreateRequest request = new CreateRequest();
 		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setCampusId("1");

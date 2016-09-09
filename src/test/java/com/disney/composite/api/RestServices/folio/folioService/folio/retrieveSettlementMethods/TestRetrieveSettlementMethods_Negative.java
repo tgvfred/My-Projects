@@ -10,11 +10,13 @@ import org.testng.annotations.Test;
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.request.RetrieveSettlementMethodsRequest;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 public class TestRetrieveSettlementMethods_Negative {
 	private String environment = "Bashful";
+	private Book book = null;
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -25,6 +27,10 @@ public class TestRetrieveSettlementMethods_Negative {
 	public void setup(@Optional String environment) {
 		//this.environment = environment;
 		this.environment = "Bashful";
+		
+		//generate accommodation booking
+		book= new Book(environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
+		book.sendRequest();
 	}
 	
 	/**
@@ -48,7 +54,7 @@ public class TestRetrieveSettlementMethods_Negative {
 		//Adding data for the different nodes
 		//Added External Reference Type
 		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("DREAMS_TP");
-		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue("462243403661");
+		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue(book.getTravelPlanId());
 		//Add Folio Type
 		request.getFolioIdentifierTO().setFolioType("INDIVIDUAL");
 		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendPutRequestWithMissingAuthToken(request);
@@ -64,7 +70,7 @@ public class TestRetrieveSettlementMethods_Negative {
 		//Adding data for the different nodes
 		//Added External Reference Type
 		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("");
-		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue("462243403661");
+		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue(book.getTravelPlanId());
 		//Add Folio Type
 		request.getFolioIdentifierTO().setFolioType("INDIVIDUAL");
 		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendPutRequestWithMissingAuthToken(request);
@@ -80,8 +86,8 @@ public class TestRetrieveSettlementMethods_Negative {
 		RetrieveSettlementMethodsRequest request = new RetrieveSettlementMethodsRequest();
 		//Adding data for the different nodes
 		//Added External Reference Type
-		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("");
-		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue("462243403661");
+		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("DREAMS_TP");
+		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue("");
 		//Add Folio Type
 		request.getFolioIdentifierTO().setFolioType("INDIVIDUAL");
 		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendPutRequestWithMissingAuthToken(request);
@@ -97,10 +103,10 @@ public class TestRetrieveSettlementMethods_Negative {
 		RetrieveSettlementMethodsRequest request = new RetrieveSettlementMethodsRequest();
 		//Adding data for the different nodes
 		//Added External Reference Type
-		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("");
-		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue("462243403661");
+		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("DREAMS_TP");
+		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue(book.getTravelPlanId());
 		//Add Folio Type
-		request.getFolioIdentifierTO().setFolioType("INDIVIDUAL");
+		request.getFolioIdentifierTO().setFolioType("IND");
 		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendPutRequestWithMissingAuthToken(request);
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 		TestReporter.assertTrue(response.getResponse().contains("FolioType from String value 'IND': value not one of declared Enum instance names"), "FolioType from String value 'IND': value not one of declared Enum instance names");
@@ -114,10 +120,10 @@ public class TestRetrieveSettlementMethods_Negative {
 		RetrieveSettlementMethodsRequest request = new RetrieveSettlementMethodsRequest();
 		//Adding data for the different nodes
 		//Added External Reference Type
-		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("");
-		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue("462243403661");
+		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("DREAMS_TP");
+		request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue(book.getTravelPlanId());
 		//Add Folio Type
-		request.getFolioIdentifierTO().setFolioType("INDIVIDUAL");
+		request.getFolioIdentifierTO().setFolioType("");
 		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendPutRequestWithMissingAuthToken(request);
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 		TestReporter.assertTrue(response.getResponse().contains("FolioType from String value '': value not one of declared Enum instance names"), "FolioType from String value '': value not one of declared Enum instance names");

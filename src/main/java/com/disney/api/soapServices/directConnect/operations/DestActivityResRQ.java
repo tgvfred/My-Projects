@@ -105,10 +105,10 @@ public class DestActivityResRQ extends DirectConnect{
 			getRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]/@ItemCode");
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@ItemCode");
-	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@OptionCode");
-	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@Quantity");
-	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@SelectedDate");
-	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNodes;Node:NegotiatedPrice/@AmountAfterTax");
+		setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@OptionCode");
+		setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@Quantity");
+		setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@SelectedDate");
+		setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNodes;Node:NegotiatedPrice/@AmountAfterTax");
 	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNodes;Node:NegotiatedPrice/@CurrencyCode");
 	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNodes;Node:ItemReferences/ItemReference/@Type");
 	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNodes;Node:ItemReferences/ItemReference/@ID");
@@ -125,7 +125,9 @@ public class DestActivityResRQ extends DirectConnect{
 	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]/SubAllocation/@TravelerRPH", TravelerRPH);
 	}
 	
-	
+	public String getRequestId(){
+		return getResponseNodeValueByXPath("/Envelope/Header/Interface/Acknowledgement/@RequestId");
+	}	
 	
 
 }

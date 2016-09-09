@@ -17,10 +17,12 @@ import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
 import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.objects.ExternalReferenceTO;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.guestFactory.Guest;
 
 @SuppressWarnings("unused")
 public class TestRetrieveGuests_Negative {
 private String environment = "Bashful";
+private String OdsID;
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -31,6 +33,9 @@ private String environment = "Bashful";
 	public void setup(@Optional String environment) {
 		//this.environment = environment;
 		this.environment = "Bashful";
+		Guest guest = new Guest();
+		guest.sendToApi(this.environment);
+		OdsID = guest.getOdsId();
 	}
 	
 	/**
@@ -74,7 +79,8 @@ private String environment = "Bashful";
 		//Adding data for the different nodes
 		//Added External Reference Type
 		request.addExternalReferenceTO();
-
+		request.getExternalReferenceTO().setReferenceName("");
+		request.getExternalReferenceTO().setReferenceValue(OdsID);
 		//Add External Reference value
 		
 		
@@ -97,7 +103,7 @@ private String environment = "Bashful";
 		//Adding data for the different nodes
 		//Added External Reference Type
 		request.addExternalReferenceTO();
-
+		request.getExternalReferenceTO().setReferenceValue("");
 		//Add External Reference value
 		
 		

@@ -17,11 +17,13 @@ package com.disney.composite.api.RestServices.folio.folioService.folio.retrieveS
 import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
 import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.objects.ExternalReferenceTO;
 import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.request.RetrieveSettlementMethodsRequest;
-	import com.disney.utils.TestReporter;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
+import com.disney.utils.TestReporter;
 
 	@SuppressWarnings("unused")
 	public class TestRetrieveSettlementMethods {
 	private String environment = "Bashful";
+	private Book book = null;
 		
 		/**
 		 * This will always be used as is. TestNG will pass in the Environment used
@@ -32,6 +34,9 @@ import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMe
 		public void setup(@Optional String environment) {
 			//this.environment = environment;
 			this.environment = "Bashful";
+			//generate accommodation booking
+			book= new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
+			book.sendRequest();
 		}
 		
 		/**
@@ -54,10 +59,10 @@ import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMe
 			RetrieveSettlementMethodsRequest request = new RetrieveSettlementMethodsRequest();
 			//Adding data for the different nodes
 			//Added External Reference Type
-			request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("DREAMS_TP");
-			request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue("462243403661");
+			//request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("DREAMS_TP");
+			//request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue(book.getTravelPlanId());
 			//Add Folio Type
-			request.getFolioIdentifierTO().setFolioType("INDIVIDUAL");
+			//request.getFolioIdentifierTO().setFolioType("INDIVIDUAL");
 			RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendPutRequest(request);
 			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 		}	

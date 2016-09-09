@@ -14,7 +14,7 @@ import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 public class TestModifyGuests_Negative {
-private String environment = "Development";
+private String environment = "Bashful";
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -24,7 +24,7 @@ private String environment = "Development";
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
 		//this.environment = environment;
-		this.environment = "Development";
+		this.environment = "Bashful";
 	}
 	
 	/**

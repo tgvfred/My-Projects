@@ -21,7 +21,7 @@ import com.disney.utils.TestReporter;
 @Test
 @SuppressWarnings("unused")
 public class TestRetrieve {
-	private String environment = "Bashful";
+	private String environment;
 	private String caChargeAccount1;
 	private String caChargeAccount2;
 	
@@ -32,8 +32,8 @@ public class TestRetrieve {
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		//this.environment = environment;
-		this.environment = "Bashful";
+		this.environment = environment;
+		//this.environment = "Bashful";
 		//Create new request
 		CreateRequest request = new CreateRequest();
 		
