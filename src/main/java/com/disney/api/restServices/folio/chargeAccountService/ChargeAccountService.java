@@ -7,7 +7,7 @@ public class ChargeAccountService {
 	private RestService restService;
 	public ChargeAccountService(RestService restService){
 		this.restService = restService;
-		this.restService.setMainResource("ChargeAccountServiceV2");
+		this.restService.setMainResource("ChargeAccountService");
 	}
 	
 	public ChargeAccount chargeAccount(){

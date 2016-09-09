@@ -17,27 +17,14 @@ import com.disney.test.utils.Randomness;
 public class retrieveGuests {
 	private RestService restService;
 	private String resource = "/retrieveguests";
-	private String referenceName;
-	private String referenceValue;
-	private String sourceAccountingCenter;
+
+
 	public retrieveGuests(RestService restService, String resource){
 		
 		this.restService = restService;
 		this.resource = resource + this.resource;
 	}
 	
-	
-	
-	
-	public RestResponse sendGetRequest(String resource){
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-	    params.add(new BasicNameValuePair("referenceName", referenceName));
-	    params.add(new BasicNameValuePair("referenceValue", referenceValue));
-	    params.add(new BasicNameValuePair("sourceAccountingCenter", sourceAccountingCenter));
-	   // setGetRequest(params);
-		return restService.sendGetRequest(resource, HeaderType.REST);
-		
-	}
 	
 	public RestResponse sendPutRequest(RetrieveGuestsRequest request){	
 		String json = restService.getJsonFromObject(request);
@@ -50,4 +37,11 @@ public class retrieveGuests {
 		return restService.sendPutRequest(resource, HeaderType.REST_NOAuth, json);
 	}
 	
+	public RestResponse sendGetRequest(String referenceName, String referenceValue, String sourceAccountCenter){
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+	    params.add(new BasicNameValuePair("referenceName", referenceName));
+	    params.add(new BasicNameValuePair("referenceValue", referenceValue));
+	    params.add(new BasicNameValuePair("sourceAccountingCenter", sourceAccountCenter));
+		return restService.sendGetRequest(resource, HeaderType.REST, params);
+	}
 }
