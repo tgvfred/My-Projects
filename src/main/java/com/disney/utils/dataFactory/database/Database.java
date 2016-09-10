@@ -1,5 +1,10 @@
 package com.disney.utils.dataFactory.database;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,6 +13,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 
+import org.apache.commons.io.FileUtils;
+
+import com.disney.AutomationException;
 import com.disney.utils.TestReporter;
 
 public abstract class Database {
@@ -86,25 +94,42 @@ public abstract class Database {
 	public Object[][] getResultSet(String query) {
 	    loadDriver();
 	    //System.out.println("here");
-		
+	    File temp = null;
+	 //   Path tempDir = null;
+	    String pathToTempDir = System.getProperty("java.io.tmpdir");
 	    Connection connection = null;
-		try {
-			String tns = getClass().getResource("/com/disney/utils/dataFactory/database/tnsnames.ora").getPath().toString();
-			tns = tns.substring(0, tns.lastIndexOf("/"));
-			tns = tns.substring(1,tns.length());
-			tns = tns.replace("%20", " ");
-			System.setProperty("oracle.net.tns_admin", tns);
-			
-			connection = DriverManager.getConnection(getDbConnectionString(), getDbUserName(), getDbPassword());
+	    String file = "tnsnames.ora";
+	    if(!new File(pathToTempDir+file).exists()){
+			try {
+				URL inputUrl = getClass().getResource("/com/disney/utils/dataFactory/database/tnsnames.ora");
+				File dest = new File("/com/disney/utils/dataFactory/database/tnsnames.ora");
+			//	tempDir = Files.createTempDirectory("tns");
+			    temp = File.createTempFile("tns" , ".ora");
+				FileUtils.copyURLToFile(inputUrl, temp.getAbsoluteFile());
+			//	String path = tempDir.toAbsolutePath()+"/";
+				temp.renameTo(new File(pathToTempDir + file));
+			} catch (IOException e) {
+				 if(!new File(pathToTempDir+file).exists()){
+					 throw new AutomationException("Failed to create tnsnames.ora", e);
+				 }
+			} 
+		}
 		
-	  TestReporter.logInfo(query);
-		ResultSet rs = (runQuery(connection, query));
-	  //  try {
-			return extract(rs);
+
+		System.setProperty("oracle.net.tns_admin", pathToTempDir);
+		
+		try {
+			connection = DriverManager.getConnection(getDbConnectionString(), getDbUserName(), getDbPassword());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			throw new RuntimeException(e);
+			 throw new AutomationException("Failed to connect to database", e);
 		}
+
+		  TestReporter.logInfo(query);
+			ResultSet rs = (runQuery(connection, query));
+		  //  try {
+				return extract(rs);
+	    
 	}
 	 
 	
@@ -136,8 +161,7 @@ public abstract class Database {
      * @return an ArrayList of ArrayLists of Strings 
      * @throws SQLException if an SQL exception occurs 
      */  
-    public static Object[][] extract(ResultSet resultSet)  
-    throws SQLException {  
+    public static Object[][] extract(ResultSet resultSet)   {  
         // get row and column count
         int rowCount = 0;
         try {
@@ -148,7 +172,7 @@ public abstract class Database {
         catch(Exception ex) {
         	rowCount = 0;
         }
-       
+       try{
         int columnCount = resultSet.getMetaData().getColumnCount();  
       
         Object[][] table = new String[rowCount+1][columnCount];  
@@ -194,6 +218,7 @@ public abstract class Database {
             resultSet.next();
         }  
         return table;  
+       }catch(SQLException sql){throw new AutomationException("Failed to generate result set", sql);}
     }  
 	
 }
