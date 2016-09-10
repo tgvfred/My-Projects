@@ -91,7 +91,7 @@ public class Headers {
 					}
 
 		        	headers = new Header []{
-		        			new BasicHeader("Authorization", authToken.getTokenType() + " " + authToken.getAccessToken())
+		        			new BasicHeader("authorization", authToken.getTokenType() + " " + authToken.getAccessToken())
 		        	};
 		        	break;
 		        case REST_NOAuth:

@@ -24,6 +24,7 @@ import com.disney.utils.TestReporter;
 	public class TestRetrieveSettlementMethods {
 	private String environment = "Bashful";
 	private Book book = null;
+	private String TPSId;
 		
 		/**
 		 * This will always be used as is. TestNG will pass in the Environment used
@@ -37,6 +38,7 @@ import com.disney.utils.TestReporter;
 			//generate accommodation booking
 			book= new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 			book.sendRequest();
+			TPSId = book.getTravelPlanId();
 		}
 		
 		/**
@@ -63,7 +65,7 @@ import com.disney.utils.TestReporter;
 			//request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue(book.getTravelPlanId());
 			//Add Folio Type
 			//request.getFolioIdentifierTO().setFolioType("INDIVIDUAL");
-			RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendPutRequest(request);
+			RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP", TPSId, "INDIVIDUAL");
 			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 		}	
 }

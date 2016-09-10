@@ -22,12 +22,20 @@ public class retrieveSettlementMethods {
 		
 	}
 	
-	public RestResponse sendGetRequest(String referenceName, String referenceValue, String sourceAccountCenter){
+	public RestResponse sendGetRequest(String referenceName, String referenceValue, String folioType){
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 	    params.add(new BasicNameValuePair("referenceName", referenceName));
 	    params.add(new BasicNameValuePair("referenceValue", referenceValue));
-	    params.add(new BasicNameValuePair("sourceAccountingCenter", sourceAccountCenter));
+	    params.add(new BasicNameValuePair("folioType", folioType));
 		return restService.sendGetRequest(resource, HeaderType.REST, params);
+	}
+	
+	public RestResponse sendGetRequestWithMissingAuthToken(String referenceName, String referenceValue, String folioType){
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+	    params.add(new BasicNameValuePair("referenceName", referenceName));
+	    params.add(new BasicNameValuePair("referenceValue", referenceValue));
+	    params.add(new BasicNameValuePair("folioType", folioType));
+		return restService.sendGetRequest(resource, HeaderType.REST_NOAuth, params);
 	}
 	
 	public RestResponse sendPutRequest(RetrieveSettlementMethodsRequest request){	

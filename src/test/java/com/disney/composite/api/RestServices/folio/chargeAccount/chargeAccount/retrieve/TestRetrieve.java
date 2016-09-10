@@ -16,6 +16,7 @@ import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.crea
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.request.RetrieveRequest;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.response.RetreiveResponse;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.response.objects.GuestInfoTO;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.utils.TestReporter;
 
 @Test
@@ -28,12 +29,15 @@ public class TestRetrieve {
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
 	 * @param environment - Valid environments for active testing are bashful, sleepy and grumpy
+	 * @param book 
 	 */
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		this.environment = environment;
-		//this.environment = "Bashful";
+		//this.environment = environment;
+		this.environment = "Bashful";
+		//generate accommodation booking
+		
 		//Create new request
 		CreateRequest request = new CreateRequest();
 		
@@ -111,4 +115,7 @@ public class TestRetrieve {
 			}
 			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");	
 	}
+	
+	
+	
 }

@@ -18,7 +18,7 @@ import com.disney.api.restServices.travelPlan.travelPlanService.retrieveDetails.
 
 @SuppressWarnings("unused")
 public class TestRetrieveDetails {
-private String environment = "Development";
+private String environment = "Bashful";
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -28,7 +28,7 @@ private String environment = "Development";
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
 		//this.environment = environment;
-		this.environment = "Development";
+		this.environment = "Bashful";
 	}
 	
 	/**
@@ -54,7 +54,7 @@ private String environment = "Development";
 		request.setRetrieveComments("false");
 		request.setRetrieveRoom("true");
 		
-		RestResponse response= Rest.travelPlan("Development").travelPlanService().retrieveDetails().sendPutRequest(request);
+		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest("", "", "462243403661", "", "");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 		}
 	
