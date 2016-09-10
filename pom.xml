@@ -225,7 +225,7 @@
 		                <argLine>
 		                    -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
 		                </argLine>
-		                <skipTests>true</skipTests> 
+		               <!--  <skipTests>true</skipTests>  -->
 		              	<suiteXmlFiles>
 							<suiteXmlFile>${testNGSourceDirectory}/${suiteXmlFile}</suiteXmlFile>
 						</suiteXmlFiles>
