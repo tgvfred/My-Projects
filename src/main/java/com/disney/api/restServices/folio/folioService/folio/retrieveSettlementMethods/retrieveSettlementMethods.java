@@ -1,6 +1,11 @@
 package com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.Header;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
@@ -15,6 +20,14 @@ public class retrieveSettlementMethods {
 		this.restService = restService;
 		this.resource = resource + this.resource;
 		
+	}
+	
+	public RestResponse sendGetRequest(String referenceName, String referenceValue, String sourceAccountCenter){
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+	    params.add(new BasicNameValuePair("referenceName", referenceName));
+	    params.add(new BasicNameValuePair("referenceValue", referenceValue));
+	    params.add(new BasicNameValuePair("sourceAccountingCenter", sourceAccountCenter));
+		return restService.sendGetRequest(resource, HeaderType.REST, params);
 	}
 	
 	public RestResponse sendPutRequest(RetrieveSettlementMethodsRequest request){	

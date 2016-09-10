@@ -25,7 +25,7 @@ public class retrieveGuests {
 		this.resource = resource + this.resource;
 	}
 	
-	
+	//no longer valid
 	public RestResponse sendPutRequest(RetrieveGuestsRequest request){	
 		String json = restService.getJsonFromObject(request);
 		return restService.sendPutRequest(resource, HeaderType.REST,json);		
@@ -43,5 +43,13 @@ public class retrieveGuests {
 	    params.add(new BasicNameValuePair("referenceValue", referenceValue));
 	    params.add(new BasicNameValuePair("sourceAccountingCenter", sourceAccountCenter));
 		return restService.sendGetRequest(resource, HeaderType.REST, params);
+	}
+	
+	public RestResponse sendGetRequestWithMissingAuthToken(String referenceName, String referenceValue, String sourceAccountCenter){
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+	    params.add(new BasicNameValuePair("referenceName", referenceName));
+	    params.add(new BasicNameValuePair("referenceValue", referenceValue));
+	    params.add(new BasicNameValuePair("sourceAccountingCenter", sourceAccountCenter));
+		return restService.sendGetRequest(resource, HeaderType.REST_NOAuth, params);
 	}
 }
