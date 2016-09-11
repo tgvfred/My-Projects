@@ -14,7 +14,7 @@ import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMe
 
 public class retrieveSettlementMethods {
 	private RestService restService;
-	private String resource = "/retrieveSettlementMethods";
+	private String resource = "/retrievesettlementmethods";
 	public retrieveSettlementMethods(RestService restService, String resource){
 		
 		this.restService = restService;

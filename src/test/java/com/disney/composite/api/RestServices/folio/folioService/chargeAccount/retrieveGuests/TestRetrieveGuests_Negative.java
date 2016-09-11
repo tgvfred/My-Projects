@@ -53,19 +53,8 @@ private String OdsID;
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		
-		//create the json message
-		RetrieveGuestsRequest request = new RetrieveGuestsRequest();
-		
-		//Adding data for the different nodes
-		//Added External Reference Type
-		request.addExternalReferenceTO();
-
-		//Add External Reference value
-		
-		
-		//Add SourceAccountingCenter
-		request.setSourceAccountingCenter("2");
-		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendPutRequestWithMissingAuthToken(request);
+	
+		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequestWithMissingAuthToken("ODS", OdsID, "2");
 		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");
 	}	
 	@Test(groups={"api","rest", "regression", "folio","negative", "folioService", "retrieveGuests"})
@@ -73,22 +62,10 @@ private String OdsID;
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		
-		//create the json message
-		RetrieveGuestsRequest request = new RetrieveGuestsRequest();
 		
-		//Adding data for the different nodes
-		//Added External Reference Type
-		request.addExternalReferenceTO();
-		request.getExternalReferenceTO().setReferenceName("");
-		request.getExternalReferenceTO().setReferenceValue(OdsID);
-		//Add External Reference value
-		
-		
-		//Add SourceAccountingCenter
-		request.setSourceAccountingCenter("2");
-		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendPutRequest(request);
+		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("", OdsID, "2");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Name =  "), "Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Name =  ] was received");
+		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO"), "Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Name =  ] was received");
 
 	}
 	
@@ -96,22 +73,27 @@ private String OdsID;
 	public void testretrieveGuests_Negative_BlankReferenceNumber()throws IOException{
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		
-		//create the json message
-		RetrieveGuestsRequest request = new RetrieveGuestsRequest();
-		
-		//Adding data for the different nodes
-		//Added External Reference Type
-		request.addExternalReferenceTO();
-		request.getExternalReferenceTO().setReferenceValue("");
-		//Add External Reference value
-		
-		
-		//Add SourceAccountingCenter
-		request.setSourceAccountingCenter("2");
-		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendPutRequest(request);
+		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("ODS", "", "2");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO"), "Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Value = ");
+		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO"), "Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO");
+
+	}
+	@Test(groups={"api","rest", "regression", "folio", "negative","folioService", "retrieveGuests"})
+	public void testretrieveGuests_Negative_BlankSourceAcctCenter()throws IOException{
+		TestReporter.setDebugLevel(1);
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("ODS", OdsID, "");
+		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
+		TestReporter.assertTrue(response.getResponse().contains("Invalid Charge Group reference : Root/Node reference provided is invalid - sourceAccountingCenterID=null"), "Invalid Charge Group reference : Root/Node reference provided is invalid - sourceAccountingCenterID=null");
+
+	}
+	@Test(groups={"api","rest", "regression", "folio", "negative","folioService", "retrieveGuests"})
+	public void testretrieveGuests_Negative_InvalidReferenceNumber()throws IOException{
+		TestReporter.setDebugLevel(1);
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("ODS", OdsID, "2");
+		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
+		TestReporter.assertTrue(response.getResponse().contains("Invalid Charge Group reference : Root/Node reference provided is invalid"), "Invalid Charge Group reference : Root/Node reference provided is invalid");
 
 	}
 }

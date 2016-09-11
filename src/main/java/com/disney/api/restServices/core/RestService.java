@@ -190,9 +190,7 @@ public class RestService {
 		String url = getTdmURL(resource);
 		TestReporter.logDebug("Creating Http GET instance with URL of ["+url+"]");
 		HttpGet request = new HttpGet(url);
-	    if(type != null) {
-	    	request.setHeaders(Headers.createHeader(type));
-	    }
+		
 		try {
 			if(params !=  null){
 		    	String allParams= "";
@@ -202,12 +200,16 @@ public class RestService {
 				TestReporter.logInfo("Adding Parameters " + allParams);
 				url = url+"?"+URLEncodedUtils.format(params, "utf-8");
 				TestReporter.logInfo("URL with params: " + url);
-				request = new HttpGet(url+"?"+URLEncodedUtils.format(params, "utf-8"));
+				request = new HttpGet(url);
 		    }
 			
 		} catch (Exception e) {
 			throw new WebServiceException(e.getMessage(),e);
 		}
+
+	    if(type != null) {
+	    	request.setHeaders(Headers.createHeader(type));
+	    }
 		return sendRequest(request);
 	}
 	

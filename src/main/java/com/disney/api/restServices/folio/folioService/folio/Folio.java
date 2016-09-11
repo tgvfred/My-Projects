@@ -6,7 +6,7 @@ import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMe
 
 public class Folio {
 	private RestService restService;
-	private String resource = "/Folio";
+	private String resource = "/folio";
 	public Folio(RestService restService){
 		this.restService = restService;
 	}
