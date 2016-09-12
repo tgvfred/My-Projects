@@ -23,6 +23,8 @@ import com.disney.utils.TestReporter;
 public class TestRetrieve_Negative {
 	private String environment;
 	private String caChargeAccount1;
+	private String externalRefName;
+	private String externalRefValue;
 	private String caChargeAccount2;
 	
 	/**
@@ -33,22 +35,16 @@ public class TestRetrieve_Negative {
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
 		this.environment = environment;
-		//this.environment = "Bashful";
+		
 		//Create new request
 		CreateRequest request = new CreateRequest();
+		externalRefName = request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).getExternalReference().get(0).getReferenceName();
+		externalRefValue= request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).getExternalReference().get(0).getReferenceValue();	
 		//Submit new chargeAccount Request
 		RestResponse response= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
 		CreateResponse[] createResponse = response.mapJSONToObject(CreateResponse[].class);
-		for(CreateResponse chargeAccount:createResponse){
-			caChargeAccount1 = chargeAccount.getRootChargeAccountCreateResponse().getChargeAccountId();
-		}
-		//Create 2nd new request
-		CreateRequest request2 = new CreateRequest();
-		//Submit new chargeAccount Request
-		RestResponse response2= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request2);
-		CreateResponse[] createResponse2 = response2.mapJSONToObject(CreateResponse[].class);
-		for(CreateResponse chargeAccount:createResponse2){
-			caChargeAccount2 = chargeAccount.getRootChargeAccountCreateResponse().getChargeAccountId();
+		for(CreateResponse chargeAccount:createResponse){	
+		caChargeAccount1 = chargeAccount.getRootChargeAccountCreateResponse().getChargeAccountId();
 		}
 	}
 	
@@ -62,90 +58,36 @@ public class TestRetrieve_Negative {
 	 * 		- DataScenario - data scenario used, data sheets can contain multiple scenarios.
 	 * @throws IOException 
 	 */
+	
 	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
 	public void testretrieve_Negatvie_NoAuthorization() throws IOException{
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		//Creating ChargeAccount.retrieve request
-		RetrieveRequest request = new RetrieveRequest();
-
-		//Adding Charge Accounts to look for
-		request.addChargeAccountId("99999");
-		
 		//Sending request and validating response
-		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequestWithMissingAuthToken(request);
-		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");	
+		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequestWithMissingAuthToken("", "", caChargeAccount1);
+		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");		
 	}
-	
+	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
+	public void testretrieve_Negatvie_InvalidRefName() throws IOException{
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		//Sending request and validating response
+		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest("DREAMS_TP", "", "");
+		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");		
+		TestReporter.assertTrue(response.getResponse().contains("Unexpected Error occurred : retrieve : null"), "Unexpected Error occurred : retrieve : null");
+	}
+	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
+	public void testretrieve_Negatvie_InvalidRefValue() throws IOException{
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		//Sending request and validating response
+		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest("", "HiThisIsATest123", "");
+		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");		
+		TestReporter.assertTrue(response.getResponse().contains("Unexpected Error occurred : retrieve : For input string:"), "Unexpected Error occurred : retrieve : For input string:");
+	}
 	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
 	public void testretrieve_Negatvie_InvalidChargeAcct() throws IOException{
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		//Creating ChargeAccount.retrieve request
-		RetrieveRequest request = new RetrieveRequest();
-
-		//Adding Charge Accounts to look for
-		request.addChargeAccountId("99999");
-		
 		//Sending request and validating response
-		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);
-		
-		RetreiveResponse[] retreiveResponse = response.mapJSONToObject(RetreiveResponse[].class);
+		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest("", "", "99999");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 		TestReporter.assertTrue(response.getResponse().contains("Charge account not found. : ChargeAccount Not Found"), "Charge account not found. : ChargeAccount Not Found");	
-	}
-	
-	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
-	public void testretrieve_Negative_BlankChargeAcct() throws IOException{
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		//Creating ChargeAccount.retrieve request
-		RetrieveRequest request = new RetrieveRequest();
-
-		//Adding Charge Accounts to look for
-		request.addChargeAccountId("");
-		
-		//Sending request and validating response
-		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);
-		
-		RetreiveResponse[] retreiveResponse = response.mapJSONToObject(RetreiveResponse[].class);
-		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-		TestReporter.assertTrue(response.getResponse().contains("Charge account not found. : ChargeAccount Not Found"), "Charge account not found. : ChargeAccount Not Found");
-
-	}
-	
-	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
-	public void testretrieve_Negative_2ndChargeAcctBlank() throws IOException{
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		//Creating ChargeAccount.retrieve request
-		RetrieveRequest request = new RetrieveRequest();
-
-		//Adding Charge Accounts to look for
-		request.addChargeAccountId(caChargeAccount1);
-		request.addChargeAccountId("");
-		
-		//Sending request and validating response
-		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);
-		
-		RetreiveResponse[] retreiveResponse = response.mapJSONToObject(RetreiveResponse[].class);
-		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-		TestReporter.assertTrue(response.getResponse().contains("\"nodeChargeAccountResponse\":null"), "nodeChargeAccountResponse:null");
-
-	}
-	
-	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
-	public void testretrieve_Negative_2ndChargeAcctInvalid() throws IOException{
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		//Creating ChargeAccount.retrieve request
-		RetrieveRequest request = new RetrieveRequest();
-
-		//Adding Charge Accounts to look for
-		request.addChargeAccountId(caChargeAccount1);
-		request.addChargeAccountId("99999");
-		
-		//Sending request and validating response
-		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);
-		
-		RetreiveResponse[] retreiveResponse = response.mapJSONToObject(RetreiveResponse[].class);
-		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-		TestReporter.assertTrue(response.getResponse().contains("\"nodeChargeAccountResponse\":null"), "nodeChargeAccountResponse:null");
-
 	}
 }

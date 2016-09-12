@@ -45,7 +45,7 @@ public class TestOTA_CancelRQ_Negative {
 		//Convert the Recordset to a string
 		String responseMessage = rs.printString();
 		//Grab the section where the error messages are located
-		Object testvalue = responseMessage.substring(4790, 4808);
+		Object testvalue = responseMessage.substring(4541, 4558);
 		//Convert to a string
 		String errorCode = testvalue.toString();
 		//Print out the error code and validate

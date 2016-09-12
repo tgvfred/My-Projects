@@ -23,43 +23,43 @@ public class retrieveDetails {
 		
 	}
 	
-	public RestResponse sendGetRequest(String referenceName, String referenceValue, String travelPlanId, String travelPlanSegmentId, String SiebelId){
+	public RestResponse sendGetRequest(String travelPlanId, String travelPlanSegmentId, String retrieveComments, String retrieveGuests, String retrieveRooms, String retrieveHistory, String retrieveGuestAddress, String retrieveTP, String retrieveAcct, String retrieveDeposit, String retrieveLookForTCG ){
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		if (referenceName != ""){
-			params.add(new BasicNameValuePair("referenceName", referenceName));
-		}
-		if (referenceValue !=""){
-			params.add(new BasicNameValuePair("referenceValue", referenceValue));
-		}
 		if (travelPlanId != ""){
 			params.add(new BasicNameValuePair("travelPlanId", travelPlanId));
 		}
 		if (travelPlanSegmentId !=""){
 			params.add(new BasicNameValuePair("travelPlanSegmentId", travelPlanSegmentId));	
 		}
-		if (SiebelId != ""){
-			params.add(new BasicNameValuePair("SiebelId", SiebelId));
-		}
+		params.add(new BasicNameValuePair("retrieve-comments",retrieveComments));
+		params.add(new BasicNameValuePair("retrieve-guests",retrieveGuests));
+		params.add(new BasicNameValuePair("retrieve-room",retrieveRooms));
+		params.add(new BasicNameValuePair("retrieve-history",retrieveHistory));
+		params.add(new BasicNameValuePair("retrieve-guest-address",retrieveGuestAddress));
+		params.add(new BasicNameValuePair("retrieve-travelPlan-details",retrieveTP));
+		params.add(new BasicNameValuePair("retrieve-accounting-info",retrieveAcct));
+		params.add(new BasicNameValuePair("retrieve-deposit-payment",retrieveDeposit));
+		params.add(new BasicNameValuePair("look-for-TCG",retrieveLookForTCG));
 		return restService.sendGetRequest(resource, HeaderType.REST, params);
 	}
 	
-	public RestResponse sendGetRequestWithMissingAuthToken(String referenceName, String referenceValue, String travelPlanId, String travelPlanSegmentId, String SiebelId){
+	public RestResponse sendGetRequestWithMissingAuthToken(String travelPlanId, String travelPlanSegmentId, String retrieveComments, String retrieveGuests, String retrieveRooms, String retrieveHistory, String retrieveGuestAddress, String retrieveTP, String retrieveAcct, String retrieveDeposit, String retrieveLookForTCG ){
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		if (referenceName != ""){
-			params.add(new BasicNameValuePair("referenceName", referenceName));
-		}
-		if (referenceValue !=""){
-			params.add(new BasicNameValuePair("referenceValue", referenceValue));
-		}
 		if (travelPlanId != ""){
 			params.add(new BasicNameValuePair("travelPlanId", travelPlanId));
 		}
 		if (travelPlanSegmentId !=""){
 			params.add(new BasicNameValuePair("travelPlanSegmentId", travelPlanSegmentId));	
 		}
-		if (SiebelId != ""){
-			params.add(new BasicNameValuePair("SiebelId", SiebelId));
-		}
+		params.add(new BasicNameValuePair("retrieve-comments",retrieveComments));
+		params.add(new BasicNameValuePair("retrieve-guests",retrieveGuests));
+		params.add(new BasicNameValuePair("retrieve-room",retrieveRooms));
+		params.add(new BasicNameValuePair("retrieve-history",retrieveHistory));
+		params.add(new BasicNameValuePair("retrieve-guest-address",retrieveGuestAddress));
+		params.add(new BasicNameValuePair("retrieve-travelPlan-details",retrieveTP));
+		params.add(new BasicNameValuePair("retrieve-accounting-info",retrieveAcct));
+		params.add(new BasicNameValuePair("retrieve-deposit-payment",retrieveDeposit));
+		params.add(new BasicNameValuePair("look-for-TCG",retrieveLookForTCG));
 		return restService.sendGetRequest(resource, HeaderType.REST_NOAuth, params);
 	}
 	

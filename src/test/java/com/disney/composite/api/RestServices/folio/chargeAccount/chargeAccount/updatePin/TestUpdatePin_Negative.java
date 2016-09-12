@@ -36,7 +36,7 @@ private String caChargeAccount;
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
 		this.environment = environment;
-		//this.environment = "Bashful";
+		
 		//Create new request
 		CreateRequest request = new CreateRequest();
 		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setCampusId("1");
