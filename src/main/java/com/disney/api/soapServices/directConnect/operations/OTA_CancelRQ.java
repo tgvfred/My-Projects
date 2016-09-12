@@ -14,7 +14,7 @@ public class OTA_CancelRQ extends DirectConnect{
 	public OTA_CancelRQ (String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
-		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("OTA_CancelRQ.java")));
+		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("OTA_CancelRQ")));
 	
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
 		removeComments() ;

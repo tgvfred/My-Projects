@@ -4,6 +4,12 @@ import com.disney.api.soapServices.directConnect.DirectConnect;
 import com.disney.test.utils.Randomness;
 import com.disney.utils.XMLTools;
 
+
+/**
+ * @author mccak082
+ *
+ */
+
 public class DestActivityResRQ extends DirectConnect{
 	public DestActivityResRQ (String environment, String scenario) {
 		super(environment);
