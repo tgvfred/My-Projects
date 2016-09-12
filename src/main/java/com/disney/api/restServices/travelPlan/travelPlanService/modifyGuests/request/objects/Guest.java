@@ -16,9 +16,15 @@ public class Guest {
 	private String guestId ="238497533";
 	private String active = "true";
 
-	public void addAddressDetails(){
+	public Guest(){
 		addressDetails.add(new AddressDetail());
 	}
+	
+
+	public void addAddressDetails(){
+       addressDetails.add(new AddressDetail());
+	}
+
 	/**
 	* 
 	* @return

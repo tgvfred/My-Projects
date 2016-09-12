@@ -14,17 +14,21 @@ package com.disney.composite.api.RestServices.folio.folioService.folio.retrieveS
 
 	import com.disney.api.restServices.Rest;
 	import com.disney.api.restServices.core.RestResponse;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.CreateRequest;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.response.CreateResponse;
 import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.RetrieveGuestsRequest;
 import com.disney.api.restServices.folio.folioService.chargeAccount.retrieveGuests.request.objects.ExternalReferenceTO;
 import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.request.RetrieveSettlementMethodsRequest;
+import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.response.RetrieveSettlementMethodsResponse;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.utils.TestReporter;
 
 	@SuppressWarnings("unused")
 	public class TestRetrieveSettlementMethods {
-	private String environment = "Bashful";
+	private String environment;
 	private Book book = null;
-	private String TPSId;
+	private String TPId;
+	private String folioId;
 		
 		/**
 		 * This will always be used as is. TestNG will pass in the Environment used
@@ -33,12 +37,25 @@ import com.disney.utils.TestReporter;
 		@BeforeMethod(alwaysRun = true)
 		@Parameters({  "environment" })
 		public void setup(@Optional String environment) {
-			//this.environment = environment;
-			this.environment = "Bashful";
+			this.environment = environment;
+			
 			//generate accommodation booking
-			book= new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
+			Book book = new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 			book.sendRequest();
-			TPSId = book.getTravelPlanId();
+				
+			//Create new request
+			CreateRequest request = new CreateRequest();
+			request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setReservationTxnGuestId(book.getGuestId());
+			request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setFirstName(book.getPrimaryGuestFirstName());
+			request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setLastName(book.getPrimaryGuestLastName());
+			request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setTxnGuestId(book.getGuestId());
+			
+			TPId = book.getTravelPlanId();
+			//Submit new chargeAccount Request
+			RestResponse response= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
+			CreateResponse[] createResponse = response.mapJSONToObject(CreateResponse[].class);
+			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		        
 		}
 		
 		/**
@@ -53,19 +70,36 @@ import com.disney.utils.TestReporter;
 		
 		
 		@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveSettlementMethods"})
-		public void testretrieveSettlementMethods()throws IOException{
+		public void testretrieveSettlementMethods_ByTravelPlan()throws IOException{
 			TestReporter.setDebugLevel(1);
 			TestReporter.setDebugLevel(TestReporter.DEBUG);
-			
-			//create the json message
-			RetrieveSettlementMethodsRequest request = new RetrieveSettlementMethodsRequest();
-			//Adding data for the different nodes
-			//Added External Reference Type
-			//request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceName("DREAMS_TP");
-			//request.getFolioIdentifierTO().getExternalReferenceTO().setReferenceValue(book.getTravelPlanId());
-			//Add Folio Type
-			//request.getFolioIdentifierTO().setFolioType("INDIVIDUAL");
-			RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP", TPSId, "INDIVIDUAL");
+			//Submit get with TP only
+			RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP",TPId,"","","true");
 			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
-		}	
+		}
+		@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveSettlementMethods"})
+		public void testretrieveSettlementMethods_ByTPAndFolioType()throws IOException{
+			TestReporter.setDebugLevel(1);
+			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			//Submit get with TP only
+			RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP",TPId,"INDIVIDUAL","","true");
+			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		}
+		@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveSettlementMethods"})
+		public void testretrieveSettlementMethods_ByFolioId()throws IOException{
+			TestReporter.setDebugLevel(1);
+			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			//Submit get with TP only
+			RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP",TPId,"INDIVIDUAL","","true");
+			//Get the returned FolioID
+			RetrieveSettlementMethodsResponse [] retrieveSettlementMethodsResponse = response.mapJSONToObject(RetrieveSettlementMethodsResponse[].class);
+			for( RetrieveSettlementMethodsResponse folio:retrieveSettlementMethodsResponse){
+				folioId = Long.toString(folio.getFolioID());
+				
+			}
+			
+			//Submit get with TP only
+			RestResponse response2= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("","","INDIVIDUAL",folioId,"true");			
+			TestReporter.assertTrue(response2.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		}
 }

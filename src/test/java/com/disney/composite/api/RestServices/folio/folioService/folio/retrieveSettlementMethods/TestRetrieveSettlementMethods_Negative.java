@@ -9,6 +9,8 @@ import org.testng.annotations.Test;
 
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.core.RestResponse;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.request.CreateRequest;
+import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.create.response.CreateResponse;
 import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.request.RetrieveSettlementMethodsRequest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.utils.TestReporter;
@@ -31,10 +33,21 @@ public class TestRetrieveSettlementMethods_Negative {
 		this.environment = "Bashful";
 		
 		//generate accommodation booking
-		book= new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
+		Book book = new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 		book.sendRequest();
+			
+		//Create new request
+		CreateRequest request = new CreateRequest();
+		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setReservationTxnGuestId(book.getGuestId());
+		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setFirstName(book.getPrimaryGuestFirstName());
+		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setLastName(book.getPrimaryGuestLastName());
+		request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setTxnGuestId(book.getGuestId());
+		
 		TPId = book.getTravelPlanId();
-		TPSId = book.getTravelPlanSegmentId();
+		//Submit new chargeAccount Request
+		RestResponse response= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
+		CreateResponse[] createResponse = response.mapJSONToObject(CreateResponse[].class);
+		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 	}
 	
 	/**
@@ -53,7 +66,7 @@ public class TestRetrieveSettlementMethods_Negative {
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		
-		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequestWithMissingAuthToken("DREAMS_TP", TPId, "INDIVIDUAL");
+		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequestWithMissingAuthToken("DREAMS_TP","462243403661","INDIVIDUAL","138847433","true");
 		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");
 	}
 	@Test(groups={"api","rest", "regression", "folio", "folioService","negative", "retrieveSettlementMethods"})
@@ -62,7 +75,7 @@ public class TestRetrieveSettlementMethods_Negative {
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		
 		
-		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("", TPId, "INDIVIDUAL");
+		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("",TPId,"","","true");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 		TestReporter.assertTrue(response.getResponse().contains("Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Name = "), "Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Name = ] was received");
 	}	
@@ -71,27 +84,17 @@ public class TestRetrieveSettlementMethods_Negative {
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		
-		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP", "", "INDIVIDUAL");
+		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP","","","","true");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Name = "), "Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO[Reference Value = ] was received");
 	}
 	@Test(groups={"api","rest", "regression", "folio", "folioService","negative", "retrieveSettlementMethods"})
-	public void testretrieveSettlementMethods_Negative_InvalidFolioType()throws IOException{
+	public void testretrieveSettlementMethods_Negative_InvalidFolioNum()throws IOException{
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		
-		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP", TPId, "IND");
+		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("","","INDIVIDUAL","138","true");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO"), "FolioType from String value 'IND': value not one of declared Enum instance names");
+		TestReporter.assertTrue(response.getResponse().contains("errorMessage\":\"No Folio found : Folio with the ID cannot be found. folioID"), "errorMessage\":\"No Folio found : Folio with the ID cannot be found. folioID");
 	}
-	@Test(groups={"api","rest", "regression", "folio", "folioService","negative", "retrieveSettlementMethods"})
-	public void testretrieveSettlementMethods_Negative_MissingFolioType()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		
-		RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP", TPId, "");
-		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO"), "FolioType from String value '': value not one of declared Enum instance names");
-	}
-	
 }

@@ -22,19 +22,39 @@ public class retrieveSettlementMethods {
 		
 	}
 	
-	public RestResponse sendGetRequest(String referenceName, String referenceValue, String folioType){
+	public RestResponse sendGetRequest(String referenceName, String referenceValue, String folioType, String folioId, String onlyActive){
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-	    params.add(new BasicNameValuePair("referenceName", referenceName));
-	    params.add(new BasicNameValuePair("referenceValue", referenceValue));
-	    params.add(new BasicNameValuePair("folioType", folioType));
+		if (referenceName!=""){
+			params.add(new BasicNameValuePair("id-type", referenceName));
+		}
+		if (referenceValue != ""){
+			params.add(new BasicNameValuePair("id-value", referenceValue));
+		}
+		if (folioType != ""){
+			params.add(new BasicNameValuePair("folioType", folioType));
+		}
+	    if (folioId !=""){
+	    	params.add(new BasicNameValuePair("folioId", folioId));
+	    }	
+	    params.add(new BasicNameValuePair("onlyActive", onlyActive));
 		return restService.sendGetRequest(resource, HeaderType.REST, params);
 	}
 	
-	public RestResponse sendGetRequestWithMissingAuthToken(String referenceName, String referenceValue, String folioType){
+	public RestResponse sendGetRequestWithMissingAuthToken(String referenceName, String referenceValue, String folioType, String folioId, String onlyActive){
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-	    params.add(new BasicNameValuePair("referenceName", referenceName));
-	    params.add(new BasicNameValuePair("referenceValue", referenceValue));
-	    params.add(new BasicNameValuePair("folioType", folioType));
+		if (referenceName!=""){
+			params.add(new BasicNameValuePair("id-type", referenceName));
+		}
+		if (referenceValue != ""){
+			params.add(new BasicNameValuePair("id-value", referenceValue));
+		}
+		if (folioType != ""){
+			params.add(new BasicNameValuePair("folioType", folioType));
+		}
+	    if (folioId !=""){
+	    	params.add(new BasicNameValuePair("folioId", folioId));
+	    }	
+	    params.add(new BasicNameValuePair("onlyActive", onlyActive));
 		return restService.sendGetRequest(resource, HeaderType.REST_NOAuth, params);
 	}
 	

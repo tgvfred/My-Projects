@@ -25,7 +25,7 @@ import com.disney.utils.dataFactory.guestFactory.Guest;
 @SuppressWarnings("unused")
 public class TestRetrieveGuests {
 private String environment = "Bashful";
-private String TPSId;
+private String TPId;
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
 	 * @param environment - Valid environments for active testing are bashful, sleepy and grumpy
@@ -43,12 +43,12 @@ private String TPSId;
 				
 			//Create new request
 			CreateRequest request = new CreateRequest();
-			//request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setFirstName(book.getPrimaryGuestFirstName());
-			//request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setLastName(book.getPrimaryGuestLastName());
-			//request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setTxnGuestId(book.getGuestId());
-			//request/.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).getExternalReference().get(0).setReferenceName("DPMSBooking");
-			//request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).getExternalReference().get(0).setReferenceValue(book.getTravelPlanSegmentId());
-			TPSId = book.getTravelPlanSegmentId();
+			request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getChargeAccountPaymentMethodDetail().get(0).getKttwPaymentDetail().setReservationTxnGuestId(book.getGuestId());
+			request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setFirstName(book.getPrimaryGuestFirstName());
+			request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setLastName(book.getPrimaryGuestLastName());
+			request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).setTxnGuestId(book.getGuestId());
+			
+			TPId = book.getTravelPlanId();
 			//Submit new chargeAccount Request
 			RestResponse response= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
 			CreateResponse[] createResponse = response.mapJSONToObject(CreateResponse[].class);
@@ -69,12 +69,12 @@ private String TPSId;
 	
 	
 	@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveGuests"})
-	public void testretrieveGuests()throws IOException{
+	public void testretrieveGuests_AllValues()throws IOException{
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);	
 		
-		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("SWID","{c64a010f-0029-4ee2-8bf5-7749c792b843}","2");
+		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("DREAMS_TP",TPId,"2");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
-
+		System.out.println(response);
 	}
 }
