@@ -5,12 +5,9 @@ import com.disney.api.restServices.accommodation.accommodationSales.updateCommen
 
 public class AccommodationSales {
 	private RestService restService;
-	private String resource = "/accommodationSales";
+	private String resource = "/accommodationsales";
 	
-	public AccommodationSales(RestService restService){
-		this.restService = restService;
-	}
-	
+
 	public updateComments updateComments(){
 		return new updateComments(restService, resource);
 	}

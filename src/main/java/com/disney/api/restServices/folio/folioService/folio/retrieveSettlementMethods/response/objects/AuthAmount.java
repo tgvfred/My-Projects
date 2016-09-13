@@ -1,7 +1,7 @@
 package com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.response.objects;
 
 public class AuthAmount {
-	private Long amount;
+	private Double amount;
 	private String currency;
 
 	/**
@@ -9,7 +9,7 @@ public class AuthAmount {
 	* @return
 	* The amount
 	*/
-	public Long getAmount() {
+	public Double getAmount() {
 	return amount;
 	 }
 
@@ -18,7 +18,7 @@ public class AuthAmount {
 	* @param amount
 	* The amount
 	*/
-	public void setAmount(Long amount) {
+	public void setAmount(Double amount) {
 	this.amount = amount;
 	 }
 

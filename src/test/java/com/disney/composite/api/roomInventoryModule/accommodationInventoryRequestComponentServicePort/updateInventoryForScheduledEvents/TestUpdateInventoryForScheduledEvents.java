@@ -88,6 +88,8 @@ public class TestUpdateInventoryForScheduledEvents extends BaseTest{
 		
 		TestReporter.logAPI(!update.getResponseStatusCode().contains("200"), update.getFaultString() ,update);
 		TestReporter.assertTrue(Regex.match("[0-9]+", update.getNewAssignmentOwnerId()), "The new Assignement Owner ID ["+update.getNewAssignmentOwnerId()+"] is numeric as expected.");
+
+		TestReporter.assertTrue(update.getNewAssignmentOwnerId().length()==9, "The new Assignement Owner ID ["+update.getNewAssignmentOwnerId()+"] is 9 characters in length.");
 		TestReporter.assertTrue(Regex.match("[0-9]+", update.getResponseTravelComponentId()), "The returned Travel Component Id ["+update.getResponseTravelComponentId()+"] is numeric as expected.");
 		
 		

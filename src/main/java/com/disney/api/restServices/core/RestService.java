@@ -44,6 +44,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -160,7 +161,7 @@ public class RestService {
 	 * @throws 	IOException
 	 */
 	public RestResponse sendGetRequest(String resource) {
-	   	return sendGetRequest(resource, null);
+	   	return sendGetRequest(resource, null, null);
 	}
 	
 	/**
@@ -172,11 +173,40 @@ public class RestService {
 	 * @throws 	IOException
 	 */
 	public RestResponse sendGetRequest(String resource, HeaderType type) {
+		return sendGetRequest(resource, type, null);
+	}
+	
+	/**
+	 * Sends a GET request
+	 * 
+	 * @param 	resource for the service you are testing
+	 * @return 	response in string format
+	 * @throws 	ClientProtocolException
+	 * @throws 	IOException
+	 */
+	public RestResponse sendGetRequest(String resource, HeaderType type,  List<NameValuePair> params) {
 		TestReporter.logDebug("Preparing to send GET request");
 		TestReporter.logDebug("Getting Rest endpoint from TDM");
 		String url = getTdmURL(resource);
 		TestReporter.logDebug("Creating Http GET instance with URL of ["+url+"]");
 		HttpGet request = new HttpGet(url);
+		
+		try {
+			if(params !=  null){
+		    	String allParams= "";
+		    	for (NameValuePair param : params){
+		    		allParams += "[" +param.getName() + ": " + param.getValue()+"] ";
+		    	}
+				TestReporter.logInfo("Adding Parameters " + allParams);
+				url = url+"?"+URLEncodedUtils.format(params, "utf-8");
+				TestReporter.logInfo("URL with params: " + url);
+				request = new HttpGet(url);
+		    }
+			
+		} catch (Exception e) {
+			throw new WebServiceException(e.getMessage(),e);
+		}
+
 	    if(type != null) {
 	    	request.setHeaders(Headers.createHeader(type));
 	    }

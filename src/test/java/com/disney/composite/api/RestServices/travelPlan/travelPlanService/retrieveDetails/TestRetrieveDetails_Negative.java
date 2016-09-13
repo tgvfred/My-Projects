@@ -10,12 +10,15 @@ import org.testng.annotations.Test;
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.travelPlan.travelPlanService.retrieveDetails.request.RetrieveDetailsRequest;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 
 public class TestRetrieveDetails_Negative {
-private String environment = "Development";
+private String environment;
+private String TPSId;
+private String TPId;
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -24,8 +27,13 @@ private String environment = "Development";
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		//this.environment = environment;
-		this.environment = "Development";
+		this.environment = environment;
+		
+		//generate accommodation booking
+		Book book = new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
+		book.sendRequest();
+		TPId = book.getTravelPlanId();
+		TPSId = book.getTravelPlanSegmentId();
 	}
 	
 	/**
@@ -37,21 +45,34 @@ private String environment = "Development";
 	 * 		- OperationName - name of the operation
 	 * 		- DataScenario - data scenario used, data sheets can contain multiple scenarios.
 	 */
-	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
+	@Test(groups={"api","rest", "regression", "negative", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_Negative_NoAuthorization () throws IOException{
 		// set log levels for debugging
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		
-		//create new request file
-		RetrieveDetailsRequest request = new RetrieveDetailsRequest();
-		
-		//Add needed data for submission
-		request.setTravelPlanSegmentId("462291037410");
-		request.setRetrieveComments("false");
-		request.setRetrieveRoom("true");
-		
-		RestResponse response= Rest.travelPlan("Development").travelPlanService().retrieveDetails().sendPutRequestWithMissingAuthToken(request);
+		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequestWithMissingAuthToken(TPId, TPSId, "true", "true", "true", "true", "true", "true", "true", "true", "true");
 		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");
+		}
+	
+	@Test(groups={"api","rest", "regression", "negative","travelPlan", "travelPlanService", "retrieveDetails"})
+	public void testretrieveDetails_Negative_InvalidTravelPlan () throws IOException{
+		// set log levels for debugging
+		TestReporter.setDebugLevel(1);
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		
+		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPSId, "", "true", "true", "true", "true", "true", "true", "true", "true", "true");
+		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
+		TestReporter.assertTrue(response.getResponse().contains("Travel Plan Segment Not Found : Invalid criteria. No data found"), "Travel Plan Segment Not Found : Invalid criteria. No data found");	
+		}
+	@Test(groups={"api","rest", "regression", "negative","travelPlan", "travelPlanService", "retrieveDetails"})
+	public void testretrieveDetails_Negative_InvalidTravelPlanSegemnt () throws IOException{
+		// set log levels for debugging
+		TestReporter.setDebugLevel(1);
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		
+		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest("", TPId, "true", "true", "true", "true", "true", "true", "true", "true", "true");
+		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
+		TestReporter.assertTrue(response.getResponse().contains("Travel Plan Segment Not Found : Invalid criteria. No data found"), "Travel Plan Segment Not Found : Invalid criteria. No data found");	
 		}
 }

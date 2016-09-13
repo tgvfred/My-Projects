@@ -300,6 +300,7 @@ public class EventDiningReservation implements ScheduledEventReservation{
 		eventDiningBook.setServiceStartDateTime(getServiceStartDate());
 		eventDiningBook.addDetailsByFacilityNameAndProductName(facilityName, productName);
 		if(!agencyId.equals("0")){eventDiningBook.addTravelAgency(agencyId, agencyOdsId, guestTravelAgencyId, agentId, guestAgentId, confirmationLocatorValue, guestConfirmationLocationId);}	
+		if(travelPlanId != null) eventDiningBook.setTravelPlanId(travelPlanId);
 
 		TestReporter.logStep("Book an Event dining reservation");
 		eventDiningBook.sendRequest();

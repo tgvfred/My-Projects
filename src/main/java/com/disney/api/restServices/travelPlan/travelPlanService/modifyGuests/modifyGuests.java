@@ -7,7 +7,7 @@ import com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests.req
 
 public class modifyGuests {
 	private RestService restService;
-	private String resource = "/modifyGuests";
+	private String resource = "/modifyguests";
 	
 	public modifyGuests(RestService restService, String resource) {
 		this.restService = restService;

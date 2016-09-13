@@ -12,7 +12,7 @@ import com.disney.test.utils.Randomness;
 
 public class updatePin {
 	private RestService restService;
-	private String resource = "/updatePin";
+	private String resource = "/updatepin";
 	
 	public updatePin(RestService restService, String resource){
 		this.restService = restService;

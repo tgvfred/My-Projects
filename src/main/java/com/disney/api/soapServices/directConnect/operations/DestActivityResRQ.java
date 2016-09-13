@@ -1,23 +1,35 @@
 package com.disney.api.soapServices.directConnect.operations;
 
 import com.disney.api.soapServices.directConnect.DirectConnect;
+import com.disney.test.utils.Randomness;
 import com.disney.utils.XMLTools;
+
+
+/**
+ * @author mccak082
+ *
+ */
 
 public class DestActivityResRQ extends DirectConnect{
 	public DestActivityResRQ (String environment, String scenario) {
 		super(environment);
 		//Generate a request from a project xml file
-		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("DestActivityResRQ.java")));	
+		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("DestActivityResRQ")));	
 		
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
 		removeComments() ;
 		removeWhiteSpace();
 	}
+	
+	//Set Unique Identifier
+	public void setPayloadRequestId(String value){setRequestNodeValueByXPath("/Envelope/Header/Interface/PayloadInfo/@RequestId", value);}
+	public void setEchoToken(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/@EchoToken",value);}
+	public void setUniqueId(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/UniqueID/@ID", value);}
+	
 	/**Payload Section **/
 	public void setPayloadName(String value){setRequestNodeValueByXPath("/Envelope/Header/Interface/@Name", value);}
 	public void setPayloadVersion(String value){setRequestNodeValueByXPath("/Envelope/Header/Interface/@Version", value);}
 	public void setPayloadLocation(String value){setRequestNodeValueByXPath("/Envelope/Header/Interface/PayloadInfo/@Location",value);}
-	public void setPayloadRequestId(String value){setRequestNodeValueByXPath("/Envelope/Header/Interface/PayloadInfo/@RequestId", value);}
 	public void setPayloadRequestorId(String value){setRequestNodeValueByXPath("/Envelope/Header/Interface/PayloadInfo/@RequestorId", value);}
 	public void setPayloadResponderId(String value){setRequestNodeValueByXPath("/Envelope/HeaderInterface/PayloadInfo/@ResponderId", value);}
 	public void setPayloadDestinationId(String value){setRequestNodeValueByXPath("/Envelope/Header/Interface/PayloadInfo/CommDescriptor/@DestinationId", value);}
@@ -30,11 +42,10 @@ public class DestActivityResRQ extends DirectConnect{
 	/**OTA Header information **/
 	public void setVersion(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/@Version", value);}
 	public void setTimeStamp(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/@TimeStamp", value);}
-	public void setEchoToken(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/@EchoToken", value);}
 	public void setTarget(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/@Target", value);}
 	
 	/**Unique Id Section **/
-	public void setUniqueId(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/UniqueID/@ID", value);}
+	
 	public void setUniqueIdType(String value){setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/UniqueID/@Type", value);}
 	
 	/** Traveler Count **/
@@ -105,10 +116,10 @@ public class DestActivityResRQ extends DirectConnect{
 			getRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]/@ItemCode");
 		}catch(Exception e){}
 		setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@ItemCode");
-	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@OptionCode");
-	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@Quantity");
-	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@SelectedDate");
-	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNodes;Node:NegotiatedPrice/@AmountAfterTax");
+		setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@OptionCode");
+		setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@Quantity");
+		setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNode;Node:@SelectedDate");
+		setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNodes;Node:NegotiatedPrice/@AmountAfterTax");
 	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNodes;Node:NegotiatedPrice/@CurrencyCode");
 	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNodes;Node:ItemReferences/ItemReference/@Type");
 	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]","fx:AddNodes;Node:ItemReferences/ItemReference/@ID");
@@ -125,7 +136,9 @@ public class DestActivityResRQ extends DirectConnect{
 	setRequestNodeValueByXPath("/Envelope/Body/OTA_DestActivityResRQ/DestActivityReservation/DestActivityItems/Item["+numberOfTicketDetails+"]/SubAllocation/@TravelerRPH", TravelerRPH);
 	}
 	
-	
+	public String getRequestId(){
+		return getResponseNodeValueByXPath("/Envelope/Header/Interface/Acknowledgement/@RequestId");
+	}	
 	
 
 }

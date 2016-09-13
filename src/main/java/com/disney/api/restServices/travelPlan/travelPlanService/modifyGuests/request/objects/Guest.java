@@ -2,22 +2,29 @@ package com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests.re
 
 import java.util.ArrayList;
 import java.util.List;
+import com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests.request.objects.AddressDetail;
 
 public class Guest {
-	private String firstName;
-	private String lastName;
-	private String partyId;
+	private String firstName = "Quick22";
+	private String lastName = "Book22";
+	private String partyId = "0";
 	private List<AddressDetail> addressDetails = new ArrayList<AddressDetail>();
-	private String doNotMailIndicator;
-	private String doNotPhoneIndicator;
-	private String preferredLanguage;
-	private String dclGuestId;
-	private String guestId;
-	private String active;
+	private String doNotMailIndicator = "false";
+	private String doNotPhoneIndicator ="false";
+	private String preferredLanguage = "eng";
+	private String dclGuestId = "0";
+	private String guestId ="238497533";
+	private String active = "true";
 
-	public void addressDetails(){
+	public Guest(){
 		addressDetails.add(new AddressDetail());
 	}
+	
+
+	public void addAddressDetails(){
+       addressDetails.add(new AddressDetail());
+	}
+
 	/**
 	* 
 	* @return
