@@ -14,7 +14,7 @@ import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 public class TestRetrieveProfiles_Negative {	
-private String environment = "Bashful";
+private String environment;
 private String TPId;
 private String TPSId; 
 		
@@ -25,8 +25,8 @@ private String TPSId;
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		//this.environment = environment;
-		this.environment = "Bashful";
+		this.environment = environment;
+		
 				
 	}
 	/**
