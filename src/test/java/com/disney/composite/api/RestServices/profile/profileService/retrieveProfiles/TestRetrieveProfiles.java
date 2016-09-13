@@ -18,8 +18,7 @@ import com.disney.utils.TestReporter;
 @SuppressWarnings("unused")
 public class TestRetrieveProfiles {
 private String environment;
-private String TPId;
-private String TPSId; 
+
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -29,6 +28,8 @@ private String TPSId;
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
 		this.environment = environment;
+		
+		//System.setProperty("header", "shadow");
 		
 	}
 	/**

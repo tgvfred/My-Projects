@@ -6,6 +6,10 @@ import com.disney.api.restServices.profile.profileService.retrieveProfiles.retri
 public class ProfileService {
 	private RestService restService;
 	private String resource = "/profile";
+	public ProfileService(RestService restService){
+		this.restService = restService;
+	}
+	
 	
 	public retrieveProfiles retrieveProfiles() {
 		return new retrieveProfiles(restService,resource);

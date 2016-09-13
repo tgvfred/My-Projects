@@ -13,6 +13,6 @@ public class Profile {
 	}
 	
 	public ProfileService profileService(){
-		return new ProfileService() ; 
+		return new ProfileService(restService) ; 
 	}	
 }

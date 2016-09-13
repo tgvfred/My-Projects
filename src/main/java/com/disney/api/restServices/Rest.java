@@ -5,6 +5,7 @@ import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.folio.Folio;
 import com.disney.api.restServices.folio.chargeAccountService.ChargeAccountService;
+import com.disney.api.restServices.guestLink.GuestLink;
 import com.disney.api.restServices.profile.Profile;
 import com.disney.api.restServices.sales.Sales;
 import com.disney.api.restServices.travelPlan.TravelPlan;
@@ -40,5 +41,9 @@ public class Rest{
 	public static TravelPlanSegment travelPlanSegment(String environment){
 		RestService restService = new RestService(environment);
 		return new TravelPlanSegment(restService);
+	}
+	public static GuestLink guestLink(String environment){
+		RestService restService = new RestService(environment);
+		return new GuestLink(restService);
 	}
 }

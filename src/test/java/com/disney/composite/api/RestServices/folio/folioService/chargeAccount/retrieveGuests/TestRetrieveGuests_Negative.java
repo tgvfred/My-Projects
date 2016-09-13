@@ -24,7 +24,7 @@ import com.disney.utils.dataFactory.guestFactory.Guest;
 
 @SuppressWarnings("unused")
 public class TestRetrieveGuests_Negative {
-private String environment = "Bashful";
+private String environment;
 private String TPId;
 	
 	/**
@@ -34,8 +34,8 @@ private String TPId;
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		//this.environment = environment;
-		this.environment = "Bashful";
+		this.environment = environment;
+		
 		//generate accommodation booking
 		Book book = new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 		book.sendRequest();

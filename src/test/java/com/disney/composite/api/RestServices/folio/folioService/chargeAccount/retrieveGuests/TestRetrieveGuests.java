@@ -24,7 +24,7 @@ import com.disney.utils.dataFactory.guestFactory.Guest;
 
 @SuppressWarnings("unused")
 public class TestRetrieveGuests {
-private String environment = "Bashful";
+private String environment;
 private String TPId;
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -35,8 +35,8 @@ private String TPId;
 	public void setup(@Optional String environment) {
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		//this.environment = environment;
-		this.environment = "Bashful";
+		this.environment = environment;
+		
 		//generate accommodation booking
 			Book book = new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 			book.sendRequest();
