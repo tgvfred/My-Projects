@@ -10,7 +10,6 @@ import org.apache.http.message.BasicNameValuePair;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.core.Headers.HeaderType;
-import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.request.RetrieveSettlementMethodsRequest;
 import com.disney.api.restServices.travelPlan.travelPlanService.retrieveDetails.request.RetrieveDetailsRequest;
 
 public class retrieveDetails {
