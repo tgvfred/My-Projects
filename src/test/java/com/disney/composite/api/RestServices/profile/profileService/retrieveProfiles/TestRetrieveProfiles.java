@@ -17,9 +17,8 @@ import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 public class TestRetrieveProfiles {
-private String environment;
-private String TPId;
-private String TPSId; 
+private String environment = "Bashful";
+
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
@@ -28,7 +27,9 @@ private String TPSId;
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		this.environment = environment;
+		//this.environment = environment;
+		this.environment = "Bashful";
+		//System.setProperty("header", "shadow");
 		
 	}
 	/**

@@ -14,7 +14,7 @@ import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 public class TestRetrieveProfiles_Negative {	
-private String environment;
+private String environment = "Bashful";
 private String TPId;
 private String TPSId; 
 		
@@ -25,7 +25,9 @@ private String TPSId;
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		this.environment = environment;
+		//this.environment = environment;
+		this.environment = "Bashful";
+				
 	}
 	/**
 	 * This is a sample template 	
@@ -37,48 +39,23 @@ private String TPSId;
 	 * 		- DataScenario - data scenario used, data sheets can contain multiple scenarios.
 	*/
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
-	public void testretrieveProfiles_Negative_NoFacilty () throws IOException{
-		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
-			
-		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("", "YC", "2366375", "true", "false", "COMMENT");
-		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
-	}
-	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_Negative_NoAuthorization () throws IOException{
 		// set log levels for debugging
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 			
-		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequestWithMissingAuthToken("80010390", "", "2366375", "true", "false", "COMMENT");
-		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequestWithMissingAuthToken("80010390", "YC", "2366375", "true", "false", "COMMENT");
+		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401");
 	}
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
-	public void testretrieveProfiles_Negative_NoRoomTypeCd () throws IOException{
+	public void testretrieveProfiles_Negative_NoFacilityRoomTypeCdProductorProfileType () throws IOException{
 		// set log levels for debugging
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
 			
-		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "", "2366375", "true", "false", "COMMENT");
-		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("", "", "", "true", "false", "");
+		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
+		TestReporter.assertTrue(response.getResponse().contains("Conflicting getter definitions for property "),"Proper error was received: Conflicting getter definitions for property");
 	}
-	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
-	public void testretrieveProfiles_Negative_NoProductId () throws IOException{
-		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
-			
-		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "YC", "", "true", "false", "COMMENT");
-		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
-	}
-	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
-	public void testretrieveProfiles_Negative_NoProfileType () throws IOException{
-		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
-			
-		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "YC", "2366375", "true", "false", "");
-		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
-	}
+	
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-
+import org.apache.http.Header;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.core.Headers.HeaderType;
