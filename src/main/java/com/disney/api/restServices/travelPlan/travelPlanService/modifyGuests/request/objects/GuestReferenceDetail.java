@@ -1,15 +1,17 @@
 package com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests.request.objects;
 
+import com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests.request.objects.Guest;
+
 public class GuestReferenceDetail {
-	private String age;
-	private String ageType;
+	private String age = "0";
+	private String ageType = "ADULT";
 	private Guest guest;
-	private String purposeOfVisit;
-	private String role;
-	private String correlationID;
+	private String purposeOfVisit = "Leisure";
+	private String role = "Guest";
+	private String correlationID = "0";
 
 	public GuestReferenceDetail(){
-		guest = new Guest();		
+		guest = new Guest();
 	}
 	/**
 	* 
@@ -118,4 +120,6 @@ public class GuestReferenceDetail {
 	public void setCorrelationID(String correlationID) {
 	this.correlationID = correlationID;
 	 }
+
+	
 }

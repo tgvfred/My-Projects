@@ -16,41 +16,40 @@ import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.crea
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.request.RetrieveRequest;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.response.RetreiveResponse;
 import com.disney.api.restServices.folio.chargeAccountService.chargeAccount.retrieve.response.objects.GuestInfoTO;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.utils.TestReporter;
 
 @Test
 @SuppressWarnings("unused")
 public class TestRetrieve {
-	private String environment = "Bashful";
+	private String environment;
 	private String caChargeAccount1;
+	private String externalRefName;
+	private String externalRefValue;
 	private String caChargeAccount2;
 	
 	/**
 	 * This will always be used as is. TestNG will pass in the Environment used
 	 * @param environment - Valid environments for active testing are bashful, sleepy and grumpy
+	 * @param book 
 	 */
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		//this.environment = environment;
-		this.environment = "Bashful";
+		this.environment = environment;
+		
+		//generate accommodation booking
+		
 		//Create new request
 		CreateRequest request = new CreateRequest();
-		
+		externalRefName = request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).getExternalReference().get(0).getReferenceName();
+		externalRefValue= request.getChargeAccountRequests().get(0).getRootChargeAccountRequest().getChargeAccountCommonRequest().getGuestInfoTO().get(0).getExternalReference().get(0).getReferenceValue();	
 		//Submit new chargeAccount Request
 		RestResponse response= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request);
 		CreateResponse[] createResponse = response.mapJSONToObject(CreateResponse[].class);
 		for(CreateResponse chargeAccount:createResponse){	
 		caChargeAccount1 = chargeAccount.getRootChargeAccountCreateResponse().getChargeAccountId();
-		}
-		//Create new request
-		CreateRequest request2 = new CreateRequest();
 		
-		//Submit new chargeAccount Request
-		RestResponse response2= Rest.folio(this.environment).chargeAccountService().chargeAccount().create().sendPostRequest(request2);
-		CreateResponse[] createResponse2 = response2.mapJSONToObject(CreateResponse[].class);
-		for(CreateResponse chargeAccount:createResponse2){
-			caChargeAccount2 = chargeAccount.getRootChargeAccountCreateResponse().getChargeAccountId();
 		}
 	}
 	
@@ -65,50 +64,27 @@ public class TestRetrieve {
 	 * @throws IOException 
 	 */
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieve"})
-	public void testretrieve_MultipleChargeAcct() throws IOException{
+	public void testretrieve_GetChargeAcctId() throws IOException{
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		//Creating ChargeAccount.retrieve request
-		RetrieveRequest request = new RetrieveRequest();
-
-		//Adding Charge Accounts to look for
-		request.addChargeAccountId(caChargeAccount1);
-		request.addChargeAccountId(caChargeAccount2);
-		
-
-		//Sending request and validating response
-		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);
-		
-		RetreiveResponse[] retreiveResponse = response.mapJSONToObject(RetreiveResponse[].class);
-			for(RetreiveResponse chargeAccount:retreiveResponse){
-				System.out.println("Charge Account Id:"+ chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getId());
-				System.out.println("Charge Account Status:"+ chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getStatus());
-				GuestInfoTO guest = chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getGuestInfoTO().get(0);
-				System.out.println("Charge Account Guest Name: "+ guest.getFirstName()+ "" + guest.getLastName());
-				System.out.println();
-			}
-			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");	
+		//Submit file
+		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest("", "", caChargeAccount1);
+		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		TestReporter.assertTrue(response.getResponse().contains(caChargeAccount1), "Retrieve returned the proper response for ChargeAccount Id of"+caChargeAccount1);	
 	}
-	
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieve"})
-	public void testretrieve_SingleChargeAcct() throws IOException{
+	public void testretrieve_GetExternalRefValue() throws IOException{
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
-		//Creating ChargeAccount.retrieve request
-		RetrieveRequest request = new RetrieveRequest();
-
-		//Adding Charge Accounts to look for
-		request.addChargeAccountId(caChargeAccount1);
-		
-		//Sending request and validating response
-		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendPutRequest(request);
-		
-		RetreiveResponse[] retreiveResponse = response.mapJSONToObject(RetreiveResponse[].class);
-			for(RetreiveResponse chargeAccount:retreiveResponse){
-				System.out.println("Charge Account Id:"+ chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getId());
-				System.out.println("Charge Account Status:"+ chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getStatus());
-				GuestInfoTO guest = chargeAccount.getRootChargeAccountResponse().getCommonChargeAccountResponse().getGuestInfoTO().get(0);
-				System.out.println("Charge Account Guest Name: "+ guest.getFirstName()+ "" + guest.getLastName());
-				System.out.println();
-			}
-			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");	
+		//Submit file
+		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest("", "87395260", "");
+		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		TestReporter.assertTrue(response.getResponse().contains("87395260"), "Retrieve returned the proper response for the external reference value provided 87395260");
+	}
+	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieve"})
+	public void testretrieve_GetExternalRefNameValue() throws IOException{
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		//Submit file
+		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest(externalRefName, externalRefValue, "");
+		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		TestReporter.assertTrue(response.getResponse().contains(caChargeAccount1), "Retrieve returned the proper response for ChargeAccount Id of"+caChargeAccount1);
 	}
 }

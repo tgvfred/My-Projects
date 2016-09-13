@@ -1,16 +1,16 @@
 package com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests.request.objects;
 
 public class AddressDetail {
-	private String locatorId;
-	private String guestLocatorId;
-	private String locatorUseType;
-	private String primary;
-	private String addressLine1;
-	private String addressLine2;
-	private String city;
-	private String country;
-	private String postalCode;
-	private String state;
+	private String locatorId = "0";
+	private String guestLocatorId = "0";
+	private String locatorUseType = "PERSONAL";
+	private String primary = "true";
+	private String addressLine1 = "AddressLine1";
+	private String addressLine2 = "AddressLine2";
+	private String city = "Orlando";
+	private String country = "USA";
+	private String postalCode = "32849";
+	private String state = "FL";
 
 	/**
 	* 

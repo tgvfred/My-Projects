@@ -6,7 +6,7 @@ import com.disney.api.restServices.travelPlan.travelPlanService.modifyGuests.mod
 
 public class TravelPlanService {
 	private RestService restService;
-	private String resource = "/travelPlanService";
+	private String resource = "/travelplan";
 	public TravelPlanService(RestService restService){
 		this.restService = restService;
 	}

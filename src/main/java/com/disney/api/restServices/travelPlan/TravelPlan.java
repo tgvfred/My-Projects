@@ -8,7 +8,7 @@ public class TravelPlan {
 	
 	public TravelPlan(RestService restService){
 		this.restService = restService;
-		this.restService.setMainResource("TravelPlan");
+		this.restService.setMainResource("TravelPlanService");
 	}
 	
 	public TravelPlanService travelPlanService(){
