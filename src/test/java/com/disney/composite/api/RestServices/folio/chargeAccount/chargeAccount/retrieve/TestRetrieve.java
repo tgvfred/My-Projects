@@ -2,9 +2,13 @@ package com.disney.composite.api.RestServices.folio.chargeAccount.chargeAccount.
 
 import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
+
 import java.io.IOException;
+
 import org.testng.annotations.Test;
+
 import static org.testng.AssertJUnit.assertTrue;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -37,7 +41,8 @@ public class TestRetrieve {
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
 		this.environment = environment;
-		
+
+		System.setProperty("header", "shadow");
 		//generate accommodation booking
 		
 		//Create new request

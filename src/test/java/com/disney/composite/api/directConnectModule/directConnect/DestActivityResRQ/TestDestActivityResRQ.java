@@ -5,7 +5,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import com.disney.api.soapServices.directConnect.operations.DestActivityResRQ;
-import com.disney.composite.BaseTest;
+import com.disney.api.BaseTest;
 import com.disney.test.utils.Sleeper;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.Randomness;
