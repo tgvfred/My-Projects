@@ -1,9 +1,9 @@
 package com.disney.api.restServices.folio.PaymentV2.folioPaymentV2.establishSettlementMethod.request.objects;
 
 public class FolioIdentifierInfo {
-	private String externalReferenceSource;
+	private String externalReferenceSource = "DREAMS_TP";
 	private String externalReferenceValue;
-	private String folioType;
+	private String folioType = "INDIVIDUAL";
 	private String partyLastName;
 
 	/**

@@ -5,7 +5,7 @@ import com.disney.api.restServices.folio.PaymentV2.folioPaymentV2.establishSettl
 
 public class FolioPaymentV2 {
 	private RestService restService;
-	private String resource = "/folioPaymentV2";
+	private String resource = "/foliopayment";
 	
 	public FolioPaymentV2 (RestService restService){
 		this.restService =restService;

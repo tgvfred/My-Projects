@@ -3,7 +3,7 @@ package com.disney.api.restServices.folio.PaymentV2.folioPaymentV2.establishSett
 public class CreditCardInfo {
 	private String cardNumber;
 	private String cardSecurityNumber;
-	private String creditCardType;
+	private String creditCardType = "Visa";
 	private String expirationDate;
 	private CardHolderInfo cardHolderInfo;
 
