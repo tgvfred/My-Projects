@@ -4,7 +4,7 @@
 	<parameter name="environment" value="stage_cm" />
 	<test name="TestCompensationFlow_Fulfill_Negative">
 		<classes>
-			<class name="com.disney.composite.api.diningModule.seatedEventsComponentService._compensationFlow.fulfill.TestCompensationFlow_Fulfill_Negative"/>
+			<class name="com.disney.composite.api.diningModule.seatedEventsComponentService.fulfill.TestCompensationFlow_Fulfill_Negative"/>
 		</classes>
 	</test>
 </suite>

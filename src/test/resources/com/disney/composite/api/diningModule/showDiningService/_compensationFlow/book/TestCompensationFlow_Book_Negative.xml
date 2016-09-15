@@ -10,7 +10,7 @@
 		</groups> -->
 		<classes>
 			<class
-				name="com.disney.composite.api.diningModule.showDiningService._compensationFlow.book.TestCompensationFlow_Book_Negative"/>
+				name="com.disney.composite.api.diningModule.showDiningService.book.TestCompensationFlow_Book_Negative"/>
 		</classes>
 	</test>
 </suite>

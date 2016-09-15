@@ -9,7 +9,7 @@
 			</run>
 		</groups>
 		<packages>
-			<package name="com.disney.composite.api.diningModule.showDiningService._compensationFlow.*"></package>
+			<package name="com.disney.composite.api.diningModule.showDiningService.*"></package>
 		</packages>
 	</test>
 </suite>

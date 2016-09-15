@@ -24,6 +24,16 @@ public class TestGetOptions extends BaseTest{
 		testGetOptions("PROFILE_TYPE");
 	}
 	
+	@Test(groups = {"api", "regression", "profile", "ProfileServiceIF"})
+	public void testGetOptions_SERVICE_TYPE(){
+		testGetOptions("SERVICE_TYPE");
+	}
+	
+	@Test(groups = {"api", "regression", "profile", "ProfileServiceIF"})
+	public void testGetOptions_ITEM(){
+		testGetOptions("ITEM");
+	}
+	
 	private void testGetOptions(String enumType){
 		TestReporter.logScenario("Test GetOptions for Enum Type ["+enumType+"]");
 		GetOptions go = new GetOptions(environment);

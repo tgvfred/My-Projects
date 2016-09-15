@@ -16,6 +16,8 @@ import java.sql.Types;
 import org.apache.commons.io.FileUtils;
 
 import com.disney.AutomationException;
+import com.disney.test.utils.Sleeper;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public abstract class Database {
@@ -118,17 +120,26 @@ public abstract class Database {
 
 		System.setProperty("oracle.net.tns_admin", pathToTempDir);
 		
-		try {
-			connection = DriverManager.getConnection(getDbConnectionString(), getDbUserName(), getDbPassword());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			 throw new AutomationException("Failed to connect to database", e);
+		for(int times = 0 ; times <= 5 ; times++){
+			try {
+				connection = DriverManager.getConnection(getDbConnectionString(), getDbUserName(), getDbPassword());
+			} catch (SQLException e) {
+				if(times == 5) throw new AutomationException("Failed to connect to database after 5 attempts", e);
+				Sleeper.sleep(Randomness.randomNumberBetween(2000, 5000));
+			}
 		}
 
 		  TestReporter.logInfo(query);
 			ResultSet rs = (runQuery(connection, query));
-		  //  try {
-				return extract(rs);
+			  
+			Object[][] extractedRs = extract(rs);
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				return extractedRs;
 	    
 	}
 	 

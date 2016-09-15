@@ -14,7 +14,8 @@ public class Sandbox {
 	@Test
 	public void test() {
 		TestReporter.setDebugLevel(1);
-		
+
+		System.setProperty("header", "light");
 		Rest.folio("Bashful").folioService().chargeAccount().retrieveGuests().sendGetRequest("ODS", "2504588196", "1");
 	}
 }

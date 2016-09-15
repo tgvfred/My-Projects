@@ -12,4 +12,14 @@
 			<package name="com.disney.composite.api.diningModule.eventDiningService.*"></package>
 		</packages>
 	</test>
+	<test name="EventDiningService_WithCompensationValidation">
+		<groups>
+			<run>
+				<include name="compensation"></include>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.diningModule.eventDiningService.*"></package>
+		</packages>
+	</test>
 </suite>

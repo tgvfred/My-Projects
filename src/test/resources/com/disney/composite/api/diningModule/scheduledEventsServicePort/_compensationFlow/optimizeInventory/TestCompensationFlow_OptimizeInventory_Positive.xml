@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Stage_CM" />
 	<test name="TestCompensationFlow_OptimizeInventory_Positive">
 		<classes>
-			<class name="com.disney.composite.api.diningModule.scheduledEventsServicePort._compensationFlow.optimizeInventory.TestCompensationFlow_OptimizeInventory_Positive"/>
+			<class name="com.disney.composite.api.diningModule.scheduledEventsServicePort.optimizeInventory.TestCompensationFlow_OptimizeInventory_Positive"/>
 		</classes>
 	</test>
 </suite>

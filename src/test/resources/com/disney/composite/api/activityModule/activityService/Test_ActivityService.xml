@@ -12,4 +12,14 @@
 			<package name="com.disney.composite.api.activityModule.activityService.*"></package>
 		</packages>
 	</test>
+	<test name="ActivityService_WithCompensationValidation">
+		<groups>
+			<run>
+				<include name="compensation"></include>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.activityModule.activityService.*"></package>
+		</packages>
+	</test>
 </suite>
