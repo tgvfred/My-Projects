@@ -1,4 +1,4 @@
-package com.disney.composite.api.RestServices.travelPlanSegment.travelPlanSegment;
+package com.disney.composite.api.RestServices.travelPlanSegment.travelPlanSegment.updatePreArrivalInformation;
 
 import java.io.IOException;
 
