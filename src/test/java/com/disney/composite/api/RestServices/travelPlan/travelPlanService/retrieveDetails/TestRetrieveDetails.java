@@ -53,8 +53,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ByTravelPlan () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, "", "true", "true", "true", "true", "true", "true", "true", "true", "true");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -66,8 +65,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ByTravelPlanSegment () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest("", TPSId, "true", "true", "true", "true", "true", "true", "true", "true", "true");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -80,8 +78,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ByTravelPlanAndTravelPlanSegment () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId,"true", "true", "true", "true", "true", "true", "true", "true", "true");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -94,8 +91,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_AllsectionsFalse () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId, "false", "false", "false", "false", "false", "false", "false", "false", "false");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -108,8 +104,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ReturnCommentsOnly () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId, "true", "false", "false", "false", "false", "false", "false", "false", "false");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -122,8 +117,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ReturnGuestsOnly () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId, "false", "true", "false", "false", "false", "false", "false", "false", "false");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -136,8 +130,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ReturnRoomOnly () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId, "false", "false", "true", "false", "false", "false", "false", "false", "false");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -150,8 +143,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ReturnHistoryOnly () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId, "false", "false", "false", "true", "false", "false", "false", "false", "false");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -164,8 +156,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ReturnGuestAddressOnly () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId, "false", "false", "false", "false", "true", "false", "false", "false", "false");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -178,8 +169,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ReturnTravelPlanDetailsOnly () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId, "false", "false", "false", "false", "false", "true", "false", "false", "false");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -192,8 +182,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ReturnAccountingInfoOnly () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId, "false", "false", "false", "false", "false", "false", "true", "false", "false");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -206,8 +195,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ReturnDepositPaymentOnly () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId, "false", "false", "false", "false", "false", "false", "false", "true", "false");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -220,8 +208,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_ReturnLookForTCGOnly () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPId, TPSId, "false", "false", "false", "false", "false", "false", "false", "false", "true");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");

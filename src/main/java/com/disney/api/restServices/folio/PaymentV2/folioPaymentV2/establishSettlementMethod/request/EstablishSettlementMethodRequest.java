@@ -5,6 +5,10 @@ import com.disney.api.restServices.folio.PaymentV2.folioPaymentV2.establishSettl
 public class EstablishSettlementMethodRequest {
 	private SettlementMethodRequest settlementMethodRequest;
 
+	public EstablishSettlementMethodRequest(){
+		settlementMethodRequest = new SettlementMethodRequest();
+	}
+	
 	/**
 	* 
 	* @return

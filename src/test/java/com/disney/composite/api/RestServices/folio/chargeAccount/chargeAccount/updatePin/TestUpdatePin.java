@@ -62,8 +62,7 @@ private String caChargeAccount;
 	 */
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "updatePin"})
 	public void testupdatePin()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();

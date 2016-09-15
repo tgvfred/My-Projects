@@ -1,12 +1,12 @@
 package com.disney.api.restServices.folio.PaymentV2.folioPaymentV2.establishSettlementMethod.request.objects;
 
 public class CardHolderInfo {
-	private String addressLine1;
-	private String city;
-	private String country;
-	private String name;
-	private String postalCode;
-	private String state;
+	private String addressLine1 = "Unknown";
+	private String city = "Unknown";
+	private String country = "USA";
+	private String name = "Unknown";
+	private String postalCode = "30004";
+	private String state = "GA";
 
 	/**
 	* 

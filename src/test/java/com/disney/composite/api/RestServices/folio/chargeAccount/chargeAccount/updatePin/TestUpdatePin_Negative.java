@@ -61,8 +61,7 @@ private String caChargeAccount;
 	 */
 	@Test(groups={"api","rest", "regression", "negative","folio", "chargeAccountV2", "updatePin"})
 	public void testUpdatePin_Negative_SequesntialPinNumber()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();
@@ -80,8 +79,7 @@ private String caChargeAccount;
 	
 	@Test(groups={"api","rest", "regression", "negative","folio", "chargeAccountV2", "updatePin"})
 	public void testUpdatePin_Negative_4DigitsSamePinNumber()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();
@@ -99,8 +97,7 @@ private String caChargeAccount;
 	
 	@Test(groups={"api","rest", "regression", "negative","folio", "chargeAccountV2", "updatePin"})
 	public void testUpdatePin_Negative_NoPinNumber()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();
@@ -118,8 +115,7 @@ private String caChargeAccount;
 	
 	@Test(groups={"api","rest", "regression", "negative","folio", "chargeAccountV2", "updatePin"})
 	public void testUpdatePin_Negative_InvaidPinNumberLength_1Digit()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();
@@ -137,8 +133,7 @@ private String caChargeAccount;
 	
 	@Test(groups={"api","rest", "regression", "negative","folio", "chargeAccountV2", "updatePin"})
 	public void testUpdatePin_Negative_InvaidPinNumberLength_2Digits()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();
@@ -156,8 +151,7 @@ private String caChargeAccount;
 	
 	@Test(groups={"api","rest", "regression", "negative","folio", "chargeAccountV2", "updatePin"})
 	public void testUpdatePin_Negative_InvaidPinNumberLength_3Digits()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();
@@ -175,8 +169,7 @@ private String caChargeAccount;
 	
 	@Test(groups={"api","rest", "regression", "negative","folio", "chargeAccountV2", "updatePin"})
 	public void testUpdatePin_Negative_InvaidPinNumberLength_5Digits()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();
@@ -194,8 +187,7 @@ private String caChargeAccount;
 	
 	@Test(groups={"api","rest", "regression", "negative","folio", "chargeAccountV2", "updatePin"})
 	public void testupdatePin_Negative_NoChargeAcct()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();
@@ -213,8 +205,7 @@ private String caChargeAccount;
 	
 	@Test(groups={"api","rest", "regression", "negative","folio", "chargeAccountV2", "updatePin"})
 	public void testUpdatePin_Negative_InvalidChargeAcct()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();
@@ -232,8 +223,7 @@ private String caChargeAccount;
 	
 	@Test(groups={"api","rest", "regression", "negative","folio", "chargeAccountV2", "updatePin"})
 	public void testUpdatePin_Negative_NoAuthorization()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Creating ChargeAccount.updatePin request
 		UpdatePinRequest request = new UpdatePinRequest();

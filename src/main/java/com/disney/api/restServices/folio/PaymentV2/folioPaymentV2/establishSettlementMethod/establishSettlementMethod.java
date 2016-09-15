@@ -3,12 +3,11 @@ package com.disney.api.restServices.folio.PaymentV2.folioPaymentV2.establishSett
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.folio.PaymentV2.folioPaymentV2.establishSettlementMethod.request.EstablishSettlementMethodRequest;
-import com.disney.api.restServices.folio.folioService.folio.retrieveSettlementMethods.request.RetrieveSettlementMethodsRequest;
 import com.disney.api.restServices.core.Headers.HeaderType;
 
 public class establishSettlementMethod {
 	private RestService restService;
-	private String resource = "/establishSettlementMethod";
+	private String resource = "/establishsettlementmethod";
 	
 	public establishSettlementMethod (RestService restService, String resource){
 		this.restService = restService;

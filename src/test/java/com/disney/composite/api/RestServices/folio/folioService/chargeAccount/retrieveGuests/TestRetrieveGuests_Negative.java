@@ -66,8 +66,7 @@ private String TPId;
 	
 	@Test(groups={"api","rest", "regression", "folio","negative", "folioService", "retrieveGuests"})
 	public void testretrieveGuests_Negative_NoAuthorization()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 	
 		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequestWithMissingAuthToken("DREAMS_TP", TPId, "2");
@@ -75,8 +74,7 @@ private String TPId;
 	}	
 	@Test(groups={"api","rest", "regression", "folio","negative", "folioService", "retrieveGuests"})
 	public void testretrieveGuests_Negative_BlankReferenceName()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		
 		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("", TPId, "2");
@@ -87,8 +85,7 @@ private String TPId;
 	
 	@Test(groups={"api","rest", "regression", "folio", "negative","folioService", "retrieveGuests"})
 	public void testretrieveGuests_Negative_BlankReferenceNumber()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("DREAMS_TP", "", "2");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 		TestReporter.assertTrue(response.getResponse().contains("Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO"), "Invalid input fields. : Invalid ChargeGroup ExternalReference-ExternalReferenceTO");
@@ -96,8 +93,7 @@ private String TPId;
 	}
 	@Test(groups={"api","rest", "regression", "folio", "negative","folioService", "retrieveGuests"})
 	public void testretrieveGuests_Negative_InvalidSourceAcctCenter()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("DREAMS_TP", TPId, "23");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 		TestReporter.assertTrue(response.getResponse().contains("Invalid Charge Group reference : Root/Node reference provided is invalid - sourceAccountingCenterID"), "Invalid Charge Group reference : Root/Node reference provided is invalid - sourceAccountingCenterID");
@@ -105,8 +101,7 @@ private String TPId;
 	}
 	@Test(groups={"api","rest", "regression", "folio", "negative","folioService", "retrieveGuests"})
 	public void testretrieveGuests_Negative_InvalidReferenceNumber()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("DREAMS_TP", "432516262626", "2");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 		TestReporter.assertTrue(response.getResponse().contains("Invalid Charge Group reference : Root/Node reference provided is invalid"), "Invalid Charge Group reference : Root/Node reference provided is invalid");

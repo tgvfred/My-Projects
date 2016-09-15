@@ -48,8 +48,7 @@ private String TPId;
 	@Test(groups={"api","rest", "regression", "negative", "travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_Negative_NoAuthorization () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequestWithMissingAuthToken(TPId, TPSId, "true", "true", "true", "true", "true", "true", "true", "true", "true");
 		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");
@@ -58,8 +57,7 @@ private String TPId;
 	@Test(groups={"api","rest", "regression", "negative","travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_Negative_InvalidTravelPlan () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest(TPSId, "", "true", "true", "true", "true", "true", "true", "true", "true", "true");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
@@ -68,8 +66,7 @@ private String TPId;
 	@Test(groups={"api","rest", "regression", "negative","travelPlan", "travelPlanService", "retrieveDetails"})
 	public void testretrieveDetails_Negative_InvalidTravelPlanSegemnt () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response= Rest.travelPlan(environment).travelPlanService().retrieveDetails().sendGetRequest("", TPId, "true", "true", "true", "true", "true", "true", "true", "true", "true");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");

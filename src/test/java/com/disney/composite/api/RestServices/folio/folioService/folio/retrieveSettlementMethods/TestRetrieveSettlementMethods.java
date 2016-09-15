@@ -71,24 +71,21 @@ import com.disney.utils.TestReporter;
 		
 		@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveSettlementMethods"})
 		public void testretrieveSettlementMethods_ByTravelPlan()throws IOException{
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Submit get with TP only
 			RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP",TPId,"","","true");
 			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 		}
 		@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveSettlementMethods"})
 		public void testretrieveSettlementMethods_ByTPAndFolioType()throws IOException{
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Submit get with TP only
 			RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP",TPId,"INDIVIDUAL","","true");
 			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
 		}
 		@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveSettlementMethods"})
 		public void testretrieveSettlementMethods_ByFolioId()throws IOException{
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Submit get with TP only
 			RestResponse response= Rest.folio(environment).folioService().folio().retrieveSettlementMethods().sendGetRequest("DREAMS_TP",TPId,"INDIVIDUAL","","true");
 			//Get the returned FolioID

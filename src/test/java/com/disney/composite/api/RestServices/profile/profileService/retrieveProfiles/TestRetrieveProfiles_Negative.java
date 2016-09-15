@@ -41,8 +41,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_Negative_NoAuthorization () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 			
 		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequestWithMissingAuthToken("80010390", "YC", "2366375", "true", "false", "COMMENT");
 		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401");
@@ -50,8 +49,7 @@ private String TPSId;
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_Negative_NoFacilityRoomTypeCdProductorProfileType () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 			
 		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("", "", "", "true", "false", "");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");

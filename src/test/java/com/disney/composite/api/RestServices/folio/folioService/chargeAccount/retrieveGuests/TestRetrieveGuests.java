@@ -33,8 +33,6 @@ private String TPId;
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
 		this.environment = environment;
 		
 		//generate accommodation booking
@@ -70,8 +68,7 @@ private String TPId;
 	
 	@Test(groups={"api","rest", "regression", "folio", "folioService", "retrieveGuests"})
 	public void testretrieveGuests_AllValues()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 		
 		RestResponse response= Rest.folio(environment).folioService().chargeAccount().retrieveGuests().sendGetRequest("DREAMS_TP",TPId,"2");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
