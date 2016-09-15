@@ -46,8 +46,7 @@ private String environment;
 	
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieveGuests"})
 	public void testretrieveGuests_Negative_NullPointer()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Send Get request			
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieveGuests().sendGetRequest("DREAMS_TP","462143359419" , "2");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
@@ -55,8 +54,7 @@ private String environment;
 	}
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieveGuests"})
 	public void testretrieveGuests_Negative_NoAcctCenter()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Submit Get request			
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieveGuests().sendGetRequest("DREAMS_TP","462143359419" , "");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
@@ -65,8 +63,7 @@ private String environment;
 	
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieveGuests"})
 	public void testretrieveGuests_Negative_NoAuthorization()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Submit get without token			
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieveGuests().sendGetRequestWithMissingAuthToken("DREAMS_TP","462143359419" , "2");
 		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");

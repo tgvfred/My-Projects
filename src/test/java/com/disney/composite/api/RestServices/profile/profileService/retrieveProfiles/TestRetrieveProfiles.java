@@ -44,8 +44,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_Allfields () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "YC", "2366375", "true", "false", "COMMENT");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -53,8 +52,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_IncludeInactiveProfilesTrue () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "YC", "2366375", "true", "true", "COMMENT");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -62,8 +60,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_retrieveOnlyDefaultProfilesFalse () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "YC", "2366375", "false", "false", "COMMENT");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -71,8 +68,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_ProfileTypeMessage () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "YC", "2366375", "true", "false", "MESSAGE");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -80,8 +76,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_ProfileTypeService () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "YC", "2366375", "true", "false", "SERVICE");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -89,8 +84,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_ProfileTypeAttribute () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "YC", "2366375", "true", "false", "ATTRIBUTE");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -98,8 +92,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_ProfileTypeAlert () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "YC", "2366375", "true", "false", "ALERT");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -107,8 +100,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "profile", "profileservice", "retrieveProfiles"})
 	public void testretrieveProfiles_ProfileTypeGRAND_GATHERING_TYPE () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		RestResponse response = Rest.profile(environment).profileService().retrieveProfiles().sendGetRequest("80010390", "YC", "2366375", "true", "false", "GRAND_GATHERING_TYPE");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");

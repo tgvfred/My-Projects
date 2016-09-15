@@ -61,14 +61,14 @@ public class TestRetrieve_Negative {
 	
 	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
 	public void testretrieve_Negatvie_NoAuthorization() throws IOException{
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Sending request and validating response
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequestWithMissingAuthToken("", "", caChargeAccount1);
 		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");		
 	}
 	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
 	public void testretrieve_Negatvie_InvalidRefName() throws IOException{
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Sending request and validating response
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest("DREAMS_TP", "", "");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");		
@@ -76,7 +76,7 @@ public class TestRetrieve_Negative {
 	}
 	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
 	public void testretrieve_Negatvie_InvalidRefValue() throws IOException{
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Sending request and validating response
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest("", "HiThisIsATest123", "");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");		
@@ -84,7 +84,7 @@ public class TestRetrieve_Negative {
 	}
 	@Test(groups={"api","rest", "regression", "negative", "folio", "chargeAccountV2", "retrieve"})
 	public void testretrieve_Negatvie_InvalidChargeAcct() throws IOException{
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Sending request and validating response
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest("", "", "99999");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");

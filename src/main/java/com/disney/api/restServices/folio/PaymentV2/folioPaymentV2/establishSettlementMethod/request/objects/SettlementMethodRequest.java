@@ -1,13 +1,13 @@
 package com.disney.api.restServices.folio.PaymentV2.folioPaymentV2.establishSettlementMethod.request.objects;
 
 public class SettlementMethodRequest {
-	private String activeIndicator;
-	private String deviceTerminalId;
-	private String expressCheckout;
-	private String paymentMethod;
-	private String paymentMethodType;
-	private String stratusTerminalNumber;
-	private String useForIncidentals;
+	private String activeIndicator = "true";
+	private String deviceTerminalId = "00RJ";
+	private String expressCheckout = "false";
+	private String paymentMethod = "Visa";
+	private String paymentMethodType = "CreditCard";
+	private String stratusTerminalNumber = "3549";
+	private String useForIncidentals = "false";
 	private MerchantInfo merchantInfo;
 	private CreditCardInfo creditCardInfo;
 	private FolioIdentifierInfo folioIdentifierInfo;

@@ -50,7 +50,7 @@ private String environment;
 	 */
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "create"})
 	public void testcreate_SingleChargeAcct(){
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Create new request
 		CreateRequest request = new CreateRequest();
@@ -105,7 +105,7 @@ private String environment;
 	
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "create"})
 	public void testcreate_TwoChargeAcct(){
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//Create new request
 		CreateRequest request = new CreateRequest();

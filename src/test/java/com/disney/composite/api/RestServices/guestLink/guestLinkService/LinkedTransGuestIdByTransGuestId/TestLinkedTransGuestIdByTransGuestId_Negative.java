@@ -29,8 +29,7 @@ public class TestLinkedTransGuestIdByTransGuestId_Negative {
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		this.environment = environment;
 		//this.environment = "Bashful";
 		//generate accommodation booking
@@ -68,16 +67,14 @@ public class TestLinkedTransGuestIdByTransGuestId_Negative {
 
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId_Negative_NoAuthorization()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequestWithMissingAuthToken("TRANSACTION_GUEST_ID", GuestId1);
 		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");
 	}
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId__Negative_NoIdType()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequest("", GuestId1);
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
@@ -85,8 +82,7 @@ public class TestLinkedTransGuestIdByTransGuestId_Negative {
 	}
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId__Negative_NoGuestId()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequest("TRANSACTION_GUEST_ID", "");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
@@ -94,8 +90,7 @@ public class TestLinkedTransGuestIdByTransGuestId_Negative {
 	}
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId__Negative_BlankFirstGuestId()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequest("TRANSACTION_GUEST_ID", " ,"+GuestId1);
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
@@ -103,8 +98,7 @@ public class TestLinkedTransGuestIdByTransGuestId_Negative {
 	}
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId__Negative_Blank2ndGuestId()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequest("TRANSACTION_GUEST_ID",GuestId1+", ");
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
@@ -112,8 +106,7 @@ public class TestLinkedTransGuestIdByTransGuestId_Negative {
 	}
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId__Negative_Blank2ndof3GuestId()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequest("TRANSACTION_GUEST_ID",GuestId1+", ,"+GuestId2);
 		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
@@ -121,8 +114,7 @@ public class TestLinkedTransGuestIdByTransGuestId_Negative {
 	}
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId__Negative_InvalidGuestId()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequest("TRANSACTION_GUEST_ID","123");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
