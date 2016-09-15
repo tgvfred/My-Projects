@@ -25,7 +25,7 @@ public class TestCreateInventory extends BaseTest{
 	// Defining global variables
 	protected String TPS_ID = null;
 	
-	@Test(groups = {"api","presmoke",  "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
+	//@Test(groups = {"api","presmoke",  "regression", "resourceInventory", "accommodationInventoryRequestComponentServicePort"})
 	public void Presmoke_testCreateInventory(){
 		CreateInventory create = new CreateInventory(environment, "Default");
 		create.sendRequest();
