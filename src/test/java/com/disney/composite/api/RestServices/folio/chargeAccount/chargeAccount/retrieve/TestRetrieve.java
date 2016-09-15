@@ -65,7 +65,7 @@ public class TestRetrieve {
 	 */
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieve"})
 	public void testretrieve_GetChargeAcctId() throws IOException{
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Submit file
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest("", "", caChargeAccount1);
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -73,7 +73,7 @@ public class TestRetrieve {
 	}
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieve"})
 	public void testretrieve_GetExternalRefValue() throws IOException{
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Submit file
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest("", "87395260", "");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -81,7 +81,7 @@ public class TestRetrieve {
 	}
 	@Test(groups={"api","rest", "regression", "folio", "chargeAccountV2", "retrieve"})
 	public void testretrieve_GetExternalRefNameValue() throws IOException{
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Submit file
 		RestResponse response= Rest.folio(environment).chargeAccountService().chargeAccount().retrieve().sendGetRequest(externalRefName, externalRefValue, "");
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");

@@ -29,8 +29,7 @@ private String GuestId4;
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		this.environment = environment;
 		//this.environment = "Bashful";
 		//generate accommodation booking
@@ -68,8 +67,7 @@ private String GuestId4;
 
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId_SingleGuestId()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequest("TRANSACTION_GUEST_ID", GuestId1);
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -77,8 +75,7 @@ private String GuestId4;
 	}
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId_TwoGuestIds()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequest("TRANSACTION_GUEST_ID", GuestId1+","+GuestId2);
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -86,8 +83,7 @@ private String GuestId4;
 	}
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId_ThreeGuestIds()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequest("TRANSACTION_GUEST_ID", GuestId1+","+GuestId2+","+GuestId3);
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
@@ -95,8 +91,7 @@ private String GuestId4;
 	}
 	@Test(groups={"api","rest", "regression", "guestlink", "guestLinkService", "linkedTransGuestByTransGuestId"})
 	public void testlinkedTransGuestIdByTransGuestId_FourGuestIds()throws IOException{
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);	
+		TestReporter.setDebugLevel(TestReporter.INFO);	
 	
 		RestResponse response= Rest.guestLink(environment).guestLinkService().LinkedTransGuestIdByTransGuestId().sendGetRequest("TRANSACTION_GUEST_ID", GuestId1+","+GuestId2+","+GuestId3+","+GuestId4);
 		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");

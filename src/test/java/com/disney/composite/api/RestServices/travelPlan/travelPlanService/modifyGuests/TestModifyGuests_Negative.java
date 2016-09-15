@@ -39,8 +39,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression","negative", "travelPlan", "travelPlanService", "modifyGuests"})
 	public void testmodifyGuests_Negative_NoAuthorization () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 				
 		//create new request file
 		ModifyGuestsRequest request = new ModifyGuestsRequest();
@@ -54,8 +53,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression","negative", "travelPlan", "travelPlanService", "modifyGuests"})
 	public void testmodifyGuests_Negative_NoGuestId () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 				
 		//create new request file
 		ModifyGuestsRequest request = new ModifyGuestsRequest();
@@ -72,8 +70,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression","negative", "travelPlan", "travelPlanService", "modifyGuests"})
 	public void testmodifyGuests_Negative_NoLocatorID () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 				
 		//create new request file
 		ModifyGuestsRequest request = new ModifyGuestsRequest();
@@ -90,8 +87,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression","negative", "travelPlan", "travelPlanService", "modifyGuests"})
 	public void testmodifyGuests_Negative_NoGuestLocatorID () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 				
 		//create new request file
 		ModifyGuestsRequest request = new ModifyGuestsRequest();

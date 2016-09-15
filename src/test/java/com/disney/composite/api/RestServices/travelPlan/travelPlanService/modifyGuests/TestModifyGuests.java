@@ -40,8 +40,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "modifyGuests"})
 	public void testmodifyGuests_SingleAddress () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//create new request file
 		ModifyGuestsRequest request = new ModifyGuestsRequest();
@@ -54,8 +53,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "modifyGuests"})
 	public void testmodifyGuests_TwoAddresses () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//create new request file
 		ModifyGuestsRequest request = new ModifyGuestsRequest();
@@ -82,8 +80,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "modifyGuests"})
 	public void testmodifyGuests_TwoGuestsSingleAddress () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//create new request file
 		ModifyGuestsRequest request = new ModifyGuestsRequest();
@@ -124,8 +121,7 @@ private String environment;
 	@Test(groups={"api","rest", "regression", "travelPlan", "travelPlanService", "modifyGuests"})
 	public void testmodifyGuests_TwoGuestsTwoAddress () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		
 		//create new request file
 		ModifyGuestsRequest request = new ModifyGuestsRequest();

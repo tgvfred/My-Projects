@@ -17,7 +17,7 @@ import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 public class TestEstablishSettlementMethod_Negative {
-	private String environment = "Bashful";
+	private String environment;
 	private String TPId;
 	private String TPSId;
 	private String LastName;
@@ -36,11 +36,10 @@ public class TestEstablishSettlementMethod_Negative {
 		@BeforeMethod(alwaysRun = true)
 		@Parameters({  "environment" })
 		public void setup(@Optional String environment) {
-			//this.environment = environment;
-			this.environment = "Bashful";
+			this.environment = environment;
+			
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 			//generate accommodation booking
 			Book book = new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 			book.sendRequest();
@@ -78,8 +77,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoAuthorization () throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -100,8 +98,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoCreditCardNumber () throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -123,8 +120,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_InvalidCVV2 () throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -146,8 +142,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoExpiration () throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -169,8 +164,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoExternalReferenceSource () throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -192,8 +186,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoExternalReferenceValue () throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -215,8 +208,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoPaymentMethod () throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -239,8 +231,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoPaymentMethodType () throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -263,8 +254,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_InvalidDeviceTerminal () throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -287,8 +277,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_InvalidStratusTerminalNumber () throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -311,8 +300,7 @@ public class TestEstablishSettlementMethod_Negative {
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoMerchantName() throws IOException{
 			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
+			TestReporter.setDebugLevel(TestReporter.INFO);
 					
 			//create new request file
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();

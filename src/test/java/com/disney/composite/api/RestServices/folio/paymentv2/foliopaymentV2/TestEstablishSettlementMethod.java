@@ -24,7 +24,7 @@ import com.disney.utils.dataFactory.staging.GenerateReservation;
 
 @SuppressWarnings("unused")
 public class TestEstablishSettlementMethod {
-private String environment = "Bashful";
+private String environment;
 private String TPId;
 private String TPSId;
 private String LastName;
@@ -44,11 +44,10 @@ private String folioId;
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		//this.environment = environment;
-		this.environment = "Bashful";
+		this.environment = environment;
+		
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 		//generate accommodation booking
 		Book book = new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 		book.sendRequest();
@@ -98,8 +97,7 @@ private String folioId;
 	@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 	public void testestablishSettlementMethod_Folio () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 				
 		//create new request file
 		EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -121,8 +119,7 @@ private String folioId;
 	@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 	public void testestablishSettlementMethod_TP () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 				
 		//create new request file
 		EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
@@ -144,8 +141,7 @@ private String folioId;
 	@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 	public void testestablishSettlementMethod_TPS () throws IOException{
 		// set log levels for debugging
-		TestReporter.setDebugLevel(1);
-		TestReporter.setDebugLevel(TestReporter.DEBUG);
+		TestReporter.setDebugLevel(TestReporter.INFO);
 				
 		//create new request file
 		EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
