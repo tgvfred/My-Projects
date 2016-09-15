@@ -2,9 +2,9 @@ package com.disney.api.restServices.folio.PaymentV2.folioPaymentV2.establishSett
 
 public class MerchantInfo {
 	private String city = "Anaheim";
-	private String name = "92802";
+	private String name = "DLR_SE_NGF";
 	private String state = "CA";
-	private String zipCode = "DLR_SE_NGF";
+	private String zipCode = "92802";
 
 	/**
 	* 

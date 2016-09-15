@@ -121,7 +121,7 @@ public class TestEstablishSettlementMethod_Negative {
 			TestReporter.assertTrue(response.getResponse().contains("Credit Card Number is not Valid : null"), "Proper error message of Credit Card Number is not Valid : null is received");
 		}
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
-		public void testestablishSettlementMethod_Negative_NoCVV2 () throws IOException{
+		public void testestablishSettlementMethod_Negative_InvalidCVV2 () throws IOException{
 			// set log levels for debugging
 			TestReporter.setDebugLevel(1);
 			TestReporter.setDebugLevel(TestReporter.DEBUG);
@@ -131,7 +131,7 @@ public class TestEstablishSettlementMethod_Negative {
 			
 			//Create request
 			request.getSettlementMethodRequest().getCreditCardInfo().setCardNumber(ccNum);
-			request.getSettlementMethodRequest().getCreditCardInfo().setCardSecurityNumber("");
+			request.getSettlementMethodRequest().getCreditCardInfo().setCardSecurityNumber("1234");
 			request.getSettlementMethodRequest().getCreditCardInfo().setExpirationDate(Expiration);
 			request.getSettlementMethodRequest().getCreditCardInfo().getCardHolderInfo().setName(NameOnCard);
 			request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceSource("DREAMS_TP");
@@ -141,7 +141,7 @@ public class TestEstablishSettlementMethod_Negative {
 			//submit request
 			RestResponse response = Rest.folio(environment).paymentV2().folioPaymentV2().establishSettlementMethod().sendPutRequest(request);
 			TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-			TestReporter.assertTrue(response.getResponse().contains("Credit Card was not approved : INVALID REQUEST"), "Proper error message of Credit Card was not approved : INVALID REQUEST is received");
+			TestReporter.assertTrue(response.getResponse().contains("Credit Card was not approved : CVV2/CVC2 Mismatch"), "Proper error message of Credit Card was not approved : CVV2/CVC2 Mismatch");
 		}
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoExpiration () throws IOException{
@@ -167,29 +167,6 @@ public class TestEstablishSettlementMethod_Negative {
 			TestReporter.assertTrue(response.getResponse().contains("General Error"), "Proper error message of General Error is received");
 		}
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
-		public void testestablishSettlementMethod_Negative_NoNameForCard () throws IOException{
-			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
-					
-			//create new request file
-			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
-			
-			//Create request
-			request.getSettlementMethodRequest().getCreditCardInfo().setCardNumber(ccNum);
-			request.getSettlementMethodRequest().getCreditCardInfo().setCardSecurityNumber(CVV2);
-			request.getSettlementMethodRequest().getCreditCardInfo().setExpirationDate(Expiration);
-			request.getSettlementMethodRequest().getCreditCardInfo().getCardHolderInfo().setName("");
-			request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceSource("DREAMS_TP");
-			request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceValue(TPId);
-			request.getSettlementMethodRequest().getFolioIdentifierInfo().setPartyLastName(LastName);
-			
-			//submit request
-			RestResponse response = Rest.folio(environment).paymentV2().folioPaymentV2().establishSettlementMethod().sendPutRequest(request);
-			TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-			TestReporter.assertTrue(response.getResponse().contains("Credit Card was not approved : INVALID REQUEST"), "Proper error message of Credit Card was not approved : INVALID REQUEST is received");
-		}
-		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoExternalReferenceSource () throws IOException{
 			// set log levels for debugging
 			TestReporter.setDebugLevel(1);
@@ -210,7 +187,7 @@ public class TestEstablishSettlementMethod_Negative {
 			//submit request
 			RestResponse response = Rest.folio(environment).paymentV2().folioPaymentV2().establishSettlementMethod().sendPutRequest(request);
 			TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-			TestReporter.assertTrue(response.getResponse().contains("Credit Card was not approved : INVALID REQUEST"), "Credit Card was not approved : INVALID REQUEST");
+			TestReporter.assertTrue(response.getResponse().contains("No External References found : Reference Value: "), "No External References found : Reference Value: ");
 		}
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
 		public void testestablishSettlementMethod_Negative_NoExternalReferenceValue () throws IOException{
@@ -284,7 +261,7 @@ public class TestEstablishSettlementMethod_Negative {
 			TestReporter.assertTrue(response.getResponse().contains("applicationErrorCode"), "applicationErrorCode");
 		}
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
-		public void testestablishSettlementMethod_Negative_NoDeviceTerminal () throws IOException{
+		public void testestablishSettlementMethod_Negative_InvalidDeviceTerminal () throws IOException{
 			// set log levels for debugging
 			TestReporter.setDebugLevel(1);
 			TestReporter.setDebugLevel(TestReporter.DEBUG);
@@ -293,7 +270,7 @@ public class TestEstablishSettlementMethod_Negative {
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
 			
 			//Create request
-			request.getSettlementMethodRequest().setDeviceTerminalId("");
+			request.getSettlementMethodRequest().setDeviceTerminalId("123456abc");
 			request.getSettlementMethodRequest().getCreditCardInfo().setCardNumber(ccNum);
 			request.getSettlementMethodRequest().getCreditCardInfo().setCardSecurityNumber(CVV2);
 			request.getSettlementMethodRequest().getCreditCardInfo().setExpirationDate(Expiration);
@@ -308,7 +285,7 @@ public class TestEstablishSettlementMethod_Negative {
 			TestReporter.assertTrue(response.getResponse().contains("applicationErrorCode"), "applicationErrorCode");
 		}
 		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
-		public void testestablishSettlementMethod_Negative_NostratusTerminalNumber () throws IOException{
+		public void testestablishSettlementMethod_Negative_InvalidStratusTerminalNumber () throws IOException{
 			// set log levels for debugging
 			TestReporter.setDebugLevel(1);
 			TestReporter.setDebugLevel(TestReporter.DEBUG);
@@ -317,7 +294,7 @@ public class TestEstablishSettlementMethod_Negative {
 			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
 			
 			//Create request
-			request.getSettlementMethodRequest().setStratusTerminalNumber("");
+			request.getSettlementMethodRequest().setStratusTerminalNumber("abcd123456");
 			request.getSettlementMethodRequest().getCreditCardInfo().setCardNumber(ccNum);
 			request.getSettlementMethodRequest().getCreditCardInfo().setCardSecurityNumber(CVV2);
 			request.getSettlementMethodRequest().getCreditCardInfo().setExpirationDate(Expiration);
@@ -354,29 +331,5 @@ public class TestEstablishSettlementMethod_Negative {
 			RestResponse response = Rest.folio(environment).paymentV2().folioPaymentV2().establishSettlementMethod().sendPutRequest(request);
 			TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
 			TestReporter.assertTrue(response.getResponse().contains("applicationErrorCode"), "applicationErrorCode");
-		}
-		@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
-		public void testestablishSettlementMethod_Negative_NoCreditCardType() throws IOException{
-			// set log levels for debugging
-			TestReporter.setDebugLevel(1);
-			TestReporter.setDebugLevel(TestReporter.DEBUG);
-					
-			//create new request file
-			EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
-			
-			//Create request
-			request.getSettlementMethodRequest().getCreditCardInfo().setCreditCardType("");
-			request.getSettlementMethodRequest().getCreditCardInfo().setCardNumber(ccNum);
-			request.getSettlementMethodRequest().getCreditCardInfo().setCardSecurityNumber(CVV2);
-			request.getSettlementMethodRequest().getCreditCardInfo().setExpirationDate(Expiration);
-			request.getSettlementMethodRequest().getCreditCardInfo().getCardHolderInfo().setName(NameOnCard);
-			request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceSource("FOLIO");
-			request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceValue("138855643");
-			request.getSettlementMethodRequest().getFolioIdentifierInfo().setPartyLastName(LastName);
-			
-			//submit request
-			RestResponse response = Rest.folio(environment).paymentV2().folioPaymentV2().establishSettlementMethod().sendPutRequest(request);
-			TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
-			TestReporter.assertTrue(response.getResponse().contains("Credit Card was not approved : INVALID REQUEST"), "Credit Card was not approved : INVALID REQUEST");
 		}
 }

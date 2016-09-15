@@ -95,8 +95,8 @@ private String folioId;
 	 * 		- OperationName - name of the operation
 	 * 		- DataScenario - data scenario used, data sheets can contain multiple scenarios.
 	 */
-	//@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
-	public void testestablishSettlementMethod () throws IOException{
+	@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
+	public void testestablishSettlementMethod_Folio () throws IOException{
 		// set log levels for debugging
 		TestReporter.setDebugLevel(1);
 		TestReporter.setDebugLevel(TestReporter.DEBUG);
@@ -111,9 +111,57 @@ private String folioId;
 		request.getSettlementMethodRequest().getCreditCardInfo().getCardHolderInfo().setName(NameOnCard);
 		request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceSource("FOLIO");
 		request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceValue(folioId);
-		request.getSettlementMethodRequest().getFolioIdentifierInfo().setPartyLastName("aut");
+		request.getSettlementMethodRequest().getFolioIdentifierInfo().setPartyLastName(LastName);
 		
 		//submit request
 		RestResponse response = Rest.folio(environment).paymentV2().folioPaymentV2().establishSettlementMethod().sendPutRequest(request);
+		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		TestReporter.assertTrue(response.getResponse().contains(folioId),"The response correctly generated with the folio id present:"+folioId);
+	}
+	@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
+	public void testestablishSettlementMethod_TP () throws IOException{
+		// set log levels for debugging
+		TestReporter.setDebugLevel(1);
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+				
+		//create new request file
+		EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
+		
+		//Create request
+		request.getSettlementMethodRequest().getCreditCardInfo().setCardNumber(ccNum);
+		request.getSettlementMethodRequest().getCreditCardInfo().setCardSecurityNumber(CVV2);
+		request.getSettlementMethodRequest().getCreditCardInfo().setExpirationDate(Expiration);
+		request.getSettlementMethodRequest().getCreditCardInfo().getCardHolderInfo().setName(NameOnCard);
+		request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceSource("DREAMS_TP");
+		request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceValue(TPId);
+		request.getSettlementMethodRequest().getFolioIdentifierInfo().setPartyLastName(LastName);
+		
+		//submit request
+		RestResponse response = Rest.folio(environment).paymentV2().folioPaymentV2().establishSettlementMethod().sendPutRequest(request);
+		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		TestReporter.assertTrue(response.getResponse().contains("Visa"),"The response correctly generated.");
+	}
+	@Test(groups={"api","rest", "regression", "folio", "paymentV2", "establishSettlementMethod"})
+	public void testestablishSettlementMethod_TPS () throws IOException{
+		// set log levels for debugging
+		TestReporter.setDebugLevel(1);
+		TestReporter.setDebugLevel(TestReporter.DEBUG);
+				
+		//create new request file
+		EstablishSettlementMethodRequest request = new EstablishSettlementMethodRequest();
+		
+		//Create request
+		request.getSettlementMethodRequest().getCreditCardInfo().setCardNumber(ccNum);
+		request.getSettlementMethodRequest().getCreditCardInfo().setCardSecurityNumber(CVV2);
+		request.getSettlementMethodRequest().getCreditCardInfo().setExpirationDate(Expiration);
+		request.getSettlementMethodRequest().getCreditCardInfo().getCardHolderInfo().setName(NameOnCard);
+		request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceSource("DREAMS_TPS");
+		request.getSettlementMethodRequest().getFolioIdentifierInfo().setExternalReferenceValue(TPSId);
+		request.getSettlementMethodRequest().getFolioIdentifierInfo().setPartyLastName(LastName);
+		
+		//submit request
+		RestResponse response = Rest.folio(environment).paymentV2().folioPaymentV2().establishSettlementMethod().sendPutRequest(request);
+		TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+		TestReporter.assertTrue(response.getResponse().contains("Visa"),"The response correctly generated.");
 	}
 }
