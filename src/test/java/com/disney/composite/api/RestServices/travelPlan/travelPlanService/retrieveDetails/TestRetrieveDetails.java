@@ -20,7 +20,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 
 @SuppressWarnings("unused")
 public class TestRetrieveDetails {
-private String environment;
+private String environment = "Bashful";
 private String TPId;
 private String TPSId; 
 	
@@ -31,8 +31,8 @@ private String TPSId;
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({  "environment" })
 	public void setup(@Optional String environment) {
-		this.environment = environment;
-		
+		//this.environment = environment;
+		this.environment = "Bashful";
 		//generate accommodation booking
 		Book book = new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 		book.sendRequest();

@@ -1,6 +1,5 @@
 package com.disney.api.restServices.travelPlanSegment.travelPlanSegmentService.updatePreArrivalInformation;
 
-import com.disney.api.restServices.accommodation.accommodationSales.updateComments.request.UpdateCommentsRequest;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.travelPlanSegment.travelPlanSegmentService.updatePreArrivalInformation.request.UpdatePreArrivalInformationRequest;
