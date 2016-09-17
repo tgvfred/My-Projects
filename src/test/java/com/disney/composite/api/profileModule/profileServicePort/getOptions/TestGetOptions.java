@@ -9,7 +9,14 @@ import com.disney.api.BaseTest;
 import com.disney.api.soapServices.profileModule.profileServicePort.operations.GetOptions;
 import com.disney.utils.TestReporter;
 
+/**
+ * These script test the functionality of ProfileOptionEnums ROUTING_TYPE, PROFILE_TYPE, SERVICE_TYPE, and ITEM
+ * @author Justin Phlegar
+ * @see <a href="http://profilesvcgrpy.wdw.disney.com/Profile/ProfileServicePort?xsd=Profile_enums.xsd">ProfileOptionEnum</a>
+ * 
+ */
 public class TestGetOptions extends BaseTest{
+	
 	@Override
 	@BeforeMethod
 	@Parameters("environment")
