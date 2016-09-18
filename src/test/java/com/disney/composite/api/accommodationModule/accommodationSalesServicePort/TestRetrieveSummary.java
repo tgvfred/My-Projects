@@ -1,7 +1,6 @@
 package com.disney.composite.api.accommodationModule.accommodationSalesServicePort;
 
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
