@@ -10,8 +10,6 @@ public class CompleteCheckIn extends AccommodationFulfillmentServicePort{
 		
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("completeCheckIn")));
-		System.out.println(getRequest());
-		
 		generateServiceContext();		
 		//All fields are dynamically required, sheet not necessary
 		//setRequestNodeValueByXPath(getTestScenario("/services/accommodationFulfillmentServicePort/completeCheckIn/completeCheckInInput.xls", scenario));

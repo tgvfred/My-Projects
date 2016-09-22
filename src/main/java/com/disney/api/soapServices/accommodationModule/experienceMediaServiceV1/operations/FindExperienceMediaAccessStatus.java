@@ -9,7 +9,6 @@ public class FindExperienceMediaAccessStatus extends ExperienceMediaServiceV1{
 		//UI Booking
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("findExperienceMediaAccessStatus")));
-		System.out.println(getRequest());
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));

@@ -10,7 +10,6 @@ public class RemoveRateOverride extends AccommodationSalesServicePort{
 		
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("removeRateOverride")));
-		System.out.println(getRequest());
 		
 		generateServiceContext();			
 	    setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
