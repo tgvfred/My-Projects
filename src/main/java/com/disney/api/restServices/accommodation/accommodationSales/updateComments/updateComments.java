@@ -8,7 +8,7 @@ import com.disney.api.restServices.core.RestResponse;
 public class updateComments {
 
 	private RestService restService;
-	private String resource ="/updatecomments";
+	private String resource ="/comments";
 	
 	public updateComments(RestService restService, String resource) {
 		this.restService = restService;

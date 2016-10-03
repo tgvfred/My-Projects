@@ -5,7 +5,7 @@ import com.disney.api.restServices.accommodation.accommodationSales.updateCommen
 
 public class AccommodationSales {
 	private RestService restService;
-	private String resource = "/accommodationsales";
+	private String resource = "/v1/accommodation";
 	
 
 	public updateComments updateComments(){
