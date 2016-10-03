@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CancelWithRefund;
-import com.disney.test.utils.Randomness;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestCancelWithRefund {

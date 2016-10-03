@@ -4,8 +4,8 @@ package com.disney.api.soapServices.accommodationModule.accommodationSalesServic
 import java.util.Arrays;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
-import com.disney.test.utils.dataFactory.database.Recordset;
-import com.disney.test.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.XMLTools;
 
 
