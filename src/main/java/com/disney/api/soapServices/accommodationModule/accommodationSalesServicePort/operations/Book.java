@@ -1,6 +1,8 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operations.SearchOrganizationByMembershipId;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 
@@ -236,5 +238,55 @@ public class Book extends AccommodationSalesServicePort{
 	
 	public void setTravelPlanPartyId(String value){
 		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelPlanGuest/partyId", value);
+	}
+	
+	public void setAgency(String agencyId){
+		SearchOrganizationByMembershipId search = new SearchOrganizationByMembershipId(getEnvironment(), "Main");
+		search.setOrganizationMembershipName(BaseSoapCommands.REMOVE_NODE.toString());
+		search.setOrganizationMembershipValue(agencyId);
+		search.sendRequest();
+		
+		try{
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/agencyIataNumber", agencyId);
+		}catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("/Envelope/Body/book/request", BaseSoapCommands.ADD_NODE.commandAppend("travelAgency"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency",  BaseSoapCommands.ADD_NODE.commandAppend("agencyIataNumber"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency",  BaseSoapCommands.ADD_NODE.commandAppend("agencyName"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency",  BaseSoapCommands.ADD_NODE.commandAppend("agencyOdsId"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency",  BaseSoapCommands.ADD_NODE.commandAppend("guestTravelAgencyId"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency",  BaseSoapCommands.ADD_NODE.commandAppend("agentId"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency",  BaseSoapCommands.ADD_NODE.commandAppend("guestAgentId"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency",  BaseSoapCommands.ADD_NODE.commandAppend("confirmationLocatorValue"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency",  BaseSoapCommands.ADD_NODE.commandAppend("guestConfirmationLocationId"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency",  BaseSoapCommands.ADD_NODE.commandAppend("primaryAddress"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress",  BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress",  BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress",  BaseSoapCommands.ADD_NODE.commandAppend("locatorUseType"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress",  BaseSoapCommands.ADD_NODE.commandAppend("primary"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress",  BaseSoapCommands.ADD_NODE.commandAppend("addressLine1"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress",  BaseSoapCommands.ADD_NODE.commandAppend("city"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress",  BaseSoapCommands.ADD_NODE.commandAppend("country"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress",  BaseSoapCommands.ADD_NODE.commandAppend("postalCode"));
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress",  BaseSoapCommands.ADD_NODE.commandAppend("state"));
+			
+			setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/agencyIataNumber", agencyId);
+		}
+		
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/agencyName", search.getName());
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/agencyOdsId", search.getId());
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/guestTravelAgencyId", "0");
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/agentId", search.getFirstAgentId());
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/guestAgentId", "0");
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/confirmationLocatorValue", "0");
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/guestConfirmationLocationId", "0");
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/locatorId", search.getAddressLocatorId());
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/guestLocatorId", "0");
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/locatorUseType", "UNKNOWN");
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/primary", "true");
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/addressLine1", search.getAddress1());
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/city", search.getCity());
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/country", search.getCountry());
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/postalCode", search.getPostalCode());
+		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/state", search.getState());
 	}
 }
