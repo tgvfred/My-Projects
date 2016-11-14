@@ -1,6 +1,8 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 
 public class BookWithPay extends AccommodationSalesServicePort{
@@ -51,15 +53,25 @@ public class BookWithPay extends AccommodationSalesServicePort{
 	}	
 
 	public void setDepartureDate(String deptDate){
-			setRequestNodeValueByXPath("//book/request/roomDetail/resortPeriod/endDate", deptDate);
+			setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/resortPeriod/endDate", deptDate);
 	}
 	
 	public void setDepartureDateDaysOut(String deptDateDaysOut){
-			setRequestNodeValueByXPath("//book/request/roomDetail/resortPeriod/endDate", "fx:GetDate; Daysout:" + deptDateDaysOut);
+			setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/resortPeriod/endDate", "fx:GetDate; Daysout:" + deptDateDaysOut);
 	}
 	
-	public void setPackageCode(String packageCode){
+	public void setRoomPackageCode(String packageCode){
 		setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/packageCode", packageCode);
+	}
+
+	public void setComponentPackageCode(String packageCode){
+		try{
+			setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/componentDetail/packageCode", packageCode);
+		}catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail", BaseSoapCommands.ADD_NODE.commandAppend("componentDetail"));
+			setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/componentDetail",  BaseSoapCommands.ADD_NODE.commandAppend("packageCode"));
+			setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/componentDetail/packageCode", packageCode);
+		}
 	}
 	
 	public void setResortCode(String resortCode){
