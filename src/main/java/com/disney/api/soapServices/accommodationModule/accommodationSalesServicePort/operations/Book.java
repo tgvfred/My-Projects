@@ -167,6 +167,28 @@ public class Book extends AccommodationSalesServicePort{
 		setRequestNodeValueByXPath("//book/request/travelPlanGuest/membershipDetail/membershipId", membershipID);
 	}
 
+	/**
+	 * 
+	 * @param commentText
+	 * @param routing AutoFulfillment / Celebrations / Dispatch System / Guest History / Guest Recovery / Guest Request / HouseKeeping /
+	 * 				Inventory / Reservation / Reservation and Confirmation / Resort Call Center / SE SPL Needs / SPL Event
+	 */
+	public void setRoomReservationComment(String commentText, String routing){
+		try{
+			setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/comments/commentText", commentText);
+		}catch(XPathNotFoundException e){
+			setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail", BaseSoapCommands.ADD_NODE.commandAppend("comments"));
+			setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/comments", BaseSoapCommands.ADD_NODE.commandAppend("commentText"));
+			setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/comments", BaseSoapCommands.ADD_NODE.commandAppend("default"));
+			setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/comments", BaseSoapCommands.ADD_NODE.commandAppend("routings"));
+			setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/comments/routings", BaseSoapCommands.ADD_NODE.commandAppend("name"));
+			setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/comments/commentText", commentText);
+		}
+
+		setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/comments/default", "false");
+		setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/comments/routings/name", routing);
+	}
+	
 	//Guest first & last names.  Have to enter in 2 places, under the Guest reference details node & the travel plan guest node
 	public void setPrimaryGuestFirstNameGuestRefDetails(String firstName){
 		setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/guest/firstName", firstName);
