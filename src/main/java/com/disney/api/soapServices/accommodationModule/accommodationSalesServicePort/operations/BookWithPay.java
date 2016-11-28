@@ -106,12 +106,34 @@ public class BookWithPay extends AccommodationSalesServicePort{
 		setRequestNodeValueByXPath("//guest/lastName", name);
 		setRequestNodeValueByXPath("//travelPlanGuest/lastName", name);
 	}
+
+	public void setAddress1(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/bookWithPay/reservationRequest/travelPlanGuest/addressDetails/addressLine1", value);
+		setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/addressLine1", value);
+	}
+
+	public void setCity(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/bookWithPay/reservationRequest/travelPlanGuest/addressDetails/city", value);
+		setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/city", value);
+	}
+
+	public void setPostalCode(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/bookWithPay/reservationRequest/travelPlanGuest/addressDetails/postalCode", value);
+		setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/postalCode", value);
+	}
+
+	public void setState(String value){
+		setRequestNodeValueByXPath("/Envelope/Body/bookWithPay/reservationRequest/travelPlanGuest/addressDetails/state", value);
+		setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/state", value);
+	}
 	
 	public void setPhoneNumber(String phone){
+		setRequestNodeValueByXPath("/Envelope/Body/bookWithPay/reservationRequest/travelPlanGuest/phoneDetails/number", phone);
 		setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails/number", phone);
 	}
 		
 	public void setEmail(String email){
+		setRequestNodeValueByXPath("/Envelope/Body/bookWithPay/reservationRequest/travelPlanGuest/emailDetails/address", email);
 		setRequestNodeValueByXPath("//bookWithPay/reservationRequest/roomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails/address", email);
 	}
 	
