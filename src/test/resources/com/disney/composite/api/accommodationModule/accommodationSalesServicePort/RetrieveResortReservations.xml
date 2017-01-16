@@ -18,7 +18,7 @@
 </suite> Suite -->
 
 <classes>
-      <class name="com.disney.composite.api.accommodationModule.accommodationSalesServicePort.TestRetrieveResortReservations"/>
+      <class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.TestRetrieveResortReservations"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

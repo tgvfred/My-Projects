@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="AccommodationModule_Suite" parallel="methods" thread-count="50" >
+	<parameter name="environment" value="latest" />
+	<test name="AccommodationModule">
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.*"></package>
+		</packages>
+			<groups>
+				<run>
+				<include name="accommodation" />
+				<include name="presmoke" />
+				<exclude name="dev"  />
+				</run>
+			</groups>
+	</test>
+</suite>

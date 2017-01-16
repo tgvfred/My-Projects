@@ -18,7 +18,7 @@
 		
 		 -->
 		<classes>
-      <class name="com.disney.composite.api.accommodationModule.accommodationSalesServicePort.TestRemoveComments"/>
+      <class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.TestRemoveComments"/>
     </classes>
 		
 		

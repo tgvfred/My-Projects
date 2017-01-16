@@ -17,7 +17,7 @@
 		
 	 	
     <classes>
-      <class name="com.disney.composite.api.accommodationModule.accommodationSalesServicePort.TestUnShare"/>
+      <class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.TestUnShare"/>
     </classes> 
 		
 		

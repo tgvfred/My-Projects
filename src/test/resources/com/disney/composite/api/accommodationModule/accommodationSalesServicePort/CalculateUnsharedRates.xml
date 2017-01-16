@@ -4,7 +4,7 @@
 	<parameter name="environment" value="bashful" />
 	<test name="Book">		
 		<classes>
-	      <class name="com.disney.composite.api.accommodationModule.accommodationSalesServicePort.TestCalculateUnsharedRates"/>
+	      <class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.TestCalculateUnsharedRates"/>
 	    </classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

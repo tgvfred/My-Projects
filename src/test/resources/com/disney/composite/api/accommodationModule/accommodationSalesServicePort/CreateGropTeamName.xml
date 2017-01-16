@@ -4,7 +4,7 @@
 	<parameter name="environment" value="sleepy" />
 	<test name="CreateGroupTeamName">
 		<classes>
-			<class name="com.disney.composite.api.accommodationModule.accommodationSalesServicePort.TestCreateGroupTeamName" />
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.TestCreateGroupTeamName" />
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

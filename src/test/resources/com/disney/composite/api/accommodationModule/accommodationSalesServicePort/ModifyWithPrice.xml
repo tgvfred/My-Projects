@@ -5,7 +5,7 @@
 	<test name="Book">
 		<classes>
 			<class
-				name="com.disney.composite.api.accommodationModule.accommodationSalesServicePort.TestModifyWithPrice" />
+				name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.TestModifyWithPrice" />
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

@@ -4,7 +4,7 @@
 	<parameter name="environment" value="Sleepy" />
 	<test name="RetrieveProductPurchaseData">
 		<classes>
-			<class name="com.disney.composite.api.accommodationModule.accommodationSalesServicePort.TestRetrieveProductPurchaseData" />
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.TestRetrieveProductPurchaseData" />
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->
