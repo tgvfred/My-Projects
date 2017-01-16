@@ -10,7 +10,6 @@ public class SearchResortReservationsByGuest extends AccommodationSalesServicePo
 		
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("searchResortReservationsByGuest")));
-		System.out.println(getRequest());
 		
 		generateServiceContext();			
 	    setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));

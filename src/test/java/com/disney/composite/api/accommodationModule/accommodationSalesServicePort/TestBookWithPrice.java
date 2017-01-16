@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.BookWithPrice;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.test.utils.Randomness;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestBookWithPrice {

@@ -10,7 +10,6 @@ public class Add extends AccommodationSalesServicePort{
 		
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("add")));
-		System.out.println(getRequest());
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));

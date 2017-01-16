@@ -18,23 +18,23 @@ public class CreateComments extends AccommodationSalesServicePort{
 		removeWhiteSpace();
 	}
 	
-	public void setparentIds(String value ){
+	public void setParentIds(String value ){
 		setRequestNodeValueByXPath("/Envelope/Body/createComments/request/parentIds",value);
 	}
 	
-	public void setcommentText(String value ){
+	public void setCommentText(String value ){
 		setRequestNodeValueByXPath("/Envelope/Body/createComments/request/commentsInfo/commentText",value);
 	}
 	
-	public void settcId(String value ){
+	public void setTcId(String value ){
 		setRequestNodeValueByXPath("/Envelope/Body/createComments/request/commentsInfo/commentOwnerDetail/tcId",value);
 	}
 	
-	public void settpsId(String value ){
+	public void setTpsId(String value ){
 		setRequestNodeValueByXPath("/Envelope/Body/createComments/request/commentsInfo/commentOwnerDetail/tpsId",value);
 	}
 	
-	public void settpId(String value ){
+	public void setTpId(String value ){
 		setRequestNodeValueByXPath("/Envelope/Body/createComments/request/commentsInfo/commentOwnerDetail/tpId", value);
 	}
 	

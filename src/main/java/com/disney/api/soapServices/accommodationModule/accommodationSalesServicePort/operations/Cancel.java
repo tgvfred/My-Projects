@@ -11,7 +11,6 @@ public class Cancel extends AccommodationSalesServicePort{
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("cancel")));
 	
 		generateServiceContext();
-		System.out.println(getRequest());
 	    setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
 		removeComments() ;
 		removeWhiteSpace();

@@ -10,7 +10,6 @@ public class CheckIn extends AccommodationFulfillmentServicePort{
 		
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("checkIn")));
-		System.out.println(getRequest());
 		
 		generateServiceContext();			
 		setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
