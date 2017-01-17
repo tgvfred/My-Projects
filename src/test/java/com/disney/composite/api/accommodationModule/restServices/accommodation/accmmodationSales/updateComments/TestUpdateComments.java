@@ -9,6 +9,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.restServices.BaseRestTest;
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.accommodation.accommodationSales.updateComments.request.UpdateCommentsRequest;
 import com.disney.api.restServices.core.RestResponse;
@@ -16,7 +17,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
-public class TestUpdateComments {
+public class TestUpdateComments extends BaseRestTest{
 	private String environment;
 	private String TPId;
 	private String TPSId; 
@@ -31,7 +32,6 @@ public class TestUpdateComments {
 		@BeforeClass(alwaysRun = true)
 		@Parameters({  "environment" })
 		public void setup(@Optional String environment) {
-			TestReporter.setDebugLevel(TestReporter.INFO);
 			this.environment = environment;
 			
 			//generate accommodation booking
@@ -56,7 +56,6 @@ public class TestUpdateComments {
 		public void testupdateComments_SingleTC () throws IOException{
 			
 			// set log levels for debugging
-			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -68,14 +67,13 @@ public class TestUpdateComments {
 			request.getCommentsInfo().get(0).setCommentLevel("TC");
 			request.getCommentsInfo().get(0).setCommentText("eServiceTestComment");
 			RestResponse response= Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
-			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+			validateResponse(response);
 			TestReporter.assertTrue(response.getResponse().contains("eServiceTestComment"), "The response created the comment and it is present: eServiceTestComment");
 		}
 		@Test(groups={"api","rest", "regression", "accommodation", "accommodationSales", "updateComments"})
 		public void testupdateComments_DoubleComment () throws IOException{
 			
 			// set log levels for debugging
-			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -92,7 +90,7 @@ public class TestUpdateComments {
 			request.getCommentsInfo().get(1).setCommentLevel("TC");
 			request.getCommentsInfo().get(1).setCommentText("eServiceTestComment2");
 			RestResponse response= Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
-			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+			validateResponse(response);
 			TestReporter.assertTrue(response.getResponse().contains("eServiceTestComment2"), "The response created the comment and it is present: eServiceTestComment");
 		}
 		@Test(groups={"api","rest", "regression", "accommodation", "accommodationSales", "updateComments"})
@@ -104,7 +102,6 @@ public class TestUpdateComments {
 			TCId2 = book2.getTravelComponentId();
 			
 			// set log levels for debugging
-			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -121,7 +118,7 @@ public class TestUpdateComments {
 			request.getCommentsInfo().get(1).setCommentLevel("TC");
 			request.getCommentsInfo().get(1).setCommentText("eServiceTestComment2");
 			RestResponse response= Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
-			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+			validateResponse(response);
 			TestReporter.assertTrue(response.getResponse().contains("eServiceTestComment2"), "The response created the comment and it is present: eServiceTestComment");
 		}
 		@Test(groups={"api","rest", "regression", "accommodation", "accommodationSales", "updateComments"})
@@ -133,7 +130,6 @@ public class TestUpdateComments {
 			TCId2 = book2.getTravelComponentId();
 			
 			// set log levels for debugging
-			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -147,7 +143,7 @@ public class TestUpdateComments {
 			request.getCommentsInfo().get(0).setCommentText("eServiceTestComment");
 	
 			RestResponse response= Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
-			TestReporter.assertTrue(response.getStatusCode() == 200, "Validate status code returned ["+response.getStatusCode()+"] was [200]");
+			validateResponse(response);
 			TestReporter.assertTrue(response.getResponse().contains("eServiceTestComment"), "The response created the comment and it is present: eServiceTestComment");
 		}
 }
