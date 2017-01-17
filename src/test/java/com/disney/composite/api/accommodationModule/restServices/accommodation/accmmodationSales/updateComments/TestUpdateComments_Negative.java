@@ -9,6 +9,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.restServices.BaseRestTest;
 import com.disney.api.restServices.Rest;
 import com.disney.api.restServices.accommodation.accommodationSales.updateComments.request.UpdateCommentsRequest;
 import com.disney.api.restServices.core.RestResponse;
@@ -16,7 +17,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
-public class TestUpdateComments_Negative {
+public class TestUpdateComments_Negative extends BaseRestTest{
 	private String environment;
 	private String TPId;
 	private String TPSId; 
@@ -31,7 +32,6 @@ public class TestUpdateComments_Negative {
 		@BeforeClass(alwaysRun = true)
 		@Parameters({  "environment" })
 		public void setup(@Optional String environment) {
-			TestReporter.setDebugLevel(TestReporter.INFO);
 			this.environment = environment;
 			
 			//generate accommodation booking
@@ -56,7 +56,6 @@ public class TestUpdateComments_Negative {
 		public void testupdateComments_Negative_NoAuthorization () throws IOException{
 			
 		// set log levels for debugging
-		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Create new request
 		UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -68,13 +67,11 @@ public class TestUpdateComments_Negative {
 		request.getCommentsInfo().get(0).setCommentLevel("TC");
 		request.getCommentsInfo().get(0).setCommentText("eServiceTestComment");
 		RestResponse response= Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequestWithMissingAuthToken(request);
-		TestReporter.assertTrue(response.getStatusCode() == 401, "Validate status code returned ["+response.getStatusCode()+"] was [401]");
+		validateResponse(response, "401");
 	}
 		@Test(groups={"api","rest", "regression", "negative","accommodation", "accommodationSales", "updateComments"})
 		public void testupdateComments_Negative_NoTC () throws IOException{
 			
-		// set log levels for debugging
-		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Create new request
 		UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -86,14 +83,12 @@ public class TestUpdateComments_Negative {
 		request.getCommentsInfo().get(0).setCommentLevel("TC");
 		request.getCommentsInfo().get(0).setCommentText("eServiceTestComment");
 		RestResponse response= Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
-		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
+		validateResponse(response, "500");
 		TestReporter.assertTrue(response.getResponse().contains("The given id must not be null!"), "The response received the proper error of The given id must not be null!");
 	}
 		@Test(groups={"api","rest", "regression", "negative","accommodation", "accommodationSales", "updateComments"})
 		public void testupdateComments_Negative_NoCommentLevel () throws IOException{
 			
-		// set log levels for debugging
-		TestReporter.setDebugLevel(TestReporter.INFO);
 		//Create new request
 		UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -105,7 +100,7 @@ public class TestUpdateComments_Negative {
 		request.getCommentsInfo().get(0).setCommentLevel(" ");
 		request.getCommentsInfo().get(0).setCommentText("eServiceTestComment");
 		RestResponse response= Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
-		TestReporter.assertTrue(response.getStatusCode() == 500, "Validate status code returned ["+response.getStatusCode()+"] was [500]");
+		validateResponse(response, "500");
 		TestReporter.assertTrue(response.getResponse().contains("Can not construct instance of com.wdw.dreams.booking.transferobject.enums.CommentLevelEnum"), "The response received the proper error of Can not construct instance of com.wdw.dreams.booking.transferobject.enums.CommentLevelEnum");
 	}	
 

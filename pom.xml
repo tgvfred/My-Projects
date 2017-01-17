@@ -18,12 +18,12 @@
 		<dependency>
 			<groupId>com.disney.gqe</groupId>
 			<artifactId>APIUtilsSoap</artifactId>
-			<version>1.0.13</version>
+			<version>1.0.22</version>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Party</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.7</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.disney.gqe</groupId>

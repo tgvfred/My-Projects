@@ -8,9 +8,9 @@ public class Accommodation {
 		
 	public Accommodation(RestService restService){
 		this.restService = restService;
-		this.restService.setMainResource("AccommodationSales");
+		this.restService.setMainResource("REST_AccommodationSalesService");
 	}
 	public AccommodationSales accoomodationSales(){
-		return new AccommodationSales();
+		return new AccommodationSales(restService);
 	}
 }
