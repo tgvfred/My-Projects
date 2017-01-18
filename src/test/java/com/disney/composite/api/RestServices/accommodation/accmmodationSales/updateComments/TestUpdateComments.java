@@ -17,7 +17,7 @@ import com.disney.utils.TestReporter;
 
 @SuppressWarnings("unused")
 public class TestUpdateComments {
-	private String environment;
+	private String environment = "Bashful";
 	private String TPId;
 	private String TPSId; 
 	private String TCId;
@@ -32,8 +32,8 @@ public class TestUpdateComments {
 		@Parameters({  "environment" })
 		public void setup(@Optional String environment) {
 			TestReporter.setDebugLevel(TestReporter.INFO);
-			this.environment = environment;
-			
+			//this.environment = environment;
+			this.environment = "Bashful";
 			//generate accommodation booking
 			Book book = new Book(this.environment, "bookRoomOnly2Adults2ChildrenWithoutTickets" );
 			book.setPackageCode("I795T");
@@ -56,7 +56,7 @@ public class TestUpdateComments {
 		public void testupdateComments_SingleTC () throws IOException{
 			
 			// set log levels for debugging
-			TestReporter.setDebugLevel(TestReporter.INFO);
+			TestReporter.setDebugLevel(TestReporter.DEBUG);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -75,7 +75,7 @@ public class TestUpdateComments {
 		public void testupdateComments_DoubleComment () throws IOException{
 			
 			// set log levels for debugging
-			TestReporter.setDebugLevel(TestReporter.INFO);
+			TestReporter.setDebugLevel(TestReporter.DEBUG);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -104,7 +104,7 @@ public class TestUpdateComments {
 			TCId2 = book2.getTravelComponentId();
 			
 			// set log levels for debugging
-			TestReporter.setDebugLevel(TestReporter.INFO);
+			TestReporter.setDebugLevel(TestReporter.DEBUG);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -133,7 +133,7 @@ public class TestUpdateComments {
 			TCId2 = book2.getTravelComponentId();
 			
 			// set log levels for debugging
-			TestReporter.setDebugLevel(TestReporter.INFO);
+			TestReporter.setDebugLevel(TestReporter.DEBUG);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
