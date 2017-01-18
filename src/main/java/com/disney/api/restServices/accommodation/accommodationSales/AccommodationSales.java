@@ -9,7 +9,7 @@ public class AccommodationSales {
 	public AccommodationSales(RestService restService){
 		this.restService = restService;
 	}
-	
+
 
 	public updateComments updateComments(){
 		return new updateComments(restService, resource);

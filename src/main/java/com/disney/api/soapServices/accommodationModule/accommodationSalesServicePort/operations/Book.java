@@ -311,4 +311,10 @@ public class Book extends AccommodationSalesServicePort{
 		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/postalCode", search.getPostalCode());
 		setRequestNodeValueByXPath("/Envelope/Body/book/request/travelAgency/primaryAddress/state", search.getState());
 	}
+	
+
+	public String getLocationId(){
+		return getRequestNodeValueByXPath("/Envelope/Body/book/request/locationId");
+	}
+	
 }

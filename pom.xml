@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Party</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.7</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.disney.gqe</groupId>
