@@ -10,7 +10,7 @@
         </groups>
 		<packages>
 			<package
-				name="com.disney.composite.api.accommodationModule.RestServices.*"/>
+				name="com.disney.composite.api.accommodationModule.restServices.accommodation.accmmodationSales.*"/>
 		</packages>
 	</test>
 </suite>
