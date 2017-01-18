@@ -10,6 +10,7 @@ public class AccommodationSales {
 		this.restService = restService;
 	}
 
+
 	public updateComments updateComments(){
 		return new updateComments(restService, resource);
 	}
