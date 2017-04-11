@@ -53,7 +53,7 @@ public class TestUpdateComments extends BaseRestTest{
 		 * 		- OperationName - name of the operation
 		 * 		- DataScenario - data scenario used, data sheets can contain multiple scenarios.
 		 */
-		@Test(groups={"api","rest", "regression", "accommodation", "accommodationSales", "updateComments"})
+		@Test(groups={"api","rest", "regression", "accommodation", "accommodationSales", "updateComments", "smoke"})
 		public void testupdateComments_SingleTC () throws IOException{
 			
 			// set log levels for debugging

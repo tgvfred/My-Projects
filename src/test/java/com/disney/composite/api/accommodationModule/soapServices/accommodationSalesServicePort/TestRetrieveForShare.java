@@ -39,7 +39,7 @@ public class TestRetrieveForShare {
 		}catch(Exception e){}
 	}
 		
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "retrieveForShare"})
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "retrieveForShare", "smoke"})
 	public void testRetrieveForShare_MainFlow(){
 		TestReporter.logScenario("Test Retrieve for Share");
 		RetrieveforShare retrieveforShare = new RetrieveforShare(environment, "Main" );
