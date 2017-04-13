@@ -4,7 +4,9 @@
 	<parameter name="environment" value="${environment}" />
 	<test name="AccommodationModule">
 		<groups>
-			<run>					
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
 				<exclude name="dev"/>
 				<exclude name="debug"/>
 			</run>

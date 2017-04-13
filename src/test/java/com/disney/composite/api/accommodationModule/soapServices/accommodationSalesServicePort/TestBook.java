@@ -34,7 +34,7 @@ public class TestBook {
 		}catch(Exception e){}
 	}
 	
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "book"})
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "book", "presmoke"})
 	public void testBook_BookWithoutTickets(){
 		TestReporter.logScenario("Test Book Without Tickets");
 		book.set(new Book(environment, "bookWithoutTickets" ));

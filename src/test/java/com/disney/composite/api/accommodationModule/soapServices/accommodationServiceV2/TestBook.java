@@ -8,7 +8,7 @@ import com.disney.utils.TestReporter;
 
 public class TestBook {
 
-	@Test
+	@Test(groups={"dev"})
 	public void sandbox(){
 		System.out.println(Randomness.generateCurrentXMLDate(-30));
 	}
