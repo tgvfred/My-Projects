@@ -39,7 +39,7 @@ public class TestReplaceAllForTravelPlanSegment {
 		}catch(Exception e){}
 	}
 	
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment"})
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug"})
 	public void testReplaceAllForTravelPlanSegment_MainFlow(){
 		TestReporter.logScenario("Test Replce All for Travel Plan Segment");
 		ReplaceAllForTravelPlanSegment ReplaceAllForTravelPlanSegment = new ReplaceAllForTravelPlanSegment(environment, "Main" );

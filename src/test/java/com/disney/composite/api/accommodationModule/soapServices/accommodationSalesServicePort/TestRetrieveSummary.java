@@ -22,7 +22,7 @@ public class TestRetrieveSummary {
 		System.out.println(book.getResponse());
 }
 		
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary", "debug"})
 	public void testRetrieveSummary_MainFlow(){
 		
 		RetrieveSummary RetrieveSummary = new RetrieveSummary(environment, "Retrieve Summay" );

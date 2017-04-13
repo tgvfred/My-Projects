@@ -20,7 +20,7 @@ public class TestCalculateUnsharedRates {
 		book.sendRequest();
 	}
 	
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates"})
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates", "debug"})
 	public void testCalculateUnsharedRates_MainFlow(){
 		TestReporter.logScenario("Test Calculate Unshared Rates");
 		CalculateUnsharedRates CalculateUnsharedRates = new CalculateUnsharedRates(environment, "Main" );

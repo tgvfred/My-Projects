@@ -67,7 +67,7 @@ public class TestBook {
 		TestReporter.assertNotNull(book.get().getTravelPlanSegmentId(), "The response contains a Travel Plan Segment ID");
 	}
 
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "book"})
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "book", "debug"})
 	public void testBook_BookGroupPackageWithoutTickets(){
 		TestReporter.logScenario("Test Book Group Package Without Tickets");
 		book.set(new Book(environment, "bookGroupPackageWithoutTickets" ));
