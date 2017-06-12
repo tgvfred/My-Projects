@@ -751,7 +751,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         // to invoke lower levels of reporting
         setEnvironment(environment);
         daysOut.set(Randomness.randomNumberBetween(1, 12));
-        nights.set(Randomness.randomNumberBetween(3, 5));
+        nights.set(Randomness.randomNumberBetween(1, 3));
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
@@ -854,6 +854,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void bookReservation() {
         if (getHouseHold() == null) {
             createHouseHold();
+            getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
         try {
@@ -928,6 +929,9 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setPrimaryGuestLastName(getHouseHold().primaryGuest().getLastName());
             getBook().setPrimaryGuestLastNameGuestRefDetails(getHouseHold().primaryGuest().getLastName());
             getBook().setPrimaryGuestLastNameTravelPlan(getHouseHold().primaryGuest().getLastName());
+            getBook().setPrimaryGuestMiddleName(getHouseHold().primaryGuest().getMiddleName());
+            getBook().setPrimaryGuestMiddleNameGuestRefDetails(getHouseHold().primaryGuest().getMiddleName());
+            getBook().setPrimaryGuestMiddleNameTravelPlan(getHouseHold().primaryGuest().getMiddleName());
             getBook().setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/addressLine1", getHouseHold().primaryGuest().primaryAddress().getAddress1());
             getBook().setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/city", getHouseHold().primaryGuest().primaryAddress().getCity());
             getBook().setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/regionName", getHouseHold().primaryGuest().primaryAddress().getState());

@@ -192,6 +192,7 @@ public class ValidationHelper {
         TestReporter.logStep("Validated guest information");
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getTpPartyGuestInfoByTpId_NoMembership(tpId)));
+        rs.print();
         TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM", 1), hh.primaryGuest().getFirstName(), "Verify that the guest first name [" + rs.getValue("IDVL_FST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getFirstName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_MID_NM", 1), hh.primaryGuest().getMiddleName(), "Verify that the guest middle [" + rs.getValue("IDVL_MID_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getMiddleName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM", 1), hh.primaryGuest().getLastName(), "Verify that the guest last name [" + rs.getValue("IDVL_LST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getLastName() + "].");
@@ -871,6 +872,14 @@ public class ValidationHelper {
             throw new SQLValidationException("Failed to find a charge details for travel plan Id [ " + tpId + " ]", sql);
         }
 
+        do {
+            if (rs.getValue("CHRG_TYP_NM").equals("Fee Charge")) {
+                numChargesExpected++;
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+        rs.moveFirst();
+
         TestReporter.softAssertEquals(rs.getRowCount(), numChargesExpected, "Verify that the number of charge details [" + rs.getRowCount() + "] is that which is expected [" + numChargesExpected + "].");
 
         TestReporter.assertAll();
@@ -1021,20 +1030,23 @@ public class ValidationHelper {
             state = guest.primaryAddress().getStateAbbv();
         }
         for (int i = 1; i <= rs.getRowCount(); i++) {
+            // System.out.println();
             if (rs.getValue("CNTRY_ID", i).toLowerCase().contains(guest.primaryAddress().getCountryAbbv().toLowerCase())) {
                 valueFound.put(guest.primaryAddress().getCountryAbbv(), true);
             }
             if (rs.getValue("ST_NM", i).equalsIgnoreCase(state)) {
                 valueFound.put(guest.primaryAddress().getStateAbbv(), true);
             }
-            if (rs.getValue("CTY_NM", i).equalsIgnoreCase(guest.primaryAddress().getCity())) {
+            if (rs.getValue("CTY_NM",
+                    i).equalsIgnoreCase(guest.primaryAddress().getCity())) {
                 valueFound.put(guest.primaryAddress().getCity(), true);
             }
             if (rs.getValue("ADDR_RAW_ADDR_VL", i).toLowerCase().replace("road", "rd")
                     .contains(guest.primaryAddress().getAddress1().toLowerCase().replace("road", "rd"))) {
                 valueFound.put(guest.primaryAddress().getAddress1(), true);
             }
-            if (guest.primaryAddress().getZipCode().contains(rs.getValue("PSTL_CD", i))) {
+            if (guest.primaryAddress().getZipCode().contains(rs.getValue("PSTL_CD",
+                    i))) {
                 valueFound.put(guest.primaryAddress().getZipCode(), true);
             }
         }
@@ -1110,7 +1122,7 @@ public class ValidationHelper {
         TestReporter.assertEquals(changed, changeExpected, "Verify that the assignment owner ID [" + rs.getValue("ASGN_OWN_ID", 1) + "] is " + value + " that which is expected [" + assignmentOwnerId + "].");
     }
 
-    public void verifyRIMPartyMIx(String tpId, String adultCount, String childCount) {
+    public void verifyRIMPartyMIx(String tpId, String adultCount, String childCount, Boolean recordsExpected) {
         TestReporter.logStep("Verify the RIM party Mix");
         String sql = "select b.ADLT_CN, b.CHLD_CN "
                 + "from rsrc_inv.rsrc_own_ref a, rsrc_inv.rsrc_own b "
@@ -1121,16 +1133,22 @@ public class ValidationHelper {
         int tries = 0;
         int maxTries = 60;
         Boolean success = false;
-        do {
-            Sleeper.sleep(1000);
-            rs = new Recordset(db.getResultSet(sql));
-            if (rs.getValue("ADLT_CN", 1).equals(adultCount)) {
-                success = true;
-            }
-            tries++;
-        } while (tries < maxTries && !success);
-        TestReporter.softAssertEquals(rs.getValue("ADLT_CN", 1), adultCount, "Verify that the adult count [" + rs.getValue("ADLT_CN", 1) + "] is that which is expected [" + adultCount + "].");
-        TestReporter.softAssertEquals(rs.getValue("CHLD_CN", 1), childCount, "Verify that the child count [" + rs.getValue("CHLD_CN", 1) + "] is that which is expected [" + childCount + "].");
+        rs = new Recordset(db.getResultSet(sql));
+
+        if (recordsExpected) {
+            do {
+                Sleeper.sleep(1000);
+                rs = new Recordset(db.getResultSet(sql));
+                if (rs.getValue("ADLT_CN", 1).equals(adultCount)) {
+                    success = true;
+                }
+                tries++;
+            } while (tries < maxTries && !success);
+            TestReporter.softAssertEquals(rs.getValue("ADLT_CN", 1), adultCount, "Verify that the adult count [" + rs.getValue("ADLT_CN", 1) + "] is that which is expected [" + adultCount + "].");
+            TestReporter.softAssertEquals(rs.getValue("CHLD_CN", 1), childCount, "Verify that the child count [" + rs.getValue("CHLD_CN", 1) + "] is that which is expected [" + childCount + "].");
+        } else {
+            TestReporter.softAssertTrue(rs.getRowCount() == 0, "Verify that no records were retruned.");
+        }
         TestReporter.assertAll();
     }
 
@@ -1151,7 +1169,7 @@ public class ValidationHelper {
         TestReporter.assertAll();
     }
 
-    public void verifyInventoryTrackingIdInRIM(String tpId, String inventoryTrackingId) {
+    public void verifyInventoryTrackingIdInRIM(String tpId, String inventoryTrackingId, Boolean recordsExpected) {
         TestReporter.logStep("Verify Inventory Tracking ID in RIM");
         String sql = "select a.EXTNL_OWN_REF_VAL "
                 + "from rsrc_inv.RSRC_OWN_REF a "
@@ -1164,10 +1182,15 @@ public class ValidationHelper {
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         Map<String, String> invTrackingIds = new HashMap<>();
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            invTrackingIds.put(rs.getValue("EXTNL_OWN_REF_VAL", i), rs.getValue("EXTNL_OWN_REF_VAL", i));
+        if (recordsExpected) {
+            TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that records were returned as expected.");
+            for (int i = 1; i <= rs.getRowCount(); i++) {
+                invTrackingIds.put(rs.getValue("EXTNL_OWN_REF_VAL", i), rs.getValue("EXTNL_OWN_REF_VAL", i));
+            }
+            TestReporter.assertTrue(invTrackingIds.containsKey(inventoryTrackingId), "Verify that the inventory tracking ID [" + rs.getValue("EXTNL_OWN_REF_VAL", 1) + "] is contained in the list of IDs [" + invTrackingIds + "].");
+        } else {
+            TestReporter.assertTrue(rs.getRowCount() == 0, "Verify that no records were returned as expected.");
         }
-        TestReporter.assertTrue(invTrackingIds.containsKey(inventoryTrackingId), "Verify that the inventory tracking ID [" + rs.getValue("EXTNL_OWN_REF_VAL", 1) + "] is contained in the list of IDs [" + invTrackingIds + "].");
     }
 
     public void verifyDinePlanCharges(String tpId, int records) {

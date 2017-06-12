@@ -33,7 +33,6 @@ public class BookByExtendingBaseTest extends AccommodationBaseTest {
         Recordset rs = new Recordset(db.getResultSet(sql));
         tpPtyId = rs.getValue("TXN_PTY_ID", 1);
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL", 1);
-
         assignmentOwnerId = getAssignmentOwnerId(getBook().getTravelPlanId());
     }
 
@@ -58,8 +57,8 @@ public class BookByExtendingBaseTest extends AccommodationBaseTest {
         helper.verifyOdsGuestIdChanged(odsGuestId, false, getBook().getTravelPlanId());
         helper.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
         helper.verifyAssignmentOwnerIdChanged(assignmentOwnerId, false, getBook().getTravelPlanId());
-        helper.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0");
-        helper.verifyInventoryTrackingIdInRIM(getBook().getTravelPlanId(), "");
+        helper.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
+        helper.verifyInventoryTrackingIdInRIM(getBook().getTravelPlanId(), "", false);
 
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
 
