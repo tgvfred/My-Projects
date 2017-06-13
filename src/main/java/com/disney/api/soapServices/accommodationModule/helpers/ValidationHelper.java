@@ -420,7 +420,7 @@ public class ValidationHelper {
         if (isDiningAddedOn() != null && isDiningAddedOn() == true) {
             sql += "and b.PROD_TYP_NM != 'RESERVABLE_RESOURCE_COMPONENT'";
         }
-        if (status.equals("Checking In")) {
+        if (status.equals("Checking In") || status.equals("Checked In")) {
             sql += "and b.PROD_TYP_NM = 'AccommodationProduct'";
         }
 

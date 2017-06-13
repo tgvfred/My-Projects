@@ -12,8 +12,10 @@ import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentS
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckOut;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckingIn;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.accommodationStatusComponentService.operations.UpdateSingleRoomStatus;
+import com.disney.api.utils.dataFactory.database.sqlStorage.Dreams;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -27,6 +29,9 @@ public class CheckInHelper {
     private String environment;
     private String[] roomRsrc;
     private String roomNumber;
+    private String locationId;
+    private String primaryGuestId;
+    private String primaryPartyId;
 
     public Book getBook() {
         return book;
@@ -60,6 +65,30 @@ public class CheckInHelper {
         this.roomNumber = roomNumber;
     }
 
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
+    }
+
+    public String getPrimaryGuestId() {
+        return primaryGuestId;
+    }
+
+    public void setPrimaryGuestId(String primaryGuestId) {
+        this.primaryGuestId = primaryGuestId;
+    }
+
+    public String getPrimaryPartyId() {
+        return primaryPartyId;
+    }
+
+    public void setPrimaryPartyId(String primaryPartyId) {
+        this.primaryPartyId = primaryPartyId;
+    }
+
     public CheckInHelper(String environment, Book book) {
         if (environment == null || StringUtils.isEmpty(environment)) {
             throw new AutomationException("The environment field cannot be null or empty.");
@@ -71,6 +100,7 @@ public class CheckInHelper {
         } else {
             setBook(book);
         }
+        retrieveReservation();
     }
 
     public FindRoomForReservation findRoomForReservation() {
@@ -147,12 +177,16 @@ public class CheckInHelper {
         TestReporter.assertTrue(checkingIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getBook().getTravelPlanId() + "]: " + checkingIn.getFaultString());
     }
 
-    public void checkIn(String locationId, String guestId, String daysOut, String nights, String facilityId) {
+    public void checkIn(String locationId, Integer daysOut, Integer nights, String facilityId) {
+        checkIn(locationId, String.valueOf(daysOut), String.valueOf(nights), facilityId);
+    }
+
+    public void checkIn(String locationId, String daysOut, String nights, String facilityId) {
         checkingIn(locationId, daysOut, nights, facilityId);
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getLocationIdByTpId(getBook().getTravelPlanId())));
         CheckIn checkIn = new CheckIn(environment, "UI_Booking");
-        checkIn.setGuestId(guestId);
+        checkIn.setGuestId(getPrimaryGuestId());
         checkIn.setLocationId(rs.getValue("WRK_LOC_ID", 1));
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         int maxTries = 20;
@@ -198,5 +232,27 @@ public class CheckInHelper {
         updateStatus.setResourceId(getRoomRsrc()[1]);
         updateStatus.setRoomNumber(getRoomRsrc()[0]);
         updateStatus.sendRequest();
+    }
+
+    public void retrieveReservation() {
+        Retrieve retrieve = new Retrieve(getEnvironment(), "Main");
+        retrieve.setRequestNodeValueByXPath("//request/travelPlanId", getBook().getTravelPlanId());
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(Dreams.getLocationIdByTpId(getBook().getTravelPlanId())));
+
+        do {
+            retrieve.setRequestNodeValueByXPath("//request/locationId", rs.getValue("WRK_LOC_ID"));
+            retrieve.sendRequest();
+            if (retrieve.getResponseStatusCode().equals("200")) {
+                setLocationId(rs.getValue("WRK_LOC_ID"));
+                break;
+            } else {
+                rs.moveNext();
+            }
+        } while (rs.hasNext());
+
+        TestReporter.assertTrue(retrieve.getResponseStatusCode().equals("200"), "Verify that an error did not occurred retrieving the prereq reservation: " + retrieve.getFaultString());
+        setPrimaryPartyId(retrieve.getPartyId());
+        setPrimaryGuestId(retrieve.getGuestId());
     }
 }

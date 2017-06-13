@@ -34,7 +34,7 @@ public class BookAndCheckingIn extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation" })
-    public void bookByExtendingBaseTest() {
+    public void bookAndCheckingIn() {
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkingIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
