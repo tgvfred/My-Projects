@@ -58,155 +58,36 @@ public class AccommodationBaseTest extends BaseRestTest {
      */
     // private static String lacdDeployDate = "2017-01-01";
 
-    protected static String environment; // Base environment under test
-    // used
-    // for
-    // booking
-    // accommodations
-    // (may
-    // be
-    // different
-    // than
-    // the
-    // environment
-    // under
-    // test)
-    protected ThreadLocal<Integer> daysOut = new ThreadLocal<Integer>(); // Number
-    // of
-    // days
-    // out
-    // for
-    // the
-    // reservation
-    protected ThreadLocal<Integer> nights = new ThreadLocal<Integer>(); // Number
-    // of
-    // nights
-    // for
-    // the
-    // reservation
-    protected ThreadLocal<String> arrivalDate = new ThreadLocal<String>(); // Arrival
-    // date
-    // for
-    // the
-    // reservation
-    protected ThreadLocal<String> departureDate = new ThreadLocal<String>(); // Departure
-    // date
-    // for
-    // the
-    // reservation
-    private ThreadLocal<String> locationId = new ThreadLocal<String>(); // Reservation
-    // location
-    // ID
-    private ThreadLocal<String> resortCode = new ThreadLocal<String>(); // Reservation
-    // resort
-    // code
-    private ThreadLocal<String> facilityId = new ThreadLocal<String>(); // Reservation
-    // facility
-    // ID
-    private ThreadLocal<String> campusId = new ThreadLocal<String>(); // Reservation
-    // campus
-    // ID;
-    private ThreadLocal<String> sourceAccoutingCenter = new ThreadLocal<String>(); // Reservation
-    // source
-    // accounting
-    // center
-    private ThreadLocal<String> roomTypeCode = new ThreadLocal<String>(); // Reservation
-    // room
-    // type
-    // code
-    private ThreadLocal<String> agencyId = new ThreadLocal<String>(); // Reservation
-    // travel
-    // agency
-    // ID
-    private ThreadLocal<String> guestId = new ThreadLocal<String>(); // Reservation
-    // guest ID
-    private ThreadLocal<String> partyId = new ThreadLocal<String>(); // Reservation
-    // party ID
-    private ThreadLocal<String> packageCode = new ThreadLocal<String>(); // Reservation
-    // package
-    // code
-    private ThreadLocal<String> guestAddressLocatorId = new ThreadLocal<String>(); // Reservation
-    // guest
-    // address
-    // locator
-    // ID
-    protected ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>(); // Flag
-    // used
-    // to
-    // determine
-    // if
-    // external
-    // references
-    // are
-    // to
-    // be
-    // added
-    // to
-    // the
-    // request
-    private ThreadLocal<String> externalRefNumber = new ThreadLocal<String>(); // Reservation
-    // external
-    // reference
-    // number
-    private String externalRefSource = "DPMSProperty"; // Reservation external
-    // reservation source
-    private static String[][] roomTypeAndFacInfo = new String[40][6]; // Map of
-    // resort/roomtype
-    // configurations
-    private Map<String, String> noPackageCodes = new HashMap<String, String>(); // Map
-    // of
-    // configurations
-    // that
-    // failed
-    // to
-    // return
-    // package
-    // codes
-    protected ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>(); // Flag
-    // used
-    // to
-    // determine
-    // if
-    // specific
-    // dates
-    // are
-    // to
-    // be
-    // used
-    // for
-    // the
-    // booking
-    private ThreadLocal<HouseHold> hh = new ThreadLocal<HouseHold>(); // Contains
-    // all of
-    // the
-    // party
-    // guests
-    private ThreadLocal<Book> book = new ThreadLocal<Book>(); // Contains the
-    // Book object
-    private ThreadLocal<Retrieve> retrieve = new ThreadLocal<Retrieve>(); // Contains
-    // the
-    // Retrieve
-    // object
-    protected ThreadLocal<String> tpId = new ThreadLocal<String>(); // Reservation
-    // travel
-    // plan ID
-    protected ThreadLocal<String> tpsId = new ThreadLocal<String>(); // Reservation
-    // travel
-    // plan
-    // segment
-    // ID
-    protected ThreadLocal<String> tcgId = new ThreadLocal<String>(); // Reservation
-    // travel
-    // component
-    // grouping
-    // ID
-    protected ThreadLocal<String> tcId = new ThreadLocal<String>(); // Reservation
-    // travel
-    // component
-    // ID
-    protected String isComo = ""; // Flag used to determine if execution is
-    // occurring in a Composite Modernization
-    // environment
+    protected static String environment;
+    protected ThreadLocal<Integer> daysOut = new ThreadLocal<Integer>();
+    protected ThreadLocal<Integer> nights = new ThreadLocal<Integer>();
+    protected ThreadLocal<String> arrivalDate = new ThreadLocal<String>();
+    protected ThreadLocal<String> departureDate = new ThreadLocal<String>();
+    private ThreadLocal<String> locationId = new ThreadLocal<String>();
+    private ThreadLocal<String> resortCode = new ThreadLocal<String>();
+    private ThreadLocal<String> facilityId = new ThreadLocal<String>();
+    private ThreadLocal<String> campusId = new ThreadLocal<String>();
+    private ThreadLocal<String> sourceAccoutingCenter = new ThreadLocal<String>();
+    private ThreadLocal<String> roomTypeCode = new ThreadLocal<String>();
+    private ThreadLocal<String> agencyId = new ThreadLocal<String>();
+    private ThreadLocal<String> guestId = new ThreadLocal<String>();
+    private ThreadLocal<String> partyId = new ThreadLocal<String>();
+    private ThreadLocal<String> packageCode = new ThreadLocal<String>();
+    private ThreadLocal<String> guestAddressLocatorId = new ThreadLocal<String>();
+    protected ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>();
+    private ThreadLocal<String> externalRefNumber = new ThreadLocal<String>();
+    private String externalRefSource = "DPMSProperty";
+    private static String[][] roomTypeAndFacInfo = new String[40][6];
+    private Map<String, String> noPackageCodes = new HashMap<String, String>();
+    protected ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>();
+    private ThreadLocal<HouseHold> hh = new ThreadLocal<HouseHold>();
+    private ThreadLocal<Book> book = new ThreadLocal<Book>();
+    private ThreadLocal<Retrieve> retrieve = new ThreadLocal<Retrieve>();
+    protected ThreadLocal<String> tpId = new ThreadLocal<String>();
+    protected ThreadLocal<String> tpsId = new ThreadLocal<String>();
+    protected ThreadLocal<String> tcgId = new ThreadLocal<String>();
+    protected ThreadLocal<String> tcId = new ThreadLocal<String>();
+    protected String isComo = "";
     private ThreadLocal<Boolean> skipCancel = new ThreadLocal<Boolean>();
     private ThreadLocal<String> ageType = new ThreadLocal<String>();
     private ThreadLocal<String> age = new ThreadLocal<String>();

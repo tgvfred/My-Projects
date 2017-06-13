@@ -3,8 +3,8 @@
 <suite name="BookByExtendingBaseTest" parallel="methods" thread-count="50" >
 	<parameter name="environment" value="latest" />
 	<test name="BookByExtendingBaseTest">
-		<classes>
-			<class name="com.disney.composite.api.accommodationModule.soapServices._examples.BookByExtendingBaseTest"></class>
-		</classes>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.soapServices._examples.*"></package>
+		</packages>
 	</test>
 </suite>

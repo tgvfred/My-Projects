@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.testng.SkipException;
 
 import com.disney.AutomationException;
@@ -71,7 +72,11 @@ public class ValidationHelper {
     }
 
     public ValidationHelper(String environment) {
-        this.environment = environment;
+        if (environment == null || StringUtils.isEmpty(environment)) {
+            throw new AutomationException("The environment field cannot be null or empty.");
+        } else {
+            setEnvironment(environment);
+        }
     }
 
     public void validateModificationBackend(int numRecords, String travelStatusName, String securityValue, String arrivalDate, String departuredate,
@@ -571,14 +576,24 @@ public class ValidationHelper {
             ids += "'" + rs.getValue("TP_ID", i) + "','" + rs.getValue("TPS_ID", i) + "','" + rs.getValue("TC_GRP_NB", i) + "'";
         }
 
-        sql = "select b.CHRG_GRP_ID, c.CHRG_GRP_STS_NM, c.CHRG_GRP_TYP_NM, d.CHRG_ID "
+        sql = "select b.CHRG_GRP_ID, c.CHRG_GRP_STS_NM, c.CHRG_GRP_TYP_NM, d.CHRG_ID, d.CHRG_TYP_NM "
                 + "from folio.extnl_ref a, folio.chrg_grp_extnl_ref b, folio.chrg_grp c, folio.chrg d "
                 + "where a.EXTNL_REF_VAL in (" + ids + ") "
                 + "and a.EXTNL_REF_ID = b.EXTNL_REF_ID "
                 + "and b.CHRG_GRP_ID = c.CHRG_GRP_ID "
                 + "and c.CHRG_GRP_ID = d.CHRG_GRP_ID "
                 + "and c.CHRG_GRP_STS_NM = '" + status + "'";
+
         rs = new Recordset(db.getResultSet(sql));
+
+        do {
+            if (rs.getValue("CHRG_TYP_NM").equals("Fee Charge")) {
+                numCharges++;
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+        rs.moveFirst();
+
         TestReporter.softAssertEquals(rs.getRowCount(), numCharges, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numCharges + "].");
 
         TestReporter.assertAll();

@@ -162,4 +162,16 @@ public class Dreams_AccommodationQueries extends Dreams {
                 " where i.EXTNL_REF_VAL ='" + tpId + "' " +
                 " AND e.CHRG_ID is not null";
     }
+
+    public static String getLocationIdByTpId(String tpId) {
+        return "select d.WRK_LOC_ID "
+                + "from rsrc_inv.wrk_loc d "
+                + "where d.HM_RSRT_FAC_ID in (select c.fac_id FAC_ID "
+                + "from res_mgmt.tps a, res_mgmt.tc_grp b, res_mgmt.tc c "
+                + "where a.tp_id = '" + tpId + "' "
+                + "and a.tps_id = b.tps_id "
+                + "and b.tc_grp_nb = c.tc_grp_nb "
+                + "and c.fac_id is not null )";
+
+    }
 }

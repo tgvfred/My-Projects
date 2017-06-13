@@ -4,7 +4,7 @@
 	<parameter name="environment" value="latest" />
 	<test name="BookAndCancelInTestClass">
 		<classes>
-			<class name="com.disney.api.soapServices.accommodationModule._examples.BookAndCancelInTestClass"></class>
+			<class name="com.disney.composite.api.accommodationModule.soapServices._examples.BookAndCancelInTestClass"></class>
 		</classes>
 	</test>
 </suite>
