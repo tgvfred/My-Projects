@@ -3,6 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices._examples;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.PaymentSettlementHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
@@ -15,10 +16,12 @@ public class BookAndAddSettlement extends AccommodationBaseTest {
     private String tpPtyId;
     private String odsGuestId;
     private String assignmentOwnerId;
+    private PaymentSettlementHelper helper;
 
     @Test(groups = { "api", "regression", "accommodation" })
     public void bookAndAddSettlement() {
-        createSettlementMethod("Pay total amount due with valid visa with incidentals", getBook().getTravelPlanId());
+        helper = new PaymentSettlementHelper(getEnvironment(), getBook(), getHouseHold());
+        helper.createSettlementMethod("Pay total amount due with valid visa with incidentals");
         gatherDataForValidations();
         validations();
     }

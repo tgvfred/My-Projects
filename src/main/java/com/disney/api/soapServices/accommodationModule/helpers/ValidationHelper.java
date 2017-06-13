@@ -1306,4 +1306,44 @@ public class ValidationHelper {
         }
         TestReporter.assertAll();
     }
+
+    public void validatePayment(String tpId, int numExpectedPayments, String paymentAmount) {
+        String sql = "select f.* "
+                + "from folio.extnl_ref a "
+                + "left outer join folio.chrg_grp_extnl_ref b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                + "left outer join folio.chrg c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
+                + "left outer join folio.chrg_item d on c.chrg_id = d.chrg_id "
+                + "left outer join folio.chrg_grp_folio e on b.CHRG_GRP_ID = e.ROOT_CHRG_GRP_ID "
+                + "left outer join folio.folio_item f on e.CHRG_GRP_FOLIO_ID = f.FOLIO_ID "
+                + "where a.EXTNL_REF_VAL in ( "
+                + "        (select to_char(a.tp_id) "
+                + "        from res_mgmt.tps a "
+                + "        left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "        where a.tp_id = " + tpId + "), "
+                + "        (select to_char(a.tps_id) "
+                + "        from res_mgmt.tps a "
+                + "        left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "        where a.tp_id = " + tpId + "), "
+                + "        (select to_char(b.tc_grp_nb) "
+                + "        from res_mgmt.tps a "
+                + "        left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "        where a.tp_id = " + tpId + "))";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        int numPayments = 0;
+        do {
+            if (rs.getValue("FOLIO_ITEM_TYP_NM").equals("PAYMENT_ITEM")) {
+                numPayments++;
+                if (paymentAmount != null) {
+                    TestReporter.softAssertEquals(rs.getValue("FOLIO_ITEM_AM"), "-" + paymentAmount, "Verify that a payment in the amount of [" + paymentAmount + "] is found to be associated with TP ID [" + tpId + "]. Instead found [" + rs.getValue("FOLIO_ITEM_AM") + "].");
+                }
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+        rs.moveFirst();
+
+        TestReporter.softAssertEquals(numPayments, numExpectedPayments, "Verify that the number of payments [" + numPayments + "] is that which is expected [" + numExpectedPayments + "].");
+        TestReporter.assertAll();
+    }
 }

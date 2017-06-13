@@ -131,6 +131,10 @@ public class CheckInHelper {
         return getRoomRsrc();
     }
 
+    public void checkingIn(String locationId, Integer daysOut, Integer nights, String facilityId) {
+        checkingIn(locationId, String.valueOf(daysOut), String.valueOf(nights), facilityId);
+    }
+
     public void checkingIn(String locationId, String daysOut, String nights, String facilityId) {
         FindRoomForReservation findRoom = findRoomForReservation();
         setRoomRsrc(assignRoomForReservation(findRoom, daysOut, nights, facilityId));
