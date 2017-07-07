@@ -5,7 +5,7 @@ import com.disney.api.restServices.core.RestService;
 
 public class Accommodation {
 	private RestService restService;
-		
+	
 	public Accommodation(RestService restService){
 		this.restService = restService;
 		this.restService.setMainResource("REST_AccommodationSalesService");
@@ -13,4 +13,4 @@ public class Accommodation {
 	public AccommodationSales accoomodationSales(){
 		return new AccommodationSales(restService);
 	}
-}
+}	

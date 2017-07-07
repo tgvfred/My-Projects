@@ -39,7 +39,7 @@ public class TestAddWithPrice {
 		}catch(Exception e){}
 	}
 	
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "addWithPrice"})
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "addWithPrice", "debug"})
 	public void testAddWithPrice_MainFlow(){
 		TestReporter.logScenario("Test Add with Price");
 		AddWithPrice AddWithPrice = new AddWithPrice(environment, "Main" );

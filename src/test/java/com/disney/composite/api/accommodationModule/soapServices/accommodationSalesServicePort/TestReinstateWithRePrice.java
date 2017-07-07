@@ -44,7 +44,7 @@ public class TestReinstateWithRePrice {
 			}catch(Exception e){}
 		}
 		
-		@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "reinstateWithRePrice"})		        
+		@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "reinstateWithRePrice", "debug"})		        
 		public void TestReinstateWithRePrice_MainFlow(){	
 			TestReporter.logScenario("Test Reinstate with Reprice");
 			ReinstateWithRePrice ReinstateWithRePrice = new ReinstateWithRePrice(environment, "Main");
