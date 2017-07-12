@@ -27,6 +27,16 @@
 			<version>1.0.9</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Folio</artifactId>
+			<version>1.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Resource</artifactId>
+			<version>1.0.8</version>
+		</dependency>
 	</dependencies>	
 	<properties>
 		<aspectj.version>1.8.5</aspectj.version>
