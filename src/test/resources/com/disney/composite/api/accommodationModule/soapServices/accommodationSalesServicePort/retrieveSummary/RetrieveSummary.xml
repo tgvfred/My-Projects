@@ -16,7 +16,7 @@
 		</packages>   -->
 		
 		 <classes>
-      <class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.TestRetrieveSummary"/>
+      <class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveSummary.TestRetrieveSummary"/>
     </classes> 
 		 
 	</test> <!-- Test -->

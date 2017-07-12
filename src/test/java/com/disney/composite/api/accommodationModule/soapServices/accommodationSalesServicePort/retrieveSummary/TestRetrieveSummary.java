@@ -1,4 +1,4 @@
-package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort;
+package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveSummary;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
