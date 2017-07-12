@@ -1,0 +1,36 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.experiencemediav1.fulfillment.lodging.bussvcs.wdpr.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ser:grantAllAccess>
+         <request>
+            <!--1 or more repetitions:-->
+            <grantAllMediaAccessDetails txnGuestId="?" travelPlanId="?" locationId="?">
+               <experienceMediaIdReference mediaId="?" mediaType="?"/>
+               <!--Zero or more repetitions:-->
+               <resourceAccessDetails facilityId="?" resourceNumber="?" guestRoomIndicator="?" id="?">
+                  <accessPeriod startDate="?" endDate="?"/>
+               </resourceAccessDetails>
+            </grantAllMediaAccessDetails>
+         </request>
+         <context>
+            <addressRole>?</addressRole>
+            <conversationId>?</conversationId>
+            <messageId>?</messageId>
+            <party1Id>?</party1Id>
+            <party1Type>?</party1Type>
+            <party2Id>?</party2Id>
+            <party2Type>?</party2Type>
+            <pathHostName>?</pathHostName>
+            <pathId>?</pathId>
+            <principalId>?</principalId>
+            <principalMethod>?</principalMethod>
+            <principalRole>?</principalRole>
+            <principalUri>?</principalUri>
+            <principalValue>?</principalValue>
+            <requestTimeStamp>?</requestTimeStamp>
+            <toAddressRole>?</toAddressRole>
+            <userName>?</userName>
+         </context>
+      </ser:grantAllAccess>
+   </soapenv:Body>
+</soapenv:Envelope>

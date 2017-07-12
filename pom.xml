@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.gqe.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.0.14</version>
+	<version>1.0.15</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>com.disney.gqe</groupId>
 			<artifactId>APIUtilsSoap</artifactId>
-			<version>1.0.50</version>
+			<version>1.0.56</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
