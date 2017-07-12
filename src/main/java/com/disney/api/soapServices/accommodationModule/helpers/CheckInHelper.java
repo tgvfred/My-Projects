@@ -140,7 +140,7 @@ public class CheckInHelper {
                 setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
                 setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
                 setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
-                setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
+                setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
             }
         }
         retrieveReservation();
