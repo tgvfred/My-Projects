@@ -153,7 +153,7 @@ public class BookAndAddSettlement extends AccommodationBaseTest {
                 TestReporter.softAssertEquals(tcGstRs.getValue("TC_ID"), getBook().getTravelComponentId(), "Verify that the TC ID [" + tcGstRs.getValue("TC_ID") + "] is that which is expected [" + getBook().getTravelComponentId() + "].");
                 TestReporter.softAssertTrue(Regex.match("[0-9]{9}", tcGstRs.getValue("TXN_IDVL_PTY_ID")), "Verify that the transaction individual party ID [" + tcGstRs.getValue("TXN_IDVL_PTY_ID") + "] is a 9-digit number as expected.");
                 TestReporter.softAssertEquals(tcGstRs.getValue("AGE_TYP_NM"), "ADULT", "Verify that the age type [" + tcGstRs.getValue("AGE_TYP_NM") + "] is that which is expected [ADULT].");
-                TestReporter.softAssertEquals(tcGstRs.getValue("AGE_NB"), "0", "Verify that the age [" + tcGstRs.getValue("AGE_NB") + "] is that which is expected [0].");
+                TestReporter.softAssertEquals(tcGstRs.getValue("AGE_NB"), getHouseHold().primaryGuest().getAge(), "Verify that the age [" + tcGstRs.getValue("AGE_NB") + "] is that which is expected [" + getHouseHold().primaryGuest().getAge() + "].");
             } else {
                 TestReporter.softAssertEquals(tcGstRs.getValue("TC_GST_ID"), "NULL", "Verify that the TC Guest ID [" + tcGstRs.getValue("TC_GST_ID") + "] is that which is expected [NULL].");
                 TestReporter.softAssertEquals(tcGstRs.getValue("TC_ID"), "NULL", "Verify that the TC ID [" + tcGstRs.getValue("TC_ID") + "] is that which is expected [NULL].");
