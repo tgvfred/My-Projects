@@ -40,7 +40,6 @@ public class BookByExtendingBaseTest extends AccommodationBaseTest {
         ValidationHelper helper = new ValidationHelper(getEnvironment());
         helper.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         helper.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
-        helper.verifyExchangeFeeFound(false, getBook().getTravelPlanId());
         helper.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
         int charges = getNights() * 4;
         helper.verifyChargeDetail(charges, getBook().getTravelPlanId());
@@ -49,7 +48,6 @@ public class BookByExtendingBaseTest extends AccommodationBaseTest {
         helper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
         helper.verifyOdsGuestIdCreated(getBook().getTravelPlanId(), true);
         helper.validateModificationBackend(1, "Booked", "DVC", getArrivalDate(), getDepartureDate(), "", "", getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), false);
-        helper.validateDvcEiFee(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), 0);
         helper.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
 
         helper.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
@@ -152,7 +150,7 @@ public class BookByExtendingBaseTest extends AccommodationBaseTest {
                 TestReporter.softAssertEquals(tcGstRs.getValue("TC_ID"), getBook().getTravelComponentId(), "Verify that the TC ID [" + tcGstRs.getValue("TC_ID") + "] is that which is expected [" + getBook().getTravelComponentId() + "].");
                 TestReporter.softAssertTrue(Regex.match("[0-9]{9}", tcGstRs.getValue("TXN_IDVL_PTY_ID")), "Verify that the transaction individual party ID [" + tcGstRs.getValue("TXN_IDVL_PTY_ID") + "] is a 9-digit number as expected.");
                 TestReporter.softAssertEquals(tcGstRs.getValue("AGE_TYP_NM"), "ADULT", "Verify that the age type [" + tcGstRs.getValue("AGE_TYP_NM") + "] is that which is expected [ADULT].");
-                TestReporter.softAssertEquals(tcGstRs.getValue("AGE_NB"), "0", "Verify that the age [" + tcGstRs.getValue("AGE_NB") + "] is that which is expected [0].");
+                TestReporter.softAssertEquals(tcGstRs.getValue("AGE_NB"), getHouseHold().primaryGuest().getAge(), "Verify that the age [" + tcGstRs.getValue("AGE_NB") + "] is that which is expected [" + getHouseHold().primaryGuest().getAge() + "].");
             } else {
                 TestReporter.softAssertEquals(tcGstRs.getValue("TC_GST_ID"), "NULL", "Verify that the TC Guest ID [" + tcGstRs.getValue("TC_GST_ID") + "] is that which is expected [NULL].");
                 TestReporter.softAssertEquals(tcGstRs.getValue("TC_ID"), "NULL", "Verify that the TC ID [" + tcGstRs.getValue("TC_ID") + "] is that which is expected [NULL].");

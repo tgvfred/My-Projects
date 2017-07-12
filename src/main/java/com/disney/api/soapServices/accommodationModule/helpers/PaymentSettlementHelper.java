@@ -5,8 +5,9 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.disney.AutomationException;
+import com.disney.api.WebService;
 import com.disney.api.soapServices.ServiceConstants;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.folioModule.folioServicePort.operations.CreateSettlementMethod;
 import com.disney.api.soapServices.folioModule.folioServicePort.operations.RetrieveFolioBalanceDue;
@@ -21,21 +22,17 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class PaymentSettlementHelper {
-    private Book book;
     private String environment;
     private String locationId;
     private HouseHold hh;
     private String primaryGuestId;
     private String primaryPartyId;
     private String paymentAmount;
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
+    private WebService ws;
+    private String tpId;
+    private String tpsId;
+    private String tcgId;
+    private String tcId;
 
     public String getEnvironment() {
         return environment;
@@ -85,16 +82,62 @@ public class PaymentSettlementHelper {
         this.paymentAmount = paymentAmount;
     }
 
-    public PaymentSettlementHelper(String environment, Book book, HouseHold hh) {
+    public WebService getWs() {
+        return ws;
+    }
+
+    public void setWs(WebService ws) {
+        this.ws = ws;
+    }
+
+    public String getTpId() {
+        return tpId;
+    }
+
+    public void setTpId(String tpId) {
+        this.tpId = tpId;
+    }
+
+    public String getTpsId() {
+        return tpsId;
+    }
+
+    public void setTpsId(String tpsId) {
+        this.tpsId = tpsId;
+    }
+
+    public String getTcgId() {
+        return tcgId;
+    }
+
+    public void setTcgId(String tcgId) {
+        this.tcgId = tcgId;
+    }
+
+    public String getTcId() {
+        return tcId;
+    }
+
+    public void setTcId(String tcId) {
+        this.tcId = tcId;
+    }
+
+    public PaymentSettlementHelper(String environment, WebService ws, HouseHold hh) {
         if (environment == null || StringUtils.isEmpty(environment)) {
             throw new AutomationException("The environment field cannot be null or empty.");
         } else {
             setEnvironment(environment);
         }
-        if (book == null) {
+        if (ws == null) {
             throw new AutomationException("The book object cannot be null.");
         } else {
-            setBook(book);
+            setWs(ws);
+            if (getWs() instanceof ReplaceAllForTravelPlanSegment) {
+                setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
+                setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
+                setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
+                setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
+            }
         }
         if (hh == null) {
             throw new AutomationException("The household object cannot be null.");
@@ -143,11 +186,11 @@ public class PaymentSettlementHelper {
         String cardPostalCode = cardInfo.get("BillingZip");
 
         RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(getEnvironment().toLowerCase().replace("_cm", ""), "UI booking");
-        retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getBook().getTravelPlanId());
+        retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getTpId());
         retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
         retrieveBalance.setLocationId(getLocationId());
         retrieveBalance.sendRequest();
-        TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200", "Verify that no error occurred retrieving the balance for TP ID [" + getBook().getTravelPlanId() + "]: " + retrieveBalance.getFaultString());
+        TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200", "Verify that no error occurred retrieving the balance for TP ID [" + getTpId() + "]: " + retrieveBalance.getFaultString());
 
         CreateSettlementMethod settlement = new CreateSettlementMethod(getEnvironment().toLowerCase().replace("_cm", ""), "Main");
         settlement.setFolioId(retrieveBalance.getFolioId());
@@ -185,11 +228,11 @@ public class PaymentSettlementHelper {
      */
     public void makeFirstNightDeposit() {
         RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(getEnvironment(), "UI booking");
-        retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getBook().getTravelPlanId());
+        retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getTpId());
 
         retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
         String sqlTpId;
-        sqlTpId = getBook().getTravelPlanId();
+        sqlTpId = getTpId();
         String sql = "select d.WRK_LOC_ID "
                 + "from rsrc_inv.wrk_loc d "
                 + "where d.HM_RSRT_FAC_ID in (select c.fac_id FAC_ID "
@@ -216,13 +259,13 @@ public class PaymentSettlementHelper {
         setPaymentAmount(retrieveBalance.getDepositRequired());
         postPayment.setAmount(getPaymentAmount());
         postPayment.setFolioId(retrieveBalance.getFolioId());
-        postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, getBook().getTravelPlanId());
-        postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, getBook().getTravelComponentId());
+        postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, getTpId());
+        postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, getTcId());
         postPayment.setLocationId(getLocationId());
         postPayment.setPartyId(getPrimaryPartyId());
-        postPayment.setPrimaryLastname(getBook().getPrimaryGuestLastName());
-        postPayment.setTravelPlanId(getBook().getTravelPlanId());
-        postPayment.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        postPayment.setPrimaryLastname(getHh().primaryGuest().getFirstName());
+        postPayment.setTravelPlanId(getTpId());
+        postPayment.setTravelPlanSegmentId(getTpsId());
         postPayment.setRetreivalReferenceNumber();
         postPayment.sendRequest();
         TestReporter.assertEquals(postPayment.getResponseStatusCode(), "200", "Response was not 200");
@@ -231,9 +274,9 @@ public class PaymentSettlementHelper {
 
     public void retrieveReservation() {
         Retrieve retrieve = new Retrieve(getEnvironment(), "Main");
-        retrieve.setRequestNodeValueByXPath("//request/travelPlanId", getBook().getTravelPlanId());
+        retrieve.setRequestNodeValueByXPath("//request/travelPlanId", getTpId());
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams.getLocationIdByTpId(getBook().getTravelPlanId())));
+        Recordset rs = new Recordset(db.getResultSet(Dreams.getLocationIdByTpId(getTpId())));
 
         do {
             retrieve.setRequestNodeValueByXPath("//request/locationId", rs.getValue("WRK_LOC_ID"));

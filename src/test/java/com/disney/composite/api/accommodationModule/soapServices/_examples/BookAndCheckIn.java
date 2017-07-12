@@ -67,7 +67,6 @@ public class BookAndCheckIn extends AccommodationBaseTest {
         ValidationHelper helper = new ValidationHelper(getEnvironment());
         helper.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         helper.verifyChargeGroupsStatusCount("Earned", 3, getBook().getTravelPlanId());
-        helper.verifyExchangeFeeFound(false, getBook().getTravelPlanId());
         helper.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
         int charges = getNights() * 4;
         helper.verifyChargeDetail(charges, getBook().getTravelPlanId());
@@ -76,7 +75,6 @@ public class BookAndCheckIn extends AccommodationBaseTest {
         helper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Checked In");
         helper.verifyOdsGuestIdCreated(getBook().getTravelPlanId(), true);
         helper.validateModificationBackend(1, "Checked In", "DVC", getArrivalDate(), getDepartureDate(), "", "", getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), false);
-        helper.validateDvcEiFee(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), 0);
         helper.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
 
         helper.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());

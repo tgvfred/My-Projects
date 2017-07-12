@@ -7,11 +7,12 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 import com.disney.AutomationException;
+import com.disney.api.WebService;
 import com.disney.api.soapServices.accommodationModule.accommodationAssignmentServicePort.operations.FindRoomForReservation;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckOut;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckingIn;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.accommodationStatusComponentService.operations.UpdateSingleRoomStatus;
@@ -25,21 +26,17 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.Dreams_AccommodationQueries;
 
 public class CheckInHelper {
-    private Book book;
     private String environment;
     private String[] roomRsrc;
     private String roomNumber;
     private String locationId;
     private String primaryGuestId;
     private String primaryPartyId;
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
+    private WebService ws;
+    private String tpId;
+    private String tpsId;
+    private String tcgId;
+    private String tcId;
 
     public String getEnvironment() {
         return environment;
@@ -89,23 +86,69 @@ public class CheckInHelper {
         this.primaryPartyId = primaryPartyId;
     }
 
-    public CheckInHelper(String environment, Book book) {
+    public WebService getWs() {
+        return ws;
+    }
+
+    public void setWs(WebService ws) {
+        this.ws = ws;
+    }
+
+    public String getTpId() {
+        return tpId;
+    }
+
+    public void setTpId(String tpId) {
+        this.tpId = tpId;
+    }
+
+    public String getTpsId() {
+        return tpsId;
+    }
+
+    public void setTpsId(String tpsId) {
+        this.tpsId = tpsId;
+    }
+
+    public String getTcgId() {
+        return tcgId;
+    }
+
+    public void setTcgId(String tcgId) {
+        this.tcgId = tcgId;
+    }
+
+    public String getTcId() {
+        return tcId;
+    }
+
+    public void setTcId(String tcId) {
+        this.tcId = tcId;
+    }
+
+    public CheckInHelper(String environment, WebService ws) {
         if (environment == null || StringUtils.isEmpty(environment)) {
             throw new AutomationException("The environment field cannot be null or empty.");
         } else {
             setEnvironment(environment);
         }
-        if (book == null) {
+        if (ws == null) {
             throw new AutomationException("The book object cannot be null.");
         } else {
-            setBook(book);
+            setWs(ws);
+            if (ws instanceof ReplaceAllForTravelPlanSegment) {
+                setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
+                setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
+                setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
+                setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
+            }
         }
         retrieveReservation();
     }
 
     public FindRoomForReservation findRoomForReservation() {
         FindRoomForReservation findRoom = new FindRoomForReservation(environment, "UI Booking");
-        findRoom.setTravelPlanId(getBook().getTravelPlanId());
+        findRoom.setTravelPlanId(getTpId());
         findRoom.setNumberOfResponseRows("50");
         findRoom.sendRequest();
         TestReporter.assertTrue(findRoom.getResponseStatusCode().equals("200"), "Verify no error occurred finding a room for a reservation: " + findRoom.getFaultString());
@@ -172,9 +215,9 @@ public class CheckInHelper {
 
         CheckingIn checkingIn = new CheckingIn(environment, "UI_Booking");
         checkingIn.setLocationId(locationId);
-        checkingIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        checkingIn.setTravelComponentGroupingId(getTcgId());
         checkingIn.sendRequest();
-        TestReporter.assertTrue(checkingIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getBook().getTravelPlanId() + "]: " + checkingIn.getFaultString());
+        TestReporter.assertTrue(checkingIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getTpId() + "]: " + checkingIn.getFaultString());
     }
 
     public void checkIn(String locationId, Integer daysOut, Integer nights, String facilityId) {
@@ -184,11 +227,11 @@ public class CheckInHelper {
     public void checkIn(String locationId, String daysOut, String nights, String facilityId) {
         checkingIn(locationId, daysOut, nights, facilityId);
         Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getLocationIdByTpId(getBook().getTravelPlanId())));
+        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getLocationIdByTpId(getTpId())));
         CheckIn checkIn = new CheckIn(environment, "UI_Booking");
         checkIn.setGuestId(getPrimaryGuestId());
         checkIn.setLocationId(rs.getValue("WRK_LOC_ID", 1));
-        checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        checkIn.setTravelComponentGroupingId(getTcgId());
         int maxTries = 20;
         int tries = 0;
         do {
@@ -199,12 +242,12 @@ public class CheckInHelper {
             }
             tries++;
         } while (!checkIn.getResponseStatusCode().equals("200") && tries < maxTries);
-        TestReporter.assertTrue(checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getBook().getTravelPlanId() + "]: " + checkIn.getFaultString());
+        TestReporter.assertTrue(checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getTpId() + "]: " + checkIn.getFaultString());
     }
 
     public void checkOut(String locationId) {
         CheckOut checkout = new CheckOut(environment, "Check_Out");
-        checkout.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        checkout.setTravelComponentGroupingId(getTcgId());
         checkout.setLocationId(locationId);
         checkout.sendRequest();
         if (checkout.getFaultString().contains("Row was updated or deleted by another transaction")) {
@@ -212,7 +255,7 @@ public class CheckInHelper {
             checkout.sendRequest();
         }
         try {
-            TestReporter.assertTrue(checkout.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-out TP ID [" + getBook().getTravelPlanId() + "]: " + checkout.getFaultString());
+            TestReporter.assertTrue(checkout.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-out TP ID [" + getTpId() + "]: " + checkout.getFaultString());
         } catch (AssertionError e) {
         }
         ;
@@ -236,9 +279,9 @@ public class CheckInHelper {
 
     public void retrieveReservation() {
         Retrieve retrieve = new Retrieve(getEnvironment(), "Main");
-        retrieve.setRequestNodeValueByXPath("//request/travelPlanId", getBook().getTravelPlanId());
+        retrieve.setRequestNodeValueByXPath("//request/travelPlanId", getTpId());
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams.getLocationIdByTpId(getBook().getTravelPlanId())));
+        Recordset rs = new Recordset(db.getResultSet(Dreams.getLocationIdByTpId(getTpId())));
 
         do {
             retrieve.setRequestNodeValueByXPath("//request/locationId", rs.getValue("WRK_LOC_ID"));

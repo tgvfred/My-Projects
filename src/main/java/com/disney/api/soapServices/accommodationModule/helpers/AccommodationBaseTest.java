@@ -3,6 +3,7 @@ package com.disney.api.soapServices.accommodationModule.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
@@ -10,14 +11,14 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Parameters;
 
 import com.disney.AutomationException;
-import com.disney.api.WebServiceException;
 import com.disney.api.restServices.BaseRestTest;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.availabilityWSPort.operations.FreezeInventory;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.BaseSoapService;
-import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.utils.Environment;
 import com.disney.utils.PackageCodes;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
@@ -31,27 +32,6 @@ import com.disney.utils.dataFactory.database.sqlStorage.Dreams_AccommodationQuer
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class AccommodationBaseTest extends BaseRestTest {
-    /*
-     * Define an email address to be used for guest messaging. This email
-     * needs to be a Disney email as the emails that are sent contain meta
-     * data that pertains to the Disney network. The current email is that
-     * one of the authors of this test suite. Once this account becomes
-     * inactive, another email will have to replace it. It was desired
-     * to have a testing-dedicated email address, but at the time of
-     * creation, none was available.
-     */
-    private String emailAddress = "waightstill.w.avery.-nd@disney.com";
-
-    /*
-     * Currently information from the LACD project is being returned in Latest,
-     * and not in the COMO Latest.
-     * This is causing 1-to-1 validations to fail. The offending LACD node is to
-     * be whitelisted until the
-     * LACD code is deployed. This date is defined below, after which time the
-     * LACD node will no longer be whitelisted.
-     */
-    // private static String lacdDeployDate = "2017-01-01";
-
     protected static String environment;
     protected ThreadLocal<Integer> daysOut = new ThreadLocal<Integer>();
     protected ThreadLocal<Integer> nights = new ThreadLocal<Integer>();
@@ -75,7 +55,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private Map<String, String> noPackageCodes = new HashMap<String, String>();
     protected ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>();
     private ThreadLocal<HouseHold> hh = new ThreadLocal<HouseHold>();
-    private ThreadLocal<Book> book = new ThreadLocal<Book>();
+    private ThreadLocal<ReplaceAllForTravelPlanSegment> book = new ThreadLocal<>();
     private ThreadLocal<Retrieve> retrieve = new ThreadLocal<Retrieve>();
     protected ThreadLocal<String> tpId = new ThreadLocal<String>();
     protected ThreadLocal<String> tpsId = new ThreadLocal<String>();
@@ -86,19 +66,6 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> ageType = new ThreadLocal<String>();
     private ThreadLocal<String> age = new ThreadLocal<String>();
 
-    /**
-     * Method to add a configuration to the list of configurations that failed
-     * to retrieve a package code
-     *
-     * @param key
-     *            - String, indicating the failied configuration (EX:
-     *            getResortCode()+":"+getLocationId()+":"+getRoomTypeCode())
-     * @param value
-     *            - String, indicating the failed configuration (EX:
-     *            "No package code found for resort["
-     *            +getResortCode()+"], locationId["
-     *            +getLocationId()+"], and roomType["+getRoomTypeCode()+"]:")
-     */
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
     }
@@ -115,217 +82,88 @@ public class AccommodationBaseTest extends BaseRestTest {
         environment = env;
     }
 
-    /**
-     * Sets the reservation facility ID
-     *
-     * @param facilityId
-     *            - reservation facility ID
-     */
     private void setFacilityId(String facilityId) {
         this.facilityId.set(facilityId);
     }
 
-    /**
-     * Sets the reservation location ID
-     *
-     * @param locationId
-     *            - reservation location ID
-     */
     private void setLocationId(String locationId) {
         this.locationId.set(locationId);
     }
 
-    /**
-     * Sets the reservation resort code
-     *
-     * @param resortCode
-     *            - reservation resort code
-     */
     private void setResortCode(String resortCode) {
         this.resortCode.set(resortCode);
     }
 
-    /**
-     * Sets the reservation source accounting center ID
-     *
-     * @param sourceAccoutingCenter
-     *            - reservation source accounting center ID
-     */
     private void setSourceAccountingCenter(String sourceAccoutingCenter) {
         this.sourceAccoutingCenter.set(sourceAccoutingCenter);
     }
 
-    /**
-     * Sets the reservation room type code
-     *
-     * @param roomTypeCode
-     *            - reservation room type code
-     */
     private void setRoomTypeCode(String roomTypeCode) {
         this.roomTypeCode.set(roomTypeCode);
     }
 
-    /**
-     * Sets the reservation travel agency ID
-     *
-     * @param agencyId
-     *            - reservation travel agency ID
-     */
     protected void setAgencyId(String agencyId) {
         this.agencyId.set(agencyId);
     }
 
-    /**
-     * Sets the number of nights for the reservation
-     *
-     * @param nights
-     *            - number of nights for the reservation
-     */
     protected void setNights(int nights) {
         this.nights.set(nights);
     }
 
-    /**
-     * Sets the number of days out for the reservation
-     *
-     * @param nights
-     *            - number of days out for the reservation
-     */
     protected void setDaysOut(int daysOut) {
         this.daysOut.set(daysOut);
     }
 
-    /**
-     * Sets the arrival date for the reservation
-     *
-     * @param arrivalDate
-     *            - arrival date for the reservation
-     */
     protected void setArrivalDate(String arrivalDate) {
         this.arrivalDate.set(arrivalDate);
     }
 
-    /**
-     * Sets the departure date for the reservation
-     *
-     * @param departureDate
-     *            - departure date for the reservation
-     */
     protected void setDepartureDate(String departureDate) {
         this.departureDate.set(departureDate);
     }
 
-    /**
-     * Overloaded method that sets the number of nights and then the departure
-     * date for the reservation
-     *
-     * @param nights
-     *            - number of nights for the reservation
-     */
     protected void setDepartureDate(int nights) {
         setNights(nights);
         this.departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
     }
 
-    /**
-     * Overloaded method that sets the number of arrival days out and then the
-     * arrival date for the reservation
-     *
-     * @param daysOut
-     *            - number of days out for the reservation
-     */
     protected void setArrivalDate(int daysOut) {
         setDaysOut(daysOut);
         this.arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
     }
 
-    /**
-     * Sets the local Book object
-     *
-     * @param book
-     *            - local Book object
-     */
-    protected void setBook(Book book) {
+    protected void setBook(ReplaceAllForTravelPlanSegment book) {
         this.book.set(book);
     }
 
-    /**
-     * Sets the local Retrieve object
-     *
-     * @param book
-     *            - local Retrieve object
-     */
     protected void setRetrieve(Retrieve retrieve) {
         this.retrieve.set(retrieve);
     }
 
-    /**
-     * Sets the flag which is used to determine if fixed dates are required
-     *
-     * @param fixedDates
-     *            - flag which is used to determine if fixed dates are required
-     */
     protected void setFixedDates(Boolean fixedDates) {
         this.fixedDates.set(fixedDates);
     }
 
-    /**
-     * Sets the flag which is used to determine if exteranl references are to be
-     * skipped
-     *
-     * @param skip
-     *            - flag which is used to determine if exteranl references are
-     *            to be skipped
-     */
     protected void setSkipExternalRef(Boolean skip) {
         skipExternalRef.set(skip);
     }
 
-    /**
-     * Sets the local travel plan ID
-     *
-     * @param tpId
-     *            - local travel plan ID
-     */
     protected void setTpId(String tpId) {
         this.tpId.set(tpId);
     }
 
-    /**
-     * Sets the local travel plan segment ID
-     *
-     * @param tpId
-     *            - local travel plan segment ID
-     */
     protected void setTpsId(String tpsId) {
         this.tpsId.set(tpsId);
     }
 
-    /**
-     * Sets the local travel component grouping ID
-     *
-     * @param tpId
-     *            - local travel component grouping ID
-     */
     protected void setTcgId(String tcgId) {
         this.tcgId.set(tcgId);
     }
 
-    /**
-     * Sets the local travel component ID
-     *
-     * @param tpId
-     *            - local travel component ID
-     */
     protected void setTcId(String tcId) {
         this.tcId.set(tcId);
     }
 
-    /**
-     * Sets the campus ID
-     *
-     * @param campusId
-     */
     protected void setCampusId(String campusId) {
         this.campusId.set(campusId);
     }
@@ -342,200 +180,86 @@ public class AccommodationBaseTest extends BaseRestTest {
         return environment;
     }
 
-    /**
-     * Gets the number of days out for the reservation
-     *
-     * @return - number of days out for the reservation
-     */
     public int getDaysOut() {
         return daysOut.get();
     }
 
-    /**
-     * Gets the number of nights for the reservation
-     *
-     * @return - number of nights for the reservation
-     */
     public int getNights() {
         return nights.get();
     }
 
-    /**
-     * Gets the arrival date for the reservation
-     *
-     * @return - arrival date for the reservation
-     */
     public String getArrivalDate() {
         return arrivalDate.get();
     }
 
-    /**
-     * Gets the departure date for the reservation
-     *
-     * @return - departure date for the reservation
-     */
     public String getDepartureDate() {
         return departureDate.get();
     }
 
-    /**
-     * Gets reservation location ID
-     *
-     * @return - reservation location ID
-     */
     public String getLocationId() {
         return locationId.get();
     }
 
-    /**
-     * Gets reservation resort code
-     *
-     * @return - reservation resort code
-     */
     public String getResortCode() {
         return resortCode.get();
     }
 
-    /**
-     * Gets reservation facility ID
-     *
-     * @return - reservation facility ID
-     */
     public String getFacilityId() {
         return facilityId.get();
     }
 
-    /**
-     * Gets reservation source accounting ID
-     *
-     * @return - reservation source accounting ID
-     */
     public String getSourceAccountingCenter() {
         return sourceAccoutingCenter.get();
     }
 
-    /**
-     * Gets reservation room type code
-     *
-     * @return - reservation room type code
-     */
     public String getRoomTypeCode() {
         return roomTypeCode.get();
     }
 
-    /**
-     * Gets reservation guets ID
-     *
-     * @return - reservation guest ID
-     */
     public String getGuestId() {
         return guestId.get();
     }
 
-    /**
-     * Gets reservation party ID
-     *
-     * @return - reservation party ID
-     */
     public String getPartyId() {
         return partyId.get();
     }
 
-    /**
-     * Gets reservation package code
-     *
-     * @return - reservation package code
-     */
     public String getPackageCode() {
         return packageCode.get();
     }
 
-    /**
-     * Gets reservation address location ID
-     *
-     * @return - reservation address location ID
-     */
     public String getAddressGuestLocatorId() {
         return guestAddressLocatorId.get();
     }
 
-    /**
-     * Gets reservation primary guest email
-     *
-     * @return - reservation primary guest email
-     */
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    /**
-     * Gets reservation external reservation number
-     *
-     * @return - reservation external reservation number
-     */
     public String getExternalRefNumber() {
         return externalRefNumber.get();
     }
 
-    /**
-     * Gets reservation external reservation source
-     *
-     * @return - reservation external reservation source
-     */
     public String getExternalRefSource() {
         return externalRefSource;
     }
 
-    /**
-     * Gets reservation campus ID
-     *
-     * @return - reservation campus ID
-     */
     public String getCampusId() {
         return campusId.get();
     }
 
-    /**
-     * Gets the map of the configurations that failed to return package codes
-     *
-     * @return - map of the configurations that failed to return package codes
-     */
     public Map<String, String> getNoPackageCodes() {
         return noPackageCodes;
     }
 
-    /**
-     * Gets the HouseHold object
-     *
-     * @return - the HouseHold object
-     */
     public HouseHold getHouseHold() {
         return hh.get();
     }
 
-    /**
-     * Sets the HouseHold object
-     *
-     * @param - the HouseHold object
-     */
     public void setHouseHold(HouseHold hh) {
         this.hh.set(hh);
     }
 
-    /**
-     * Gets the Book object
-     *
-     * @return - the Book object
-     */
-    public Book getBook() {
+    public ReplaceAllForTravelPlanSegment getBook() {
         return book.get();
     }
 
-    /**
-     * Gets the Retrieve object
-     *
-     * @return - the Retrieve object
-     */
     public Retrieve getRetrieve() {
         return retrieve.get();
     }
@@ -556,22 +280,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         return age.get();
     }
 
-    // public static String getLacdDeployDate() {
-    // return lacdDeployDate;
-    // }
-
-    /**
-     * Unless overridden in the test class, this will serve as the entry point
-     * for every TravelPlan suite. Along
-     * with defining some flags and fields, a query is performed in the DREAMS
-     * database to find the resort/roomtype
-     * configurations with the highest number of physical beds. This 'should'
-     * afford each test a high probability
-     * of avoiding availability issues.
-     *
-     * @param environment
-     *            - environment under test, passed from the TextNG XML
-     */
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -609,16 +317,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         }
     }
 
-    /**
-     * Unless overridden in the test class, this will be the method executed
-     * directly prior to the @Test method.
-     * Contained within is code that sets the travel plan dates, the
-     * accommodation metadata (resort, roomtype, facility ID, etc.),
-     * as well as a call to a method that books the actual reservation.
-     *
-     * @param environment
-     *            - environment under test, passed from the TextNG XML
-     */
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
@@ -634,13 +332,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         bookReservation();
     }
 
-    /**
-     * Unless overridden in the test class, this will be the method executed
-     * directly after to the @Test method.
-     * In an effort to reduce the footprint of automated tests in the test
-     * environments, this method will attempt
-     * to cancel the reservation to release inventory back into the environment.
-     */
     @AfterMethod(alwaysRun = true)
     public void teardown() {
         try {
@@ -664,14 +355,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         cancel.sendRequest();
     }
 
-    /**
-     * Unless overridden in the test class, this will serve as the exit point
-     * for every TravelPlan suite. This method
-     * can serve many purposes, such as outputting messages collected during the
-     * running of the suite, data reporting, etc.
-     * At the time of development, this method is used to report and
-     * configuration that did not return a package code.
-     */
     @AfterSuite(alwaysRun = true)
     public void afterSuite() {
         String mesage = noPackageCodes.values().toString();
@@ -687,69 +370,22 @@ public class AccommodationBaseTest extends BaseRestTest {
         System.out.println("*********************************************************************************");
     }
 
-    /**
-     * Create a household locally. If required, this household can be created in
-     * the GoMaster database using the getHouseHold().getsendToApi() method.
-     */
     public void createHouseHold() {
         hh.set(new HouseHold(1));
     }
 
-    /**
-     * This method is the main method that books the reservation. The sequence
-     * of calls is listed below:
-     * <ol>
-     * <li>Create a local household</li>
-     * <li>Retrieves a package code</li>
-     * <ul>
-     * <li>Modify the query to use the booking metadata (arrival date, location
-     * ID, resort code, and room type code)</li>
-     * <li>If no package code is returned, new metadata is generated and package
-     * code retrieval is attempted again</li>
-     * <li>A maximum of attempts (defined prior to the loop) is performed. If
-     * that limit is reached, the loop is broken and the test will fail. If
-     * successful, the loop is broken and the test proceeds.</li>
-     * </ul>
-     * <li>Metadata specific to the booking is set (guest info, resort,
-     * roomtype, package code, etc.)</li>
-     * <li>An attempt is made to freeze accommodation inventory. At the time of
-     * development, this is commented out as a permanent solution has not been
-     * approved by the application developers.</li>
-     * <li>The book request is sent to the service</li>
-     * <li>If the booking is not successful, new metadata is generated and the
-     * entire booking process is attempted again.</li>
-     * <li>A maximum of attempts (defined prior to the loop) is performed. If
-     * that limit is reached, the loop is broken and the test will fail. If
-     * successful, the loop is broken and the test proceeds.</li>
-     * <li>After a successful booking, a call to
-     * AccommodationSalesServicePort#retrieve is made to capture reservation
-     * details.</li>
-     * </ol>
-     */
     public void bookReservation() {
         if (getHouseHold() == null) {
             createHouseHold();
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
-        try {
-            book.set(new Book(getEnvironment(), "bookWithoutTickets"));
-        } catch (WebServiceException e) {
-            Sleeper.sleep(Randomness.randomNumberBetween(5, 10) * 1000);
-            book.set(new Book(getEnvironment(), "bookWithoutTickets"));
-        }
+        book.set(new ReplaceAllForTravelPlanSegment(getEnvironment(), "roomOnlyWithoutTickets"));
 
         if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
             externalRefNumber.set(Randomness.randomNumber(12));
-            try {
-                getBook().setExternalRefNum(getExternalRefNumber());
-            } catch (XPathNotFoundException e) {
-                getBook().setRequestNodeValueByXPath("//book/request", "fx:addnode;node:externalReference");
-                getBook().setRequestNodeValueByXPath("//book/request/externalReference", "fx:addnode;node:externalReferenceNumber");
-                getBook().setRequestNodeValueByXPath("//book/request/externalReference/externalReferenceNumber", getExternalRefNumber());
-                getBook().setRequestNodeValueByXPath("//book/request/externalReference", "fx:addnode;node:externalReferenceSource");
-                getBook().setRequestNodeValueByXPath("//book/request/externalReference/externalReferenceSource", getExternalRefSource());
-            }
+            getBook().setExternalReference(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), getExternalRefSource(), "RESERVATION");
+            getBook().setRoomDetails_ExternalRefs(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), getExternalRefSource(), "RESERVATION");
         }
 
         PackageCodes pkg = new PackageCodes();
@@ -757,8 +393,11 @@ public class AccommodationBaseTest extends BaseRestTest {
         int maxTries = 10;
         int tries = 0;
         do {
-            getBook().setArrivalDate(String.valueOf(getDaysOut()));
-            getBook().setDeptDate(String.valueOf(getDaysOut() + getNights()));
+            getBook().setAreaPeriodStartDate(Randomness.generateCurrentXMLDate(getDaysOut()));
+            getBook().setAreaPeriodEndDate(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+            getBook().setRoomDetails_ResortPeriodEndDate(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+            getBook().setRoomDetails_ResortPeriodStartDate(Randomness.generateCurrentXMLDate(getDaysOut()));
+            getBook().setRoomDetailsBookingDate(Randomness.generateCurrentXMLDate());
 
             pkg = new PackageCodes();
             boolean success = false;
@@ -778,100 +417,20 @@ public class AccommodationBaseTest extends BaseRestTest {
                 }
                 pkgTries++;
             } while (!success && pkgTries < pkgMaxTries);
-            if (!success) {
-                throw new AutomationException("No package code was found after [" + maxTries + "] attempts. Last attempt:"
-                        + "\nEnvironment: " + getEnvironment()
-                        + "\nDate: " + Randomness.generateCurrentXMLDate(getDaysOut())
-                        + "\nLocation ID: " + getLocationId()
-                        + "\nResort Code: " + getResortCode()
-                        + "\nRoom Type Code: " + getRoomTypeCode());
-            }
-            // if(agencyId.get() != null) getBook().setAgency(agencyId.get());
-            getBook().setPackageCode(getPackageCode());
-            getBook().setResortCode(getResortCode());
-            getBook().setRoomTypeCode(getRoomTypeCode());
-            getBook().setLocationID(getLocationId());
-
-            if (ageType.get() != null) {
-                getBook().setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/ageType", getAgeType());
-            }
-            if (age.get() != null) {
-                getBook().setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/age", getAge());
-            }
-            getBook().setPrimaryGuestFirstName(getHouseHold().primaryGuest().getFirstName());
-            getBook().setPrimaryGuestFirstNameGuestRefDetails(getHouseHold().primaryGuest().getFirstName());
-            getBook().setPrimaryGuestFirstNameTravelPlan(getHouseHold().primaryGuest().getFirstName());
-            getBook().setPrimaryGuestLastName(getHouseHold().primaryGuest().getLastName());
-            getBook().setPrimaryGuestLastNameGuestRefDetails(getHouseHold().primaryGuest().getLastName());
-            getBook().setPrimaryGuestLastNameTravelPlan(getHouseHold().primaryGuest().getLastName());
-            getBook().setPrimaryGuestMiddleName(getHouseHold().primaryGuest().getMiddleName());
-            getBook().setPrimaryGuestMiddleNameGuestRefDetails(getHouseHold().primaryGuest().getMiddleName());
-            getBook().setPrimaryGuestMiddleNameTravelPlan(getHouseHold().primaryGuest().getMiddleName());
-            getBook().setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/addressLine1", getHouseHold().primaryGuest().primaryAddress().getAddress1());
-            getBook().setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/city", getHouseHold().primaryGuest().primaryAddress().getCity());
-            getBook().setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/regionName", getHouseHold().primaryGuest().primaryAddress().getState());
-            getBook().setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/state", getHouseHold().primaryGuest().primaryAddress().getState());
-            getBook().setRequestNodeValueByXPath("//book/request/roomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails/postalCode", getHouseHold().primaryGuest().primaryAddress().getZipCode());
-            getBook().setRequestNodeValueByXPath("//book/request/travelPlanGuest/addressDetails/addressLine1", getHouseHold().primaryGuest().primaryAddress().getAddress1());
-            getBook().setRequestNodeValueByXPath("//book/request/travelPlanGuest/addressDetails/city", getHouseHold().primaryGuest().primaryAddress().getCity());
-            getBook().setRequestNodeValueByXPath("//book/request/travelPlanGuest/addressDetails/postalCode", getHouseHold().primaryGuest().primaryAddress().getZipCode());
-            getBook().setRequestNodeValueByXPath("//book/request/travelPlanGuest/addressDetails/state", getHouseHold().primaryGuest().primaryAddress().getState());
-            getBook().setRequestNodeValueByXPath("//book/request/travelPlanGuest/addressDetails/regionName", getHouseHold().primaryGuest().primaryAddress().getState());
-            getBook().setPhoneNumber(getHouseHold().primaryGuest().primaryPhone().getNumber());
-            getBook().setRequestNodeValueByXPath("/Envelope/Body/book/request/travelPlanGuest/phoneDetails/number", getHouseHold().primaryGuest().primaryPhone().getNumber());
-            getBook().setEmail(getHouseHold().primaryGuest().primaryEmail().getEmail());
-            getBook().setRequestNodeValueByXPath("/Envelope/Body/book/request/travelPlanGuest/emailDetails/address", getHouseHold().primaryGuest().primaryEmail().getEmail());
-
-            // freezeInventory();
-            // getBook().setRequestNodeValueByXPath("//book/request/roomDetail/overideFreeze",
-            // "true");
+            getBook().setRoomDetailsPackageCode(getPackageCode());
+            getBook().setRoomDetailsResortCode(getResortCode());
+            getBook().setRoomDetailsRoomTypeCode(getRoomTypeCode());
+            getBook().setRoomDetailsLocationId(getLocationId());
+            getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
+            getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
 
             getBook().sendRequest();
-            TestReporter.logAPI(false, "", getBook());
-            if (getBook().getResponseStatusCode().equals("200")) {
-                bookSuccess = true;
-            }
-            else {
-                if (fixedDates != null) {
-                    if (fixedDates.get() != null) {
-                        if (fixedDates.get() != true) {
-                            daysOut.set(Randomness.randomNumberBetween(15, 120));
-                            nights.set(Randomness.randomNumberBetween(3, 5));
-                            arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
-                            departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
-                        }
-                    }
-                }
-                setValues();
-            }
+            TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
             tries++;
-        } while (!bookSuccess && tries < maxTries);
-        if (!getBook().getResponseStatusCode().equals("200")) {
-            TestReporter.log("\n\nRQ:\n\n");
-            TestReporter.log(getBook().getRequest());
-            TestReporter.log("\n\nRS:\n\n");
-            TestReporter.log(getBook().getResponse());
-        }
-        TestReporter.assertEquals(getBook().getResponseStatusCode(), "200", "An error occurred booking a prereq reservations: " + getBook().getFaultString());
+        } while (!getBook().getResponseStatusCode().equals("200") && tries < maxTries);
         retrieveReservation();
     }
 
-    /**
-     * Overloaded method for booking a reservation. Typically this will be
-     * called in the test class
-     *
-     * @param locEnv
-     *            - environment under test
-     */
-    public void bookReservation(String locEnv) {
-        bookReservation();
-    }
-
-    /**
-     * This method attempts to freeze accommodation inventory
-     *
-     * @return freeze ID
-     */
     public String freezeInventory() {
         String freezeId = "";
         FreezeInventory freeze = new FreezeInventory(getEnvironment(), "Main");
@@ -894,51 +453,18 @@ public class AccommodationBaseTest extends BaseRestTest {
         return freezeId;
     }
 
-    /**
-     * This method retrieves the booking and sets some reservation data (guest
-     * ID, party ID, etc.)
-     */
     public void retrieveReservation() {
         Sleeper.sleep(5000);
-        try {
-            retrieve.set(new Retrieve(environment.toUpperCase().replace("_CM", ""), "Main"));
-        } catch (WebServiceException e) {
-            Sleeper.sleep(Randomness.randomNumberBetween(5, 10) * 1000);
-            retrieve.set(new Retrieve(getEnvironment().toUpperCase().replace("_CM", ""), "Main"));
-        }
-        if (getBook() != null && getBook().getTravelPlanId() != null) {
-            getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", getBook().getTravelPlanId());
-        } else {
-            getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", tpId.get());
-        }
+        retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
+        getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", getBook().getTravelPlanId());
         getRetrieve().setRequestNodeValueByXPath("//request/locationId", getLocationId());
-        // getRetrieve().setRequestNodeValueByXPath("//request/locationId",
-        // "1");
         getRetrieve().sendRequest();
-        if (getRetrieve().getFaultString().contains("SocketTimeoutException")) {
-            Sleeper.sleep(Randomness.randomNumberBetween(5, 10) * 1000);
-            getRetrieve().sendRequest();
-        }
         if (getRetrieve().getFaultString().toLowerCase().replaceAll("\\s", "").contains("No Accommodation Component found".toLowerCase().replaceAll("\\s", ""))) {
-            // TestReporter.logNoXmlTrim("\n\nRQ:\n\n" +
-            // getRetrieve().getRequest());
-            // TestReporter.logNoXmlTrim("\n\nRS:\n\n" +
-            // getRetrieve().getResponse());
-            // skipCancel.set(true);
-            String sqlTpId;
-            if (getBook() != null && getBook().getTravelPlanId() != null) {
-                getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", getBook().getTravelPlanId());
-                sqlTpId = getBook().getTravelPlanId();
-            }
-            else {
-                getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", tpId.get());
-                sqlTpId = tpId.get();
-            }
             String sql = "select d.WRK_LOC_ID "
                     + "from rsrc_inv.wrk_loc d "
                     + "where d.HM_RSRT_FAC_ID in (select c.fac_id FAC_ID "
                     + "from res_mgmt.tps a, res_mgmt.tc_grp b, res_mgmt.tc c "
-                    + "where a.tp_id = '" + sqlTpId + "' "
+                    + "where a.tp_id = '" + getBook().getTravelPlanId() + "' "
                     + "and a.tps_id = b.tps_id "
                     + "and b.tc_grp_nb = c.tc_grp_nb "
                     + "and c.fac_id is not null )";
@@ -951,7 +477,6 @@ public class AccommodationBaseTest extends BaseRestTest {
                     break;
                 }
             }
-
         }
         TestReporter.assertTrue(getRetrieve().getResponseStatusCode().equals("200"), "Verify that an error did not occurred retrieving the prereq reservation: " + getRetrieve().getFaultString());
         partyId.set(getRetrieve().getPartyId());
@@ -959,30 +484,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         guestAddressLocatorId.set(getRetrieve().getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest/addressDetails/guestLocatorId"));
     }
 
-    /**
-     * Overloaded method for retrieving a reservation. Typically this will be
-     * called in the test class
-     *
-     * @param locEnv
-     *            - environment under test
-     */
-    public void retrieveReservation(String retrieveEnv) {
-        retrieveReservation();
-    }
-
-    /**
-     * Method to set reservation metadata. This method loops until all data is
-     * deemed successfully populated.
-     * A resort/roomtype configuration is randomly chosen from the list of data
-     * that is populated in the @BeforeSuite method
-     * <ul>
-     * <li>Facility ID</li>
-     * <li>Room Type Code</li>
-     * <li>Location ID</li>
-     * <li>Resort Code</li>
-     * <li>Source Accounting Center</li>
-     * </ul>
-     */
     protected void setValues() {
         boolean success = false;
         int index;
@@ -1026,7 +527,6 @@ public class AccommodationBaseTest extends BaseRestTest {
                 // System.out.println();
             }
         } while (!success);
-        // System.out.println();
     }
 
     protected void setValues(String environment) {
@@ -1034,24 +534,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         setValues();
     }
 
-    /**
-     * Overloaded method to set specific metadata for a reservation, and
-     * generate other metadata based on the values passed to the method
-     * <ul>
-     * <li>Facility ID</li>
-     * <li>Room Type Code</li>
-     * <li>Location ID</li>
-     * <li>Resort Code</li>
-     * <li>Source Accounting Center</li>
-     * </ul>
-     *
-     * @param facilityId
-     *            - facility ID under test
-     * @param roomTypeCode
-     *            - room type code under test
-     * @param locationId
-     *            - location ID under test
-     */
     protected void setValues(String facilityId, String roomTypeCode, String locationId) {
         setFacilityId(facilityId);
         setRoomTypeCode(roomTypeCode);
@@ -1063,20 +545,47 @@ public class AccommodationBaseTest extends BaseRestTest {
         setSourceAccountingCenter(ResortInfo.getSourceAccountingCenterId(ResortColumns.FACILITY_ID, getFacilityId()));
     }
 
-    public static String getStateAbbv(String state) {
-        switch (state) {
-            case "North Carolina":
-                return "NC";
-            case "BUCKINGHAMSHIRE":
-                return "BKM";
-            default:
-                throw new AutomationException("The state abbrviation [" + state + "] is not an expected type.");
-        }
-    }
-
     public String getAssignmentOwnerId(String tpId) {
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getAccommodationComponentAssignemtnOwnerIDByTpId(tpId)));
         return rs.getValue("ASGN_OWN_ID", 1);
+    }
+
+    public static String getAgeTypeByAge(int age) {
+        return getAgeTypeByAge(String.valueOf(age));
+    }
+
+    public static String getAgeTypeByAge(String age) {
+        int intAge = Integer.parseInt(age);
+        String ageType = null;
+
+        if (intAge <= 2) {
+            ageType = "INFANT";
+        } else if (intAge <= 9) {
+            ageType = "CHILD";
+        } else if (intAge <= 17) {
+            ageType = "JUNIOR";
+        } else {
+            ageType = "ADULT";
+        }
+
+        return ageType;
+    }
+
+    public static boolean isValid(Object o) {
+        boolean valid = false;
+        if (o == null) {
+            valid = false;
+        }
+
+        if (o instanceof String) {
+            if (StringUtils.isEmpty((String) o)) {
+                valid = false;
+            } else {
+                valid = true;
+            }
+        }
+
+        return valid;
     }
 }

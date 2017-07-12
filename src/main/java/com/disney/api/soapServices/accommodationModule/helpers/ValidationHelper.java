@@ -5,12 +5,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
-import org.testng.SkipException;
 
 import com.disney.AutomationException;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.folioModule.folioServicePort.operations.RetrieveFolioDetails;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -18,7 +16,6 @@ import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.SQLValidationException;
-import com.disney.utils.dataFactory.database.databaseImpl.DB2Database;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.Dreams_AccommodationQueries;
 import com.disney.utils.dataFactory.guestFactory.Guest;
@@ -178,14 +175,6 @@ public class ValidationHelper {
         TestReporter.assertAll();
     }
 
-    public void validateDvcEiFee(String tpId, String tpsId, String tcgId, int numRecords) {
-        TestReporter.logStep("Validated charge item status for EI reservations");
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getChargeItemStatusByTpTpsTcgIds(tpId, tpsId, tcgId).concat(" and c.REV_CLS_NM = 'DVC Inbound Exchange Fee'")));
-
-        TestReporter.assertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
-    }
-
     public void validateGuestInformation(String tpId, HouseHold hh, String membershipTypeName, String membershipRefId) {
         Recordset rs = validateGuestInformation(tpId, hh);
         TestReporter.softAssertEquals(rs.getValue("DVC_MBR_TYP_NM", 1), membershipTypeName, "Verify that the Dvc membership type name [" + rs.getValue("DVC_MBR_TYP_NM", 1) + "] is that which is expected [" + membershipTypeName + "].");
@@ -203,15 +192,7 @@ public class ValidationHelper {
         TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM", 1), hh.primaryGuest().getLastName(), "Verify that the guest last name [" + rs.getValue("IDVL_LST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getLastName() + "].");
         TestReporter.softAssertTrue(rs.getValue("ADDR_LN_1_TX", 1).contains(hh.primaryGuest().primaryAddress().getAddress1()), "Verify that the address line 1 [" + rs.getValue("ADDR_LN_1_TX", 1) + "] contains that which is expected [" + hh.primaryGuest().primaryAddress().getAddress1() + "].");
         TestReporter.softAssertEquals(rs.getValue("CITY_NM", 1), hh.primaryGuest().primaryAddress().getCity(), "Verify that the address city [" + rs.getValue("CITY_NM", 1) + "] is that which is expected [" + hh.primaryGuest().primaryAddress().getCity() + "].");
-        String state = null;
-        try {
-            state = AccommodationBaseTest.getStateAbbv(hh.primaryGuest().primaryAddress().getStateAbbv());
-        } catch (AutomationException e) {
-        }
-        if (!rs.getValue("RGN_CD", 1).equals(state)) {
-            state = hh.primaryGuest().primaryAddress().getStateAbbv();
-        }
-        TestReporter.softAssertEquals(rs.getValue("RGN_CD", 1), state, "Verify that the state [" + rs.getValue("RGN_CD", 1) + "] is that which is expected [" + state + "].");
+        TestReporter.softAssertEquals(rs.getValue("RGN_CD", 1), hh.primaryGuest().primaryAddress().getStateAbbv(), "Verify that the state [" + rs.getValue("RGN_CD", 1) + "] is that which is expected [" + hh.primaryGuest().primaryAddress().getStateAbbv() + "].");
         TestReporter.softAssertEquals(rs.getValue("PSTL_CD", 1), hh.primaryGuest().primaryAddress().getZipCode(), "Verify that the zip code [" + rs.getValue("PSTL_CD", 1) + "] is that which is expected [" + hh.primaryGuest().primaryAddress().getZipCode() + "].");
         TestReporter.softAssertEquals(rs.getValue("TXN_PTY_EML_ADDR_TX", 1), hh.primaryGuest().primaryEmail().getEmail(), "Verify that the email address [" + rs.getValue("TXN_PTY_EML_ADDR_TX", 1) + "] is that which is expected [" + hh.primaryGuest().primaryEmail().getEmail() + "].");
         TestReporter.softAssertEquals(rs.getValue("PHN_NB", 1), hh.primaryGuest().primaryPhone().getNumber(), "Verify that the phone number [" + rs.getValue("PHN_NB", 1) + "] is that which is expected [" + hh.primaryGuest().primaryPhone().getNumber() + "].");
@@ -226,16 +207,6 @@ public class ValidationHelper {
                 .replace(" = e.TXN_PTY_ADDR_LCTR_ID", " = e.TXN_PTY_ADDR_LCTR_ID and b.TXN_IDVL_PTY_ID = " + tpPtyId + " ")
                 .replace(" = f.TXN_PTY_EML_LCTR_ID", " = f.TXN_PTY_EML_LCTR_ID and b.TXN_IDVL_PTY_ID = " + tpPtyId + " ")
                 .replace(" = g.TXN_PTY_PHN_LCTR_ID", " = g.TXN_PTY_PHN_LCTR_ID and b.TXN_IDVL_PTY_ID = " + tpPtyId + " ")));
-        // +"and b.idvl_lst_nm = '"+hh.primaryGuest().getLastName()+"' "
-        // +
-        // "and e.ADDR_LN_1_TX = '"+hh.primaryGuest().primaryAddress().getAddress1()+"' "
-        // +
-        // "and f.TXN_PTY_EML_ADDR_TX = '"+hh.primaryGuest().primaryEmail().getEmail()+"' "
-        // +
-        // "and g.PHN_NB = '"+hh.primaryGuest().primaryPhone().getNumber()+"'"));
-        // rs.print();
-        // IDVL_FST_NM|IDVL_MID_NM|IDVL_LST_NM|DVC_MBR_TYP_NM|MBRSHP_ID
-        // |ADDR_LN_1_TX |CITY_NM |RGN_CD|PSTL_CD|TXN_PTY_EML_ADDR_TX |PHN_NB |
         Map<String, Boolean> values = new HashMap<>();
         values.put(hh.primaryGuest().getFirstName(), false);
         values.put(hh.primaryGuest().getLastName(), false);
@@ -290,126 +261,6 @@ public class ValidationHelper {
         TestReporter.softAssertTrue(values.get(hh.primaryGuest().primaryEmail().getEmail()), "Verify that the guest email [" + hh.primaryGuest().primaryEmail().getEmail() + "] is found for TP party ID [" + tpPtyId + "].");
         TestReporter.softAssertTrue(values.get(hh.primaryGuest().primaryPhone().getNumber()), "Verify that the guest phone number [" + hh.primaryGuest().primaryPhone().getNumber() + "] is found for TP party ID [" + tpPtyId + "].");
         TestReporter.assertAll();
-    }
-
-    public void verifyDinePlanAdded(String tpsId) {
-        TestReporter.logStep("Verify That a Dine Plan Was Added");
-        String sql = "select a.tc_grp_nb, a.TC_GRP_TYP_NM, b.PROD_TYP_NM "
-                + "from res_mgmt.tc_grp a, res_mgmt.tc b "
-                + "where a.tps_id = '" + tpsId + "' "
-                + "and a.tc_grp_nb = b.tc_grp_nb";
-
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-        // rs.print();
-
-        Boolean tcgAddOnFound = false;
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            if (rs.getValue("TC_GRP_TYP_NM", i).equals("ADD_ON_PACKAGE")) {
-                tcgAddOnFound = true;
-                break;
-            }
-        }
-        TestReporter.assertTrue(tcgAddOnFound, "Verify that a TCG add-on package was found for TPS ID [" + tpsId + "].");
-
-        rs.moveFirst();
-        Boolean tcDisneyDineProductFound = false;
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            if (rs.getValue("PROD_TYP_NM", i).equals("DDP") || rs.getValue("PROD_TYP_NM", i).equals("DLX")) {
-                tcDisneyDineProductFound = true;
-                break;
-            }
-        }
-        TestReporter.assertTrue(tcDisneyDineProductFound, "Verify that a TC disney dine product was found for TPS ID [" + tpsId + "].");
-    }
-
-    public void verifyDinePlanRemoved(String tpsId) {
-        TestReporter.logStep("Verify That a Dine Plan Was Removed");
-        String sql = "select b.tc_grp_nb "
-                + "from res_mgmt.tps a, res_mgmt.tc_grp b "
-                + "where a.tp_id = " + tpsId + " "
-                + "and a.tps_id = b.tps_id "
-                + "and b.tc_grp_typ_nm = 'ADD_ON_PACKAGE'";
-
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-        // rs.print();
-
-        TestReporter.assertTrue(rs.getRowCount() == 0, "Verify that no TC disney dine product was found for TPS ID [" + tpsId + "].");
-    }
-
-    public void verifyDinePlanTcgAssociatedWithParentTcg(String tps, String tcg) {
-        String sql1 = "select a.TC_GRP_NB "
-                + "from res_mgmt.tc_grp a "
-                + "where a.tps_id = '" + tps + "' "
-                + "and a.tc_grp_typ_nm = 'ADD_ON_PACKAGE'";
-        String sql2 = "select a.ADD_ON_TC_GRP_NB "
-                + "from res_mgmt.tc_grp a "
-                + "where a.TC_GRP_NB = '" + tcg + "'";
-
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql1));
-        String dineTcg = rs.getValue("TC_GRP_NB", 1);
-
-        rs = new Recordset(db.getResultSet(sql2));
-        String addOnTcg = rs.getValue("ADD_ON_TC_GRP_NB", 1);
-
-        TestReporter.softAssertEquals(dineTcg, addOnTcg, "Verify that the add-on TCG [" + addOnTcg + "] is that which is expected [" + dineTcg + "].");
-    }
-
-    public void verifyDinePlanNotAdded(String tpsId) {
-        throw new SkipException("Need to add validation for dine plan being removed.");
-        // TestReporter.logStep("Verify That a Dine Plan Was Added");
-        // String sql = "select a.tc_grp_nb, a.TC_GRP_TYP_NM, b.PROD_TYP_NM "
-        // + "from res_mgmt.tc_grp a, res_mgmt.tc b "
-        // + "where a.tps_id = '"+tpsId+"' "
-        // + "and a.tc_grp_nb = b.tc_grp_nb";
-        //
-        // Database db = new OracleDatabase(environment, Database.DREAMS);
-        // Recordset rs = new Recordset(db.getResultSet(sql));
-        // //rs.print();
-        //
-        // Boolean tcgAddOnFound = false;
-        // for(int i = 1; i <= rs.getRowCount(); i++){
-        // if(rs.getValue("TC_GRP_TYP_NM", i).equals("ADD_ON_PACKAGE")){
-        // tcgAddOnFound = true;
-        // break;
-        // }
-        // }
-        // TestReporter.assertTrue(tcgAddOnFound,
-        // "Verify that a TCG add-on package was found for TPS ID ["+tpsId+"].");
-        //
-        // rs.moveFirst();
-        // Boolean tcDisneyDineProductFound = false;
-        // for(int i = 1; i <= rs.getRowCount(); i++){
-        // if(rs.getValue("PROD_TYP_NM", i).equals("DDP")){
-        // tcDisneyDineProductFound = true;
-        // break;
-        // }
-        // }
-        // TestReporter.assertTrue(tcDisneyDineProductFound,
-        // "Verify that a TC disney dine product was found for TPS ID ["+tpsId+"].");
-    }
-
-    public void verifyDinePlanTcgNotAssociatedWithParentTcg(String tps, String tcg) {
-        throw new SkipException("Need to add validation for dine plan being removed.");
-        // String sql1 = "select a.TC_GRP_NB "
-        // + "from res_mgmt.tc_grp a "
-        // + "where a.tps_id = '"+tps+"' "
-        // + "and a.tc_grp_typ_nm = 'ADD_ON_PACKAGE'";
-        // String sql2 = "select a.ADD_ON_TC_GRP_NB "
-        // + "from res_mgmt.tc_grp a "
-        // + "where a.TC_GRP_NB = '"+tcg+"'";
-        //
-        // Database db = new OracleDatabase(environment, Database.DREAMS);
-        // Recordset rs = new Recordset(db.getResultSet(sql1));
-        // String dineTcg = rs.getValue("TC_GRP_NB", 1);
-        //
-        // rs = new Recordset(db.getResultSet(sql2));
-        // String addOnTcg = rs.getValue("ADD_ON_TC_GRP_NB", 1);
-        //
-        // TestReporter.softAssertEquals(dineTcg, addOnTcg,
-        // "Verify that the add-on TCG ["+addOnTcg+"] is that which is expected ["+dineTcg+"].");
     }
 
     public void verifyTcStatusByTcg(String tcg, String status) {
@@ -494,50 +345,6 @@ public class ValidationHelper {
         for (int i = 1; i <= rs.getRowCount(); i++) {
             TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM", i), status,
                     "Verify that the [" + rs.getValue("CHRG_GRP_TYP_NM", i) + "] charge group [" + rs.getValue("CHRG_GRP_ID", i) + "] status [" + rs.getValue("CHRG_GRP_STS_NM", i) + "] is [" + status + "] as expected.");
-        }
-        TestReporter.assertAll();
-    }
-
-    public void verifyExchangeFeeFound(Boolean feeExpected, String tpId) {
-        TestReporter.logStep("Verify Number Of Charges");
-        RetrieveFolioDetails retrieveFolioDetails = new RetrieveFolioDetails(environment);
-        retrieveFolioDetails.setRequestNodeValueByXPath("/Envelope/Body/retrieveFolioDetails/externalRef/referenceName", "DREAMS_TP");
-        retrieveFolioDetails.setRequestNodeValueByXPath("/Envelope/Body/retrieveFolioDetails/externalRef/referenceValue", tpId);
-        retrieveFolioDetails.setRequestNodeValueByXPath("/Envelope/Body/retrieveFolioDetails/transactionID", "fx:removenode");
-
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getUniqueNodeChargeGroups(tpId)));
-        // rs.print();
-
-        String nodeChargeGroups = "";
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            nodeChargeGroups += rs.getValue("NODE_CHRG_GRP_ID", i);
-            if (i != rs.getRowCount()) {
-                nodeChargeGroups += ",";
-            }
-        }
-
-        rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getUniqueRootChargeGroups(tpId)));
-        // rs.print();
-        String rootChargeGroups = "";
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            rootChargeGroups += rs.getValue("ROOT_CHRG_GRP_ID", i);
-            if (i != rs.getRowCount()) {
-                rootChargeGroups += ",";
-            }
-        }
-
-        String sql = "select e.* "
-                + "from folio.chrg e where e.CHRG_GRP_ID in (" + nodeChargeGroups + "," + rootChargeGroups + ") "
-                + "and e.chrg_ds = 'Disney Collection Exchange Fee'";
-
-        db = new OracleDatabase(environment, Database.DREAMS);
-        rs = new Recordset(db.getResultSet(sql));
-        // rs.print();
-        if (feeExpected) {
-            TestReporter.softAssertTrue(rs.getRowCount() > 0, "Verify that an exhange fee was found as expected.");
-        } else {
-            TestReporter.softAssertTrue(rs.getRowCount() == 0, "Verify that no exhange fee was found as expected.");
         }
         TestReporter.assertAll();
     }
@@ -700,183 +507,6 @@ public class ValidationHelper {
         return ids;
     }
 
-    /**
-     * This method validates data in the DVC database and should contain the
-     * following information with the keys precisely as listed:
-     * STAYDATE - arrival date
-     * TPID - travel plan id
-     * TPSID - travel plan segment id
-     * TCGID - travel component grouping id
-     * INVTRACKID - inventory tracking id
-     * RESTYPE - reservation type (M$, MP, etc.))
-     * HOMETYPE - room type code
-     * EXPDPTDATE - departure date
-     * ROOMNUMBER - room number (empty if no room assigned)
-     * SPECNEEDS - special needs flag (Y or N)
-     * MEMBERID - DVC member id
-     * RESORTID - resort code (BLT, AKV, etc.)
-     * STATUS - reservation status (Booked, Cancelled, etc.)
-     *
-     * @param dataToValidate
-     *            - map of data points to validate
-     */
-    public void verifyReservationInDvc(Map<String, String> dataToValidate, int expectedRecords, Boolean multiNights) {
-        TestReporter.logStep("Verify Reservation Data in the DVC Database");
-        String sql = "select STAYDATE,b.TPID,b.TPSID,b.TCGID,b.INVTRACKID,c.ITI,c.EXIST_ITI,b.RESTYPE,b.HOMETYPE,b.EXPDPTDATE,b.ROOMNUMBER,b.SPECNEEDS,c.MEMBERID,b.RESORTCODE,STATUS "
-                + "from dvcwishes.WPMRESPRCP a, dvcwishes.WPMRESDTLP b, dvcinvsys.WPIINVTRKP c "
-                + "where a.guid = b.guid "
-                + "and b.tpid = '" + dataToValidate.get("TPID") + "' "
-                + "and c.EXIST_ITI != '' "
-                + "and b.INVTRACKID = c.ITI";
-
-        Database db = new DB2Database(environment, "dvcwishes");
-        int tries = 0;
-        int maxTries = 60;
-        Boolean success = false;
-        Recordset rs = null;
-        do {
-            Sleeper.sleep(1000);
-            rs = new Recordset(db.getResultSet(sql));
-            if (rs.getRowCount() == expectedRecords) {
-                success = true;
-            }
-            tries++;
-        } while (tries < maxTries && !success);
-
-        // rs.print();
-        if (rs.getRowCount() != expectedRecords) {
-            TestReporter.log("SQL:" + sql);
-        }
-        TestReporter.softAssertEquals(rs.getRowCount(), expectedRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + expectedRecords + "].");
-        if (dataToValidate.get("STAYDATE") == null) {
-            TestReporter.assertEquals(rs.getRowCount(), 0, "Verify that no records wre returned from the DVC database for TP ID [" + dataToValidate.get("TPID") + "].");
-        } else {
-            for (int i = 1; i <= rs.getRowCount(); i++) {
-                if (multiNights == null || multiNights == false) {
-                    TestReporter.softAssertEquals(rs.getValue("STAYDATE", i), dataToValidate.get("STAYDATE").replaceAll("-", ""), "Verify that the arrival date [" + rs.getValue("STAYDATE", i) + "] is that which is expected [" + dataToValidate.get("STAYDATE").replaceAll("-", "") + "].");
-                } else {
-                    TestReporter.softAssertTrue(Long.parseLong(rs.getValue("STAYDATE", i)) >= Long.parseLong(dataToValidate.get("STAYDATE").replaceAll("-", "")) && Long.parseLong(rs.getValue("STAYDATE", i)) <= Long.parseLong(dataToValidate.get("EXPDPTDATE").replaceAll("-", "")),
-                            "Verify that the arrival date [" + rs.getValue("STAYDATE", i) + "] is between the expected arrival date [" + dataToValidate.get("STAYDATE").replaceAll("-", "") + "] and the expected departure date [" + dataToValidate.get("EXPDPTDATE").replaceAll("-", "") + "].");
-                }
-                TestReporter.softAssertEquals(rs.getValue("TPID", i), dataToValidate.get("TPID"), "Verify that the TP ID [" + rs.getValue("TPID", i) + "] is that which is expected [" + dataToValidate.get("TPID") + "].");
-                TestReporter.softAssertEquals(rs.getValue("TPSID", i), dataToValidate.get("TPSID"), "Verify that the TPS ID [" + rs.getValue("TPSID", i) + "] is that which is expected [" + dataToValidate.get("TPSID") + "].");
-                TestReporter.softAssertEquals(rs.getValue("TCGID", i), dataToValidate.get("TCGID"), "Verify that the TCG ID [" + rs.getValue("TCGID", i) + "] is that which is expected [" + dataToValidate.get("TCGID") + "].");
-                TestReporter.softAssertEquals(rs.getValue("INVTRACKID", i).replaceAll("\\s", ""), dataToValidate.get("INVTRACKID").replaceAll("\\s", ""), "Verify that the inventory tracking ID [" + rs.getValue("INVTRACKID", i).replaceAll("\\s", "") + "] is that which is expected [" + dataToValidate.get("INVTRACKID").replaceAll("\\s", "") + "].");
-                TestReporter.softAssertEquals(rs.getValue("RESTYPE", i), dataToValidate.get("RESTYPE"), "Verify that the reservation type [" + rs.getValue("RESTYPE", i) + "] is that which is expected [" + dataToValidate.get("RESTYPE") + "].");
-                TestReporter.softAssertEquals(rs.getValue("HOMETYPE", i), dataToValidate.get("HOMETYPE"), "Verify that the room type code [" + rs.getValue("HOMETYPE", i) + "] is that which is expected [" + dataToValidate.get("HOMETYPE") + "].");
-                TestReporter.softAssertEquals(rs.getValue("EXPDPTDATE", i), dataToValidate.get("EXPDPTDATE").replaceAll("-", ""), "Verify that the departure date [" + rs.getValue("EXPDPTDATE", i) + "] is that which is expected [" + dataToValidate.get("EXPDPTDATE").replaceAll("-", "") + "].");
-                TestReporter.softAssertEquals(rs.getValue("ROOMNUMBER", i).replaceAll("\\s", ""), dataToValidate.get("ROOMNUMBER").replaceAll("\\s", ""), "Verify that the room number [" + rs.getValue("ROOMNUMBER", i).replaceAll("\\s", "") + "] is that which is expected [" + dataToValidate.get("ROOMNUMBER").replaceAll("\\s", "") + "].");
-                TestReporter.softAssertEquals(rs.getValue("SPECNEEDS", i), dataToValidate.get("SPECNEEDS"), "Verify that the special needs flag [" + rs.getValue("SPECNEEDS", i) + "] is that which is expected [" + dataToValidate.get("SPECNEEDS") + "].");
-                TestReporter.softAssertEquals(rs.getValue("MEMBERID", i), dataToValidate.get("MEMBERID"), "Verify that the DVC member ID [" + rs.getValue("MEMBERID", i) + "] is that which is expected [" + dataToValidate.get("MEMBERID") + "].");
-                TestReporter.softAssertEquals(rs.getValue("RESORTCODE", i).replaceAll("\\s", ""), dataToValidate.get("RESORTID").replaceAll("\\s", ""), "Verify that the resort code [" + rs.getValue("RESORTCODE", i).replaceAll("\\s", "") + "] is that which is expected [" + dataToValidate.get("RESORTID").replaceAll("\\s", "") + "].");
-                TestReporter.softAssertEquals(rs.getValue("STATUS", i).replaceAll("\\s", ""), dataToValidate.get("STATUS").replaceAll("\\s", ""), "Verify that the reservation status [" + rs.getValue("STATUS", i).replaceAll("\\s", "") + "] is that which is expected [" + dataToValidate.get("STATUS").replaceAll("\\s", "") + "].");
-                TestReporter.log("DVC Reservation Number: " + rs.getValue("RESNUMBER", i));
-            }
-            TestReporter.assertAll();
-        }
-    }
-
-    /**
-     * This method validates data in the DVC database and should contain the
-     * following information with the keys precisely as listed:
-     * STAYDATE - arrival date
-     * TPID - travel plan id
-     * TPSID - travel plan segment id
-     * TCGID - travel component grouping id
-     * INVTRACKID - inventory tracking id
-     * RESTYPE - reservation type (M$, MP, etc.))
-     * HOMETYPE - room type code
-     * EXPDPTDATE - departure date
-     * ROOMNUMBER - room number (empty if no room assigned)
-     * SPECNEEDS - special needs flag (Y or N)
-     * MEMBERID - DVC member id
-     * RESORTID - resort code (BLT, AKV, etc.)
-     * STATUS - reservation status (Booked, Cancelled, etc.)
-     *
-     * @param dataToValidate
-     *            - map of data points to validate
-     */
-    public void verifyReservationInDvc_EI(Map<String, String> dataToValidate, int expectedRecords, Boolean multiNights, Boolean debug) {
-        TestReporter.logStep("Verify Reservation Data in the DVC Database");
-        // String sql =
-        // "select STAYDATE,b.TPID,b.TPSID,b.TCGID,b.INVTRACKID,c.ITI,c.EXIST_ITI,b.RESTYPE,b.HOMETYPE,b.EXPDPTDATE,b.ROOMNUMBER,b.SPECNEEDS,c.MEMBERID,b.RESORTCODE,STATUS "
-        // +
-        // "from dvcwishes.WPMRESPRCP a, dvcwishes.WPMRESDTLP b, dvcinvsys.WPIINVTRKP c "
-        // + "where a.guid = b.guid "
-        // + "and b.tpid = '"+dataToValidate.get("TPID")+"' "
-        // + "and c.EXIST_ITI != '' "
-        // + "and b.INVTRACKID = c.ITI";
-        String sql = "select a.STAYDATE,b.TPID,b.TPSID,b.TCGID,b.INVTRACKID,b.RESTYPE,b.HOMETYPE,b.EXPDPTDATE,b.ROOMNUMBER,b.SPECNEEDS,c.MEMBERID,b.RESORTCODE,c.STATUS "
-                + "from dvcwishes.WPMRESPRCP a, dvcwishes.WPMRESDTLP b, dvcinvsys.WPIINVTRKP c "
-                + "where a.guid = b.guid "
-                + "and b.tpid = '" + dataToValidate.get("TPID") + "' "
-                + "and c.EXIST_ITI != '' "
-                + "and b.RESTYPE = '" + dataToValidate.get("RESTYPE") + "' "
-                + "and c.MEMBERID = '" + dataToValidate.get("MEMBERID") + "' "
-                + "and c.STATUS = 'BOOKED'"
-                + "order by a.STAYDATE asc";
-
-        Database db = new DB2Database(environment, "dvcwishes");
-        int tries = 0;
-        int maxTries = 60;
-        Boolean success = false;
-        Recordset rs = null;
-        do {
-            if (debug == null) {
-                Sleeper.sleep(1000);
-            }
-            rs = new Recordset(db.getResultSet(sql));
-            if (rs.getRowCount() == expectedRecords) {
-                success = true;
-            }
-            tries++;
-        } while (tries < maxTries && !success);
-        // rs.print();
-        TestReporter.softAssertEquals(rs.getRowCount(), expectedRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + expectedRecords + "].");
-        if (dataToValidate.get("STAYDATE") == null) {
-            TestReporter.assertEquals(rs.getRowCount(), 0, "Verify that no records wre returned from the DVC database for TP ID [" + dataToValidate.get("TPID") + "].");
-        } else {
-            for (int i = 1; i <= rs.getRowCount(); i++) {
-                if (multiNights == null || multiNights == false) {
-                    TestReporter.softAssertEquals(rs.getValue("STAYDATE", i), dataToValidate.get("STAYDATE").replaceAll("-", ""), "Verify that the arrival date [" + rs.getValue("STAYDATE", i) + "] is that which is expected [" + dataToValidate.get("STAYDATE").replaceAll("-", "") + "].");
-                } else {
-                    TestReporter.softAssertTrue(Long.parseLong(rs.getValue("STAYDATE", i)) >= Long.parseLong(dataToValidate.get("STAYDATE").replaceAll("-", "")) && Long.parseLong(rs.getValue("STAYDATE", i)) <= Long.parseLong(dataToValidate.get("EXPDPTDATE").replaceAll("-", "")),
-                            "Verify that the arrival date [" + rs.getValue("STAYDATE", i) + "] is between the expected arrival date [" + dataToValidate.get("STAYDATE").replaceAll("-", "") + "] and the expected departure date [" + dataToValidate.get("EXPDPTDATE").replaceAll("-", "") + "].");
-                }
-                TestReporter.softAssertEquals(rs.getValue("TPID", i), dataToValidate.get("TPID"), "Verify that the TP ID [" + rs.getValue("TPID", i) + "] is that which is expected [" + dataToValidate.get("TPID") + "].");
-                TestReporter.softAssertEquals(rs.getValue("TPSID", i), dataToValidate.get("TPSID"), "Verify that the TPS ID [" + rs.getValue("TPSID", i) + "] is that which is expected [" + dataToValidate.get("TPSID") + "].");
-                TestReporter.softAssertEquals(rs.getValue("TCGID", i), dataToValidate.get("TCGID"), "Verify that the TCG ID [" + rs.getValue("TCGID", i) + "] is that which is expected [" + dataToValidate.get("TCGID") + "].");
-                TestReporter.softAssertEquals(rs.getValue("INVTRACKID", i).replaceAll("\\s", ""), dataToValidate.get("INVTRACKID").replaceAll("\\s", ""), "Verify that the inventory tracking ID [" + rs.getValue("INVTRACKID", i).replaceAll("\\s", "") + "] is that which is expected [" + dataToValidate.get("INVTRACKID").replaceAll("\\s", "") + "].");
-                TestReporter.softAssertEquals(rs.getValue("RESTYPE", i), dataToValidate.get("RESTYPE"), "Verify that the reservation type [" + rs.getValue("RESTYPE", i) + "] is that which is expected [" + dataToValidate.get("RESTYPE") + "].");
-                TestReporter.softAssertEquals(rs.getValue("HOMETYPE", i), dataToValidate.get("HOMETYPE"), "Verify that the room type code [" + rs.getValue("HOMETYPE", i) + "] is that which is expected [" + dataToValidate.get("HOMETYPE") + "].");
-                TestReporter.softAssertEquals(rs.getValue("EXPDPTDATE", i), dataToValidate.get("EXPDPTDATE").replaceAll("-", ""), "Verify that the departure date [" + rs.getValue("EXPDPTDATE", i) + "] is that which is expected [" + dataToValidate.get("EXPDPTDATE").replaceAll("-", "") + "].");
-                TestReporter.softAssertEquals(rs.getValue("ROOMNUMBER", i).replaceAll("\\s", ""), dataToValidate.get("ROOMNUMBER").replaceAll("\\s", ""), "Verify that the room number [" + rs.getValue("ROOMNUMBER", i).replaceAll("\\s", "") + "] is that which is expected [" + dataToValidate.get("ROOMNUMBER").replaceAll("\\s", "") + "].");
-                TestReporter.softAssertEquals(rs.getValue("SPECNEEDS", i), dataToValidate.get("SPECNEEDS"), "Verify that the special needs flag [" + rs.getValue("SPECNEEDS", i) + "] is that which is expected [" + dataToValidate.get("SPECNEEDS") + "].");
-                TestReporter.softAssertEquals(rs.getValue("MEMBERID", i), dataToValidate.get("MEMBERID"), "Verify that the DVC member ID [" + rs.getValue("MEMBERID", i) + "] is that which is expected [" + dataToValidate.get("MEMBERID") + "].");
-                TestReporter.softAssertEquals(rs.getValue("RESORTCODE", i).replaceAll("\\s", ""), dataToValidate.get("RESORTID").replaceAll("\\s", ""), "Verify that the resort code [" + rs.getValue("RESORTCODE", i).replaceAll("\\s", "") + "] is that which is expected [" + dataToValidate.get("RESORTID").replaceAll("\\s", "") + "].");
-                TestReporter.softAssertEquals(rs.getValue("STATUS", i).replaceAll("\\s", ""), dataToValidate.get("STATUS").replaceAll("\\s", ""), "Verify that the reservation status [" + rs.getValue("STATUS", i).replaceAll("\\s", "") + "] is that which is expected [" + dataToValidate.get("STATUS").replaceAll("\\s", "") + "].");
-                TestReporter.log("DVC Reservation Number: " + rs.getValue("RESNUMBER", i));
-            }
-            TestReporter.assertAll();
-        }
-    }
-
-    public void verifyDinePlanComponentStatus(String tpId, String status) {
-        TestReporter.logStep("Verify Dine Components are Cancelled");
-        String sql = "select c.TC_ID, c.TRVL_STS_NM "
-                + "from res_mgmt.tps a, res_mgmt.tc_grp b, res_mgmt.tc c "
-                + "where a.tp_id = " + tpId + " "
-                + "and a.tps_id = b.tps_id "
-                + "and b.tc_grp_typ_nm = 'ADD_ON_PACKAGE' "
-                + "and b.tc_grp_nb = c.tc_grp_nb";
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM", i), status, "Verify that the TC ID [" + rs.getValue("TC_ID", i) + "] status [" + status + "] is that which is expected [Cancelled].");
-        }
-        TestReporter.assertAll();
-    }
-
     public void verifyChargeDetail(int numChargesExpected, String tpId) {
         TestReporter.logStep("Verify charge details was created in Folio");
         String sql = Dreams_AccommodationQueries.getChargeInformationByTp(tpId);
@@ -965,7 +595,6 @@ public class ValidationHelper {
                 + "where a.tp_id = '" + tpId + "' "
                 + "and a.TXN_PTY_ID = b.TXN_PTY_ID "
                 + "order by b.TXN_PTY_EXTNL_REF_VAL asc";
-        // System.out.println();
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         // rs.print();
@@ -992,7 +621,6 @@ public class ValidationHelper {
                 + "where a.tp_id = '" + tpId + "' "
                 + "and a.TXN_PTY_ID = b.TXN_PTY_ID "
                 + "order by b.TXN_PTY_EXTNL_REF_VAL asc";
-        // System.out.println();
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         // rs.print();
@@ -1035,26 +663,15 @@ public class ValidationHelper {
         Map<String, Boolean> valueFound = new HashMap<>();
         valueFound.put(guest.primaryAddress().getCountryAbbv(), false);
         valueFound.put(guest.primaryAddress().getStateAbbv(), false);
-        valueFound.put(guest.primaryAddress().getCity(), false);
         valueFound.put(guest.primaryAddress().getAddress1(), false);
         valueFound.put(guest.primaryAddress().getZipCode(), false);
-        String state = null;
-        try {
-            state = AccommodationBaseTest.getStateAbbv(guest.primaryAddress().getStateAbbv());
-        } catch (AutomationException e) {
-            state = guest.primaryAddress().getStateAbbv();
-        }
         for (int i = 1; i <= rs.getRowCount(); i++) {
             // System.out.println();
             if (rs.getValue("CNTRY_ID", i).toLowerCase().contains(guest.primaryAddress().getCountryAbbv().toLowerCase())) {
                 valueFound.put(guest.primaryAddress().getCountryAbbv(), true);
             }
-            if (rs.getValue("ST_NM", i).equalsIgnoreCase(state)) {
+            if (rs.getValue("ST_NM", i).equalsIgnoreCase(guest.primaryAddress().getStateAbbv())) {
                 valueFound.put(guest.primaryAddress().getStateAbbv(), true);
-            }
-            if (rs.getValue("CTY_NM",
-                    i).equalsIgnoreCase(guest.primaryAddress().getCity())) {
-                valueFound.put(guest.primaryAddress().getCity(), true);
             }
             if (rs.getValue("ADDR_RAW_ADDR_VL", i).toLowerCase().replace("road", "rd")
                     .contains(guest.primaryAddress().getAddress1().toLowerCase().replace("road", "rd"))) {
@@ -1206,28 +823,6 @@ public class ValidationHelper {
         } else {
             TestReporter.assertTrue(rs.getRowCount() == 0, "Verify that no records were returned as expected.");
         }
-    }
-
-    public void verifyDinePlanCharges(String tpId, int records) {
-        TestReporter.logStep("Verify the number of Dine Plan charges");
-        String sql = "select distinct e.* "
-                + "from FOLIO.CHRG_GRP_FOLIO a "
-                + "left outer join FOLIO.FOLIO b on b.FOLIO_ID= a.CHRG_GRP_FOLIO_ID "
-                + "left outer join FOLIO.FOLIO_ITEM c on c.FOLIO_ID= b.FOLIO_ID "
-                + "left outer join FOLIO.CHRG_ITEM d on d.CHRG_ITEM_ID = c.FOLIO_ITEM_ID "
-                + "left outer join FOLIO.CHRG e on e.CHRG_ID = d.CHRG_ID "
-                + "left outer join FOLIO.PMT f on f.FOLIO_ITEM_ID = c.FOLIO_ITEM_ID "
-                + "left outer join FOLIO.CHRG_GRP g on g.CHRG_GRP_ID = a.ROOT_CHRG_GRP_ID "
-                + "left outer join FOLIO.CHRG_GRP_EXTNL_REF h on h.CHRG_GRP_ID=g.CHRG_GRP_ID "
-                + "left outer join FOLIO.EXTNL_REF i on i.EXTNL_REF_ID=h.EXTNL_REF_ID "
-                + "left outer join FOLIO.prod_chrg t on t.chrg_id=d.chrg_id "
-                + "left outer join FOLIO.chrg_mkt_pkg u on u.chrg_mkt_pkg_id=t.chrg_mkt_pkg_Id "
-                + "where i.EXTNL_REF_VAL ='" + tpId + "' "
-                + "and e.chrg_id is not null "
-                + "and e.REV_CLS_NM != 'Accommodation'";
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.assertEquals(rs.getRowCount(), records, "Verify that the number of dine plan records [" + rs.getRowCount() + "] is that which is expected [" + records + "].");
     }
 
     public void validateTpAddedToTravelWith(String gathering, String tpId) {
