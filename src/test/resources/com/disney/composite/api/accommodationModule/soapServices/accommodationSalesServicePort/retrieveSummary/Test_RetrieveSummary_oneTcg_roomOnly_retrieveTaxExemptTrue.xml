@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue" parallel="methods" thread-count="20" configfailurepolicy="continue" data-provider-thread-count="5">
+	<parameter name="environment" value="latest_cm" />
+	<test name="Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue">
+		<classes>
+			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveSummary.Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue'></class>
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
