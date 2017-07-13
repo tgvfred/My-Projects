@@ -115,22 +115,14 @@
 					</executions>
 					<configuration>
 		 				<testFailureIgnore>false</testFailureIgnore>
-		                <argLine>
-		                    -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
-		                </argLine>
+		               
 		               <!--  <skipTests>true</skipTests>  -->
 		              	<suiteXmlFiles>
 							<suiteXmlFile>${testNGSourceDirectory}/${suiteXmlFile}</suiteXmlFile>
 						</suiteXmlFiles>
 
 					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>org.aspectj</groupId>
-							<artifactId>aspectjweaver</artifactId>
-							<version>${aspectj.version}</version>
-						</dependency>
-					</dependencies>
+					
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
