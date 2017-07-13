@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.gqe.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.0.8</version>
+	<version>1.0.14</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -18,38 +18,30 @@
 		<dependency>
 			<groupId>com.disney.gqe</groupId>
 			<artifactId>APIUtilsSoap</artifactId>
-			<version>1.0.26</version>
+			<version>1.0.50</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Party</artifactId>
-			<version>1.0.7</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.disney.gqe</groupId>
-					<artifactId>APIUtilsSoap</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.disney.gqe.composite.api</groupId>
-					<artifactId>Accommodation</artifactId>
-				</exclusion>
-			</exclusions>
+			<version>1.0.9</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Folio</artifactId>
+			<version>1.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Resource</artifactId>
+			<version>1.0.8</version>
 		</dependency>
 	</dependencies>	
 	<properties>
 		<testNGSourceDirectory>src/test/resources</testNGSourceDirectory>
 	</properties>
 	<build>
-		<resources>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/*.txt</include>
-					<include>**/*.ora</include>
-				</includes>
-			</resource>
-
-		</resources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
