@@ -19,7 +19,7 @@ public class BookByExtendingBaseTestAndMakeFirstNightDeposit extends Accommodati
     private PaymentSettlementHelper helper;
 
     @Test(groups = { "api", "regression", "accommodation" })
-    public void bookAndMakeFirstNightDeposit() {
+    public void bookByExtendingBaseTestAndMakeFirstNightDeposit() {
         helper = new PaymentSettlementHelper(getEnvironment(), getBook(), getHouseHold());
         helper.makeFirstNightDeposit();
         gatherDataForValidations();

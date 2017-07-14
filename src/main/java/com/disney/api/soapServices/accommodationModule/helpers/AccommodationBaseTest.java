@@ -18,6 +18,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.availabilityWSPort.operations.FreezeInventory;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.BaseSoapService;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
 import com.disney.utils.PackageCodes;
 import com.disney.utils.Randomness;
@@ -292,11 +293,11 @@ public class AccommodationBaseTest extends BaseRestTest {
         return packageType.get();
     }
 
-    public void setIsWdtcBooking(boolean isWdtcBooking) {
+    public void setIsWdtcBooking(Boolean isWdtcBooking) {
         this.isWdtcBooking.set(isWdtcBooking);
     }
 
-    public boolean isWdtcBooking() {
+    public Boolean isWdtcBooking() {
         return this.isWdtcBooking.get();
     }
 
@@ -348,9 +349,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
-        setPackageBillCode("");
-        setPackageDescription("");
-        setPackageType("DRC RO");
         setIsWdtcBooking(false);
         setValues();
         bookReservation();
@@ -422,10 +420,20 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setRoomDetails_ResortPeriodStartDate(Randomness.generateCurrentXMLDate(getDaysOut()));
             getBook().setRoomDetailsBookingDate(Randomness.generateCurrentXMLDate());
 
-            if (isWdtcBooking()) {
+            if (isWdtcBooking() != null && isWdtcBooking() == true) {
                 setPackageBillCode("*WDTC");
                 setPackageDescription("R MYW Pkg + Deluxe Dining");
                 setPackageType("WDW PKG");
+                try {
+                    getBook().setRoomDetailsBlockCode("01825");
+                } catch (XPathNotFoundException e) {
+                    getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+                    getBook().setRoomDetailsBlockCode("01825");
+                }
+            } else {
+                setPackageBillCode("");
+                setPackageDescription("");
+                setPackageType("DRC RO");
             }
             pkg = new PackageCodes();
             boolean success = false;
@@ -438,6 +446,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                     success = true;
                 } catch (AssertionError e) {
                     setValues();
+                    pkg.setUseBookingDates(false);
                 }
                 pkgTries++;
             } while (!success && pkgTries < pkgMaxTries);

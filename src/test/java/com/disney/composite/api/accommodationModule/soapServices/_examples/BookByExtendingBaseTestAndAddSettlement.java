@@ -19,7 +19,7 @@ public class BookByExtendingBaseTestAndAddSettlement extends AccommodationBaseTe
     private PaymentSettlementHelper helper;
 
     @Test(groups = { "api", "regression", "accommodation" })
-    public void bookAndAddSettlement() {
+    public void bookByExtendingBaseTestAndAddSettlement() {
         helper = new PaymentSettlementHelper(getEnvironment(), getBook(), getHouseHold());
         helper.createSettlementMethod("Pay total amount due with valid visa with incidentals");
         gatherDataForValidations();

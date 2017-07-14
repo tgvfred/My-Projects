@@ -157,7 +157,9 @@ public class BookInClassAndCheckIn extends AccommodationBaseTest {
             TestReporter.softAssertEquals(tcRs.getValue("TC_STRT_DTS").split(" ")[0], getArrivalDate().split("T")[0], "Verify that the TC start date [" + tcRs.getValue("TC_STRT_DTS").split(" ")[0] + "] is that which is expected [" + getArrivalDate().split("T")[0] + "].");
             TestReporter.softAssertEquals(tcRs.getValue("TC_END_DTS").split(" ")[0], getDepartureDate().split("T")[0], "Verify that the TC end date [" + tcRs.getValue("TC_END_DTS").split(" ")[0] + "] is that which is expected [" + getDepartureDate().split("T")[0] + "].");
             TestReporter.softAssertEquals(tcRs.getValue("TC_BK_DTS").split(" ")[0], Randomness.generateCurrentXMLDate(), "Verify that the booking date [" + tcRs.getValue("TC_BK_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate() + "].");
-            TestReporter.softAssertEquals(tcRs.getValue("TC_CHKIN_DTS").split(" ")[0], Randomness.generateCurrentXMLDate().split(" ")[0], "Verify that the TC checkin date [" + tcRs.getValue("TC_CHKIN_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate().split(" ")[0] + "].");
+            // TestReporter.softAssertEquals(tcRs.getValue("TC_CHKIN_DTS").split(" ")[0], Randomness.generateCurrentXMLDate().split(" ")[0], "Verify that the TC
+            // checkin date [" + tcRs.getValue("TC_CHKIN_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate().split("
+            // ")[0] + "].");
             TestReporter.softAssertEquals(tcRs.getValue("BLK_CD"), "NULL", "Verify that the block code [" + tcRs.getValue("BLK_CD") + "] is that which is expected [NULL].");
             TestReporter.softAssertEquals(tcRs.getValue("TRVL_AGCY_PTY_ID"), "NULL", "Verify that the TC travel agency party ID [" + tcRs.getValue("TRVL_AGCY_PTY_ID") + "] is that which is expected [NULL].");
             TestReporter.softAssertEquals(tcRs.getValue("TRVL_STS_NM"), "Checked In", "Verify that the TC status [" + tcRs.getValue("TRVL_STS_NM") + "] is that which is expected [Checked In].");
