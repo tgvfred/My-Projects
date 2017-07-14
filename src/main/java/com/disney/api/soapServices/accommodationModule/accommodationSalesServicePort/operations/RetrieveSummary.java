@@ -58,6 +58,25 @@ public class RetrieveSummary extends AccommodationSalesServicePort{
 	
 	public String getShared(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/shared");}
 	
+	public String getADA(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/specialNeedsRequested");}
+	
+	public String getNumberofAdults(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/partyMixInfo/numberOfAdults");}
+	
+	public String getNumberofChildren(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/partyMixInfo/numberOfChildren");}
+	
+	int index = getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/guestReferences") + 1;
+	
+	public String getGuestReferenceDetails(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/guestReferences["+index+"]");}
+	
+	public Integer getGuestReferenceDetails(){return getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/guestReferences");}
+	
+	int index1 = getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails") + 1;
+	
+	public String getAccommodationsSummaryDetails(String index1){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails["+index1+"]");}
+	
+	public Integer getAccommodationsSummaryDetails(){return getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails");}
+	
+	
 	//Here in case you need it
 //	public void setguestEnteredInRoomIndicator(String value) {
 //		try{setRequestNodeValueByXPath("/Envelope/Body/search/request/guestEnteredInRoomIndicator", value);}

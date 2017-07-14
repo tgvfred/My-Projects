@@ -4,38 +4,40 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
-import com.disney.utils.Randomness;
-import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.Database;
-import com.disney.utils.dataFactory.database.Recordset;
-import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class Test_RetrieveSummary_oneTcg_roomOnly extends AccommodationBaseTest{
+public class Test_RetrieveSummary_oneTcg_roomOnlyADA extends AccommodationBaseTest{
 
 	private String environment;
 	private String tcg;
 	private String tps;
 	private String tcgType;
 	
+	private Book book;
+	
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void testBefore(String environment) {
         this.environment = environment;
         
+        book = new Book(environment, "bookWithoutTicketsShared");
+        //book.setRequestNodeValueByXPath("//book/request/roomDetail/specialNeedsRequested", "true");
+        book.sendRequest();
+        book.getResponse();
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
-	public void testRetrieveSummary_oneTcg_roomOnly(){
+	public void testRetrieveSummary_oneTcg_roomOnlyADA(){
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
+		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
 		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
+		TestReporter.assertTrue(retrieve.getADA().equals("true"), "ADA Successfully flipped! ");
 		
 		// Old vs New Validation
 		if (Environment.isSpecialEnvironment(environment)) {

@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
@@ -25,10 +26,6 @@ public class Test_RetrieveSummary_oneTcg_dining extends AccommodationBaseTest{
 	private String tcg;
 	private String tps;
 	private String tcgType;
-	
-	private String tpPtyId;
-    private String odsGuestId;
-    private String assignmentOwnerId;
     
     private ScheduledEventReservation diningRes;
 	
@@ -37,11 +34,16 @@ public class Test_RetrieveSummary_oneTcg_dining extends AccommodationBaseTest{
     @Parameters("environment")
     public void setup(String environment) {
         this.environment = environment;
-             
+        
+        diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), new HouseHold(1));
+        diningRes.setFacilityName("Pioneer Hall");
+        diningRes.setProductName("Hoop-Dee-Doo-Cat 2-1st Show");
+        diningRes.setServiceStartDate(Randomness.generateCurrentXMLDate(7));
+        diningRes.book("NoComponentsNoAddons");
 	}
 	
 	@AfterMethod(alwaysRun = true)
-    public void dteardown() {
+    public void teardown() {
         try {
             diningRes.cancel();
         } catch (Exception e) {
@@ -51,12 +53,6 @@ public class Test_RetrieveSummary_oneTcg_dining extends AccommodationBaseTest{
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
 	public void testRetrieveSummary_oneTcg_dining(){
-		
-		diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), new HouseHold(1));
-        diningRes.setFacilityName("Pioneer Hall");
-        diningRes.setProductName("Hoop-Dee-Doo-Cat 2-1st Show");
-        diningRes.setServiceStartDate(Randomness.generateCurrentXMLDate(7));
-        diningRes.book("NoComponentsNoAddons");
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
 		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());

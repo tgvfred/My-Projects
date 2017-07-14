@@ -22,10 +22,6 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyDVC extends BookDVCCashHelper{
 	private String tps;
 	private String tcgType;
 	
-	private String tpPtyId;
-    private String odsGuestId;
-    private String assignmentOwnerId;
-	
     @Override
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
