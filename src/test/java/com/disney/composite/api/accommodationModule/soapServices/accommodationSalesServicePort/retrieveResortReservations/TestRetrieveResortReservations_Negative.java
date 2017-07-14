@@ -38,140 +38,62 @@ public class TestRetrieveResortReservations_Negative extends BaseTest {
                 + "and c.prod_typ_nm = 'DiningProduct' "
                 + "where rownum < 100"
                 + "order by dbms_random.value");
-
         validateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_Cancelled() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Cancelled");
-        String tpsID = getTPSIdForQuery("select b.tps_id "
-                + "from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "and a.TRVL_STS_NM = 'Cancelled' "
-                + "and c.tc_typ_nm = 'AccommodationComponent' "
-                + "where rownum < 100"
-                + "order by dbms_random.value");
-
+        String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Cancelled"));
         validateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_Arrived() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Arrived");
-        String tpsID = getTPSIdForQuery("select b.tps_id "
-                + "from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "and a.TRVL_STS_NM = 'Arrived' "
-                + "where rownum < 100"
-                + "order by dbms_random.value");
-
+        String tpsID = getTPSIdForQuery(arrivedQueryBuilder("Arrived"));
         validateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_AutoArrived() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Auto Arrived");
-        String tpsID = getTPSIdForQuery("select b.tps_id "
-                + "from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "and a.TRVL_STS_NM = 'Auto Arrived' "
-                + "where rownum < 100"
-                + "order by dbms_random.value");
-
+        String tpsID = getTPSIdForQuery(arrivedQueryBuilder("Auto Arrived"));
         validateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_NoShow() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - No Show");
-        String tpsID = getTPSIdForQuery("select b.tps_id "
-                + "from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "and a.TRVL_STS_NM = 'No Show' "
-                + "and c.tc_typ_nm = 'AccommodationComponent' "
-                + "where rownum < 100"
-                + "order by dbms_random.value");
-
+        String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("No Show"));
         validateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_PastVisit() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Past Visit");
-        String tpsID = getTPSIdForQuery("select b.tps_id "
-                + "from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "and a.TRVL_STS_NM = 'Past Visit' "
-                + "and c.tc_typ_nm = 'AccommodationComponent' "
-                + "where rownum < 100"
-                + "order by dbms_random.value");
-
+        String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Past Visit"));
         validateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_AutoCancelled() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Auto Cancelled");
-        String tpsID = getTPSIdForQuery("select b.tps_id "
-                + "from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "and a.TRVL_STS_NM = 'Auto Cancelled' "
-                + "and c.tc_typ_nm = 'AccommodationComponent' "
-                + "where rownum < 100"
-                + "order by dbms_random.value");
-
+        String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Auto Cancelled"));
         validateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_NotArrived() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Not Arrived");
-        String tpsID = getTPSIdForQuery("select b.tps_id "
-                + "from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "and a.TRVL_STS_NM = 'Not Arrived' "
-                + "and c.tc_typ_nm = 'AccommodationComponent' "
-                + "where rownum < 100"
-                + "order by dbms_random.value");
-
+        String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Not Arrived"));
         validateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_CheckingIn() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Checking In");
-        String tpsID = getTPSIdForQuery("select b.tps_id "
-                + "from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "and a.TRVL_STS_NM = 'Checking In' "
-                + "and c.tc_typ_nm = 'AccommodationComponent' "
-                + "where rownum < 100"
-                + "order by dbms_random.value");
-
-        validateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
-    }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
-    public void testRetrieveResortReservations_DFCheckedOut() {
-        TestReporter.logScenario("Test - Retrieve Resort Reservations - DF Checked Out");
-        String tpsID = getTPSIdForQuery("select b.tps_id "
-                + "from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "and a.TRVL_STS_NM = 'DF Checked Out' "
-                + "and c.tc_typ_nm = 'AccommodationComponent' "
-                + "where rownum < 100"
-                + "order by dbms_random.value");
-
+        String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Checking In"));
         validateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
     }
 
@@ -184,11 +106,33 @@ public class TestRetrieveResortReservations_Negative extends BaseTest {
         return results.getValue("TPS_ID", ThreadLocalRandom.current().nextInt(results.getRowCount()) + 1);
     }
 
+    private String arrivedQueryBuilder(String status) {
+        return "select b.tps_id "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "and a.TRVL_STS_NM = '" + status + "' "
+                + "where rownum < 100"
+                + "order by dbms_random.value";
+    }
+
+    private String accommodationComponentQueryBuilder(String status) {
+        return "select b.tps_id "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "and a.TRVL_STS_NM = '" + status + "' "
+                + "and c.tc_typ_nm = 'AccommodationComponent' "
+                + "where rownum < 100"
+                + "order by dbms_random.value";
+    }
+
     private void validateApplicationError(String tpsID, ApplicationErrorCode error) {
         RetrieveResortReservations retrieveResortReservations = new RetrieveResortReservations(environment);
         retrieveResortReservations.setReservationNumber(tpsID);
         retrieveResortReservations.sendRequest();
 
+        TestReporter.logAPI(retrieveResortReservations.getResponseStatusCode().equals("200"), "The response was incorrectly successful.", retrieveResortReservations);
         super.validateApplicationError(retrieveResortReservations, error);
     }
 }
