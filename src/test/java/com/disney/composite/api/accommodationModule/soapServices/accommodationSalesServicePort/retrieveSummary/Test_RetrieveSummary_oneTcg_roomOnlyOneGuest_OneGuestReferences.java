@@ -32,6 +32,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences ext
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
 	public void testRetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences(){
 		
+		//The response will always seem to have two GuestReferenceDetails, they hold the exact same data even for the same guest
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
 		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
 		retrieve.sendRequest();

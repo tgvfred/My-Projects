@@ -64,6 +64,10 @@ public class RetrieveSummary extends AccommodationSalesServicePort{
 	
 	public String getNumberofChildren(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/partyMixInfo/numberOfChildren");}
 	
+	public String getTaxExemptCertificateNumber(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/taxExemptDetail/taxExemptCertificateNumber");}
+	
+	public String getTaxExemptType(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/taxExemptDetail/taxExemptType");}
+	
 	int index = getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/guestReferences") + 1;
 	
 	public String getGuestReferenceDetails(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/guestReferences["+index+"]");}
