@@ -24,9 +24,9 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences ext
     public void testBefore(String environment) {
         this.environment = environment;
         
-        book = new Book(environment, "bookWithoutTickets");
-        book.sendRequest();
-        book.getResponse();
+//        book = new Book(environment, "bookWithoutTickets");
+//        book.sendRequest();
+//        book.getResponse();
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
@@ -34,9 +34,9 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences ext
 		
 		//The response will always seem to have two GuestReferenceDetails, they hold the exact same data even for the same guest
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
 		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
 		
 		TestReporter.logStep("Verify one GuestReferenceDetails node is found.");
 		TestReporter.assertTrue(retrieve.getGuestReferenceDetails() > 1, "Only one GuestReferenceDetails node found! ");

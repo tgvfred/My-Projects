@@ -13,9 +13,6 @@ import com.disney.utils.TestReporter;
 public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends AccommodationBaseTest{
 
 	private String environment;
-	private String tcg;
-	private String tps;
-	private String tcgType;
 	
 	private Book book;
 	
@@ -24,9 +21,10 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
     public void testBefore(String environment) {
         this.environment = environment;
         
-        book = new Book(environment, "BookWithoutTicketsTaxExempt");
-        book.sendRequest();
-        book.getResponse();
+        getBook().setTaxExemptDetailCertificateNumber("1");
+        getBook().setTaxExemptDetailType("Military");
+        getBook().sendRequest();
+        
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
@@ -34,9 +32,9 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
 		retrieve.setRequestRetrieveTaxExempt("true");
-		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
 		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
 		
 		TestReporter.logStep("Verify Tax Exempt Details are found.");
 		TestReporter.assertTrue(retrieve.getTaxExemptCertificateNumber().equals("1"), "Tax Exempt Certificate Number Found [1]! ");

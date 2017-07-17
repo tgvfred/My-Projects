@@ -13,9 +13,6 @@ import com.disney.utils.TestReporter;
 public class Test_RetrieveSummary_oneTcg_roomOnlyADA extends AccommodationBaseTest{
 
 	private String environment;
-	private String tcg;
-	private String tps;
-	private String tcgType;
 	
 	private Book book;
 	
@@ -24,20 +21,20 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyADA extends AccommodationBaseTe
     public void testBefore(String environment) {
         this.environment = environment;
         
-        book = new Book(environment, "bookWithoutTicketsShared");
-        //book.setRequestNodeValueByXPath("//book/request/roomDetail/specialNeedsRequested", "true");
-        book.sendRequest();
-        book.getResponse();
+        getBook().setRoomDetailsSpecialNeedsRequested("true");
+        getBook().sendRequest();
+      
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
 	public void testRetrieveSummary_oneTcg_roomOnlyADA(){
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
 		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
-		TestReporter.assertTrue(retrieve.getADA().equals("true"), "ADA Successfully flipped! ");
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
+		//Everything is correct in the RS, but the validation says it's not
+		TestReporter.assertTrue(retrieve.getADA().equals("true"), "ADA Successfully flipped! ["+retrieve.getADA()+"] ");
 		
 		// Old vs New Validation
 		if (Environment.isSpecialEnvironment(environment)) {

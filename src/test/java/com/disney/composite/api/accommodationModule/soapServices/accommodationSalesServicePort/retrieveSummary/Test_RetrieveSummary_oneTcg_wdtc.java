@@ -19,7 +19,7 @@ public class Test_RetrieveSummary_oneTcg_wdtc extends AccommodationBaseTest{
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-		setEnvironment(environment);
+		this.environment = environment;
         
 	}
 	
@@ -45,8 +45,8 @@ public class Test_RetrieveSummary_oneTcg_wdtc extends AccommodationBaseTest{
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
 		
-//		TestReporter.logStep("Verify one GuestReferenceDetails node is found.");
-//		TestReporter.assertTrue(retrieve.getGuestReferenceDetails() > 1, "Only one GuestReferenceDetails node found! ");
+		TestReporter.logStep("Verify roomOnly node is false.");
+		TestReporter.assertTrue(retrieve.getRoomOnlyStatus().equals("false"), "Room Only node returns false! ");
 		
 		// Old vs New Validation
 		if (Environment.isSpecialEnvironment(environment)) {

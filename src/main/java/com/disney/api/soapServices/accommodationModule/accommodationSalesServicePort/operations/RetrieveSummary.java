@@ -80,6 +80,7 @@ public class RetrieveSummary extends AccommodationSalesServicePort{
 	
 	public Integer getAccommodationsSummaryDetails(){return getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails");}
 	
+	public String getRoomOnlyStatus(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/roomOnly");}
 	
 	//Here in case you need it
 //	public void setguestEnteredInRoomIndicator(String value) {

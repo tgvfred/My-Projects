@@ -39,6 +39,8 @@
 		</dependency>
 	</dependencies>	
 	<properties>
+		<aspectj.version>1.8.5</aspectj.version>
+		<allure.version>{latest-allure-version}</allure.version>
 		<testNGSourceDirectory>src/test/resources</testNGSourceDirectory>
 	</properties>
 	<build>
@@ -113,13 +115,14 @@
 					</executions>
 					<configuration>
 		 				<testFailureIgnore>false</testFailureIgnore>
+		               
 		               <!--  <skipTests>true</skipTests>  -->
 		              	<suiteXmlFiles>
 							<suiteXmlFile>${testNGSourceDirectory}/${suiteXmlFile}</suiteXmlFile>
 						</suiteXmlFiles>
 
 					</configuration>
-				
+					
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>

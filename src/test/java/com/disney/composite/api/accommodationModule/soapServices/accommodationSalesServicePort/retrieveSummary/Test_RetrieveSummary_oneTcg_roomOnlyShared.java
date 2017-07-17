@@ -5,6 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
@@ -13,21 +14,16 @@ import com.disney.utils.TestReporter;
 public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBaseTest{
 
 	private String environment;
-	private String tcg;
-	private String tps;
-	private String tcgType;
 	
-	private Book book;
+	private ReplaceAllForTravelPlanSegment book;
 	
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void testBefore(String environment) {
         this.environment = environment;
         
-        book = new Book(environment, "bookWithoutTickets");
-        book.setRequestNodeValueByXPath("//book/request/roomDetail/shared", "true");
-        book.sendRequest();
-        book.getResponse();
+        getBook().setRoomDetailsShared("true");
+        getBook().sendRequest();
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
@@ -35,9 +31,9 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
 		
 		//Flips correctly while booking, but the it isn't flipped in RetrieveSummary RS
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
 		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
 		TestReporter.assertTrue(retrieve.getShared().equals("true"), "Shared Successfully flipped! ");
 		
 		// Old vs New Validation

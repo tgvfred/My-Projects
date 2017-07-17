@@ -18,6 +18,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.availabilityWSPort.operations.FreezeInventory;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.BaseSoapService;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
 import com.disney.utils.PackageCodes;
 import com.disney.utils.Randomness;
@@ -65,18 +66,14 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> skipCancel = new ThreadLocal<Boolean>();
     private ThreadLocal<String> ageType = new ThreadLocal<String>();
     private ThreadLocal<String> age = new ThreadLocal<String>();
+    private ThreadLocal<String> packageBillCode = new ThreadLocal<>();
+    private ThreadLocal<String> packageDescription = new ThreadLocal<>();
+    private ThreadLocal<String> packageType = new ThreadLocal<>();
+    private ThreadLocal<Boolean> isWdtcBooking = new ThreadLocal<Boolean>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
     }
-
-    // **************************************
-    // **************************************
-    // **************************************
-    // Setters
-    // **************************************
-    // **************************************
-    // **************************************
 
     public static void setEnvironment(String env) {
         environment = env;
@@ -167,14 +164,6 @@ public class AccommodationBaseTest extends BaseRestTest {
     protected void setCampusId(String campusId) {
         this.campusId.set(campusId);
     }
-
-    // **************************************
-    // **************************************
-    // **************************************
-    // Getters
-    // **************************************
-    // **************************************
-    // **************************************
 
     public static String getEnvironment() {
         return environment;
@@ -280,6 +269,38 @@ public class AccommodationBaseTest extends BaseRestTest {
         return age.get();
     }
 
+    public void setPackageBillCode(String packageBillCode) {
+        this.packageBillCode.set(packageBillCode);
+    }
+
+    public String getPackageBillCode() {
+        return packageBillCode.get();
+    }
+
+    public void setPackageDescription(String packageDescription) {
+        this.packageDescription.set(packageDescription);
+    }
+
+    public String getPackageDescription() {
+        return packageDescription.get();
+    }
+
+    public void setPackageType(String packageType) {
+        this.packageType.set(packageType);
+    }
+
+    public String getPackageType() {
+        return packageType.get();
+    }
+
+    public void setIsWdtcBooking(Boolean isWdtcBooking) {
+        this.isWdtcBooking.set(isWdtcBooking);
+    }
+
+    public Boolean isWdtcBooking() {
+        return this.isWdtcBooking.get();
+    }
+
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -328,6 +349,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
+        setIsWdtcBooking(false);
         setValues();
         bookReservation();
     }
@@ -389,7 +411,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         }
 
         PackageCodes pkg = new PackageCodes();
-        boolean bookSuccess = false;
         int maxTries = 10;
         int tries = 0;
         do {
@@ -399,6 +420,21 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setRoomDetails_ResortPeriodStartDate(Randomness.generateCurrentXMLDate(getDaysOut()));
             getBook().setRoomDetailsBookingDate(Randomness.generateCurrentXMLDate());
 
+            if (isWdtcBooking() != null && isWdtcBooking() == true) {
+                setPackageBillCode("*WDTC");
+                setPackageDescription("R MYW Pkg + Deluxe Dining");
+                setPackageType("WDW PKG");
+                try {
+                    getBook().setRoomDetailsBlockCode("01825");
+                } catch (XPathNotFoundException e) {
+                    getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+                    getBook().setRoomDetailsBlockCode("01825");
+                }
+            } else {
+                setPackageBillCode("");
+                setPackageDescription("");
+                setPackageType("DRC RO");
+            }
             pkg = new PackageCodes();
             boolean success = false;
             int pkgMaxTries = 15;
@@ -406,14 +442,11 @@ public class AccommodationBaseTest extends BaseRestTest {
             do {
                 try {
                     packageCode.set(pkg.retrievePackageCode(getEnvironment(), String.valueOf(getDaysOut()),
-                            getLocationId(), "DRC RO", "", getResortCode(), getRoomTypeCode(), ""));
+                            getLocationId(), getPackageType(), getPackageBillCode(), getResortCode(), getRoomTypeCode(), getPackageDescription()));
                     success = true;
                 } catch (AssertionError e) {
-                    if (!noPackageCodes.containsKey(getResortCode() + ":" + getLocationId() + ":" + getRoomTypeCode())) {
-                        String message = "No package code found for resort[" + getResortCode() + "], locationId[" + getLocationId() + "], and roomType[" + getRoomTypeCode() + "]:";
-                        noPackageCodes.put(getResortCode() + ":" + getLocationId() + ":" + getRoomTypeCode(), message);
-                    }
                     setValues();
+                    pkg.setUseBookingDates(false);
                 }
                 pkgTries++;
             } while (!success && pkgTries < pkgMaxTries);
