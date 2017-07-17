@@ -399,6 +399,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void bookReservation() {
         if (getHouseHold() == null) {
             createHouseHold();
+            hh.get().sendToApi("latest");
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 

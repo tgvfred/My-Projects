@@ -5,9 +5,12 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.travelPlanModule.TravelPlanBaseTest;
 import com.disney.utils.Environment;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences extends AccommodationBaseTest{
@@ -24,7 +27,6 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences ext
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
 	public void testRetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences(){
 		
-		//The response will always seem to have two GuestReferenceDetails, they hold the exact same data even for the same guest
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
 		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
 		retrieve.sendRequest();

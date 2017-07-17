@@ -5,41 +5,23 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
-import com.disney.utils.Randomness;
-import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.Database;
-import com.disney.utils.dataFactory.database.Recordset;
-import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class Test_RetrieveSummary_oneTcg_dining extends AccommodationBaseTest{
 
 	private String environment;
-	private String tcg;
-	private String tps;
-	private String tcgType;
-    
     private ScheduledEventReservation diningRes;
 	
-    @Override
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
-    public void setup(String environment) {
+    public void testBefore(String environment) {
         this.environment = environment;
         
-        diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), new HouseHold(1));
-        diningRes.setFacilityName("Pioneer Hall");
-        diningRes.setProductName("Hoop-Dee-Doo-Cat 2-1st Show");
-        diningRes.setServiceStartDate(Randomness.generateCurrentXMLDate(7));
-        diningRes.book("NoComponentsNoAddons");
 	}
 	
 	@AfterMethod(alwaysRun = true)
@@ -53,6 +35,10 @@ public class Test_RetrieveSummary_oneTcg_dining extends AccommodationBaseTest{
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
 	public void testRetrieveSummary_oneTcg_dining(){
+		
+		ScheduledEventReservation dining = new ShowDiningReservation(getEnvironment().toLowerCase().replace("_cm", ""));
+        dining.setTravelPlanId(getBook().getTravelPlanId());
+        dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
 		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());

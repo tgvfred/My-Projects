@@ -18,9 +18,6 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class Test_RetrieveSummary_oneTcg_roomOnlyDVC extends BookDVCCashHelper{
 
 	private String environment;
-	private String tcg;
-	private String tps;
-	private String tcgType;
 	
     @Override
 	@BeforeMethod(alwaysRun = true)
