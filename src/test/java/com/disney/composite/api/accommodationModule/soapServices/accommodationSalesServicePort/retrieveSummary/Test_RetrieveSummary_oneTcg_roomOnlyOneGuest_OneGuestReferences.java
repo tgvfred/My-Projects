@@ -13,20 +13,12 @@ import com.disney.utils.TestReporter;
 public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences extends AccommodationBaseTest{
 
 	private String environment;
-	private String tcg;
-	private String tps;
-	private String tcgType;
-	
-	private Book book;
 	
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void testBefore(String environment) {
         this.environment = environment;
         
-//        book = new Book(environment, "bookWithoutTickets");
-//        book.sendRequest();
-//        book.getResponse();
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})

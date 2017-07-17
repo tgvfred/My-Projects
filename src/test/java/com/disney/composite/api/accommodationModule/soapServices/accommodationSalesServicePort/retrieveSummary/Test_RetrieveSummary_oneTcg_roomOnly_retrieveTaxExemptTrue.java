@@ -21,6 +21,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
     public void testBefore(String environment) {
         this.environment = environment;
         
+        //Cannot set these even though it sets up "Shared" & "Special Needs" just fine.
         getBook().setTaxExemptDetailCertificateNumber("1");
         getBook().setTaxExemptDetailType("Military");
         getBook().sendRequest();

@@ -1,10 +1,12 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveSummary;
 
+import org.apache.tools.ant.taskdefs.Replace;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
@@ -13,18 +15,15 @@ import com.disney.utils.TestReporter;
 public class Test_RetrieveSummary_oneTcg_roomOnlyTwoGuests extends AccommodationBaseTest{
 
 	private String environment;
-	private String tcg;
-	private String tps;
-	private String tcgType;
 	
-	private Book book;
+	private ReplaceAllForTravelPlanSegment book;
 	
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void testBefore(String environment) {
         this.environment = environment;
         
-        book = new Book(environment, "Book2AdultsWithoutTickets");
+        book = new ReplaceAllForTravelPlanSegment(environment, "book2AdultsAndTwoRoom");
         book.sendRequest();
         book.getResponse();
 	}

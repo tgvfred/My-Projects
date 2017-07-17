@@ -4,14 +4,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
-public class Test_RetrieveSummary_oneTcg_roomOnly_oneAdultOneChild extends AccommodationBaseTest{
+public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationBaseTest{
 
 	private String environment;
 	
@@ -22,21 +21,22 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_oneAdultOneChild extends Accom
     public void testBefore(String environment) {
         this.environment = environment;
         
-        book = new ReplaceAllForTravelPlanSegment(environment, "book1Adult1Child");
-
+        book = new ReplaceAllForTravelPlanSegment(environment, "book2AdultsAndTwoRoom");
         book.sendRequest();
         book.getResponse();
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
-	public void testRetrieveSummary_oneTcg_roomOnlyShared(){
+	public void testRetrieveSummary_oneTcg_roomOnlyTwoRooms(){
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
 		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
-		TestReporter.assertTrue(retrieve.getNumberofAdults().equals("1"), "Number of Adults is [1]! ");
-		TestReporter.assertTrue(retrieve.getNumberofChildren().equals("1"), "Number of Children is [1]! ");
+		
+		TestReporter.logStep("Verify two accommodationsSummaryDetails nodes are returned");
+		TestReporter.assertTrue(retrieve.getTravelComponentGroupingId("1") != null && retrieve.getTravelComponentGroupingId("2") != null, "Two accommodationsSummaryDetails nodes found! First TCGID is ["+retrieve.getTravelComponentGroupingId("1")+"] & Second TCGID is ["+retrieve.getTravelComponentGroupingId("2")+"]");
+		
 		
 		// Old vs New Validation
 		if (Environment.isSpecialEnvironment(environment)) {

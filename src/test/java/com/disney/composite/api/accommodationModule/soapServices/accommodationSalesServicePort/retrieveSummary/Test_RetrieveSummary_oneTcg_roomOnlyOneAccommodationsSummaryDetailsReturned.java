@@ -24,18 +24,15 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneAccommodationsSummaryDetails
     public void testBefore(String environment) {
         this.environment = environment;
         
-        book = new Book(environment, "bookWithoutTickets");
-        book.sendRequest();
-        book.getResponse();
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
 	public void testRetrieveSummary_oneTcg_roomOnlyOneAccommodationsSummaryDetailsReturned(){
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
 		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
 		
 		TestReporter.logStep("Verify one AccommodationsSummaryDetails node is found.");
 		TestReporter.assertTrue(retrieve.getAccommodationsSummaryDetails() <= 1, "Only one AccommodationsSummaryDetails node found! ");

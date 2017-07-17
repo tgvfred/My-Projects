@@ -15,30 +15,24 @@ import com.disney.utils.TestReporter;
 public class Test_RetrieveSummary_oneTcg_roomOnlyRSR extends AccommodationBaseTest{
 
 	private String environment;
-	private String tcg;
-	private String tps;
-	private String tcgType;
-	
-	private Book book;
 	
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void testBefore(String environment) {
         this.environment = environment;
         
-        book = new Book(environment, "bookWithoutTickets");
-        book.setRequestNodeValueByXPath("//book/request/roomDetail/rsrReservation", "true");
-        book.sendRequest();
-        book.getResponse();
+        //This is the only node with RSR in it, but does not flip the RSR node found in Retrieve.
+        getBook().setRoomDetailsRsrReservation("true");
+        getBook().sendRequest();
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
 	public void testRetrieveSummary_oneTcg_roomOnlyRSR(){
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
 		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
 		TestReporter.assertTrue(retrieve.getRSR().equals("true"), "RSR Successfully flipped! ");
 		
 		// Old vs New Validation

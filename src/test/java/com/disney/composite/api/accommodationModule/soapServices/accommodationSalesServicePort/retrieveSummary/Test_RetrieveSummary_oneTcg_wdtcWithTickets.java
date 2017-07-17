@@ -126,8 +126,8 @@ public class Test_RetrieveSummary_oneTcg_wdtcWithTickets extends AccommodationBa
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
 		
-//		TestReporter.logStep("Verify one GuestReferenceDetails node is found.");
-//		TestReporter.assertTrue(retrieve.getGuestReferenceDetails() > 1, "Only one GuestReferenceDetails node found! ");
+		TestReporter.logStep("Verify Ticket Group node is found.");
+		TestReporter.assertTrue(retrieve.getTicketGroup() != null, "Ticket Group found! ["+retrieve.getTicketGroup()+"] ");
 		
 		// Old vs New Validation
 		if (Environment.isSpecialEnvironment(environment)) {

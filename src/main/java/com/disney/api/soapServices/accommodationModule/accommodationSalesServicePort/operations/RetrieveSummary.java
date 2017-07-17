@@ -68,6 +68,10 @@ public class RetrieveSummary extends AccommodationSalesServicePort{
 	
 	public String getTaxExemptType(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/taxExemptDetail/taxExemptType");}
 	
+	public String getTicketDetails(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/ticketDetails");}
+	
+	public String getTicketGroup(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/ticketGroup");}
+	
 	int index = getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/guestReferences") + 1;
 	
 	public String getGuestReferenceDetails(String index){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/guestReferences["+index+"]");}
@@ -81,6 +85,10 @@ public class RetrieveSummary extends AccommodationSalesServicePort{
 	public Integer getAccommodationsSummaryDetails(){return getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails");}
 	
 	public String getRoomOnlyStatus(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/roomOnly");}
+	
+	int index2 = getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/travelComponentGroupingId") + 1;
+	
+	public String getTravelComponentGroupingId(String index2){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails["+index2+"]/travelComponentGroupingId");}
 	
 	//Here in case you need it
 //	public void setguestEnteredInRoomIndicator(String value) {
