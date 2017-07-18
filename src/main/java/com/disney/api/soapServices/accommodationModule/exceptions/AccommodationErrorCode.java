@@ -5,6 +5,8 @@ import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 public class AccommodationErrorCode {
 	private static final String APP_NAME = "LILO FOLIO";
 
+	private static final String MODULE_NAME = "LILO_RESM";
+	
 	public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS = new ApplicationErrorCode(APP_NAME, 2901,
 			" Missing required fields. ");
 	public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS_POST_REFUND_REQUEST = new ApplicationErrorCode(APP_NAME, 2902,
@@ -79,4 +81,8 @@ public class AccommodationErrorCode {
 			"No Travel Plan Found for given TC Id");
 	public static final ApplicationErrorCode ROLLBACK_IMPLEMENTATION_VALIDATION_EXCEPTION= new ApplicationErrorCode(APP_NAME, 2901,
 			" Rollback Implemenation Validation. ");
+	public static final ApplicationErrorCode RESULT_SIZE_TOO_LARGE_EXCEPTION= new ApplicationErrorCode(MODULE_NAME, 91443,
+			" Validation Failed. ");
+	public static final ApplicationErrorCode DATA_NOT_FOUND_EXCEPTION= new ApplicationErrorCode(MODULE_NAME, 91443,
+			" Data not found. ");
 }
