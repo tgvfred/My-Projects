@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.gqe.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.0.14</version>
+	<version>1.0.15</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -41,6 +41,7 @@
 	<properties>
 		<aspectj.version>1.8.5</aspectj.version>
 		<allure.version>{latest-allure-version}</allure.version>
+		<additionalparam>-Xdoclint:none</additionalparam>
 		<testNGSourceDirectory>src/test/resources</testNGSourceDirectory>
 	</properties>
 	<build>
