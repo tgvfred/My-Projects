@@ -21,11 +21,12 @@ public class Test_SearchPackage_emptyRequest extends AccommodationBaseTest{
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
-	public void testSearchPackage_emptyRequest(){
+	public void testSearchPackage_packageCodeOnly(){
 		
 		String faultString = "Validation Failed. : Result size too large. 3125 rows selected, which exceeds the maximum of 500";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
+		search.setPackageCode("X697A");
 		search.sendRequest();
 		
 		TestReporter.assertEquals(search.getFaultString().replaceAll("\\s", ""), faultString.replaceAll("\\s", ""), "Verify that the fault string [" + search.getFaultString() + "] is that which is expected [" + faultString + "].");

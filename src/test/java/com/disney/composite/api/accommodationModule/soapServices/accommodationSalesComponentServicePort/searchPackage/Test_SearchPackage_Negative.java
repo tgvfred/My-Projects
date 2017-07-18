@@ -12,16 +12,10 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.Database;
-import com.disney.utils.dataFactory.database.Recordset;
-import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 
 	private String environment;
-	
-	private String tps;
-    private String role;
 	
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
