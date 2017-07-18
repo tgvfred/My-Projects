@@ -35,6 +35,12 @@ public class RetrieveSummary extends AccommodationSalesServicePort{
 		setRequestNodeValueByXPath("/Envelope/Body/retrieveSummary/request/travelComponentGroupingIds", tcgId);
 	}
 	
+	int index3 = getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/guestReferences") + 1;
+	
+	public void setRequestTravelComponentGroupingIdIndex(String index3, String tcgId){
+		setRequestNodeValueByXPath("/Envelope/Body/retrieveSummary/request/travelComponentGroupingIds["+index3+"]", tcgId);
+	}
+	
 	public void setRequestTravelComponentId(String value) {
 		try{setRequestNodeValueByXPath("/Envelope/Body/retrieveSummary/request/travelComponentIds", value);}
 		catch(XPathNotFoundException e){
@@ -89,6 +95,20 @@ public class RetrieveSummary extends AccommodationSalesServicePort{
 	int index2 = getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/travelComponentGroupingId") + 1;
 	
 	public String getTravelComponentGroupingId(String index2){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails["+index2+"]/travelComponentGroupingId");}
+	
+	int index4 = getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/travelPlanSegmentId") + 1;
+	
+	public String getTravelPlanSegmentId(String index4){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails["+index4+"]/travelPlanSegmentId");}
+	
+	public String getPackageCode(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/packageCode");}
+	
+	public String getPackageDescription(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/packageDescription");}
+	
+	public String getSalesChannelId(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/salesChannelId");}
+	
+	public String getBookDate(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/bookDate");}
+	
+	public String getStartDate(){return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/period/startDate");}
 	
 	//Here in case you need it
 //	public void setguestEnteredInRoomIndicator(String value) {

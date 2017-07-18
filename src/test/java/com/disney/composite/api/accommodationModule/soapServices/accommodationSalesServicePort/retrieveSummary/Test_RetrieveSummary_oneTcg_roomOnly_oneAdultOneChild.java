@@ -29,7 +29,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_oneAdultOneChild extends Accom
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
-	public void testRetrieveSummary_oneTcg_roomOnlyShared(){
+	public void testRetrieveSummary_oneTcg_roomOnly_oneAdultOneChild(){
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
 		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());

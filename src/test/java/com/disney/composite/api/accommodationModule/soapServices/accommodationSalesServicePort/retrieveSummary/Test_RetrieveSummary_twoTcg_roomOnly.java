@@ -10,11 +10,13 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
-public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationBaseTest{
+public class Test_RetrieveSummary_twoTcg_roomOnly extends AccommodationBaseTest{
 
 	private String environment;
 	
 	private ReplaceAllForTravelPlanSegment book;
+	private ReplaceAllForTravelPlanSegment book1;
+	
 	private Integer two = 2;
 	
 	@BeforeMethod(alwaysRun = true)
@@ -22,22 +24,25 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationB
     public void testBefore(String environment) {
         this.environment = environment;
         
-        book = new ReplaceAllForTravelPlanSegment(environment, "book2AdultsAndTwoRoom");
+        book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
         book.sendRequest();
-        book.getResponse();
+        
+        book1 = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
+        book1.sendRequest();
+        
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
-	public void testRetrieveSummary_oneTcg_roomOnlyTwoRooms(){
+	public void testRetrieveSummary_twoTcg_roomOnly(){
 		
-		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main2TCG");
+		retrieve.setRequestTravelComponentGroupingIdIndex("1", book.getTravelPlanSegmentId());
+		retrieve.setRequestTravelComponentGroupingIdIndex("2", book1.getTravelPlanSegmentId());
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
 		
-		TestReporter.logStep("Verify two accommodationsSummaryDetails nodes are returned");
-		TestReporter.assertTrue(retrieve.getAccommodationsSummaryDetails().equals(two), "Two accommodationsSummaryDetails nodes found! First TCGID is ["+retrieve.getTravelComponentGroupingId("1")+"] & Second TCGID is ["+retrieve.getTravelComponentGroupingId("2")+"]");
-		
+		TestReporter.logStep("Verify two AccommodationsSummaryDetails node is found & that two different TPS IDs are found.");
+		TestReporter.assertTrue(retrieve.getAccommodationsSummaryDetails().equals(two), "Number of AccommodationsSummaryDetails nodes found is ["+retrieve.getAccommodationsSummaryDetails()+"]! and the two TPS IDs are ["+retrieve.getTravelPlanSegmentId("1")+"] & ["+retrieve.getTravelPlanSegmentId("2")+"]");
 		
 		// Old vs New Validation
 		if (Environment.isSpecialEnvironment(environment)) {

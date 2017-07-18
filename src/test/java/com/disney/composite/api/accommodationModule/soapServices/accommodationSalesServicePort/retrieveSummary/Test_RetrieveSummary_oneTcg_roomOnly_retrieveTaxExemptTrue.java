@@ -5,6 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
@@ -14,17 +15,15 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
 
 	private String environment;
 	
-	private Book book;
+	private ReplaceAllForTravelPlanSegment book;
 	
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void testBefore(String environment) {
         this.environment = environment;
         
-        //Cannot set these even though it sets up "Shared" & "Special Needs" just fine.
-        getBook().setTaxExemptDetailCertificateNumber("1");
-        getBook().setTaxExemptDetailType("Military");
-        getBook().sendRequest();
+        book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTicketsTaxExempt");
+        book.sendRequest();
         
 	}
 	
@@ -33,9 +32,9 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
 		retrieve.setRequestRetrieveTaxExempt("true");
-		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
+		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
 		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
+		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
 		
 		TestReporter.logStep("Verify Tax Exempt Details are found.");
 		TestReporter.assertTrue(retrieve.getTaxExemptCertificateNumber().equals("1"), "Tax Exempt Certificate Number Found [1]! ");

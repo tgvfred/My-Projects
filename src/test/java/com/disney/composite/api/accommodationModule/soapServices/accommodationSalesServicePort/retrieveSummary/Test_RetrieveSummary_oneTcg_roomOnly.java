@@ -18,9 +18,6 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class Test_RetrieveSummary_oneTcg_roomOnly extends AccommodationBaseTest{
 
 	private String environment;
-	private String tcg;
-	private String tps;
-	private String tcgType;
 	
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")

@@ -10,34 +10,32 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
-public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationBaseTest{
+public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuestMultiAddresses extends AccommodationBaseTest{
 
 	private String environment;
 	
 	private ReplaceAllForTravelPlanSegment book;
-	private Integer two = 2;
 	
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void testBefore(String environment) {
         this.environment = environment;
         
-        book = new ReplaceAllForTravelPlanSegment(environment, "book2AdultsAndTwoRoom");
+        book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTicketsMultiAddr");
         book.sendRequest();
-        book.getResponse();
+        
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
-	public void testRetrieveSummary_oneTcg_roomOnlyTwoRooms(){
+	public void testRetrieveSummary_oneTcg_roomOnlyOneGuestMultiAddresses(){
 		
 		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
 		retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+book.getTravelComponentGroupingId()+"]", retrieve);
 		
-		TestReporter.logStep("Verify two accommodationsSummaryDetails nodes are returned");
-		TestReporter.assertTrue(retrieve.getAccommodationsSummaryDetails().equals(two), "Two accommodationsSummaryDetails nodes found! First TCGID is ["+retrieve.getTravelComponentGroupingId("1")+"] & Second TCGID is ["+retrieve.getTravelComponentGroupingId("2")+"]");
-		
+//		TestReporter.logStep("Verify Multiple Addresses are found.");
+//		TestReporter.assertTrue(retrieve.getTaxExemptCertificateNumber().equals("1"), "Number of Addresses Found [2]! ");
 		
 		// Old vs New Validation
 		if (Environment.isSpecialEnvironment(environment)) {
