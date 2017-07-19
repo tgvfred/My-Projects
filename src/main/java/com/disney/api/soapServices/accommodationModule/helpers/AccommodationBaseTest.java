@@ -72,6 +72,9 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> packageDescription = new ThreadLocal<>();
     private ThreadLocal<String> packageType = new ThreadLocal<>();
     private ThreadLocal<Boolean> isWdtcBooking = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> isADA = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> isRSR = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> isShared = new ThreadLocal<Boolean>(); 
     private ThreadLocal<Boolean> addGuest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addNewGuest = new ThreadLocal<Boolean>();
 
@@ -304,6 +307,30 @@ public class AccommodationBaseTest extends BaseRestTest {
     public Boolean isWdtcBooking() {
         return this.isWdtcBooking.get();
     }
+    
+    public void setIsADA(Boolean isADA) {
+        this.isADA.set(isADA);
+    }
+
+    public Boolean isADA() {
+        return this.isADA.get();
+    }
+    
+    public void setIsRSR(Boolean isRSR) {
+        this.isRSR.set(isRSR);
+    }
+
+    public Boolean isRSR() {
+        return this.isRSR.get();
+    }
+    
+    public void setIsShared(Boolean isShared) {
+        this.isShared.set(isShared);
+    }
+
+    public Boolean isShared() {
+        return this.isShared.get();
+    }
 
     public void setAddGuest(Boolean addGuest) {
         this.addGuest.set(addGuest);
@@ -420,6 +447,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void bookReservation() {
         if (getHouseHold() == null) {
             createHouseHold();
+            hh.get().sendToApi("latest");
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
@@ -477,9 +505,23 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setRoomDetailsLocationId(getLocationId());
             getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
             getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
+
+            if (isADA() != null && isADA() == true) {
+				getBook().setRoomDetailsSpecialNeedsRequested("true");
+			}
+            
+            if (isRSR() != null && isRSR() == true) {
+				getBook().setRoomDetailsRsrReservation("true");
+			}
+            
+            if (isShared() != null && isShared() == true) {
+				getBook().setRoomDetailsShared("true");
+			}
+          
             if (getAddGuest() != null && getAddGuest() == true) {
                 addGuest();
             }
+
             getBook().sendRequest();
             TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
             tries++;
