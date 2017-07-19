@@ -47,7 +47,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
-    public void testCancel_TravelComponentGroupingIdLessThanZero() {
+    public void testCancel_tcgLessThanZero() {
         TestReporter.logScenario("Test - Cancel - Travel Component Grouping ID Less Than Zero");
 
         Cancel cancel = new Cancel(environment);
@@ -70,7 +70,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
-    public void testCancel_InvalidTravelComponentGroupingId() {
+    public void testCancel_Invalidtcg() {
         TestReporter.logScenario("Test - Cancel - Travel Component Grouping ID Less Than Zero");
 
         Cancel cancel = new Cancel(environment);

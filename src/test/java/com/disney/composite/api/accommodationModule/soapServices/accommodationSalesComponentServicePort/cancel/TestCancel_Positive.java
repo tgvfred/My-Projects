@@ -22,7 +22,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
-    public void testCancel_Booked_TravelComponentGroupingIdOnly_RoomOnly() {
+    public void testCancel_Booked_tcgOnly_RoomOnly() {
         TestReporter.logScenario("Test - Cancel - Travel Component Grouping ID Only and Room Only");
 
         Cancel cancel = new Cancel(environment);
@@ -34,7 +34,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
-    public void testCancel_CheckingIn_TravelComponentGroupingIdOnly() {
+    public void testCancel_CheckingIn_tcgOnly() {
         setEnvironment(environment);
         setDaysOut(0);
         setNights(1);
@@ -53,6 +53,11 @@ public class TestCancel_Positive extends AccommodationBaseTest {
 
         validateSoapResponse(cancel);
         validateSpecialEnvironment(cancel);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
+    public void testCancel_addAccommodation_checkInOne_cancelOne_tcgOnly() {
+
     }
 
     /*
