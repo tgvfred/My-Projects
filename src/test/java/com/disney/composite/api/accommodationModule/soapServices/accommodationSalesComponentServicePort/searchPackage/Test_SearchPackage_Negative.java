@@ -27,7 +27,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_emptyRequest(){
 		
-		String faultString = "Validation Failed. : Result size too large. 3125 rows selected, which exceeds the maximum of 500";
+		String faultString = "Validation Failed. : Result size too large. 3119 rows selected, which exceeds the maximum of 500";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
 		search.sendRequest();
@@ -37,12 +37,12 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
-	public void testSearchPackage_nullSalesChannel(){
+	public void testSearchPackage_salesChannelIdOnly(){
 		
-		String faultString = "Data not found. : No Packages could be found for channelIDs='[0]' and bookDate='Tue Jul 18 00:00:00 EDT 2017' and arriveDate='null' and packageCode='null' and packageDescription='null' and roomOnly=null";
+		String faultString = "Data not found. : No Packages could be found for channelIDs='[1]' and bookDate='Wed Jul 19 00:00:00 EDT 2017' and arriveDate='null' and packageCode='null' and packageDescription='null' and roomOnly=null";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
-		search.setSalesChannelIDs(" ");
+		search.setSalesChannelIDs("1");
 		search.sendRequest();
 		
 		TestReporter.assertEquals(search.getFaultString().replaceAll("\\s", ""), faultString.replaceAll("\\s", ""), "Verify that the fault string [" + search.getFaultString() + "] is that which is expected [" + faultString + "].");
@@ -52,7 +52,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_nullPackageCode(){
 		
-		String faultString = "Data not found. : No Packages could be found for channelIDs='[1]' and bookDate='Tue Jul 18 00:00:00 EDT 2017' and arriveDate='Tue Jul 18 00:00:00 EDT 2017' and packageCode=' ' and packageDescription='R Room Only' and roomOnly=null";
+		String faultString = "Data not found. : No Packages could be found for channelIDs='[1]' and bookDate=[" + Randomness.generateCurrentXMLDatetime() + "] and arriveDate=[" + Randomness.generateCurrentXMLDatetime() + "] ' and packageDescription='R Room Only' and roomOnly=null";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
 		search.setBookingDate(Randomness.generateCurrentXMLDate());
@@ -69,7 +69,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_resortArrivalDateOnly(){
 		
-		String faultString = "Validation Failed. : Result size too large. 718 rows selected, which exceeds the maximum of 500";
+		String faultString = "Validation Failed. : Result size too large. 728 rows selected, which exceeds the maximum of 500";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
 		search.setResortArrivalDate(Randomness.generateCurrentXMLDate());
@@ -82,7 +82,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_bookingDateOnly(){
 		
-		String faultString = "Validation Failed. : Result size too large. 3125 rows selected, which exceeds the maximum of 500";
+		String faultString = "Validation Failed. : Result size too large. 3119 rows selected, which exceeds the maximum of 500";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
 		search.setBookingDate(Randomness.generateCurrentXMLDate());
