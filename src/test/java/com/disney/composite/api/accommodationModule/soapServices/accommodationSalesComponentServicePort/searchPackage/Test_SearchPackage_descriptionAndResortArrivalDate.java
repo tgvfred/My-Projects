@@ -20,13 +20,6 @@ public class Test_SearchPackage_descriptionAndResortArrivalDate extends Accommod
     private String pkg;
     private String desc;
 	
-	@BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
-        
-	}
-	
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_descriptionAndResortArrivalDate(){
 		

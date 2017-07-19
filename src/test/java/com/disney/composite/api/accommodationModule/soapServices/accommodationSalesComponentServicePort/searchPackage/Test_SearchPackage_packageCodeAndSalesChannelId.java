@@ -15,13 +15,6 @@ public class Test_SearchPackage_packageCodeAndSalesChannelId extends Accommodati
 
 	private String environment;
 	
-	@BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
-        
-	}
-	
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_packageCodeAndSalesChannelId(){
 		

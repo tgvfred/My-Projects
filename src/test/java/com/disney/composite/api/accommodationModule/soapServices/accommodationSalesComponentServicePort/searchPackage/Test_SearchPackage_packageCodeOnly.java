@@ -19,13 +19,6 @@ public class Test_SearchPackage_packageCodeOnly extends AccommodationBaseTest{
     private String pkg;
     private String desc;
 	
-	@BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
-        
-	}
-	
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_packageCodeOnly(){
 		
