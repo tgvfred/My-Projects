@@ -33,7 +33,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnly extends AccommodationBaseTest{
 		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
 		retrieve.sendRequest();
 		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
-		
+
 		// Old vs New Validation
 		if (Environment.isSpecialEnvironment(environment)) {
 			RetrieveSummary clone = (RetrieveSummary) retrieve.clone();

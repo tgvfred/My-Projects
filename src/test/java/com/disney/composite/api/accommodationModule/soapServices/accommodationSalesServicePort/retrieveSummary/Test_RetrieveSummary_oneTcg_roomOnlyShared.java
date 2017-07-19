@@ -7,23 +7,31 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBaseTest{
 
-	private String environment;
-	
-	private ReplaceAllForTravelPlanSegment book;
-	
+	@Override
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
+    public void setup(String environment) {
+		setEnvironment(environment);
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(environment);
         
-        getBook().setRoomDetailsShared("true");
-        getBook().sendRequest();
+        setIsShared(true);
+        bookReservation();
+        
+        Share share = new Share(environment, "Main");
+        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        share.sendRequest();
+        TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Validate billy this guy");
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})

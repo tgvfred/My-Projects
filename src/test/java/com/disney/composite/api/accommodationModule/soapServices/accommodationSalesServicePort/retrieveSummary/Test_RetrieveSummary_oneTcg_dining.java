@@ -13,16 +13,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class Test_RetrieveSummary_oneTcg_dining extends AccommodationBaseTest{
-
-	private String environment;
     private ScheduledEventReservation diningRes;
-	
-	@BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
-        
-	}
 	
 	@AfterMethod(alwaysRun = true)
     public void teardown() {

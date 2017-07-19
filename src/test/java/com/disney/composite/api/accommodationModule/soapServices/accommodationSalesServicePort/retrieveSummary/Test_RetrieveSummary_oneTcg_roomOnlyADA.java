@@ -12,17 +12,19 @@ import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyADA extends AccommodationBaseTest{
 
-	private String environment;
-	
-	private Book book;
-	
+	@Override
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
+    public void setup(String environment) {
+        setEnvironment(environment);
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(environment);
         
-        getBook().setRoomDetailsSpecialNeedsRequested("true");
-        getBook().sendRequest();
+        setIsADA(true);
+        bookReservation();
       
 	}
 	

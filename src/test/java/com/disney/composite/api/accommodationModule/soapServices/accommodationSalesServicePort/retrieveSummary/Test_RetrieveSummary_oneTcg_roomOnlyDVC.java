@@ -5,15 +5,9 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
-import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.Environment;
-import com.disney.utils.Randomness;
-import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.Database;
-import com.disney.utils.dataFactory.database.Recordset;
-import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyDVC extends BookDVCCashHelper{
 

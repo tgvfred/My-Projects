@@ -7,11 +7,8 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.core.BaseSoapService;
-import com.disney.api.soapServices.dvcModule.dvcSalesService.operations.travelPlanSegment.TravelPlanSegment;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
-import com.disney.utils.XMLTools;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyOneAccommodationsSummaryDetailsReturned extends AccommodationBaseTest{
 

@@ -14,16 +14,19 @@ import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyRSR extends AccommodationBaseTest{
 
-	private String environment;
-	
+	@Override
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
+    public void setup(String environment) {
+		setEnvironment(environment);
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(environment);
         
-        //This is the only node with RSR in it, but does not flip the RSR node found in Retrieve.
-        getBook().setRoomDetailsRsrReservation("true");
-        getBook().sendRequest();
+        setIsRSR(true);
+        bookReservation();
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
