@@ -16,15 +16,6 @@ import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class Test_RetrieveSummary_oneTcg_roomOnly extends AccommodationBaseTest{
-
-	private String environment;
-	
-	@BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
-        
-	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
 	public void testRetrieveSummary_oneTcg_roomOnly(){

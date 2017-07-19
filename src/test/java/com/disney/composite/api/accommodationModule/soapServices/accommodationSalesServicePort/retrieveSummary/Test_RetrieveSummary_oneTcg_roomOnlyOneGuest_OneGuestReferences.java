@@ -15,19 +15,6 @@ import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences extends AccommodationBaseTest{
 
-	private String environment;
-	
-	@BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
-        
-        //Getting exact same in old vs new. Should this actually happen?
-//        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId", getHouseHold().primaryGuest().getOdsId());
-//        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelPlanGuest/guestId", getHouseHold().primaryGuest().getOdsId());
-//        getBook().sendRequest();
-	}
-	//RoomOnlyNoTickets
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
 	public void testRetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences(){
 		

@@ -11,17 +11,6 @@ import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyOneAccommodationsSummaryDetailsReturned extends AccommodationBaseTest{
-
-	private String environment;
-	
-	private Book book;
-	
-	@BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
-        
-	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
 	public void testRetrieveSummary_oneTcg_roomOnlyOneAccommodationsSummaryDetailsReturned(){

@@ -18,22 +18,7 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class Test_RetrieveSummary_oneTcg_roomOnly_Cancelled extends AccommodationBaseTest{
 
-	private String environment;
-	private String tcg;
-	private String tps;
-	private String tcgType;
 	private String cancel;
-	
-	private String tpPtyId;
-    private String odsGuestId;
-    private String assignmentOwnerId;
-	
-	@BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
-        
-	}
 	
 	@Override
     @AfterMethod(alwaysRun = true)

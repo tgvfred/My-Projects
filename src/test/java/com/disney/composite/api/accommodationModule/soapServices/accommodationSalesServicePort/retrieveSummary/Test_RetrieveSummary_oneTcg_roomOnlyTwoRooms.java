@@ -17,10 +17,17 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationB
 	private ReplaceAllForTravelPlanSegment book;
 	private Integer two = 2;
 	
+	@Override
 	@BeforeMethod(alwaysRun = true)
     @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
+    public void setup(String environment) {
+		setEnvironment(environment);
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(environment);
+        bookReservation();
         
         book = new ReplaceAllForTravelPlanSegment(environment, "book2AdultsAndTwoRoom");
         book.sendRequest();
