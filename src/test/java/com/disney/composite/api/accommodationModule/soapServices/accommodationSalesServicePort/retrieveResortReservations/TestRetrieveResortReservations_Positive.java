@@ -1,6 +1,8 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveResortReservations;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.testng.annotations.BeforeClass;
@@ -25,12 +27,6 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "smoke" })
-    public void testRetrieveResortReservations_Smoke() {
-        TestReporter.logScenario("Test - Retrieve Resort Reservations - Smoke");
-        validateSpecialEnvironment(buildAndSendRequestAndValidateSoapResponse("470181081988"));
-    }
-
-    @Test(dependsOnMethods = "testRetrieveResortReservations_Smoke", groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
     public void testRetrieveResortReservations_RoomOnlyReservation() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Room Only Reservation");
         String tpsID = getTPSIdForQuery("select b.tps_id from res_mgmt.tps a "
@@ -49,7 +45,7 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
         validateSpecialEnvironment(retrieveResortReservations);
     }
 
-    @Test(dependsOnMethods = "testRetrieveResortReservations_Smoke", groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
     public void testRetrieveResortReservations_GroupReservation() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Group Reservation");
         String tpsID = getTPSIdForQuery("select b.tps_id from res_mgmt.tps a "
@@ -67,7 +63,7 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
         validateSpecialEnvironment(retrieveResortReservations);
     }
 
-    @Test(dependsOnMethods = "testRetrieveResortReservations_Smoke", groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
     public void testRetrieveResortReservations_MultipleGuests() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Multiple Guests");
         String tpsID = getTPSIdForQuery("select z.tps_id "
@@ -92,7 +88,7 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
         validateSpecialEnvironment(retrieveResortReservations);
     }
 
-    @Test(dependsOnMethods = "testRetrieveResortReservations_Smoke", groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
     public void testRetrieveResortReservations_NonZeroVip() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Non Zero Vip");
         String tpsID = getTPSIdForQuery("select b.tps_id from res_mgmt.tps a "
@@ -110,7 +106,7 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
         validateSpecialEnvironment(retrieveResortReservations);
     }
 
-    @Test(dependsOnMethods = "testRetrieveResortReservations_Smoke", groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
     public void testRetrieveResortReservations_CheckedIn() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Checked In");
         String tpsID = getTPSIdForQuery("select b.tps_id from res_mgmt.tps a "
@@ -139,7 +135,7 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
         validateSpecialEnvironment(retrieveResortReservations);
     }
 
-    @Test(dependsOnMethods = "testRetrieveResortReservations_Smoke", groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
     public void testRetrieveResortReservations_Booked() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Booked");
         String tpsID = getTPSIdForQuery("select b.tps_id from res_mgmt.tps a "
@@ -175,7 +171,8 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
         TestReporter.assertEquals(tpsID, retrieveResortReservations.getTravelPlanSegmentId(), "The response contains the correct TPS ID.");
 
         // Database validation
-        Recordset results = new Recordset(db.getResultSet("SELECT COUNT(*) FROM RES_MGMT.TPS a "
+        Recordset results;
+        results = new Recordset(db.getResultSet("SELECT COUNT(*) FROM RES_MGMT.TPS a "
                 + "JOIN RES_MGMT.TC_GRP b ON a.TPS_ID = b.TPS_ID "
                 + "WHERE a.TPS_ID = " + tpsID + " "
                 + "AND a.TP_ID = " + retrieveResortReservations.getTravelPlanId() + " "
@@ -183,6 +180,26 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
                 + "AND a.TPS_DPRT_DT = '" + retrieveResortReservations.getResortEndDate() + "' "
                 + "AND b.TC_GRP_NB = " + retrieveResortReservations.getTravelComponentGroupingId()));
         TestReporter.assertTrue(results.getRowCount() > 0 && Integer.parseInt(results.getValue(1, 1)) > 0, "Response data was found in the database.");
+
+        results = new Recordset(db.getResultSet("SELECT a.IDVL_FST_NM, a.IDVL_LST_NM, a.TXN_IDVL_PTY_ID FROM GUEST.TXN_IDVL_PTY a "
+                + "JOIN RES_MGMT.TC_GST b ON a.TXN_IDVL_PTY_ID = b.TXN_IDVL_PTY_ID "
+                + "JOIN RES_MGMT.TC c ON b.TC_ID = c.TC_ID "
+                + "WHERE c.TC_GRP_NB = " + retrieveResortReservations.getTravelComponentGroupingId()));
+
+        Map<Integer, String> mappedResults = new HashMap<>();
+        for (results.moveFirst(); results.hasNext(); results.moveNext()) {
+            Integer ID = Integer.parseInt(results.getValue("TXN_IDVL_PTY_ID").trim());
+            String name = (results.getValue("IDVL_FST_NM").trim() + " " + results.getValue("IDVL_LST_NM").trim()).toUpperCase();
+            mappedResults.put(ID, name);
+        }
+        TestReporter.assertEquals(mappedResults, retrieveResortReservations.getPartyRoleGuests(), "The guests in the response matched the guests in the database.");
+        TestReporter.assertTrue(mappedResults.entrySet().contains(retrieveResortReservations.getPrimaryGuest()), "The primary guest in the response matched the one in the database.");
+
+        results = new Recordset(db.getResultSet("select c.RSRC_INVTRY_TYP_CD from res_mgmt.tc a "
+                + "join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID "
+                + "join rsrc_inv.RSRC_INVTRY_TYP c on b.RSRC_INVTRY_TYP_ID = c.RSRC_INVTRY_TYP_ID "
+                + "where a.tc_grp_nb = " + retrieveResortReservations.getTravelComponentGroupingId()));
+        TestReporter.assertEquals(retrieveResortReservations.getRoomTypeCode(), results.getValue("RSRC_INVTRY_TYP_CD"), "The primary guest in the response matched the one in the database.");
 
         return retrieveResortReservations;
     }

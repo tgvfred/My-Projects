@@ -1,5 +1,10 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations;
 
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.utils.XMLTools;
 import com.disney.utils.exceptions.NoDataFromVirtualTableException;
@@ -42,7 +47,26 @@ public class RetrieveResortReservations extends AccommodationSalesServicePort {
     }
 
     public int getNumberOfPartyRoles() {
-        return getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/partyRoles");
+        return getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations[1]/partyRoles");
+    }
+
+    public Map<Integer, String> getPartyRoleGuests() {
+        Map<Integer, String> toreturn = new HashMap<>();
+        for (int i = getNumberOfPartyRoles(); i > 0; i--) {
+            String fname = getResponseNodeValueByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/partyRoles[" + i + "]/guest/firstName");
+            String lname = getResponseNodeValueByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/partyRoles[" + i + "]/guest/lastName");
+            String ID = getResponseNodeValueByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/partyRoles[" + i + "]/guest/guestId");
+            toreturn.put(Integer.parseInt(ID.trim()), (fname.trim() + " " + lname.trim()).toUpperCase());
+        }
+
+        return toreturn;
+    }
+
+    public Entry<Integer, String> getPrimaryGuest() {
+        String fname = getResponseNodeValueByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/primaryGuest/firstName");
+        String lname = getResponseNodeValueByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/primaryGuest/lastName");
+        String ID = getResponseNodeValueByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/primaryGuest/guestId");
+        return new AbstractMap.SimpleEntry<Integer, String>(Integer.parseInt(ID.trim()), (fname.trim() + " " + lname.trim()).toUpperCase());
     }
 
     public String getReservationStatus() {
@@ -55,6 +79,10 @@ public class RetrieveResortReservations extends AccommodationSalesServicePort {
 
     public String getResortStartDate() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/resortStartDate").replace('T', ' ').trim();
+    }
+
+    public String getRoomTypeCode() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/roomTypeCode");
     }
 
     public String getTravelComponentGroupingId() {
