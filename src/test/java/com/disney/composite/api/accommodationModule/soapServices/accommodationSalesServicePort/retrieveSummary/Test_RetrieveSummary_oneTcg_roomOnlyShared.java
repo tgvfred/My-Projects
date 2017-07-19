@@ -28,7 +28,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
         setIsShared(true);
         bookReservation();
         
-        Share share = new Share(environment, "Main");
+        Share share = new Share(environment, "oneTcgOnly");
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Validate billy this guy");

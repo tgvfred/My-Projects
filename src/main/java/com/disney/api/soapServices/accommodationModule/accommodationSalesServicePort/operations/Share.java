@@ -9,7 +9,7 @@ public class Share extends AccommodationSalesServicePort{
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("share")));
 	    generateServiceContext();			
-	   // setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
+	    setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
 		removeComments() ;
 		removeWhiteSpace();
 		}
