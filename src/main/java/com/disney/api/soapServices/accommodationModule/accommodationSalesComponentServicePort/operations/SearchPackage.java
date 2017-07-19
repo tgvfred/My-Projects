@@ -90,4 +90,13 @@ public class SearchPackage extends AccommodationSalesComponentServicePort{
 			setRequestNodeValueByXPath("/Envelope/Body/searchPackage/request/salesChannelIDs", value);
 		}
 	}
+	
+	// Getters
+	public String getPackageCode(){return getResponseNodeValueByXPath("/Envelope/Body/searchPackageResponse/return/code");}
+	
+	public String getPackageDescription(){return getResponseNodeValueByXPath("/Envelope/Body/searchPackageResponse/return/description");}
+	
+	int index = getNumberOfRequestNodesByXPath("/Envelope/Body/searchPackageResponse/return/description") + 1;
+	
+	public String getPackageDescription(String index){return getResponseNodeValueByXPath("/Envelope/Body/searchPackageResponse/return["+index+"]/description");}
 }
