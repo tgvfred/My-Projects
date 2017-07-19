@@ -15,15 +15,6 @@ import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 
 public class Test_SearchPackage_Negative extends AccommodationBaseTest{
-
-	private String environment;
-	
-	@BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
-        
-	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_emptyRequest(){
@@ -40,13 +31,13 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_salesChannelIdOnly(){
 		
-		String faultString = "Data not found. : No Packages could be found for channelIDs='[1]' and bookDate='[a-zA-z0-9].*' and arriveDate='[a-zA-z0-9].*' and packageCode=' ' and packageDescription='R Room Only' and roomOnly=null";
+		String faultString = "Data not found\\. : No Packages could be found for channelIDs='\\[1\\]' and bookDate='[a-z A-Z 0-9].*' and arriveDate='null' and packageCode='null' and packageDescription='null' and roomOnly=null";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
 		search.setSalesChannelIDs("1");
 		search.sendRequest();
-		
-		TestReporter.assertEquals(search.getFaultString().replaceAll("\\s", ""), faultString.replaceAll("\\s", ""), "Verify that the fault string [" + search.getFaultString() + "] is that which is expected [" + faultString + "].");
+
+		TestReporter.assertTrue(Regex.match (faultString.replaceAll("\\s", ""), search.getFaultString ().replaceAll("\\s", "")), "Regex Validation Passed");
         validateApplicationError(search, AccommodationErrorCode.DATA_NOT_FOUND_EXCEPTION);
 	}
 	
@@ -55,7 +46,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 		
 		String book = Randomness.generateCurrentXMLDate();
 		
-		String faultString = "Data not found. : No Packages could be found for channelIDs='[1]' and bookDate='[a-z A-Z 0-9].*' and arriveDate='[a-z A-Z 0-9].*' and packageCode=' ' and packageDescription='R Room Only' and roomOnly=null";
+		String faultString = "Data not found\\. : No Packages could be found for channelIDs='\\[1\\]' and bookDate='[a-z A-Z 0-9].*' and arriveDate='[a-z A-Z 0-9].*' and packageCode=' ' and packageDescription='R Room Only' and roomOnly=null";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
 		search.setBookingDate(book);
@@ -65,8 +56,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 		search.setSalesChannelIDs("1");
 		search.sendRequest();
 		
-		TestReporter.assertTrue(Regex.match (faultString.replaceAll("\\s", ""), search.getFaultString ().replaceAll("\\s", "")), "Regex error has occurred");
-		//TestReporter.assertEquals(search.getFaultString().replaceAll("\\s", ""), faultString.replaceAll("\\s", ""), "Verify that the fault string [" + search.getFaultString() + "] is that which is expected [" + faultString + "].");
+		TestReporter.assertTrue(Regex.match (faultString.replaceAll("\\s", ""), search.getFaultString ().replaceAll("\\s", "")), "Regex Validation Passed");
         validateApplicationError(search, AccommodationErrorCode.DATA_NOT_FOUND_EXCEPTION);
 	}
 	
