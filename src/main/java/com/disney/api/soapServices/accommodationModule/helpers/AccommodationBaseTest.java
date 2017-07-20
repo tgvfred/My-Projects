@@ -94,7 +94,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         this.locationId.set(locationId);
     }
 
-    private void setResortCode(String resortCode) {
+    protected void setResortCode(String resortCode) {
         this.resortCode.set(resortCode);
     }
 
@@ -102,7 +102,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         this.sourceAccoutingCenter.set(sourceAccoutingCenter);
     }
 
-    private void setRoomTypeCode(String roomTypeCode) {
+    protected void setRoomTypeCode(String roomTypeCode) {
         this.roomTypeCode.set(roomTypeCode);
     }
 
