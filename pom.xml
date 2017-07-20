@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.gqe.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.0.14</version>
+	<version>1.0.17</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>com.disney.gqe</groupId>
 			<artifactId>APIUtilsSoap</artifactId>
-			<version>1.0.50</version>
+			<version>1.0.56</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -37,10 +37,21 @@
 			<artifactId>Resource</artifactId>
 			<version>1.0.8</version>
 		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Dining</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>DVCSales</artifactId>
+			<version>1.0.13</version>
+		</dependency>
 	</dependencies>	
 	<properties>
 		<aspectj.version>1.8.5</aspectj.version>
 		<allure.version>{latest-allure-version}</allure.version>
+		<additionalparam>-Xdoclint:none</additionalparam>
 		<testNGSourceDirectory>src/test/resources</testNGSourceDirectory>
 	</properties>
 	<build>

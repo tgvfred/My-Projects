@@ -43,6 +43,7 @@ public class BookGroupBookingInTestClass extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues();
         setIsWdtcBooking(true);
+        setAddNewGuest(true);
         bookReservation();
 
         gatherDataForValidations();
