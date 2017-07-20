@@ -14,12 +14,12 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_emptyRequest(){
 		
-		String faultString = "Validation Failed. : Result size too large. 3119 rows selected, which exceeds the maximum of 500";
+		String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
 		search.sendRequest();
 		
-		TestReporter.assertEquals(search.getFaultString().replaceAll("\\s", ""), faultString.replaceAll("\\s", ""), "Verify that the fault string [" + search.getFaultString() + "] is that which is expected [" + faultString + "].");
+		TestReporter.assertTrue(Regex.match (faultString.replaceAll("\\s", ""), search.getFaultString ().replaceAll("\\s", "")), "Regex Validation Passed");
         validateApplicationError(search, AccommodationErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
 	}
 	
@@ -58,26 +58,26 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest{
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_resortArrivalDateOnly(){
 		
-		String faultString = "Validation Failed. : Result size too large. 728 rows selected, which exceeds the maximum of 500";
+		String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
 		search.setResortArrivalDate(Randomness.generateCurrentXMLDate());
 		search.sendRequest();
 		
-		TestReporter.assertEquals(search.getFaultString().replaceAll("\\s", ""), faultString.replaceAll("\\s", ""), "Verify that the fault string [" + search.getFaultString() + "] is that which is expected [" + faultString + "].");
+		TestReporter.assertTrue(Regex.match (faultString.replaceAll("\\s", ""), search.getFaultString ().replaceAll("\\s", "")), "Regex Validation Passed");
         validateApplicationError(search, AccommodationErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
 	}
 	
 	@Test(groups={"api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage"})
 	public void testSearchPackage_bookingDateOnly(){
 		
-		String faultString = "Validation Failed. : Result size too large. 3119 rows selected, which exceeds the maximum of 500";
+		String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
 		
 		SearchPackage search = new SearchPackage(environment, "Main");
 		search.setBookingDate(Randomness.generateCurrentXMLDate());
 		search.sendRequest();
 		
-		TestReporter.assertEquals(search.getFaultString().replaceAll("\\s", ""), faultString.replaceAll("\\s", ""), "Verify that the fault string [" + search.getFaultString() + "] is that which is expected [" + faultString + "].");
+		TestReporter.assertTrue(Regex.match (faultString.replaceAll("\\s", ""), search.getFaultString ().replaceAll("\\s", "")), "Regex Validation Passed");
         validateApplicationError(search, AccommodationErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
 	}
 	
