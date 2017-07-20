@@ -168,19 +168,19 @@ public class AccommodationBaseTest extends BaseRestTest {
         this.tcId.set(tcId);
     }
 
-    protected String getTpId(String tpId) {
+    protected String getTpId() {
         return this.tpId.get();
     }
 
-    protected String getTpsId(String tpsId) {
+    protected String getTpsId() {
         return this.tpsId.get();
     }
 
-    protected String getTcgId(String tcgId) {
+    protected String getTcgId() {
         return this.tcgId.get();
     }
 
-    protected String getTcId(String tcId) {
+    protected String getTcId() {
         return this.tcId.get();
     }
 
