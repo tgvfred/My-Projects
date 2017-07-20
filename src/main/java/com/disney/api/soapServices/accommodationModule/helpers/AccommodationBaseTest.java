@@ -86,11 +86,11 @@ public class AccommodationBaseTest extends BaseRestTest {
         environment = env;
     }
 
-    private void setFacilityId(String facilityId) {
+    protected void setFacilityId(String facilityId) {
         this.facilityId.set(facilityId);
     }
 
-    private void setLocationId(String locationId) {
+    protected void setLocationId(String locationId) {
         this.locationId.set(locationId);
     }
 
@@ -98,7 +98,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         this.resortCode.set(resortCode);
     }
 
-    private void setSourceAccountingCenter(String sourceAccoutingCenter) {
+    protected void setSourceAccountingCenter(String sourceAccoutingCenter) {
         this.sourceAccoutingCenter.set(sourceAccoutingCenter);
     }
 
@@ -246,6 +246,10 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public String getExternalRefNumber() {
         return externalRefNumber.get();
+    }
+
+    public void setExternalRefNumber(String extRefNum) {
+        externalRefNumber.set(extRefNum);
     }
 
     public String getExternalRefSource() {
