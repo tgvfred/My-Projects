@@ -74,7 +74,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> isWdtcBooking = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isADA = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isRSR = new ThreadLocal<Boolean>();
-    private ThreadLocal<Boolean> isShared = new ThreadLocal<Boolean>(); 
+    private ThreadLocal<Boolean> isShared = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addGuest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addNewGuest = new ThreadLocal<Boolean>();
 
@@ -166,6 +166,22 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     protected void setTcId(String tcId) {
         this.tcId.set(tcId);
+    }
+
+    protected String getTpId(String tpId) {
+        return this.tpId.get();
+    }
+
+    protected String getTpsId(String tpsId) {
+        return this.tpsId.get();
+    }
+
+    protected String getTcgId(String tcgId) {
+        return this.tcgId.get();
+    }
+
+    protected String getTcId(String tcId) {
+        return this.tcId.get();
     }
 
     protected void setCampusId(String campusId) {
@@ -307,7 +323,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public Boolean isWdtcBooking() {
         return this.isWdtcBooking.get();
     }
-    
+
     public void setIsADA(Boolean isADA) {
         this.isADA.set(isADA);
     }
@@ -315,7 +331,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public Boolean isADA() {
         return this.isADA.get();
     }
-    
+
     public void setIsRSR(Boolean isRSR) {
         this.isRSR.set(isRSR);
     }
@@ -323,7 +339,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public Boolean isRSR() {
         return this.isRSR.get();
     }
-    
+
     public void setIsShared(Boolean isShared) {
         this.isShared.set(isShared);
     }
@@ -507,17 +523,17 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
 
             if (isADA() != null && isADA() == true) {
-				getBook().setRoomDetailsSpecialNeedsRequested("true");
-			}
-            
+                getBook().setRoomDetailsSpecialNeedsRequested("true");
+            }
+
             if (isRSR() != null && isRSR() == true) {
-				getBook().setRoomDetailsRsrReservation("true");
-			}
-            
+                getBook().setRoomDetailsRsrReservation("true");
+            }
+
             if (isShared() != null && isShared() == true) {
-				getBook().setRoomDetailsShared("true");
-			}
-          
+                getBook().setRoomDetailsShared("true");
+            }
+
             if (getAddGuest() != null && getAddGuest() == true) {
                 addGuest();
             }
