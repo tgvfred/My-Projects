@@ -11,7 +11,9 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Parameters;
 
 import com.disney.AutomationException;
+import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.restServices.BaseRestTest;
+import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
@@ -19,6 +21,11 @@ import com.disney.api.soapServices.accommodationModule.availabilityWSPort.operat
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.api.soapServices.folioModule.folioServicePort.operations.RetrieveFolioBalanceDue;
+import com.disney.api.soapServices.folioModule.paymentService.operations.PostCardPayment;
+import com.disney.api.soapServices.pricingModule.packagingService.operations.FindMiscPackages;
+import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
+import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Environment;
 import com.disney.utils.PackageCodes;
 import com.disney.utils.Randomness;
@@ -30,9 +37,12 @@ import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.DVCSalesDreams;
 import com.disney.utils.dataFactory.database.sqlStorage.Dreams_AccommodationQueries;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class AccommodationBaseTest extends BaseRestTest {
     protected static String environment;
@@ -73,10 +83,17 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> packageType = new ThreadLocal<>();
     private ThreadLocal<Boolean> isWdtcBooking = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isADA = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> isBundle = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> isDining = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isRSR = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isShared = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addGuest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addNewGuest = new ThreadLocal<Boolean>();
+    private ThreadLocal<String> firstDiningTcg = new ThreadLocal<String>();
+    private AddBundle add;
+    private RetrieveDetailsByTravelPlanId details;
+    private String firstBundleTcg;
+    private ScheduledEventReservation diningRes;
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -335,6 +352,22 @@ public class AccommodationBaseTest extends BaseRestTest {
     public Boolean isADA() {
         return this.isADA.get();
     }
+       
+    public void setIsBundle(Boolean isBundle) {
+        this.isBundle.set(isBundle);
+    }
+    
+    public Boolean isBundle() {
+        return this.isBundle.get();
+    }
+    
+    public void setIsDining(Boolean isDining) {
+        this.isDining.set(isDining);
+    }
+    
+    public Boolean isDining() {
+        return this.isDining.get();
+    }
 
     public void setIsRSR(Boolean isRSR) {
         this.isRSR.set(isRSR);
@@ -367,6 +400,10 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public Boolean getAddNewGuest() {
         return this.addNewGuest.get();
+    }
+    
+    public String getFirstDiningTcg() {
+        return this.firstDiningTcg.get();
     }
 
     @BeforeSuite(alwaysRun = true)
@@ -541,11 +578,55 @@ public class AccommodationBaseTest extends BaseRestTest {
             if (getAddGuest() != null && getAddGuest() == true) {
                 addGuest();
             }
-
+            
             getBook().sendRequest();
             TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
-            tries++;
+            tries++;   
         } while (!getBook().getResponseStatusCode().equals("200") && tries < maxTries);
+        
+        if (isBundle() != null && isBundle() == true) {addBundle();}
+        if (isDining() != null && isDining() == true) {addDining();}
+        retrieveReservation();
+    }
+    
+    private void addBundle(){
+    	details = new RetrieveDetailsByTravelPlanId(environment, "Main");
+        details.setTravelPlanId(getBook().getTravelPlanId());
+        details.sendRequest();
+        TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
+
+        add = new AddBundle(environment, "Main");
+        add.setGuestsGuestNameFirstName(hh.get().primaryGuest().getFirstName());
+        add.setGuestsGuestNameLastName(hh.get().primaryGuest().getLastName());
+        add.setGuestsGuestReferenceId(details.getGuestsId());
+        add.setGuestsId(details.getGuestsId());
+        add.setPackageBundleRequestsBookDate(Randomness.generateCurrentXMLDate());
+        add.setPackageBundleRequestsContactName(hh.get().primaryGuest().getFirstName() + " " + hh.get().primaryGuest().getLastName());
+        add.setPackageBundleRequestsEndDate(Randomness.generateCurrentXMLDate(getDaysOut() + 2) + "T00:00:00");
+        add.setPackageBundleRequestsSalesOrderItemGuestsGUestReferenceId(details.getGuestsId());
+        add.setPackageBundleRequestsStartDate(Randomness.generateCurrentXMLDate(getDaysOut() + 1) + "T00:00:00");
+        add.setTravelPlanId(getBook().getTravelPlanId());
+        add.retrieveSalesOrderId(getBook().getTravelPlanId());
+        add.setSalesOrderId(add.getBundleSalesOrderIds()[0]);
+
+        FindMiscPackages find = new FindMiscPackages(environment, "MinimalInfo");
+        find.setArrivalDate(Randomness.generateCurrentXMLDate(getDaysOut()));
+        find.setBookDate(Randomness.generateCurrentXMLDate());
+        find.sendRequest();
+        TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred adding a bundle to TP ID [" + getBook().getTravelPlanId() + "]: " + add.getFaultString());
+        add.setPackageBundleRequestsCode(find.getPackageCode());
+
+        add.sendRequest();
+        //convos.put("add", add.getRequestNodeValueByXPath("/Envelope/Header/ServiceContext/@conversationId"));
+        TestReporter.assertEquals(add.getResponseStatusCode(), "200", "An error occurred while adding a bundle.\nRequest:\n" + add.getRequest() + "\nResonse:\n" + add.getResponse());
+
+        firstBundleTcg = findBundleTcg(getBook().getTravelPlanId());
+
+        details.sendRequest();
+        TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
+
+        retrieveReservation();
+        makeFirstNightDeposit();
         retrieveReservation();
     }
 
@@ -812,5 +893,116 @@ public class AccommodationBaseTest extends BaseRestTest {
         }
 
         return valid;
+    }
+    
+    protected void makeFirstNightDeposit(){
+		RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
+		if(getBook() != null && getBook().getTravelPlanId() != null)retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getBook().getTravelPlanId());
+		else retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, tpId.get());
+
+		retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
+		String sqlTpId;
+    	if(getBook() != null && getBook().getTravelPlanId() != null){
+    		sqlTpId = getBook().getTravelPlanId();
+    	}
+        else{
+        	sqlTpId = tpId.get();
+        }
+		String sql = "select d.WRK_LOC_ID "
+    			+ "from rsrc_inv.wrk_loc d "
+    			+ "where d.HM_RSRT_FAC_ID in (select c.fac_id FAC_ID "
+    			+ "from res_mgmt.tps a, res_mgmt.tc_grp b, res_mgmt.tc c "
+    			+ "where a.tp_id = '"+sqlTpId+"' "
+    			+ "and a.tps_id = b.tps_id "
+    			+ "and b.tc_grp_nb = c.tc_grp_nb "
+    			+ "and c.fac_id is not null )";
+    	Database db = new OracleDatabase(environment, Database.DREAMS);
+    	Recordset rs = new Recordset(db.getResultSet(sql));
+    	
+    	for(int i = 1; i <= rs.getRowCount(); i++){
+        	setLocationId(rs.getValue("WRK_LOC_ID", i));
+    		
+    		retrieveBalance.setLocationId(getLocationId());
+    		retrieveBalance.sendRequest();
+    		if(retrieveBalance.getResponseStatusCode().equals("200")) break;
+    	}
+		if(!retrieveBalance.getResponseStatusCode().equals("200")){
+			if(getBook() != null){
+				TestReporter.log("\n\nAn error occurred retrieving the balance for the TP ID ["+getBook().getTravelPlanId()+"],");
+			}else if(tpId != null && tpId.get() != null){
+				TestReporter.log("\n\nAn error occurred retrieving the balance for the TP ID ["+tpId.get()+"],");
+			}else{
+				TestReporter.log("\n\nAn error occurred retrieving the balance");
+			}
+			TestReporter.log("Fault String: " + retrieveBalance.getFaultString());
+			TestReporter.log("ENDPOINT: " + retrieveBalance.getServiceURL());
+        	TestReporter.logNoXmlTrim("\n\nRQ:\n\n" + retrieveBalance.getRequest());
+        	TestReporter.logNoXmlTrim("\n\nRS:\n\n" + retrieveBalance.getResponse());
+		}
+		TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200","Verify that no error occurred retrieving the balance for the reservation: " + retrieveBalance.getFaultString());
+		
+		PostCardPayment postPayment = new PostCardPayment(environment, "Visa-CreditCard");
+		postPayment.setAmount(retrieveBalance.getDepositRequired());
+		postPayment.setFolioId(retrieveBalance.getFolioId());
+		if(getBook() != null && getBook().getTravelPlanId() != null)postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, getBook().getTravelPlanId());
+		else postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, tpId.get());
+		if(getBook() != null && getBook().getTravelPlanId() != null) postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, getBook().getTravelComponentId());
+		else postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, tcId.get());
+		postPayment.setLocationId(getLocationId());
+		postPayment.setPartyId(getPartyId());
+		try {
+			postPayment.setPrimaryLastname(hh.get().primaryGuest().getLastName());
+		} catch (NullPointerException | AutomationException e) {
+			postPayment.setPrimaryLastname(getHouseHold().primaryGuest().getLastName());
+		}
+		if(getBook() != null && getBook().getTravelPlanId() != null)postPayment.setTravelPlanId(getBook().getTravelPlanId());
+		else postPayment.setTravelPlanId(tpId.get());
+		if(getBook() != null && getBook().getTravelPlanSegmentId() != null)postPayment.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+		else postPayment.setTravelPlanSegmentId(tpsId.get());
+		postPayment.setRetreivalReferenceNumber();
+		postPayment.sendRequest();
+		TestReporter.assertEquals(postPayment.getResponseStatusCode(), "200","Response was not 200");
+		TestReporter.log("Payment ID: " + postPayment.getPaymentId());
+	}
+    
+    public String findBundleTcg(String tpId) {
+        String baseSql = DVCSalesDreams.getReservationInfoByTpId(tpId).replace("and rownum = 1", "").replace("*", "unique(c.TC_GRP_NB)");
+        String sql = "select PROD_TYP_NM from res_mgmt.tc a where a.tc_grp_nb in({INPUT})";
+        Database db = new OracleDatabase(DVCSalesBaseTest.removeCM(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(baseSql));
+
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            String locSql = sql;
+            locSql = locSql.replace("{INPUT}", rs.getValue("TC_GRP_NB", i));
+            Recordset rs2 = new Recordset(db.getResultSet(locSql));
+            if (rs2.getRowCount() > 1) {
+                for (int j = 1; j <= rs2.getRowCount(); j++) {
+                    if (rs2.getValue("PROD_TYP_NM", j).contains("Memory Maker")) {
+                        return rs.getValue("TC_GRP_NB", i);
+                    }
+                }
+            }
+        }
+        if (rs.getRowCount() == 0) {
+            throw new AutomationException("No bundle was found to be associated with TP ID [" + tpId + "].");
+        }
+        return null;
+    }
+    
+    private void addDining(){
+    	diningRes = new ShowDiningReservation(environment.toLowerCase().replace("_cm", ""), hh.get());
+        diningRes.setTravelPlanId(getBook().getTravelPlanId());
+        diningRes.setFacilityName("Pioneer Hall");
+        diningRes.setProductName("Hoop-Dee-Doo-Cat 2-1st Show");
+        diningRes.setServiceStartDate(getArrivalDate());
+        diningRes.book("NoComponentsNoAddons");
+        
+        firstDiningTcg.set(findDiningResTcg(diningRes.getConfirmationNumber()));
+    }
+    
+    public String findDiningResTcg(String confirmationNumber) {
+        Database db = new OracleDatabase(environment.toLowerCase().replace("_cm", ""), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(DVCSalesDreams.getReservationInfoByTpsId(confirmationNumber)));
+        return rs.getValue("TC_GRP_NB", 1);
     }
 }
