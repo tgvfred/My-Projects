@@ -20,5 +20,6 @@ public class RetrieveTeamsByGroupCode extends AccommodationSalesServicePort{
 		
 	}
 	
+	public String getTeamCode() {return getResponseNodeValueByXPath("/Envelope/Body/retrieveTeamsByGroupCodeResponse/response/teamNames");}
 	
 }
