@@ -1,23 +1,46 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.cancel;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
+import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.travelPlanModule.TravelPlanBaseTest;
+import com.disney.utils.Environment;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
 
-public class TestCancel_RSR extends TravelPlanBaseTest {
+public class TestCancel_RSR extends AccommodationBaseTest {
+
+    @Override
+    @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
+    public void setup(String environment) {
+        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
+        // to invoke lower levels of reporting
+        setEnvironment(environment);
+        daysOut.set(0);
+        nights.set(1);
+        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
+        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+
+        setIsWdtcBooking(false);
+        setValues();
+        setIsRSR(true);
+        bookReservation();
+    }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
     public void testCancel_RSR() {
-        TestReporter.logScenario("Test Cancel RO With Cancellation Fee");
+        TestReporter.logScenario("Test Cancel RSR");
 
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
-        cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
@@ -25,7 +48,7 @@ public class TestCancel_RSR extends TravelPlanBaseTest {
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "Verify that a cancellation number was returned.");
         TestReporter.log("Cancellation number: " + cancel.getCancellationNumber());
 
-        retrieveReservation(environment);
+        retrieveReservation();
         TestReporter.setAssertFailed(false);
         TestReporter.softAssertEquals(
                 getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/cancelDate").split("T")[0], DateTimeConversion.ConvertToDateYYYYMMDD("0"),
@@ -62,6 +85,28 @@ public class TestCancel_RSR extends TravelPlanBaseTest {
         TestReporter.assertAll();
 
         validations(cancel);
+    }
+
+    private void validations(Cancel cancel) {
+        CancelHelper cancelHelper = new CancelHelper(removeCM(environment), getBook().getTravelPlanId());
+        cancelHelper.verifyChargeGroupsCancelled();
+        cancelHelper.verifyCancellationIsFoundInResHistory(getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
+        // cancelHelper.verifyCancellationComment(getRetrieve(), "Air not available CancellationNumber : " + cancel.getCancellationNumber());
+        cancelHelper.verifyNumberOfCharges(1);
+        cancelHelper.verifyInventoryReleased(getBook().getTravelComponentGroupingId());
+        cancelHelper.verifyNumberOfTpPartiesByTpId(1);
+        cancelHelper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Cancelled");
+        cancelHelper.verifyExchangeFeeFound(false);
+        cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 2);
+        cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 0);
+        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
+        cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
+        // Verify the reasonID matches the reason code used for the given TCId
+        // cancelHelper.verifyProductReasonID(getBook().getTravelComponentId());
+    }
+
+    public static String removeCM(String cmEnv) {
+        return Environment.getBaseEnvironmentName(cmEnv).toLowerCase();
     }
 
 }

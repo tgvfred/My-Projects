@@ -20,9 +20,12 @@ public class TestCancel_RO_CheckingIn extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
-        // to invoke lower levels of reporting
-        setEnvironment(environment);
+
+        String locEnv = null;
+        if (environment.toLowerCase().contains("_cm")) {
+            locEnv = environment.toLowerCase().replace("_cm", "");
+        }
+        setEnvironment(locEnv);
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
@@ -31,7 +34,7 @@ public class TestCancel_RO_CheckingIn extends AccommodationBaseTest {
         setIsWdtcBooking(false);
         setValues();
         bookReservation();
-        checkingIn();
+        checkingIn(locEnv);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })

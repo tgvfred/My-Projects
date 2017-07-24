@@ -1149,7 +1149,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         return rs.getValue("TC_GRP_NB", 1);
     }
 
-    protected void checkingIn() {
+    protected void checkingIn(String environment) {
 
         FindRoomForReservation findRoom = new FindRoomForReservation(environment, "UI Booking");
         findRoom.setTravelPlanId(getBook().getTravelPlanId());

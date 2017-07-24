@@ -83,5 +83,7 @@ public class AccommodationErrorCode {
             " Rollback Implemenation Validation. ");
     public static final ApplicationErrorCode ACCOMMODATION_NOT_FOUND = new ApplicationErrorCode(APP_NAME_RESM, 7192,
             " Accommodations not found ");
+    public static final ApplicationErrorCode ACCOMMODATION_NOT_IN_BOOKED_STATUS = new ApplicationErrorCode(APP_NAME_RESM, 7192,
+            " Accommodation should be in Booked status to be cancelled ");
 
 }
