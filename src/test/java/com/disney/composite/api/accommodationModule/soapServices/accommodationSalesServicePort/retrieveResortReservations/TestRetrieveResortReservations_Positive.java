@@ -9,21 +9,23 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.BaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveResortReservations;
+import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestRetrieveResortReservations_Positive extends BaseTest {
+public class TestRetrieveResortReservations_Positive extends AccommodationBaseTest {
     private static OracleDatabase db;
+    private static OracleDatabase recdb;
 
     @BeforeClass
     @Parameters("environment")
     public void beforeClass(String environment) {
         db = new OracleDatabase(this.environment = environment, Database.DREAMS);
+        recdb = new OracleDatabase(this.environment = environment, Database.RECOMMENDER);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "smoke" })
@@ -65,6 +67,16 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
     public void testRetrieveResortReservations_MultipleGuests() {
+        setEnvironment(environment);
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(getEnvironment());
+        setIsWdtcBooking(true);
+        setAddNewGuest(true);
+        bookReservation();
+
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Multiple Guests");
         String tpsID = getTPSIdForQuery("select z.tps_id "
                 + "from res_mgmt.tps z "
@@ -75,13 +87,15 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
                 + "join res_mgmt.tp_pty d on a.tp_id = d.tp_id "
                 + "join guest.TXN_PTY_EXTNL_REF e on d.TXN_PTY_ID = e.TXN_PTY_ID "
+                + "JOIN RES_MGMT.TC_GST f ON c.tc_id = f.tc_id "
                 + "where a.TRVL_STS_NM = 'Booked' "
                 + "and c.TRVL_STS_NM = 'Booked' "
                 + "and c.TC_TYP_NM = 'AccommodationComponent' "
                 + "and c.blk_cd is null "
                 + "group by a.tp_id "
-                + "having count(*) >=2) "
-                + "and rownum = 1");
+                + "having count(f.TXN_IDVL_PTY_ID) >=2) "
+                + "and rownum < 100 "
+                + "order by dbms_random.value");
 
         RetrieveResortReservations retrieveResortReservations = buildAndSendRequestAndValidateSoapResponse(tpsID);
         TestReporter.assertTrue(retrieveResortReservations.getNumberOfPartyRoles() > 1, "There is more than one guest in the resort reservation.");
@@ -181,6 +195,7 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
                 + "AND b.TC_GRP_NB = " + retrieveResortReservations.getTravelComponentGroupingId()));
         TestReporter.assertTrue(results.getRowCount() > 0 && Integer.parseInt(results.getValue(1, 1)) > 0, "Response data was found in the database.");
 
+        // Guest validation
         results = new Recordset(db.getResultSet("SELECT a.IDVL_FST_NM, a.IDVL_LST_NM, a.TXN_IDVL_PTY_ID FROM GUEST.TXN_IDVL_PTY a "
                 + "JOIN RES_MGMT.TC_GST b ON a.TXN_IDVL_PTY_ID = b.TXN_IDVL_PTY_ID "
                 + "JOIN RES_MGMT.TC c ON b.TC_ID = c.TC_ID "
@@ -193,13 +208,43 @@ public class TestRetrieveResortReservations_Positive extends BaseTest {
             mappedResults.put(ID, name);
         }
         TestReporter.assertEquals(mappedResults, retrieveResortReservations.getPartyRoleGuests(), "The guests in the response matched the guests in the database.");
-        TestReporter.assertTrue(mappedResults.entrySet().contains(retrieveResortReservations.getPrimaryGuest()), "The primary guest in the response matched the one in the database.");
 
+        results = new Recordset(db.getResultSet("SELECT a.TXN_IDVL_PTY_ID FROM GUEST.TXN_IDVL_PTY a "
+                + "JOIN RES_MGMT.TP_PTY b ON a.TXN_IDVL_PTY_ID = b.TXN_PTY_ID "
+                + "WHERE b.PRMY_PTY_IN = 'Y' "
+                + "AND b.TP_ID = " + retrieveResortReservations.getTravelPlanId()));
+        TestReporter.assertEquals(results.getValue("TXN_IDVL_PTY_ID"), retrieveResortReservations.getPrimaryGuest().getKey().toString(), "The primary guest in the response matched the one in the database.");
+
+        // Room Type validation
         results = new Recordset(db.getResultSet("select c.RSRC_INVTRY_TYP_CD from res_mgmt.tc a "
                 + "join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID "
                 + "join rsrc_inv.RSRC_INVTRY_TYP c on b.RSRC_INVTRY_TYP_ID = c.RSRC_INVTRY_TYP_ID "
                 + "where a.tc_grp_nb = " + retrieveResortReservations.getTravelComponentGroupingId()));
-        TestReporter.assertEquals(retrieveResortReservations.getRoomTypeCode(), results.getValue("RSRC_INVTRY_TYP_CD"), "The primary guest in the response matched the one in the database.");
+        TestReporter.assertTrue(results.getRowCount() > 0 && retrieveResortReservations.getRoomTypeCode().equals(results.getValue("RSRC_INVTRY_TYP_CD")), "The room type code in the response matched the one in the database.");
+
+        // Package Code validation
+        results = new Recordset(db.getResultSet("select c.tc_id, d.prod_id, d.prod_cls_id, d.ACCT_REV_CLS_ID, d.PROD_YR_NB, d.PROD_TYP_NM, d.PROD_INTRNL_NM, d.PROD_BKNG_STRT_DTS, d.PROD_BKNG_END_DTS, d.PROD_USG_STRT_DTS, d.PROD_USG_END_DTS "
+                + "from res_mgmt.tps a "
+                + "left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "left outer join pricing.prod d on c.prod_id = d.prod_id "
+                + "where a.tps_id = " + tpsID + " "
+                + "and c.tc_typ_nm = 'PackageTravelComponent'"));
+
+        boolean found = false;
+        outer: for (results.moveFirst(); results.hasNext(); results.moveNext()) {
+            Recordset recresults = new Recordset(recdb.getResultSet("select a.PKG_CD from pma_wdw.pkg a "
+                    + "where a.PKG_DESC = '" + results.getValue("PROD_INTRNL_NM") + "' "
+                    + "and a.PRODUCT_YR = " + results.getValue("PROD_YR_NB")));
+
+            for (recresults.moveFirst(); recresults.hasNext(); recresults.moveNext()) {
+                if (retrieveResortReservations.getPackageCode().equals(recresults.getValue("PKG_CD"))) {
+                    found = true;
+                    break outer;
+                }
+            }
+        }
+        TestReporter.assertTrue(found, "The package code in the response matched the one in the database.");
 
         return retrieveResortReservations;
     }

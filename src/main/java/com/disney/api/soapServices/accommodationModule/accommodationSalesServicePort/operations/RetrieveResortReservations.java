@@ -42,6 +42,10 @@ public class RetrieveResortReservations extends AccommodationSalesServicePort {
         return getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations");
     }
 
+    public String getPackageCode() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/packageCode");
+    }
+
     public String getPackagePlanType() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/packagePlanType");
     }
