@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestCreateComments" parallel="methods" thread-count="20">
+	<parameter name="environment" value="Latest_cm" />
+	<test name="TestCreateComments">
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.createComments.*"/>
+		</packages>
+	</test> 
+</suite> 

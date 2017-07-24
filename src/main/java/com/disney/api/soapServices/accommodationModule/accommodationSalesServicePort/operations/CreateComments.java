@@ -51,6 +51,15 @@ public class CreateComments extends AccommodationSalesServicePort{
 	public void setUpdatedBy(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/commentsInfo/auditDetail/updatedBy", value);}
 	public void setUpdatedDate(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/commentsInfo/auditDetail/updatedDate", value);}
 	public void setStatus(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/commentsInfo/auditDetail/status", value);}
+	public void setRoomExternalReferenceNumber(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference/externalReferenceNumber", value);}
+	public void setRoomExternalReferenceSource(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference/externalReferenceSource", value);}
+	public void setRoomExternalReferenceType(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference/externalReferenceType", value);}
+	public void setRoomExternalReferenceCode(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference/externalReferenceCode", value);}
+	public void setTpsExternalReferenceNumber(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference/externalReferenceNumber", value);}
+	public void setTpsExternalReferenceSource(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference/externalReferenceSource", value);}
+	public void setTpsExternalReferenceType(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference/externalReferenceType", value);}
+	public void setTpsExternalReferenceCode(String value ){setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference/externalReferenceCode", value);}
+	
 	
 	//Getters
 	public String getIsActive(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/isActive");}

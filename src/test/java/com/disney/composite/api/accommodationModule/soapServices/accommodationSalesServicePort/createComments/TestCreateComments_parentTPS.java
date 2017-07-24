@@ -1,4 +1,5 @@
-package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort;
+package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.createComments;
+
 
 import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateComments;
@@ -11,21 +12,24 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestCreateComments extends AccommodationBaseTest{
+public class TestCreateComments_parentTPS extends AccommodationBaseTest{
 String commentId = Randomness.randomAlphaNumeric(10);
 String commentText = "This is test comment " + Randomness.randomAlphaNumeric(4);
 String parentId = "";
 	
 
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "CreateComments"})
-	public void testCreateComments_parentTP_emptyCommentOwnerDetails() {
+	public void testCreateComments_parentTPS() {
 
 		String expectedIsActive = "true";
 		String expectedGSR = "false";
 		String expectedConfidential = "true";
-		String expectedCommentLevel = "TC";
+		String expectedCommentLevel = "TPS";
 		String expectedCreatedBy = "AutoJUnit.us";
-		parentId = getBook().getTravelComponentId();
+		String TpsExternalReferenceNumber = getExternalRefNumber();
+		String TpsExternalReferenceSource = getExternalRefSource();
+		String TpsExternalReferenceType = "RESERVATION";
+		parentId = getBook().getTravelPlanSegmentId();
 		CreateComments create = new CreateComments(environment, "Main");
 		create.setParentIds(parentId);
 		create.setIsActive(expectedIsActive);
@@ -36,14 +40,18 @@ String parentId = "";
 		create.setCommentId(BaseSoapCommands.REMOVE_NODE.toString());
 		create.setCommentText(commentText);
 		create.setCommentLevel(expectedCommentLevel);
-		create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/commentsInfo/commentOwnerDetail", BaseSoapCommands.REMOVE_NODE.toString());
+		create.setTcId(getBook().getTravelComponentId());
+		create.setTpsId(getBook().getTravelPlanSegmentId());
+		create.setTpId(getBook().getTravelPlanId());
 		create.setCreatedBy(expectedCreatedBy);
 		create.setCreatedDate(BaseSoapCommands.REMOVE_NODE.toString());
 		create.setUpdatedDate(BaseSoapCommands.REMOVE_NODE.toString());
 		create.setUpdatedBy("Thomas " + Randomness.randomAlphaNumeric(4));
 		create.setStatus(BaseSoapCommands.REMOVE_NODE.toString());
 		create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
-		create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
+		create.setTpsExternalReferenceNumber(TpsExternalReferenceNumber);
+		create.setTpsExternalReferenceSource(TpsExternalReferenceSource);
+		create.setTpsExternalReferenceType(TpsExternalReferenceType);
 		create.sendRequest();
 
 		//Validate node response values
@@ -56,31 +64,23 @@ String parentId = "";
 		TestReporter.softAssertTrue(create.getCommentLevel().equals(expectedCommentLevel), "Verify that the commentLevel node [" + create.getCommentLevel() + "] is what is expected [" + expectedCommentLevel + "]");
 		TestReporter.softAssertTrue(create.getCreatedBy().equals(expectedCreatedBy), "Verify that the createdBy node [" + create.getCreatedBy() + "] is what is expected [" + expectedCreatedBy + "]");
 		TestReporter.assertAll();
-				
-		//Validate comment with a call to retrieveComments
-		RetrieveComments retrieve = new RetrieveComments(environment, "Main");
-		retrieve.setParentIds(parentId);
-		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting options by filter", retrieve);
-		validate(create, retrieve);
 		
 		//Validate comment data in RES_MGMT_REQ table
 		String GSR_IN = (create.getSendToGSR().equals("true")) ? "Y" : "N";
-		String CFDNTL_IN = (create.getSendToGSR().equals("true")) ? "Y" : "N";
+		String CFDNTL_IN = (create.getConfidential().equals("true")) ? "Y" : "N";
 				
 		String RES_MGMT_REQ_VALIDATE_sql = "SELECT * " +
                 " FROM RES_MGMT.RES_MGMT_REQ " +
-                " WHERE TC_ID = " + parentId + " " +
+                " WHERE TPS_ID = " + parentId + " " +
                 " AND GSR_IN = '" + GSR_IN + "' " +
                 " AND CFDNTL_IN = '" + CFDNTL_IN + "' " +
                 " AND RES_MGMT_REQ_TX = '" + create.getCommentText() + "' ";
 		                
 		Database RES_MGMT_REQ_VALIDATE_db = new OracleDatabase(environment, Database.DREAMS);
 		Recordset RES_MGMT_REQ_VALIDATE_rs = new Recordset(RES_MGMT_REQ_VALIDATE_db.getResultSet(RES_MGMT_REQ_VALIDATE_sql));
-				
 		TestReporter.logStep("Verify that the comment shows up in the RES_MGMT_REQ_VALIDATE database.");
-        TestReporter.setAssertFailed(false);
-        TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("TC_ID"), parentId, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("TC_ID") + "] matches the comment data [ " + parentId + "]");
+        TestReporter.setAssertFailed(false);     
+        TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("TPS_ID"), parentId, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("TPS_ID") + "] matches the comment data [ " + parentId + "]");
         TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("RES_MGMT_REQ_TX"), create.getCommentText(), "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("RES_MGMT_REQ_TX") + "] matches the comment data [ " + create.getCommentText() + "]");
         TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("GSR_IN"), GSR_IN, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("GSR_IN") + "] matches the comment data [ " + GSR_IN + "]");
         TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("CFDNTL_IN"), CFDNTL_IN, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("CFDNTL_IN") + "] matches the comment data [ " + CFDNTL_IN + "]");
@@ -104,8 +104,7 @@ String parentId = "";
 			TestReporter.softAssertEquals(rs.getValue("CMT_TX"), create.getCommentText() , "Verify that the GSR_RCD comment text [ " + rs.getValue("CMT_TX") + "] matches the comment data [ " + create.getCommentText() + "]");
 			TestReporter.softAssertEquals(rs.getValue("PTY_ID"), getBook().getGuestId() , "Verify that the GSR_RCD party id [ " + rs.getValue("PTY_ID") + "] matches the comment data [ " + getBook().getGuestId() + "]");
 			TestReporter.assertAll();
-		}
-	
+		}	
 		
 		//Verify that the comment exists in the TPV3 database table
 		String TPV3_sql = "select * " +

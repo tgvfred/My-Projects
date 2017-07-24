@@ -1,4 +1,4 @@
-package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort;
+package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.createComments;
 
 import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateComments;
@@ -11,14 +11,14 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestCreateComments extends AccommodationBaseTest{
+public class TestCreateComments_parentTC extends AccommodationBaseTest{
 String commentId = Randomness.randomAlphaNumeric(10);
 String commentText = "This is test comment " + Randomness.randomAlphaNumeric(4);
 String parentId = "";
 	
 
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "CreateComments"})
-	public void testCreateComments_parentTP_emptyCommentOwnerDetails() {
+	public void testCreateComments_parentTC() {
 
 		String expectedIsActive = "true";
 		String expectedGSR = "false";
@@ -36,7 +36,9 @@ String parentId = "";
 		create.setCommentId(BaseSoapCommands.REMOVE_NODE.toString());
 		create.setCommentText(commentText);
 		create.setCommentLevel(expectedCommentLevel);
-		create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/commentsInfo/commentOwnerDetail", BaseSoapCommands.REMOVE_NODE.toString());
+		create.setTcId(getBook().getTravelComponentId());
+		create.setTpsId(getBook().getTravelPlanSegmentId());
+		create.setTpId(getBook().getTravelPlanId());
 		create.setCreatedBy(expectedCreatedBy);
 		create.setCreatedDate(BaseSoapCommands.REMOVE_NODE.toString());
 		create.setUpdatedDate(BaseSoapCommands.REMOVE_NODE.toString());
@@ -66,18 +68,18 @@ String parentId = "";
 		
 		//Validate comment data in RES_MGMT_REQ table
 		String GSR_IN = (create.getSendToGSR().equals("true")) ? "Y" : "N";
-		String CFDNTL_IN = (create.getSendToGSR().equals("true")) ? "Y" : "N";
+		String CFDNTL_IN = (create.getConfidential().equals("true")) ? "Y" : "N";
 				
 		String RES_MGMT_REQ_VALIDATE_sql = "SELECT * " +
                 " FROM RES_MGMT.RES_MGMT_REQ " +
-                " WHERE TC_ID = " + parentId + " " +
+                " WHERE TC_ID = " + parentId + " "+
                 " AND GSR_IN = '" + GSR_IN + "' " +
                 " AND CFDNTL_IN = '" + CFDNTL_IN + "' " +
                 " AND RES_MGMT_REQ_TX = '" + create.getCommentText() + "' ";
 		                
 		Database RES_MGMT_REQ_VALIDATE_db = new OracleDatabase(environment, Database.DREAMS);
 		Recordset RES_MGMT_REQ_VALIDATE_rs = new Recordset(RES_MGMT_REQ_VALIDATE_db.getResultSet(RES_MGMT_REQ_VALIDATE_sql));
-				
+			
 		TestReporter.logStep("Verify that the comment shows up in the RES_MGMT_REQ_VALIDATE database.");
         TestReporter.setAssertFailed(false);
         TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("TC_ID"), parentId, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("TC_ID") + "] matches the comment data [ " + parentId + "]");
@@ -88,7 +90,7 @@ String parentId = "";
 		
 
 		//If sendToGsr=true, validate GSR data in EXT_INTF.GSR_RCD, EXT_INTF.GSR_GUEST, and EXT_INTF.GSR_TXN tables
-        if (create.getSendToGSR().equals("true")){
+		if (create.getSendToGSR().equals("true")){
 			String sql = "select * " +
 					" from ext_intf.gsr_rcd a " + 
 					" join ext_intf.gsr_guest b on a.GSR_GUEST_ID = b.GSR_GUEST_ID " +
