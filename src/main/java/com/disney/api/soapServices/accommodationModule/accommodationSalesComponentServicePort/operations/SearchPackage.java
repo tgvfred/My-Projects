@@ -85,8 +85,7 @@ public class SearchPackage extends AccommodationSalesComponentServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/searchPackageResponse/return/description");
     }
 
-    int index = getNumberOfRequestNodesByXPath("/Envelope/Body/searchPackageResponse/return/description") + 1;
-
+    // Finds the package code within the response then returns the description attached to that package code
     public String getPackageDescriptionByPackageCode(String pkgCode) {
         return getResponseNodeValueByXPath("/Envelope/Body/searchPackageResponse/return/code[text()='" + pkgCode + "']/../description");
     }
