@@ -11,7 +11,7 @@ import com.disney.utils.TestReporter;
 
 public class Test_SearchPackage_Negative extends AccommodationBaseTest {
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_emptyRequest() {
 
         String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
@@ -23,7 +23,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         validateApplicationError(search, AccommodationErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_salesChannelIdOnly() {
 
         String faultString = "Data not found\\. : No Packages could be found for channelIDs='\\[1\\]' and bookDate='[a-z A-Z 0-9].*' and arriveDate='null' and packageCode='null' and packageDescription='null' and roomOnly=null";
@@ -36,7 +36,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         validateApplicationError(search, AccommodationErrorCode.DATA_NOT_FOUND_EXCEPTION);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_nullPackageCode() {
 
         String book = Randomness.generateCurrentXMLDate();
@@ -55,7 +55,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         validateApplicationError(search, AccommodationErrorCode.DATA_NOT_FOUND_EXCEPTION);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_resortArrivalDateOnly() {
 
         String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
@@ -68,7 +68,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         validateApplicationError(search, AccommodationErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_bookingDateOnly() {
 
         String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";

@@ -15,6 +15,7 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
 
     private String pkg;
     private String desc;
+    private String pkgCode = "H333E";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
     public void testSearchPackage_descriptionAndBookingDate() {
@@ -25,7 +26,7 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
         search.sendRequest();
         TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", search);
 
-        packageCheck(search.getPackageDescription("3"));
+        packageCheck(search.getPackageDescriptionByPackageCode(pkgCode));
 
         // Old vs New Validation
         if (Environment.isSpecialEnvironment(environment)) {
@@ -35,11 +36,6 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
             if (!clone.getResponseStatusCode().equals("200")) {
                 TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
             }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(search, true), "Validating Response Comparison");
         }
     }
@@ -69,7 +65,7 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
         pkg = rs.getValue("PKG_CD");
         desc = rs.getValue("PKG_GST_FACING_DESC");
 
-        TestReporter.assertEquals(pkg, "H333E", "Verify the Package Code [H333E] matches the Package Code found"
+        TestReporter.assertEquals(pkg, pkgCode, "Verify the Package Code [" + pkgCode + "] matches the Package Code found"
                 + " in the DB [" + pkg + "]");
         TestReporter.assertEquals(desc, pkgDesc, "Verify the Package Description [" + pkgDesc + "] matches the Package Description found"
                 + " in the DB [" + desc + "]");

@@ -15,6 +15,7 @@ public class Test_SearchPackage_nullSalesChannel extends AccommodationBaseTest {
 
     private String pkg;
     private String desc;
+    private String pkgCode = "H333E";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
     public void testSearchPackage_nullSalesChannel() {

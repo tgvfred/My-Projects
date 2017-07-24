@@ -14,6 +14,7 @@ public class Test_SearchPackage_packageCodeOnly extends AccommodationBaseTest {
 
     private String pkg;
     private String desc;
+    private String pkgCode = "H333E";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
     public void testSearchPackage_packageCodeOnly() {
