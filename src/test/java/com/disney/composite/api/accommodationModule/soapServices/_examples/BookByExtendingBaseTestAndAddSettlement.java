@@ -1,11 +1,9 @@
 package com.disney.composite.api.accommodationModule.soapServices._examples;
 
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.PaymentSettlementHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
@@ -14,34 +12,16 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class BookAndCancelInTestClass extends AccommodationBaseTest {
+public class BookByExtendingBaseTestAndAddSettlement extends AccommodationBaseTest {
     private String tpPtyId;
     private String odsGuestId;
     private String assignmentOwnerId;
-
-    @Override
-    @BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void setup(String environment) {
-        setEnvironment(environment);
-    }
-
-    @Override
-    @AfterMethod(alwaysRun = true)
-    public void teardown() {
-        cancel();
-    }
+    private PaymentSettlementHelper helper;
 
     @Test(groups = { "api", "regression", "accommodation" })
-    public void bookAndCancelInTestClass() {
-        setDaysOut(Randomness.randomNumberBetween(1, 12));
-        setNights(Randomness.randomNumberBetween(3, 5));
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getDaysOut() + getNights());
-        setValues();
-        bookReservation();
-        cancel();
-
+    public void bookByExtendingBaseTestAndAddSettlement() {
+        helper = new PaymentSettlementHelper(getEnvironment(), getBook(), getHouseHold());
+        helper.createSettlementMethod("Pay total amount due with valid visa with incidentals");
         gatherDataForValidations();
         validations();
     }
@@ -62,15 +42,15 @@ public class BookAndCancelInTestClass extends AccommodationBaseTest {
     private void validations() {
         ValidationHelper helper = new ValidationHelper(getEnvironment());
         helper.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
-        helper.verifyChargeGroupsStatusCount("Cancelled", 3, getBook().getTravelPlanId());
-        helper.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 0, getBook().getTravelPlanId());
+        helper.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
+        helper.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
         int charges = getNights() * 4;
         helper.verifyChargeDetail(charges, getBook().getTravelPlanId());
-        helper.verifyNumberOfChargesByStatus("Cancelled", getNights(), getBook().getTravelPlanId());
+        helper.verifyNumberOfChargesByStatus("UnEarned", getNights(), getBook().getTravelPlanId());
         helper.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
-        helper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Cancelled");
+        helper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
         helper.verifyOdsGuestIdCreated(getBook().getTravelPlanId(), true);
-        helper.validateModificationBackend(1, "Cancelled", "DVC", getArrivalDate(), getDepartureDate(), "", "", getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), false);
+        helper.validateModificationBackend(1, "Booked", "DVC", getArrivalDate(), getDepartureDate(), "", "", getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), false);
         helper.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
 
         helper.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
@@ -78,7 +58,7 @@ public class BookAndCancelInTestClass extends AccommodationBaseTest {
         helper.verifyOdsGuestIdChanged(odsGuestId, false, getBook().getTravelPlanId());
         helper.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
         helper.verifyAssignmentOwnerIdChanged(assignmentOwnerId, false, getBook().getTravelPlanId());
-        helper.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", false);
+        helper.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
         helper.verifyInventoryTrackingIdInRIM(getBook().getTravelPlanId(), "", false);
 
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
@@ -93,15 +73,15 @@ public class BookAndCancelInTestClass extends AccommodationBaseTest {
             TestReporter.log("Validating record [" + i + "].");
             TestReporter.softAssertEquals(tpsRs.getValue("TPS_ID"), getBook().getTravelPlanSegmentId(), "Verify that the TPS ID [" + tpsRs.getValue("TPS_ID") + "] is that which is expected [" + getBook().getTravelPlanSegmentId() + "].");
             TestReporter.softAssertEquals(tpsRs.getValue("TP_ID"), getBook().getTravelPlanId(), "Verify that the TP ID [" + tpsRs.getValue("TP_ID") + "] is that which is expected [" + getBook().getTravelPlanId() + "].");
-            TestReporter.softAssertEquals(tpsRs.getValue("TRVL_STS_NM"), "Cancelled", "Verify that the travel status [" + tpsRs.getValue("TRVL_STS_NM") + "] is that which is expected [Cancelled].");
+            TestReporter.softAssertEquals(tpsRs.getValue("TRVL_STS_NM"), "Booked", "Verify that the travel status [" + tpsRs.getValue("TRVL_STS_NM") + "] is that which is expected [Booked].");
             TestReporter.softAssertEquals(tpsRs.getValue("VIP_LVL_NM"), "0", "Verify that the VIP level [" + tpsRs.getValue("VIP_LVL_NM") + "] is that which is expected [0].");
             TestReporter.softAssertEquals(tpsRs.getValue("TRVL_AGCY_PTY_ID"), "NULL", "Verify that the travel agency party ID [" + tpsRs.getValue("TRVL_AGCY_PTY_ID") + "] is that which is expected [NULL].");
             TestReporter.softAssertEquals(tpsRs.getValue("TRVL_AGT_PTY_ID"), "NULL", "Verify that the travel agent party ID [" + tpsRs.getValue("TRVL_AGT_PTY_ID") + "] is that which is expected [NULL].");
             TestReporter.softAssertEquals(tpsRs.getValue("PRMY_PTY_ID"), "NULL", "Verify that the primary party ID [" + tpsRs.getValue("PRMY_PTY_ID") + "] is that which is expected [NULL].");
             TestReporter.softAssertEquals(tpsRs.getValue("TPS_SECUR_VL"), "NULL", "Verify that the TPS security value [" + tpsRs.getValue("TPS_SECUR_VL") + "] is that which is expected [NULL].");
-            TestReporter.softAssertEquals(tpsRs.getValue("TPS_CNCL_DTS").split(" ")[0], Randomness.generateCurrentXMLDate(), "Verify that the cancel DTS [" + tpsRs.getValue("TPS_CNCL_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate() + "].");
-            TestReporter.softAssertTrue(Regex.match("[0-9]+", tpsRs.getValue("TPS_CNCL_NB")), "Verify that the cancel number [" + tpsRs.getValue("TPS_CNCL_NB") + "] is a numerical value as expected.");
-            TestReporter.softAssertEquals(tpsRs.getValue("TPS_GUAR_IN"), "N", "Verify that the TPS guaranteed indicator [" + tpsRs.getValue("TPS_GUAR_IN") + "] is that which is expected [N].");
+            TestReporter.softAssertEquals(tpsRs.getValue("TPS_CNCL_DTS"), "NULL", "Verify that the cancel DTS [" + tpsRs.getValue("TPS_CNCL_DTS") + "] is that which is expected [NULL].");
+            TestReporter.softAssertEquals(tpsRs.getValue("TPS_CNCL_NB"), "NULL", "Verify that the cancel number [" + tpsRs.getValue("TPS_CNCL_NB") + "] is that which is expected [NULL].");
+            TestReporter.softAssertEquals(tpsRs.getValue("TPS_GUAR_IN"), "Y", "Verify that the TPS guaranteed indicator [" + tpsRs.getValue("TPS_GUAR_IN") + "] is that which is expected [Y].");
             TestReporter.softAssertEquals(tpsRs.getValue("TPS_ARVL_DT").split(" ")[0], getArrivalDate().split("T")[0], "Verify that the TPS arrival date [" + tpsRs.getValue("TPS_ARVL_DT").split(" ")[0] + "] is that which is expected [" + getArrivalDate().split("T")[0] + "].");
             TestReporter.softAssertEquals(tpsRs.getValue("TPS_DPRT_DT").split(" ")[0], getDepartureDate().split("T")[0], "Verify that the TPS departure date [" + tpsRs.getValue("TPS_DPRT_DT").split(" ")[0] + "] is that which is expected [" + getDepartureDate().split("T")[0] + "].");
             TestReporter.softAssertEquals(tpsRs.getValue("ONST_MSG_IN"), "Y", "Verify that the onsite messaging indicator [" + tpsRs.getValue("ONST_MSG_IN") + "] is that which is expected [Y].");
@@ -148,7 +128,6 @@ public class BookAndCancelInTestClass extends AccommodationBaseTest {
                 TestReporter.softAssertEquals(tcRs.getValue("TC_INVTRY_IN"), "N", "Verify that the TC inventory indicator [" + tcRs.getValue("TC_INVTRY_IN") + "] is that which is expected [N].");
             }
 
-            TestReporter.softAssertEquals(tcRs.getValue("TC_CNCL_DTS"), "NULL", "Verify that the cancel date [" + tcRs.getValue("TC_CNCL_DTS") + "] is that which is expected [NULL].");
             TestReporter.softAssertEquals(tcRs.getValue("TC_GRP_NB"), getBook().getTravelComponentGroupingId(), "Verify that the TCG ID [" + tcRs.getValue("TC_GRP_NB") + "] is that which is expected [" + getBook().getTravelComponentGroupingId() + "].");
             TestReporter.softAssertEquals(tcRs.getValue("TC_CHKOT_DTS"), "NULL", "Verify that the TC checkout date [" + tcRs.getValue("TC_CHKOT_DTS") + "] is that which is expected [" + getBook().getTravelComponentGroupingId() + "].");
             TestReporter.softAssertEquals(tcRs.getValue("TC_STRT_DTS").split(" ")[0], getArrivalDate().split("T")[0], "Verify that the TC start date [" + tcRs.getValue("TC_STRT_DTS").split(" ")[0] + "] is that which is expected [" + getArrivalDate().split("T")[0] + "].");
@@ -156,8 +135,9 @@ public class BookAndCancelInTestClass extends AccommodationBaseTest {
             TestReporter.softAssertEquals(tcRs.getValue("TC_BK_DTS").split(" ")[0], Randomness.generateCurrentXMLDate(), "Verify that the booking date [" + tcRs.getValue("TC_BK_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate() + "].");
             TestReporter.softAssertEquals(tcRs.getValue("TC_CHKIN_DTS"), "NULL", "Verify that the TC checkin date [" + tcRs.getValue("TC_CHKIN_DTS") + "] is that which is expected [NULL].");
             TestReporter.softAssertEquals(tcRs.getValue("BLK_CD"), "NULL", "Verify that the block code [" + tcRs.getValue("BLK_CD") + "] is that which is expected [NULL].");
-            TestReporter.softAssertEquals(tcRs.getValue("TRVL_STS_NM"), "Cancelled", "Verify that the TCG ID [" + tcRs.getValue("TRVL_STS_NM") + "] is that which is expected [Cancelled].");
+            TestReporter.softAssertEquals(tcRs.getValue("TRVL_STS_NM"), "Booked", "Verify that the TCG ID [" + tcRs.getValue("TRVL_STS_NM") + "] is that which is expected [Booked].");
             TestReporter.softAssertEquals(tcRs.getValue("TRVL_AGCY_PTY_ID"), "NULL", "Verify that the TCG ID [" + tcRs.getValue("TRVL_AGCY_PTY_ID") + "] is that which is expected [NULL].");
+            TestReporter.softAssertEquals(tcRs.getValue("TC_CNCL_DTS"), "NULL", "Verify that the TCG ID [" + tcRs.getValue("TC_CNCL_DTS") + "] is that which is expected [NULL].");
             tcRs.moveNext();
         } while (tcRs.hasNext());
 

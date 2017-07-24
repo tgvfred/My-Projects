@@ -12,16 +12,16 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class BookAndAddSettlement extends AccommodationBaseTest {
+public class BookByExtendingBaseTestAndMakeFirstNightDeposit extends AccommodationBaseTest {
     private String tpPtyId;
     private String odsGuestId;
     private String assignmentOwnerId;
     private PaymentSettlementHelper helper;
 
     @Test(groups = { "api", "regression", "accommodation" })
-    public void bookAndAddSettlement() {
+    public void bookByExtendingBaseTestAndMakeFirstNightDeposit() {
         helper = new PaymentSettlementHelper(getEnvironment(), getBook(), getHouseHold());
-        helper.createSettlementMethod("Pay total amount due with valid visa with incidentals");
+        helper.makeFirstNightDeposit();
         gatherDataForValidations();
         validations();
     }
@@ -60,6 +60,8 @@ public class BookAndAddSettlement extends AccommodationBaseTest {
         helper.verifyAssignmentOwnerIdChanged(assignmentOwnerId, false, getBook().getTravelPlanId());
         helper.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
         helper.verifyInventoryTrackingIdInRIM(getBook().getTravelPlanId(), "", false);
+
+        helper.validatePayment(getBook().getTravelPlanId(), 1, this.helper.getPaymentAmount());
 
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
 

@@ -1,4 +1,4 @@
-package com.disney.api.soapServices.accommodationModule.exceptions;
+package com.disney.api.soapServices.accommodationModule.applicationError;
 
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 
