@@ -91,4 +91,8 @@ public class AccommodationErrorCode {
             " Validation Failed. ");
     public static final ApplicationErrorCode DATA_NOT_FOUND_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 91443,
             " Data not found. ");
+    public static final ApplicationErrorCode COMMENT_LEVEL_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
+            " Create Comments Request Invalid ");
+    public static final ApplicationErrorCode REQUEST_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
+            " Create Comments Request Invalid ");
 }
