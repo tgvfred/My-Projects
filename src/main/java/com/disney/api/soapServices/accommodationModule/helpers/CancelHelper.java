@@ -918,6 +918,20 @@ public class CancelHelper {
         TestReporter.assertAll();
     }
 
+    public void verifyTcFee(String tcId, boolean feeExpected) {
+        TestReporter.logStep("Verify TC fee was generated.");
+        String sql = "select * "
+                + "from res_mgmt.tc_fee a "
+                + "where a.tc_id = '" + tcId + "'";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        if (feeExpected) {
+            TestReporter.softAssertTrue(rs.getRowCount() > 0, "Verify that a TC fee was generated.");
+        } else {
+            TestReporter.softAssertTrue(rs.getRowCount() == 0, "Verify that no TC fee was generated.");
+        }
+    }
+
     public void verifyCancellationFee() {
         TestReporter.logStep("Verify cancellation fee was created in Folio");
         String sql = DVCSalesDreams.getChargeInformationByTp(tpId) + " and CHRG_TYP_NM = 'Fee Charge'";

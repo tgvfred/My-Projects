@@ -216,6 +216,7 @@ public class TestCancel_RO_WithCancellationFee extends TravelPlanBaseTest {
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
+        cancelHelper.verifyTcFee(getBook().getTravelComponentId(), true);
         TestReporter.assertAll();
     }
 
