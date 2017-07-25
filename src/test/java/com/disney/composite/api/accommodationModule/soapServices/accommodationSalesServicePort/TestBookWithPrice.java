@@ -35,7 +35,7 @@ public class TestBookWithPrice {
 		}catch(Exception e){}
 	}
 		
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "BookWithPrice"})
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "BookWithPrice", "debug"})
 	public void testBookWithPrice_MainFlow(){
 		TestReporter.logScenario("Test Book with Price");
 		BookWithPrice = new BookWithPrice(environment, "Main" );

@@ -16,7 +16,7 @@
 		</packages> -->
 		
 		<classes>
-			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.TestRetrieveTeamByGroupCode"></class>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveTeamByGroupCode.TestRetrieveTeamByGroupCode"></class>
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

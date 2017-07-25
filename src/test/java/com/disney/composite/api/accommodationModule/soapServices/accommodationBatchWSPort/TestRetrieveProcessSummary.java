@@ -19,7 +19,7 @@ public class TestRetrieveProcessSummary {
 	@Parameters("environment")
 	public void before(String environment){this.environment = environment;}
 	
-	@Test(groups = {"api", "regression", "Accommodation", "AccommodationBatchService"})
+	@Test(groups = {"api", "regression", "Accommodation", "AccommodationBatchService", "presmoke"})
 	public void testRetrieveProcessSummary(){
 		TestReporter.logScenario("Test Retrieve Process Summary");
 		retrieve = new RetrieveProcessSummary(environment, "Main");

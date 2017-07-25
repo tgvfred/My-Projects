@@ -39,7 +39,7 @@ public class TestOverrideRate {
 		}catch(Exception e){}
 	}
 		
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "overrideRate"})
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "overrideRate", "debug"})
 	public void testOverrideRate_MainFlow(){
 		TestReporter.logScenario("Test Override Rate");
 		OverrideRate OverrideRate= new OverrideRate(environment, "Main" );

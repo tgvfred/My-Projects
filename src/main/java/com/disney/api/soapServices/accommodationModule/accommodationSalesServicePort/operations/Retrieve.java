@@ -74,14 +74,14 @@ public class Retrieve extends AccommodationSalesServicePort{
 		OracleDatabase db = new OracleDatabase("Sleepy", "Dreams");	
 		Recordset rs = new Recordset(db.getResultSet("Select * FROM RES_MGMT.TPS WHERE ROWNUM < 10"));
 
-		System.out.println("Example 1");
+//		System.out.println("Example 1");
 		for (rs.moveFirst() ; rs.hasNext() ; rs.moveNext()){
-			System.out.println(rs.getValue("TPS_ID"));			
+//			System.out.println(rs.getValue("TPS_ID"));			
 		}
 		
 		
-		System.out.println();
-		System.out.println("Example 2");
+//		System.out.println();
+//		System.out.println("Example 2");
 		rs.moveFirst();
 		String report = "";
 		for (int row = 0 ; rs.hasNext() ; rs.moveNext() , row++){
@@ -90,12 +90,12 @@ public class Retrieve extends AccommodationSalesServicePort{
 				report += rs.getValue(column, row) + " | ";			
 			}
 			
-			System.out.println(report);
+//			System.out.println(report);
 			
 		}
 		
-		System.out.println();
-		System.out.println();
+//		System.out.println();
+//		System.out.println();
 		rs.print();			
 		return "";
 	}

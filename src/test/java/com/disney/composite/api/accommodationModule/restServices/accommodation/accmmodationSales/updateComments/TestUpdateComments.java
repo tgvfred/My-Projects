@@ -32,6 +32,7 @@ public class TestUpdateComments extends BaseRestTest{
 		@BeforeClass(alwaysRun = true)
 		@Parameters({  "environment" })
 		public void setup(@Optional String environment) {
+			TestReporter.setDebugLevel(TestReporter.INFO);
 			this.environment = environment;
 			
 			//generate accommodation booking
@@ -52,10 +53,11 @@ public class TestUpdateComments extends BaseRestTest{
 		 * 		- OperationName - name of the operation
 		 * 		- DataScenario - data scenario used, data sheets can contain multiple scenarios.
 		 */
-		@Test(groups={"api","rest", "regression", "accommodation", "accommodationSales", "updateComments"})
+		@Test(groups={"api","rest", "regression", "accommodation", "accommodationSales", "updateComments", "smoke"})
 		public void testupdateComments_SingleTC () throws IOException{
 			
 			// set log levels for debugging
+			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -74,6 +76,7 @@ public class TestUpdateComments extends BaseRestTest{
 		public void testupdateComments_DoubleComment () throws IOException{
 			
 			// set log levels for debugging
+			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -102,6 +105,7 @@ public class TestUpdateComments extends BaseRestTest{
 			TCId2 = book2.getTravelComponentId();
 			
 			// set log levels for debugging
+			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						
@@ -130,6 +134,7 @@ public class TestUpdateComments extends BaseRestTest{
 			TCId2 = book2.getTravelComponentId();
 			
 			// set log levels for debugging
+			TestReporter.setDebugLevel(TestReporter.INFO);
 			//Create new request
 			UpdateCommentsRequest request = new UpdateCommentsRequest();
 						

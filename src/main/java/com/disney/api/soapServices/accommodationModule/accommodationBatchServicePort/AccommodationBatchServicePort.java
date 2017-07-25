@@ -2,8 +2,9 @@ package com.disney.api.soapServices.accommodationModule.accommodationBatchServic
 
 import com.disney.api.soapServices.core.BaseSoapService;
 
-public class AccommodationBatchServicePort extends BaseSoapService{
-	public AccommodationBatchServicePort(String environment) {		
-		setEnvironmentServiceURL("AccommodationBatchWSPort", environment);
-	}
+public class AccommodationBatchServicePort extends BaseSoapService {
+
+    public AccommodationBatchServicePort(String environment) {
+        setEnvironmentServiceURL("AccommodationBatchWSPort", environment);
+    }
 }

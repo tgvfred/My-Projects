@@ -14,7 +14,7 @@ public class TestCalculateSharedRates {
 	@Parameters({  "environment" })
 	public void setup(String environment){this.environment = environment;}
 			
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "calculateSharedRates"})
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "calculateSharedRates", "debug"})
 	public void testCalculateSharedRates_MainFlow(){
 		TestReporter.logScenario("Test Calculate Shared Rates");
 		CalculateSharedRates calculateSharedRates = new CalculateSharedRates(environment, "Main");		
