@@ -106,6 +106,7 @@ public class TestCancel_RO_ADA extends AccommodationBaseTest {
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
+        TestReporter.assertAll();
     }
 
     public static String removeCM(String cmEnv) {

@@ -106,6 +106,7 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
+        TestReporter.assertAll();
     }
 
     public static String removeCM(String cmEnv) {

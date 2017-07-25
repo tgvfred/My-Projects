@@ -230,7 +230,7 @@ public class TestCancel_GroupBundle_CancelRoom extends TravelPlanBaseTest {
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
-
+        TestReporter.assertAll();
     }
 
     public static String removeCM(String cmEnv) {
