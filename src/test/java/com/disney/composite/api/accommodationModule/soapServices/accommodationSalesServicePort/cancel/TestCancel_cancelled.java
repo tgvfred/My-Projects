@@ -11,7 +11,7 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
-public class TestCancel_AlreadyCancelled_Negative extends AccommodationBaseTest {
+public class TestCancel_cancelled extends AccommodationBaseTest {
 
     @Override
     @BeforeMethod(alwaysRun = true)

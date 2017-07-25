@@ -24,6 +24,7 @@ import com.disney.utils.dataFactory.database.databaseImpl.DB2Database;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.DVCSalesDreams;
 import com.disney.utils.dataFactory.guestFactory.DVCMember;
+import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class CancelHelper {
     private String environment;
@@ -127,6 +128,22 @@ public class CancelHelper {
         }
         TestReporter.softAssertTrue(cancelled,
                 "Verify that the reservation history shows a cencellation for TP ID [" + tpId + "], TPS ID [" + tpsId + "], TCG ID [" + tcgId + "], and TC ID [" + tcId + "].");
+        TestReporter.assertAll();
+    }
+
+    public void verifyCancellationNotFoundInResHistory(String tpsId, String tcgId, String tcId) {
+        TestReporter.logStep("Verify Cancellation Is Not Found In Res History");
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(DVCSalesDreams.getReservationHistoryByTpId(tpId, tpsId, tcgId, tcId)));
+        // rs.print();
+        boolean cancelled = false;
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            if (rs.getValue("RES_HIST_PROC_DS", i).equals("Cancelled")) {
+                cancelled = true;
+            }
+        }
+        TestReporter.softAssertFalse(cancelled,
+                "Verify that the reservation history does not show a cencellation for TP ID [" + tpId + "], TPS ID [" + tpsId + "], TCG ID [" + tcgId + "], and TC ID [" + tcId + "].");
         TestReporter.assertAll();
     }
 
@@ -930,5 +947,38 @@ public class CancelHelper {
         TestReporter.assertEquals(rs.getValue("PRDF_TC_RSN_ID"), "1", "Verify that the product reason ID: [" + rs.getValue("PRDF_TC_RSN_ID") + "] is set"
                 + " to 1 the ID that corrseponds with the AIR reason code used in the cancel");
 
+    }
+
+    public void verifyTPV3RecordCreated(String tpId) {
+        TestReporter.logStep("Verify TPV3 record created.");
+        String sql = "select * "
+                + "from sales_tp.tp a "
+                + "where a.tp_id = '" + tpId + "'";
+        Database db = new OracleDatabase(environment, Database.SALESTP);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.softAssertTrue(rs.getRowCount() > 0, "Verify that a TPV3 record was created.");
+    }
+
+    public void verifyTPV3GuestRecordCreated(String tpId, Guest guest) {
+        TestReporter.logStep("Verify TPV3 guest record created.");
+        String sql = "select * "
+                + "from sales_tp.tp_pty a "
+                + "where a.tp_id = '" + tpId + "'";
+        Database db = new OracleDatabase(environment, Database.SALESTP);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.softAssertTrue(rs.getRowCount() > 0, "Verify that a TPV3 guest record was created.");
+
+        TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM"), guest.getFirstName(), "Verify that the guest first name [" + rs.getValue("IDVL_FST_NM") + "] is that which is expected [" + guest.getFirstName() + "].");
+        TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM"), guest.getLastName(), "Verify that the guest last name [" + rs.getValue("IDVL_LST_NM") + "] is that which is expected [" + guest.getLastName() + "].");
+    }
+
+    public void verifyTPV3SalesOrderRecordCreated(String tpId) {
+        TestReporter.logStep("Verify TPV3 sales order record created.");
+        String sql = "select * "
+                + "from sales_tp.sls_ord a "
+                + "where a.tp_id = '" + tpId + "'";
+        Database db = new OracleDatabase(environment, Database.SALESTP);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.softAssertTrue(rs.getRowCount() > 0, "Verify that a TPV3 sales order record was created.");
     }
 }
