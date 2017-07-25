@@ -40,6 +40,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>TravelPlanSegment</artifactId>
+			<version>1.0.00</version>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Resource</artifactId>
 			<version>1.0.8</version>
 		</dependency>

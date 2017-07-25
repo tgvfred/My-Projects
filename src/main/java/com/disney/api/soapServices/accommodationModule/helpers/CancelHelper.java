@@ -131,6 +131,22 @@ public class CancelHelper {
         TestReporter.assertAll();
     }
 
+    public void verifyCancellationNotFoundInResHistory(String tpsId, String tcgId, String tcId) {
+        TestReporter.logStep("Verify Cancellation Is Not Found In Res History");
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(DVCSalesDreams.getReservationHistoryByTpId(tpId, tpsId, tcgId, tcId)));
+        // rs.print();
+        boolean cancelled = false;
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            if (rs.getValue("RES_HIST_PROC_DS", i).equals("Cancelled")) {
+                cancelled = true;
+            }
+        }
+        TestReporter.softAssertFalse(cancelled,
+                "Verify that the reservation history does not show a cencellation for TP ID [" + tpId + "], TPS ID [" + tpsId + "], TCG ID [" + tcgId + "], and TC ID [" + tcId + "].");
+        TestReporter.assertAll();
+    }
+
     public void verifyCancellationIsFoundInResHistoryLinked(String tpsId) {
         TestReporter.logStep("Verify Cancellation Is Found In Res History");
         Database db = new OracleDatabase(environment, Database.DREAMS);
