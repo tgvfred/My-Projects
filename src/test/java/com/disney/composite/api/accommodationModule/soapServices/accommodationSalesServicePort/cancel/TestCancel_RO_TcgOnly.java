@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
@@ -14,7 +15,7 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
 
-public class TestCancel_RO_CheckingIn extends AccommodationBaseTest {
+public class TestCancel_RO_TcgOnly extends AccommodationBaseTest {
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -38,11 +39,11 @@ public class TestCancel_RO_CheckingIn extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
-    public void testCancel_RO_CheckingIn() {
-        TestReporter.logScenario("Test Cancel RO CheckingIn");
+    public void testCancel_RO_TcgOnly() {
+        TestReporter.logScenario("Test Cancel RO CheckingIn Tcg Only");
 
         Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
+        cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
@@ -114,5 +115,4 @@ public class TestCancel_RO_CheckingIn extends AccommodationBaseTest {
     public static String removeCM(String cmEnv) {
         return Environment.getBaseEnvironmentName(cmEnv).toLowerCase();
     }
-
 }

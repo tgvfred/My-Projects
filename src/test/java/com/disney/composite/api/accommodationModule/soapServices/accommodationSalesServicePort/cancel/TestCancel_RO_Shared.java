@@ -113,6 +113,9 @@ public class TestCancel_RO_Shared extends TravelPlanBaseTest {
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(book.getTravelComponentId());
+        cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
+        cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
+        cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
     }
 
     public static String removeCM(String cmEnv) {

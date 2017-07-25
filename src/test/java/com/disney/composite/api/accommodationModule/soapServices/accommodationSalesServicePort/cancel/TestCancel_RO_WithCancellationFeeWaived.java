@@ -1,63 +1,71 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.cancel;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationAssignmentServicePort.operations.FindRoomForReservation;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.travelPlanModule.TravelPlanBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.PackageCodes;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
 
-public class TestCancel_RO_AdditionalAdult extends TravelPlanBaseTest {
+public class TestCancel_RO_WithCancellationFeeWaived extends TravelPlanBaseTest {
 
     private Book book;
-    private String packageCode;
-    private static final int maxTries = 3;
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
         this.environment = environment;
-        daysOut.set(Randomness.randomNumberBetween(15, 120));
-        nights.set(1);
-        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
-        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
-
-        setValues("80010402", "EA", "42");
+        if (environment.toLowerCase().contains("_cm")) {
+            environment = environment.toLowerCase().replace("_cm", "");
+        }
         createHouseHold();
+        book = new Book(environment, "bookWithoutTickets");
+        int locDaysOut = 0;
+        book.setArrivalDate(String.valueOf(locDaysOut));
+        int locNights = 1;
+        book.setDeptDate(String.valueOf(String.valueOf(locDaysOut + locNights)));
 
-        book = new Book(environment, "3Adults");
-
-        int bookTries = 0;
-        PackageCodes pkg = new PackageCodes();
         boolean bookSuccess = false;
+        int tries = 0;
+        int maxTries = 10;
+        PackageCodes pkg = new PackageCodes();
         do {
-            book.setArrivalDate(String.valueOf(getDaysOut()));
-            book.setDeptDate(String.valueOf(getDaysOut() + getNights()));
+            setValues("80010402", "EP", "42");
 
-            int tries = 0;
             pkg = new PackageCodes();
             boolean success = false;
+            String packageCode = "";
             do {
                 try {
-                    packageCode = pkg.retrievePackageCode(environment, String.valueOf(getDaysOut()),
+                    packageCode = pkg.retrievePackageCode(environment, String.valueOf(locDaysOut),
                             getLocationId(), "DRC RO", "", getResortCode(), getRoomTypeCode(), "");
                     success = true;
                 } catch (AssertionError e) {
-                    setValues("80010402", "EA", "42");
+                    if (!getNoPackageCodes().containsKey(getResortCode() + ":" + getLocationId() + ":" + getRoomTypeCode())) {
+                        String message = "No package code found for resort[" + getResortCode() + "], locationId[" + getLocationId() + "], and roomType[" + getRoomTypeCode() + "]:";
+                        addToNoPackageCodes(getResortCode() + ":" + getLocationId() + ":" + getRoomTypeCode(), message);
+                    }
+                    setValues("80010402", "EP", "43");
                 }
-            } while (!success && ++tries < maxTries);
+            } while (!success);
 
-            TestReporter.assertTrue(success, "Successfully found package code");
             book.setPackageCode(packageCode);
             book.setResortCode(getResortCode());
             book.setRoomTypeCode(getRoomTypeCode());
@@ -81,33 +89,56 @@ public class TestCancel_RO_AdditionalAdult extends TravelPlanBaseTest {
             book.setPhoneNumber(getHouseHold().primaryGuest().primaryPhone().getNumber());
             book.setEmail(getHouseHold().primaryGuest().primaryEmail().getEmail());
             book.sendRequest();
-            TestReporter.logAPI(false, "", book);
             if (book.getResponseStatusCode().equals("200")) {
                 bookSuccess = true;
             } else {
-                if (fixedDates != null) {
-                    if (fixedDates.get() != null) {
-                        if (fixedDates.get() != true) {
-                            daysOut.set(Randomness.randomNumberBetween(15, 120));
-                            nights.set(1);
-                            arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
-                            departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
-                        }
-                    }
-                }
-                setValues("80010402", "EA", "42");
+                tries++;
             }
-        } while (!bookSuccess && ++bookTries < maxTries);
-        TestReporter.assertEquals(book.getResponseStatusCode(), "200", "An error occurred booking a prereq reservations: " + book.getFaultString());
+        } while (!bookSuccess && tries < maxTries);
+        TestReporter.assertTrue(book.getResponseStatusCode().equals("200"), "Verify that no error occurred booking the prereq reservation: " + book.getFaultString());
         setBook(book);
-        retrieveReservation(environment);
+
+        FindRoomForReservation findRoom = new FindRoomForReservation(environment, "UI Booking");
+        findRoom.setTravelPlanId(book.getTravelPlanId());
+        findRoom.setNumberOfResponseRows("50");
+        findRoom.sendRequest();
+        TestReporter.assertTrue(findRoom.getResponseStatusCode().equals("200"), "Verify no error occurred finding a room for a reservation: " + findRoom.getFaultString());
+
+        String resourceId = null;
+        String roomNumber = null;
+        AssignRoomForReservation assignRoom = null;
+        boolean roomAdded = false;
+        Map<String, String> values = findRoom.getAllRoomAndResourceIds();
+        Iterator<Entry<String, String>> it = values.entrySet().iterator();
+        while (!roomAdded && it.hasNext()) {
+            Entry<String, String> et = it.next();
+            roomNumber = et.getKey();
+            resourceId = et.getValue();
+
+            assignRoom = new AssignRoomForReservation(environment, "UI Booking");
+            assignRoom.setArrivalAndDepartureDaysOut(String.valueOf(locDaysOut), String.valueOf(locNights));
+            assignRoom.setAssignmentOwnerNumber(findRoom.getAssignmentOwnerNumber());
+            assignRoom.setFacilityId(getFacilityId());
+            assignRoom.setRoomNumber(roomNumber);
+            assignRoom.setRoomResourceNumber(resourceId);
+            assignRoom.sendRequest();
+            if (assignRoom.getFaultString().contains("LOCK ASSIGNMENT ERROR")) {
+                Sleeper.sleep(Randomness.randomNumberBetween(3, 7) * 1000);
+                assignRoom.sendRequest();
+            }
+            if (assignRoom.getResponseStatusCode().equals("200")) {
+                roomAdded = true;
+            }
+        }
+        ;
+        TestReporter.assertTrue(roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoom.getFaultString());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
-    public void testCancel_RO_ADA() {
-        TestReporter.logScenario("Test Cancel RO ADA");
+    public void testCancel_RO_WithCancellationFeeWaived() {
+        TestReporter.logScenario("Test Cancel RO With Cancellation Fee Waived");
 
-        Cancel cancel = new Cancel(environment, "Main");
+        Cancel cancel = new Cancel(environment, "Main_WithFeeWaived");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
         cancel.sendRequest();
@@ -117,7 +148,7 @@ public class TestCancel_RO_AdditionalAdult extends TravelPlanBaseTest {
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "Verify that a cancellation number was returned.");
         TestReporter.log("Cancellation number: " + cancel.getCancellationNumber());
 
-        retrieveReservation();
+        retrieveReservation(environment);
         TestReporter.setAssertFailed(false);
         TestReporter.softAssertEquals(
                 getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/cancelDate").split("T")[0], DateTimeConversion.ConvertToDateYYYYMMDD("0"),
@@ -158,20 +189,23 @@ public class TestCancel_RO_AdditionalAdult extends TravelPlanBaseTest {
 
     private void validations(Cancel cancel) {
         CancelHelper cancelHelper = new CancelHelper(removeCM(environment), book.getTravelPlanId());
+        // Checks root and node charge group status is set to cancelled
         cancelHelper.verifyChargeGroupsCancelled();
+        // Checks for canclled status is reservation history using tp, tps, tc, tcg
         cancelHelper.verifyCancellationIsFoundInResHistory(book.getTravelPlanSegmentId(), book.getTravelComponentGroupingId(), book.getTravelComponentId());
-        // cancelHelper.verifyCancellationComment(getRetrieve(), "Air not available CancellationNumber : " + cancel.getCancellationNumber());
         cancelHelper.verifyNumberOfCharges(0);
+        // Checks for RIM inventory release
         cancelHelper.verifyInventoryReleased(book.getTravelComponentGroupingId());
-        cancelHelper.verifyNumberOfTpPartiesByTpId(3);
+        // Validate number of parties for the tpID
+        cancelHelper.verifyNumberOfTpPartiesByTpId(1);
+        // Checks for cancelled TC status for first tcgID
         cancelHelper.verifyTcStatusByTcg(book.getTravelComponentGroupingId(), "Cancelled");
+        // Looks for exchange fee if set
         cancelHelper.verifyExchangeFeeFound(false);
+        // Verify 2 cancelled charge group status
         cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 2);
-        cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 0);
+        // Check for 1 charge in cancelled status
         cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 0);
-        cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
-        // Verify the reasonID matches the reason code used for the given TCId
-        // cancelHelper.verifyProductReasonID(book.getTravelComponentId());
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());

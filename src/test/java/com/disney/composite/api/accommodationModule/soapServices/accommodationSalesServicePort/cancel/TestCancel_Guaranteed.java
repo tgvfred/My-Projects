@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
@@ -14,35 +15,32 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
 
-public class TestCancel_RO_CheckingIn extends AccommodationBaseTest {
+public class TestCancel_Guaranteed extends AccommodationBaseTest {
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-
-        String locEnv = null;
-        if (environment.toLowerCase().contains("_cm")) {
-            locEnv = environment.toLowerCase().replace("_cm", "");
-        }
-        setEnvironment(locEnv);
+        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
+        // to invoke lower levels of reporting
+        setEnvironment(environment);
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
-        setIsWdtcBooking(false);
+        setIsWdtcBooking(true);
         setValues();
+        setIsADA(false);
         bookReservation();
-        checkingIn(locEnv);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
-    public void testCancel_RO_CheckingIn() {
-        TestReporter.logScenario("Test Cancel RO CheckingIn");
+    public void testCancel_addAccomm_cancelOne_tcgOnly() {
+        TestReporter.logScenario("Test Cancel RO ADA");
 
         Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
+        cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
@@ -95,24 +93,24 @@ public class TestCancel_RO_CheckingIn extends AccommodationBaseTest {
         cancelHelper.verifyChargeGroupsCancelled();
         cancelHelper.verifyCancellationIsFoundInResHistory(getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
         // cancelHelper.verifyCancellationComment(getRetrieve(), "Air not available CancellationNumber : " + cancel.getCancellationNumber());
-        cancelHelper.verifyNumberOfCharges(1);
+        cancelHelper.verifyNumberOfCharges(0);
         cancelHelper.verifyInventoryReleased(getBook().getTravelComponentGroupingId());
         cancelHelper.verifyNumberOfTpPartiesByTpId(1);
         cancelHelper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Cancelled");
         cancelHelper.verifyExchangeFeeFound(false);
         cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 2);
         cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 0);
-        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
+        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 0);
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(book.getTravelComponentId());
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
+        TestReporter.assertAll();
     }
 
     public static String removeCM(String cmEnv) {
         return Environment.getBaseEnvironmentName(cmEnv).toLowerCase();
     }
-
 }

@@ -81,10 +81,6 @@ public class AccommodationErrorCode {
             "No Travel Plan Found for given TC Id");
     public static final ApplicationErrorCode ROLLBACK_IMPLEMENTATION_VALIDATION_EXCEPTION = new ApplicationErrorCode(APP_NAME, 2901,
             " Rollback Implemenation Validation. ");
-    public static final ApplicationErrorCode ACCOMMODATION_NOT_FOUND = new ApplicationErrorCode(APP_NAME_RESM, 7192,
-            " Accommodations not found ");
-    public static final ApplicationErrorCode ACCOMMODATION_NOT_IN_BOOKED_STATUS = new ApplicationErrorCode(APP_NAME_RESM, 7192,
-            " Accommodation should be in Booked status to be cancelled ");
 
     private static final String MOD_NAME = "LILO_RESM";
 
@@ -101,5 +97,13 @@ public class AccommodationErrorCode {
             " Create Comments Request Invalid ");
     public static final ApplicationErrorCode REQUEST_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
             " Create Comments Request Invalid ");
+    public static final ApplicationErrorCode ACCOMMODATION_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 7192,
+            " Accommodations not found ");
+    public static final ApplicationErrorCode ACCOMMODATION_NOT_IN_BOOKED_STATUS = new ApplicationErrorCode(MOD_NAME, 7192,
+            " Accommodation should be in Booked status to be cancelled ");
+    public static final ApplicationErrorCode REQ_PARAM_MISSING = new ApplicationErrorCode(MOD_NAME, 7064,
+            " Required parameters are missing ");
+    public static final ApplicationErrorCode EXT_REF_SRC_REQ = new ApplicationErrorCode(MOD_NAME, 7090,
+            " External Reference Source or Code required ");
 
 }

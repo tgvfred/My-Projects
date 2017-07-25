@@ -103,6 +103,9 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(getBook().getTravelComponentId());
         cancelHelper.verifyTcStatusByTcg(getFirstBundleTcg(), "Booked");
+        cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
+        cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
+        cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
     }
 
     public static String removeCM(String cmEnv) {

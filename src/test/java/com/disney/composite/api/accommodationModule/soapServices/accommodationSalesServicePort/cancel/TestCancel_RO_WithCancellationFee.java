@@ -142,7 +142,7 @@ public class TestCancel_RO_WithCancellationFee extends TravelPlanBaseTest {
     public void testCancel_RO_WithCancellationFee() {
         TestReporter.logScenario("Test Cancel RO With Cancellation Fee");
 
-        Cancel cancel = new Cancel(environment, "Main");
+        Cancel cancel = new Cancel(environment, "Main_WithFee");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
         cancel.sendRequest();
@@ -213,6 +213,9 @@ public class TestCancel_RO_WithCancellationFee extends TravelPlanBaseTest {
         cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 2);
         // Check for 1 charge in cancelled status
         cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
+        cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
+        cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
+        cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
     }
 
     public static String removeCM(String cmEnv) {
