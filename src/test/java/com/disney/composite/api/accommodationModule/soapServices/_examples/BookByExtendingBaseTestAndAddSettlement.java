@@ -167,7 +167,7 @@ public class BookByExtendingBaseTestAndAddSettlement extends AccommodationBaseTe
         TestReporter.logStep("Validate reservation details: TP_PTY");
         sql = sql.replace("d.*", "e.*");
         Recordset tcPtyRs = new Recordset(db.getResultSet(sql));
-        tcPtyRs.print();
+        // tcPtyRs.print();
         i = 0;
         do {
             i++;

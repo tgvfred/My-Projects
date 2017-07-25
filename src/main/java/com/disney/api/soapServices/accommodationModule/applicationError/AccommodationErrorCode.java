@@ -5,8 +5,9 @@ import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 public class AccommodationErrorCode {
     private static final String APP_NAME = "LILO FOLIO";
 
-    private static final String APP_NAME_RESM = "LILO_RESM";
+    private static final String MOD_NAME = "LILO_RESM";
 
+    // LILO FOLIO errors
     public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS = new ApplicationErrorCode(APP_NAME, 2901,
             " Missing required fields. ");
     public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS_POST_REFUND_REQUEST = new ApplicationErrorCode(APP_NAME, 2902,
@@ -81,15 +82,26 @@ public class AccommodationErrorCode {
             "No Travel Plan Found for given TC Id");
     public static final ApplicationErrorCode ROLLBACK_IMPLEMENTATION_VALIDATION_EXCEPTION = new ApplicationErrorCode(APP_NAME, 2901,
             " Rollback Implemenation Validation. ");
-    public static final ApplicationErrorCode ACCOMMODATION_NOT_FOUND = new ApplicationErrorCode(APP_NAME_RESM, 7192,
+
+    // LILO_RESM errors
+    public static final ApplicationErrorCode SEARCH_CRITERIA_INVALID = new ApplicationErrorCode(MOD_NAME, 7124,
+            "Search Criteria is Invalid");
+    public static final ApplicationErrorCode NO_TRAVEL_PLAN_DATA_FOUND = new ApplicationErrorCode(MOD_NAME, 7183,
+            "No travel plan data found.");
+    public static final ApplicationErrorCode RESULT_SIZE_TOO_LARGE_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 91443,
+            " Validation Failed. ");
+    public static final ApplicationErrorCode DATA_NOT_FOUND_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 91443,
+            " Data not found. ");
+    public static final ApplicationErrorCode COMMENT_LEVEL_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
+            " Create Comments Request Invalid ");
+    public static final ApplicationErrorCode REQUEST_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
+            " Create Comments Request Invalid ");
+    public static final ApplicationErrorCode ACCOMMODATION_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 7192,
             " Accommodations not found ");
-    public static final ApplicationErrorCode ACCOMMODATION_NOT_IN_BOOKED_STATUS = new ApplicationErrorCode(APP_NAME_RESM, 7192,
+    public static final ApplicationErrorCode ACCOMMODATION_NOT_IN_BOOKED_STATUS = new ApplicationErrorCode(MOD_NAME, 7192,
             " Accommodation should be in Booked status to be cancelled ");
-
-    public static final ApplicationErrorCode REQ_PARAM_MISSING = new ApplicationErrorCode(APP_NAME_RESM, 7064,
+    public static final ApplicationErrorCode REQ_PARAM_MISSING = new ApplicationErrorCode(MOD_NAME, 7064,
             " Required parameters are missing ");
-
-    public static final ApplicationErrorCode EXT_REF_SRC_REQ = new ApplicationErrorCode(APP_NAME_RESM, 7090,
+    public static final ApplicationErrorCode EXT_REF_SRC_REQ = new ApplicationErrorCode(MOD_NAME, 7090,
             " External Reference Source or Code required ");
-
 }
