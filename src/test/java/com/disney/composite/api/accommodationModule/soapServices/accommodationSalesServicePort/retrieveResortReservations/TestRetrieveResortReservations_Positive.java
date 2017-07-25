@@ -24,8 +24,8 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
     @BeforeClass
     @Parameters("environment")
     public void beforeClass(String environment) {
-        db = new OracleDatabase(this.environment = environment, Database.DREAMS);
-        recdb = new OracleDatabase(this.environment = environment, Database.RECOMMENDER);
+        db = new OracleDatabase(environment, Database.DREAMS);
+        recdb = new OracleDatabase(environment, Database.RECOMMENDER);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "smoke" })
@@ -39,7 +39,7 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
                 + "and c.TC_TYP_NM = 'AccommodationComponent' "
                 + "and c.blk_cd is null "
                 + "and a.tps_secur_vl != 'DVC' "
-                + "where rownum < 100"
+                + "where rownum < 100 "
                 + "order by dbms_random.value");
 
         RetrieveResortReservations retrieveResortReservations = buildAndSendRequestAndValidateSoapResponse(tpsID);
@@ -49,23 +49,22 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
     public void testRetrieveResortReservations_GroupReservation() {
-        TestReporter.logScenario("Test - Retrieve Resort Reservations - Group Reservation");
-        String tpsID = getTPSIdForQuery("select b.tps_id from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "and a.TRVL_STS_NM not in ('Auto Cancelled','Cancelled','Past Visit', 'No Show') "
-                + "and c.TRVL_STS_NM not in ('Auto Cancelled','Cancelled','Past Visit', 'No Show', 'DF Checked Out', 'Not Arrived') "
-                + "and c.TC_TYP_NM = 'AccommodationComponent' "
-                + "and c.blk_cd is not null "
-                + "and a.tps_secur_vl != 'DVC' "
-                + "where rownum < 100"
-                + "order by dbms_random.value");
+        setEnvironment(environment);
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(getEnvironment());
+        setIsWdtcBooking(true);
+        bookReservation();
 
-        RetrieveResortReservations retrieveResortReservations = buildAndSendRequestAndValidateSoapResponse(tpsID);
+        TestReporter.logScenario("Test - Retrieve Resort Reservations - Group Reservation");
+
+        RetrieveResortReservations retrieveResortReservations = buildAndSendRequestAndValidateSoapResponse(getBook().getTravelPlanSegmentId());
         validateSpecialEnvironment(retrieveResortReservations);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "debug" })
     public void testRetrieveResortReservations_MultipleGuests() {
         setEnvironment(environment);
         setDaysOut(0);
@@ -78,26 +77,8 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
         bookReservation();
 
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Multiple Guests");
-        String tpsID = getTPSIdForQuery("select z.tps_id "
-                + "from res_mgmt.tps z "
-                + "where z.tp_id in "
-                + "(select a.tp_id "
-                + "from res_mgmt.tps a "
-                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "join res_mgmt.tp_pty d on a.tp_id = d.tp_id "
-                + "join guest.TXN_PTY_EXTNL_REF e on d.TXN_PTY_ID = e.TXN_PTY_ID "
-                + "JOIN RES_MGMT.TC_GST f ON c.tc_id = f.tc_id "
-                + "where a.TRVL_STS_NM = 'Booked' "
-                + "and c.TRVL_STS_NM = 'Booked' "
-                + "and c.TC_TYP_NM = 'AccommodationComponent' "
-                + "and c.blk_cd is null "
-                + "group by a.tp_id "
-                + "having count(f.TXN_IDVL_PTY_ID) >=2) "
-                + "and rownum < 100 "
-                + "order by dbms_random.value");
 
-        RetrieveResortReservations retrieveResortReservations = buildAndSendRequestAndValidateSoapResponse(tpsID);
+        RetrieveResortReservations retrieveResortReservations = buildAndSendRequestAndValidateSoapResponse(getBook().getTravelPlanSegmentId());
         TestReporter.assertTrue(retrieveResortReservations.getNumberOfPartyRoles() > 1, "There is more than one guest in the resort reservation.");
         validateSpecialEnvironment(retrieveResortReservations);
     }
@@ -112,7 +93,7 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
                 + "and c.TRVL_STS_NM not in ('Auto Cancelled','Cancelled','Past Visit', 'No Show', 'DF Checked Out', 'Not Arrived') "
                 + "and c.TC_TYP_NM = 'AccommodationComponent' "
                 + "and VIP_LVL_NM != '0' "
-                + "where rownum < 100"
+                + "where rownum < 100 "
                 + "order by dbms_random.value");
 
         RetrieveResortReservations retrieveResortReservations = buildAndSendRequestAndValidateSoapResponse(tpsID);
@@ -157,7 +138,7 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
                 + "and a.TRVL_STS_NM = 'Booked' "
                 + "and c.tc_typ_nm = 'AccommodationComponent' "
-                + "where rownum < 100"
+                + "where rownum < 100 "
                 + "order by dbms_random.value");
 
         RetrieveResortReservations retrieveResortReservations = buildAndSendRequestAndValidateSoapResponse(tpsID);

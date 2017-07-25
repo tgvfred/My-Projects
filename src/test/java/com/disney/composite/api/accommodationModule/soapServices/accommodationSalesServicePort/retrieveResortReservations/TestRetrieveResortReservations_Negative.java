@@ -1,7 +1,7 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveResortReservations;
 
-import static com.disney.api.soapServices.accommodationModule.exceptions.AccommodationErrorCode.NO_TRAVEL_PLAN_DATA_FOUND;
-import static com.disney.api.soapServices.accommodationModule.exceptions.AccommodationErrorCode.SEARCH_CRITERIA_INVALID;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.NO_TRAVEL_PLAN_DATA_FOUND;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.SEARCH_CRITERIA_INVALID;
 
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
@@ -85,7 +85,20 @@ public class TestRetrieveResortReservations_Negative extends BaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_NotArrived() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Not Arrived");
-        String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Not Arrived"));
+        String query = "select tps_id, COUNT(CASE WHEN TRVL_STS_NM = 'Not Arrived' THEN 0 ELSE 1 END) from "
+                + "(select b.tps_id, c.trvl_sts_nm from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "where a.TRVL_STS_NM = 'Not Arrived' "
+                + "and c.tc_typ_nm = 'AccommodationComponent' "
+                + "and rownum < 100) "
+                + "group by tps_id "
+                + "order by COUNT(CASE WHEN TRVL_STS_NM = 'Not Arrived' THEN 0 ELSE 1 END) asc, dbms_random.value";
+
+        Recordset results = new Recordset(new OracleDatabase(environment, Database.DREAMS).getResultSet(query));
+        TestReporter.assertTrue(results.getRowCount() > 0 && Arrays.asList(results.getArray()[0]).contains("TPS_ID"), "The SQL Query returned a TPS ID");
+        String tpsID = results.getValue("TPS_ID");
+
         sendRequestAndValidateApplicationError(tpsID, NO_TRAVEL_PLAN_DATA_FOUND);
     }
 
@@ -110,7 +123,7 @@ public class TestRetrieveResortReservations_Negative extends BaseTest {
                 + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
                 + "and a.TRVL_STS_NM = '" + status + "' "
-                + "where rownum < 100"
+                + "where rownum < 100 "
                 + "order by dbms_random.value";
     }
 
@@ -120,7 +133,7 @@ public class TestRetrieveResortReservations_Negative extends BaseTest {
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
                 + "and a.TRVL_STS_NM = '" + status + "' "
                 + "and c.tc_typ_nm = 'AccommodationComponent' "
-                + "where rownum < 100"
+                + "where rownum < 100 "
                 + "order by dbms_random.value";
     }
 
