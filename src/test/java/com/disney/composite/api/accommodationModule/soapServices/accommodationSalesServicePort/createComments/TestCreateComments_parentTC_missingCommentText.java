@@ -88,7 +88,7 @@ public class TestCreateComments_parentTC_missingCommentText extends Accommodatio
         Database RES_MGMT_REQ_VALIDATE_db = new OracleDatabase(environment, Database.DREAMS);
         Recordset RES_MGMT_REQ_VALIDATE_rs = new Recordset(RES_MGMT_REQ_VALIDATE_db.getResultSet(RES_MGMT_REQ_VALIDATE_sql));
         System.out.println(parentId);
-        RES_MGMT_REQ_VALIDATE_rs.print();
+        // RES_MGMT_REQ_VALIDATE_rs.print();
 
         TestReporter.logStep("Verify that the comment shows up in the RES_MGMT_REQ_VALIDATE database.");
         TestReporter.setAssertFailed(false);

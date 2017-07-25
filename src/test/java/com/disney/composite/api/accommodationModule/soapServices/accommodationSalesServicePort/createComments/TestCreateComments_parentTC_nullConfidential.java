@@ -2,18 +2,20 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateComments;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveComments;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCreateComments_parentTC_nullConfidential extends AccommodationBaseTest {
-    String commentId = Randomness.randomAlphaNumeric(10);
+    String commentId = BaseSoapCommands.REMOVE_NODE.toString();
     String commentText = "This is test comment " + Randomness.randomAlphaNumeric(4);
     String parentId = "";
 
@@ -39,12 +41,17 @@ public class TestCreateComments_parentTC_nullConfidential extends AccommodationB
         create.setTpsId(getBook().getTravelPlanSegmentId());
         create.setTpId(getBook().getTravelPlanId());
         create.setCreatedBy(expectedCreatedBy);
-        create.setCreatedDate(BaseSoapCommands.REMOVE_NODE.toString());
-        create.setUpdatedDate(BaseSoapCommands.REMOVE_NODE.toString());
-        create.setUpdatedBy("Thomas " + Randomness.randomAlphaNumeric(4));
+        create.setCreatedDate(Randomness.generateCurrentXMLDate());
+        create.setUpdatedDate(Randomness.generateCurrentXMLDate());
+        create.setUpdatedBy(expectedCreatedBy);
         create.setStatus(BaseSoapCommands.REMOVE_NODE.toString());
-        create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
-        create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
+        create.setRoomExternalReferenceNumber(getBook().getTravelComponentId());
+        create.setRoomExternalReferenceSource(ServiceConstants.FolioExternalReference.DREAMS_TC);
+        create.setTpsExternalReferenceNumber(getBook().getTravelPlanSegmentId());
+        create.setTpsExternalReferenceSource(ServiceConstants.FolioExternalReference.DREAMS_TPS);
+        create.setCommentType("TravelComponentComment");
+        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
+        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create.sendRequest();
 
         // Validate node response values
@@ -92,7 +99,19 @@ public class TestCreateComments_parentTC_nullConfidential extends AccommodationB
                     " and a.cmt_tx = '" + create.getCommentText() + "' ";
 
             Database db = new OracleDatabase(environment, Database.DREAMS);
-            Recordset rs = new Recordset(db.getResultSet(sql));
+            Recordset rs = null;
+
+            int tries = 0;
+            int maxTries = 20;
+            boolean success = false;
+            do {
+                Sleeper.sleep(1000);
+                rs = new Recordset(db.getResultSet(sql));
+                if (rs.getRowCount() > 0) {
+                    success = true;
+                }
+                tries++;
+            } while (!success && tries < maxTries);
 
             TestReporter.logStep("Verify that the comment shows up in the GSR_RCD, GSR_GUEST AND GSR_TXN database.");
             TestReporter.setAssertFailed(false);
