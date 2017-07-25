@@ -186,7 +186,7 @@ public class ValidationHelper {
         TestReporter.logStep("Validated guest information");
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getTpPartyGuestInfoByTpId_NoMembership(tpId)));
-        rs.print();
+        // rs.print();
         TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM", 1), hh.primaryGuest().getFirstName(), "Verify that the guest first name [" + rs.getValue("IDVL_FST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getFirstName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_MID_NM", 1), hh.primaryGuest().getMiddleName(), "Verify that the guest middle [" + rs.getValue("IDVL_MID_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getMiddleName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM", 1), hh.primaryGuest().getLastName(), "Verify that the guest last name [" + rs.getValue("IDVL_LST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getLastName() + "].");
