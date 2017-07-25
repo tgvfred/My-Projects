@@ -2,7 +2,6 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateComments;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveComments;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -15,7 +14,7 @@ import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCreateComments_parentTC_emptyCommentOwnerDetails extends AccommodationBaseTest {
-    String commentId = BaseSoapCommands.REMOVE_NODE.toString();
+    String commentId = Randomness.randomAlphaNumeric(10);
     String commentText = "This is test comment " + Randomness.randomAlphaNumeric(4);
     String parentId = "";
 
@@ -38,18 +37,13 @@ public class TestCreateComments_parentTC_emptyCommentOwnerDetails extends Accomm
         create.setCommentText(commentText);
         create.setCommentLevel("TC");
         create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/commentsInfo/commentOwnerDetail", BaseSoapCommands.REMOVE_NODE.toString());
-        create.setCreatedBy(expectedCreatedBy);
-        create.setCreatedDate(Randomness.generateCurrentXMLDate());
-        create.setUpdatedDate(Randomness.generateCurrentXMLDate());
-        create.setUpdatedBy(expectedCreatedBy);
+        create.setCreatedBy("AutoJUnit.us");
+        create.setCreatedDate(BaseSoapCommands.REMOVE_NODE.toString());
+        create.setUpdatedDate(BaseSoapCommands.REMOVE_NODE.toString());
+        create.setUpdatedBy("Thomas " + Randomness.randomAlphaNumeric(4));
         create.setStatus(BaseSoapCommands.REMOVE_NODE.toString());
-        create.setRoomExternalReferenceNumber(getBook().getTravelComponentId());
-        create.setRoomExternalReferenceSource(ServiceConstants.FolioExternalReference.DREAMS_TC);
-        create.setTpsExternalReferenceNumber(getBook().getTravelPlanSegmentId());
-        create.setTpsExternalReferenceSource(ServiceConstants.FolioExternalReference.DREAMS_TPS);
-        create.setCommentType("TravelComponentComment");
-        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
-        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
+        create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
+        create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create.sendRequest();
 
         // Validate node response values
@@ -80,7 +74,6 @@ public class TestCreateComments_parentTC_emptyCommentOwnerDetails extends Accomm
                 " AND GSR_IN = '" + GSR_IN + "' " +
                 " AND CFDNTL_IN = '" + CFDNTL_IN + "' " +
                 " AND RES_MGMT_REQ_TX = '" + create.getCommentText() + "' ";
-
         Database RES_MGMT_REQ_VALIDATE_db = new OracleDatabase(environment, Database.DREAMS);
         Recordset RES_MGMT_REQ_VALIDATE_rs = new Recordset(RES_MGMT_REQ_VALIDATE_db.getResultSet(RES_MGMT_REQ_VALIDATE_sql));
 
