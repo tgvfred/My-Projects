@@ -1,9 +1,9 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.cancel;
 
-import static com.disney.api.soapServices.accommodationModule.exceptions.AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND;
-import static com.disney.api.soapServices.accommodationModule.exceptions.AccommodationErrorCode.ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL;
-import static com.disney.api.soapServices.accommodationModule.exceptions.AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED;
-import static com.disney.api.soapServices.accommodationModule.exceptions.AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;

@@ -91,4 +91,12 @@ public class AccommodationErrorCode {
             " Validation Failed. ");
     public static final ApplicationErrorCode DATA_NOT_FOUND_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 91443,
             " Data not found. ");
+    public static final ApplicationErrorCode REQUIRED_PARAMETERS_MISSING = new ApplicationErrorCode(MOD_NAME, 7064,
+            "Required parameters are missing");
+    public static final ApplicationErrorCode EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED = new ApplicationErrorCode(MOD_NAME, 7090,
+            "External Reference Source or Code required");
+    public static final ApplicationErrorCode ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL = new ApplicationErrorCode(MOD_NAME, 7192,
+            " Accommodation should be in Booked status to be cancelled");
+    public static final ApplicationErrorCode ACCOMMODATIONS_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 7192,
+            "Accommodations not found");
 }
