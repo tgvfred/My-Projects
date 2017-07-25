@@ -41,7 +41,7 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
-    public void testCancel_booked_tcgOnly_roomOnly() {
+    public void testCancel_addAccomm_cancelOne_tcgOnly() {
         TestReporter.logScenario("Test Cancel RO ADA");
 
         Cancel cancel = new Cancel(environment, "Main");
