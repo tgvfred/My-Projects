@@ -87,4 +87,8 @@ public class AccommodationErrorCode {
             "Search Criteria is Invalid");
     public static final ApplicationErrorCode NO_TRAVEL_PLAN_DATA_FOUND = new ApplicationErrorCode(MOD_NAME, 7183,
             "No travel plan data found.");
+    public static final ApplicationErrorCode RESULT_SIZE_TOO_LARGE_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 91443,
+            " Validation Failed. ");
+    public static final ApplicationErrorCode DATA_NOT_FOUND_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 91443,
+            " Data not found. ");
 }
