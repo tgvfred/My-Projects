@@ -14,30 +14,27 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
 
-public class TestCancel_AddBundle extends AccommodationBaseTest {
+public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends AccommodationBaseTest {
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        String locEnv = null;
-        if (environment.toLowerCase().contains("_cm")) {
-            locEnv = environment.toLowerCase().replace("_cm", "");
-        }
-        setEnvironment(locEnv);
+        setEnvironment(environment);
         daysOut.set(Randomness.randomNumberBetween(1, 12));
         nights.set(Randomness.randomNumberBetween(1, 3));
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues();
+        setValues(getEnvironment());
         setIsBundle(true);
+        setSkipDeposit(true);
         bookReservation();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
-    public void testCancel_AddBundle() {
+    public void testCancel_addBundle_cancelAccommodation_tcgOnly() {
         TestReporter.logScenario("Test Cancel");
 
         Cancel cancel = new Cancel(environment, "Main");
@@ -105,6 +102,7 @@ public class TestCancel_AddBundle extends AccommodationBaseTest {
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(getBook().getTravelComponentId());
+        cancelHelper.verifyTcStatusByTcg(getFirstBundleTcg(), "Booked");
     }
 
     public static String removeCM(String cmEnv) {

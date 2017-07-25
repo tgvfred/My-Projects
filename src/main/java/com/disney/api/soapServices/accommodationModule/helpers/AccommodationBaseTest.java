@@ -95,10 +95,11 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> isShared = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addGuest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addNewGuest = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> skipDeposit = new ThreadLocal<Boolean>();
     private ThreadLocal<String> firstDiningTcg = new ThreadLocal<String>();
     private AddBundle add;
     private RetrieveDetailsByTravelPlanId details;
-    private String firstBundleTcg;
+    private ThreadLocal<String> firstBundleTcg = new ThreadLocal<>();
     private ScheduledEventReservation diningRes;
 
     protected void addToNoPackageCodes(String key, String value) {
@@ -399,6 +400,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addGuest.get();
     }
 
+    public void setSkipDeposit(Boolean skipDeposit) {
+        this.skipDeposit.set(skipDeposit);
+    }
+
+    public Boolean getSkipDeposit() {
+        return this.skipDeposit.get();
+    }
+
     public void setAddNewGuest(Boolean addNewGuest) {
         this.addNewGuest.set(addNewGuest);
         this.addGuest.set(addNewGuest);
@@ -410,6 +419,14 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public String getFirstDiningTcg() {
         return this.firstDiningTcg.get();
+    }
+
+    public void setFirstBundleTcg(String firstBundleTcg) {
+        this.firstBundleTcg.set(firstBundleTcg);
+    }
+
+    public String getFirstBundleTcg() {
+        return this.firstBundleTcg.get();
     }
 
     @BeforeSuite(alwaysRun = true)
@@ -630,13 +647,15 @@ public class AccommodationBaseTest extends BaseRestTest {
         // convos.put("add", add.getRequestNodeValueByXPath("/Envelope/Header/ServiceContext/@conversationId"));
         TestReporter.assertEquals(add.getResponseStatusCode(), "200", "An error occurred while adding a bundle.\nRequest:\n" + add.getRequest() + "\nResonse:\n" + add.getResponse());
 
-        firstBundleTcg = findBundleTcg(getBook().getTravelPlanId());
+        firstBundleTcg.set(findBundleTcg(getBook().getTravelPlanId()));
 
         details.sendRequest();
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
 
         retrieveReservation();
-        makeFirstNightDeposit();
+        if (getSkipDeposit() != null && getSkipDeposit() == false) {
+            makeFirstNightDeposit();
+        }
         retrieveReservation();
     }
 
