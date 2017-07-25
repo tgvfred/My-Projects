@@ -23,7 +23,7 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
 
-public class TestCancel_RO_WithCancellationFee extends TravelPlanBaseTest {
+public class TestCancel_RO_WithCancellationFeeWaived extends TravelPlanBaseTest {
 
     private Book book;
 
@@ -132,17 +132,13 @@ public class TestCancel_RO_WithCancellationFee extends TravelPlanBaseTest {
         }
         ;
         TestReporter.assertTrue(roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoom.getFaultString());
-
-        retrieveReservation(environment);
-        makeFirstNightDeposit(environment);
-        retrieveReservation(environment);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
-    public void testCancel_RO_WithCancellationFee() {
-        TestReporter.logScenario("Test Cancel RO With Cancellation Fee");
+    public void testCancel_RO_WithCancellationFeeWaived() {
+        TestReporter.logScenario("Test Cancel RO With Cancellation Fee Waived");
 
-        Cancel cancel = new Cancel(environment, "Main_WithFee");
+        Cancel cancel = new Cancel(environment, "Main_WithFeeWaived");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
         cancel.sendRequest();
@@ -197,10 +193,7 @@ public class TestCancel_RO_WithCancellationFee extends TravelPlanBaseTest {
         cancelHelper.verifyChargeGroupsCancelled();
         // Checks for canclled status is reservation history using tp, tps, tc, tcg
         cancelHelper.verifyCancellationIsFoundInResHistory(book.getTravelPlanSegmentId(), book.getTravelComponentGroupingId(), book.getTravelComponentId());
-        // Verify number of charges -- One left -- fee from initial deposit
-        cancelHelper.verifyNumberOfCharges(1);
-        // Verify cancellation fee was created in Folio
-        cancelHelper.verifyCancellationFee();
+        cancelHelper.verifyNumberOfCharges(0);
         // Checks for RIM inventory release
         cancelHelper.verifyInventoryReleased(book.getTravelComponentGroupingId());
         // Validate number of parties for the tpID
@@ -212,7 +205,7 @@ public class TestCancel_RO_WithCancellationFee extends TravelPlanBaseTest {
         // Verify 2 cancelled charge group status
         cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 2);
         // Check for 1 charge in cancelled status
-        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
+        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 0);
     }
 
     public static String removeCM(String cmEnv) {

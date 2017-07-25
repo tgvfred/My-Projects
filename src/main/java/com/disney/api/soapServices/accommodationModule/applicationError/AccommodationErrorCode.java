@@ -86,4 +86,10 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode ACCOMMODATION_NOT_IN_BOOKED_STATUS = new ApplicationErrorCode(APP_NAME_RESM, 7192,
             " Accommodation should be in Booked status to be cancelled ");
 
+    public static final ApplicationErrorCode REQ_PARAM_MISSING = new ApplicationErrorCode(APP_NAME_RESM, 7064,
+            " Required parameters are missing ");
+
+    public static final ApplicationErrorCode EXT_REF_SRC_REQ = new ApplicationErrorCode(APP_NAME_RESM, 7090,
+            " External Reference Source or Code required ");
+
 }
