@@ -36,7 +36,7 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.PARAMETERS_MISSING_EXCEPTION);
+        validateApplicationError(get, AccommodationErrorCode.REQ_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
@@ -49,7 +49,7 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.PARAMETERS_MISSING_EXCEPTION);
+        validateApplicationError(get, AccommodationErrorCode.REQ_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
@@ -63,7 +63,7 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.PARAMETERS_MISSING_EXCEPTION);
+        validateApplicationError(get, AccommodationErrorCode.REQ_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
