@@ -180,8 +180,7 @@ public class checkout_Positive extends AccommodationBaseTest {
 
 	//@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_bundle() {
-		/*bundleHelper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
-		bundleHelper.addBundle(getBook().getTravelPlanId(), getDaysOut());*/
+		
 		
 		String status = "false";
 		String tcgId = getBook().getTravelComponentGroupingId();
