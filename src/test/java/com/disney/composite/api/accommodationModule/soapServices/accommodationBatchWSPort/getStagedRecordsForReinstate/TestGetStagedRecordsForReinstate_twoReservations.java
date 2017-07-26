@@ -74,7 +74,4 @@ public class TestGetStagedRecordsForReinstate_twoReservations extends Accommodat
         TestReporter.softAssertEquals(returnNodes, numExpectedNodes, "Verify that the response returns the number of 'return' nodes [" + returnNodes + "] is that which is expected [" + numExpectedNodes + "].");
 
     }
-
-    {
-
 }

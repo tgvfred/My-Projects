@@ -47,7 +47,7 @@ public class TestGetStagedRecordsForReinstate_oneReservation extends Accommodati
     public void validateResponseReturnNode() {
         TestReporter.logStep("Validate the response node has one 'return' node.");
         int numExpectedNodes = 1;
-        int returnNodes = stage.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return");
+        int returnNodes = stageReinstate.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return");
         TestReporter.softAssertEquals(returnNodes, numExpectedNodes, "Verify that the response returns the number of 'return' nodes [" + returnNodes + "] is that which is expected [" + numExpectedNodes + "].");
 
     }
