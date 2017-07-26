@@ -77,6 +77,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> isShared = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addGuest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addNewGuest = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> sendRequest = new ThreadLocal<Boolean>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -360,6 +361,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addGuest.get();
     }
 
+    public void setSendRequest(Boolean sendRequest) {
+        this.sendRequest.set(sendRequest);
+    }
+
+    public Boolean getSendRequest() {
+        return this.sendRequest.get();
+    }
+
     public void setAddNewGuest(Boolean addNewGuest) {
         this.addNewGuest.set(addNewGuest);
         this.addGuest.set(addNewGuest);
@@ -404,6 +413,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                     " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
                     " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
         }
+        setSendRequest(true);
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -419,6 +429,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
         setIsWdtcBooking(false);
         setValues();
+        setSendRequest(true);
         bookReservation();
     }
 
@@ -542,11 +553,17 @@ public class AccommodationBaseTest extends BaseRestTest {
                 addGuest();
             }
 
-            getBook().sendRequest();
-            TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
-            tries++;
-        } while (!getBook().getResponseStatusCode().equals("200") && tries < maxTries);
-        retrieveReservation();
+            if (getSendRequest() == null || getSendRequest() == true) {
+                getBook().sendRequest();
+                TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+                tries++;
+            } else {
+                tries = maxTries;
+            }
+        } while ((getSendRequest() == null ? !getBook().getResponseStatusCode().equals("200") : false) && tries < maxTries);
+        if (getSendRequest() == null || getSendRequest() == true) {
+            retrieveReservation();
+        }
     }
 
     private void addGuest() {
