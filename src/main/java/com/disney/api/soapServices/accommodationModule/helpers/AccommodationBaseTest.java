@@ -538,7 +538,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void bookReservation() {
         if (getHouseHold() == null) {
             createHouseHold();
-            hh.get().sendToApi("latest");
+            hh.get().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
@@ -631,6 +631,15 @@ public class AccommodationBaseTest extends BaseRestTest {
         if (getSendRequest() == null || getSendRequest() == true) {
             retrieveReservation();
         }
+
+        if (isBundle() != null && isBundle() == true) {
+            addBundle();
+        }
+        if (isDining() != null && isDining() == true) {
+            addDining();
+        }
+        retrieveReservation();
+
     }
 
     private void addBundle() {

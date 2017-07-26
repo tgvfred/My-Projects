@@ -12,6 +12,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationAssignmentSe
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckOut;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckingIn;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
@@ -141,6 +142,11 @@ public class CheckInHelper {
                 setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
                 setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
                 setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
+            } else if (ws instanceof ReplaceAllForTravelPlanSegment) {
+                setTpId(((Add) ws).getTravelPlanId());
+                setTpsId(((Add) ws).getTravelPlanSegmentId());
+                setTcgId(((Add) ws).getTravelComponentGroupingId());
+                setTcId(((Add) ws).getTravelComponentId());
             }
         }
         retrieveReservation();
