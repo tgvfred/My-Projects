@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
@@ -25,7 +26,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
-    public void testCancel_NullRequest() {
+    public void testCancel_nullRequest() {
         TestReporter.logScenario("Test - Cancel - Null Request");
 
         Cancel cancel = new Cancel(environment);
@@ -35,7 +36,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
-    public void testCancel_NullExternalReferenceSourceAndCode() {
+    public void testCancel_nullExternalReferenceSourceAndCode() {
         TestReporter.logScenario("Test - Cancel - Null External Reference Source and Code");
 
         Cancel cancel = new Cancel(environment);
@@ -48,7 +49,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
     public void testCancel_tcgLessThanZero() {
-        TestReporter.logScenario("Test - Cancel - Travel Component Grouping ID Less Than Zero");
+        TestReporter.logScenario("Test - Cancel - TCG Less Than Zero");
 
         Cancel cancel = new Cancel(environment);
         cancel.setTravelComponentGroupingId("-1");
@@ -58,7 +59,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
-    public void testCancel_AlreadyCancelled() {
+    public void testCancel_alreadyCancelled() {
         TestReporter.logScenario("Test - Cancel - Already Cancelled");
 
         Cancel cancel = new Cancel(environment);
@@ -70,13 +71,39 @@ public class TestCancel_Negative extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
-    public void testCancel_Invalidtcg() {
-        TestReporter.logScenario("Test - Cancel - Travel Component Grouping ID Less Than Zero");
+    public void testCancel_invalidTcg() {
+        TestReporter.logScenario("Test - Cancel - Invalid TCG");
 
         Cancel cancel = new Cancel(environment);
         cancel.setTravelComponentGroupingId("9999999999999");
         cancel.sendRequest();
 
         validateApplicationError(cancel, ACCOMMODATIONS_NOT_FOUND);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
+    public void testCancel_checkedIn() {
+        checkIn();
+
+        TestReporter.logScenario("Test - Cancel - Checked In");
+
+        Cancel cancel = new Cancel(environment);
+        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.sendRequest();
+
+        validateApplicationError(cancel, ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL);
+    }
+
+    private void checkIn() {
+        setEnvironment(environment);
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues();
+        bookReservation();
+
+        CheckInHelper helper = new CheckInHelper(getEnvironment(), getBook());
+        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
     }
 }

@@ -6,6 +6,7 @@ import com.disney.AutomationException;
 import com.disney.api.WebService;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.utils.TestReporter;
 
 public class AddAccommodationHelper {
@@ -133,6 +134,11 @@ public class AddAccommodationHelper {
         if (ws instanceof Book) {
             setTpId(((Book) ws).getTravelPlanId());
             setTpsId(((Book) ws).getTravelPlanSegmentId());
+        }
+
+        if (ws instanceof ReplaceAllForTravelPlanSegment) {
+            setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
+            setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
         }
     }
 

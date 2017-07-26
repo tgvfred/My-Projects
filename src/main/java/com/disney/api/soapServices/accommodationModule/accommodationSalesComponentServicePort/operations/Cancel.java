@@ -84,6 +84,10 @@ public class Cancel extends AccommodationSalesComponentServicePort {
         trySetRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceSource", value);
     }
 
+    public void setWaived(String value) {
+        trySetRequestNodeValueByXPath("/Envelope/Body/cancel/request/waived", value);
+    }
+
     public void setTravelComponentGroupingId(String value) {
         trySetRequestNodeValueByXPath("/Envelope/Body/cancel/request/travelComponentGroupingId", value);
     }
