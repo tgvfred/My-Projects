@@ -16,4 +16,10 @@ public class GetStagedRecordsForReinstate extends AccommodationBatchComponentWSP
         removeWhiteSpace();
 
     }
+
+    public void setProcessDataId(String value) {
+        setRequestNodeValueByXPath(
+                "/Envelope/Body/getStagedRecordsForReinstate/processDataId", value);
+    }
+
 }
