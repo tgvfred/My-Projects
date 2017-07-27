@@ -99,7 +99,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> firstDiningTcg = new ThreadLocal<String>();
     private AddBundle add;
     private RetrieveDetailsByTravelPlanId details;
-    private ThreadLocal<String> firstBundleTcg = new ThreadLocal<>();
+    private ThreadLocal<String> bundleTcg = new ThreadLocal<>();
     private ScheduledEventReservation diningRes;
 
     protected void addToNoPackageCodes(String key, String value) {
@@ -421,12 +421,12 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.firstDiningTcg.get();
     }
 
-    public void setFirstBundleTcg(String firstBundleTcg) {
-        this.firstBundleTcg.set(firstBundleTcg);
+    public void setBundleTcg(String bundleTcg) {
+        this.bundleTcg.set(bundleTcg);
     }
 
-    public String getFirstBundleTcg() {
-        return this.firstBundleTcg.get();
+    public String getBundleTcg() {
+        return this.bundleTcg.get();
     }
 
     @BeforeSuite(alwaysRun = true)
@@ -647,7 +647,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         // convos.put("add", add.getRequestNodeValueByXPath("/Envelope/Header/ServiceContext/@conversationId"));
         TestReporter.assertEquals(add.getResponseStatusCode(), "200", "An error occurred while adding a bundle.\nRequest:\n" + add.getRequest() + "\nResonse:\n" + add.getResponse());
 
-        firstBundleTcg.set(findBundleTcg(getBook().getTravelPlanId()));
+        setBundleTcg(findBundleTcg(getBook().getTravelPlanId()));
 
         details.sendRequest();
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
