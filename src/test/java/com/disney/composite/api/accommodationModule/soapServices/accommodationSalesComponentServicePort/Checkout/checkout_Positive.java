@@ -5,6 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Checkout;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 
@@ -32,12 +33,10 @@ public class checkout_Positive extends AccommodationBaseTest {
 		setArrivalDate(getDaysOut());
 		setDepartureDate(getDaysOut() + getNights());
 		setValues(getEnvironment());
-		setIsWdtcBooking(true);
-		setAddNewGuest(true);
 		bookReservation();
 	}
 
-	public String validateResMgmt(String TcId, Checkout checkout) {
+	public String validateResMgmt(String TcId) {
 		String tcId = getBook().getTravelComponentId();
 
 		TestReporter.logStep("Verify Res Mgmt");
@@ -61,7 +60,7 @@ public class checkout_Positive extends AccommodationBaseTest {
 		return assignOwnerId;
 	}
 
-	public void validateRIM(String assignOwnerId, Checkout checkout) {
+	public void validateRIM(String assignOwnerId) {
 		// String assignOwnerIdValue = assignOwnerId;
 		TestReporter.logStep("Validate RIM");
 		String sql = " Select RSRC_INVTRY_TYP_ID, AUTO_ASGN_RSRC_ID, OWNR_STS_NM, ASGN_OWNR_ID "
@@ -80,7 +79,7 @@ public class checkout_Positive extends AccommodationBaseTest {
 		}
 	}
 
-	public void validateFolio(String TcgId, Checkout checkout) {
+	public void validateFolio(String TcgId) {
 		TestReporter.logStep("Verify Folio");
 		String sql = "select FOLIO_STS_NM " + " from folio.EXTNL_REF a "
 				+ " left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
@@ -107,107 +106,89 @@ public class checkout_Positive extends AccommodationBaseTest {
 		}
 	}
 
-	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
-	public void TestCheckout_wdtc() {
 
+	@Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
+	public void TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne() {
+		// Add a second accommodation
+		accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
+		accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
+				getLocationId());
+		
+		// Checkin the first accommodation
 		helper = new CheckInHelper(getEnvironment(), getBook());
 		helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+		
+		// Checkin the second accommodation
+		helper = new CheckInHelper(getEnvironment(), accommHelper.getWs());
+		helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+		helper.checkOut(getLocationId());
+		
+		String assignOwnerId =  validateResMgmt(getBook().getTravelComponentId());		    
+		validateRIM(assignOwnerId);
+		validateFolio(getBook().getTravelComponentGroupingId());	
+	}
 
-		String tcgId = getBook().getTravelComponentGroupingId();
-		String checkoutDate = Randomness.generateCurrentXMLDate();
+	@Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
+	public void TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne() {
+		// Add a second accommodation
+		accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
+		accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
+				getLocationId());
+
+		// Checkin the first accommodation
+		helper = new CheckInHelper(getEnvironment(), getBook());
+		helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+		helper.checkOut(getLocationId());
+		
+		String assignOwnerId =  validateResMgmt(getBook().getTravelComponentId());		    
+		validateRIM(assignOwnerId);
+		validateFolio(getBook().getTravelComponentGroupingId());
+	}
+
+	@Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
+	public void TestCheckout_roomOnly_shared_checkoutOne() {
+		Share share = new Share(getEnvironment(), "oneTcgOnly");
+		share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+		share.sendRequest();
+		// Assert
+		
+		helper = new CheckInHelper(getEnvironment(), getBook());
+		helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+		helper.checkOut(getLocationId());
+		
+		String assignOwnerId =  validateResMgmt(getBook().getTravelComponentId());		    
+		validateRIM(assignOwnerId);
+		validateFolio(getBook().getTravelComponentGroupingId());
+
+	}
+
+	
+	
+	@Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
+	public void TestCheckout_tcExtRefOnly() {
+		helper = new CheckInHelper(getEnvironment(), getBook());
+        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+		
+        String tcgId = getBook().getTravelComponentGroupingId();
+		String refType = "RESERVATION";
 		String refNumber = getExternalRefNumber();
 		String refSource = getExternalRefSource();
-
+		
 		Checkout checkout = new Checkout(getEnvironment(), "main");
 		checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
 		checkout.setIsBellServiceRequired(BaseSoapCommands.REMOVE_NODE.toString());
 		checkout.setIsSameRoomNumberAssigned(BaseSoapCommands.REMOVE_NODE.toString());
-		checkout.setTravelComponentGroupingId(tcgId);
-		checkout.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
+		checkout.setTravelComponentGroupingId(BaseSoapCommands.REMOVE_NODE.toString());
+		checkout.setExternalReferenceType(refType);
 		checkout.setExternalReferenceNumber(refNumber);
 		checkout.setExternalReferenceSource(refSource);
 		checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
-		checkout.setCheckoutDate(checkoutDate);
+		checkout.setCheckoutDate(BaseSoapCommands.REMOVE_NODE.toString());
 		checkout.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
 		checkout.sendRequest();
-
-		String assignOwnerId = validateResMgmt(getBook().getTravelComponentId(), checkout);
-		validateRIM(assignOwnerId, checkout);
-		validateFolio(getBook().getTravelComponentGroupingId(), checkout);
-	}
-
-	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
-	public void TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne() {
-		accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
-		accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
-				getLocationId());
-		helper = new CheckInHelper(getEnvironment(), getBook());
-		helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		
-		String status = "false";
-		String tcgId = getBook().getTravelComponentGroupingId();
-		String locationId = getLocationId();
-		String checkoutDate = Randomness.generateCurrentXMLDate();
-		String refType = "RESERVATION";
-		String refNumber = getExternalRefNumber();
-		String refSource = getExternalRefSource();
-
-		Checkout checkout = new Checkout(getEnvironment(), "main");
-		checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
-		checkout.setIsBellServiceRequired(status);
-		checkout.setIsSameRoomNumberAssigned(status);
-		checkout.setTravelComponentGroupingId(tcgId);
-		checkout.setExternalReferenceType(refType);
-		checkout.setExternalReferenceNumber(refNumber);
-		checkout.setExternalReferenceSource(refSource);
-		checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
-		checkout.setCheckoutDate(checkoutDate);
-		checkout.setLocationId(locationId);
-		checkout.sendRequest();
+		TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking out: " + checkout.getFaultString(), checkout);
 		
-	}
-
-	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
-	public void TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne() {
-
-	}
-
-	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
-	public void TestCheckout_roomOnly_shared_checkoutOne() {
-
-	}
-
-
-	//@Test(groups = { "api", "regression", "checkout", "Accommodation" })
-	public void TestCheckout_bundle() {
-		
-		
-		String status = "false";
-		String tcgId = getBook().getTravelComponentGroupingId();
-		String locationId = getLocationId();
-		String checkoutDate = Randomness.generateCurrentXMLDate();
-
-		String refType = "RESERVATION";
-		String refNumber = getExternalRefNumber();
-		String refSource = getExternalRefSource();
-
-		Checkout checkout = new Checkout(getEnvironment(), "main");
-		checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
-		checkout.setIsBellServiceRequired(status);
-		checkout.setIsSameRoomNumberAssigned(status);
-		checkout.setTravelComponentGroupingId(tcgId);
-		checkout.setExternalReferenceType(refType);
-		checkout.setExternalReferenceNumber(refNumber);
-		checkout.setExternalReferenceSource(refSource);
-		checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
-		checkout.setCheckoutDate(checkoutDate);
-		checkout.setLocationId(locationId);
-		checkout.sendRequest();
-
-	}
-
-	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
-	public void TestCheckout_tcExtRefOnly() {
 
 	}
 

@@ -1,10 +1,11 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.AccommodationSalesComponentService;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.AccommodationSalesComponentServicePort;
 //import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.utils.XMLTools;
 
-public class Checkout extends AccommodationSalesComponentService{
+public class Checkout extends AccommodationSalesComponentServicePort{
 
 	public Checkout(String environment, String scenario) {
 		super(environment);

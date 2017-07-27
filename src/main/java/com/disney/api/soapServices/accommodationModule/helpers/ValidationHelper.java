@@ -186,7 +186,7 @@ public class ValidationHelper {
         TestReporter.logStep("Validated guest information");
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getTpPartyGuestInfoByTpId_NoMembership(tpId)));
-        rs.print();
+        // rs.print();
         TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM", 1), hh.primaryGuest().getFirstName(), "Verify that the guest first name [" + rs.getValue("IDVL_FST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getFirstName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_MID_NM", 1), hh.primaryGuest().getMiddleName(), "Verify that the guest middle [" + rs.getValue("IDVL_MID_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getMiddleName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM", 1), hh.primaryGuest().getLastName(), "Verify that the guest last name [" + rs.getValue("IDVL_LST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getLastName() + "].");
@@ -664,7 +664,6 @@ public class ValidationHelper {
         valueFound.put(guest.primaryAddress().getCountryAbbv(), false);
         valueFound.put(guest.primaryAddress().getStateAbbv(), false);
         valueFound.put(guest.primaryAddress().getAddress1(), false);
-        valueFound.put(guest.primaryAddress().getZipCode(), false);
         for (int i = 1; i <= rs.getRowCount(); i++) {
             // System.out.println();
             if (rs.getValue("CNTRY_ID", i).toLowerCase().contains(guest.primaryAddress().getCountryAbbv().toLowerCase())) {
@@ -676,10 +675,6 @@ public class ValidationHelper {
             if (rs.getValue("ADDR_RAW_ADDR_VL", i).toLowerCase().replace("road", "rd")
                     .contains(guest.primaryAddress().getAddress1().toLowerCase().replace("road", "rd"))) {
                 valueFound.put(guest.primaryAddress().getAddress1(), true);
-            }
-            if (guest.primaryAddress().getZipCode().contains(rs.getValue("PSTL_CD",
-                    i))) {
-                valueFound.put(guest.primaryAddress().getZipCode(), true);
             }
         }
         for (Entry<String, Boolean> entry : valueFound.entrySet()) {
