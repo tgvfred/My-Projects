@@ -15,7 +15,6 @@ import com.disney.api.soapServices.pricingModule.packagingService.operations.Fin
 import com.disney.api.soapServices.pricingModule.packagingService.operations.FindTicketPriceGridByPackage;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.GetTicketProducts;
 import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
-import com.disney.utils.Environment;
 import com.disney.utils.PackageCodes;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -38,7 +37,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment);
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         sendRequestAndValidateSoapResponse(cancel);
-        validateSpecialEnvironment(cancel);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -50,7 +48,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment);
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         sendRequestAndValidateSoapResponse(cancel);
-        validateSpecialEnvironment(cancel);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -62,7 +59,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment);
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         sendRequestAndValidateSoapResponse(cancel);
-        validateSpecialEnvironment(cancel);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -75,7 +71,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment);
         cancel.setTravelComponentGroupingId(helper.getTcgId());
         sendRequestAndValidateSoapResponse(cancel);
-        validateSpecialEnvironment(cancel);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -86,7 +81,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
 
         Cancel cancel = buildRequestForDefaultBook();
         sendRequestAndValidateSoapResponse(cancel);
-        validateSpecialEnvironment(cancel);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -97,7 +91,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
 
         Cancel cancel = buildRequestForDefaultBook();
         sendRequestAndValidateSoapResponse(cancel);
-        validateSpecialEnvironment(cancel);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -109,7 +102,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
 
         Cancel cancel = buildRequestForDefaultBook();
         sendRequestAndValidateSoapResponse(cancel);
-        validateSpecialEnvironment(cancel);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -119,7 +111,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         Cancel cancel = buildRequestForDefaultBook();
         cancel.setWaived("true");
         sendRequestAndValidateSoapResponse(cancel);
-        validateSpecialEnvironment(cancel);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -129,7 +120,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         Cancel cancel = buildRequestForDefaultBook();
         cancel.setWaived("false");
         sendRequestAndValidateSoapResponse(cancel);
-        validateSpecialEnvironment(cancel);
     }
 
     /*
@@ -190,23 +180,18 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         getBook().setRoomDetailsRoomTypeCode(getRoomTypeCode());
         getBook().setAreaPeriodStartDate(getArrivalDate());
         getBook().setAreaPeriodEndDate(getDepartureDate());
-        // getBook().setResortAreaStartDate(getArrivalDate());
-        // getBook().setResortAreaEndDate(getDepartureDate());
 
         FindTicketPriceGridByPackage find = new FindTicketPriceGridByPackage(environment);
         find.setPackageCode(packageCode);
         find.sendRequest();
         TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred finding tickets for package code [" + packageCode + "].");
-        // getBook().setRoomDetailsTicketGroup(BaseSoapCommands.ADD_NODE.toString());
-        // getBook().setRoomDetailsTicketGroup(find.getTicketGroupName());
         trySetRequestNodeValueByXPath(getBook(), "//replaceAllForTravelPlanSegment/request/roomDetails/ticketGroup", find.getTicketGroupName());
-        // ticketGroupName = find.getTicketGroupName();
 
         GetTicketProducts get = new GetTicketProducts(environment, "Main");
         get.setTicketGroupName(find.getTicketGroupName());
         get.sendRequest();
         TestReporter.assertTrue(get.getResponseStatusCode().equals("200"), "Verify that no error occurred finding ticket products for ticket group name [" + find.getTicketGroupName() + "].");
-        String admissionProductId = get.getAdmissionProductIdByTicketDescription("2 Day Base Ticket");
+        // String admissionProductId = get.getAdmissionProductIdByTicketDescription("2 Day Base Ticket");
         // getBook().setTicketDetailsBaseAdmissionProductId(admissionProductId);
         // getBook().setTicketDetailsCode(admissionProductId);
 
@@ -313,15 +298,5 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     private void sendRequestAndValidateSoapResponse(Cancel cancel) {
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "The cancel was not successful.", cancel);
-        // Add second validation here
-    }
-
-    private void validateSpecialEnvironment(Cancel cancel) {
-        if (Environment.isSpecialEnvironment(environment) || isComo.equals("true")) {
-            Cancel cancelBaseLine = (Cancel) cancel.clone();
-            cancelBaseLine.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            cancelBaseLine.sendRequest();
-            TestReporter.assertTrue(cancel.validateResponseNodeQuantity(cancelBaseLine), "Response Node Validation Result");
-        }
     }
 }

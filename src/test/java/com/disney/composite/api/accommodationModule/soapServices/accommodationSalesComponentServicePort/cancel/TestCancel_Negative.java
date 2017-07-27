@@ -5,26 +5,14 @@ import static com.disney.api.soapServices.accommodationModule.applicationError.A
 import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED;
 import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING;
 
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.Database;
-import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCancel_Negative extends AccommodationBaseTest {
-    private static Database db;
-
-    @Parameters("environment")
-    @BeforeClass(alwaysRun = true)
-    public static void beforeClass(String environment) {
-        db = new OracleDatabase(environment, Database.DREAMS);
-    }
-
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
     public void testCancel_nullRequest() {
         TestReporter.logScenario("Test - Cancel - Null Request");
@@ -83,18 +71,6 @@ public class TestCancel_Negative extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
     public void testCancel_checkedIn() {
-        checkIn();
-
-        TestReporter.logScenario("Test - Cancel - Checked In");
-
-        Cancel cancel = new Cancel(environment);
-        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.sendRequest();
-
-        validateApplicationError(cancel, ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL);
-    }
-
-    private void checkIn() {
         setEnvironment(environment);
         setDaysOut(0);
         setNights(1);
@@ -105,5 +81,13 @@ public class TestCancel_Negative extends AccommodationBaseTest {
 
         CheckInHelper helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        TestReporter.logScenario("Test - Cancel - Checked In");
+
+        Cancel cancel = new Cancel(environment);
+        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.sendRequest();
+
+        validateApplicationError(cancel, ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL);
     }
 }
