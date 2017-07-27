@@ -88,6 +88,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> packageDescription = new ThreadLocal<>();
     private ThreadLocal<String> packageType = new ThreadLocal<>();
     private ThreadLocal<Boolean> isWdtcBooking = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> isLibgoBooking = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isADA = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isBundle = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isDining = new ThreadLocal<Boolean>();
@@ -466,6 +467,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.setTickets.get();
     }
 
+    public void setIsLibgoBooking(Boolean isLibgoBooking) {
+        this.isLibgoBooking.set(isLibgoBooking);
+    }
+
+    public Boolean getIsLibgoBooking() {
+        return this.isLibgoBooking.get();
+    }
+
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -599,6 +608,20 @@ public class AccommodationBaseTest extends BaseRestTest {
                 if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
                     getBook().setExternalReference("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                     getBook().setRoomDetails_ExternalRefs("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                }
+            } else if (isValid(getIsLibgoBooking()) && getIsLibgoBooking() == true) {
+                setPackageBillCode("*DWSL");
+                setPackageDescription("ANN MYW Pkg + Dining");
+                setPackageType("WHOLESALE");
+                try {
+                    getBook().setRoomDetailsBlockCode("01905");
+                } catch (XPathNotFoundException e) {
+                    getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+                    getBook().setRoomDetailsBlockCode("01905");
+                }
+                if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
+                    getBook().setExternalReference("01905", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setRoomDetails_ExternalRefs("01905", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                 }
             } else {
                 setPackageBillCode("");
