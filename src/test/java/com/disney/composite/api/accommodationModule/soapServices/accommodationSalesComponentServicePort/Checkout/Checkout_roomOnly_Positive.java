@@ -15,6 +15,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.AddBundleHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 
 public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 	private CheckInHelper helper;
@@ -111,6 +112,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 
 	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_roomOnly_BEREAV() {
+		Sleeper.sleep(15000);
 		helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		
@@ -152,8 +154,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 	}		  
 	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_roomOnly_DOMDISP() {
-		try {Thread.sleep(15000);} catch (InterruptedException e) {	e.printStackTrace();}
-		
+		Sleeper.sleep(15000);		
 		helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		
@@ -197,7 +198,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 	}
 	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_roomOnly_DUPRES() {
-		try {Thread.sleep(15000);} catch (InterruptedException e) {	e.printStackTrace();}
+		Sleeper.sleep(15000);
 		
 		helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
@@ -243,8 +244,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 	}
 	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_roomOnly_ECERR() {
-		try {Thread.sleep(15000);} catch (InterruptedException e) {	e.printStackTrace();}
-		
+		Sleeper.sleep(15000);		
 		helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		
@@ -290,6 +290,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 	}
 	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_roomOnly_FAMEM() {
+		Sleeper.sleep(15000);
 		helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		
@@ -381,6 +382,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 	}
 	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_roomOnly_LVNOUTWDW() {
+		Sleeper.sleep(15000);
 		helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		
@@ -426,8 +428,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 	}
 	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_roomOnly_WTHRCKO() {
-		try {Thread.sleep(15000);} catch (InterruptedException e) {	e.printStackTrace();}
-		
+		Sleeper.sleep(15000);		
 		helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		
@@ -473,8 +474,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 	}
 	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_tpsExtRefAndTcg() {
-		try {Thread.sleep(15000);} catch (InterruptedException e) {	e.printStackTrace();}
-		
+		Sleeper.sleep(15000);		
 		helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		
@@ -517,11 +517,9 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 			validateRIM(assignOwnerId, checkout);
 			validateFolio(getBook().getTravelComponentGroupingId(), checkout);
 	}
-
 	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_bundle() {
-		try {Thread.sleep(15000);} catch (InterruptedException e) {	e.printStackTrace();}
-
+		Sleeper.sleep(15000);
 		AddBundleHelper bundleHelper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
 		bundleHelper.addBundle(getBook().getTravelPlanId(), getDaysOut());
 

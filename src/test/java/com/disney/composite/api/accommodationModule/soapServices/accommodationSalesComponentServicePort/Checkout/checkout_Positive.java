@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
@@ -23,7 +24,8 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class checkout_Positive extends AccommodationBaseTest {
 	private CheckInHelper helper;
 	private AddAccommodationHelper accommHelper;
-
+	//private Book book;
+	
 	@Override
 	@Parameters("environment")
 	@BeforeMethod(alwaysRun = true)
@@ -107,7 +109,6 @@ public class checkout_Positive extends AccommodationBaseTest {
 		}
 	}
 
-
 	@Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
 	public void TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne() {
 		// Add a second accommodation
@@ -146,13 +147,13 @@ public class checkout_Positive extends AccommodationBaseTest {
 		validateFolio(getBook().getTravelComponentGroupingId());
 	}
 
-	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
+	@Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
 	public void TestCheckout_roomOnly_shared_checkoutOne() {
 		Share share = new Share(getEnvironment(), "oneTcgOnly");
 		share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
 		share.sendRequest();
-		// Assert
-		
+		TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing TCG ID [" + getBook().getTravelComponentGroupingId() + "]: " + share.getFaultString());
+      
 		helper = new CheckInHelper(getEnvironment(), getBook());
 		helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		helper.checkOut(getLocationId());

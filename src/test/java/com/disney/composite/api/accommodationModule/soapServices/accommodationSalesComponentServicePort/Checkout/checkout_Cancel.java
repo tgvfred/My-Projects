@@ -26,44 +26,8 @@ import com.disney.utils.date.DateTimeConversion;
 public class checkout_Cancel extends AccommodationBaseTest {
 	private CheckInHelper checkInHelper;
 	private AddAccommodationHelper accommHelper;
-	/*private String tpPtyId;
-	private String odsGuestId;
-	private String assignmentOwnerId;*/
-
-	/*@Override
-	@Parameters("environment")
-	@BeforeMethod(alwaysRun = true)
-	public void setup(String environment) {
-		setEnvironment(environment);
-		setDaysOut(0);
-		setNights(1);
-		setArrivalDate(getDaysOut());
-		setDepartureDate(getDaysOut() + getNights());
-		setValues(getEnvironment());
-		bookReservation();*/
 	
-	/* @Override
-	    @BeforeMethod(alwaysRun = true)
-	    @Parameters("environment")
-	    public void setup(String environment) {
-	        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
-	        // to invoke lower levels of reporting
-	        setEnvironment(environment);
-	        daysOut.set(0);
-	        nights.set(1);
-	        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
-	        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
-
-	        //setIsWdtcBooking(false);
-	        setValues();
-	        //setIsADA(false);
-	        bookReservation();
-
-	        accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
-	        accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
-	    }
-	 */
-	/*public String validateResMgmt(String TcId) {
+	public String validateResMgmt(String TcId) {
 		String tcId = getBook().getTravelComponentId();
 
 		TestReporter.logStep("Verify Res Mgmt");
@@ -86,7 +50,6 @@ public class checkout_Cancel extends AccommodationBaseTest {
 		}
 		return assignOwnerId;
 	}
-
 	public void validateRIM(String assignOwnerId) {
 		TestReporter.logStep("Validate RIM");
 		String sql = " Select RSRC_INVTRY_TYP_ID, AUTO_ASGN_RSRC_ID, OWNR_STS_NM, ASGN_OWNR_ID "
@@ -104,7 +67,6 @@ public class checkout_Cancel extends AccommodationBaseTest {
 			}
 		}
 	}
-
 	public void validateFolio(String TcgId) {
 		TestReporter.logStep("Verify Folio");
 		String sql = "select FOLIO_STS_NM " + " from folio.EXTNL_REF a "
@@ -131,43 +93,7 @@ public class checkout_Cancel extends AccommodationBaseTest {
 			}
 		}
 	}
-*/
-/*	private void gatherDataForValidations() {
-        String sql = "select a.TXN_PTY_ID, b.TXN_PTY_EXTNL_REF_VAL "
-                + "from res_mgmt.tp_pty a, guest.TXN_PTY_EXTNL_REF b "
-                + "where a.tp_id = '" + getBook().getTravelPlanId() + "' "
-                + "and a.TXN_PTY_ID = b.TXN_PTY_ID";
 
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-        tpPtyId = rs.getValue("TXN_PTY_ID", 1);
-        odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL", 1);
-        assignmentOwnerId = getAssignmentOwnerId(getBook().getTravelPlanId());
-    }*/
-	
-	/*private void validations() {
-		ValidationHelper validHelper = new ValidationHelper(getEnvironment());
-		validHelper.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
-        validHelper.verifyChargeGroupsStatusCount("Cancelled", 3, getBook().getTravelPlanId());
-	}*/
-	
-	
-	/*@Test(groups = { "api", "regression", "checkout", "Accommodation" })
-	public void TestCheckout_bundle() {
-		
-		AddBundleHelper helper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
-        helper.addBundle(getBook().getTravelPlanId(), getDaysOut());
-        
-        checkInHelper = new CheckInHelper(getEnvironment(), getBook());
-        checkInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-        checkInHelper.checkOut(getLocationId());
-        
-        //Validations
-        String assignOwnerId =  validateResMgmt(getBook().getTravelComponentId());		    
-		validateRIM(assignOwnerId);
-		validateFolio(getBook().getTravelComponentGroupingId());
-	}*/
-	
 	@Override
 	@Parameters("environment")
 	@BeforeMethod(alwaysRun = true)
@@ -188,10 +114,8 @@ public class checkout_Cancel extends AccommodationBaseTest {
 		accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
 		Add add = accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
 
-
 		//Cancel One
         TestReporter.logScenario("Cancel");
-
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -206,10 +130,11 @@ public class checkout_Cancel extends AccommodationBaseTest {
 		
         TestReporter.logScenario("Checkout One");
         checkInHelper.checkOut(getLocationId());
-        
-        
-
-		
+         
+        //Validations
+        String assignOwnerId =  validateResMgmt(getBook().getTravelComponentId());		    
+		validateRIM(assignOwnerId);
+		validateFolio(getBook().getTravelComponentGroupingId());
 	}
 
 }

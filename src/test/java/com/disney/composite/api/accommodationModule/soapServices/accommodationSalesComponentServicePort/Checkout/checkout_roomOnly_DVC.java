@@ -1,13 +1,10 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.Checkout;
 
-import org.apache.tools.ant.taskdefs.Sleep;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Checkout;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
-import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -137,15 +134,13 @@ public class checkout_roomOnly_DVC extends BookDVCCashHelper{
 		checkout.setLocationId(locationId);
 		checkout.sendRequest();
         TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "Verify that no error occurred checking out a reservation: " + checkout.getFaultString(), checkout);
-		  String assignOwnerId =  validateResMgmt(getFirstBooking().getTravelComponentId(), checkout);		    
+		
+        //Validations 
+        String assignOwnerId =  validateResMgmt(getFirstBooking().getTravelComponentId(), checkout);		    
 				validateRIM(assignOwnerId, checkout);
 				validateFolio(getFirstBooking().getTravelComponentGroupingId(), checkout);
 		        
         ValidationHelper backEndHelper = new ValidationHelper(getEnvironment());
         backEndHelper.validateModificationBackend(1, "Past Visit", "DVC", getArrivalDate(), getDepartureDate(), "", "", getFirstBooking().getTravelPlanId(), getFirstBooking().getTravelPlanSegmentId(), getFirstBooking().getTravelComponentGroupingId(), false);
-		        
-		        
-		        
-		
 	}
 }
