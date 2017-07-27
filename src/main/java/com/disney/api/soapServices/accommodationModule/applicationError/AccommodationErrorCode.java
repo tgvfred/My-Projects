@@ -4,9 +4,7 @@ import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 
 public class AccommodationErrorCode {
     private static final String APP_NAME = "LILO FOLIO";
-    private static final String MOD_NAME = "LILO_RESM";
 
-    // LILO FOLIO errors
     public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS = new ApplicationErrorCode(APP_NAME, 2901,
             " Missing required fields. ");
     public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS_POST_REFUND_REQUEST = new ApplicationErrorCode(APP_NAME, 2902,
@@ -82,6 +80,8 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode ROLLBACK_IMPLEMENTATION_VALIDATION_EXCEPTION = new ApplicationErrorCode(APP_NAME, 2901,
             " Rollback Implemenation Validation. ");
 
+    private static final String MOD_NAME = "LILO_RESM";
+
     // LILO_RESM errors
     public static final ApplicationErrorCode SEARCH_CRITERIA_INVALID = new ApplicationErrorCode(MOD_NAME, 7124,
             "Search Criteria is Invalid");
@@ -99,4 +99,16 @@ public class AccommodationErrorCode {
             " Accommodation should be in Booked status to be cancelled");
     public static final ApplicationErrorCode ACCOMMODATIONS_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 7192,
             "Accommodations not found");
+    public static final ApplicationErrorCode COMMENT_LEVEL_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
+            " Create Comments Request Invalid ");
+    public static final ApplicationErrorCode REQUEST_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
+            " Create Comments Request Invalid ");
+    public static final ApplicationErrorCode ACCOMMODATION_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 7192,
+            " Accommodations not found ");
+    public static final ApplicationErrorCode ACCOMMODATION_NOT_IN_BOOKED_STATUS = new ApplicationErrorCode(MOD_NAME, 7192,
+            " Accommodation should be in Booked status to be cancelled ");
+    public static final ApplicationErrorCode REQ_PARAM_MISSING = new ApplicationErrorCode(MOD_NAME, 7064,
+            " Required parameters are missing ");
+    public static final ApplicationErrorCode EXT_REF_SRC_REQ = new ApplicationErrorCode(MOD_NAME, 7090,
+            " External Reference Source or Code required ");
 }

@@ -15,6 +15,7 @@ public class BookForShare extends AccommodationSalesServicePort{
 		removeWhiteSpace(); 
 	}
 	
+	
 	public String getlocationId(){
 		return getResponseNodeValueByXPath("/Envelope/Body/bookForShareResponse/reservationResponse/roomDetails/locationId");
 	}

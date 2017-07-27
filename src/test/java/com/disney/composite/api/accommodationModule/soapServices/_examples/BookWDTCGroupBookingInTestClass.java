@@ -17,7 +17,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class BookGroupBookingInTestClass extends AccommodationBaseTest {
+public class BookWDTCGroupBookingInTestClass extends AccommodationBaseTest {
     private String tpPtyId;
     private String odsGuestId;
     private String assignmentOwnerId;
