@@ -3,8 +3,8 @@
 <suite name="checkout_CancelOne_CheckinOne_CheckoutOne" parallel="methods" thread-count="20" configfailurepolicy="continue" data-provider-thread-count="5">
 	<parameter name="environment" value="latest" />
 	<test name="checkout_CancelOne_CheckinOne_CheckoutOne">
-		<classes>
-			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.Checkout.checkout_Cancel'></class>
-		</classes>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.Checkout.*"></package>
+		</packages>
 	</test> 
 </suite>
