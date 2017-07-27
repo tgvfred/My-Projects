@@ -33,8 +33,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     public void testCancel_Booked_tcgOnly_RoomOnly() {
         TestReporter.logScenario("Test - Cancel - TCG Only Room Only");
 
-        Cancel cancel = new Cancel(environment);
-        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        Cancel cancel = buildRequestForDefaultBook();
         sendRequestAndValidateSoapResponse(cancel);
     }
 
