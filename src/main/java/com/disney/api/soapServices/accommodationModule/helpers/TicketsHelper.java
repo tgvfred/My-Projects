@@ -5,7 +5,6 @@ import static com.disney.api.soapServices.accommodationModule.helpers.Accommodat
 
 import com.disney.AutomationException;
 import com.disney.api.WebService;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.BaseSoapService;
@@ -28,6 +27,10 @@ public class TicketsHelper {
     private String code;
     private Boolean mediaCustomizationOtpOut;
     private Boolean adultTicket;
+    private String baseXpath;
+    private BaseSoapService bs;
+    private int numTickets;
+    private Boolean baseInfoEstablished;
 
     public String getEnvironment() {
         return environment;
@@ -125,32 +128,40 @@ public class TicketsHelper {
         this.adultTicket = adultTicket;
     }
 
+    public Boolean getBaseInfoEstablished() {
+        return baseInfoEstablished;
+    }
+
+    public void setBaseInfoEstablished(Boolean baseInfoEstablished) {
+        this.baseInfoEstablished = baseInfoEstablished;
+    }
+
     public TicketsHelper(String environment, WebService ws, String packageCode) {
-        if (isValid(environment)) {
+        if (!isValid(environment)) {
             throw new AutomationException("The environment field cannot be null or empty.");
         } else {
             setEnvironment(environment);
         }
-        if (isValid(packageCode)) {
+        if (!isValid(packageCode)) {
             throw new AutomationException("The environment field cannot be null or empty.");
         } else {
-            setEnvironment(environment);
+            setPackageCode(packageCode);
         }
-        if (isValid(ws)) {
+        if (!isValid(ws)) {
             throw new AutomationException("The book object cannot be null.");
         } else {
             setWs(ws);
-            if (ws instanceof ReplaceAllForTravelPlanSegment) {
-                setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
-                setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
-                setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
-                setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
-            } else if (ws instanceof Add) {
-                setTpId(((Add) ws).getTravelPlanId());
-                setTpsId(((Add) ws).getTravelPlanSegmentId());
-                setTcgId(((Add) ws).getTravelComponentGroupingId());
-                setTcId(((Add) ws).getTravelComponentId());
-            }
+            // if (ws instanceof ReplaceAllForTravelPlanSegment) {
+            // setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
+            // setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
+            // setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
+            // setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
+            // } else if (ws instanceof Add) {
+            // setTpId(((Add) ws).getTravelPlanId());
+            // setTpsId(((Add) ws).getTravelPlanSegmentId());
+            // setTcgId(((Add) ws).getTravelComponentGroupingId());
+            // setTcId(((Add) ws).getTravelComponentId());
+            // }
         }
     }
 
@@ -185,28 +196,40 @@ public class TicketsHelper {
         return get;
     }
 
-    public void addTickets(String ticketDescription, Guest guest) {
-        String baseXpath = null;
+    private void determineBaseInfo() {
+        baseXpath = null;
         String baseTicketNode = null;
-        BaseSoapService bs = null;
+        bs = null;
         if (ws instanceof ReplaceAllForTravelPlanSegment) {
             bs = (BaseSoapService) ws;
             baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails";
-            try {
-                bs.setRequestNodeValueByXPath(baseXpath + "/ticketGroup", getTicketGroupName());
-            } catch (XPathNotFoundException e) {
-                bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("ticketGroup"));
-                bs.setRequestNodeValueByXPath(baseXpath + "/ticketGroup", getTicketGroupName());
+            if (!isValid(getBaseInfoEstablished())) {
+                numTickets = bs.getNumberOfRequestNodesByXPath(baseXpath + "/ticketGroup");
+                try {
+                    bs.setRequestNodeValueByXPath(baseXpath + "/ticketGroup", getTicketGroupName());
+                } catch (XPathNotFoundException e) {
+                    bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("ticketGroup"));
+                    bs.setRequestNodeValueByXPath(baseXpath + "/ticketGroup", getTicketGroupName());
+                }
             }
             baseTicketNode = "ticketDetails";
-            baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/" + baseTicketNode;
         } else {
 
         }
+        if (!isValid(getBaseInfoEstablished())) {
+            bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(baseTicketNode));
+            numTickets++;
+        }
 
-        int numTickets = bs.getNumberOfRequestNodesByXPath(baseXpath);
-        bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(baseTicketNode));
-        numTickets++;
+        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/" + baseTicketNode;
+        setBaseInfoEstablished(true);
+    }
+
+    public void addTickets(String ticketDescription, Guest guest) {
+        if (!isValid(getCode())) {
+            determineTicketCode(ticketDescription);
+        }
+        determineBaseInfo();
 
         baseXpath = baseXpath + "[" + numTickets + "]";
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("adultTicket"));
@@ -252,6 +275,7 @@ public class TicketsHelper {
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("number"));
 
         // Add an addressDetails node
+        baseXpath = tempXpath + "/guest";
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("addressDetails"));
         baseXpath = tempXpath + "/guest/addressDetails";
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
@@ -264,6 +288,7 @@ public class TicketsHelper {
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("state"));
 
         // Add an emailDetails node
+        baseXpath = tempXpath + "/guest";
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("emailDetails"));
         baseXpath = tempXpath + "/guest/emailDetails";
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
@@ -278,24 +303,27 @@ public class TicketsHelper {
         baseXpath = baseXpath + "/mediaCustomization";
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("optOut"));
 
-        setTickets(ticketDescription, guest, baseXpath, numTickets, bs);
+        setTickets(ticketDescription, guest);
     }
 
-    public void setTickets(String ticketDescription, Guest guest, String baseXpath, int numTickets, BaseSoapService bs) {
-        determineTicketCode(ticketDescription);
+    public void setTickets(String ticketDescription, Guest guest) {
+        if (!isValid(getCode())) {
+            determineTicketCode(ticketDescription);
+        }
+        determineBaseInfo();
 
         baseXpath = baseXpath + "[" + numTickets + "]";
         if (isValid(getAdultTicket()) && getAdultTicket() == true) {
-            bs.setRequestNodeValueByXPath(baseXpath + "adultTicket", "true");
+            bs.setRequestNodeValueByXPath(baseXpath + "/adultTicket", "true");
         } else {
-            bs.setRequestNodeValueByXPath(baseXpath + "adultTicket", "false");
+            bs.setRequestNodeValueByXPath(baseXpath + "/adultTicket", "false");
         }
-        bs.setRequestNodeValueByXPath(baseXpath + "hardTicketedEvent", "false");
-        bs.setRequestNodeValueByXPath(baseXpath + "baseAdmissionProductId", getAdmissionProductId());
-        bs.setRequestNodeValueByXPath(baseXpath + "code", getCode());
-        bs.setRequestNodeValueByXPath(baseXpath + "componentId", "0");
-        bs.setRequestNodeValueByXPath(baseXpath + "dayCount", "2");
-        bs.setRequestNodeValueByXPath(baseXpath + "partOfPackage", "false");
+        bs.setRequestNodeValueByXPath(baseXpath + "/hardTicketedEvent", "false");
+        bs.setRequestNodeValueByXPath(baseXpath + "/baseAdmissionProductId", getAdmissionProductId());
+        bs.setRequestNodeValueByXPath(baseXpath + "/code", getCode());
+        bs.setRequestNodeValueByXPath(baseXpath + "/componentId", "0");
+        bs.setRequestNodeValueByXPath(baseXpath + "/dayCount", "2");
+        bs.setRequestNodeValueByXPath(baseXpath + "/partOfPackage", "false");
 
         baseXpath = baseXpath + "/guestReference";
         String tempXpath = baseXpath;
@@ -308,7 +336,7 @@ public class TicketsHelper {
         bs.setRequestNodeValueByXPath(baseXpath + "/title", guest.getTitle());
         bs.setRequestNodeValueByXPath(baseXpath + "/firstName", guest.getFirstName());
         bs.setRequestNodeValueByXPath(baseXpath + "/lastName", guest.getLastName());
-        bs.setRequestNodeValueByXPath(baseXpath + "/partyId", "0");
+        bs.setRequestNodeValueByXPath(baseXpath + "/partyId", guest.getPartyId());
         bs.setRequestNodeValueByXPath(baseXpath + "/doNotMailIndicator", "0");
         bs.setRequestNodeValueByXPath(baseXpath + "/doNotPhoneIndicator", "0");
         bs.setRequestNodeValueByXPath(baseXpath + "/preferredLanguage", guest.getLanguagePreference());

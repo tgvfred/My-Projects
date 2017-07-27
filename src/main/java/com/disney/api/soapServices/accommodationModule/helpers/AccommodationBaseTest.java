@@ -101,6 +101,9 @@ public class AccommodationBaseTest extends BaseRestTest {
     private RetrieveDetailsByTravelPlanId details;
     private ThreadLocal<String> bundleTcg = new ThreadLocal<>();
     private ScheduledEventReservation diningRes;
+    private ThreadLocal<Boolean> setTickets = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> addTickets = new ThreadLocal<Boolean>();
+    private ThreadLocal<String> ticketDescription = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -429,6 +432,40 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.bundleTcg.get();
     }
 
+    public void setAddTickets(Boolean addTickets) {
+        this.addTickets.set(addTickets);
+    }
+
+    public void setAddTickets(String ticketDescription) {
+        this.setTicketDescription(ticketDescription);
+        this.addTickets.set(true);
+    }
+
+    public Boolean getAddTickets() {
+        return this.addTickets.get();
+    }
+
+    public void setTicketDescription(String ticketDescription) {
+        this.ticketDescription.set(ticketDescription);
+    }
+
+    public String getTicketDescription() {
+        return this.ticketDescription.get();
+    }
+
+    public void setSetTickets(Boolean setTickets) {
+        this.setTickets.set(setTickets);
+    }
+
+    public void setSetTickets(String ticketDescription) {
+        this.setTicketDescription(ticketDescription);
+        this.setTickets.set(true);
+    }
+
+    public Boolean getSetTickets() {
+        return this.setTickets.get();
+    }
+
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -559,6 +596,10 @@ public class AccommodationBaseTest extends BaseRestTest {
                     getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
                     getBook().setRoomDetailsBlockCode("01825");
                 }
+                if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
+                    getBook().setExternalReference("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setRoomDetails_ExternalRefs("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                }
             } else {
                 setPackageBillCode("");
                 setPackageDescription("");
@@ -600,6 +641,24 @@ public class AccommodationBaseTest extends BaseRestTest {
 
             if (getAddGuest() != null && getAddGuest() == true) {
                 addGuest();
+            }
+
+            if (isValid(getSetTickets()) && getSetTickets() == true) {
+                TicketsHelper tickets = new TicketsHelper(getEnvironment(), getBook(), getPackageCode());
+                if (isValid(getTicketDescription())) {
+                    tickets.setTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                } else {
+                    tickets.setTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
+                }
+            }
+
+            if (isValid(getAddTickets()) && getAddTickets() == true) {
+                TicketsHelper tickets = new TicketsHelper(getEnvironment(), getBook(), getPackageCode());
+                if (isValid(getTicketDescription())) {
+                    tickets.addTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                } else {
+                    tickets.addTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
+                }
             }
 
             getBook().sendRequest();
