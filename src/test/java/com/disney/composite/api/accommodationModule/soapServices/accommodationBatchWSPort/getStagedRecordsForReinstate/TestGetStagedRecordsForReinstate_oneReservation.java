@@ -1,7 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationBatchWSPort.getStagedRecordsForReinstate;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
@@ -18,9 +16,6 @@ public class TestGetStagedRecordsForReinstate_oneReservation extends Accommodati
 
     private GetStagedRecordsForReinstate stageReinstate;
     private StageMassReinstateTransactional stage;
-
-    @BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
 
     @Test(groups = { "api", "regression", "getStagedRecordsForReinstate", "accommodation" })
     public void Test_GetStagedRecordsForReinstate_oneReservation() {
@@ -44,6 +39,7 @@ public class TestGetStagedRecordsForReinstate_oneReservation extends Accommodati
         stageReinstate.sendRequest();
         TestReporter.logAPI(!stageReinstate.getResponseStatusCode().equals("200"), "Verify that no error occurred getting staged records for reinstate: " + stageReinstate.getFaultString(), stageReinstate);
         validateResponseReturnNode();
+        validations();
 
         if (Environment.isSpecialEnvironment(environment)) {
             RetrieveComment clone = (RetrieveComment) stageReinstate.clone();
@@ -64,6 +60,34 @@ public class TestGetStagedRecordsForReinstate_oneReservation extends Accommodati
         int numExpectedNodes = 1;
         int returnNodes = stageReinstate.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return");
         TestReporter.softAssertEquals(returnNodes, numExpectedNodes, "Verify that the response returns the number of 'return' nodes [" + returnNodes + "] is that which is expected [" + numExpectedNodes + "].");
+        TestReporter.assertAll();
+    }
+
+    public void validations() {
+
+        String communicationChannel = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/communicationchannel");
+        String overrideFreeze = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/roomdetails/overideFreeze");
+        String rsrReservation = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/roomdetails/rsrReservation");
+        String tcgId = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/roomdetails/travelComponentGroupingId");
+        String shared = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/roomdetails/shared");
+        String salesChannel = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/saleschannel");
+        String tpsId = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/travelPlanSegmentId");
+        String reinstateReasonCode = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateReasonCode");
+        String isCancelFeeWaived = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/isCancelFeeWaived");
+        String contactName = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/contactName");
+
+        TestReporter.softAssertEquals(communicationChannel, "Guest Facing", "Verify that the response returns the communication channel [" + communicationChannel + "] that is expected [Guest Facing].");
+        TestReporter.softAssertEquals(overrideFreeze, "false", "Verify that the response returns the override freeze [" + overrideFreeze + "] that is expected [false].");
+        TestReporter.softAssertEquals(rsrReservation, "false", "Verify that the response returns the rsrReservation [" + rsrReservation + "] that is expected [false].");
+        TestReporter.softAssertEquals(tcgId, getBook().getTravelComponentGroupingId(), "Verify that the response returns the tcgId [" + tcgId + "] that is expected [" + getBook().getTravelComponentGroupingId() + "].");
+        TestReporter.softAssertEquals(shared, "false", "Verify that the response returns the shared status [" + shared + "] that is expected [false].");
+        TestReporter.softAssertEquals(salesChannel, "Consumer Direct", "Verify that the response returns the sales channel [" + salesChannel + "] that is expected [Consumer Direct].");
+        TestReporter.softAssertEquals(tpsId, getBook().getTravelPlanSegmentId(), "Verify that the response returns the tpsId [" + tpsId + "] that is expected [" + getBook().getTravelPlanSegmentId() + "].");
+        TestReporter.softAssertEquals(reinstateReasonCode, "Reinstate Contact", "Verify that the response returns the reinstate reason code [" + reinstateReasonCode + "] that is expected [Reinstate Contact].");
+        TestReporter.softAssertEquals(isCancelFeeWaived, "false", "Verify that the response returns the cancel fee waived status [" + isCancelFeeWaived + "] that is expected [false].");
+        TestReporter.softAssertEquals(contactName, "Reinstate Contact", "Verify that the response returns the contact name [" + contactName + "] that is expected [Reinstate Contact].");
+
+        TestReporter.assertAll();
 
     }
 }

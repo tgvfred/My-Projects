@@ -12,7 +12,7 @@ public class GetStagedRecordsForReinstate extends AccommodationBatchComponentWSP
         super(environment);
 
         // Generate a request from a project xml file
-        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("stageMassReinstateTransactional")));
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("getStagedRecordsForReinstate")));
         generateServiceContext();
         setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
         removeComments();
@@ -27,14 +27,20 @@ public class GetStagedRecordsForReinstate extends AccommodationBatchComponentWSP
 
     private void setNewProcessDataId(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "processDataId", value);
+            if (baseXpath.contains("processDataId")) {
+                setRequestNodeValueByXPath(baseXpath, value);
+            } else {
+                setRequestNodeValueByXPath(baseXpath + "processDataId", value);
+            }
         }
     }
 
     public void addProcessDataId(String newProcessDataId) {
-        String baseXpath = "/Envelope/Body/getStagedRecordsForReinstate/";
-        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.toString());
+        int existingNodes = getNumberOfRequestNodesByXPath("/Envelope/Body/getStagedRecordsForReinstate/processDataId");
+        String baseXpath = "/Envelope/Body/getStagedRecordsForReinstate";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("processDataId"));
+        existingNodes++;
+        baseXpath = "/Envelope/Body/getStagedRecordsForReinstate/processDataId[" + existingNodes + "]";
         setNewProcessDataId(baseXpath, newProcessDataId);
     }
-
 }
