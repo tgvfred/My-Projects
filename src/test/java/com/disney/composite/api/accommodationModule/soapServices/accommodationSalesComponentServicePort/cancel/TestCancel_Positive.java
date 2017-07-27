@@ -5,20 +5,19 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
+import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.BaseSoapService;
-import com.disney.api.soapServices.pricingModule.packagingService.operations.FindMiscPackages;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.FindTicketPriceGridByPackage;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.GetTicketProducts;
-import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
+import com.disney.utils.Environment;
 import com.disney.utils.PackageCodes;
-import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCancel_Positive extends AccommodationBaseTest {
@@ -45,20 +44,19 @@ public class TestCancel_Positive extends AccommodationBaseTest {
 
         TestReporter.logScenario("Test - Cancel - Checking In TCG Only");
 
-        Cancel cancel = new Cancel(environment);
-        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        Cancel cancel = buildRequestForDefaultBook();
         sendRequestAndValidateSoapResponse(cancel);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
     public void testCancel_addAccommodation_cancelOne_tcgOnly() {
-        addAccommodation();
+        AddAccommodationHelper helper = addAccommodation();
 
         TestReporter.logScenario("Test - Cancel - Add Accommodation Cancel One TCG Only");
 
-        Cancel cancel = new Cancel(environment);
-        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        Cancel cancel = buildRequestForDefaultBook();
         sendRequestAndValidateSoapResponse(cancel);
+        verifyNotCancelled(helper.getTcgId());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -71,6 +69,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment);
         cancel.setTravelComponentGroupingId(helper.getTcgId());
         sendRequestAndValidateSoapResponse(cancel);
+        verifyNotCancelled(getBook().getTravelComponentGroupingId());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -81,6 +80,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
 
         Cancel cancel = buildRequestForDefaultBook();
         sendRequestAndValidateSoapResponse(cancel);
+        verifyNotCancelled(getBundleTcg());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -102,6 +102,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
 
         Cancel cancel = buildRequestForDefaultBook();
         sendRequestAndValidateSoapResponse(cancel);
+
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -111,6 +112,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         Cancel cancel = buildRequestForDefaultBook();
         cancel.setWaived("true");
         sendRequestAndValidateSoapResponse(cancel);
+        verifyCancellationFee(cancel.getTravelPlanId(), true);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -120,6 +122,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         Cancel cancel = buildRequestForDefaultBook();
         cancel.setWaived("false");
         sendRequestAndValidateSoapResponse(cancel);
+        verifyCancellationFee(cancel.getTravelPlanId(), false);
     }
 
     /*
@@ -127,34 +130,16 @@ public class TestCancel_Positive extends AccommodationBaseTest {
      */
     private AddAccommodationHelper addAccommodation() {
         AddAccommodationHelper helper = new AddAccommodationHelper(environment, getBook());
-        Add addAccomm = helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
-        addAccomm.sendRequest();
-        TestReporter.assertEquals(addAccomm.getResponseStatusCode(), "200", "The accommodation addition precondition succeeded.");
+        helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
         return helper;
     }
 
     private void addBundle() {
-        AddBundle add = new AddBundle(environment, "Main");
-        add.setGuestsGuestNameFirstName(getHouseHold().primaryGuest().getFirstName());
-        add.setGuestsGuestNameLastName(getHouseHold().primaryGuest().getLastName());
-        add.setGuestsGuestReferenceId(getGuestId());
-        add.setGuestsId(getGuestId());
-        add.setPackageBundleRequestsBookDate(Randomness.generateCurrentXMLDate());
-        add.setPackageBundleRequestsContactName(getHouseHold().primaryGuest().getFirstName() + " " + getHouseHold().primaryGuest().getLastName());
-        add.setPackageBundleRequestsEndDate(Randomness.generateCurrentXMLDate(getDaysOut() + 2) + "T00:00:00");
-        add.setPackageBundleRequestsSalesOrderItemGuestsGUestReferenceId(getGuestId());
-        add.setPackageBundleRequestsStartDate(Randomness.generateCurrentXMLDate(getDaysOut() + 1) + "T00:00:00");
-        add.setTravelPlanId(getBook().getTravelPlanId());
-        add.retrieveSalesOrderId(getBook().getTravelPlanId());
-        add.setSalesOrderId(add.getBundleSalesOrderIds()[0]);
-
-        FindMiscPackages find = new FindMiscPackages(environment, "MinimalInfo");
-        find.setArrivalDate(Randomness.generateCurrentXMLDate(getDaysOut()));
-        find.setBookDate(Randomness.generateCurrentXMLDate());
-        find.sendRequest();
-        TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred adding a bundle to TP ID [" + getTpId() + "]: " + add.getFaultString());
-        add.setPackageBundleRequestsCode(find.getPackageCode());
-        add.sendRequest();
+        setIsWdtcBooking(false);
+        setValues(getEnvironment());
+        setIsBundle(true);
+        setSkipDeposit(true);
+        bookReservation();
     }
 
     private void addTickets() {
@@ -191,11 +176,9 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         get.setTicketGroupName(find.getTicketGroupName());
         get.sendRequest();
         TestReporter.assertTrue(get.getResponseStatusCode().equals("200"), "Verify that no error occurred finding ticket products for ticket group name [" + find.getTicketGroupName() + "].");
-        // String admissionProductId = get.getAdmissionProductIdByTicketDescription("2 Day Base Ticket");
-        // getBook().setTicketDetailsBaseAdmissionProductId(admissionProductId);
-        // getBook().setTicketDetailsCode(admissionProductId);
-
-        createHouseHold();
+        String admissionProductId = get.getAdmissionProductIdByTicketDescription("2 Day Base Ticket");
+        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/baseAdmissionProductId", admissionProductId);
+        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/code", admissionProductId);
 
         trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/firstName", getHouseHold().primaryGuest().getFirstName());
         trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/lastName", getHouseHold().primaryGuest().getLastName());
@@ -225,9 +208,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/phoneDetails/number", getHouseHold().primaryGuest().primaryPhone().getNumber());
         trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/emailDetails/address", getHouseHold().primaryGuest().primaryEmail().getEmail());
 
-        if (getBook().getResponse().contains("Error Invoking Pricing Service")) {
-            // System.out.println();
-        }
         TestReporter.assertTrue(getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a prereq reservation: " + getBook().getFaultString());
         setTpId(getBook().getTravelPlanId());
         retrieveReservation();
@@ -298,5 +278,71 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     private void sendRequestAndValidateSoapResponse(Cancel cancel) {
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "The cancel was not successful.", cancel);
+        String tcg = cancel.getRequestNodeValueByXPath("/Envelope/Body/cancel/request/travelComponentGroupingId");
+        Recordset results = new Recordset(db.getResultSet("SELECT a.TPS_ID, b.TC_ID FROM RES_MGMT.TC_GRP a "
+                + "JOIN RES_MGMT.TC b ON a.TC_GRP_NB = b.TC_GRP_NB "
+                + "WHERE a.TC_GRP_NB = " + tcg + " "
+                + "AND b.TC_TYP_NM = 'AccommodationComponent'"));
+        TestReporter.assertGreaterThanZero(results.getRowCount());
+        String tpsID = results.getValue("TPS_ID");
+        String tcID = results.getValue("TC_ID");
+        String tpID = null;
+        try {
+            tpID = cancel.getTravelPlanId();
+            TestReporter.assertTrue(Long.parseLong(cancel.getTravelPlanId()) > 0, "The Travel Plan ID in the response was greater than zero.");
+        } catch (NumberFormatException e) {
+            TestReporter.assertTrue(false, "The Travel Plan ID in the response was a valid number.");
+        }
+
+        CancelHelper cancelHelper = new CancelHelper(Environment.getBaseEnvironmentName(environment), tpID);
+        cancelHelper.verifyChargeGroupsCancelled();
+        cancelHelper.verifyCancellationIsFoundInResHistory(tpsID, tcg, tcID);
+        cancelHelper.verifyInventoryReleased(tcg);
+        cancelHelper.verifyTcStatusByTcg(tcg, "Cancelled");
+        cancelHelper.verifyExchangeFeeFound(false);
+        cancelHelper.verifyTPV3GuestRecordCreated(tpID, getHouseHold().primaryGuest());
+        cancelHelper.verifyTPV3RecordCreated(tpID);
+        cancelHelper.verifyTPV3SalesOrderRecordCreated(tpID);
+        TestReporter.assertAll();
+    }
+
+    private void verifyNotCancelled(String tcg) {
+        TestReporter.logStep("Verify TC Status By TCG");
+        Recordset rs = new Recordset(db.getResultSet("select count(*) count "
+                + "from res_mgmt.tc_grp a, res_mgmt.tc b "
+                + "where a.tc_grp_nb = b.tc_grp_nb "
+                + "and a.tc_grp_nb = '" + tcg + "' "
+                + "and b.TRVL_STS_NM = 'Cancelled'"));
+        TestReporter.assertEquals(rs.getValue("count"), "0", "The TCs were not cancelled.");
+    }
+
+    private void verifyCancellationFee(String tpID, boolean waived) {
+        TestReporter.logStep("Verify cancellation fee was created in Folio");
+        Recordset results = new Recordset(db.getResultSet(" select e.* " +
+                " from FOLIO.CHRG_GRP_FOLIO a  " +
+                " left outer join FOLIO.FOLIO b on b.FOLIO_ID= a.CHRG_GRP_FOLIO_ID " +
+                " left outer join FOLIO.FOLIO_ITEM c on c.FOLIO_ID= b.FOLIO_ID " +
+                " left outer join FOLIO.CHRG_ITEM d on d.CHRG_ITEM_ID = c.FOLIO_ITEM_ID " +
+                " left outer join FOLIO.CHRG e on e.CHRG_ID = d.CHRG_ID " +
+                " left outer join FOLIO.PMT f on f.FOLIO_ITEM_ID = c.FOLIO_ITEM_ID " +
+                " left outer join FOLIO.CHRG_GRP g on g.CHRG_GRP_ID = a.ROOT_CHRG_GRP_ID " +
+                " left outer join FOLIO.CHRG_GRP_EXTNL_REF h on h.CHRG_GRP_ID=g.CHRG_GRP_ID " +
+                " left outer join FOLIO.EXTNL_REF i on i.EXTNL_REF_ID=h.EXTNL_REF_ID " +
+                " left outer join FOLIO.prod_chrg t on t.chrg_id=d.chrg_id " +
+                " left outer join FOLIO.chrg_mkt_pkg u on u.chrg_mkt_pkg_id=t.chrg_mkt_pkg_Id  " +
+                " where i.EXTNL_REF_VAL ='" + tpID + "' " +
+                " AND e.CHRG_ID is not null" +
+                " and CHRG_TYP_NM = 'Fee Charge'"));
+
+        if (waived) {
+            TestReporter.assertTrue(results.getRowCount() == 0, "There were no cancellation fees.");
+        } else {
+            TestReporter.assertGreaterThanZero(results.getRowCount());
+            TestReporter.softAssertEquals(results.getValue("RECOG_STS_NM"), "APPROVED", "Validate value for RECOG_STS_NM [ " + results.getValue("RECOG_STS_NM") + " ] is [ APPROVED ] as expected");
+            TestReporter.softAssertEquals(results.getValue("REV_CLS_NM"), "Cancellation Fee", "Validate value for REV_CLS_NM [ " + results.getValue("RECOG_STS_NM") + " ] is [ Cancellation Fee ] as expected");
+            TestReporter.softAssertEquals(results.getValue("CHRG_ACTV_IN"), "Y", "Validate value for RECOG_STS_NM [ " + results.getValue("CHRG_ACTV_IN") + " ] is [ Y ] as expected");
+            TestReporter.softAssertEquals(results.getValue("CHRG_DS"), "Cancellation Fee", "Validate value for RECOG_STS_NM [ " + results.getValue("CHRG_DS") + " ] is [ Cancellation Fee ] as expected");
+            TestReporter.assertAll();
+        }
     }
 }
