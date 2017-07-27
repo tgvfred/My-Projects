@@ -4,6 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
@@ -185,9 +186,8 @@ public class checkout_Cancel extends AccommodationBaseTest {
 		//Add an accommodation
 		TestReporter.logScenario("Add Accommodation");
 		accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
-		accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
+		Add add = accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
 
-		//TestReporter.logScenario("Are you getting past this step?");
 
 		//Cancel One
         TestReporter.logScenario("Cancel");
@@ -201,7 +201,7 @@ public class checkout_Cancel extends AccommodationBaseTest {
     	
         //Checkin One and then Checkout One 
         TestReporter.logScenario("Checkin One");
-        checkInHelper = new CheckInHelper(getEnvironment(), getBook());
+        checkInHelper = new CheckInHelper(getEnvironment(), add);
         checkInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		
         TestReporter.logScenario("Checkout One");

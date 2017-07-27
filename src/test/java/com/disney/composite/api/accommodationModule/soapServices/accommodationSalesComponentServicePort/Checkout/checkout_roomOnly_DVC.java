@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.Checkout;
 
+import org.apache.tools.ant.taskdefs.Sleep;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -12,6 +13,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -19,7 +21,6 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class checkout_roomOnly_DVC extends BookDVCCashHelper{
 	private CheckInHelper helper;
-	private ThreadLocal<Book> book = new ThreadLocal<Book>();
     
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -28,24 +29,21 @@ public class checkout_roomOnly_DVC extends BookDVCCashHelper{
         setEnvironment(environment);
         
         setUseDvcResort(true);
+        setCheckingIn(true);
         setBook(bookDvcReservation("testBook_MCash", 1));
         setTpId(getFirstBooking().getTravelPlanId());
     }
     
     public String validateResMgmt(String TcId, Checkout checkout) {
-		String tcId = getBook().getTravelComponentId();
+		String tcId = getFirstBooking().getTravelComponentId();
 
 		TestReporter.logStep("Verify Res Mgmt");
 		String sql = "select c.* " + " from res_mgmt.tps a "
 				+ " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
 				+ " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb " + " where tc_id = "
-				+ getBook().getTravelComponentId();
+				+ getFirstBooking().getTravelComponentId();
 
-		try {
-			Thread.sleep(15000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		Sleeper.sleep(15000);
 
 		Database db = new OracleDatabase(environment, Database.DREAMS);
 		Recordset rs = new Recordset(db.getResultSet(sql));
@@ -91,8 +89,8 @@ public class checkout_roomOnly_DVC extends BookDVCCashHelper{
 				+ " left outer join folio.CHRG_ITEM e on d.CHRG_ID = e.CHRG_ID"
 				+ " left outer join folio.CHRG_GRP_FOLIO f on c.CHRG_GRP_ID = f.ROOT_CHRG_GRP_ID "
 				+ " left outer join folio.FOLIO g on f.CHRG_GRP_FOLIO_ID = g.FOLIO_ID " + " where a.EXTNL_REF_VAL in ('"
-				+ getBook().getTravelPlanId() + "','" + getBook().getTravelPlanSegmentId() + "','"
-				+ getBook().getTravelComponentGroupingId() + "')" +
+				+ getFirstBooking().getTravelPlanId() + "','" + getFirstBooking().getTravelPlanSegmentId() + "','"
+				+ getFirstBooking().getTravelComponentGroupingId() + "')" +
 				// "where a.EXTNL_REF_VAL in
 				// ('472059709301','472051342254','472052990544')" +
 				" and folio_sts_nm is not null ";
@@ -111,29 +109,20 @@ public class checkout_roomOnly_DVC extends BookDVCCashHelper{
 	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_roomOnly_DVC() {
 		
-		TestReporter.logScenario("Test Book DVC");
-		book.set(new Book(environment, "bookDVCCash" ));
-		book.get().sendRequest();
-		TestReporter.logAPI(!book.get().getResponseStatusCode().equals("200"), "An error occurred booking a DVC Cash reservation", book.get());	
+		TestReporter.logScenario("Test Book DVC");	
 	    TestReporter.log("Travel Plan ID: " + book.get().getTravelPlanId());
 		TestReporter.assertNotNull(book.get().getTravelPlanId(), "The response contains a Travel Plan ID");
 		TestReporter.assertNotNull(book.get().getTravelPlanSegmentId(), "The response contains a Travel Plan Segment ID");
 
-		helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-        
-        ValidationHelper backEndHelper = new ValidationHelper(getEnvironment());
-        backEndHelper.validateModificationBackend(1, "Booked", "DVC", getArrivalDate(), getDepartureDate(), "", "", getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), false);
-        
-        
-        String status = "false";
-		String tcgId = getBook().getTravelComponentGroupingId();
+		helper = new CheckInHelper(getEnvironment(), getFirstBooking());
+        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());String status = "false";
+		String tcgId = getFirstBooking().getTravelComponentGroupingId();
 		String locationId = getLocationId();
 		String checkoutDate = Randomness.generateCurrentXMLDate(); 
 		String earlyCheckoutReason = "BEREAV";
-		String refType = "RESERVATION";
-		String refNumber = getExternalRefNumber();
-		String refSource = getExternalRefSource();
+		String refType = "MEMBERSHIP";
+		String refNumber = getFirstMember().getMembershipRefId();
+		String refSource = "DVC";
 		
 		Checkout checkout = new Checkout(getEnvironment(), "main");
 		checkout.setEarlyCheckOutReason(earlyCheckoutReason);
@@ -147,10 +136,16 @@ public class checkout_roomOnly_DVC extends BookDVCCashHelper{
 		checkout.setCheckoutDate(checkoutDate);
 		checkout.setLocationId(locationId);
 		checkout.sendRequest();
-        
-		  String assignOwnerId =  validateResMgmt(getBook().getTravelComponentId(), checkout);		    
+        TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "Verify that no error occurred checking out a reservation: " + checkout.getFaultString(), checkout);
+		  String assignOwnerId =  validateResMgmt(getFirstBooking().getTravelComponentId(), checkout);		    
 				validateRIM(assignOwnerId, checkout);
-				validateFolio(getBook().getTravelComponentGroupingId(), checkout);
+				validateFolio(getFirstBooking().getTravelComponentGroupingId(), checkout);
+		        
+        ValidationHelper backEndHelper = new ValidationHelper(getEnvironment());
+        backEndHelper.validateModificationBackend(1, "Past Visit", "DVC", getArrivalDate(), getDepartureDate(), "", "", getFirstBooking().getTravelPlanId(), getFirstBooking().getTravelPlanSegmentId(), getFirstBooking().getTravelComponentGroupingId(), false);
+		        
+		        
+		        
 		
 	}
 }

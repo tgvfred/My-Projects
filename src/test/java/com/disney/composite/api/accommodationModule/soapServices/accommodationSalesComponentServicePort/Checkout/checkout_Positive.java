@@ -5,6 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Checkout;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
@@ -111,7 +112,7 @@ public class checkout_Positive extends AccommodationBaseTest {
 	public void TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne() {
 		// Add a second accommodation
 		accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
-		accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
+		Add add = accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
 				getLocationId());
 		
 		// Checkin the first accommodation
@@ -119,7 +120,7 @@ public class checkout_Positive extends AccommodationBaseTest {
 		helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		
 		// Checkin the second accommodation
-		helper = new CheckInHelper(getEnvironment(), accommHelper.getWs());
+		helper = new CheckInHelper(getEnvironment(), add);
 		helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 		helper.checkOut(getLocationId());
 		
@@ -128,7 +129,7 @@ public class checkout_Positive extends AccommodationBaseTest {
 		validateFolio(getBook().getTravelComponentGroupingId());	
 	}
 
-	@Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
+	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne() {
 		// Add a second accommodation
 		accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
@@ -145,7 +146,7 @@ public class checkout_Positive extends AccommodationBaseTest {
 		validateFolio(getBook().getTravelComponentGroupingId());
 	}
 
-	@Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
+	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_roomOnly_shared_checkoutOne() {
 		Share share = new Share(getEnvironment(), "oneTcgOnly");
 		share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -164,7 +165,7 @@ public class checkout_Positive extends AccommodationBaseTest {
 
 	
 	
-	@Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
+	@Test(groups = { "api", "regression", "checkout", "Accommodation" })
 	public void TestCheckout_tcExtRefOnly() {
 		helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());

@@ -7,6 +7,7 @@ import com.disney.AutomationException;
 import com.disney.api.WebService;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.utils.TestReporter;
 
 public class AddAccommodationHelper {
@@ -22,8 +23,17 @@ public class AddAccommodationHelper {
     private String resortCode;
     private String roomTypeCode;
     private String packageCode;
+    private Add add;
 
-    public String getEnvironment() {
+    public Add getAdd() {
+		return add;
+	}
+
+	public void setAdd(Add add) {
+		this.add = add;
+	}
+
+	public String getEnvironment() {
         return environment;
     }
 
@@ -134,6 +144,11 @@ public class AddAccommodationHelper {
         if (ws instanceof Book) {
             setTpId(((Book) ws).getTravelPlanId());
             setTpsId(((Book) ws).getTravelPlanSegmentId());
+        }else if (ws instanceof ReplaceAllForTravelPlanSegment) {
+            setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
+            setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
+        }else{
+        	throw new AutomationException("The WebService object was not of a type supported by this class.");
         }
     }
 
