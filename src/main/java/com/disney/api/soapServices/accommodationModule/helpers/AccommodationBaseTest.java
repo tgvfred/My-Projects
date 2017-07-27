@@ -938,23 +938,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         return ageType;
     }
 
-    public static boolean isValid(Object o) {
-        boolean valid = false;
-        if (o == null) {
-            valid = false;
-        }
-
-        if (o instanceof String) {
-            if (StringUtils.isEmpty((String) o)) {
-                valid = false;
-            } else {
-                valid = true;
-            }
-        }
-
-        return valid;
-    }
-
     protected void makeFirstNightDeposit() {
         RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
         if (getBook() != null && getBook().getTravelPlanId() != null) {
@@ -1211,5 +1194,42 @@ public class AccommodationBaseTest extends BaseRestTest {
         checkingIn.sendRequest();
         TestReporter.assertTrue(checkingIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getBook().getTravelPlanId() + "]: " + getBook().getFaultString());
 
+    }
+
+    // public static boolean isValid(Object o) {
+    // boolean valid = false;
+    // if (o == null) {
+    // valid = false;
+    // }
+    //
+    // if (o instanceof String) {
+    // if (StringUtils.isEmpty((String) o)) {
+    // valid = false;
+    // } else {
+    // valid = true;
+    // }
+    // }
+    //
+    // return valid;
+    // }
+
+    public static Boolean isValid(Object obj) {
+        Boolean valid = null;
+        if (obj != null) {
+            valid = true;
+        } else {
+            valid = false;
+        }
+
+        if (obj instanceof String) {
+            if (StringUtils.isEmpty(((String) obj))) {
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            return valid;
+        }
     }
 }

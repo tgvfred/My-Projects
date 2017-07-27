@@ -142,7 +142,7 @@ public class CheckInHelper {
                 setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
                 setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
                 setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
-            } else if (ws instanceof ReplaceAllForTravelPlanSegment) {
+            } else if (ws instanceof Add) {
                 setTpId(((Add) ws).getTravelPlanId());
                 setTpsId(((Add) ws).getTravelPlanSegmentId());
                 setTcgId(((Add) ws).getTravelComponentGroupingId());
