@@ -1,7 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationBatchWSPort.getStagedRecordsForReinstate;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
@@ -18,9 +16,6 @@ public class TestGetStagedRecordsForReinstate_oneReservation extends Accommodati
 
     private GetStagedRecordsForReinstate stageReinstate;
     private StageMassReinstateTransactional stage;
-
-    @BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
 
     @Test(groups = { "api", "regression", "getStagedRecordsForReinstate", "accommodation" })
     public void Test_GetStagedRecordsForReinstate_oneReservation() {
