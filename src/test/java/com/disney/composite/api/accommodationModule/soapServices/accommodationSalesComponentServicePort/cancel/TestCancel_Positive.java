@@ -117,6 +117,8 @@ public class TestCancel_Positive extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
     public void testCancel_cancellationFeeNotWaived() {
+        checkingIn();
+
         TestReporter.logScenario("Test - Cancel - Cancellation Fee Not Waived");
 
         Cancel cancel = buildRequestForDefaultBook();
