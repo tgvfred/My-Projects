@@ -1,4 +1,4 @@
-package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort;
+package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveRates;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -50,4 +50,21 @@ public class TestRetrieveRates {
 		TestReporter.assertNotNull(RetrieveRates.getroomTypeCode(), "The response contains a Room Type Code");
 		TestReporter.assertNotNull(RetrieveRates.getadditionalChargeOverridden(), "The response contains a Additional Charge Overridden");
 	}
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "retrieveRates"})
+	public void TestRetrieveRates_roomOnly_oneNight(){
+		
+	}
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "retrieveRates"})
+	public void TestRetrieveRates_roomOnly_twoNights(){
+		
+	}
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "retrieveRates"})
+	public void TestRetrieveRates_showDiningReservation(){
+		
+	}
+	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "retrieveRates"})
+	public void TestRetrieveRates_roomOnly_checkedIn(){
+		
+	}
+	
 }
