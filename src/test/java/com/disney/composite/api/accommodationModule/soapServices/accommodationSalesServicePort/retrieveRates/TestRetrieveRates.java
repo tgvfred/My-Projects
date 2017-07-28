@@ -12,10 +12,11 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveRates {
-	private String environment = "";
+    private String environment = "";
     private Book book = null;
-    
+
     @BeforeMethod(alwaysRun = true)
+<<<<<<< HEAD:src/test/java/com/disney/composite/api/accommodationModule/soapServices/accommodationSalesServicePort/retrieveRates/TestRetrieveRates.java
 	@Parameters({  "environment" })
 	public void setup(String environment) {
 		this.environment = environment;
@@ -67,4 +68,41 @@ public class TestRetrieveRates {
 		
 	}
 	
+=======
+    @Parameters({ "environment" })
+    public void setup(String environment) {
+        this.environment = environment;
+        book = new Book(environment, "bookRoomOnly2Adults2ChildrenWithoutTickets");
+        book.sendRequest();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            if (book != null) {
+                if (book.getTravelPlanSegmentId() != null) {
+                    if (!book.getTravelPlanSegmentId().isEmpty()) {
+                        Cancel cancel = new Cancel(environment, "Main");
+                        cancel.setCancelDate(Randomness.generateCurrentXMLDate(0));
+                        cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+                        cancel.sendRequest();
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates", "example" })
+    public void testRetrieveRates_MainFlow() {
+        TestReporter.logScenario("Test Retrieve Rates");
+        RetrieveRates RetrieveRates = new RetrieveRates(environment, "retrieveRates");
+        RetrieveRates.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+        RetrieveRates.sendRequest();
+        TestReporter.logAPI(!RetrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving rates", RetrieveRates);
+        TestReporter.log("Travel Plan ID: " + book.getTravelPlanId());
+        TestReporter.assertNotNull(RetrieveRates.getroomTypeCode(), "The response contains a Room Type Code");
+        TestReporter.assertNotNull(RetrieveRates.getadditionalChargeOverridden(), "The response contains a Additional Charge Overridden");
+    }
+>>>>>>> 3355aa155f32d01c6ada4313d785ad8fa54a0e34:src/test/java/com/disney/composite/api/accommodationModule/soapServices/accommodationSalesServicePort/TestRetrieveRates.java
 }

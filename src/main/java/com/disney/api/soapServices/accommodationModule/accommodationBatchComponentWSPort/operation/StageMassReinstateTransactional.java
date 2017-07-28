@@ -52,12 +52,20 @@ public class StageMassReinstateTransactional extends AccommodationBatchComponent
     }
 
     public void setTcg(String value) {
-        setRequestNodeValueByXPath("//travelComponentGroupingId", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageMassReinstateTransactional/request/massReinstateRequestDetail/travelComponentGroupingId", value);
     }
 
     public void setTpId(String value) {
-        setRequestNodeValueByXPath("//travelPlanId", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageMassReinstateTransactional/request/massReinstateRequestDetail/travelPlanId", value);
     }
+
+    // public void setSecondTcg(String value) {
+    // setRequestNodeValueByXPath("/Envelope/Body/stageMassReinstateTransactional/request[2]/massReinstateRequestDetail/travelComponentGroupingId", value);
+    // }
+    //
+    // public void setSecondTpId(String value) {
+    // setRequestNodeValueByXPath("/Envelope/Body/stageMassReinstateTransactional/request[2]/massReinstateRequestDetail/travelPlanId", value);
+    // }
 
     public String getResponseProcessId() {
         return getResponseNodeValueByXPath("//processId");
