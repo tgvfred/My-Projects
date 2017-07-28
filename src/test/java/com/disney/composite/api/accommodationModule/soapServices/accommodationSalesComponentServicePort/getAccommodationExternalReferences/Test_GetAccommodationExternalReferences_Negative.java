@@ -78,7 +78,7 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
 
         String sql = "select * from res_mgmt.tc_grp a where a.tps_id = '" + dining.getConfirmationNumber() + "' and a.tc_grp_typ_nm = 'SHOWDINING'";
 
-        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(getEnvironment()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         tcg = rs.getValue("TC_GRP_NB");
