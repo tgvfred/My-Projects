@@ -59,6 +59,10 @@ public class StageMassCancelTransactional extends AccommodationBatchComponentWSP
         setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails/travelComponentGroupingId", value);
     }
 
+    public void setCancelContactName(String value) {
+        setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails/cancelContactName", value);
+    }
+
     public String getResponseProcessId() {
         return getResponseNodeValueByXPath("//processId");
     }
