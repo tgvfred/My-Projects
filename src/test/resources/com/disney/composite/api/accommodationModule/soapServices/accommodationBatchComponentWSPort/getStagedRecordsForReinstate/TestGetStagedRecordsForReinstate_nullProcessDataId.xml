@@ -5,7 +5,7 @@
 	<test name="TestGetStagedRecordsForReinstate_nullProcessDataId">
 		<classes>
 			<class
-				name="com.disney.composite.api.accommodationModule.soapServices.accommodationBatchWSPort.getStagedRecordsForReinstate.TestGetStagedRecordsForReinstate_nullProcessDataId"/>
+				name="com.disney.composite.api.accommodationModule.soapServices.accommodationBatchComponentWSPort.getStagedRecordsForReinstate.TestGetStagedRecordsForReinstate_nullProcessDataId"/>
 		</classes>
 	</test>
 </suite>

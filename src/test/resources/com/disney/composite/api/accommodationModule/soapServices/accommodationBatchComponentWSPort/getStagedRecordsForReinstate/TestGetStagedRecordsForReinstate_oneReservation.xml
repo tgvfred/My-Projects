@@ -5,7 +5,7 @@
 	<test name="TestGetStagedRecordsForReinstate_oneReservation">
 		<classes>
 			<class
-				name="com.disney.composite.api.accommodationModule.soapServices.accommodationBatchWSPort.getStagedRecordsForReinstate.TestGetStagedRecordsForReinstate_oneReservation"/>
+				name="com.disney.composite.api.accommodationModule.soapServices.accommodationBatchComponentWSPort.getStagedRecordsForReinstate.TestGetStagedRecordsForReinstate_oneReservation"/>
 		</classes>
 	</test>
 </suite>

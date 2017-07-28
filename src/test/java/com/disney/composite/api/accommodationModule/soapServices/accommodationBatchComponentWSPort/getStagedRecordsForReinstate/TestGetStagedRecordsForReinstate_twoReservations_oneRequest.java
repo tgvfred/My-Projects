@@ -1,11 +1,10 @@
-package com.disney.composite.api.accommodationModule.soapServices.accommodationBatchWSPort.getStagedRecordsForReinstate;
+package com.disney.composite.api.accommodationModule.soapServices.accommodationBatchComponentWSPort.getStagedRecordsForReinstate;
 
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassReinstateTransactional;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.RetrieveComment;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -82,7 +81,7 @@ public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends
         validations();
 
         if (Environment.isSpecialEnvironment(environment)) {
-            RetrieveComment clone = (RetrieveComment) stageReinstate.clone();
+            GetStagedRecordsForReinstate clone = (GetStagedRecordsForReinstate) stageReinstate.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.sendRequest();
             if (!clone.getResponseStatusCode().equals("200")) {
@@ -99,8 +98,7 @@ public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends
         TestReporter.logStep("Validate the response node has one 'return' node.");
         int numExpectedNodes = 2;
         int returnNodes = stageReinstate.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return");
-        TestReporter.softAssertEquals(returnNodes, numExpectedNodes, "Verify that the response returns the number of 'return' nodes [" + returnNodes + "] is that which is expected [" + numExpectedNodes + "].");
-        TestReporter.assertAll();
+        TestReporter.assertEquals(returnNodes, numExpectedNodes, "Verify that the response returns the number of 'return' nodes [" + returnNodes + "] is that which is expected [" + numExpectedNodes + "].");
     }
 
     public void validations() {

@@ -1,11 +1,10 @@
-package com.disney.composite.api.accommodationModule.soapServices.accommodationBatchWSPort.getStagedRecordsForReinstate;
+package com.disney.composite.api.accommodationModule.soapServices.accommodationBatchComponentWSPort.getStagedRecordsForReinstate;
 
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.RetrieveComment;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
@@ -24,7 +23,7 @@ public class TestGetStagedRecordsForReinstate_nullProcessDataId extends Accommod
         validateResponseReturnNode();
 
         if (Environment.isSpecialEnvironment(environment)) {
-            RetrieveComment clone = (RetrieveComment) stageReinstate.clone();
+            GetStagedRecordsForReinstate clone = (GetStagedRecordsForReinstate) stageReinstate.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.sendRequest();
             if (!clone.getResponseStatusCode().equals("200")) {
