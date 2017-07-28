@@ -16,7 +16,6 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class TestGetStagedRecordsForCancel_OneTcg extends AccommodationBaseTest {
 
     private String processId = null;
-    private String processCode = null;
     private String contactName = "Cancel Name";
     private String reasonCode = "AIR";
     private String isOverridden = "false";
@@ -51,7 +50,6 @@ public class TestGetStagedRecordsForCancel_OneTcg extends AccommodationBaseTest 
         TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request.", stageMassCancel);
 
         processId = stageMassCancel.getResponseProcessId();
-        processCode = stageMassCancel.getResponseProcessCode();
 
     }
 
