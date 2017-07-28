@@ -5,10 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Checkout;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
@@ -17,10 +14,8 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class Checkout_Positive3 extends AccommodationBaseTest {
+public class TestCheckout_tcExtRefOnly extends AccommodationBaseTest {
     private CheckInHelper helper;
-    private AddAccommodationHelper accommHelper;
-    // private Book book;
 
     @Override
     @Parameters("environment")
@@ -35,70 +30,11 @@ public class Checkout_Positive3 extends AccommodationBaseTest {
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
-    public void TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne() {
-        // Add a second accommodation
-        accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
-        Add add = accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
-                getLocationId());
-
-        // Checkin the first accommodation
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-
-        // Checkin the second accommodation
-        helper = new CheckInHelper(getEnvironment(), add);
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-        helper.checkOut(getLocationId());
-
-        String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
-        validateRIM(assignOwnerId);
-        additionalValidations(assignOwnerId);
-        validateChargeGroupsChargesAndFolio();
-    }
-
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
-    public void TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne() {
-        // Add a second accommodation
-        accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
-        accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
-                getLocationId());
-
-        // Checkin the first accommodation
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-        helper.checkOut(getLocationId());
-
-        String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
-        validateRIM(assignOwnerId);
-        additionalValidations(assignOwnerId);
-        validateChargeGroupsChargesAndFolio();
-    }
-
-    @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
-    public void TestCheckout_roomOnly_shared_checkoutOne() {
-        Share share = new Share(getEnvironment(), "oneTcgOnly");
-        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        share.sendRequest();
-        TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing TCG ID [" + getBook().getTravelComponentGroupingId() + "]: " + share.getFaultString());
-
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-        helper.checkOut(getLocationId());
-
-        String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
-        validateRIM(assignOwnerId);
-        additionalValidations(assignOwnerId);
-        validateChargeGroupsChargesAndFolio();
-
-    }
-
-    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
-    public void TestCheckout_tcExtRefOnly() {
+    public void testCheckout_tcExtRefOnly() {
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
-        String tcgId = getBook().getTravelComponentGroupingId();
         String refType = "RESERVATION";
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
@@ -139,7 +75,7 @@ public class Checkout_Positive3 extends AccommodationBaseTest {
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         TestReporter.softAssertTrue(rs.getRowCount() == 1, "Verify that 1 record was returned.");
-        TestReporter.softAssertTrue(rs.getValue("AUTO_ASGN_RSRC_ID").equals("NULL"), "Verify that the auto asign resource ID [" + rs.getValue("AUTO_ASGN_RSRC_ID") + "] is that which is expected [NULL].");
+        TestReporter.softAssertTrue(!rs.getValue("AUTO_ASGN_RSRC_ID").equals("NULL"), "Verify that the auto asign resource ID [" + rs.getValue("AUTO_ASGN_RSRC_ID") + "] is not null.");
         TestReporter.softAssertTrue(rs.getValue("OWNR_STS_NM").equals("COMPLETED"), "Verify that the owner status [" + rs.getValue("OWNR_STS_NM") + "] is that which is expected [COMPLETED].");
         TestReporter.softAssertTrue(rs.getValue("RSRC_ASGN_REQ_ID").equals("NULL"), "Verify that the resource assingment request ID [" + rs.getValue("RSRC_ASGN_REQ_ID") + "] is that which is expected [NULL].");
         TestReporter.softAssertTrue(rs.getValue("ASGN_ID").equals("NULL"), "Verify that the assignment ID [" + rs.getValue("ASGN_ID") + "] is that which is expected [NULL].");
@@ -156,9 +92,12 @@ public class Checkout_Positive3 extends AccommodationBaseTest {
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertEquals(rs.getValue("TC_RSN_TYP_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_TYP_NM") + "] is that which is expected [NULL].");
-        TestReporter.softAssertEquals(rs.getValue("LGCY_RSN_CD"), "NULL", "Verify that the TC reason type [" + rs.getValue("LGCY_RSN_CD") + "] is that which is expected [NULL].");
-        TestReporter.softAssertEquals(rs.getValue("TC_RSN_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_NM") + "] is that which is expected [NULL].");
+        do {
+            TestReporter.softAssertEquals(rs.getValue("TC_RSN_TYP_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_TYP_NM") + "] is that which is expected [NULL].");
+            TestReporter.softAssertEquals(rs.getValue("LGCY_RSN_CD"), "NULL", "Verify that the TC reason type [" + rs.getValue("LGCY_RSN_CD") + "] is that which is expected [NULL].");
+            TestReporter.softAssertEquals(rs.getValue("TC_RSN_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_NM") + "] is that which is expected [NULL].");
+            rs.moveNext();
+        } while (rs.hasNext());
         TestReporter.assertAll();
     }
 
@@ -183,7 +122,7 @@ public class Checkout_Positive3 extends AccommodationBaseTest {
             }
         }
 
-        sql = "select a.trvl_sts_nm TPS_STS, TC_CHKOT_DTS, TC_CHKIN_DTS, c.TRVL_STS_NM TC_STS "
+        sql = "select a.trvl_sts_nm TPS_STS, TC_CHKOT_DTS, TC_CHKIN_DTS, c.TRVL_STS_NM TC_STS, c.TC_ID "
                 + "from res_mgmt.tps a "
                 + "left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
@@ -192,9 +131,14 @@ public class Checkout_Positive3 extends AccommodationBaseTest {
 
         db = new OracleDatabase(environment, Database.DREAMS);
         rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Past Visit", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Past Visit].");
-        TestReporter.softAssertEquals(rs.getValue("TC_CHKOT_DTS").split(" ")[0], Randomness.generateCurrentXMLDate(), "Verify that the checkout date [" + rs.getValue("TC_CHKOT_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate() + "].");
-        TestReporter.softAssertEquals(rs.getValue("TC_STS"), "Past Visit", "Verify that the TC status [" + rs.getValue("TC_STS") + "] is that which is expected [Past Visit].");
+        do {
+            if (rs.getValue("TC_ID").equals(TcId)) {
+                TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Past Visit", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Past Visit].");
+                TestReporter.softAssertEquals(rs.getValue("TC_CHKOT_DTS").split(" ")[0], Randomness.generateCurrentXMLDate(), "Verify that the checkout date [" + rs.getValue("TC_CHKOT_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate() + "].");
+                TestReporter.softAssertEquals(rs.getValue("TC_STS"), "Past Visit", "Verify that the TC status [" + rs.getValue("TC_STS") + "] is that which is expected [Past Visit].");
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
 
         TestReporter.assertAll();
         return assignOwnerId;
@@ -240,7 +184,7 @@ public class Checkout_Positive3 extends AccommodationBaseTest {
                 + "and folio_sts_nm is not null";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertTrue(rs.getRowCount() == 2, "Verify that 2 folios were found.");
+        TestReporter.softAssertTrue(rs.getRowCount() == 1, "Verify that 1 folio was found.");
         do {
             TestReporter.softAssertEquals(rs.getValue("FOLIO_STS_NM"), "Earned", "Verify that the foloi status [" + rs.getValue("FOLIO_STS_NM") + "] is that which is expected [Earned].");
             rs.moveNext();
@@ -260,10 +204,10 @@ public class Checkout_Positive3 extends AccommodationBaseTest {
                 + "and CHRG_ACTV_IN is not null";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertTrue(rs.getRowCount() == 17, "Verify that 17 charges were found.");
+        TestReporter.softAssertTrue(rs.getRowCount() == 4, "Verify that 4 charges were found.");
         do {
             TestReporter.softAssertEquals(rs.getValue("CHRG_PST_ST_NM"), "Earned", "Verify that the charge past state name [" + rs.getValue("CHRG_PST_ST_NM") + "] is that which is expected [Earned].");
-            TestReporter.softAssertEquals(rs.getValue("CHRG_ACTV_IN"), "Y", "Verify that the charge active indicator [" + rs.getValue("CHRG_ACTV_IN") + "] is that which is expected [Y].");
+            TestReporter.softAssertEquals(rs.getValue("CHRG_ACTV_IN"), "N", "Verify that the charge active indicator [" + rs.getValue("CHRG_ACTV_IN") + "] is that which is expected [N].");
             TestReporter.softAssertEquals(rs.getValue("RECOG_STS_NM"), "APPROVED", "Verify that the RECOG status [" + rs.getValue("RECOG_STS_NM") + "] is that which is expected [APPROVED].");
             rs.moveNext();
         } while (rs.hasNext());
@@ -272,7 +216,7 @@ public class Checkout_Positive3 extends AccommodationBaseTest {
 
     public void validateChargGroups() {
         TestReporter.logStep("Validate charge groups");
-        String sql = "select CHRG_GRP_STS_NM, CHRG_GRP_ACTV_IN "
+        String sql = "select a.EXTNL_SRC_NM, CHRG_GRP_STS_NM, CHRG_GRP_ACTV_IN "
                 + "from folio.EXTNL_REF a "
                 + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
                 + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
