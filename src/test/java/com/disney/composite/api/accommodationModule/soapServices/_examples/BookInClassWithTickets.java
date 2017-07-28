@@ -24,7 +24,7 @@ public class BookInClassWithTickets extends AccommodationBaseTest {
         setEnvironment(environment);
     }
 
-    @Test(groups = { "api", "regression", "accommodation" })
+    @Test(groups = { "api", "regression", "accommodation", "example" })
     public void bookInClassAndCancelInTestClass() {
         setDaysOut(0);
         setNights(1);

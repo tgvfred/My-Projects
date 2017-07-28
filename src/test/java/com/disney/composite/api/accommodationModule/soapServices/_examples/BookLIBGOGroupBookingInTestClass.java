@@ -35,7 +35,7 @@ public class BookLIBGOGroupBookingInTestClass extends AccommodationBaseTest {
         cancel();
     }
 
-    @Test(groups = { "api", "regression", "accommodation" })
+    @Test(groups = { "api", "regression", "accommodation", "example" })
     public void bookLIBGOGroupBookingInTestClass() {
         setDaysOut(0);
         setNights(1);
