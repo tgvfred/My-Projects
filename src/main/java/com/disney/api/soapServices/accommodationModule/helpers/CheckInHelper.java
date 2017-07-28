@@ -15,6 +15,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentS
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Book;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.accommodationStatusComponentService.operations.UpdateSingleRoomStatus;
 import com.disney.api.utils.dataFactory.database.sqlStorage.Dreams;
@@ -142,11 +143,18 @@ public class CheckInHelper {
                 setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
                 setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
                 setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
-            } else if (ws instanceof ReplaceAllForTravelPlanSegment) {
+            } else if (ws instanceof Add) {
                 setTpId(((Add) ws).getTravelPlanId());
                 setTpsId(((Add) ws).getTravelPlanSegmentId());
                 setTcgId(((Add) ws).getTravelComponentGroupingId());
                 setTcId(((Add) ws).getTravelComponentId());
+            }else if (ws instanceof Book) {
+                setTpId(((Book) ws).getTravelPlanId());
+                setTpsId(((Book) ws).getTravelPlanSegmentId());
+                setTcgId(((Book) ws).getTravelComponentGroupingId());
+                setTcId(((Book) ws).getTravelComponentId());
+            }else{
+            	throw new AutomationException("The WebService object is not supported by this class.");
             }
         }
         retrieveReservation();
@@ -266,7 +274,11 @@ public class CheckInHelper {
         }
         ;
 
-        updateSingleRoomStatus("updateToCleanAndVacant");
+        try{
+        	updateSingleRoomStatus("updateToCleanAndVacant");
+        }catch(Exception e){
+        	
+        }
     }
 
     public void updateSingleRoomStatus(String scenario, String roomNumner, String resourceId) {
