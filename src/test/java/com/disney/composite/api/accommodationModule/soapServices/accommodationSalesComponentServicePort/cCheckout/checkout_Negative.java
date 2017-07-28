@@ -1,4 +1,4 @@
-package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.Checkout;
+package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.cCheckout;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
