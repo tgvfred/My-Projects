@@ -19,7 +19,6 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest {
 
     private String processId = null;
-    private String processCode = null;
     private String contactName = "Cancel Name";
     private String reasonCode = "AIR";
     private String isOverridden = "false";
@@ -34,7 +33,7 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        this.environment = environment;
+        setEnvironment(environment);
         String locEnv;
         if (environment.toLowerCase().contains("_cm")) {
             locEnv = environment.toLowerCase().replace("_cm", "");
@@ -156,7 +155,6 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request.", stageMassCancel);
 
         processId = stageMassCancel.getResponseProcessId();
-        processCode = stageMassCancel.getResponseProcessCode();
 
     }
 
@@ -181,7 +179,7 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         getStaged.sendRequest();
         TestReporter.logAPI(!getStaged.getResponseStatusCode().equals("200"), "An error occurred getting staged records for cancel.", getStaged);
 
-        TestReporter.assertTrue(getStaged.getNumberOfRequestNodesByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return") == 1, "Verify that one return node was returned.");
+        TestReporter.softAssertTrue(getStaged.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return") == 1, "Verify that one return node was returned.");
         TestReporter.softAssertEquals(getStaged.getCancelContactName(), contactName, "Verify the cancel contact name [" + getStaged.getCancelContactName() + "] "
                 + "brought back in the GetStagedRecordsForCancel response matches the value [" + contactName + "] used in the StageMassCancelTransactional request");
         TestReporter.softAssertEquals(getStaged.getCancelDate().substring(0, 10), Randomness.generateCurrentXMLDate(), "Verify the cancel date [" + getStaged.getCancelDate() + "] "
