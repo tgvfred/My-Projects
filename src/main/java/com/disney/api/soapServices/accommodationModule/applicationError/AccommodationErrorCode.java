@@ -5,8 +5,6 @@ import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 public class AccommodationErrorCode {
     private static final String APP_NAME = "LILO FOLIO";
 
-    private static final String APP_NAME_RESM = "LILO_RESM";
-
     public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS = new ApplicationErrorCode(APP_NAME, 2901,
             " Missing required fields. ");
     public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS_POST_REFUND_REQUEST = new ApplicationErrorCode(APP_NAME, 2902,
@@ -93,6 +91,14 @@ public class AccommodationErrorCode {
             " Validation Failed. ");
     public static final ApplicationErrorCode DATA_NOT_FOUND_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 91443,
             " Data not found. ");
+    public static final ApplicationErrorCode REQUIRED_PARAMETERS_MISSING = new ApplicationErrorCode(MOD_NAME, 7064,
+            "Required parameters are missing");
+    public static final ApplicationErrorCode EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED = new ApplicationErrorCode(MOD_NAME, 7090,
+            "External Reference Source or Code required");
+    public static final ApplicationErrorCode ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL = new ApplicationErrorCode(MOD_NAME, 7192,
+            " Accommodation should be in Booked status to be cancelled");
+    public static final ApplicationErrorCode ACCOMMODATIONS_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 7192,
+            "Accommodations not found");
     public static final ApplicationErrorCode COMMENT_LEVEL_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
             " Create Comments Request Invalid ");
     public static final ApplicationErrorCode REQUEST_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
@@ -107,5 +113,4 @@ public class AccommodationErrorCode {
             " External Reference Source or Code required ");
     public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
             " No Accommodation Component found. ");
-
 }
