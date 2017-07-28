@@ -11,10 +11,6 @@ import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_GetAccommodationExternalReferences_bookingWithNoAccommExtRef extends AccommodationBaseTest {
-
-    private String extNum;
-    private String extSrc;
-
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
