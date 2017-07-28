@@ -4,7 +4,7 @@
 	<parameter name="environment" value="latest" />
 	<test name="checkout_CancelOne_CheckinOne_CheckoutOne">
 		<packages>
-			<package name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.Checkout.*"></package>
+			<package name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout.*"></package>
 		</packages>
 	</test> 
 </suite>
