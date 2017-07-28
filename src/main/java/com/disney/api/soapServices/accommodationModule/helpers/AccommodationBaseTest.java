@@ -676,12 +676,6 @@ public class AccommodationBaseTest extends BaseRestTest {
             if (getAddGuest() != null && getAddGuest() == true) {
                 addGuest();
             }
-            if (isBundle() != null && isBundle() == true) {
-                addBundle();
-            }
-            if (isDining() != null && isDining() == true) {
-                addDining();
-            }
             if (isValid(getSetTickets()) && getSetTickets() == true) {
                 TicketsHelper tickets = new TicketsHelper(getEnvironment(), getBook(), getPackageCode());
                 if (isValid(getTicketDescription())) {
@@ -711,6 +705,13 @@ public class AccommodationBaseTest extends BaseRestTest {
 
         if (getSendRequest() == null || getSendRequest() == true) {
             retrieveReservation();
+        }
+
+        if (isBundle() != null && isBundle() == true) {
+            addBundle();
+        }
+        if (isDining() != null && isDining() == true) {
+            addDining();
         }
     }
 
