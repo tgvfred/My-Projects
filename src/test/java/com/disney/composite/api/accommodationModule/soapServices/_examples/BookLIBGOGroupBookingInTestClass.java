@@ -17,7 +17,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class BookWDTCGroupBookingInTestClass extends AccommodationBaseTest {
+public class BookLIBGOGroupBookingInTestClass extends AccommodationBaseTest {
     private String tpPtyId;
     private String odsGuestId;
     private String assignmentOwnerId;
@@ -36,14 +36,13 @@ public class BookWDTCGroupBookingInTestClass extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation" })
-    public void bookWDTCGroupBookingInTestClass() {
+    public void bookLIBGOGroupBookingInTestClass() {
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues();
-        setIsWdtcBooking(true);
-        setAddNewGuest(true);
+        setIsLibgoBooking(true);
         bookReservation();
 
         gatherDataForValidations();

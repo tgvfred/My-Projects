@@ -88,6 +88,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> packageDescription = new ThreadLocal<>();
     private ThreadLocal<String> packageType = new ThreadLocal<>();
     private ThreadLocal<Boolean> isWdtcBooking = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> isLibgoBooking = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isADA = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isBundle = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isDining = new ThreadLocal<Boolean>();
@@ -101,6 +102,9 @@ public class AccommodationBaseTest extends BaseRestTest {
     private RetrieveDetailsByTravelPlanId details;
     private ThreadLocal<String> bundleTcg = new ThreadLocal<>();
     private ScheduledEventReservation diningRes;
+    private ThreadLocal<Boolean> setTickets = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> addTickets = new ThreadLocal<Boolean>();
+    private ThreadLocal<String> ticketDescription = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -429,6 +433,48 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.bundleTcg.get();
     }
 
+    public void setAddTickets(Boolean addTickets) {
+        this.addTickets.set(addTickets);
+    }
+
+    public void setAddTickets(String ticketDescription) {
+        this.setTicketDescription(ticketDescription);
+        this.addTickets.set(true);
+    }
+
+    public Boolean getAddTickets() {
+        return this.addTickets.get();
+    }
+
+    public void setTicketDescription(String ticketDescription) {
+        this.ticketDescription.set(ticketDescription);
+    }
+
+    public String getTicketDescription() {
+        return this.ticketDescription.get();
+    }
+
+    public void setSetTickets(Boolean setTickets) {
+        this.setTickets.set(setTickets);
+    }
+
+    public void setSetTickets(String ticketDescription) {
+        this.setTicketDescription(ticketDescription);
+        this.setTickets.set(true);
+    }
+
+    public Boolean getSetTickets() {
+        return this.setTickets.get();
+    }
+
+    public void setIsLibgoBooking(Boolean isLibgoBooking) {
+        this.isLibgoBooking.set(isLibgoBooking);
+    }
+
+    public Boolean getIsLibgoBooking() {
+        return this.isLibgoBooking.get();
+    }
+
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -559,6 +605,24 @@ public class AccommodationBaseTest extends BaseRestTest {
                     getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
                     getBook().setRoomDetailsBlockCode("01825");
                 }
+                if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
+                    getBook().setExternalReference("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setRoomDetails_ExternalRefs("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                }
+            } else if (isValid(getIsLibgoBooking()) && getIsLibgoBooking() == true) {
+                setPackageBillCode("*DWSL");
+                setPackageDescription("ANN MYW Pkg + Dining");
+                setPackageType("WHOLESALE");
+                try {
+                    getBook().setRoomDetailsBlockCode("01905");
+                } catch (XPathNotFoundException e) {
+                    getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+                    getBook().setRoomDetailsBlockCode("01905");
+                }
+                if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
+                    getBook().setExternalReference("01905", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setRoomDetails_ExternalRefs("01905", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                }
             } else {
                 setPackageBillCode("");
                 setPackageDescription("");
@@ -600,6 +664,24 @@ public class AccommodationBaseTest extends BaseRestTest {
 
             if (getAddGuest() != null && getAddGuest() == true) {
                 addGuest();
+            }
+
+            if (isValid(getSetTickets()) && getSetTickets() == true) {
+                TicketsHelper tickets = new TicketsHelper(getEnvironment(), getBook(), getPackageCode());
+                if (isValid(getTicketDescription())) {
+                    tickets.setTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                } else {
+                    tickets.setTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
+                }
+            }
+
+            if (isValid(getAddTickets()) && getAddTickets() == true) {
+                TicketsHelper tickets = new TicketsHelper(getEnvironment(), getBook(), getPackageCode());
+                if (isValid(getTicketDescription())) {
+                    tickets.addTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                } else {
+                    tickets.addTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
+                }
             }
 
             getBook().sendRequest();
@@ -938,23 +1020,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         return ageType;
     }
 
-    public static boolean isValid(Object o) {
-        boolean valid = false;
-        if (o == null) {
-            valid = false;
-        }
-
-        if (o instanceof String) {
-            if (StringUtils.isEmpty((String) o)) {
-                valid = false;
-            } else {
-                valid = true;
-            }
-        }
-
-        return valid;
-    }
-
     protected void makeFirstNightDeposit() {
         RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
         if (getBook() != null && getBook().getTravelPlanId() != null) {
@@ -1211,5 +1276,42 @@ public class AccommodationBaseTest extends BaseRestTest {
         checkingIn.sendRequest();
         TestReporter.assertTrue(checkingIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getBook().getTravelPlanId() + "]: " + getBook().getFaultString());
 
+    }
+
+    // public static boolean isValid(Object o) {
+    // boolean valid = false;
+    // if (o == null) {
+    // valid = false;
+    // }
+    //
+    // if (o instanceof String) {
+    // if (StringUtils.isEmpty((String) o)) {
+    // valid = false;
+    // } else {
+    // valid = true;
+    // }
+    // }
+    //
+    // return valid;
+    // }
+
+    public static Boolean isValid(Object obj) {
+        Boolean valid = null;
+        if (obj != null) {
+            valid = true;
+        } else {
+            valid = false;
+        }
+
+        if (obj instanceof String) {
+            if (StringUtils.isEmpty(((String) obj))) {
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            return valid;
+        }
     }
 }
