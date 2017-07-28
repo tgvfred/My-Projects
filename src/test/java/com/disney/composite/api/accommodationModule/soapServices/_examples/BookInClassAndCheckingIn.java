@@ -33,7 +33,7 @@ public class BookInClassAndCheckingIn extends AccommodationBaseTest {
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation" })
+    @Test(groups = { "api", "regression", "accommodation", "example" })
     public void bookInClassAndCheckingIn() {
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkingIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());

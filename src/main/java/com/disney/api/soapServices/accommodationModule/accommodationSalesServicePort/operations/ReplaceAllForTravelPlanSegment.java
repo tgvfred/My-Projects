@@ -5,6 +5,8 @@ import static com.disney.api.soapServices.accommodationModule.helpers.Accommodat
 
 import com.disney.AutomationException;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Randomness;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.guestFactory.Address;
@@ -288,7 +290,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     private void setGuest(String baseXpath, Guest guest) {
-        if (isValid(guest)) {
+        if (!isValid(guest)) {
             throw new AutomationException("The guest object cannot be null");
         }
         // setRequestNodeValueByXPath(baseXpath + "/suffix", guest.getSuffix());
@@ -311,7 +313,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     private void setGuestPhone(String baseXpath, Phone phone) {
-        if (isValid(phone)) {
+        if (!isValid(phone)) {
             throw new AutomationException("The phone object cannot be null");
         }
         setRequestNodeValueByXPath(baseXpath + "/phoneDetails/locatorId", phone.getLocatorId());
@@ -323,7 +325,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     private void setGuestAddress(String baseXpath, Address address) {
-        if (isValid(address)) {
+        if (!isValid(address)) {
             throw new AutomationException("The address object cannot be null");
         }
         setRequestNodeValueByXPath(baseXpath + "/addressDetails/locatorId", address.getLocatorId());
@@ -729,25 +731,45 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     private void setExtRefType(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "externalReferenceType", value);
+            try {
+                setRequestNodeValueByXPath(baseXpath + "externalReferenceType", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath(baseXpath.substring(0, baseXpath.lastIndexOf("/")), BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceType"));
+                setRequestNodeValueByXPath(baseXpath + "externalReferenceType", value);
+            }
         }
     }
 
     private void setExtRefCode(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "externalReferenceCode", value);
+            try {
+                setRequestNodeValueByXPath(baseXpath + "externalReferenceCode", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath(baseXpath.substring(0, baseXpath.lastIndexOf("/")), BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceCode"));
+                setRequestNodeValueByXPath(baseXpath + "externalReferenceCode", value);
+            }
         }
     }
 
     private void setExtRefNumber(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "externalReferenceNumber", value);
+            try {
+                setRequestNodeValueByXPath(baseXpath + "externalReferenceNumber", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath(baseXpath.substring(0, baseXpath.lastIndexOf("/")), BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceNumber"));
+                setRequestNodeValueByXPath(baseXpath + "externalReferenceNumber", value);
+            }
         }
     }
 
     private void setExtRefSource(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "externalReferenceSource", value);
+            try {
+                setRequestNodeValueByXPath(baseXpath + "externalReferenceSource", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath(baseXpath.substring(0, baseXpath.lastIndexOf("/")), BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceSource"));
+                setRequestNodeValueByXPath(baseXpath + "externalReferenceSource", value);
+            }
         }
     }
 

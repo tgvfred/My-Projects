@@ -22,6 +22,15 @@ public class AddAccommodationHelper {
     private String resortCode;
     private String roomTypeCode;
     private String packageCode;
+    private Add add;
+
+    public Add getAdd() {
+        return add;
+    }
+
+    public void setAdd(Add add) {
+        this.add = add;
+    }
 
     public String getEnvironment() {
         return environment;
@@ -134,11 +143,11 @@ public class AddAccommodationHelper {
         if (ws instanceof Book) {
             setTpId(((Book) ws).getTravelPlanId());
             setTpsId(((Book) ws).getTravelPlanSegmentId());
-        }
-
-        if (ws instanceof ReplaceAllForTravelPlanSegment) {
+        } else if (ws instanceof ReplaceAllForTravelPlanSegment) {
             setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
             setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
+        } else {
+            throw new AutomationException("The WebService object was not of a type supported by this class.");
         }
     }
 
@@ -165,6 +174,10 @@ public class AddAccommodationHelper {
         addAccommodation.setDeptDate(String.valueOf(Integer.parseInt(getDaysOut()) + Integer.parseInt(getNights())));
         addAccommodation.setLocationID(getLocationId());
         addAccommodation.sendRequest();
+        if (!addAccommodation.getResponseStatusCode().equals("200")) {
+            System.out.println(((Book) getWs()).getRequest());
+            System.out.println(((Book) getWs()).getResponse());
+        }
         TestReporter.assertTrue(addAccommodation.getResponseStatusCode().equals("200"), "Verify that no error occurred adding an accommodation: " + addAccommodation.getFaultString());
         setTcgId(addAccommodation.getTravelComponentGroupingId());
         setTcId(addAccommodation.getTravelComponentId());
