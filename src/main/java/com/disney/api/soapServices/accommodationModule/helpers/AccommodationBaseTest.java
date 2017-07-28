@@ -102,6 +102,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private RetrieveDetailsByTravelPlanId details;
     private ThreadLocal<String> bundleTcg = new ThreadLocal<>();
     private ScheduledEventReservation diningRes;
+    private ThreadLocal<Boolean> sendRequest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> setTickets = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addTickets = new ThreadLocal<Boolean>();
     private ThreadLocal<String> ticketDescription = new ThreadLocal<>();
@@ -412,6 +413,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.skipDeposit.get();
     }
 
+    public void setSendRequest(Boolean sendRequest) {
+        this.sendRequest.set(sendRequest);
+    }
+
+    public Boolean getSendRequest() {
+        return this.sendRequest.get();
+    }
+
     public void setAddNewGuest(Boolean addNewGuest) {
         this.addNewGuest.set(addNewGuest);
         this.addGuest.set(addNewGuest);
@@ -510,6 +519,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                     " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
                     " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
         }
+        setSendRequest(true);
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -525,6 +535,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
         setIsWdtcBooking(false);
         setValues();
+        setSendRequest(true);
         bookReservation();
     }
 
@@ -573,7 +584,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void bookReservation() {
         if (getHouseHold() == null) {
             createHouseHold();
-            hh.get().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
+            hh.get().sendToApi("latest");
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
@@ -665,7 +676,12 @@ public class AccommodationBaseTest extends BaseRestTest {
             if (getAddGuest() != null && getAddGuest() == true) {
                 addGuest();
             }
-
+            if (isBundle() != null && isBundle() == true) {
+                addBundle();
+            }
+            if (isDining() != null && isDining() == true) {
+                addDining();
+            }
             if (isValid(getSetTickets()) && getSetTickets() == true) {
                 TicketsHelper tickets = new TicketsHelper(getEnvironment(), getBook(), getPackageCode());
                 if (isValid(getTicketDescription())) {
@@ -684,18 +700,18 @@ public class AccommodationBaseTest extends BaseRestTest {
                 }
             }
 
-            getBook().sendRequest();
-            TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
-            tries++;
-        } while (!getBook().getResponseStatusCode().equals("200") && tries < maxTries);
+            if (getSendRequest() == null || getSendRequest() == true) {
+                getBook().sendRequest();
+                TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+                tries++;
+            } else {
+                tries = maxTries;
+            }
+        } while ((getSendRequest() == null ? !getBook().getResponseStatusCode().equals("200") : false) && tries < maxTries);
 
-        if (isBundle() != null && isBundle() == true) {
-            addBundle();
+        if (getSendRequest() == null || getSendRequest() == true) {
+            retrieveReservation();
         }
-        if (isDining() != null && isDining() == true) {
-            addDining();
-        }
-        retrieveReservation();
     }
 
     private void addBundle() {
