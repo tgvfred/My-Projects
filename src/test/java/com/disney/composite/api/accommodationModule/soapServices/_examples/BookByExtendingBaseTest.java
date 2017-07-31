@@ -16,7 +16,7 @@ public class BookByExtendingBaseTest extends AccommodationBaseTest {
     private String odsGuestId;
     private String assignmentOwnerId;
 
-    @Test(groups = { "api", "regression", "accommodation" })
+    @Test(groups = { "api", "regression", "accommodation", "example" })
     public void bookByExtendingBaseTest() {
         gatherDataForValidations();
         validations();

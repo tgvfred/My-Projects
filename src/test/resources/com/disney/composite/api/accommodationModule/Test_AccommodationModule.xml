@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="AccommodationModule_Suite" parallel="methods" thread-count="25" >
+<suite name="AccommodationModule_Suite" parallel="methods" thread-count="25" configfailurepolicy="continue">
 	<parameter name="environment" value="${environment}" />
+	<test name="AccommodationModule_checkout" parallel="methods" thread-count="5">
+		<groups>
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
+				<exclude name="dev"/>
+				<!-- <exclude name="debug"/> -->
+				<include name="checkout"></include>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.*"></package>
+		</packages>
+	</test>
 	<test name="AccommodationModule">
 		<groups>
 			<run>
 				<exclude name="presmoke"/>
 				<exclude name="smoke"/>					
 				<exclude name="dev"/>
-				<exclude name="debug"/>
+				<!-- <exclude name="debug"/> -->
+				<exclude name="checkout"></exclude>
 			</run>
 		</groups>
 		<packages>

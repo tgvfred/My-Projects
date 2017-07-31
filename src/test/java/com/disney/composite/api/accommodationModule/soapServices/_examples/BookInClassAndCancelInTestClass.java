@@ -32,7 +32,7 @@ public class BookInClassAndCancelInTestClass extends AccommodationBaseTest {
         cancel();
     }
 
-    @Test(groups = { "api", "regression", "accommodation" })
+    @Test(groups = { "api", "regression", "accommodation", "example" })
     public void bookInClassAndCancelInTestClass() {
         setDaysOut(Randomness.randomNumberBetween(1, 12));
         setNights(Randomness.randomNumberBetween(3, 5));
