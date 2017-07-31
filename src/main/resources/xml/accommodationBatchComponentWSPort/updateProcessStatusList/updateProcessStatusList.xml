@@ -1,13 +1,19 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bat="http://batch.accommodation.transferobject.booking.dreams.wdw.com">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bat="http://batch.accommodation.services.booking.dreams.wdw.com/">
    <soapenv:Header/>
    <soapenv:Body>
-      <bat:updateProcessStatus>
-         <!--Optional:-->
-         <processDataId>?</processDataId>
+      <bat:updateProcessStatusList>
+         <!--Zero or more repetitions:-->
+         <processDataIdList>?</processDataIdList>
          <!--Optional:-->
          <processType>?</processType>
          <!--Optional:-->
-         <context>
+         <processingStatus>?</processingStatus>
+         <!--Optional:-->
+         <tpsId>?</tpsId>
+         <!--Optional:-->
+         <errorMessage>?</errorMessage>
+         <!--Optional:-->
+         <serviceContext>
             <addressRole>?</addressRole>
             <conversationId>?</conversationId>
             <messageId>?</messageId>
@@ -25,7 +31,7 @@
             <requestTimeStamp>?</requestTimeStamp>
             <toAddressRole>?</toAddressRole>
             <userName>?</userName>
-         </context>
-      </bat:updateProcessStatus>
+         </serviceContext>
+      </bat:updateProcessStatusList>
    </soapenv:Body>
 </soapenv:Envelope>

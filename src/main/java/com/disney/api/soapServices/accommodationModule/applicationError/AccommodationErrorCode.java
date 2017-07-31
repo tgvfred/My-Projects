@@ -113,4 +113,10 @@ public class AccommodationErrorCode {
             " External Reference Source or Code required ");
     public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
             " No Accommodation Component found. ");
+
+    private static final String MODULE_NAME = "LILO System";
+
+    // LILO System errors
+    public static final ApplicationErrorCode UNEXPECTED_ERROR = new ApplicationErrorCode(MODULE_NAME, 1001,
+            "Unexpected Error occurred");
 }
