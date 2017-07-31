@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationBatchCompone
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.BookReservations;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Environment;
 import com.disney.utils.PackageCodes;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -197,6 +198,19 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
 
         TestReporter.assertAll();
         validateDBProcessData(processId);
+
+        if (Environment.isSpecialEnvironment(environment)) {
+            GetStagedRecordsForCancel clone = (GetStagedRecordsForCancel) getStaged.clone();
+            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+            clone.sendRequest();
+            if (!clone.getResponseStatusCode().equals("200")) {
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+            }
+            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
+            clone.addExcludedBaselineAttributeValidations("@xsi:type");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(getStaged, true), "Validating Response Comparison");
+        }
 
     }
 

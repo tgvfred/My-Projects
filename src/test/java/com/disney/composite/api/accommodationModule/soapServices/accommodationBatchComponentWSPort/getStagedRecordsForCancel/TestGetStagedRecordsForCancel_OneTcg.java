@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForCancel;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassCancelTransactional;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -90,6 +91,19 @@ public class TestGetStagedRecordsForCancel_OneTcg extends AccommodationBaseTest 
         TestReporter.assertAll();
         validateDBProcessData(processId);
         validateACM_CNCL_PROC_RUN(runID, getStaged);
+
+        if (Environment.isSpecialEnvironment(environment)) {
+            GetStagedRecordsForCancel clone = (GetStagedRecordsForCancel) getStaged.clone();
+            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+            clone.sendRequest();
+            if (!clone.getResponseStatusCode().equals("200")) {
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+            }
+            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
+            clone.addExcludedBaselineAttributeValidations("@xsi:type");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(getStaged, true), "Validating Response Comparison");
+        }
 
     }
 
