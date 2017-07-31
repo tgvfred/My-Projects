@@ -24,4 +24,8 @@ public class RetrieveRates extends AccommodationSalesServicePort{
 	    public String getadditionalChargeOverridden(){
 		    return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/ratedetails/additionalChargeOverridden");
 	    }
+	    public String getRate(){
+	    return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/ratedetails/rackRate/rate");
+	    }
+	    
 }
