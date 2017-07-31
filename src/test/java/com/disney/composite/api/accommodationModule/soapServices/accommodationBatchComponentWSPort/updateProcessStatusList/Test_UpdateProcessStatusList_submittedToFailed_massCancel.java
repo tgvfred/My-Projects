@@ -47,6 +47,8 @@ public class Test_UpdateProcessStatusList_submittedToFailed_massCancel extends A
         // Validations
         helper.validationOverall(helper.retrieveProcRunId(cancel.getResponseProcessId()), "FAILED");
 
+        helper.validationMassCancel(helper.retrieveProcRunId(cancel.getResponseProcessId()), getBook().getTravelPlanId(), getBook().getTravelComponentGroupingId());
+
         // Test Case Only Validations
         validation(helper.retrieveProcRunId(cancel.getResponseProcessId()));
     }

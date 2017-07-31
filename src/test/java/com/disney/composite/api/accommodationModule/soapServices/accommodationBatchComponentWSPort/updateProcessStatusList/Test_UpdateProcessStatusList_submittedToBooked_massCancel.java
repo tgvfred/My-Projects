@@ -37,5 +37,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_massCancel extends A
         // Validations
         helper.validationOverall(helper.retrieveProcRunId(cancel.getResponseProcessId()), "BOOKED");
 
+        helper.validationMassCancel(helper.retrieveProcRunId(cancel.getResponseProcessId()), getBook().getTravelPlanId(), getBook().getTravelComponentGroupingId());
+
     }
 }

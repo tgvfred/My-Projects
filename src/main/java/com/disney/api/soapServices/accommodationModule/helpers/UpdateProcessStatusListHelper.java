@@ -16,10 +16,17 @@ public class UpdateProcessStatusListHelper {
     private String rl;
     private String runID;
     private String id;
-    private String resID;
+    private String cnclID;
     private String stsNM;
     private String idCD;
     private String date;
+    private String tpID;
+    private String tcID;
+    private String tpsID;
+    private String tcgID;
+    private String cntNM;
+    private String cnclRS;
+    private String grpID;
 
     public UpdateProcessStatusListHelper(String environment) {
         this.environment.set(environment);
@@ -122,19 +129,79 @@ public class UpdateProcessStatusListHelper {
 
     }
 
-    public void validationResID(String procRunId, String test) {
+    public void validationMassCancel(String procRunId, String tpid, String tcgid) {
 
-        String sql = "select a.GRP_RES_PROC_RUN_ID, a.RES_ID "
-                + "from res_mgmt.RM_LIST_RES_RUN a "
+        String sql = "select * "
+                + "from res_mgmt.ACM_CNCL_PROC_RUN a "
                 + "where a.GRP_RES_PROC_RUN_ID = '" + procRunId + "'";
 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
-        resID = rs.getValue("RES_ID");
+        cnclID = rs.getValue("ACM_CNCL_PROC_RUN_ID");
+        tpID = rs.getValue("TP_ID");
+        tcgID = rs.getValue("TC_GRP_NB");
+        cntNM = rs.getValue("CNCL_CNTCT_NM");
+        cnclRS = rs.getValue("CNCL_RSN_TX");
 
-        TestReporter.assertEquals(resID, test, "Verify the Reservation ID [" + test + "] matches the Rservation ID found"
-                + " in the DB [" + resID + "]");
+        TestReporter.assertTrue(!(cnclID.equals(null)), "Accommodation Cancel Process Run ID is found! [" + cnclID + "]");
+
+        TestReporter.assertEquals(tpID, tpid, "Verify the Travel Plan ID [" + tpid + "] matches the Travel Plan ID found"
+                + " in the DB [" + tpID + "]");
+
+        TestReporter.assertEquals(tcgID, tcgid, "Verify the Travel Component Grouping ID [" + tcgid + "] matches the Travel Component Grouping ID found"
+                + " in the DB [" + tcgID + "]");
+
+        TestReporter.assertEquals(cntNM, "Cancel Name", "Verify the Cancel Contact Name [Cancel Name] matches the Cancel Contact Name found"
+                + " in the DB [" + cntNM + "]");
+
+        TestReporter.assertEquals(cnclRS, "AIR", "Verify the Cancel Reason [AIR] matches the Cancel Reason found"
+                + " in the DB [" + cnclRS + "]");
+    }
+
+    public void validationMassModify(String procRunId, String tpsid, String tcgid, String tcid) {
+
+        String sql = "select * "
+                + "from res_mgmt.GRP_RES_MOD_RUN a "
+                + "where a.GRP_RES_PROC_RUN_ID = '" + procRunId + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        cnclID = rs.getValue("GRP_RES_MOD_RUN_ID");
+        tpsID = rs.getValue("TPS_ID");
+        tcgID = rs.getValue("TC_GRP_NB");
+        tcID = rs.getValue("TC_ID");
+
+        TestReporter.assertTrue(!(cnclID.equals(null)), "Accommodation Cancel Process Run ID is found! [" + cnclID + "]");
+
+        TestReporter.assertEquals(tpsID, tpsid, "Verify the Travel Plan Segment ID [" + tpsid + "] matches the Travel Plan Segment ID found"
+                + " in the DB [" + tpsID + "]");
+
+        TestReporter.assertEquals(tcgID, tcgid, "Verify the Travel Component Grouping ID [" + tcgid + "] matches the Travel Component Grouping ID found"
+                + " in the DB [" + tcgID + "]");
+
+        TestReporter.assertEquals(tcID, tcid, "Verify the Cancel Contact Name [" + tcid + "] matches the Cancel Contact Name found"
+                + " in the DB [" + tcID + "]");
+    }
+
+    public void validationRemoveGroup(String procRunId, String tcgid) {
+
+        String sql = "select * "
+                + "from res_mgmt.RMVE_GRP_PROC_RUN a "
+                + "where a.GRP_RES_PROC_RUN_ID = '" + procRunId + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        grpID = rs.getValue("RMVE_GRP_PROC_RUN_ID");
+        tcgID = rs.getValue("TC_GRP_NB");
+
+        TestReporter.assertTrue(!(grpID.equals(null)), "Remove Group Process Run ID is found! [" + grpID + "]");
+
+        TestReporter.assertEquals(tcgID, tcgid, "Verify the Travel Component Grouping ID [" + tcgid + "] matches the Travel Component Grouping ID found"
+                + " in the DB [" + tcgID + "]");
 
     }
+
 }

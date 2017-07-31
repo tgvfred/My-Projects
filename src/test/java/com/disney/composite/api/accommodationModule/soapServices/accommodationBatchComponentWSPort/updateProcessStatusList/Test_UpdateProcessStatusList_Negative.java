@@ -40,4 +40,22 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
         validateApplicationError(update, AccommodationErrorCode.UNEXPECTED_ERROR);
 
     }
+
+    // May not be valid
+    @Test(groups = { "api", "regression", "accommodation", "accommodationBatchComponentWS", "UpdateProcessStatusList", "negative" })
+    public void testUpdateProcessStatusList_nullTpsId_roomingList() {
+
+        String faultString = "Unexpected Error occurred : updateProcessStatusList : java.lang.NullPointerException";
+
+        UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
+
+        update.setProcessDataIdList("20264762");
+        update.setProcessType("ROOMINGLIST");
+        update.setProcessingStatus("BOOKED");
+        update.sendRequest();
+
+        TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
+        validateApplicationError(update, AccommodationErrorCode.UNEXPECTED_ERROR);
+
+    }
 }
