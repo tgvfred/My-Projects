@@ -1,7 +1,107 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationBatchComponentWSPort.getStagedRecordsForRemoveGroup;
 
-import com.disney.api.BaseTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
 
-public class TestGetStagedRecordsForRemoveGroup_Positive extends BaseTest {
+import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForRemoveGroup;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageRemoveGroupTransactional;
+import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.RetrieveCrossReferences;
+import com.disney.utils.Environment;
+import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
+public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBaseTest {
+    private static Database db;
+
+    @Parameters("environment")
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass(String environment) {
+        db = new OracleDatabase(environment, Database.DREAMS);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup" })
+    public void testGetStagedRecordsForRemoveGroup_nullProcessDataId() {
+        TestReporter.logScenario("Test - Get Staged Records For Remove Group - Null Process Data ID");
+        GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = buildAndSendRequestAndValidateResponse("");
+        TestReporter.assertEquals(getStagedRecordsForRemoveGroup.getNumberOfResponseNodesByXPath("//return"), 0, "There was no information returned in the response.");
+        validateSpecialEnvironment(getStagedRecordsForRemoveGroup);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup" })
+    public void testGetStagedRecordsForRemoveGroup_oneReservation() {
+        createGroupBooking();
+        String processID = getProcessDataID();
+
+        TestReporter.logScenario("Test - Get Staged Records For Remove Group - One Reservation");
+        GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = buildAndSendRequestAndValidateResponse(processID);
+        validateSpecialEnvironment(getStagedRecordsForRemoveGroup);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup" })
+    public void TestGetStagedRecordsForRemoveGroup_twoReservations() {
+        createGroupBooking();
+        createGroupBooking();
+        String processID = getProcessDataID();
+
+        TestReporter.logScenario("Test - Get Staged Records For Remove Group - Two Reservations");
+        GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = buildAndSendRequestAndValidateResponse(processID);
+        validateSpecialEnvironment(getStagedRecordsForRemoveGroup);
+    }
+
+    /*
+     * Utility functions
+     */
+    private void createGroupBooking() {
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues();
+        setIsWdtcBooking(true);
+        setAddNewGuest(true);
+        bookReservation();
+    }
+
+    private String getProcessDataID() {
+        StageRemoveGroupTransactional stageRemoveGroupTransactional = new StageRemoveGroupTransactional(environment);
+        stageRemoveGroupTransactional.setRequestNodeValueByXPath("//processId", BaseSoapCommands.REMOVE_NODE.toString());
+        stageRemoveGroupTransactional.setTcg(getBook().getTravelComponentGroupingId());
+        stageRemoveGroupTransactional.sendRequest();
+
+        TestReporter.assertEquals(stageRemoveGroupTransactional.getResponseStatusCode(), "200", "The stage remove group transaction precondition succeeded.");
+
+        String sql = "select b.GRP_RES_PROC_RUN_ID"
+                + " from res_mgmt.GRP_RES_PROC a"
+                + " join res_mgmt.GRP_RES_PROC_RUN b on a.GRP_RES_PROC_ID = b.GRP_RES_PROC_ID"
+                + " where a.GRP_RES_PROC_ID = " + stageRemoveGroupTransactional.getResponseProcessId();
+
+        Recordset results = new Recordset(db.getResultSet(sql));
+        TestReporter.assertGreaterThanZero(results.getRowCount());
+
+        return results.getValue("GRP_RES_PROC_RUN_ID");
+    }
+
+    private GetStagedRecordsForRemoveGroup buildAndSendRequestAndValidateResponse(String pdID) {
+        GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = new GetStagedRecordsForRemoveGroup(environment);
+        getStagedRecordsForRemoveGroup.setProcessDataID(pdID);
+        getStagedRecordsForRemoveGroup.sendRequest();
+
+        TestReporter.logAPI(!getStagedRecordsForRemoveGroup.getResponseStatusCode().equals("200"), "The request was not successful.", getStagedRecordsForRemoveGroup);
+
+        return getStagedRecordsForRemoveGroup;
+    }
+
+    private void validateSpecialEnvironment(GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup) {
+        if (Environment.isSpecialEnvironment(environment) || isComo.equals("true")) {
+            RetrieveCrossReferences getStagedRecordsForRemoveGroupBaseLine = (RetrieveCrossReferences) getStagedRecordsForRemoveGroup.clone();
+            getStagedRecordsForRemoveGroupBaseLine.setEnvironment(Environment.getBaseEnvironmentName(environment));
+            getStagedRecordsForRemoveGroupBaseLine.sendRequest();
+            TestReporter.assertTrue(getStagedRecordsForRemoveGroup.validateResponseNodeQuantity(getStagedRecordsForRemoveGroupBaseLine), "Response Node Validation Result");
+        }
+    }
 }
