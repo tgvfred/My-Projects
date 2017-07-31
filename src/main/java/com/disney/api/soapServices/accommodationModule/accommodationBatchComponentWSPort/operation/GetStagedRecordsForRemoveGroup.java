@@ -25,6 +25,33 @@ public class GetStagedRecordsForRemoveGroup extends AccommodationBatchComponentW
     /*
      * Response getters
      */
+    public String getRoomExternalReferenceNumber() {
+        return tryGetResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForRemoveGroupResponse/return/roomDetail/externalReferences/externalReferenceNumber");
+    }
+
+    public String getRoomPackageCode() {
+        return tryGetResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForRemoveGroupResponse/return/roomDetail/packageCode");
+    }
+
+    public String getRoomResortCode() {
+        return tryGetResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForRemoveGroupResponse/return/roomDetail/resortCode");
+    }
+
+    public String getRoomTypeCode() {
+        return tryGetResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForRemoveGroupResponse/return/roomDetail/roomTypeCode");
+    }
+
+    public String getRoomTravelComponentGroupingID() {
+        return tryGetResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForRemoveGroupResponse/return/roomDetail/travelComponentGroupingId");
+    }
+
+    public String getRoomTravelComponentID() {
+        return tryGetResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForRemoveGroupResponse/return/roomDetail/travelComponentId");
+    }
+
+    public String getTravelPlanSegmentID() {
+        return tryGetResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForRemoveGroupResponse/return/travelPlanSegmentId");
+    }
 
     /*
      * Utility functions

@@ -16,19 +16,20 @@ import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBaseTest {
-    private static Database db;
+    private static Database db, recdb;
 
     @Parameters("environment")
     @BeforeClass(alwaysRun = true)
     public void beforeClass(String environment) {
         db = new OracleDatabase(environment, Database.DREAMS);
+        recdb = new OracleDatabase(environment, Database.RECOMMENDER);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup" })
     public void testGetStagedRecordsForRemoveGroup_nullProcessDataId() {
         TestReporter.logScenario("Test - Get Staged Records For Remove Group - Null Process Data ID");
+
         GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = buildAndSendRequestAndValidateResponse("");
-        TestReporter.assertEquals(getStagedRecordsForRemoveGroup.getNumberOfResponseNodesByXPath("//return"), 0, "There was no information returned in the response.");
         validateSpecialEnvironment(getStagedRecordsForRemoveGroup);
     }
 
@@ -38,6 +39,7 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
         String processID = getProcessDataID();
 
         TestReporter.logScenario("Test - Get Staged Records For Remove Group - One Reservation");
+
         GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = buildAndSendRequestAndValidateResponse(processID);
         validateSpecialEnvironment(getStagedRecordsForRemoveGroup);
     }
@@ -49,6 +51,7 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
         String processID = getProcessDataID();
 
         TestReporter.logScenario("Test - Get Staged Records For Remove Group - Two Reservations");
+
         GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = buildAndSendRequestAndValidateResponse(processID);
         validateSpecialEnvironment(getStagedRecordsForRemoveGroup);
     }
@@ -92,7 +95,26 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
         getStagedRecordsForRemoveGroup.sendRequest();
 
         TestReporter.logAPI(!getStagedRecordsForRemoveGroup.getResponseStatusCode().equals("200"), "The request was not successful.", getStagedRecordsForRemoveGroup);
+        if (pdID.isEmpty()) {
+            TestReporter.assertEquals(getStagedRecordsForRemoveGroup.getNumberOfResponseNodesByXPath("//return"), 0, "There was no information returned in the response.");
+        } else {
+            try {
+                Recordset results = new Recordset(recdb.getResultSet("select a.PLAN_TYPE from pma_wdw.pkg a"
+                        + " where a.pkg_cd = '" + getStagedRecordsForRemoveGroup.getRoomPackageCode() + "'"));
 
+                TestReporter.softAssertEquals(getExternalRefNumber(), getStagedRecordsForRemoveGroup.getRoomExternalReferenceNumber(), "The External Reference Number in the response was equal to the one in the request.");
+                TestReporter.softAssertEquals(getBook().getTravelPlanSegmentId(), getStagedRecordsForRemoveGroup.getTravelPlanSegmentID(), "The TPS ID in the response was equal to the one in the request.");
+                TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), getStagedRecordsForRemoveGroup.getRoomTravelComponentGroupingID(), "The TCG ID in the response was equal to the one in the request.");
+                TestReporter.softAssertEquals(getBook().getTravelComponentId(), getStagedRecordsForRemoveGroup.getRoomTravelComponentID(), "The TC ID in the response was equal to the one in the request.");
+                TestReporter.softAssertEquals(getResortCode(), getStagedRecordsForRemoveGroup.getRoomResortCode(), "The Resort Code in the response was equal to the one in the request.");
+                TestReporter.softAssertEquals(getRoomTypeCode(), getStagedRecordsForRemoveGroup.getRoomTypeCode(), "The Room Type Code in the response was equal to the one in the request.");
+                if (TestReporter.softAssertTrue(results.getRowCount() > 0, "The Package Code Plan Type was found in the database.")) {
+                    TestReporter.softAssertEquals(results.getValue("PLAN_TYPE"), "Room Only", "The Package Code in the response was not a group booking.");
+                }
+            } finally {
+                TestReporter.assertAll();
+            }
+        }
         return getStagedRecordsForRemoveGroup;
     }
 
