@@ -36,7 +36,7 @@ public class TestCancel_RO_Shared extends TravelPlanBaseTest {
         book = book();
         hh = getHouseHold();
 
-        Share share = new Share(environment.toLowerCase().replace("_cm", ""), "Share");
+        Share share = new Share(environment.toLowerCase().replace("_cm", ""));
         share.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
         share.setRequestNodeValueByXPath("/Envelope/Body/share/request/roomNumber", "fx:removenode");
         share.setRequestNodeValueByXPath("/Envelope/Body/share/request/locationId", getLocationId());

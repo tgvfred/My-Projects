@@ -4,12 +4,11 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.utils.XMLTools;
 
 public class Share extends AccommodationSalesServicePort{
-	public Share(String environment, String scenario) {
+	public Share(String environment) {
 		super(environment);
 		//Generate a request from a project xml file
 		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("share")));
 	    generateServiceContext();			
-	    setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
 		removeComments() ;
 		removeWhiteSpace();
 		}
@@ -17,10 +16,25 @@ public class Share extends AccommodationSalesServicePort{
 	public void setTravelComponentGroupingId(String tcg_id){
 	setRequestNodeValueByXPath("/Envelope/Body/share/request/sharedComponents/travelComponentGroupingId", tcg_id);
     }
+
+	public void setRoomNumber(String value){
+	setRequestNodeValueByXPath("/Envelope/Body/share/request/roomNumber", value);
+    }
+
+	public void setLocationId(String value){
+	setRequestNodeValueByXPath("/Envelope/Body/share/request/locationId", value);
+    }
+	
     public String getTravelComponentGroupingId(){
     return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentGroupingId");
     } 
+    
     public String getTravelComponentId(){
         return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentId");
-        } 
+    }
+    
+    public String getTravelPlanSegmentId(){
+        return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/travelPlanSegmentId");
+    } 
+    
 }
