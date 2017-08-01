@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Test_UpdateProcessStatusList_multipleProcessDataIdList_submitOne" data-provider-thread-count="3">
+	<parameter name="environment" value="latest" />
+	<test name="Test_UpdateProcessStatusList_multipleProcessDataIdList_submitOne">
+		<classes>
+			<class
+				name="com.disney.composite.api.accommodationModule.soapServices.accommodationBatchComponentWSPort.updateProcessStatusList.Test_UpdateProcessStatusList_multipleProcessDataIdList_submitOne"/>
+		</classes>
+	</test>
+</suite>

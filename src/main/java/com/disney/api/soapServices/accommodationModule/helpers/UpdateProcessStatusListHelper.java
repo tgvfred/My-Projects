@@ -27,6 +27,8 @@ public class UpdateProcessStatusListHelper {
     private String cntNM;
     private String cnclRS;
     private String grpID;
+    private String runID1;
+    private String runID2;
 
     public UpdateProcessStatusListHelper(String environment) {
         this.environment.set(environment);
@@ -101,6 +103,38 @@ public class UpdateProcessStatusListHelper {
         this.id = runID;
 
         return runID;
+    }
+
+    public String retrieveProcRunIdMulti1(String processId) {
+
+        String sql = "select b.GRP_RES_PROC_ID, b.GRP_RES_PROC_RUN_ID, b.GRP_RES_PROC_RUN_STS_NM "
+                + "from res_mgmt.GRP_RES_PROC a "
+                + "join res_mgmt.GRP_RES_PROC_RUN b on a.GRP_RES_PROC_ID = b.GRP_RES_PROC_ID "
+                + "where a.GRP_RES_PROC_ID in '" + processId + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        runID1 = rs.getValue("GRP_RES_PROC_RUN_ID", 1);
+        this.id = runID1;
+
+        return runID1;
+    }
+
+    public String retrieveProcRunIdMulti2(String processId) {
+
+        String sql = "select b.GRP_RES_PROC_ID, b.GRP_RES_PROC_RUN_ID, b.GRP_RES_PROC_RUN_STS_NM "
+                + "from res_mgmt.GRP_RES_PROC a "
+                + "join res_mgmt.GRP_RES_PROC_RUN b on a.GRP_RES_PROC_ID = b.GRP_RES_PROC_ID "
+                + "where a.GRP_RES_PROC_ID in '" + processId + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        runID2 = rs.getValue("GRP_RES_PROC_RUN_ID", 2);
+        this.id = runID2;
+
+        return runID2;
     }
 
     // Validations

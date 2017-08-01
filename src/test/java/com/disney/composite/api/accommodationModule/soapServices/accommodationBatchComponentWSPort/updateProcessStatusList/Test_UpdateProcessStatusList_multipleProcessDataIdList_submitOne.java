@@ -11,7 +11,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
 import com.disney.utils.TestReporter;
 
-public class Test_UpdateProcessStatusList_multipleProcessDataIdList extends AccommodationBaseTest {
+public class Test_UpdateProcessStatusList_multipleProcessDataIdList_submitOne extends AccommodationBaseTest {
 
     private ReplaceAllForTravelPlanSegment book;
     private ReplaceAllForTravelPlanSegment book1;
@@ -39,7 +39,7 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList extends Acco
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationBatchComponentWS", "UpdateProcessStatusList" })
-    public void testUpdateProcessStatusList_multipleProcessDataIdList() {
+    public void testUpdateProcessStatusList_multipleProcessDataIdList_submitOne() {
 
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
@@ -64,10 +64,9 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList extends Acco
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]", cancel);
 
-        UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "MainMultiID");
+        UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
 
         update.setProcessDataIdList(helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()));
-        update.setRequestNodeValueByXPath("/Envelope/Body/updateProcessStatusList/processDataIdList[2]", helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()));
         update.setProcessType("MASS_CANCEL");
         update.setProcessingStatus("BOOKED");
         update.sendRequest();
@@ -75,12 +74,10 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList extends Acco
 
         // Validations
         TestReporter.logStep("Multiple Proc Run ID's found in the DB: first Proc Run ID [" + helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()) + "] & second Proc Run ID [" + helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()) + "]");
-
-        TestReporter.logStep("Verify status for first Proc Run ID [" + helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()) + "] has been updated:");
+        TestReporter.logStep("Verify submitted Proc Run ID [" + helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()) + "] has an updated status:");
         helper.validationOverall(helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()), "BOOKED");
 
-        TestReporter.logStep("Verify status for second Proc Run ID [" + helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()) + "] has been updated:");
-        helper.validationOverall(helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()), "BOOKED");
-
+        TestReporter.logStep("Verify second Proc Run ID [" + helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()) + "] doesn't have an updated status:");
+        helper.validationOverall(helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()), "SUBMITTED");
     }
 }

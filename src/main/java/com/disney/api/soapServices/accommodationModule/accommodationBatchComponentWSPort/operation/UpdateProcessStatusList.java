@@ -34,6 +34,15 @@ public class UpdateProcessStatusList extends AccommodationBatchComponentWSPort {
         setRequestNodeValueByXPath("/Envelope/Body/updateProcessStatusList/processDataIdList", value);
     }
 
+    public void setProcessDataIdList2(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/updateProcessStatusList/processDataIdList[2]", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/updateProcessStatusList", BaseSoapCommands.ADD_NODE.commandAppend("processDataIdList[2]"));
+            setRequestNodeValueByXPath("/Envelope/Body/updateProcessStatusList/processDataIdList[2]", value);
+        }
+    }
+
     public void setProcessType(String value) {
         try {
             setRequestNodeValueByXPath("/Envelope/Body/updateProcessStatusList/processType", value);
