@@ -173,7 +173,7 @@ public class UpdateProcessStatusListHelper {
         tcgID = rs.getValue("TC_GRP_NB");
         tcID = rs.getValue("TC_ID");
 
-        TestReporter.assertTrue(!(cnclID.equals(null)), "Accommodation Cancel Process Run ID is found! [" + cnclID + "]");
+        TestReporter.assertTrue(!(cnclID.equals(null)), "Group Reservation Modify Run ID is found! [" + cnclID + "]");
 
         TestReporter.assertEquals(tpsID, tpsid, "Verify the Travel Plan Segment ID [" + tpsid + "] matches the Travel Plan Segment ID found"
                 + " in the DB [" + tpsID + "]");
@@ -181,7 +181,7 @@ public class UpdateProcessStatusListHelper {
         TestReporter.assertEquals(tcgID, tcgid, "Verify the Travel Component Grouping ID [" + tcgid + "] matches the Travel Component Grouping ID found"
                 + " in the DB [" + tcgID + "]");
 
-        TestReporter.assertEquals(tcID, tcid, "Verify the Cancel Contact Name [" + tcid + "] matches the Cancel Contact Name found"
+        TestReporter.assertEquals(tcID, tcid, "Verify the Travel Component ID [" + tcid + "] matches the Travel Component ID found"
                 + " in the DB [" + tcID + "]");
     }
 

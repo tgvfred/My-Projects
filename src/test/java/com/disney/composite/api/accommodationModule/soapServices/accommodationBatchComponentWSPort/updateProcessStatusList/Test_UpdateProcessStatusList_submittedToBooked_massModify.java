@@ -15,7 +15,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_massModify extends A
 
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
-        StageMassModifyTransactional modify = new StageMassModifyTransactional(environment, "Main");
+        StageMassModifyTransactional modify = new StageMassModifyTransactional(environment, "MainProcLst");
 
         modify.setProcessName("MASS_MODIFY");
         modify.setMassModifyRoomDetailTcId(getBook().getTravelComponentId());
