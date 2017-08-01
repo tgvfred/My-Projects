@@ -11,8 +11,6 @@ import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveRates_wdtc_twoNights extends AccommodationBaseTest {
-    private CheckInHelper helper;
-
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
@@ -30,9 +28,6 @@ public class TestRetrieveRates_wdtc_twoNights extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
     public void TestRetrieveRates_WDTC_twoNights() {
         String tcgId = getBook().getTravelComponentGroupingId();
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-
         TestReporter.logScenario("Retrieve Rates for Two Night");
         RetrieveRates RetrieveRates = new RetrieveRates(environment, "retrieveRates");
         RetrieveRates.setTravelComponentGroupingId(tcgId);

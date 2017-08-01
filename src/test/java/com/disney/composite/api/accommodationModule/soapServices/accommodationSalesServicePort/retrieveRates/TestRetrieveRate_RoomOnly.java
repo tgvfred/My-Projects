@@ -29,9 +29,7 @@ public class TestRetrieveRate_RoomOnly extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
     public void TestRetrieveRates_roomOnly_oneNight() {
         String tcgId = getBook().getTravelComponentGroupingId();
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-
+        
         TestReporter.logScenario("Retrieve Rates One Night");
         RetrieveRates RetrieveRates = new RetrieveRates(environment, "retrieveRates");
         RetrieveRates.setTravelComponentGroupingId(tcgId);
