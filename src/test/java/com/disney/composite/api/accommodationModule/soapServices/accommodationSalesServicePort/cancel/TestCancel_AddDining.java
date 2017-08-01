@@ -10,10 +10,10 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
-public class TestCancel_AddDining extends AccommodationBaseTest{
-		
-	@Override
-	@BeforeMethod(alwaysRun = true)
+public class TestCancel_AddDining extends AccommodationBaseTest {
+
+    @Override
+    @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
@@ -29,16 +29,16 @@ public class TestCancel_AddDining extends AccommodationBaseTest{
         setIsDining(true);
         bookReservation();
     }
-		
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "Cancel"})
-	public void testCancel_AddDining(){
-		TestReporter.logScenario("Test Cancel Add Dining");
-	    
-		Cancel cancel = new Cancel(environment, "Main");
-		cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
-		cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-		cancel.sendRequest();
-		TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
-		TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
-	}
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    public void testCancel_AddDining() {
+        TestReporter.logScenario("Test Cancel Add Dining");
+
+        Cancel cancel = new Cancel(environment, "Main");
+        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
+        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.sendRequest();
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
+    }
 }

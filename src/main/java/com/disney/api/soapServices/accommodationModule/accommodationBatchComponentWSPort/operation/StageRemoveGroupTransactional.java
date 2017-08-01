@@ -7,6 +7,17 @@ public class StageRemoveGroupTransactional extends AccommodationBatchComponentWS
     private String defaultProcessName = REMOVEGROUP;
     private String processName;
 
+    public StageRemoveGroupTransactional(String environment) {
+        super(environment);
+
+        // Generate a request from a project xml file
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("stageRemoveGroupTransactional")));
+        removeComments();
+        removeWhiteSpace();
+        generateServiceContext();
+        setProcessName(getLocalDefaultProcessName());
+    }
+
     public StageRemoveGroupTransactional(String environment, String scenario) {
         super(environment);
 
