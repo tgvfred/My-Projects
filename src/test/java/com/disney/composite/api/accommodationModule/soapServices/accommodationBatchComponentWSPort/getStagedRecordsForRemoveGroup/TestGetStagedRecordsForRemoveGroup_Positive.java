@@ -1,5 +1,7 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationBatchComponentWSPort.getStagedRecordsForRemoveGroup;
 
+import java.util.LinkedHashMap;
+
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -44,15 +46,17 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
         validateSpecialEnvironment(getStagedRecordsForRemoveGroup);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup", "debug" })
     public void TestGetStagedRecordsForRemoveGroup_twoReservations() {
         createGroupBooking();
+        String firstTcg = getBook().getTravelComponentGroupingId();
         createGroupBooking();
-        String processID = getProcessDataID();
+        String secondTcg = getBook().getTravelComponentGroupingId();
+        LinkedHashMap<Integer, String> procRunIds = getProcessDataID(firstTcg, secondTcg);
 
         TestReporter.logScenario("Test - Get Staged Records For Remove Group - Two Reservations");
 
-        GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = buildAndSendRequestAndValidateResponse(processID);
+        GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = buildAndSendRequestAndValidateResponse(procRunIds);
         validateSpecialEnvironment(getStagedRecordsForRemoveGroup);
     }
 
@@ -89,6 +93,34 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
         return results.getValue("GRP_RES_PROC_RUN_ID");
     }
 
+    private LinkedHashMap<Integer, String> getProcessDataID(String firstTcg, String secondTcg) {
+        StageRemoveGroupTransactional stageRemoveGroupTransactional = new StageRemoveGroupTransactional(environment);
+        stageRemoveGroupTransactional.setRequestNodeValueByXPath("//processId", BaseSoapCommands.REMOVE_NODE.toString());
+        stageRemoveGroupTransactional.setTcg(firstTcg);
+        stageRemoveGroupTransactional.setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupTransactional/request", BaseSoapCommands.ADD_NODE.commandAppend("travelComponentGroupNoList"));
+        stageRemoveGroupTransactional.setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupTransactional/request/travelComponentGroupNoList[2]", secondTcg);
+        stageRemoveGroupTransactional.sendRequest();
+
+        TestReporter.assertEquals(stageRemoveGroupTransactional.getResponseStatusCode(), "200", "The stage remove group transaction precondition succeeded.");
+
+        String sql = "select b.GRP_RES_PROC_RUN_ID"
+                + " from res_mgmt.GRP_RES_PROC a"
+                + " join res_mgmt.GRP_RES_PROC_RUN b on a.GRP_RES_PROC_ID = b.GRP_RES_PROC_ID"
+                + " where a.GRP_RES_PROC_ID = " + stageRemoveGroupTransactional.getResponseProcessId();
+
+        Recordset results = new Recordset(db.getResultSet(sql));
+        TestReporter.assertGreaterThanZero(results.getRowCount());
+
+        LinkedHashMap<Integer, String> procRunIds = new LinkedHashMap<>();
+        int index = 0;
+        do {
+            procRunIds.put(index, results.getValue("GRP_RES_PROC_RUN_ID"));
+            results.moveNext();
+            index++;
+        } while (results.hasNext());
+        return procRunIds;
+    }
+
     private GetStagedRecordsForRemoveGroup buildAndSendRequestAndValidateResponse(String pdID) {
         GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = new GetStagedRecordsForRemoveGroup(environment);
         getStagedRecordsForRemoveGroup.setProcessDataID(pdID);
@@ -114,6 +146,35 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
             } finally {
                 TestReporter.assertAll();
             }
+        }
+        return getStagedRecordsForRemoveGroup;
+    }
+
+    private GetStagedRecordsForRemoveGroup buildAndSendRequestAndValidateResponse(LinkedHashMap<Integer, String> procRunIds) {
+
+        GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = new GetStagedRecordsForRemoveGroup(environment);
+        getStagedRecordsForRemoveGroup.setProcessDataID(procRunIds.get(0));
+        getStagedRecordsForRemoveGroup.setRequestNodeValueByXPath("Envelope/Body/getStagedRecordsForRemoveGroup", BaseSoapCommands.ADD_NODE.commandAppend("processDataId"));
+        getStagedRecordsForRemoveGroup.setRequestNodeValueByXPath("Envelope/Body/getStagedRecordsForRemoveGroup/processDataId[2]", procRunIds.get(1));
+        getStagedRecordsForRemoveGroup.sendRequest();
+
+        TestReporter.logAPI(!getStagedRecordsForRemoveGroup.getResponseStatusCode().equals("200"), "The request was not successful.", getStagedRecordsForRemoveGroup);
+        TestReporter.softAssertTrue(getStagedRecordsForRemoveGroup.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForRemoveGroupResponse/return") == 2, "Verify that 2 return nodes are returned.");
+        try {
+            Recordset results = new Recordset(recdb.getResultSet("select a.PLAN_TYPE from pma_wdw.pkg a"
+                    + " where a.pkg_cd = '" + getStagedRecordsForRemoveGroup.getRoomPackageCode() + "'"));
+
+            TestReporter.softAssertEquals(getExternalRefNumber(), getStagedRecordsForRemoveGroup.getRoomExternalReferenceNumber(), "The External Reference Number in the response was equal to the one in the request.");
+            TestReporter.softAssertEquals(getBook().getTravelPlanSegmentId(), getStagedRecordsForRemoveGroup.getTravelPlanSegmentID(), "The TPS ID in the response was equal to the one in the request.");
+            TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), getStagedRecordsForRemoveGroup.getRoomTravelComponentGroupingID(), "The TCG ID in the response was equal to the one in the request.");
+            TestReporter.softAssertEquals(getBook().getTravelComponentId(), getStagedRecordsForRemoveGroup.getRoomTravelComponentID(), "The TC ID in the response was equal to the one in the request.");
+            TestReporter.softAssertEquals(getResortCode(), getStagedRecordsForRemoveGroup.getRoomResortCode(), "The Resort Code in the response was equal to the one in the request.");
+            TestReporter.softAssertEquals(getRoomTypeCode(), getStagedRecordsForRemoveGroup.getRoomTypeCode(), "The Room Type Code in the response was equal to the one in the request.");
+            if (TestReporter.softAssertTrue(results.getRowCount() > 0, "The Package Code Plan Type was found in the database.")) {
+                TestReporter.softAssertEquals(results.getValue("PLAN_TYPE"), "Room Only", "The Package Code in the response was not a group booking.");
+            }
+        } finally {
+            TestReporter.assertAll();
         }
         return getStagedRecordsForRemoveGroup;
     }
