@@ -3,38 +3,43 @@ package com.disney.api.soapServices.accommodationModule.accommodationSalesServic
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.utils.XMLTools;
 
-public class Share extends AccommodationSalesServicePort{
-	public Share(String environment) {
-		super(environment);
-		//Generate a request from a project xml file
-		setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("share")));
-	    generateServiceContext();			
-		removeComments() ;
-		removeWhiteSpace();
-		}
-	
-	public void setTravelComponentGroupingId(String tcg_id){
-	setRequestNodeValueByXPath("/Envelope/Body/share/request/sharedComponents/travelComponentGroupingId", tcg_id);
+public class Share extends AccommodationSalesServicePort {
+    public Share(String environment, String scenario) {
+        super(environment);
+        // Generate a request from a project xml file
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("share")));
+        setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
+        generateServiceContext();
+        removeComments();
+        removeWhiteSpace();
     }
 
-	public void setRoomNumber(String value){
-	setRequestNodeValueByXPath("/Envelope/Body/share/request/roomNumber", value);
+    public void setTravelComponentGroupingId(String tcg_id) {
+        setRequestNodeValueByXPath("/Envelope/Body/share/request/sharedComponents/travelComponentGroupingId", tcg_id);
     }
 
-	public void setLocationId(String value){
-	setRequestNodeValueByXPath("/Envelope/Body/share/request/locationId", value);
+    public void setRoomNumber(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/share/request/roomNumber", value);
     }
-	
-    public String getTravelComponentGroupingId(){
-    return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentGroupingId");
-    } 
-    
-    public String getTravelComponentId(){
+
+    public void setLocationId(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/share/request/locationId", value);
+    }
+
+    public String getTravelComponentGroupingId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getTravelComponentId() {
         return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentId");
     }
-    
-    public String getTravelPlanSegmentId(){
+
+    public String getTravelPlanSegmentId() {
         return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/travelPlanSegmentId");
-    } 
-    
+    }
+
+    public String getBookingDate() {
+        return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/bookingDate");
+    }
+
 }
