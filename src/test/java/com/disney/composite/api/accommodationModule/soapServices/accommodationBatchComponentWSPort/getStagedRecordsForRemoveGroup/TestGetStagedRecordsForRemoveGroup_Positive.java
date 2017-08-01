@@ -10,7 +10,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationBatchCompone
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageRemoveGroupTransactional;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.RetrieveCrossReferences;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -181,7 +180,7 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
 
     private void validateSpecialEnvironment(GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup) {
         if (Environment.isSpecialEnvironment(environment) || isComo.equals("true")) {
-            RetrieveCrossReferences getStagedRecordsForRemoveGroupBaseLine = (RetrieveCrossReferences) getStagedRecordsForRemoveGroup.clone();
+            GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroupBaseLine = (GetStagedRecordsForRemoveGroup) getStagedRecordsForRemoveGroup.clone();
             getStagedRecordsForRemoveGroupBaseLine.setEnvironment(Environment.getBaseEnvironmentName(environment));
             getStagedRecordsForRemoveGroupBaseLine.sendRequest();
             TestReporter.assertTrue(getStagedRecordsForRemoveGroup.validateResponseNodeQuantity(getStagedRecordsForRemoveGroupBaseLine), "Response Node Validation Result");
