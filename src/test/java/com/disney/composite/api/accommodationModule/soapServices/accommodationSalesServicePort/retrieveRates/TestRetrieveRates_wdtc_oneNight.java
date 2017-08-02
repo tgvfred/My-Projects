@@ -35,7 +35,7 @@ public class TestRetrieveRates_wdtc_oneNight extends AccommodationBaseTest {
         RetrieveRates.setTravelComponentGroupingId(tcgId);
         RetrieveRates.sendRequest();
         TestReporter.logAPI(!RetrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving rates", RetrieveRates);
-        TestReporter.assertNotNull(RetrieveRates.getRate(), "The response contains a rate");
+        TestReporter.assertNotNull(RetrieveRates.getRackRate(), "The response contains a rate");
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
