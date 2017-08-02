@@ -28,7 +28,7 @@ public class RetrieveTravelPlanMediaCustomization extends AccommodationSalesServ
 	public void setParty2Type(String value ){setRequestNodeValueByXPath("/Envelope/Body/retrieveTravelPlanMediaCustomization/serviceContext/party2Type",value);}
 	
 	//Getters
-	public String getIsFacilityEligible() {return getResponseNodeValueByXPath("/Envelope/Body/retrieveTravelPlanMediaCustomization/response/isFacilityEligible");}
+	public String getIsFacilityEligible() {return getResponseNodeValueByXPath("/Envelope/Body/retrieveTravelPlanMediaCustomizationResponse/response/isFacilityEligible");}
 }
 
 //<serviceContext>

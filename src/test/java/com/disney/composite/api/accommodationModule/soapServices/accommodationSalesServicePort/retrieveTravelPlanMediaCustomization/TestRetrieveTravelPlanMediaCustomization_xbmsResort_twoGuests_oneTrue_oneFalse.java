@@ -1,14 +1,12 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveTravelPlanMediaCustomization;
 
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.RetrieveTravelPlanMediaCustomization;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveTravelPlanMediaCustomization;
 
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.RetrieveTravelPlanMediaCustomization;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -21,8 +19,12 @@ public class TestRetrieveTravelPlanMediaCustomization_xbmsResort_twoGuests_oneTr
 	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "retrieveTravelPlanMediaCustomization"})
 	public void TestRetrieveTravelPlanMediaCustomization_xbmsResort_twoGuests_oneTrue_oneFalse(){
 		String facilityId = getFacilityId();
-		String resortCode = ResortInfo.getResortCode(ResortColumns.FACILITY_ID, getFacilityId());
+		String resortCode = "1U";
 		String locationId = ResortInfo.getLocationID(ResortColumns.FACILITY_ID, getFacilityId());
+		String party1Id = getPartyId();
+		String party1Type = "true";
+		String party2Id = getPartyId();
+		String party2Type = "false";
 		String expectedFacilityEligibility = "false";
 				
 		RetrieveTravelPlanMediaCustomization retrieve = new RetrieveTravelPlanMediaCustomization(environment, "main");
@@ -30,6 +32,10 @@ public class TestRetrieveTravelPlanMediaCustomization_xbmsResort_twoGuests_oneTr
 		retrieve.setTravelPlanId(getBook().getTravelPlanId());
 		retrieve.setResortCode(resortCode);
 		retrieve.setLocationId(locationId);
+		retrieve.setRequestNodeValueByXPath("/Envelope/Body/retrieveTravelPlanMediaCustomization/serviceContext/party1Id", party1Id);
+		retrieve.setRequestNodeValueByXPath("/Envelope/Body/retrieveTravelPlanMediaCustomization/serviceContext/party1Type", party1Type);
+		retrieve.setRequestNodeValueByXPath("/Envelope/Body/retrieveTravelPlanMediaCustomization/serviceContext/party2Id", party2Id);
+		retrieve.setRequestNodeValueByXPath("/Envelope/Body/retrieveTravelPlanMediaCustomization/serviceContext/party2Type", party2Type);
 		retrieve.sendRequest();
 		
 		//Validate old vs. new service

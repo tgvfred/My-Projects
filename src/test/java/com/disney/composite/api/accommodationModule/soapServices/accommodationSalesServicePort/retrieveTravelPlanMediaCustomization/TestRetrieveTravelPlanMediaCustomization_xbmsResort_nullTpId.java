@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.RetrieveTravelPlanMediaCustomization;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveTravelPlanMediaCustomization;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
