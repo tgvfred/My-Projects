@@ -14,6 +14,16 @@ public class Share extends AccommodationSalesServicePort {
         removeWhiteSpace();
     }
 
+    public Share(String environment) {
+        super(environment);
+        // Generate a request from a project xml file
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("share")));
+
+        generateServiceContext();
+        removeComments();
+        removeWhiteSpace();
+    }
+
     public void setTravelComponentGroupingId(String tcg_id) {
         setRequestNodeValueByXPath("/Envelope/Body/share/request/sharedComponents/travelComponentGroupingId", tcg_id);
     }
@@ -40,6 +50,14 @@ public class Share extends AccommodationSalesServicePort {
 
     public String getBookingDate() {
         return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/bookingDate");
+    }
+
+    public String getTravelStatus() {
+        return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelStatus");
+    }
+
+    public String getLocationId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/locationId");
     }
 
 }

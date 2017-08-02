@@ -4,7 +4,9 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.ShareHelper;
 import com.disney.utils.Environment;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestShare_oneTcg extends AccommodationBaseTest {
@@ -30,6 +32,7 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(share, true), "Validating Response Comparison");
             validateResponse();
+            validations();
         }
     }
 
@@ -39,37 +42,28 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
         String tcgId = share.getTravelComponentGroupingId();
         String tcId = share.getTravelComponentId();
         String bookingDate = share.getBookingDate();
+        String travelStatus = share.getTravelStatus();
 
         TestReporter.softAssertEquals(getBook().getTravelPlanSegmentId(), tpsId, "Verify that the response returns the tpsID [" + getBook().getTravelPlanSegmentId() + "] that which is expected [" + tpsId + "].");
         TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), tcgId, "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "] that which is expected [" + tcgId + "].");
         TestReporter.softAssertEquals(getBook().getTravelComponentId(), tcId, "Verify that the response returns the tcId [" + getBook().getTravelComponentId() + "] that which is expected [" + tcId + "].");
-        TestReporter.softAssertEquals("", bookingDate, "Verify that the response returns the tcId [" + getBook().getTravelComponentId() + "] that which is expected [" + tcId + "].");
-
+        TestReporter.softAssertEquals(Randomness.generateCurrentXMLDate(), bookingDate, "Verify that the booking date [" + Randomness.generateCurrentXMLDate() + "] that which is expected [" + bookingDate + "].");
+        TestReporter.softAssertEquals(travelStatus, "Booked", "Verify that the response returns the travel status [" + getBook().getTravelComponentId() + "] that which is expected [Booked].");
         TestReporter.assertAll();
+
+    }
+
+    public void validations() {
+        ShareHelper helper = new ShareHelper();
+
+        int numExpectedRecords = 2;
+        helper.validateReservationHistory(numExpectedRecords, reservationHistoryId, share.getLocationId(), Randomness.generateCurrentXMLDate(), Randomness.generateCurrentXMLDate(), Randomness.generateCurrentXMLDate(), arrivalDate, departureDate);
+
+        int numExpectedRecords2 = 1;
+        helper.validateShareInFlag(numExpectedRecords2);
     }
 }
 
-// // Validate Reservation History for Shared Record
-// String sql = "select * " +
-// "from res_mgmt.res_hist a " +
-// " where a.tps_id = " + tpsID;
-//
-// Database db = new OracleDatabase(environment, Database.DREAMS);
-// Recordset rs = new Recordset(db.getResultSet(sql));
-// rs.print();
-// String reservationHistoryID = rs.getValue("RES_HIST_ID", 1);
-// TestReporter.assertNotNull(reservationHistoryID, "No Reservation Hisotry found for this record");
-//
-// // Lets look for a Shared Flag
-// sql = "select * from res_mgmt.acm_cmpnt a " +
-// "INNER JOIN res_mgmt.res_hist b on a.acm_tc_id = b.tc_id " +
-// "where tps_id = " + tpsID;
-// rs = new Recordset(db.getResultSet(sql));
-// rs.print();
-// String shared = rs.getValue("SHR_IN", 1);
-// TestReporter.assertEquals(shared, "Y", "Shared flag on record one is not set. TPSID: " + tpsID);
-// shared = rs.getValue("SHR_IN", 2);
-// TestReporter.assertEquals(shared, "Y", "Shared flag on record one is not set. TPSID: " + tpsID);
 //
 // // Validate Share Period
 // // TODO - waiting for info for determining share period
