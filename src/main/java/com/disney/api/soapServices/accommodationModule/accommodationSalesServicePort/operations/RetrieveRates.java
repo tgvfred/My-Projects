@@ -64,6 +64,7 @@ public class RetrieveRates extends AccommodationSalesServicePort{
 	    public String getDayCount(){
 		    return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/ratedetails/dayCount");
 	    }
+	    
 	    public String getRateDetailsOveridden(){
 		    return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/ratedetails/overidden");
 	    }

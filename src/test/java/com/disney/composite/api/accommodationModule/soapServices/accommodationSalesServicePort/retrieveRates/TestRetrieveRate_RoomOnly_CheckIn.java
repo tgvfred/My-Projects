@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.Environment;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveRate_RoomOnly_CheckIn extends AccommodationBaseTest {
@@ -31,31 +32,32 @@ public class TestRetrieveRate_RoomOnly_CheckIn extends AccommodationBaseTest {
         String tpId = getBook().getTravelPlanId();
         String roomCode = getRoomTypeCode();
         String packageName = "R Room Only";
+        String rateDate = "";
 
         TestReporter.logScenario("Book and Check In");
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         TestReporter.logScenario("Retrieve rates");
-        RetrieveRates RetrieveRates = new RetrieveRates(environment, "retrieveRates");
-        RetrieveRates.setTravelComponentGroupingId(tcgId);
-        RetrieveRates.sendRequest();
-        TestReporter.logAPI(!RetrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving rates", RetrieveRates);
-        TestReporter.assertNotNull(RetrieveRates.getRackRate(), "The response contains a rate");
+        RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
+        retrieveRates.setTravelComponentGroupingId(tcgId);
+        retrieveRates.sendRequest();
+        TestReporter.logAPI(!retrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving rates", retrieveRates);
+        rateDate = retrieveRates.getRateDate();
         TestReporter.log("Travel Plan ID: " + tpId);
-        TestReporter.assertEquals(RetrieveRates.getroomTypeCode(), roomCode, "Verify that the room code matches '" + roomCode + "' for tcgId " + tcgId);
-        TestReporter.assertEquals(RetrieveRates.getPackageName(), packageName, "Validate the package name of '" + packageName + "' matches for tcgId " + tcgId);
-        TestReporter.assertNotNull(RetrieveRates.getRateDate(), "Validate the Rate Date is present for tcgId '"+ tcgId +"'.");
+        TestReporter.assertEquals(retrieveRates.getroomTypeCode(), roomCode, "Verify that the room code matches '" + roomCode + "' for tcgId " + tcgId);
+        TestReporter.assertEquals(retrieveRates.getPackageName(), packageName, "Validate the package name of '" + packageName + "' matches for tcgId " + tcgId);
+        TestReporter.assertEquals(Randomness.generateCurrentXMLDate(), rateDate.split("T")[0], "Validate the Rate Date of '" + rateDate.split("T")[0]+ "' matches for tcgId '"+ tcgId +"'.");
         TestReporter.logStep("Verify number of nodes being returned");
-        TestReporter.assertTrue(RetrieveRates.getRateDetails("1") !=null, "One Rate Details node is present");
+        TestReporter.assertTrue(retrieveRates.getRateDetails("1") !=null, "One Rate Details node is present");
         
-        if (RetrieveRates.getRateDetails("1") !=null){
+        if (retrieveRates.getRateDetails("1") !=null){
         	TestReporter.log("One RateDetails node found");
         }
         
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
-            RetrieveRates clone = (RetrieveRates) RetrieveRates.clone();
+            RetrieveRates clone = (RetrieveRates) retrieveRates.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.sendRequest();
             if (!clone.getResponseStatusCode().equals("200")) {
@@ -64,7 +66,7 @@ public class TestRetrieveRate_RoomOnly_CheckIn extends AccommodationBaseTest {
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(RetrieveRates, true),
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieveRates, true),
                     "Validating Response Comparison");
         }
     }
