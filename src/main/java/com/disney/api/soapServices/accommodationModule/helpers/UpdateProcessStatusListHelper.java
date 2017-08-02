@@ -251,6 +251,7 @@ public class UpdateProcessStatusListHelper {
         grpID = rs.getValue("GRP_RES_PROC_RUN_ID");
         rlID = rs.getValue("RM_LIST_RES_RUN_ID");
         resID = rs.getValue("RES_ID");
+        idCD = rs.getValue("UPDT_USR_ID_CD");
 
         TestReporter.assertTrue(!(grpID.equals(null)), "Group Reservation Process Run ID is found! [" + grpID + "]");
 
@@ -259,6 +260,9 @@ public class UpdateProcessStatusListHelper {
 
         TestReporter.assertEquals(resID, "", "Verify the Reservation ID [0] matches the Reservation ID found"
                 + " in the DB [" + resID + "]");
+
+        TestReporter.assertEquals(idCD, "AutoJUnit.us", "Verify the ID Code [AutoJUnit.us] matches the ID Code found"
+                + " in the DB [" + idCD + "]");
     }
 
 }

@@ -17,8 +17,10 @@ public class Test_UpdateProcessStatusList_submittedToBooked_roomingList extends 
         UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
 
         // update.setProcessDataIdList(helper.retrieveProcRunId(remove.getResponseProcessId()));
-        update.setProcessType("");
+        update.setProcessDataIdList("");
+        update.setProcessType("ROOMINGLIST");
         update.setProcessingStatus("BOOKED");
+        update.setTPSId(getBook().getTravelPlanSegmentId());
         update.sendRequest();
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", update);
 
