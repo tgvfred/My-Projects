@@ -103,6 +103,32 @@ public class ShareHelper {
         } while (rs.hasNext());
     }
 
+    public void validateMultipleOwnerIds(int numExpectedRecords5, String firstTcgId, String assignFirstOwnerId, String assignSecondOwnerId) {
+        TestReporter.logStep("Verify assignment owner id is the same for both TCG's but is not the same as either original ownder Id for each TCG");
+
+        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + firstTcgId + "'";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords5, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expcetd [" + numExpectedRecords5 + "].");
+
+        do {
+            TestReporter.softAssertEquals(rs.getValue("ASGN_OWN_ID"), assignFirstOwnerId, "Verify the assignment owner Id [" + rs.getValue("ASGN_OWN_ID") + "] matches the owner id in the db [" + assignFirstOwnerId + "].");
+            rs.moveNext();
+        } while (rs.hasNext());
+
+        String sql2 = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getTcgId() + "'";
+        Database db2 = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs2 = new Recordset(db2.getResultSet(sql2));
+
+        do {
+            TestReporter.softAssertEquals(rs2.getValue("ASGN_OWN_ID"), assignSecondOwnerId, "Verify the second assignment owner Id [" + rs2.getValue("ASGN_OWN_ID") + "] matches the owner id in the db [" + assignSecondOwnerId + "].");
+            TestReporter.softAssertTrue(rs2.getValue("ASGN_OWN_ID") != assignFirstOwnerId, "Verify the assignment owner Ids do not match [" + rs2.getValue("ASGN_OWN_ID") + "] does not equal the old assignment owner id [" + assignFirstOwnerId + "].");
+            rs.moveNext();
+        } while (rs.hasNext());
+
+    }
+
     public void validateFolioGuaranteeType(int numExpectedRecords4) {
         TestReporter.logStep("Validate group guarantee for node charge group of tcg");
 
