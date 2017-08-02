@@ -24,8 +24,12 @@ public class Share extends AccommodationSalesServicePort {
         removeWhiteSpace();
     }
 
-    public void setTravelComponentGroupingId(String tcg_id) {
-        setRequestNodeValueByXPath("/Envelope/Body/share/request/sharedComponents/travelComponentGroupingId", tcg_id);
+    public void setTravelComponentGroupingId(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/share/request/sharedComponents/travelComponentGroupingId", value);
+    }
+
+    public void setSecondTravelComponentGroupingId(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/share/request/sharedComponents/travelComponentGroupingId[2]", value);
     }
 
     public void setRoomNumber(String value) {

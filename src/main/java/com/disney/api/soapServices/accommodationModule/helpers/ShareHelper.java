@@ -12,6 +12,10 @@ public class ShareHelper {
     private String tcgId;
     private String tcId;
 
+    public ShareHelper(String environment) {
+        this.environment = environment;
+    }
+
     public String getEnvironment() {
         return environment;
     }
@@ -52,7 +56,7 @@ public class ShareHelper {
         this.tcId = tcId;
     }
 
-    public void validateReservationHistory(int numExpectedRecords, String reservationHistoryId, String resLocation, String creationDate, String updateDate, String bookingDate, String arrivalDate, String departureDate) {
+    public void validateReservationHistory(int numExpectedRecords) {
         TestReporter.logStep("Verify reservation history");
 
         String sql = "select * from res_mgmt.res_hist a where a.tps_id = '" + getTpsId() + "'";
@@ -62,25 +66,9 @@ public class ShareHelper {
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expcetd [" + numExpectedRecords + "].");
 
         for (int i = 1; i <= rs.getRowCount(); i++) {
-            if (rs.getValue("RES_HIST_PROC_DS", i).equals("Shared")) {
-                TestReporter.assertEquals(rs.getValue("RES_HIST_ID", i), reservationHistoryId, "Verify the reservation history id [" + rs.getValue("RES_HIST_ID", i) + "] matches the reservation history in the DB [" + reservationHistoryId + "]");
-                TestReporter.assertEquals(rs.getValue("TP_ID", i), tpId, "Verify the tp id [" + rs.getValue("TP_ID", i) + "] matches the tpId in the DB [" + tpId + "]");
-                TestReporter.assertEquals(rs.getValue("RES_HIST_LOC_NM", i), resLocation, "Verify the reservation history location name [" + rs.getValue("RES_HIST_LOC_NM", i) + "] matches the reservation history location name in the db [" + resLocation + "]");
-                TestReporter.assertEquals(rs.getValue("TPS_ID", i), tpsId, "Verify the tpsId [" + rs.getValue("TPS_ID", i) + "] matches the tpsId in the db [" + tpsId + "]");
-                TestReporter.assertEquals(rs.getValue("TC_GRP_NM", i), tcgId, "Verify the tcgId [" + rs.getValue("TC_GRP_NM", i) + "] matches the tcgId in the db [" + tcgId + "]");
-                TestReporter.assertEquals(rs.getValue("TC_ID", i), tcId, "Verify the tcId [" + rs.getValue("TC_ID", i) + "] matches the tcId in the db [" + tcId + "]");
-                TestReporter.assertEquals(rs.getValue("RES_HIST_PROC_DS", i), "Shared", "Verify the reservation history process [" + rs.getValue("RES_HIST_PROC_DS", i) + "] matches the reservation history process in the db [Shared]");
-                TestReporter.assertEquals(rs.getValue("CREATE_DTS", i).split(" ")[0], creationDate, "Verify the creation date [" + rs.getValue("CREATE_DTS", i).split(" ")[0] + "] matches the creation date in the db [" + creationDate + "]");
-                TestReporter.assertEquals(rs.getValue("UPDT_DTS", i).split(" ")[0], updateDate, "Verify the update date [" + rs.getValue("UPDT_DTS", i).split(" ")[0] + "] matches the update date in the db [" + updateDate + "]");
-                TestReporter.softAssertTrue(tpId.contains(rs.getValue("RES_HIST_TX")), "Verify the TCG id [" + rs.getValue("RES_HIST_TX") + "] is contained in the reservation history text in the db [" + tcId + "].");
-                TestReporter.softAssertTrue(bookingDate.contains(rs.getValue("RES_HIST_TX")), "Verify the booking date [" + rs.getValue("RES_HIST_TX") + "] is contained in the reservation history text in the db [" + bookingDate + "].");
-                TestReporter.softAssertTrue(arrivalDate.contains(rs.getValue("RES_HIST_TX")), "Verify the arrival date [" + rs.getValue("RES_HIST_TX") + "] is contained in the reservation history text in the db [" + arrivalDate + "].");
-                TestReporter.softAssertTrue(departureDate.contains(rs.getValue("RES_HIST_TX")), "Verify the departure date [" + rs.getValue("RES_HIST_TX") + "] is contained in the reservation history text in the db [" + departureDate + "].");
-
-            }
-            TestReporter.assertAll();
+            TestReporter.assertEquals(rs.getValue("RES_HIST_PROC_DS", i), "Shared", "Verify the reservatoin history status [" + rs.getValue("RES_HIST_PROC_DS", i) + "] matches the reservation history status in the DB [Shared]");
         }
-
+        TestReporter.assertAll();
     }
 
     public void validateShareInFlag(int numExpectedRecords2) {
@@ -100,14 +88,34 @@ public class ShareHelper {
         }
     }
 
-    public void validateAssignmentOwnerIdChanges(int numExpectedRecords3) {
+    public void validateAssignmentOwnerIdChanges(int numExpectedRecords3, String assignOwnerId) {
         TestReporter.logStep("Verify assignment owner id changes");
 
-        String sql = "select c.* from res_mgmt.tc_grp a join res_mgmt.tc b on a.tc_grp_nb = b.tc_grp_nb join res_mgmt.acm_cmpnt c on b.tc_id = c.acm_tc_id where a.tc_grp_nb = '" + getTcgId() + "'";
+        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getTcgId() + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
-        TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords3, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expcetd [" + numExpectedRecords2 + "].");
+        TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords3, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expcetd [" + numExpectedRecords3 + "].");
 
+        do {
+            TestReporter.softAssertTrue(rs.getValue("ASGN_OWN_ID") != assignOwnerId, "Verify the assignment owner Id [" + rs.getValue("ASGN_OWN_ID") + "] does not equal the old assignment owner id [" + assignOwnerId + "].");
+            rs.moveNext();
+        } while (rs.hasNext());
+    }
+
+    public void validateFolioGuaranteeType(int numExpectedRecords4) {
+        TestReporter.logStep("Validate group guarantee for node charge group of tcg");
+
+        String sql = "select i.GUAR_TYP_NM from folio.EXTNL_REF a left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID left outer join folio.CHRG d on c.CHRG_GRP_ID = d.CHRG_GRP_ID left outer join folio.CHRG_ITEM e on d.CHRG_ID = e.CHRG_ID left outer join folio.CHRG_GRP_FOLIO f on c.CHRG_GRP_ID = f.ROOT_CHRG_GRP_ID left outer join folio.FOLIO g on f.CHRG_GRP_FOLIO_ID = g.FOLIO_ID left outer join folio.FOLIO_ITEM h on g.FOLIO_ID = h.FOLIO_ID left outer join folio.node_chrg_grp i on c.CHRG_GRP_ID = i.NODE_CHRG_GRP_ID where a.EXTNL_REF_VAL in ('" + getTcgId() + "')";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords4, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expcetd [" + numExpectedRecords4 + "].");
+
+        do {
+            TestReporter.assertEquals(rs.getValue("GUAR_TYP_NM"), "Group_Guaranteed", "Verify the guarantee type name [" + rs.getValue("GUAR_TYP_NM") + "] is that which is expected in the DB [Group_Guaranteed]");
+            rs.moveNext();
+            TestReporter.assertAll();
+        } while (rs.hasNext());
     }
 }

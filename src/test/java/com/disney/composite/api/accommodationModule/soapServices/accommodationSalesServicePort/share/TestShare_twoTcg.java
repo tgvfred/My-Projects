@@ -1,5 +1,7 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
@@ -12,16 +14,36 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestShare_oneTcg extends AccommodationBaseTest {
+public class TestShare_twoTcg extends AccommodationBaseTest {
 
     private Share share;
     String assignOwnerId;
+    String firstTCG;
+
+    @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
+    public void setup(String environment) {
+        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
+        // to invoke lower levels of reporting
+        setEnvironment(environment);
+        daysOut.set(0);
+        nights.set(1);
+        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
+        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+
+        setIsWdtcBooking(true);
+        setValues();
+
+        firstTCG = getBook().getTravelComponentGroupingId();
+        bookReservation();
+    }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
-    public void Test_Share_oneTcg() {
+    public void Test_Share_twoTcg() {
         captureOwnerId();
-        share = new Share(environment, "Main_oneTcg");
-        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        share = new Share(environment, "Main_twoTcg");
+        share.setTravelComponentGroupingId(firstTCG);
+        share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
@@ -70,8 +92,6 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
         int numExpectedRecords3 = 1;
         helper.validateAssignmentOwnerIdChanges(numExpectedRecords3, assignOwnerId);
 
-        int numExpectedRecords4 = 4;
-        helper.validateFolioGuaranteeType(numExpectedRecords4);
     }
 
     public void captureOwnerId() {
@@ -83,4 +103,5 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
         assignOwnerId = rs.getValue("ASGN_OWN_ID");
 
     }
+
 }
