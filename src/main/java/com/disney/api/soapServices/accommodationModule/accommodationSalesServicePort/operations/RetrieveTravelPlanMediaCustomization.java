@@ -3,10 +3,10 @@ package com.disney.api.soapServices.accommodationModule.accommodationSalesServic
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.utils.XMLTools;
 
-public class RretrieveTravelPlanMediaCustomization extends AccommodationSalesServicePort {
+public class RetrieveTravelPlanMediaCustomization extends AccommodationSalesServicePort {
 
 
-	public RretrieveTravelPlanMediaCustomization(String environment, String scenario) {
+	public RetrieveTravelPlanMediaCustomization(String environment, String scenario) {
 		super(environment);
 		
 		//Generate a request from a project xml file
