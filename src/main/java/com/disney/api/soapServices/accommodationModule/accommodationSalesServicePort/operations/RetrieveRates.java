@@ -58,8 +58,8 @@ public class RetrieveRates extends AccommodationSalesServicePort{
 	    public String getBasePrice(){
 		    return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/ratedetails/basePrice");
 	    }
-	    public String getRateDate(){
-		    return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/ratedetails/date");
+	    public String getRateDate(String index2){
+		    return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/ratedetails["+index2+"]/date");
 	    }
 	    public String getDayCount(){
 		    return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/ratedetails/dayCount");

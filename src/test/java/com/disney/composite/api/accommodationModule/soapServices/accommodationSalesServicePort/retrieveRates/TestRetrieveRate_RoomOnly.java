@@ -41,7 +41,7 @@ public class TestRetrieveRate_RoomOnly extends AccommodationBaseTest {
         retrieveRates.sendRequest();
         TestReporter.logAPI(!retrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving rates", retrieveRates);
         TestReporter.assertNotNull(retrieveRates.getRackRate(), "The response contains a rate");
-        rateDate = retrieveRates.getRateDate();
+        rateDate = retrieveRates.getRateDate("1");
         TestReporter.log("Travel Plan ID: " + tpId);
         TestReporter.assertEquals(retrieveRates.getroomTypeCode(), roomCode, "Verify that the room code matches '" + roomCode + "' for tcgId " + tcgId);
         TestReporter.assertEquals(retrieveRates.getPackageName(), packageName, "Validate the package name of '" + packageName + "' matches for tcgId " + tcgId);

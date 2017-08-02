@@ -46,10 +46,9 @@ public class TestRetrieveRates_DVC_Points extends BookDVCPointsHelper {
         retrieveRates.setTravelComponentGroupingId(tcgId);
         retrieveRates.sendRequest();
         TestReporter.logAPI(!retrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getFirstBooking().getTravelComponentGroupingId() + "]", retrieveRates);
-        rateDate = retrieveRates.getRateDate();
+        rateDate = retrieveRates.getRateDate("1");
         rackRateDate = retrieveRates.getRackRateDate();
-        //pointsValue = retrieveRates.getPointsValue();
-        
+          
         TestReporter.log("Travel Plan ID: " + tpId);
         TestReporter.assertEquals(retrieveRates.getroomTypeCode(), roomCode, "Verify that the room code matches '" + roomCode + "' for tcgId " + tcgId);
         TestReporter.assertEquals(retrieveRates.getPackageName(), packageName, "Verify the package name of '" + packageName + "' matches for tcgId " + tcgId);
