@@ -5,6 +5,7 @@ import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 public class AccommodationErrorCode {
 	private static final String APP_NAME = "LILO FOLIO";
 	private static final String MODULE_NAME = "LILO_RESM";
+	private static final String DVC_NAME = "DVC Sales";
 
 	public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS = new ApplicationErrorCode(APP_NAME, 2901,
 			" Missing required fields. ");
@@ -84,4 +85,6 @@ public class AccommodationErrorCode {
 			" Create Comments Request Invalid ");
 	public static final ApplicationErrorCode REQUEST_REQUIRED = new ApplicationErrorCode(MODULE_NAME, 8078,
 			" Create Comments Request Invalid ");
+	public static final ApplicationErrorCode FACILITY_ID_REQUIRED = new ApplicationErrorCode(DVC_NAME, 9025,
+			" Enterprice Facility ID is Required ");
 }

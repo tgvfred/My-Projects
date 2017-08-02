@@ -62,21 +62,21 @@ public class CreateComments extends AccommodationSalesServicePort{
 	
 	
 	//Getters
-	public String getIsActive(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/isActive");}
-	public String getSendToGSR(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/sendToGSR");}
-	public String getConfidential(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/confidential");}
-	public String getProfileId(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/profileId");}
-	public String getProfileCode(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/profileCode");}
-	public String getCommentId(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/commentId");}
-	public String getCommentText(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/commentText");}
-	public String getCommentLevel(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/commentLevel");}
-	public String getTcId(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/commentOwnerDetail/tcId");}
-	public String getTpsId(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/commentOwnerDetail/tpsId");}
-	public String getTpId(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/commentOwnerDetail/tpId");}
-	public String getCreatedBy(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/auditDetail/createdBy");}
-	public String getCreatedDate(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/auditDetail/createdDate");}
-	public String getUpdatedBy(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/auditDetail/udatedBy");}
-	public String getUpdatedDate(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/auditDetail/updatedDate");}
-	public String getCommentType(){return getResponseNodeValueByXPath("Envelope/Body/createCommentsResponse/response/commentsInfo/commentType");}
+	public String getIsActive(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/isActive");}
+	public String getSendToGSR(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/sendToGSR");}
+	public String getConfidential(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/confidential");}
+	public String getProfileId(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/profileId");}
+	public String getProfileCode(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/profileCode");}
+	public String getCommentId(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/commentId");}
+	public String getCommentText(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/commentText");}
+	public String getCommentLevel(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/commentLevel");}
+	public String getTcId(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/commentOwnerDetail/tcId");}
+	public String getTpsId(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/commentOwnerDetail/tpsId");}
+	public String getTpId(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/commentOwnerDetail/tpId");}
+	public String getCreatedBy(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/auditDetail/createdBy");}
+	public String getCreatedDate(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/auditDetail/createdDate");}
+	public String getUpdatedBy(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/auditDetail/udatedBy");}
+	public String getUpdatedDate(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/auditDetail/updatedDate");}
+	public String getCommentType(){return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/commentType");}
 	
 }
