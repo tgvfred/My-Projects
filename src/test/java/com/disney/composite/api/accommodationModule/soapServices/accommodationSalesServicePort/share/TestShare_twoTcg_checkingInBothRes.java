@@ -15,7 +15,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
+public class TestShare_twoTcg_checkingInBothRes extends AccommodationBaseTest {
 
     private Share share;
     String firstOwnerId;
@@ -42,7 +42,7 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
-    public void Test_Share_twoTcg_checkingInFirstRes() {
+    public void Test_Share_twoTcg_heckingInBothRes() {
         captureSecondOwnerId();
 
         // check in the first res
@@ -50,6 +50,11 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
         checkIn.setTravelComponentGroupingId(firstTCG);
         checkIn.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + share.getFaultString(), share);
+
+        // check in the second res
+        checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        checkIn.sendRequest();
+        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in the second reservation " + share.getFaultString(), share);
 
         // verify that the owner id's for the first and second tcg do not match.
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");

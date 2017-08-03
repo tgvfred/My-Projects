@@ -29,7 +29,7 @@ public class Share extends AccommodationSalesServicePort {
     }
 
     public void setSecondTravelComponentGroupingId(String value) {
-        setRequestNodeValueByXPath("/Envelope/Body/share/request/sharedComponents/travelComponentGroupingId[2]", value);
+        setRequestNodeValueByXPath("/Envelope/Body/share/request/sharedComponents[2]/travelComponentGroupingId", value);
     }
 
     public void setRoomNumber(String value) {

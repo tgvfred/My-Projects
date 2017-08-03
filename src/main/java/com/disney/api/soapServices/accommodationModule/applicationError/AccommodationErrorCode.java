@@ -113,4 +113,10 @@ public class AccommodationErrorCode {
             " External Reference Source or Code required ");
     public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
             " No Accommodation Component found. ");
+    public static final ApplicationErrorCode ACCOMMODATION_INVALID_FOR_SHARE = new ApplicationErrorCode(MOD_NAME, 7130,
+            "Accommodation is invalid for Share");
+    public static final ApplicationErrorCode TRAVEL_STATUS_INVALID_FOR_SHARE = new ApplicationErrorCode(MOD_NAME, 7131,
+            "Travel status is invalid for Share");
+    public static final ApplicationErrorCode CANNOT_CHANGE_RESORT = new ApplicationErrorCode(MOD_NAME, 7208,
+            "Cannot change Block/Resort/Package for an shared Accommodation.");
 }
