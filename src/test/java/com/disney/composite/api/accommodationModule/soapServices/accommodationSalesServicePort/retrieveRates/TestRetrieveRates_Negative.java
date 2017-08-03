@@ -11,38 +11,30 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class TestRetrieveRates_Negative extends AccommodationBaseTest {
-    private String environment = "";
-    private Book book = null;
-
+	
+	@Override
+    @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
-    @Parameters({ "environment" })
     public void setup(String environment) {
-        this.environment = environment;
-        book = new Book(environment, "bookRoomOnly2Adults2ChildrenWithoutTickets");
-        book.sendRequest();
+        setEnvironment(environment);
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(getEnvironment());
+        bookReservation();
     }
-
-    @AfterMethod(alwaysRun = true)
-    public void teardown() {
-        try {
-            if (book != null) {
-                if (book.getTravelPlanSegmentId() != null) {
-                    if (!book.getTravelPlanSegmentId().isEmpty()) {
-                        Cancel cancel = new Cancel(environment, "Main");
-                        cancel.setCancelDate(Randomness.generateCurrentXMLDate(0));
-                        cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
-                        cancel.sendRequest();
-                    }
-                }
-            }
-        } catch (Exception e) {
-        }
-    }
-
+ 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
     public void TestRetrieveRates_nullTcg() {
         String faultString = "Required parameters are missing : Invalid Travel Component grouping Id#0";
@@ -56,17 +48,20 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         validateApplicationError(retrieveRates, AccommodationErrorCode.REQ_PARAM_MISSING);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates", "" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
     public void TestRetrieveRates_showDiningReservation() {
-        String faultString = "Accommodation Component not found : NO ACCOMMODATION FOUND WITH ID#471952101120";
-        String tcgId = "471952101120";
+    	String tcgId;
+        ScheduledEventReservation dining = new ShowDiningReservation(getEnvironment().toLowerCase().replace("_cm", ""));
+        dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 
-        /*
-         * String tcgId = getBook().getTravelComponentGroupingId();
-         * String faultString = " Accommodation Component not found : NO ACCOMMODATION FOUND WITH ID#" + tcgId;
-         */
-
-        TestReporter.logScenario("Dinning reservation rates");
+        String sql = "select * from res_mgmt.tc_grp a where a.tps_id = '" + dining.getConfirmationNumber() + "' and a.tc_grp_typ_nm = 'SHOWDINING'";
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(getEnvironment()), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+       
+        tcgId = rs.getValue("TC_GRP_NB");
+        String faultString = "Accommodation Component not found : NO ACCOMMODATION FOUND WITH ID#" + tcgId;
+        
+        TestReporter.logScenario("Negative Dinning reservation rates");
         RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
         retrieveRates.setTravelComponentGroupingId(tcgId);
         retrieveRates.sendRequest();

@@ -37,10 +37,7 @@ public class TestRetrieveRates_DVC_Points extends BookDVCPointsHelper {
         String shared = "false";
         String rackRateDate = "";
         String pointsValue = "1";
-        
-        
-        
-        
+   
         TestReporter.logScenario("Retieve DVC Points");
         RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
         retrieveRates.setTravelComponentGroupingId(tcgId);
