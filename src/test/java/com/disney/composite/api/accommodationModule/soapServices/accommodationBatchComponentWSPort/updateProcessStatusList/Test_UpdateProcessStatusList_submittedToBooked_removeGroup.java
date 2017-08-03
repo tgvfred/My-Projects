@@ -6,6 +6,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationBatchCompone
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.UpdateProcessStatusList;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class Test_UpdateProcessStatusList_submittedToBooked_removeGroup extends AccommodationBaseTest {
@@ -31,7 +32,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_removeGroup extends 
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", update);
 
         // Validations
-        helper.validationOverall(helper.retrieveProcRunId(remove.getResponseProcessId()), "BOOKED");
+        helper.validationOverall(helper.retrieveProcRunId(remove.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
         helper.validationRemoveGroup(helper.retrieveProcRunId(remove.getResponseProcessId()), getBook().getTravelComponentGroupingId());
     }
 

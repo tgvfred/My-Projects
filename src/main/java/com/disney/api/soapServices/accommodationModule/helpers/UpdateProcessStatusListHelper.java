@@ -1,7 +1,6 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
 
 import com.disney.utils.Environment;
-import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -20,6 +19,7 @@ public class UpdateProcessStatusListHelper {
     private String stsNM;
     private String idCD;
     private String date;
+    private String date1;
     private String tpID;
     private String tcID;
     private String tpsID;
@@ -140,9 +140,9 @@ public class UpdateProcessStatusListHelper {
 
     // Validations
 
-    public void validationOverall(String procRunId, String status) {
+    public void validationOverall(String procRunId, String status, String procDate) {
 
-        String sql = "select a.GRP_RES_PROC_RUN_ID, a.GRP_RES_PROC_RUN_STS_NM, a.UPDT_USR_ID_CD, a.UPDT_DTS "
+        String sql = "select a.GRP_RES_PROC_RUN_ID, a.GRP_RES_PROC_RUN_STS_NM, a.UPDT_USR_ID_CD, a.GRP_RES_PROC_RUN_DTS "
                 + "from res_mgmt.GRP_RES_PROC_RUN a "
                 + "where a.GRP_RES_PROC_RUN_ID = '" + procRunId + "'";
 
@@ -151,7 +151,7 @@ public class UpdateProcessStatusListHelper {
 
         stsNM = rs.getValue("GRP_RES_PROC_RUN_STS_NM");
         idCD = rs.getValue("UPDT_USR_ID_CD");
-        date = rs.getValue("UPDT_DTS");
+        date = rs.getValue("GRP_RES_PROC_RUN_DTS");
 
         TestReporter.assertEquals(stsNM, status, "Verify the Status Name [" + status + "] matches the Status Name found"
                 + " in the DB [" + stsNM + "]");
@@ -159,8 +159,8 @@ public class UpdateProcessStatusListHelper {
         TestReporter.assertEquals(idCD, "AutoJUnit.us", "Verify the ID Code [AutoJUnit.us] matches the ID Code found"
                 + " in the DB [" + idCD + "]");
 
-        // Because the date/time will always change a Regex validation is required
-        TestReporter.assertTrue(Regex.match("[a-z A-Z 0-9].*", date), "Verify the Update Date [" + date + "] matches the Update Date found in the DB [" + date + "]");
+        TestReporter.assertEquals(date.substring(0, 10), procDate, "Verify the Group Reservation Process Run Date [" + procDate + "] matches the Group Reservation Process Run Date found"
+                + " in the DB [" + date.substring(0, 10) + "]");
 
     }
 

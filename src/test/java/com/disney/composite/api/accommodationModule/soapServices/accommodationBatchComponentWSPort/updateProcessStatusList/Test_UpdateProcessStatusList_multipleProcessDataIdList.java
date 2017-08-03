@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationBatchCompone
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class Test_UpdateProcessStatusList_multipleProcessDataIdList extends AccommodationBaseTest {
@@ -77,10 +78,10 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList extends Acco
         TestReporter.logStep("Multiple Proc Run ID's found in the DB: first Proc Run ID [" + helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()) + "] & second Proc Run ID [" + helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()) + "]");
 
         TestReporter.logStep("Verify status for first Proc Run ID [" + helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()) + "] has been updated:");
-        helper.validationOverall(helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()), "BOOKED");
+        helper.validationOverall(helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
 
         TestReporter.logStep("Verify status for second Proc Run ID [" + helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()) + "] has been updated:");
-        helper.validationOverall(helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()), "BOOKED");
+        helper.validationOverall(helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
 
     }
 }

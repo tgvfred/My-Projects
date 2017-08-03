@@ -7,6 +7,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationBatchCompone
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
 import com.disney.utils.Environment;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -45,7 +46,7 @@ public class Test_UpdateProcessStatusList_submittedToFailed_massCancel extends A
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", update);
 
         // Validations
-        helper.validationOverall(helper.retrieveProcRunId(cancel.getResponseProcessId()), "FAILED");
+        helper.validationOverall(helper.retrieveProcRunId(cancel.getResponseProcessId()), "FAILED", Randomness.generateCurrentDatetime().substring(0, 10));
 
         helper.validationMassCancel(helper.retrieveProcRunId(cancel.getResponseProcessId()), getBook().getTravelPlanId(), getBook().getTravelComponentGroupingId());
 
