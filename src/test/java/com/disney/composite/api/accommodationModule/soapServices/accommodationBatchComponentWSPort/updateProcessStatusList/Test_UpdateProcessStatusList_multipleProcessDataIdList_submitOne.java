@@ -17,8 +17,6 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList_submitOne ex
     private ReplaceAllForTravelPlanSegment book;
     private ReplaceAllForTravelPlanSegment book1;
 
-    private Integer two = 2;
-
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
