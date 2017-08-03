@@ -2,14 +2,12 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationServiceV2.operations.Book;
 import com.disney.utils.Randomness;
-import com.disney.utils.TestReporter;
 
 public class TestBook {
 
-	@Test(groups={"dev"})
-	public void sandbox(){
-		System.out.println(Randomness.generateCurrentXMLDate(-30));
-	}
+    @Test(groups = { "dev" })
+    public void sandbox() {
+        System.out.println(Randomness.generateCurrentXMLDate(-30));
+    }
 }

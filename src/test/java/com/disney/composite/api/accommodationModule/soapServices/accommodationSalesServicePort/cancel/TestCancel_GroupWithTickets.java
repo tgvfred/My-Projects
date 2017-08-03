@@ -107,7 +107,11 @@ public class TestCancel_GroupWithTickets extends TravelPlanBaseTest {
         book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/phoneDetails/number", getHouseHold().primaryGuest().primaryPhone().getNumber());
         book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/emailDetails/address", getHouseHold().primaryGuest().primaryEmail().getEmail());
 
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelAgent", BaseSoapCommands.REMOVE_NODE.toString());
+        try {
+            book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelAgent", BaseSoapCommands.REMOVE_NODE.toString());
+        } catch (XPathNotFoundException e) {
+
+        }
 
         book.sendRequest();
         if (book.getResponse().contains("Error Invoking Pricing Service")) {

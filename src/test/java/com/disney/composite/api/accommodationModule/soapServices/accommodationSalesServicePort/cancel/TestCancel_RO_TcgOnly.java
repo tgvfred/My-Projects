@@ -33,7 +33,7 @@ public class TestCancel_RO_TcgOnly extends AccommodationBaseTest {
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues();
+        setValues(getEnvironment());
         bookReservation();
         checkingIn(locEnv);
     }

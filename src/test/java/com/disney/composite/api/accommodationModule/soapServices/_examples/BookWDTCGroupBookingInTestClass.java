@@ -35,8 +35,8 @@ public class BookWDTCGroupBookingInTestClass extends AccommodationBaseTest {
         cancel();
     }
 
-    @Test(groups = { "api", "regression", "accommodation" })
-    public void bookGroupBookingInTestClass() {
+    @Test(groups = { "api", "regression", "accommodation", "example" })
+    public void bookWDTCGroupBookingInTestClass() {
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
