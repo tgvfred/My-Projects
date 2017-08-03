@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ShareHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -14,7 +15,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestShare_twoTcg extends AccommodationBaseTest {
+public class TestShare_twoTcg_nullLocationId extends AccommodationBaseTest {
 
     private Share share;
     String firstOwnerId;
@@ -41,7 +42,7 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
-    public void Test_Share_twoTcg() {
+    public void Test_Share_twoTcg_nullLocationId() {
         captureSecondOwnerId();
 
         // verify that the owner id's for the first and second tcg do not match.
@@ -50,6 +51,7 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
         share = new Share(environment, "Main_twoTcg");
         share.setTravelComponentGroupingId(firstTCG);
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        share.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
@@ -118,5 +120,4 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
 
     }
-
 }

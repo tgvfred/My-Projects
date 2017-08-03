@@ -14,7 +14,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestShare_twoTcg extends AccommodationBaseTest {
+public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
 
     private Share share;
     String firstOwnerId;
@@ -41,7 +41,7 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
-    public void Test_Share_twoTcg() {
+    public void Test_Share_twoTcg_checkingInFirstRes() {
         captureSecondOwnerId();
 
         // verify that the owner id's for the first and second tcg do not match.
