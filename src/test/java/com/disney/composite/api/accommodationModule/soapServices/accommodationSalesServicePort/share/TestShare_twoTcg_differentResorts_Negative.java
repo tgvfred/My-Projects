@@ -42,7 +42,7 @@ public class TestShare_twoTcg_differentResorts_Negative extends BookDVCPointsHel
         String faultString = "Cannot change Block/Resort/Package for an shared Accommodation. : ROOM TYPE , PACKAGE AND BLOCK SHOULD BE SAME FOR SHARE";
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(share, AccommodationErrorCode.CANNOT_CHANGE_RESORT);
+        validateApplicationError(share, AccommodationErrorCode.CANNOT_CHANGE_PACKAGE);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
@@ -12,16 +14,43 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestShare_oneTcg extends AccommodationBaseTest {
+public class TestShare_twoTcg_oneAdaRes extends AccommodationBaseTest {
 
     private Share share;
-    String assignOwnerId;
+    String firstOwnerId;
+    String secondOwnerId;
+    String firstTCG;
+    String ownerIdOne;
+    String ownerIdTwo;
+
+    @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
+    public void setup(String environment) {
+        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
+        // to invoke lower levels of reporting
+        setEnvironment(environment);
+        daysOut.set(0);
+        nights.set(1);
+        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
+        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+        setValues();
+
+        firstTCG = getBook().getTravelComponentGroupingId();
+        captureFirstOwnerId();
+        setIsADA(true);
+        bookReservation();
+    }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
-    public void Test_Share_oneTcg() {
-        captureOwnerId();
-        share = new Share(environment, "Main_oneTcg");
-        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+    public void Test_Share_twoTcg() {
+        captureSecondOwnerId();
+
+        // verify that the owner id's for the first and second tcg do not match.
+        TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
+
+        share = new Share(environment, "Main_twoTcg");
+        share.setTravelComponentGroupingId(firstTCG);
+        share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
@@ -67,20 +96,28 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
         int numExpectedRecords2 = 1;
         helper.validateShareInFlag(numExpectedRecords2);
 
-        int numExpectedRecords3 = 1;
-        helper.validateAssignmentOwnerIdChanges(numExpectedRecords3, assignOwnerId);
+        helper.validateMultipleOwnerIds(firstTCG, getBook().getTravelComponentGroupingId());
 
-        int numExpectedRecords4 = 4;
-        helper.validateFolioGuaranteeType(numExpectedRecords4);
     }
 
-    public void captureOwnerId() {
+    public void captureFirstOwnerId() {
 
-        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getBook().getTravelComponentGroupingId() + "'";
+        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + firstTCG + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
-        assignOwnerId = rs.getValue("ASGN_OWN_ID");
+        firstOwnerId = rs.getValue("ASGN_OWN_ID");
 
     }
+
+    public void captureSecondOwnerId() {
+
+        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getTcgId() + "'";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        secondOwnerId = rs.getValue("ASGN_OWN_ID");
+
+    }
+
 }

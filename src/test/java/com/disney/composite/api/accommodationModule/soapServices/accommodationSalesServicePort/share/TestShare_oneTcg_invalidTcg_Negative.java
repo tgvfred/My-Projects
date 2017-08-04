@@ -18,7 +18,7 @@ public class TestShare_oneTcg_invalidTcg_Negative extends AccommodationBaseTest 
         share.setTravelComponentGroupingId("1234");
         share.sendRequest();
 
-        String faultString = "No Accommodation Component found. : null";
+        String faultString = " No Accommodation Component found. : null";
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(share, AccommodationErrorCode.NO_ACCOMMODATION_COMPONENT_EXCEPTION);

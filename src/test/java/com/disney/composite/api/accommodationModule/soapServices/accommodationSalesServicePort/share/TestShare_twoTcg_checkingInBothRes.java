@@ -5,6 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ShareHelper;
@@ -18,27 +19,36 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class TestShare_twoTcg_checkingInBothRes extends AccommodationBaseTest {
 
     private Share share;
+    private ReplaceAllForTravelPlanSegment book, book1;
     String firstOwnerId;
     String secondOwnerId;
     String firstTCG;
     String ownerIdOne;
     String ownerIdTwo;
 
+    @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
+        Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
         setValues();
+        bookReservation();
+
+        book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
+        book.sendRequest();
 
         firstTCG = getBook().getTravelComponentGroupingId();
         captureFirstOwnerId();
-        bookReservation();
+
+        book1 = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
+        book1.sendRequest();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
@@ -49,7 +59,7 @@ public class TestShare_twoTcg_checkingInBothRes extends AccommodationBaseTest {
         CheckIn checkIn = new CheckIn(environment, "Main");
         checkIn.setTravelComponentGroupingId(firstTCG);
         checkIn.sendRequest();
-        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + share.getFaultString(), share);
+        TestReporter.logAPI(!checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + checkIn.getFaultString(), checkIn);
 
         // check in the second res
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -123,7 +133,7 @@ public class TestShare_twoTcg_checkingInBothRes extends AccommodationBaseTest {
 
     public void captureSecondOwnerId() {
 
-        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getTcgId() + "'";
+        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getBook().getTravelComponentGroupingId() + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
