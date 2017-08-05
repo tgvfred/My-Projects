@@ -23,9 +23,14 @@ public RetreiveIdsToProcess(String environment, String scenario) {
     }
 		
 	//Getters
-	public String getRetreiveIdsToProcessResponse() {
-		return getResponseNodeValueByXPath("/Envelope/Body/retreiveIdsToProcessResp/retreiveIdsToProcessResponse");
+	int index = getNumberOfRequestNodesByXPath("/Envelope/Body/retreiveIdsToProcessResp/retreiveIdsToProcessResponse") + 1;
+	
+	public String getRetreiveIdsToProcessResponse(String index) {
+		return getResponseNodeValueByXPath("/Envelope/Body/retreiveIdsToProcessResp/retreiveIdsToProcessResponse["+index+"]");
 	}
+	public Integer  getRetreiveIdsToProcessResponse(){
+    	return getNumberOfResponseNodesByXPath("/Envelope/Body/retreiveIdsToProcessResp/retreiveIdsToProcessResponse");
+    }
 	public String getProcessDataIdList() {
 		return getResponseNodeValueByXPath("/Envelope/Body/retreiveIdsToProcessResp/retreiveIdsToProcessResponse/processDataIdList");
 	}
