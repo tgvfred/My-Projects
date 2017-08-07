@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestUpdateComments" parallel="methods" thread-count="20">
+<<<<<<< HEAD
 	<parameter name="environment" value="latest" />
+=======
+	<parameter name="environment" value="shadow" />
+>>>>>>> 99985fe6a0ee3e9371dc144e7eabfee06220ef3c
 	<test name="TestUpdateComments"> 
 		 <packages>
 		 	<package name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.updateComments.*"></package>

@@ -16,7 +16,7 @@ public class BookByExtendingBaseTest extends AccommodationBaseTest {
     private String odsGuestId;
     private String assignmentOwnerId;
 
-    @Test(groups = { "api", "regression", "accommodation" })
+    @Test(groups = { "api", "regression", "accommodation", "example" })
     public void bookByExtendingBaseTest() {
         gatherDataForValidations();
         validations();
@@ -164,7 +164,7 @@ public class BookByExtendingBaseTest extends AccommodationBaseTest {
         TestReporter.logStep("Validate reservation details: TP_PTY");
         sql = sql.replace("d.*", "e.*");
         Recordset tcPtyRs = new Recordset(db.getResultSet(sql));
-        tcPtyRs.print();
+        // tcPtyRs.print();
         i = 0;
         do {
             i++;
