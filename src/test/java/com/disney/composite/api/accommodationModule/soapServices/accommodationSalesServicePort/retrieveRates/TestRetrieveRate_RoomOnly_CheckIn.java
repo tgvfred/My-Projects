@@ -11,8 +11,8 @@ import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestRetrieveRate_RoomOnly extends AccommodationBaseTest {
-    //private CheckInHelper helper;
+public class TestRetrieveRate_RoomOnly_CheckIn extends AccommodationBaseTest {
+    private CheckInHelper helper;
      
     @Override
     @Parameters("environment")
@@ -26,21 +26,23 @@ public class TestRetrieveRate_RoomOnly extends AccommodationBaseTest {
         setValues(getEnvironment());
         bookReservation();
     }
-
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
-    public void TestRetrieveRates_roomOnly_oneNight() {
+    public void TestRetrieveRates_roomOnly_checkedIn() {
     	String tcgId = getBook().getTravelComponentGroupingId();
         String tpId = getBook().getTravelPlanId();
         String roomCode = getRoomTypeCode();
         String packageName = "R Room Only";
         String rateDate = "";
-        
-        TestReporter.logScenario("Retrieve Rates One Night");
+
+        TestReporter.logScenario("Book and Check In");
+        helper = new CheckInHelper(getEnvironment(), getBook());
+        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        TestReporter.logScenario("Retrieve rates");
         RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
         retrieveRates.setTravelComponentGroupingId(tcgId);
         retrieveRates.sendRequest();
         TestReporter.logAPI(!retrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving rates", retrieveRates);
-        TestReporter.assertNotNull(retrieveRates.getRackRate(), "The response contains a rate");
         rateDate = retrieveRates.getRateDate("1");
         TestReporter.log("Travel Plan ID: " + tpId);
         TestReporter.assertEquals(retrieveRates.getroomTypeCode(), roomCode, "Verify that the room code matches '" + roomCode + "' for tcgId " + tcgId);
@@ -52,6 +54,7 @@ public class TestRetrieveRate_RoomOnly extends AccommodationBaseTest {
         if (retrieveRates.getRateDetails("1") !=null){
         	TestReporter.log("One RateDetails node found");
         }
+        
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
             RetrieveRates clone = (RetrieveRates) retrieveRates.clone();
@@ -62,10 +65,10 @@ public class TestRetrieveRate_RoomOnly extends AccommodationBaseTest {
             }
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieveRates, true), "Validating Response Comparison");
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieveRates, true),
+                    "Validating Response Comparison");
         }
     }
+
 }
