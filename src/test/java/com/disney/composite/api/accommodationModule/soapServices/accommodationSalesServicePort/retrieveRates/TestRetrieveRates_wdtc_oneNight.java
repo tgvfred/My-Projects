@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveRates;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -34,7 +33,7 @@ public class TestRetrieveRates_wdtc_oneNight extends AccommodationBaseTest {
         String roomCode = getRoomTypeCode();
         String rateDate = "";
         String billCode = "TRAVEL COMPANY PKGS";
-       
+
         TestReporter.logScenario("Retrieve Rates One Night");
         RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
         retrieveRates.setTravelComponentGroupingId(tcgId);
@@ -43,13 +42,13 @@ public class TestRetrieveRates_wdtc_oneNight extends AccommodationBaseTest {
         rateDate = retrieveRates.getRateDate("1");
         TestReporter.log("Travel Plan ID: " + tpId);
         TestReporter.assertEquals(retrieveRates.getroomTypeCode(), roomCode, "Verify that the room code matches '" + roomCode + "' for tcgId " + tcgId);
-        TestReporter.assertEquals(Randomness.generateCurrentXMLDate(), rateDate.split("T")[0], "Validate the Rate Date of '" + rateDate.split("T")[0]+ "' matches for tcgId '"+ tcgId +"'.");
+        TestReporter.assertEquals(Randomness.generateCurrentXMLDate(), rateDate.split("T")[0], "Validate the Rate Date of '" + rateDate.split("T")[0] + "' matches for tcgId '" + tcgId + "'.");
         TestReporter.assertEquals(retrieveRates.getBillCode(), billCode, "Validate the package name of '" + billCode + "' matches for tcgId " + tcgId);
         TestReporter.logStep("Verify number of nodes being returned");
         TestReporter.assertTrue(retrieveRates.getRateDetails("1") != null, "One rate details node is present ");
-        
-        if (retrieveRates.getRateDetails("1") !=null){
-        	TestReporter.log("Two rate detail nodes are found!");
+
+        if (retrieveRates.getRateDetails("1") != null) {
+            TestReporter.log("Two rate detail nodes are found!");
         }
 
         // Validate the Old to the New

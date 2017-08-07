@@ -1,18 +1,14 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveRates;
 
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveRates;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
-import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -21,8 +17,8 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class TestRetrieveRates_Negative extends AccommodationBaseTest {
-	
-	@Override
+
+    @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
@@ -34,7 +30,7 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         setValues(getEnvironment());
         bookReservation();
     }
- 
+
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
     public void TestRetrieveRates_nullTcg() {
         String faultString = "Required parameters are missing : Invalid Travel Component grouping Id#0";
@@ -50,17 +46,17 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
     public void TestRetrieveRates_showDiningReservation() {
-    	String tcgId;
+        String tcgId;
         ScheduledEventReservation dining = new ShowDiningReservation(getEnvironment().toLowerCase().replace("_cm", ""));
         dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 
         String sql = "select * from res_mgmt.tc_grp a where a.tps_id = '" + dining.getConfirmationNumber() + "' and a.tc_grp_typ_nm = 'SHOWDINING'";
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(getEnvironment()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-       
+
         tcgId = rs.getValue("TC_GRP_NB");
         String faultString = "Accommodation Component not found : NO ACCOMMODATION FOUND WITH ID#" + tcgId;
-        
+
         TestReporter.logScenario("Negative Dinning reservation rates");
         RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
         retrieveRates.setTravelComponentGroupingId(tcgId);
