@@ -14,7 +14,7 @@ import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 public class TestRetrieveTravelPlanMediaCustomization_xbmsResort_twoGuests_oneTrue_oneFalse extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveTravelPlanMediaCustomization" })
-    public void TestRetrieveTravelPlanMediaCustomization_xbmsResort_twoGuests_oneTrue_oneFalse() {
+    public void testRetrieveTravelPlanMediaCustomization_xbmsResort_twoGuests_oneTrue_oneFalse() {
         String facilityId = getFacilityId();
         String resortCode = "1U";
         String locationId = ResortInfo.getLocationID(ResortColumns.FACILITY_ID, getFacilityId());

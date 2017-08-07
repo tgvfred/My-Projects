@@ -12,10 +12,10 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.ResortInfo;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 
-public class TestRetrieveTravelPlanMediaCustomization_emptyResortCode extends AccommodationBaseTest {
+public class TestRetrieveTravelPlanMediaCustomization_xbmsResort_emptyResortCode extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveTravelPlanMediaCustomization" })
-    public void testRetrieveTravelPlanMediaCustomization_emptyResortCode() {
+    public void testRetrieveTravelPlanMediaCustomization_xbmsResort_emptyResortCode() {
         String travelPlanId = getBook().getTravelPlanId();
         String facilityId = getFacilityId();
         String locationId = ResortInfo.getLocationID(ResortColumns.FACILITY_ID, getFacilityId());

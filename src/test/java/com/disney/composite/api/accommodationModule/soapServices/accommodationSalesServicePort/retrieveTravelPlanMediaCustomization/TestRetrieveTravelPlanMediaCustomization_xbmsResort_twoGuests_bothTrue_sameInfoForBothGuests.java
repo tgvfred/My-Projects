@@ -13,7 +13,7 @@ import com.disney.utils.TestReporter;
 public class TestRetrieveTravelPlanMediaCustomization_xbmsResort_twoGuests_bothTrue_sameInfoForBothGuests extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveTravelPlanMediaCustomization" })
-    public void TestRetrieveTravelPlanMediaCustomization_xbmsResort_twoGuests_bothTrue_sameInfoForBothGuests() {
+    public void testRetrieveTravelPlanMediaCustomization_xbmsResort_twoGuests_bothTrue_sameInfoForBothGuests() {
         String facilityId = getFacilityId();
         String guestInfo = getPartyId();
         String resortCode = "1U";
