@@ -116,5 +116,4 @@ public class AccommodationErrorCode {
             " Accommodation Component not found ");
     public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
             " No Accommodation Component found. ");
-
 }

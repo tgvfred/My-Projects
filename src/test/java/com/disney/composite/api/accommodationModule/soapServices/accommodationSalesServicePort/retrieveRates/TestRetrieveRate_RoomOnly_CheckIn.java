@@ -13,7 +13,7 @@ import com.disney.utils.TestReporter;
 
 public class TestRetrieveRate_RoomOnly_CheckIn extends AccommodationBaseTest {
     private CheckInHelper helper;
-     
+
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
@@ -26,9 +26,10 @@ public class TestRetrieveRate_RoomOnly_CheckIn extends AccommodationBaseTest {
         setValues(getEnvironment());
         bookReservation();
     }
+
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
     public void TestRetrieveRates_roomOnly_checkedIn() {
-    	String tcgId = getBook().getTravelComponentGroupingId();
+        String tcgId = getBook().getTravelComponentGroupingId();
         String tpId = getBook().getTravelPlanId();
         String roomCode = getRoomTypeCode();
         String packageName = "R Room Only";
@@ -47,14 +48,14 @@ public class TestRetrieveRate_RoomOnly_CheckIn extends AccommodationBaseTest {
         TestReporter.log("Travel Plan ID: " + tpId);
         TestReporter.assertEquals(retrieveRates.getroomTypeCode(), roomCode, "Verify that the room code matches '" + roomCode + "' for tcgId " + tcgId);
         TestReporter.assertEquals(retrieveRates.getPackageName(), packageName, "Validate the package name of '" + packageName + "' matches for tcgId " + tcgId);
-        TestReporter.assertEquals(Randomness.generateCurrentXMLDate(), rateDate.split("T")[0], "Validate the Rate Date of '" + rateDate.split("T")[0]+ "' matches for tcgId '"+ tcgId +"'.");
+        TestReporter.assertEquals(Randomness.generateCurrentXMLDate(), rateDate.split("T")[0], "Validate the Rate Date of '" + rateDate.split("T")[0] + "' matches for tcgId '" + tcgId + "'.");
         TestReporter.logStep("Verify number of nodes being returned");
-        TestReporter.assertTrue(retrieveRates.getRateDetails("1") !=null, "One Rate Details node is present");
-        
-        if (retrieveRates.getRateDetails("1") !=null){
-        	TestReporter.log("One RateDetails node found");
+        TestReporter.assertTrue(retrieveRates.getRateDetails("1") != null, "One Rate Details node is present");
+
+        if (retrieveRates.getRateDetails("1") != null) {
+            TestReporter.log("One RateDetails node found");
         }
-        
+
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
             RetrieveRates clone = (RetrieveRates) retrieveRates.clone();
