@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.RetreiveIdsToProcess;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
@@ -20,8 +21,15 @@ public class TestRetreiveIdsToProcess_nullProcessId extends AccommodationBaseTes
 		
 		TestReporter.assertTrue(retreiveIds.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retreiveIds.getFaultString() + "] is that which is expected [" + faultString + "].");
 		validateApplicationError(retreiveIds, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
-        //TestReporter.logAPI(!retreiveIds.getResponseStatusCode().equals("200"), "Verify that no error occurred while retrieving Id's : " + retreiveIds.getFaultString(), retreiveIds);
-       
+        
+		TestReporter.logStep("Response node return validation count.");
+		try {
+			retreiveIds.getProcessDataIdList();
+			TestReporter.assertTrue(false, "Return node found -- Response should contain nothing");
+		} catch (XPathNotFoundException e) {
+			TestReporter.assertTrue(true,
+					"Validating no ProcessDataIdList returned in the reponse for getRetreiveIdsToProcessResponse");
+		}
 		
         if (Environment.isSpecialEnvironment(environment)) {
         	RetreiveIdsToProcess clone = (RetreiveIdsToProcess) retreiveIds.clone();
@@ -34,8 +42,8 @@ public class TestRetreiveIdsToProcess_nullProcessId extends AccommodationBaseTes
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retreiveIds, true), "Validating Response Comparison");
         }
-
-    }	
+    }
+	
 }
 
 

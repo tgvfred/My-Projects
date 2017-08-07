@@ -37,5 +37,8 @@ public RetreiveIdsToProcess(String environment, String scenario) {
 	public String getProcessType() {
 		return getResponseNodeValueByXPath("/Envelope/Body/retreiveIdsToProcessResp/retreiveIdsToProcessResponse/processType");
 	}
+	public String getProcessId(){
+		return getResponseNodeValueByXPath("/Envelope/Body/retreiveIdsToProcess/processId");
+	}
 	
 }
