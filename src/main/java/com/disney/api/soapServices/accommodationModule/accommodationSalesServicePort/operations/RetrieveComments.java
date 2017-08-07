@@ -71,5 +71,4 @@ public class RetrieveComments extends AccommodationSalesServicePort {
     public String getUpdatedDate() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo/auditDetail/udatedDate");
     }
-
 }

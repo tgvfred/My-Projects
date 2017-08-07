@@ -349,10 +349,20 @@ public class AccommodationBaseTest extends BaseRestTest {
         return packageType.get();
     }
 
+    /**
+     * This flag is used to determine if a particular wholesaler (Group# 01825) is to be used for booking
+     * 
+     * @param isLibgoBooking
+     */
     public void setIsWdtcBooking(Boolean isWdtcBooking) {
         this.isWdtcBooking.set(isWdtcBooking);
     }
 
+    /**
+     * This flag is used to determine if a particular wholesaler (Group# 01825) is to be used for booking
+     * 
+     * @param isLibgoBooking
+     */
     public Boolean isWdtcBooking() {
         return this.isWdtcBooking.get();
     }
@@ -476,10 +486,20 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.setTickets.get();
     }
 
+    /**
+     * This flag is used to determine if a particular wholesaler (Group# 01905) is to be used for booking
+     * 
+     * @param isLibgoBooking
+     */
     public void setIsLibgoBooking(Boolean isLibgoBooking) {
         this.isLibgoBooking.set(isLibgoBooking);
     }
 
+    /**
+     * This flag is used to determine if a particular wholesaler (Group# 01905) is to be used for booking
+     * 
+     * @param isLibgoBooking
+     */
     public Boolean getIsLibgoBooking() {
         return this.isLibgoBooking.get();
     }

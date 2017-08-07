@@ -111,6 +111,9 @@ public class AccommodationErrorCode {
             " Required parameters are missing ");
     public static final ApplicationErrorCode EXT_REF_SRC_REQ = new ApplicationErrorCode(MOD_NAME, 7090,
             " External Reference Source or Code required ");
+
+    public static final ApplicationErrorCode ACCOMMODATION_COMPONENT_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 9083,
+            " Accommodation Component not found ");
     public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
             " No Accommodation Component found. ");
 
