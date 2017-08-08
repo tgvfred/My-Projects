@@ -74,6 +74,7 @@ public class TestCreateComments_parentTC_emptyCommentOwnerDetails extends Accomm
                 " AND GSR_IN = '" + GSR_IN + "' " +
                 " AND CFDNTL_IN = '" + CFDNTL_IN + "' " +
                 " AND RES_MGMT_REQ_TX = '" + create.getCommentText() + "' ";
+
         Database RES_MGMT_REQ_VALIDATE_db = new OracleDatabase(environment, Database.DREAMS);
         Recordset RES_MGMT_REQ_VALIDATE_rs = new Recordset(RES_MGMT_REQ_VALIDATE_db.getResultSet(RES_MGMT_REQ_VALIDATE_sql));
 

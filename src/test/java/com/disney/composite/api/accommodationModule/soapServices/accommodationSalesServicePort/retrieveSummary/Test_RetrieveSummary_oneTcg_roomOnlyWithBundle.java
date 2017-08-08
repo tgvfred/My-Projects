@@ -8,21 +8,21 @@ import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.AddBundleHe
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
-public class Test_RetrieveSummary_oneTcg_roomOnlyWithBundle extends AccommodationBaseTest{
-	
-	@Test(groups={"api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary"})
-	public void testRetrieveSummary_oneTcg_roomOnlyWithBundle(){
-		
-		AddBundleHelper helper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
+public class Test_RetrieveSummary_oneTcg_roomOnlyWithBundle extends AccommodationBaseTest {
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
+    public void testRetrieveSummary_oneTcg_roomOnlyWithBundle() {
+
+        AddBundleHelper helper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         helper.addBundle(getBook().getTravelPlanId(), getDaysOut());
-		
-		RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-		retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
-		retrieve.sendRequest();
-		TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping ["+getBook().getTravelComponentGroupingId()+"]", retrieve);
-		
-		// Old vs New Validation
-		if (Environment.isSpecialEnvironment(environment)) {
+
+        RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
+        retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
+        retrieve.sendRequest();
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", retrieve);
+
+        // Old vs New Validation
+        if (Environment.isSpecialEnvironment(environment)) {
             RetrieveSummary clone = (RetrieveSummary) retrieve.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.sendRequest();
@@ -36,7 +36,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyWithBundle extends Accommodatio
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
         }
-		
-	}
-	
+
+    }
+
 }
