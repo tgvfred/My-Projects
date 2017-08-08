@@ -1,9 +1,13 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.XMLTools;
 
 public class Share extends AccommodationSalesServicePort {
+
+    int Shared = 1;
+
     public Share(String environment, String scenario) {
         super(environment);
         // Generate a request from a project xml file
@@ -22,6 +26,16 @@ public class Share extends AccommodationSalesServicePort {
         generateServiceContext();
         removeComments();
         removeWhiteSpace();
+    }
+
+    public void addSharedComponent() {
+        String baseXpath = "/Envelope/Body/share/request";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("sharedComponents"));
+
+        baseXpath = "/Envelope/Body/share/request/sharedComponents[" + (Shared + 1) + "]";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("travelComponentGroupingId"));
+
+        Shared++;
     }
 
     public void setTravelComponentGroupingId(String value) {

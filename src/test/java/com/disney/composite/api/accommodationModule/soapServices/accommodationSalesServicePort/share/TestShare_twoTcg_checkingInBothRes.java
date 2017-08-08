@@ -25,6 +25,8 @@ public class TestShare_twoTcg_checkingInBothRes extends AccommodationBaseTest {
     String firstTCG;
     String ownerIdOne;
     String ownerIdTwo;
+    String guestId;
+    String guestId2;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -40,15 +42,14 @@ public class TestShare_twoTcg_checkingInBothRes extends AccommodationBaseTest {
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
         setValues();
         bookReservation();
-
-        book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
-        book.sendRequest();
-
+        ReplaceAllForTravelPlanSegment book = getBook();
         firstTCG = getBook().getTravelComponentGroupingId();
+        guestId = getBook().getGuestId();
         captureFirstOwnerId();
 
-        book1 = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
-        book1.sendRequest();
+        bookReservation();
+        ReplaceAllForTravelPlanSegment book1 = getBook();
+        guestId2 = getBook().getGuestId();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
@@ -58,19 +59,22 @@ public class TestShare_twoTcg_checkingInBothRes extends AccommodationBaseTest {
         // check in the first res
         CheckIn checkIn = new CheckIn(environment, "Main");
         checkIn.setTravelComponentGroupingId(firstTCG);
+        checkIn.setGuestId(guestId);
         checkIn.sendRequest();
         TestReporter.logAPI(!checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + checkIn.getFaultString(), checkIn);
 
         // check in the second res
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        // checkIn.setGuestId(guestId2);
         checkIn.sendRequest();
-        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in the second reservation " + share.getFaultString(), share);
+        TestReporter.logAPI(!checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in the second reservation " + checkIn.getFaultString(), checkIn);
 
         // verify that the owner id's for the first and second tcg do not match.
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
 
-        share = new Share(environment, "Main_twoTcg");
+        share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(firstTCG);
+        share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
