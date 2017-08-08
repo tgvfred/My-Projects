@@ -122,4 +122,9 @@ public class AccommodationErrorCode {
             "Travel Status is invalid for Share");
     public static final ApplicationErrorCode CANNOT_CHANGE_PACKAGE = new ApplicationErrorCode(MOD_NAME, 7208,
             "Cannot change Block/Resort/Package for an shared Accommodation.");
+
+    private static final String MODULE_NAME = "LILO System";
+
+    public static final ApplicationErrorCode UNEXPECTED_ERROR = new ApplicationErrorCode(MODULE_NAME, 1001,
+            "Unexpected Error occurred");
 }

@@ -4,10 +4,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.ShareHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
@@ -42,32 +42,24 @@ public class TestShare_twoTcg_checkingInBothRes extends AccommodationBaseTest {
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
         setValues();
         bookReservation();
-        ReplaceAllForTravelPlanSegment book = getBook();
+        book = getBook();
         firstTCG = getBook().getTravelComponentGroupingId();
         guestId = getBook().getGuestId();
         captureFirstOwnerId();
 
         bookReservation();
-        ReplaceAllForTravelPlanSegment book1 = getBook();
+        book1 = getBook();
         guestId2 = getBook().getGuestId();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
-    public void Test_Share_twoTcg_heckingInBothRes() {
+    public void Test_Share_twoTcg_checkingInBothRes() {
         captureSecondOwnerId();
 
-        // check in the first res
-        CheckIn checkIn = new CheckIn(environment, "Main");
-        checkIn.setTravelComponentGroupingId(firstTCG);
-        checkIn.setGuestId(guestId);
-        checkIn.sendRequest();
-        TestReporter.logAPI(!checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + checkIn.getFaultString(), checkIn);
-
-        // check in the second res
-        checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        // checkIn.setGuestId(guestId2);
-        checkIn.sendRequest();
-        TestReporter.logAPI(!checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in the second reservation " + checkIn.getFaultString(), checkIn);
+        CheckInHelper checkingIn = new CheckInHelper(environment, book);
+        checkingIn.checkingIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        checkingIn = new CheckInHelper(environment, book1);
+        checkingIn.checkingIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         // verify that the owner id's for the first and second tcg do not match.
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
