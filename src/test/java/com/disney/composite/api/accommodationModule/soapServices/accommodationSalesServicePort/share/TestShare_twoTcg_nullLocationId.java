@@ -29,16 +29,21 @@ public class TestShare_twoTcg_nullLocationId extends AccommodationBaseTest {
     public void setup(String environment) {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
+        Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
         setValues();
+        bookReservation();
 
         firstTCG = getBook().getTravelComponentGroupingId();
         captureFirstOwnerId();
+
         bookReservation();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
@@ -50,6 +55,7 @@ public class TestShare_twoTcg_nullLocationId extends AccommodationBaseTest {
 
         share = new Share(environment, "Main_twoTcg");
         share.setTravelComponentGroupingId(firstTCG);
+        share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
         share.sendRequest();
@@ -113,7 +119,7 @@ public class TestShare_twoTcg_nullLocationId extends AccommodationBaseTest {
 
     public void captureSecondOwnerId() {
 
-        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getTcgId() + "'";
+        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getBook().getTravelComponentGroupingId() + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 

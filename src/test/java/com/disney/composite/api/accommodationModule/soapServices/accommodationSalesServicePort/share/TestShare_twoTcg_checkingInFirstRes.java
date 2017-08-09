@@ -44,6 +44,9 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
         firstTCG = getBook().getTravelComponentGroupingId();
         guestId = getBook().getGuestId();
         captureFirstOwnerId();
+
+        bookReservation();
+
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
@@ -59,6 +62,7 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
 
         share = new Share(environment, "Main_twoTcg");
         share.setTravelComponentGroupingId(firstTCG);
+        share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
@@ -121,7 +125,7 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
 
     public void captureSecondOwnerId() {
 
-        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getTcgId() + "'";
+        String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getBook().getTravelComponentGroupingId() + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
