@@ -26,7 +26,7 @@ public class TestUpdateComments_Negative extends BaseRestTest {
 
     /**
      * This will always be used as is. TestNG will pass in the Environment used
-     * 
+     *
      * @param environment
      *            - Valid environments for active testing are bashful, sleepy and grumpy
      */
@@ -72,7 +72,7 @@ public class TestUpdateComments_Negative extends BaseRestTest {
         validateResponse(response, "401");
     }
 
-    @Test(groups = { "api", "rest", "regression", "negative", "accommodation", "accommodationSales", "updateComments" })
+    @Test(groups = { "api", "rest", "regression", "negative", "accommodation", "accommodationSales", "updateComments", "example" })
     public void testupdateComments_Negative_NoTC() throws IOException {
 
         // Create new request

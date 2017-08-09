@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentS
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -23,22 +24,18 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
     public void setup(String environment) {
 
         int tries = 0;
-        String locEnv = null;
-        if (environment.toLowerCase().contains("_cm")) {
-            locEnv = environment.toLowerCase().replace("_cm", "");
-        }
-        setEnvironment(locEnv);
+        setEnvironment(environment);
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues(getEnvironment());
+        setValues(Environment.getBaseEnvironmentName(getEnvironment()));
         bookReservation();
-        checkingIn(locEnv);
+        checkingIn(Environment.getBaseEnvironmentName(getEnvironment()));
 
-        CheckIn checkIn = new CheckIn(locEnv, "UI_Booking");
+        CheckIn checkIn = new CheckIn(Environment.getBaseEnvironmentName(getEnvironment()), "UI_Booking");
         checkIn.setGuestId(getBook().getGuestId());
         checkIn.setLocationId(getLocationId());
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
