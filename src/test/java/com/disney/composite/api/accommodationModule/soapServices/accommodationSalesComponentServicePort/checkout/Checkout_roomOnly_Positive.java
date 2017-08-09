@@ -55,7 +55,22 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     public void TestCheckout_roomOnly_BEREAV() {
 
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
-        helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -91,7 +106,22 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     public void TestCheckout_roomOnly_DOMDISP() {
 
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
-        helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -127,7 +157,22 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     public void TestCheckout_roomOnly_DUPRES() {
 
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
-        helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -163,7 +208,22 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     public void TestCheckout_roomOnly_ECERR() {
 
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
-        helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -200,7 +260,22 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     public void TestCheckout_roomOnly_FAMEM() {
 
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
-        helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -235,7 +310,22 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_ILL() {
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
-        helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -272,7 +362,22 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     public void TestCheckout_roomOnly_LVNOUTWDW() {
 
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
-        helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -309,7 +414,22 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     public void TestCheckout_roomOnly_WTHRCKO() {
 
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
-        helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -346,7 +466,22 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     public void TestCheckout_tpsExtRefAndTcg() {
 
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
-        helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();

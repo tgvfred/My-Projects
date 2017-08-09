@@ -243,28 +243,32 @@ public class CancelHelper {
         retrieveFolioDetails.setRequestNodeValueByXPath("/Envelope/Body/retrieveFolioDetails/transactionID", "fx:removenode");
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(DVCSalesDreams.getUniqueNodeChargeGroups(tpId)));
-        String sql = "select e.* "
-                + "from folio.EXTNL_REF a "
-                + "join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
-                + "join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
-                + "join folio.ROOT_CHRG_GRP d on c.CHRG_GRP_ID = d.ROOT_CHRG_GRP_ID "
-                + "join folio.NODE_CHRG_GRP e on d.ROOT_CHRG_GRP_ID = e.ROOT_CHRG_GRP_ID "
-                + "where a.EXTNL_REF_VAL in ( "
-                + "        (select to_char(a.tp_id) "
-                + "        from res_mgmt.tps a "
-                + "        where a.tp_id = '" + tpId + "'), "
-                + "        (select to_char(a.tps_id) "
-                + "        from res_mgmt.tps a "
-                + "        where a.tp_id = '" + tpId + "'), "
-                + "        (select to_char(b.tc_grp_nb) "
-                + "        from res_mgmt.tps a "
-                + "        join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "        where a.tp_id = '" + tpId + "') "
-                + ")";
-        rs = new Recordset(db.getResultSet(sql));
+        Recordset rs = null;
+        try {
+            String sql = "select e.* "
+                    + "from folio.EXTNL_REF a "
+                    + "join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                    + "join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
+                    + "join folio.ROOT_CHRG_GRP d on c.CHRG_GRP_ID = d.ROOT_CHRG_GRP_ID "
+                    + "join folio.NODE_CHRG_GRP e on d.ROOT_CHRG_GRP_ID = e.ROOT_CHRG_GRP_ID "
+                    + "where a.EXTNL_REF_VAL in ( "
+                    + "        (select to_char(a.tp_id) "
+                    + "        from res_mgmt.tps a "
+                    + "        where a.tp_id = '" + tpId + "'), "
+                    + "        (select to_char(a.tps_id) "
+                    + "        from res_mgmt.tps a "
+                    + "        where a.tp_id = '" + tpId + "'), "
+                    + "        (select to_char(b.tc_grp_nb) "
+                    + "        from res_mgmt.tps a "
+                    + "        join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                    + "        where a.tp_id = '" + tpId + "') "
+                    + ")";
+            rs = new Recordset(db.getResultSet(sql));
+        } catch (Exception e) {
+            rs = new Recordset(db.getResultSet(DVCSalesDreams.getUniqueNodeChargeGroups(tpId)));
+        }
         // rs.print();
-        System.out.println();
+        // System.out.println();
         String nodeChargeGroups = "";
         for (int i = 1; i <= rs.getRowCount(); i++) {
             nodeChargeGroups += rs.getValue("NODE_CHRG_GRP_ID", i);
