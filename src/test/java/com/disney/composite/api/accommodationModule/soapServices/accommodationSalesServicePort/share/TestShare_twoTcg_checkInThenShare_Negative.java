@@ -49,7 +49,7 @@ public class TestShare_twoTcg_checkInThenShare_Negative extends AccommodationBas
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
-    public void Test_Share_twoTcg_checkingInBothRes_Negative() {
+    public void Test_Share_twoTcg_checkingInThenShare_Negative() {
 
         // check in the first res
         CheckIn checkIn = new CheckIn(environment, "Main");

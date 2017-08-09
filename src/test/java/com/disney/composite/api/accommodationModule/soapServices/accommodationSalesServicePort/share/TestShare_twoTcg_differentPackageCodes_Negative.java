@@ -4,12 +4,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
-import com.disney.utils.PackageCodes;
+import com.disney.utils.PackageCodes_RSR;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
@@ -17,7 +16,6 @@ public class TestShare_twoTcg_differentPackageCodes_Negative extends Accommodati
 
     private Share share;
     String firstTCG;
-    private ReplaceAllForTravelPlanSegment book, book1;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -34,17 +32,17 @@ public class TestShare_twoTcg_differentPackageCodes_Negative extends Accommodati
         setValues();
         bookReservation();
 
-        book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
-        book.sendRequest();
-
         firstTCG = getBook().getTravelComponentGroupingId();
 
-        book1 = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
-        PackageCodes pkg = new PackageCodes();
+        PackageCodes_RSR pkg = new PackageCodes_RSR();
         String packageCode = pkg.retrievePackageCode(getEnvironment(), String.valueOf(getDaysOut()),
-                getLocationId(), "RSR", "", getResortCode(), getRoomTypeCode(), "");
+                getLocationId(), "RSR", "", getResortCode(), getRoomTypeCode(), "WDW RSR CR");
+
+        setSendRequest(false);
+        bookReservation();
         getBook().setRoomDetailsPackageCode(packageCode);
-        book1.sendRequest();
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share", "negative" })
@@ -52,6 +50,7 @@ public class TestShare_twoTcg_differentPackageCodes_Negative extends Accommodati
 
         share = new Share(environment, "Main_twoTcg");
         share.setTravelComponentGroupingId(firstTCG);
+        share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
 

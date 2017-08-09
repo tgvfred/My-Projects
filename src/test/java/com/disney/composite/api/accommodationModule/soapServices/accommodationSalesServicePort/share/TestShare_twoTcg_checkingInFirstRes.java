@@ -4,9 +4,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.ShareHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
@@ -18,27 +19,31 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
 
     private Share share;
+    private ReplaceAllForTravelPlanSegment book;
     String firstOwnerId;
     String secondOwnerId;
     String firstTCG;
     String ownerIdOne;
     String ownerIdTwo;
+    String guestId;
 
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
+        Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
         setValues();
-
-        firstTCG = getBook().getTravelComponentGroupingId();
-        captureFirstOwnerId();
         bookReservation();
+        book = getBook();
+        firstTCG = getBook().getTravelComponentGroupingId();
+        guestId = getBook().getGuestId();
+        captureFirstOwnerId();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
@@ -46,10 +51,8 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
         captureSecondOwnerId();
 
         // check in the first res
-        CheckIn checkIn = new CheckIn(environment, "Main");
-        checkIn.setTravelComponentGroupingId(firstTCG);
-        checkIn.sendRequest();
-        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + share.getFaultString(), share);
+        CheckInHelper checkingIn = new CheckInHelper(environment, book);
+        checkingIn.checkingIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         // verify that the owner id's for the first and second tcg do not match.
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
