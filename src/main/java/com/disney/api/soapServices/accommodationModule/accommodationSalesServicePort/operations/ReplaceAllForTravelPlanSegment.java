@@ -5,6 +5,7 @@ import static com.disney.api.soapServices.accommodationModule.helpers.Accommodat
 
 import com.disney.AutomationException;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Randomness;
@@ -15,6 +16,16 @@ import com.disney.utils.dataFactory.guestFactory.Guest;
 import com.disney.utils.dataFactory.guestFactory.Phone;
 
 public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePort {
+    private int totalRate;
+
+    public int getTotalRate() {
+        return totalRate;
+    }
+
+    public void setTotalRate(int totalRate) {
+        this.totalRate = totalRate;
+    }
+
     public ReplaceAllForTravelPlanSegment(String environment, String scenario) {
         super(environment);
         // Generate a request from a project xml file
@@ -24,6 +35,16 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         removeComments();
         removeWhiteSpace();
     }
+
+    // *********************************************************************************************************
+    // *********************************************************************************************************
+    // *********************************************************************************************************
+
+    // ********************************************Setters******************************************************
+
+    // *********************************************************************************************************
+    // *********************************************************************************************************
+    // *********************************************************************************************************
 
     public void setResExternalReference(String code, String number, String source, String type) {
         String baseXpath = "//replaceAllForTravelPlanSegment/request/resExternalReferences/";
@@ -41,14 +62,37 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setExtRefType(baseXpath, type);
     }
 
-    public void setInternalComments(String commentText, String defaultIndicator, String from, String rountingName, String to, String auditStatus) {
-        String baseXpath = "//replaceAllForTravelPlanSegment/request/internalComments/";
+    public void setInternalComments(String commentText, String commentType, String auditStatus) {
+        String baseXpath = "//replaceAllForTravelPlanSegment/request/internalComments";
+        int numInternalComments = getNumberOfRequestNodesByXPath(baseXpath);
+        if (numInternalComments == 0) {
+            addInternalComments(baseXpath, numInternalComments);
+        }
+        baseXpath += "/";
         setCommentsCommentText(baseXpath, commentText);
-        setCommentsDefault(baseXpath, defaultIndicator);
-        setCommentsFrom(baseXpath, from);
-        setCommentsRountingsName(baseXpath, rountingName);
-        setCommentsTo(baseXpath, to);
+        setCommentsCommentType(baseXpath, commentType);
         setAuditDetails(baseXpath, "AutoJUnit.us", Randomness.generateCurrentXMLDate(), "AutoJUnit.us", Randomness.generateCurrentXMLDate(), auditStatus);
+    }
+
+    public void addInternalComments(String baseXpath, int intnumInternalComments) {
+        String nodeName = "internalComments";
+        setRequestNodeValueByXPath(baseXpath.replace("/" + nodeName, ""), BaseSoapCommands.ADD_NODE.commandAppend("internalComments"));
+        intnumInternalComments++;
+        baseXpath = baseXpath + "[" + String.valueOf(intnumInternalComments) + "]";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("commentText"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("commentType"));
+        addAuditDetail(baseXpath);
+    }
+
+    private void addAuditDetail(String baseXpath) {
+        int numAuditDetails = getNumberOfRequestNodesByXPath(baseXpath);
+        setRequestNodeValueByXPath(baseXpath.replace("/auditDetail", ""), BaseSoapCommands.ADD_NODE.commandAppend("auditDetail"));
+        numAuditDetails++;
+        setRequestNodeValueByXPath(baseXpath + "[" + String.valueOf(numAuditDetails) + "]/auditDetail", "createdBy");
+        setRequestNodeValueByXPath(baseXpath + "[" + String.valueOf(numAuditDetails) + "]/auditDetail", "createdDate");
+        setRequestNodeValueByXPath(baseXpath + "[" + String.valueOf(numAuditDetails) + "]/auditDetail", "updatedBy");
+        setRequestNodeValueByXPath(baseXpath + "[" + String.valueOf(numAuditDetails) + "]/auditDetail", "updatedDate");
+        setRequestNodeValueByXPath(baseXpath + "[" + String.valueOf(numAuditDetails) + "]/auditDetail", "status");
     }
 
     public void setReservationDetail_Comments(String commentText, String defaultIndicator, String from, String rountingName, String to, String auditStatus) {
@@ -142,13 +186,30 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public void setRoomDetails_RoomReservationDetail_Comments(String auditStatus, String commentText, String defaultIndicator, String from, String routingsName, String to) {
-        String baseXpath = "//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/comments/";
+        String baseXpath = "//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/comments";
+        int numComments = getNumberOfRequestNodesByXPath(baseXpath);
+        if (numComments == 0) {
+            addRoomDetails_RoomReservationDetail_Comments(baseXpath, numComments);
+        }
+        baseXpath += "/";
         setAuditDetails(baseXpath, "AutoJUnit.us", Randomness.generateCurrentDatetime(), "AutoJUnit.us", Randomness.generateCurrentDatetime(), auditStatus);
         setCommentsCommentText(baseXpath, commentText);
         setCommentsDefault(baseXpath, defaultIndicator);
         setCommentsFrom(baseXpath, from);
         setCommentsRountingsName(baseXpath, routingsName);
         setCommentsTo(baseXpath, to);
+    }
+
+    private void addRoomDetails_RoomReservationDetail_Comments(String baseXpath, int numComments) {
+        String nodeName = "comments";
+        setRequestNodeValueByXPath(baseXpath.replace("/" + nodeName, ""), BaseSoapCommands.ADD_NODE.commandAppend(nodeName));
+        numComments++;
+        baseXpath += "/" + nodeName + "[" + String.valueOf(numComments) + "]";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(AccommodationBaseTest.COMMENT_TEXT));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(AccommodationBaseTest.COMMENT_TO));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(AccommodationBaseTest.COMMENT_FROM));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("default"));
+        addAuditDetail(baseXpath + "/auditDetail");
     }
 
     public void setRoomDetails_RoomReservationDetail_GuestRefDetails(Guest guest) {
@@ -205,7 +266,11 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public void setConfirmationDetails(String id, String indicator, String type, String defaultConfirmationIndicator, String individual, String jdoSeqNumber, String locatorId, String partyId, Guest guest) {
-        String baseXpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/guestDetail/";
+        int numConfirmationDetails = getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/confirmationDetails");
+        if (numConfirmationDetails == 0) {
+            addConfirmationDetails(numConfirmationDetails);
+        }
+        String baseXpath = "//confirmationDetails/guestDetail/";
         setConfirmationDetails_ConfirmationDetailId(indicator);
         setConfirmationDetails_ConfirmationIndicator(indicator);
         setConfirmationDetails_ConfirmationType(type);
@@ -217,76 +282,128 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setGuest(baseXpath, guest);
     }
 
-    private void setConfirmationDetails_ConfirmationDetailId(String value) {
-        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/confirmationDetailId";
-        if (isValid(value)) {
-            setRequestNodeValueByXPath(xpath, value);
-        } else {
-            setRequestNodeValueByXPath(xpath, "0");
-        }
+    private void addConfirmationDetails(int numConfirmationDetails) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("confirmationDetails"));
+        numConfirmationDetails++;
+        baseXpath += "/confirmationDetails[" + String.valueOf(numConfirmationDetails) + "]";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("confirmationDetailId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("confirmationIndicator"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("confirmationType"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("contactName"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("defaultConfirmationIndicator"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("firstName"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("individual"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("jdoSequenceNumber"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("lastName"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("partyId"));
+        addGuest("/Envelope/Body/replaceAllForTravelPlanSegment/request/confirmationDetails", false, false, "guestDetail");
     }
 
-    private void setConfirmationDetails_ConfirmationIndicator(String value) {
-        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/confirmationIndicator";
-        if (isValid(value)) {
-            setRequestNodeValueByXPath(xpath, value);
-        } else {
-            setRequestNodeValueByXPath(xpath, "0");
-        }
+    public void setReservationDetail_GuestRefDetails_Guest_GuestIdRefs(String type, String value) {
+        String baseXpath = "//replaceAllForTravelPlanSegment/request/reservationDetail/guestReferenceDetails/guest";
+        setGuestIdReferencesType(baseXpath, type);
+        setGuestIdReferencesValue(baseXpath, value);
     }
 
-    private void setConfirmationDetails_ConfirmationType(String value) {
-        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/confirmationType";
-        if (isValid(value)) {
-            setRequestNodeValueByXPath(xpath, value);
-        } else {
-            setRequestNodeValueByXPath(xpath, "Email");
-        }
+    public void addReservationDetail_GuestReferenceDetailGuest(Boolean addMembership, Boolean addGuestIdReferences, Guest guest) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/reservationDetail/guestReferenceDetails";
+        addAndSetGuest(baseXpath, addMembership, addGuestIdReferences, guest, "guest");
     }
 
-    private void setConfirmationDetails_DefaultConfirmationIndicator(String value) {
-        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/defaultConfirmationIndicator";
-        if (isValid(value)) {
-            setRequestNodeValueByXPath(xpath, value);
-        } else {
-            setRequestNodeValueByXPath(xpath, "Email");
-        }
+    public void addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(Boolean addMembership, Boolean addGuestIdReferences, Guest guest) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails";
+        addAndSetGuest(baseXpath, addMembership, addGuestIdReferences, guest, "guest");
     }
 
-    private void setConfirmationDetails_Individual(String value) {
-        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/individual";
-        if (isValid(value)) {
-            setRequestNodeValueByXPath(xpath, value);
-        } else {
-            setRequestNodeValueByXPath(xpath, "false");
-        }
+    public void addTicketDetails_GuestReferenceGuest(Boolean addMembership, Boolean addGuestIdReferences, Guest guest) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/ticketDetails/guestReference";
+        addAndSetGuest(baseXpath, addMembership, addGuestIdReferences, guest, "guest");
     }
 
-    private void setConfirmationDetails_JdoSequenceNumber(String value) {
-        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/jdoSequenceNumber";
-        if (isValid(value)) {
-            setRequestNodeValueByXPath(xpath, value);
-        } else {
-            setRequestNodeValueByXPath(xpath, "0");
-        }
+    public void addAndSetGuest(String xPath, Boolean addMembership, Boolean addGuestIdReferences, Guest guest, String guestNodeName) {
+        int numGuestNodes = addGuest(xPath, addMembership, addGuestIdReferences, guestNodeName);
+        setGuest(xPath + "[" + String.valueOf(numGuestNodes) + "]" + "/guest", guest);
     }
 
-    private void setConfirmationDetails_LocatorId(String value) {
-        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/locatorId";
-        if (isValid(value)) {
-            setRequestNodeValueByXPath(xpath, value);
-        } else {
-            setRequestNodeValueByXPath(xpath, "0");
-        }
-    }
+    public int addGuest(String xPath, Boolean addMembership, Boolean addGuestIdReferences, String guestNodeName) {
+        int numExistingGuests = getNumberOfRequestNodesByXPath(xPath);
+        // Add a new parent node
+        String[] arrTemp = xPath.split("/");
+        String strTemp = arrTemp[arrTemp.length - 1];
+        String tempXpath = xPath.replace("/" + strTemp, "");
+        setRequestNodeValueByXPath(tempXpath, BaseSoapCommands.ADD_NODE.commandAppend(strTemp));
+        numExistingGuests++;
+        // Create the new xPath
+        xPath += "[" + String.valueOf(numExistingGuests) + "]";
 
-    private void setConfirmationDetails_PartyId(String value) {
-        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/partyId";
-        if (isValid(value)) {
-            setRequestNodeValueByXPath(xpath, value);
-        } else {
-            setRequestNodeValueByXPath(xpath, "0");
+        // Add a "guest" node
+        String baseXpath = xPath;
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(guestNodeName));
+        baseXpath += "/guest";
+        // Add the remaining nodes
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("title"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("firstName"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("lastName"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("middleName"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("partyId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("doNotMailIndicator"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("doNotPhoneIndicator"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("preferredLanguage"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("dclGuestId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("active"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("dob"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("phoneDetails"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("addressDetails"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("emailDetails"));
+
+        baseXpath += "/phoneDetails";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primary"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("deviceType"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("extension"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("number"));
+
+        baseXpath = xPath + "/guest/addressDetails";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primary"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("addressLine1"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("city"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("country"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("postalCode"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("state"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("regionName"));
+
+        baseXpath = xPath + "/guest/emailDetails";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primary"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("address"));
+
+        if (isValid(addMembership) && addMembership == true) {
+            baseXpath = xPath + "/guest";
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("membershipDetail"));
+            baseXpath = xPath + "/guest/membershipDetail";
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("expirationDate"));
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("memberShipType"));
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("membershipId"));
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("policyId"));
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("productChannelId"));
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestMembershipId"));
         }
+
+        if (isValid(addGuestIdReferences) && addGuestIdReferences == true) {
+            baseXpath = xPath + "/guest";
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestIdReferences"));
+            baseXpath = xPath + "/guest/guestIdReferences";
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("type"));
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("value"));
+        }
+        return numExistingGuests;
     }
 
     private void setGuest(String baseXpath, Guest guest) {
@@ -367,6 +484,204 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setMembershipDetailsProdChannelId(baseXpath, prodChannelId);
     }
 
+    public void setGatheringDetail(String id, String name, String type) {
+        int numGatherings = getNumberOfRequestNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/gatheringDetail");
+        if (numGatherings == 0) {
+            addGathering(numGatherings);
+        }
+        setGateringDetailId(id);
+        setGateringDetailName(name);
+        setGateringDetailType(type);
+    }
+
+    private void addGathering(int numGatherings) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("gatheringDetail"));
+        numGatherings++;
+        baseXpath += "/gatheringDetail[" + String.valueOf(numGatherings) + "]";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("gatheringId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("gatheringName"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("gatheringType"));
+    }
+
+    public void setGateringDetailId(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/gatheringDetail/gatheringId", value);
+        } else {
+            throw new AutomationException("The Gathering Detail ID cannot be null");
+        }
+    }
+
+    public void setGateringDetailName(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/gatheringDetail/gatheringName", value);
+        } else {
+            throw new AutomationException("The Gathering Detail name cannot be null");
+        }
+    }
+
+    public void setGateringDetailType(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/gatheringDetail/gatheringType", value);
+        } else {
+            throw new AutomationException("The Gathering Detail type cannot be null");
+        }
+    }
+
+    public void setRoomDetails_ResortPeriod(String startDate, String endDate) {
+        setRoomDetails_ResortPeriodStartDate(startDate);
+        setRoomDetails_ResortPeriodEndDate(endDate);
+    }
+
+    public void setAreaPeriod(String startDate, String endDate) {
+        setAreaPeriodEndDate(endDate);
+        setAreaPeriodStartDate(startDate);
+    }
+
+    public void setTaxExemptDetails(String number, String type) {
+        setTaxExemptDetailCertificateNumber(number);
+        setTaxExemptDetailType(type);
+    }
+
+    @Deprecated
+    public void setTravelAgency(Address address) {
+        // TODO: add functionality to add a travel agency at a high level
+        // setTravelAgency_primaryAddress();
+        // setTravelAgencyAgencyIataNumber(value);
+        // setTravelAgencyAgencyName(value);
+        // setTravelAgencyAgencyOdsId(value);
+        // setTravelAgencyGuestTravelAgencyId(value);
+        // setTravelAgencyAgentId(value);
+        // setTravelAgencyConfirmationLocatorValue(value);
+        // setTravelAgencyConfirmationType(value);
+        // setTravelAgencyGuestAgentId(value);
+        // setTravelAgencyGuestConfirmationLocationId(value);
+        // setTravelAgencyStatus(value);
+    }
+
+    @Deprecated
+    public void setTravelAgent(Guest guest) {
+        // TODO: add functionality to add a travel agency at a high level
+        // setGuest("//replaceAllForTravelPlanSegment/request/travelAgent", guest);
+        // setTravelAgent_GuestIdReferences(type, value);
+        // setTravelAgent_MembershipDetails(expDate, membershipType, membershipId, policyId, prodChannelId, guestMembershipId);
+    }
+
+    public void setLocationIds(String locationId) {
+        setLocationId(locationId);
+        setRoomDetailsLocationId(locationId);
+    }
+
+    public void setReservationDetail_ModContactAndReason(String contact, String reason) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/reservationDetail/";
+        setRoomModificationContactName(baseXpath, contact);
+        setRoomModificationReason(baseXpath, reason);
+    }
+
+    public void setRoomDetails_RoomReservationDetail_ModContactAndReason(String contact, String reason) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/";
+        setRoomModificationContactName(baseXpath, contact);
+        setRoomModificationReason(baseXpath, reason);
+    }
+
+    public void setReservationDetail_AdditionalOccupants(String additionalOccupants) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/reservationDetail/";
+        setAdditionalOccupants(baseXpath, additionalOccupants);
+    }
+
+    public void setRoomDetails_RoomReservationDetail_AdditionalOccupants(String additionalOccupants) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/";
+        setAdditionalOccupants(baseXpath, additionalOccupants);
+    }
+
+    public void setOfferIdentifiers(String candidateId, String requestId, String quoteId) {
+        setOfferIdentifiersCandidateId(candidateId);
+        setOfferIdentifiersRequestId(requestId);
+        setOfferIdentifiersQuoteId(quoteId);
+    }
+
+    // *********************************************************************************************************
+    // *********************************************************************************************************
+    // *********************************************************************************************************
+
+    // ********************************************Component Setters********************************************
+
+    // *********************************************************************************************************
+    // *********************************************************************************************************
+    // *********************************************************************************************************
+
+    private void setConfirmationDetails_ConfirmationDetailId(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/confirmationDetailId";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "0");
+        }
+    }
+
+    private void setConfirmationDetails_ConfirmationIndicator(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/confirmationIndicator";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "0");
+        }
+    }
+
+    private void setConfirmationDetails_ConfirmationType(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/confirmationType";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "Email");
+        }
+    }
+
+    private void setConfirmationDetails_DefaultConfirmationIndicator(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/defaultConfirmationIndicator";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "Email");
+        }
+    }
+
+    private void setConfirmationDetails_Individual(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/individual";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "false");
+        }
+    }
+
+    private void setConfirmationDetails_JdoSequenceNumber(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/jdoSequenceNumber";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "0");
+        }
+    }
+
+    private void setConfirmationDetails_LocatorId(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/locatorId";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "0");
+        }
+    }
+
+    private void setConfirmationDetails_PartyId(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/partyId";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "0");
+        }
+    }
+
     public void setRoomDetailsTeamName(String value) {
         setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/teamName", value);
     }
@@ -444,7 +759,11 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public void setRoomDetailsLocationId(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/locationId", value);
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/locationId", value);
+        } else {
+            throw new AutomationException("The location id cannot be null or empty");
+        }
     }
 
     public void setRoomDetailsShared(String value) {
@@ -456,19 +775,43 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public void setRoomDetails_ResortPeriodEndDate(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/resortPeriod/endDate", value);
+        setEndDate("//replaceAllForTravelPlanSegment/request/roomDetails/resortPeriod/", value);
     }
 
     public void setRoomDetails_ResortPeriodStartDate(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/resortPeriod/startDate", value);
+        setStartDate("//replaceAllForTravelPlanSegment/request/roomDetails/resortPeriod/", value);
+    }
+
+    public void setEndDate(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "endDate", value);
+        } else {
+            throw new AutomationException("The end date cannot be null");
+        }
+    }
+
+    public void setStartDate(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "startDate", value);
+        } else {
+            throw new AutomationException("The start date cannot be null");
+        }
     }
 
     public void setTaxExemptDetailCertificateNumber(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+        } else {
+            throw new AutomationException("The tax exempt detail certificate number cannot be null or empty");
+        }
     }
 
     public void setTaxExemptDetailType(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+        } else {
+            throw new AutomationException("The tax exempt detail type cannot be null or empty");
+        }
     }
 
     public void setTravelAgencyAgencyIataNumber(String value) {
@@ -665,6 +1008,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         }
     }
 
+    private void setCommentsCommentType(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "comments/commentType", value);
+        }
+    }
+
     private void setCommentsDefault(String baseXpath, String value) {
         if (isValid(value)) {
             setRequestNodeValueByXPath(baseXpath + "comments/default", value);
@@ -718,15 +1067,19 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public void setLocationId(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/locationId", value);
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/locationId", value);
+        } else {
+            throw new AutomationException("The location id cannot be null or empty");
+        }
     }
 
     public void setAreaPeriodEndDate(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/areaPeriod/endDate", value);
+        setEndDate("//replaceAllForTravelPlanSegment/request/areaPeriod/", value);
     }
 
     public void setAreaPeriodStartDate(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/areaPeriod/startDate", value);
+        setStartDate("//replaceAllForTravelPlanSegment/request/areaPeriod/", value);
     }
 
     private void setExtRefType(String baseXpath, String value) {
@@ -771,18 +1124,6 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
                 setRequestNodeValueByXPath(baseXpath + "externalReferenceSource", value);
             }
         }
-    }
-
-    public void setGateringDetailId(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/gatheringDetail/gatheringId", value);
-    }
-
-    public void setGateringDetailName(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/gatheringDetail/gatheringName", value);
-    }
-
-    public void setGateringDetailType(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/gatheringDetail/gatheringType", value);
     }
 
     private void setExperienceMediaDetailsId(String baseXpath, String value) {
@@ -929,12 +1270,6 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         }
     }
 
-    public void setReservationDetail_GuestRefDetails_Guest_GuestIdRefs(String type, String value) {
-        String baseXpath = "//replaceAllForTravelPlanSegment/request/reservationDetail/guestReferenceDetails/guest";
-        setGuestIdReferencesType(baseXpath, type);
-        setGuestIdReferencesValue(baseXpath, value);
-    }
-
     private void setGuestIdReferencesType(String baseXpath, String value) {
         if (isValid(value)) {
             setRequestNodeValueByXPath(baseXpath + "/guestIdReferences/type", value);
@@ -946,6 +1281,348 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
             setRequestNodeValueByXPath(baseXpath + "/guestIdReferences/value", value);
         }
     }
+
+    public void setByPassFreeze(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//byPassFreeze", value);
+        } else {
+            throw new AutomationException("The bypass freeze value cannot be null or empty");
+        }
+    }
+
+    public void setContactName(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//contactName", value);
+        } else {
+            throw new AutomationException("The contact name cannot be null or empty");
+        }
+    }
+
+    public void setReplaceAll(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//replaceAll", value);
+        } else {
+            throw new AutomationException("The replace all value cannot be null or empty");
+        }
+    }
+
+    public void setSecurityValue(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//securityValue", value);
+        } else {
+            throw new AutomationException("The security value cannot be null or empty");
+        }
+    }
+
+    public void setSentToProperty(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//sentToProperty", value);
+        } else {
+            throw new AutomationException("The sent to property value cannot be null or empty");
+        }
+    }
+
+    public void setTagNumber(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//tagNumber", value);
+        } else {
+            throw new AutomationException("The tag number cannot be null or empty");
+        }
+    }
+
+    public void setRoomModificationContactName(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "roomModificationContactName", value);
+        } else {
+            throw new AutomationException("The room modification contact name cannot be null or empty");
+        }
+    }
+
+    public void setRoomModificationReason(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "roomModificationReason", value);
+        } else {
+            throw new AutomationException("The room modification contact name cannot be null or empty");
+        }
+    }
+
+    public void setAdditionalOccupants(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "additionalOccupants", value);
+        } else {
+            throw new AutomationException("The additional occupants cannot be null or empty");
+        }
+    }
+
+    public void setCheckoutDateTime(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "checkOutDateTime", value);
+        } else {
+            throw new AutomationException("The checkout dateTime cannot be null or empty");
+        }
+    }
+
+    public void setFPLOSid(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "fplosId", value);
+        } else {
+            throw new AutomationException("The FPLOS ID cannot be null or empty");
+        }
+    }
+
+    public void setRateCategoryCode(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "rateCategoryCode", value);
+        } else {
+            throw new AutomationException("The rate category code cannot be null or empty");
+        }
+    }
+
+    public void setRoomNumber(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//roomNumber", value);
+        } else {
+            throw new AutomationException("The room number cannot be null or empty");
+        }
+    }
+
+    public void setInventoryOverrideReason(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//inventoryOverrideReason", value);
+        } else {
+            throw new AutomationException("The inventory override reason cannot be null or empty");
+        }
+    }
+
+    public void setInventoryOverrideContactName(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("//inventoryOverrideContactName", value);
+        } else {
+            throw new AutomationException("The inventory override contact name cannot be null or empty");
+        }
+    }
+
+    public void setOfferIdentifiersCandidateId(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/offerIdentifiers/candidate_id", value);
+        } else {
+            throw new AutomationException("The offer identifiers candidate ID cannot be null or empty");
+        }
+    }
+
+    public void setOfferIdentifiersRequestId(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/offerIdentifiers/request_id", value);
+        } else {
+            throw new AutomationException("The offer identifiers request ID cannot be null or empty");
+        }
+    }
+
+    public void setOfferIdentifiersQuoteId(String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/offerIdentifiers/quote_id", value);
+        } else {
+            throw new AutomationException("The offer identifiers quote ID cannot be null or empty");
+        }
+    }
+
+    // /Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/rateDetails/rackRate/ ?
+    // /Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/rateDetails/rackRate/ ?
+
+    public void setRateDetails(int numRates, int startDaysOut) {
+        int dayCount = 0;
+        int daysOut = startDaysOut;
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/rateDetails/";
+        int numExistingRates = getNumberOfRequestNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/rateDetails");
+        setTotalRate(setRateDetailsValues(baseXpath, startDaysOut, dayCount));
+        // If more than one rate details is to be set....
+        if (numRates > dayCount) {
+            // Loop over the remaining rate details
+            for (dayCount++; dayCount < numRates; dayCount++) {
+                daysOut++;
+                // If the next rate details is not expected to exist, add it and set the values
+                // Else just set the values
+                if (dayCount > numExistingRates) {
+                    numExistingRates++;
+                    addRateDetailsNode(numExistingRates);
+                }
+                setTotalRate(getTotalRate() + setRateDetailsValues(baseXpath.replace("rateDetails/", "rateDetails[" + String.valueOf(numExistingRates) + "]/"), daysOut, dayCount));
+            }
+        }
+    }
+
+    public void addRateDetailsNode(int nextNodeIndex) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("rateDetails"));
+        baseXpath = baseXpath + "/rateDetails[" + String.valueOf(nextNodeIndex) + "]";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("additionalCharge"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("additionalChargeOverridden"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("basePrice"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("date"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("dayCount"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("overidden"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("shared"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("netPrice"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("pointsValue"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("rackRate"));
+        baseXpath = baseXpath + "/rackRate";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("date"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("rate"));
+    }
+
+    public void setRateDetails(String numRates, int startDaysOut) {
+        setRateDetails(Integer.parseInt(numRates), startDaysOut);
+    }
+
+    private int setRateDetailsValues(String baseXpath, int daysOut, int dayCount) {
+        return setRateDetailsValues(baseXpath, daysOut, String.valueOf(dayCount));
+    }
+
+    private int setRateDetailsValues(String baseXpath, int daysOut, String dayCount) {
+        int defaultRackRate = Randomness.randomNumberBetween(1, 100);
+        setRateDetails_RackRateDate(baseXpath, Randomness.generateCurrentXMLDate(daysOut));
+        setRateDetails_RackRateRate(baseXpath, defaultRackRate);
+        setRateDetailsAdditionalCharge(baseXpath, "0");
+        setRateDetailsAdditionalChargeOverridden(baseXpath, "false");
+        setRateDetailsBasePrice(baseXpath, defaultRackRate);
+        setRateDetailsDate(baseXpath, Randomness.generateCurrentXMLDate(daysOut));
+        setRateDetailsDayCount(baseXpath, dayCount);
+        setRateDetailsNetPrice(baseXpath, defaultRackRate);
+        setRateDetailsShared(baseXpath, "false");
+        return defaultRackRate;
+    }
+
+    public void setRackRate(String baseXpath, String date, String rate) {
+        setRateDetails_RackRateDate(baseXpath, date);
+        setRateDetails_RackRateRate(baseXpath, rate);
+    }
+
+    public void setRackRate(String baseXpath, String date, int rate) {
+        setRateDetails_RackRateDate(baseXpath, date);
+        setRateDetails_RackRateRate(baseXpath, String.valueOf(rate));
+    }
+
+    public void setRateDetails_RackRateDate(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "date", value);
+        } else {
+            throw new AutomationException("The rate details rack rate date cannot be null or empty");
+        }
+    }
+
+    public void setRateDetails_RackRateRate(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "rate", value);
+        } else {
+            throw new AutomationException("The rate details rack rate rate cannot be null or empty");
+        }
+    }
+
+    public void setRateDetails_RackRateRate(String baseXpath, Integer value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "rate", String.valueOf(value));
+        } else {
+            throw new AutomationException("The rate details rack rate rate cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsAdditionalCharge(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "additionalCharge", value);
+        } else {
+            throw new AutomationException("The rate details additional charge cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsAdditionalChargeOverridden(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "additionalChargeOverridden", value);
+        } else {
+            throw new AutomationException("The rate details additional charge overridden cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsBasePrice(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "basePrice", value);
+        } else {
+            throw new AutomationException("The rate details base price cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsBasePrice(String baseXpath, Integer value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "basePrice", String.valueOf(value));
+        } else {
+            throw new AutomationException("The rate details base price cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsDate(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "date", value);
+        } else {
+            throw new AutomationException("The rate details date cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsDayCount(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "dayCount", value);
+        } else {
+            throw new AutomationException("The rate details day count cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsDayCount(String baseXpath, Integer value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "dayCount", String.valueOf(value));
+        } else {
+            throw new AutomationException("The rate details day count cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsOveridden(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "overidden", value);
+        } else {
+            throw new AutomationException("The rate details overidden flag cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsShared(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "shared", value);
+        } else {
+            throw new AutomationException("The rate details shared flag cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsNetPrice(String baseXpath, String value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "netPrice", value);
+        } else {
+            throw new AutomationException("The rate details net price cannot be null or empty");
+        }
+    }
+
+    public void setRateDetailsNetPrice(String baseXpath, Integer value) {
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(baseXpath + "netPrice", String.valueOf(value));
+        } else {
+            throw new AutomationException("The rate details net price cannot be null or empty");
+        }
+    }
+
+    // *********************************************************************************************************
+    // *********************************************************************************************************
+    // *********************************************************************************************************
+
+    // ********************************************Getters******************************************************
+
+    // *********************************************************************************************************
+    // *********************************************************************************************************
+    // *********************************************************************************************************
 
     public String getTravelComponentGroupingId() {
         return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
