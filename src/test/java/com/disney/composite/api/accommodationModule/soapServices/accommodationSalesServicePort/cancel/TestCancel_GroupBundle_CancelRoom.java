@@ -37,6 +37,7 @@ public class TestCancel_GroupBundle_CancelRoom extends TravelPlanBaseTest {
     private String firstBundleTcg;
     private static final int maxTries = 3;
 
+    @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters({ "environment" })
     public void setup(String environment) {
@@ -227,7 +228,8 @@ public class TestCancel_GroupBundle_CancelRoom extends TravelPlanBaseTest {
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(book.getTravelComponentId());
-        cancelHelper.verifyTPV3GuestRecordCreated(book.getTravelPlanId(), getHouseHold().primaryGuest());
+        // cancelHelper.verifyTPV3GuestRecordCreated(book.getTravelPlanId(), getHouseHold().primaryGuest());
+        cancelHelper.verifyTPV3GuestRecordCreated(book.getTravelPlanId(), hh.primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(book.getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(book.getTravelPlanId());
         TestReporter.assertAll();

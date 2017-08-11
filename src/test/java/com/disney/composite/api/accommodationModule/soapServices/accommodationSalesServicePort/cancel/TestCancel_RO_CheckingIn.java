@@ -20,21 +20,16 @@ public class TestCancel_RO_CheckingIn extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-
-        String locEnv = null;
-        if (environment.toLowerCase().contains("_cm")) {
-            locEnv = environment.toLowerCase().replace("_cm", "");
-        }
-        setEnvironment(locEnv);
+        setEnvironment(environment);
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues(getEnvironment());
+        setValues(Environment.getBaseEnvironmentName(getEnvironment()));
         bookReservation();
-        checkingIn(locEnv);
+        checkingIn(Environment.getBaseEnvironmentName(getEnvironment()));
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })

@@ -53,7 +53,7 @@ public class TestQuickBook {
         TestReporter.assertNotNull(quickbook.get().getTravelPlanId(), "The response contains a Travel Plan ID");
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "quickbook" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "quickbook", "example" })
     public void testQuickbook_2Adults1Child() {
         TestReporter.logScenario("Test Quickbook For 2 Adults And 1 Child");
         quickbook.set(new Quickbook(environment, "2Adults1Child"));
@@ -63,7 +63,7 @@ public class TestQuickBook {
         TestReporter.assertNotNull(quickbook.get().getTravelPlanId(), "The response contains a Travel Plan ID");
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "quickbook" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "quickbook", "example" })
     public void testQuickbook_BookingWithAddress() {
         TestReporter.logScenario("Test Quickbook With Address");
         quickbook.set(new Quickbook(environment, "Booking with Address"));
