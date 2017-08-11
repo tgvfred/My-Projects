@@ -120,6 +120,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Map<String, String>> comments = new ThreadLocal<>();
     private ThreadLocal<Boolean> addInternalComments = new ThreadLocal<>();
     private ThreadLocal<Boolean> addRoomResDetailsComments = new ThreadLocal<>();
+    private ThreadLocal<Map<Integer, Guest>> additionalGuests = new ThreadLocal<Map<Integer, Guest>>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -568,6 +569,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.comments.get();
     }
 
+    public void setAdditionalGuests(HashMap<Integer, Guest> additionalGuests) {
+        this.additionalGuests.set(additionalGuests);
+    }
+
+    public Map<Integer, Guest> getAdditionalGuests() {
+        return this.additionalGuests.get();
+    }
+
     /**
      * This flag is used to determine if a particular wholesaler (Group# 01905) is to be used for booking
      *
@@ -922,9 +931,12 @@ public class AccommodationBaseTest extends BaseRestTest {
             guest = new HouseHold(1).primaryGuest();
         } else {
             guest = getHouseHold().primaryGuest();
+            if (additionalGuests.get() == null) {
+                setAdditionalGuests(new HashMap<Integer, Guest>());
+            }
+            getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
         }
         getBook().addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, guest);
-
     }
 
     public String freezeInventory() {

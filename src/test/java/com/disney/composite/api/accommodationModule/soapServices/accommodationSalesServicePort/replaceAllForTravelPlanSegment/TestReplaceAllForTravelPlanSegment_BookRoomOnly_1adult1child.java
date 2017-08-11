@@ -6,8 +6,10 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
+import com.disney.utils.Environment;
+import com.disney.utils.TestReporter;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child extends AccommodationBaseTest {
     private String odsGuestId = null;
     private String tpPtyId = null;
     @SuppressWarnings("unused")
@@ -26,9 +28,18 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest ex
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest() {
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child() {
+        setSendRequest(false);
+        setAddGuest(true);
         bookReservation();
-        odsGuestId = getBook().getPartyId("1");
+        getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
+        getAdditionalGuests().get(1).setAge("3");
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/reservationDetail/guestReferenceDetails[2]/age", getAdditionalGuests().get(1).getAge());
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/reservationDetail/guestReferenceDetails[2]/ageType", getAgeTypeByAge(getAdditionalGuests().get(1).getAge()));
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        odsGuestId = getHouseHold().primaryGuest().getOdsId();
+
         tpPtyId = getBook().getGuestId();
         assignmentOwnerId = getAssignmentOwnerId(getBook().getTravelPlanId());
 
@@ -49,13 +60,13 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest ex
         // Validate RIM
         validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
         validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
-        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
+        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "1", true);
         System.out.println();
+
         // Validate guest
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(false, getBook().getTravelPlanId());
         validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
     }
 }
