@@ -126,7 +126,7 @@ public class AccommodationErrorCode {
 
     private static final String MODULE_NAME = "LILO System";
 
-    public static final ApplicationErrorCode UNEXPECTED_ERROR = new ApplicationErrorCode(MODULE_NAME, 1001,
+    public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode(MODULE_NAME, 1001,
             "Unexpected Error occurred");
 
 }

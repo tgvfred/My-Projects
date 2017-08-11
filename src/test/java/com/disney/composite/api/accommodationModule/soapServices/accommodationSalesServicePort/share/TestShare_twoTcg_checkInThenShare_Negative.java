@@ -73,7 +73,7 @@ public class TestShare_twoTcg_checkInThenShare_Negative extends AccommodationBas
         String faultString = "Unexpected Error occurred : share : java.lang.NullPointerException";
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(share, AccommodationErrorCode.UNEXPECTED_ERROR);
+        validateApplicationError(share, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
 
     }
 }

@@ -41,7 +41,6 @@ public class TestShare_twoTcg_differentRoomTypes_Negative extends AccommodationB
         do {
             setValues();
         } while (!(getResortCode().equals(previousResort) && !getRoomTypeCode().equals(previousRoomTypeCode)));
-        bookReservation();
 
         bookReservation();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
@@ -57,10 +56,10 @@ public class TestShare_twoTcg_differentRoomTypes_Negative extends AccommodationB
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
 
-        String faultString = "No Accommodation Component found. : null";
+        String faultString = "Cannot change Block/Resort/Package for an shared Accommodation. : ROOM TYPE , PACKAGE AND BLOCK SHOULD BE SAME FOR SHARE!";
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(share, AccommodationErrorCode.NO_ACCOMMODATION_COMPONENT_EXCEPTION);
+        validateApplicationError(share, AccommodationErrorCode.CANNOT_CHANGE_PACKAGE);
     }
 
 }

@@ -35,10 +35,13 @@ public class TestShare_twoTcg_differentResorts_Negative extends AccommodationBas
         setDepartureDate(getNights());
 
         String previousResort = getResortCode();
+        String previousRoomTypeCode = getRoomTypeCode();
+        // Loop until
+        // 1. The resort is the same
+        // 2. The room type has changed for the original resort
         do {
             setValues();
-        } while (!getResortCode().equals(previousResort));
-
+        } while (!getResortCode().equals(previousResort) && getRoomTypeCode().equals(previousRoomTypeCode));
         bookReservation();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 
@@ -53,7 +56,7 @@ public class TestShare_twoTcg_differentResorts_Negative extends AccommodationBas
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
 
-        String faultString = "Cannot change Block/Resort/Package for an shared Accommodation. : ROOM TYPE , PACKAGE AND BLOCK SHOULD BE SAME FOR SHARE";
+        String faultString = "Cannot change Block/Resort/Package for an shared Accommodation. : ROOM TYPE , PACKAGE AND BLOCK SHOULD BE SAME FOR SHARE!";
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(share, AccommodationErrorCode.CANNOT_CHANGE_PACKAGE);
