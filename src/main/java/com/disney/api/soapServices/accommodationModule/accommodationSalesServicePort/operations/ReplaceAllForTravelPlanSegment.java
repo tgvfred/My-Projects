@@ -543,20 +543,55 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setTaxExemptDetailType(type);
     }
 
-    @Deprecated
-    public void setTravelAgency(Address address) {
-        // TODO: add functionality to add a travel agency at a high level
-        // setTravelAgency_primaryAddress();
-        // setTravelAgencyAgencyIataNumber(value);
-        // setTravelAgencyAgencyName(value);
-        // setTravelAgencyAgencyOdsId(value);
-        // setTravelAgencyGuestTravelAgencyId(value);
-        // setTravelAgencyAgentId(value);
-        // setTravelAgencyConfirmationLocatorValue(value);
-        // setTravelAgencyConfirmationType(value);
-        // setTravelAgencyGuestAgentId(value);
-        // setTravelAgencyGuestConfirmationLocationId(value);
-        // setTravelAgencyStatus(value);
+    public void setTravelAgency() {
+        int numTravelAgencies = getNumberOfRequestNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelAgency");
+        if (numTravelAgencies == 0) {
+            addTravelAgency();
+        }
+        setTravelAgencyAgencyIataNumber("99999998");
+        setTravelAgencyAgencyName("SYSTEM SUPPORT TEST AGENCY");
+        setTravelAgencyAgencyOdsId("423996915");
+        setTravelAgencyGuestTravelAgencyId("0");
+        setTravelAgencyAgentId("1788217880");
+        setTravelAgencyConfirmationLocatorValue("0");
+        setTravelAgencyGuestAgentId("0");
+        setTravelAgencyGuestConfirmationLocationId("0");
+
+        setTravelAgency_PrimaryAddressAddressLine1("11234 Minnie Mouse Lane");
+        setTravelAgency_PrimaryAddressLocatorId("827970903");
+        setTravelAgency_PrimaryAddressGuestLocatorId("0");
+        setTravelAgency_PrimaryAddressLocatorUseType("UNKNOWN");
+        setTravelAgency_PrimaryAddressPrimary("true");
+        setTravelAgency_PrimaryAddressCity("Anaheim");
+        setTravelAgency_PrimaryAddressCountry("USA");
+        setTravelAgency_PrimaryAddressPostalCode("92805");
+        setTravelAgency_PrimaryAddressState("CA");
+    }
+
+    private void addTravelAgency() {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("travelAgency"));
+        baseXpath += "/travelAgency";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("agencyIataNumber"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("agencyName"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("agencyOdsId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestTravelAgencyId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("agentId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestAgentId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("confirmationLocatorValue"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestConfirmationLocationId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primaryAddress"));
+
+        baseXpath += "/primaryAddress";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorUseType"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primary"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("addressLine1"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("city"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("country"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("postalCode"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("state"));
     }
 
     @Deprecated

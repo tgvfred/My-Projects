@@ -5,6 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.GroupsMgmtErrorCode;
 import com.disney.api.soapServices.accommodationModule.applicationError.LiloResm;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -272,7 +273,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         validateApplicationError(getBook(), LiloResm.INVALID_GATHERING_DETAIL);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
     public void TestReplaceAllForTravelPlanSegment_invalidBlockCode() {
         String faultString = "Group Profile does not exist with the given code : null";
         setIsWdtcBooking(true);
@@ -281,6 +282,133 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), LiloResm.INVALID_GATHERING_DETAIL);
+        validateApplicationError(getBook(), GroupsMgmtErrorCode.GROUP_PROFILE_DOESNT_EXIST);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_resortRoomTypeMismatch() {
+        String faultString = "INVALID REQUEST ! : Combination of Resort Code [RESORT] and Room Type Code [ROOM] is not valid!";
+        bookReservation();
+        String originalResort = getResortCode();
+        String originalRoomType = getRoomTypeCode();
+        do {
+            setValues();
+        } while (getResortCode().equals(originalResort) && getRoomTypeCode().equals(originalRoomType));
+        getBook().setRoomDetailsResortCode(originalResort);
+        getBook().setRoomDetailsRoomTypeCode(getRoomTypeCode());
+        getBook().sendRequest();
+        faultString = faultString.replace("RESORT", originalResort).replace("ROOM", getRoomTypeCode());
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.INVALID_REQUEST);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_modifyNotArrived() {
+        String faultString = "Invalid Modify Request : Accommodation is in : NOT_ARRIVED status. Cannot modify this reservation";
+
+        String sql = "select * "
+                + "from( "
+                + "        select c.tp_id, c.tps_id "
+                + "        from res_mgmt.tc_grp a "
+                + "        join res_mgmt.tc b on a.tc_grp_nb = b.tc_grp_nb "
+                + "        join res_mgmt.tps c on a.tps_id = c.tps_id "
+                + "        where a.TC_GRP_TYP_NM = 'ACCOMMODATION' "
+                + "        and b.trvl_sts_nm = 'Not Arrived' "
+                + "        order by dbms_random.value"
+                + ")where rownum = 1";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            TestReporter.assertTrue(true, "No reservations were found in 'Not Arrived' status.");
+        } else {
+            bookReservation();
+            getBook().setTravelPlanId(rs.getValue("TP_ID"));
+            getBook().setTravelPlanSegementId(rs.getValue("TPS_ID"));
+            getBook().sendRequest();
+
+            TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+            validateApplicationError(getBook(), LiloResm.INVALID_MODIFY_REQUEST);
+        }
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_modifyDFCheckedOut() {
+        String faultString = "Invalid Modify Request : Accommodation is in : DF_CHECKED_OUT status. Cannot modify this reservation";
+
+        String sql = "select * "
+                + "from( "
+                + "        select c.tp_id, c.tps_id "
+                + "        from res_mgmt.tc_grp a "
+                + "        join res_mgmt.tc b on a.tc_grp_nb = b.tc_grp_nb "
+                + "        join res_mgmt.tps c on a.tps_id = c.tps_id "
+                + "        where a.TC_GRP_TYP_NM = 'ACCOMMODATION' "
+                + "        and b.trvl_sts_nm = 'DF Checked Out' "
+                + "        and c.tps_id not in( "
+                + "                select d.tps_id "
+                + "                from res_mgmt.ADM_CMPNT_ENTTL a "
+                + "                join res_mgmt.tc b on a.ADM_TC_ID = b.tc_id "
+                + "                join res_mgmt.tc_grp c on b.tc_grp_nb = c.tc_grp_nb "
+                + "                join res_mgmt.tps d on c.tps_id = d.tps_id "
+                + "        ) "
+                + "        order by dbms_random.value "
+                + ") where rownum = 1 ";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            TestReporter.assertTrue(true, "No reservations were found in 'DF Checked Out' status.");
+        } else {
+            bookReservation();
+            getBook().setTravelPlanId(rs.getValue("TP_ID"));
+            getBook().setTravelPlanSegementId(rs.getValue("TPS_ID"));
+            getBook().sendRequest();
+
+            TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+            validateApplicationError(getBook(), LiloResm.INVALID_MODIFY_REQUEST);
+        }
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_invalidTravelAgency() {
+        String faultString = " Travel Agency is invalid  : null";
+
+        bookReservation();
+        getBook().setTravelAgency();
+        // String invalidValue = Randomness.randomNumber(20);
+        getBook().setTravelAgencyAgencyIataNumber(Randomness.randomNumber(20));
+        getBook().setTravelAgencyAgencyOdsId(Randomness.randomNumber(15));
+        getBook().setTravelAgencyAgentId(Randomness.randomNumber(15));
+        getBook().sendRequest();
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.TRAVEL_AGENCY_INVALID);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
+    public void TestReplaceAllForTravelPlanSegment_ticketsPickedUp() {
+        String faultString = "Invalid Modify Request : Tickets have already been picked up for reservation: RES. Cannot modify this reservation";
+
+        String sql = "select d.tp_id, d.tps_id "
+                + "from res_mgmt.ADM_CMPNT_ENTTL a "
+                + "join res_mgmt.tc b on a.ADM_TC_ID = b.tc_id "
+                + "join res_mgmt.tc_grp c on b.tc_grp_nb = c.tc_grp_nb "
+                + "join res_mgmt.tps d on c.tps_id = d.tps_id";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        faultString = faultString.replace("RES", rs.getValue("TPS_ID"));
+
+        if (rs.getRowCount() == 0) {
+            TestReporter.assertTrue(true, "No reservations were found with tickets picked up.");
+        } else {
+            bookReservation();
+            getBook().setTravelPlanId(rs.getValue("TP_ID"));
+            getBook().setTravelPlanSegementId(rs.getValue("TPS_ID"));
+            getBook().sendRequest();
+
+            TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+            validateApplicationError(getBook(), LiloResm.INVALID_MODIFY_REQUEST);
+        }
     }
 }

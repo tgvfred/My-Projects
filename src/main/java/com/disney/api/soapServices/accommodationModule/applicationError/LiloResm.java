@@ -76,4 +76,8 @@ public class LiloResm {
             "FPLOSID AND FREEZEID CANNOT BE USED TOGETHER!");
     public static final ApplicationErrorCode INVALID_GATHERING_DETAIL = new ApplicationErrorCode(APP_NAME, 7156,
             "Gathering Detail is not valid");
+    public static final ApplicationErrorCode INVALID_MODIFY_REQUEST = new ApplicationErrorCode(APP_NAME, 9105,
+            "Invalid Modify Request");
+    public static final ApplicationErrorCode TRAVEL_AGENCY_INVALID = new ApplicationErrorCode(APP_NAME, 7102,
+            "Travel Agency is invalid");
 }

@@ -3,11 +3,11 @@
 <suite name="TestReplaceAllForTravelPlanSegment_Negative" parallel="methods" thread-count="20">
 	<parameter name="environment" value="latest" />
 	<test name="TestReplaceAllForTravelPlanSegment_Negative">
-		<groups>
+		<!-- <groups>
 			<run>
 				<include name="debug"></include>
 			</run>
-		</groups>
+		</groups> -->
 		<classes>
 			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.replaceAllForTravelPlanSegment.TestReplaceAllForTravelPlanSegment_Negative" />
 		</classes>
