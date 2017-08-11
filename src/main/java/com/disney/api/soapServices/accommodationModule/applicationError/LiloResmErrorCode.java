@@ -9,7 +9,7 @@ package com.disney.api.soapServices.accommodationModule.applicationError;
 
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 
-public class LiloResm {
+public class LiloResmErrorCode {
     private static final String APP_NAME = "LILO_RESM";
 
     public static final ApplicationErrorCode EXTERNAL_REFERENCE_REQUIRED = new ApplicationErrorCode(

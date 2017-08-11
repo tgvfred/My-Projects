@@ -1,9 +1,9 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.cancel;
 
-import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResm.ACCOMMODATIONS_NOT_FOUND;
-import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResm.ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL;
-import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResm.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED;
-import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResm.REQUIRED_PARAMETERS_MISSING;
+import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode.ACCOMMODATIONS_NOT_FOUND;
+import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode.ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL;
+import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED;
+import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode.REQUIRED_PARAMETERS_MISSING;
 
 import org.testng.annotations.Test;
 

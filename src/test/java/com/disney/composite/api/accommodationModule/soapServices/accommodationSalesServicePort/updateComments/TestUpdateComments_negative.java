@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UpdateComments;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResm;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
@@ -23,7 +23,7 @@ public class TestUpdateComments_negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(update.getFaultString(), faultString, "Verify that the fault string [" + update.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(update, LiloResm.REQUEST_REQUIRED);
+        validateApplicationError(update, LiloResmErrorCode.REQUEST_REQUIRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "updateComments", "negative" })
@@ -37,7 +37,7 @@ public class TestUpdateComments_negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(update.getFaultString(), faultString, "Verify that the fault string [" + update.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(update, LiloResm.REQUEST_REQUIRED);
+        validateApplicationError(update, LiloResmErrorCode.REQUEST_REQUIRED);
     }
 
 }

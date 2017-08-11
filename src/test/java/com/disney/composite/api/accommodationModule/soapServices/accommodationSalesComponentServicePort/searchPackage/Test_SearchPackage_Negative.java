@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.SearchPackage;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResm;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
@@ -20,7 +20,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, LiloResm.RESULT_SIZE_TOO_LARGE_EXCEPTION);
+        validateApplicationError(search, LiloResmErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
@@ -33,7 +33,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, LiloResm.DATA_NOT_FOUND_EXCEPTION);
+        validateApplicationError(search, LiloResmErrorCode.DATA_NOT_FOUND_EXCEPTION);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
@@ -52,7 +52,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, LiloResm.DATA_NOT_FOUND_EXCEPTION);
+        validateApplicationError(search, LiloResmErrorCode.DATA_NOT_FOUND_EXCEPTION);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
@@ -65,7 +65,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, LiloResm.RESULT_SIZE_TOO_LARGE_EXCEPTION);
+        validateApplicationError(search, LiloResmErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
@@ -78,7 +78,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, LiloResm.RESULT_SIZE_TOO_LARGE_EXCEPTION);
+        validateApplicationError(search, LiloResmErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
     }
 
 }
