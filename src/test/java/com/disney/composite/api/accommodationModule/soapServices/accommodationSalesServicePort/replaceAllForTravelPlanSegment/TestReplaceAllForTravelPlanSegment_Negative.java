@@ -1,0 +1,286 @@
+package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.replaceAllForTravelPlanSegment;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResm;
+import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
+import com.disney.utils.Environment;
+import com.disney.utils.Randomness;
+import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams_AccommodationQueries;
+
+public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBaseTest {
+
+    @Override
+    @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
+    public void setup(String environment) {
+        setEnvironment(environment);
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getNights());
+        setValues(getEnvironment());
+        setSendRequest(false);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullRequest() {
+        String faultString = "Required parameters are missing : Request can not be null!";
+        bookReservation();
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request", BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.REQUIRED_PARAMETERS_MISSING);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_ResortPeriodStartDateAfterEndDate() {
+        String faultString = " Resort Period is invalid  : ResortPeriod start date should be less than end date";
+        bookReservation();
+        getBook().setRoomDetails_ResortPeriod(Randomness.generateCurrentXMLDate(1), Randomness.generateCurrentXMLDate(0));
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.INVALID_RESORT_PERIOD);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullCommunicationsChannel() {
+        String faultString = "communication Channel is required : null";
+        bookReservation();
+        getBook().setCommunicationChannel(BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.COMMUNICATION_CHANNEL_REQUIRED);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullSalesChannel() {
+        String faultString = "Sales Channel is required : null";
+        bookReservation();
+        getBook().setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.SALES_CHANNEL_REQUIRED);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullRoomDetailsPackageCode() {
+        String faultString = " Package Code is invalid  : PackageCode can not be null or blank";
+        bookReservation();
+        getBook().setRoomDetailsPackageCode(BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.PACKAGE_CODE_INVALID);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullRoomDetailsRoomTypeCode() {
+        String faultString = " Room Type is invalid  : ROOM TYPE CODE CANNOT BE NULL OR BLANK!";
+        bookReservation();
+        getBook().setRoomDetailsRoomTypeCode(BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.INVALID_ROOM_TYPE);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullRoomDetailsResortCode() {
+        String faultString = " Resort Code is invalid  : RESORT CODE CANNOT BE NULL OR BLANK!";
+        bookReservation();
+        getBook().setRoomDetailsResortCode(BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.INVALID_RESORT_CODE);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_invalidTravelPlanId() {
+        String faultString = "TRAVEL_PLAN_NOT_FOUND : NO TRAVEL PLAN FOUND WITH ID#";
+        bookReservation();
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getUnusedTpId()));
+        String invalidTp = rs.getValue("ID");
+        faultString += invalidTp;
+        getBook().setTravelPlanId(invalidTp);
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.TRAVEL_PLAN_NOT_FOUND);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullRoomDetails() {
+        String faultString = "There should be at least one Room Detail : null";
+        bookReservation();
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.ROOM_DETAIL_MISSING);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullRoomDetailsResortPeriod() {
+        String faultString = " Resort Period is invalid  : ResortPeriod or resort period start date or end date can not be null";
+        bookReservation();
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/resortPeriod", BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.INVALID_RESORT_PERIOD);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullRoomReservationDetailGuestReferenceDetails() {
+        String faultString = "Guest is Required : GuestReferenceDetails cannot be empty";
+        bookReservation();
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.GUEST_REQUIRED);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullTravelPlanGuest() {
+        String faultString = "Travel Plan Guest is required :  Travel Plan Guest Details not provided ";
+        bookReservation();
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelPlanGuest", BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.TRAVEL_PLAN_GUEST_REQUIRED);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_invalidTravelStatus() {
+        String faultString = " Travel Status is invalid  : INVALID TRAVEL STATUS TO BOOK OR MODIFY!";
+        bookReservation();
+        getBook().setRoomDetailsTravelStatus("Auto Cancelled");
+        getBook().sendRequest();
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.TRAVEL_STATUS_INVALID);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullExtRefNumber() {
+        String faultString = "External Reference is required : null";
+        bookReservation();
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/externalReference/externalReferenceNumber", BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.EXTERNAL_REFERENCE_REQUIRED);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_ORIGINAL_TP_ID_nullExtRefNumber() {
+        String faultString = "Invalid External Reference Details : null";
+        bookReservation();
+        getBook().setExternalReference(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), getExternalRefSource(), "ORIGINAL_TP_ID");
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/externalReference/externalReferenceNumber", BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.INVALID_EXT_REF_DETAILS);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_fplosAndFreezeID() {
+        String faultString = "FPLOSID AND FREEZEID CANNOT BE USED TOGETHER! : FPLOSID AND FREEZEID CANNOT BE USED TOGETHER!";
+        bookReservation();
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("fplosId"));
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/fplosId", "0");
+        getBook().sendRequest();
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.DIRECT_CONNECT_BOTH_FPLOSID_AND_FREEZEID_CANNOT_EXIST);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullExtRefSourceAndCode() {
+        String faultString = "External Reference Source or Code required : EXTERNAL_REFERENCE_SOURCE_OR_EXTERNAL_REFERENCE_CODE_REQUIRED";
+        bookReservation();
+        getBook().setExternalReference(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), externalRefSource);
+        getBook().sendRequest();
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullRoomDetailsExtRefSourceAndCode() {
+        String faultString = "External Reference Source or Code required : ";
+        bookReservation();
+        getBook().setRoomDetails_ExternalRefs(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), externalRefSource);
+        getBook().sendRequest();
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_nullSourceExtRefSourceAndCode() {
+        String faultString = "External Reference Source or Code required : ";
+        bookReservation();
+        getBook().setRequestNodeValueByXPath("//roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("sourceExternalReference"));
+        getBook().setRoomDetails_SourceExtRef(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), externalRefSource);
+        getBook().sendRequest();
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_modifyDvcRes() {
+        BookDVCCashHelper dvc = new BookDVCCashHelper();
+        dvc.setEnvironment(Environment.getBaseEnvironmentName(environment));
+        dvc.beforeSuite(dvc.getEnvironment());
+        dvc.setUseDvcResort(true);
+        dvc.bookDvcReservation("testCancel_M$", 1);
+        String tpId = dvc.getFirstBooking().getTravelPlanId();
+        String tpsId = dvc.getFirstBooking().getTravelPlanSegmentId();
+
+        String faultString = "Cannot modify a DVC reservation";
+        bookReservation();
+        getBook().setSecurityValue("DVC");
+        getBook().setTravelPlanId(tpId);
+        getBook().setTravelPlanSegementId(tpsId);
+        getBook().sendRequest();
+
+        try {
+            TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+            validateApplicationError(getBook(), AccommodationErrorCode.ERROR_FROM_DVC_PRICING_SERVICE);
+        } finally {
+            dvc.cancel(dvc.getFirstBooking().getTravelComponentGroupingId());
+        }
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    public void TestReplaceAllForTravelPlanSegment_invalidGathering() {
+        String faultString = "Gathering Detail is not valid : Not a valid Gathering Detail Information";
+        bookReservation();
+        getBook().setGatheringDetail(BaseSoapCommands.REMOVE_NODE.toString(), Randomness.randomAlphaNumeric(20), "TW");
+        getBook().sendRequest();
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.INVALID_GATHERING_DETAIL);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
+    public void TestReplaceAllForTravelPlanSegment_invalidBlockCode() {
+        String faultString = "Group Profile does not exist with the given code : null";
+        setIsWdtcBooking(true);
+        bookReservation();
+        getBook().setRoomDetailsBlockCode(Randomness.randomAlphaNumeric(8));
+        getBook().sendRequest();
+
+        TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(getBook(), LiloResm.INVALID_GATHERING_DETAIL);
+    }
+}

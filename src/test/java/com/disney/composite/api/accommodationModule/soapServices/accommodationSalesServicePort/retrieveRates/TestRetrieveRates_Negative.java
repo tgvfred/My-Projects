@@ -5,7 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveRates;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResm;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
@@ -41,7 +41,7 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         retrieveRates.sendRequest();
 
         TestReporter.assertTrue(retrieveRates.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieveRates.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieveRates, AccommodationErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(retrieveRates, LiloResm.REQ_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
@@ -63,7 +63,7 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         retrieveRates.sendRequest();
 
         TestReporter.assertTrue(retrieveRates.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieveRates.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieveRates, AccommodationErrorCode.ACCOMMODATION_COMPONENT_NOT_FOUND);
+        validateApplicationError(retrieveRates, LiloResm.ACCOMMODATION_COMPONENT_NOT_FOUND);
 
     }
 }

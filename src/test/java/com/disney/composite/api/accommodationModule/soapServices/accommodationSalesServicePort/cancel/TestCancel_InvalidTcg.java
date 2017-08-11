@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResm;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
@@ -22,6 +22,6 @@ public class TestCancel_InvalidTcg extends AccommodationBaseTest {
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.ACCOMMODATION_NOT_FOUND);
+        validateApplicationError(cancel, LiloResm.ACCOMMODATION_NOT_FOUND);
     }
 }

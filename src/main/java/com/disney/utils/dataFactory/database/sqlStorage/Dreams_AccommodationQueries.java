@@ -174,4 +174,14 @@ public class Dreams_AccommodationQueries extends Dreams {
                 + "and c.fac_id is not null )";
 
     }
+
+    public static String getUnusedTpId() {
+        return "SELECT tp_id + 1 id "
+                + "FROM res_mgmt.tp tp1 "
+                + "WHERE NOT EXISTS( "
+                + "SELECT null "
+                + "FROM res_mgmt.tp tp2 "
+                + "WHERE tp2.tp_id = tp1.tp_id+1 ) "
+                + "AND ROWNUM = 1";
+    }
 }

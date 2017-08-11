@@ -1,7 +1,7 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveResortReservations;
 
-import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.NO_TRAVEL_PLAN_DATA_FOUND;
-import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.SEARCH_CRITERIA_INVALID;
+import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResm.NO_TRAVEL_PLAN_DATA_FOUND;
+import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResm.SEARCH_CRITERIA_INVALID;
 
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;

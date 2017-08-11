@@ -1308,7 +1308,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setSecurityValue(String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath("//securityValue", value);
+            try {
+                setRequestNodeValueByXPath("//securityValue", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request", BaseSoapCommands.ADD_NODE.commandAppend("securityValue"));
+                setRequestNodeValueByXPath("//securityValue", value);
+            }
         } else {
             throw new AutomationException("The security value cannot be null or empty");
         }
