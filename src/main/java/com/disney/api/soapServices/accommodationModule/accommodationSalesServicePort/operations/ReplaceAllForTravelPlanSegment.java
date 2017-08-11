@@ -1683,4 +1683,8 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     public String getTravelPlanSegmentId() {
         return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
     }
+
+    public String getPartyId(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails[" + index + "]/guest/partyId");
+    }
 }

@@ -1,5 +1,7 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
 
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.isValid;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -97,7 +99,7 @@ public class ValidationHelper {
 
         Map<String, String> tcgs = new HashMap<>();
         tcgs.put(tcgId, tcgId);
-        if (isDiningAddedOn() != null && isDiningAddedOn() == true) {
+        if (isValid(isDiningAddedOn()) && isDiningAddedOn() == true) {
             String sql = "select b.tc_grp_nb "
                     + "from res_mgmt.tps a, res_mgmt.tc_grp b "
                     + "where a.tp_id = " + tpId + " "
@@ -105,7 +107,7 @@ public class ValidationHelper {
                     + "and b.tc_grp_typ_nm = 'ADD_ON_PACKAGE'";
             rs = new Recordset(db.getResultSet(sql));
             tcgs.put(rs.getValue("TC_GRP_NB", 1), rs.getValue("TC_GRP_NB", 1));
-        } else if (isBundleAdded() == true) {
+        } else if (isValid(isBundleAdded()) && isBundleAdded() == true) {
             String sql = "select b.tc_grp_nb "
                     + "from res_mgmt.tps a, res_mgmt.tc_grp b "
                     + "where a.tp_id = " + tpId + " "
@@ -114,7 +116,14 @@ public class ValidationHelper {
             rs = new Recordset(db.getResultSet(sql));
             tcgs.put(rs.getValue("TC_GRP_NB", 1), rs.getValue("TC_GRP_NB", 1));
         }
-        rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getReservationInfoByTpId(tpId)));
+        String sql = "select * "
+                + "from res_mgmt.tps a "
+                + "left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "left outer join res_mgmt.tc c  on b. tc_grp_nb = c.tc_grp_nb "
+                + "left outer join res_mgmt.tc_gst d on c.tc_id = d.tc_id "
+                + "left outer join res_mgmt.tps_extnl_ref e on a. tps_id = e.tps_id "
+                + "where a.tp_id = " + tpId;
+        rs = new Recordset(db.getResultSet(sql));
         // rs.print();
 
         TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
@@ -125,7 +134,7 @@ public class ValidationHelper {
             TestReporter.softAssertTrue(tcgs.containsKey(rs.getValue("TC_GRP_NB", i)), "Verify that the TCG ID [" + rs.getValue("TC_GRP_NB", i) + "] is included in the TCGs which are expected [" + tcgs + "].");
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM", i), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM", i) + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT", i).split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT", i).split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT", i).split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT", i).split(" ")[0] + "] is that which is expected [" + departuredate + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT", i).split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DPRT_DT", i).split(" ")[0] + "] is that which is expected [" + departuredate + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
         }
@@ -709,7 +718,8 @@ public class ValidationHelper {
         valueFound = new HashMap<>();
         valueFound.put(guest.primaryPhone().getNumber(), false);
         for (int i = 1; i <= rs.getRowCount(); i++) {
-            if (rs.getValue("PHN_RAW_PHN_NB", i).replace(")", "").replace("(", "").replace("-", "").equals(guest.primaryPhone().getNumber())) {
+            if (rs.getValue("PHN_RAW_PHN_NB", i).replace(")", "").replace("(", "").replace("-", "").equals(guest.primaryPhone().getNumber()) ||
+                    rs.getValue("PHN_PHN_NB").equals(guest.primaryPhone().getNumber())) {
                 valueFound.put(guest.primaryPhone().getNumber(), true);
             }
         }
@@ -881,6 +891,11 @@ public class ValidationHelper {
     }
 
     public void validateSpecialNeeds(String tpId, String flag) {
+        if (flag.equals("true")) {
+            flag = "Y";
+        } else if (flag.equals("false")) {
+            flag = "N";
+        }
         TestReporter.logStep("Validate Special Needs in RIM");
         String sql = "select d.SPCL_NEED_REQ_IN "
                 + "from res_mgmt.tps a "
