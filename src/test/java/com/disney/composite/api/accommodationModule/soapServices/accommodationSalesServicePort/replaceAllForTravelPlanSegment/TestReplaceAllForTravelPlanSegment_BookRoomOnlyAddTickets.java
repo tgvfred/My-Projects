@@ -1,17 +1,14 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.replaceAllForTravelPlanSegment;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
-import com.disney.utils.TestReporter;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends AccommodationBaseTest {
+    private String tpPtyId = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -23,15 +20,14 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child extend
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setAddTickets(true);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child() {
-        setSendRequest(false);
-        setAddChildGuest(true);
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnly() {
         bookReservation();
-        getBook().sendRequest();
-        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        tpPtyId = getBook().getGuestId();
+
         validations();
     }
 
@@ -44,30 +40,25 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child extend
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
+        String admissionComponentId = validations.validateAdmissionComponentAdded(getBook().getTravelComponentGroupingId());
+        String ticketComponentPrice = validations.validateAdmissionComponentDetails(admissionComponentId, getTicketsHelper().getCode());
+        validations.validateAdmissionComponentPrice(getBook().getTravelPlanId(), ticketComponentPrice);
 
         // Validate Folio
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
-        validations.verifyNumberOfChargesByStatus("UnEarned", 1, getBook().getTravelPlanId());
-        validations.verifyChargeDetail(4, getBook().getTravelPlanId());
+        validations.verifyNumberOfChargesByStatus("UnEarned", 2, getBook().getTravelPlanId());
+        validations.verifyChargeDetail(5, getBook().getTravelPlanId());
         validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
 
         // Validate RIM
         validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
         validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
-        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "1", true);
-        // System.out.println();
+        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
 
         // Validate guest
-        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold(), getAdditionalGuests());
-        validations.verifyNumberOfTpPartiesByTpId(2, getBook().getTravelPlanId());
-        retrieveReservation();
-        Map<String, String> tpPartyIds = new HashMap<>();
-        String partyId = getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests[1]/guest/guestId");
-        tpPartyIds.put(partyId, partyId);
-        validations.verifyOdsGuestIdCreated(false, partyId);
-        partyId = getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests[2]/guest/guestId");
-        tpPartyIds.put(partyId, partyId);
-        validations.verifyOdsGuestIdCreated(false, partyId);
-        validations.verifyTpPartyIds(tpPartyIds, getBook().getTravelPlanId());
+        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
+        validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
+        validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
+        validations.verifyOdsGuestIdCreated(false, getBook().getTravelPlanId());
     }
 }

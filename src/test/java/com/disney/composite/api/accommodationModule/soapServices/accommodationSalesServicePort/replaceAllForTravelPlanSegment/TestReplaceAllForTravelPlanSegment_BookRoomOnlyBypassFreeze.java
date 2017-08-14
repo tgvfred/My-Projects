@@ -46,7 +46,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyBypassFreeze extends
         validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
         validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
         validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
-        System.out.println();
+
         // Validate guest
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());

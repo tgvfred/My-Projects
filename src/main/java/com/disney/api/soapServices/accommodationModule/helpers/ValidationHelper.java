@@ -1042,4 +1042,75 @@ public class ValidationHelper {
         TestReporter.softAssertEquals(numPayments, numExpectedPayments, "Verify that the number of payments [" + numPayments + "] is that which is expected [" + numExpectedPayments + "].");
         TestReporter.assertAll();
     }
+
+    public String validateAdmissionComponentAdded(String travelComponentGroupingId) {
+        String admissionTcId = null;
+        String sql = "select * "
+                + "from res_mgmt.tc a "
+                + "where a.tc_grp_nb = " + travelComponentGroupingId;
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        boolean found = false;
+        do {
+            if (rs.getValue("TC_TYP_NM").equals("AdmissionComponent")) {
+                found = true;
+                admissionTcId = rs.getValue("TC_ID");
+                rs.moveLast();
+            } else {
+                rs.moveNext();
+            }
+        } while (rs.hasNext());
+        TestReporter.assertTrue(found, "Verify that an admission TC [" + admissionTcId + "] was found for TCG [" + travelComponentGroupingId + "].");
+        return admissionTcId;
+    }
+
+    public String validateAdmissionComponentDetails(String admissionComponentId, String code) {
+        TestReporter.logStep("Verify admission component details.");
+        String sql = "select * "
+                + "from res_mgmt.adm_cmpnt a "
+                + "WHERE a.ADM_TC_ID IN (" + admissionComponentId + ")";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.assertTrue(rs.getValue("ATS_TKT_CD").equals(code), "Verify that the admission component ticket code [" + rs.getValue("ATS_TKT_CD") + "] is that which is expected [" + code + "].");
+        return rs.getValue("TKT_PRC_AM");
+    }
+
+    public void validateAdmissionComponentPrice(String tpId, String ticketComponentPrice) {
+        TestReporter.logStep("Verify admission component details.");
+        String sql = "select d.* "
+                + "from folio.EXTNL_REF a "
+                + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
+                + "left outer join folio.CHRG d on c.CHRG_GRP_ID = d.CHRG_GRP_ID "
+                + "left outer join folio.CHRG_ITEM e on d.CHRG_ID = e.CHRG_ID "
+                + "where a.EXTNL_REF_VAL in ( "
+                + "        (select to_char(a.tp_id) "
+                + "        from res_mgmt.tps a "
+                + "        where a.tp_id = '" + tpId + "'), "
+                + "        (select to_char(a.tps_id) "
+                + "        from res_mgmt.tps a "
+                + "        where a.tp_id = '" + tpId + "'), "
+                + "        (select to_char(b.tc_grp_nb) "
+                + "        from res_mgmt.tps a "
+                + "        join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "        where a.tp_id = '" + tpId + "') "
+                + ")";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        boolean found = false;
+        boolean match = false;
+        do {
+            if (rs.getValue("REV_CLS_NM").equals("Admission")) {
+                found = true;
+                if (rs.getValue("CHRG_AM").equals(ticketComponentPrice)) {
+                    match = true;
+                }
+                rs.moveLast();
+            }
+        } while (rs.hasNext());
+        TestReporter.softAssertTrue(found, "Verify that an admission charge was found.");
+        TestReporter.softAssertTrue(match, "Verify that the admission charge amount is that which is expected [" + ticketComponentPrice + "].");
+        TestReporter.assertAll();
+
+    }
 }

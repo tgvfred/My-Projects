@@ -8,10 +8,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 
 public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest extends AccommodationBaseTest {
-    private String odsGuestId = null;
     private String tpPtyId = null;
-    @SuppressWarnings("unused")
-    private String assignmentOwnerId;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -28,9 +25,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest ex
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
     public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest() {
         bookReservation();
-        odsGuestId = getBook().getPartyId("1");
         tpPtyId = getBook().getGuestId();
-        assignmentOwnerId = getAssignmentOwnerId(getBook().getTravelPlanId());
 
         ValidationHelper validations = new ValidationHelper(getEnvironment());
 
@@ -50,7 +45,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest ex
         validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
         validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
         validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
-        System.out.println();
+
         // Validate guest
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());

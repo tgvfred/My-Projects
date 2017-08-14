@@ -123,6 +123,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> addInternalComments = new ThreadLocal<>();
     private ThreadLocal<Boolean> addRoomResDetailsComments = new ThreadLocal<>();
     private ThreadLocal<Map<Integer, Guest>> additionalGuests = new ThreadLocal<Map<Integer, Guest>>();
+    private ThreadLocal<TicketsHelper> ticketsHelper = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -606,6 +607,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.isLibgoBooking.get();
     }
 
+    public void setTicketsHelper(TicketsHelper ticketsHelper) {
+        this.ticketsHelper.set(ticketsHelper);
+    }
+
+    public TicketsHelper getTicketsHelper() {
+        return this.ticketsHelper.get();
+    }
+
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -798,20 +807,30 @@ public class AccommodationBaseTest extends BaseRestTest {
             }
 
             if (isValid(getSetTickets()) && getSetTickets() == true) {
-                TicketsHelper tickets = new TicketsHelper(getEnvironment(), getBook(), getPackageCode());
-                if (isValid(getTicketDescription())) {
-                    tickets.setTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                if ((isValid(isWdtcBooking()) && isWdtcBooking() == true) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook(), getPackageCode()));
                 } else {
-                    tickets.setTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook()));
+                }
+                ticketsHelper.get().setAdultTicket(true);
+                if (isValid(getTicketDescription())) {
+                    ticketsHelper.get().setTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                } else {
+                    ticketsHelper.get().setTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
                 }
             }
 
             if (isValid(getAddTickets()) && getAddTickets() == true) {
-                TicketsHelper tickets = new TicketsHelper(getEnvironment(), getBook(), getPackageCode());
-                if (isValid(getTicketDescription())) {
-                    tickets.addTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                if ((isValid(isWdtcBooking()) && isWdtcBooking() == true) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook(), getPackageCode()));
                 } else {
-                    tickets.addTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook()));
+                }
+                ticketsHelper.get().setAdultTicket(true);
+                if (isValid(getTicketDescription())) {
+                    ticketsHelper.get().addTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                } else {
+                    ticketsHelper.get().addTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
                 }
             }
 
