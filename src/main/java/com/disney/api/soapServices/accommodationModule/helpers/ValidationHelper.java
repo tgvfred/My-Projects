@@ -1059,13 +1059,13 @@ public class ValidationHelper {
             } else {
                 rs.moveNext();
             }
-        } while (rs.hasNext());
+        } while (rs.hasNext() && !found);
         TestReporter.assertTrue(found, "Verify that an admission TC [" + admissionTcId + "] was found for TCG [" + travelComponentGroupingId + "].");
         return admissionTcId;
     }
 
     public String validateAdmissionComponentDetails(String admissionComponentId, String code) {
-        TestReporter.logStep("Verify admission component details.");
+        TestReporter.logStep("Verify admission component details");
         String sql = "select * "
                 + "from res_mgmt.adm_cmpnt a "
                 + "WHERE a.ADM_TC_ID IN (" + admissionComponentId + ")";
@@ -1076,7 +1076,7 @@ public class ValidationHelper {
     }
 
     public void validateAdmissionComponentPrice(String tpId, String ticketComponentPrice) {
-        TestReporter.logStep("Verify admission component details.");
+        TestReporter.logStep("Verify admission component charge and price");
         String sql = "select d.* "
                 + "from folio.EXTNL_REF a "
                 + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
@@ -1106,8 +1106,10 @@ public class ValidationHelper {
                     match = true;
                 }
                 rs.moveLast();
+            } else {
+                rs.moveNext();
             }
-        } while (rs.hasNext());
+        } while (rs.hasNext() && !found);
         TestReporter.softAssertTrue(found, "Verify that an admission charge was found.");
         TestReporter.softAssertTrue(match, "Verify that the admission charge amount is that which is expected [" + ticketComponentPrice + "].");
         TestReporter.assertAll();

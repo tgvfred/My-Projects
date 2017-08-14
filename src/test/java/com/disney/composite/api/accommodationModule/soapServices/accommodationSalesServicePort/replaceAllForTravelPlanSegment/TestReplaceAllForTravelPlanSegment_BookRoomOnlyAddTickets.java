@@ -6,9 +6,13 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends AccommodationBaseTest {
     private String tpPtyId = null;
+    private String odsGuestId;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -27,6 +31,13 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends A
     public void testReplaceAllForTravelPlanSegment_BookRoomOnly() {
         bookReservation();
         tpPtyId = getBook().getGuestId();
+        String sql = "select b.TXN_PTY_EXTNL_REF_VAL "
+                + "from res_mgmt.tp_pty a "
+                + "join guest.TXN_PTY_EXTNL_REF b on a.TXN_PTY_ID = b.TXN_PTY_ID "
+                + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
         validations();
     }
@@ -59,6 +70,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends A
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(false, getBook().getTravelPlanId());
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
+        validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
     }
 }
