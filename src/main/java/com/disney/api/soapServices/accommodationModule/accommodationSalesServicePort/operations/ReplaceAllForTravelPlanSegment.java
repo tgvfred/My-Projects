@@ -314,7 +314,11 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(Boolean addMembership, Boolean addGuestIdReferences, Guest guest) {
         String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails";
-        addAndSetGuest(baseXpath, addMembership, addGuestIdReferences, guest, "guest");
+        int numGuestNodes = addAndSetGuest(baseXpath, addMembership, addGuestIdReferences, guest, "guest");
+
+        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails[" + String.valueOf(numGuestNodes) + "]";
+        setRequestNodeValueByXPath(baseXpath + "/age", guest.getAge());
+        setRequestNodeValueByXPath(baseXpath + "/ageType", getAgeTypeByAge(guest.getAge()));
     }
 
     public void addTicketDetails_GuestReferenceGuest(Boolean addMembership, Boolean addGuestIdReferences, Guest guest) {
@@ -322,9 +326,10 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         addAndSetGuest(baseXpath, addMembership, addGuestIdReferences, guest, "guest");
     }
 
-    public void addAndSetGuest(String xPath, Boolean addMembership, Boolean addGuestIdReferences, Guest guest, String guestNodeName) {
+    public int addAndSetGuest(String xPath, Boolean addMembership, Boolean addGuestIdReferences, Guest guest, String guestNodeName) {
         int numGuestNodes = addGuest(xPath, addMembership, addGuestIdReferences, guestNodeName);
         setGuest(xPath + "[" + String.valueOf(numGuestNodes) + "]" + "/guest", guest);
+        return numGuestNodes;
     }
 
     public int addGuest(String xPath, Boolean addMembership, Boolean addGuestIdReferences, String guestNodeName) {
@@ -341,6 +346,8 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         // Add a "guest" node
         String baseXpath = xPath;
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(guestNodeName));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("age"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("ageType"));
         baseXpath += "/guest";
         // Add the remaining nodes
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("title"));

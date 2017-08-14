@@ -1,5 +1,6 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -101,6 +102,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> isRSR = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isShared = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addGuest = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> addChildGuest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addNewGuest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> skipDeposit = new ThreadLocal<Boolean>();
     private ThreadLocal<String> firstDiningTcg = new ThreadLocal<String>();
@@ -430,6 +432,15 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addGuest.get();
     }
 
+    public void setAddChildGuest(Boolean addChildGuest) {
+        setAddNewGuest(addChildGuest);
+        this.addChildGuest.set(addChildGuest);
+    }
+
+    public Boolean getAddChildGuest() {
+        return this.addChildGuest.get();
+    }
+
     public void setSkipDeposit(Boolean skipDeposit) {
         this.skipDeposit.set(skipDeposit);
     }
@@ -695,7 +706,6 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void bookReservation() {
         if (getHouseHold() == null) {
             createHouseHold();
-            hh.get().sendToApi("latest");
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
@@ -769,6 +779,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setRoomDetailsLocationId(getLocationId());
             getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
             getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
+            getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
 
             if (isADA() != null && isADA() == true) {
                 getBook().setRoomDetailsSpecialNeedsRequested("true");
@@ -927,15 +938,21 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     private void addGuest() {
         Guest guest;
+        if (additionalGuests.get() == null) {
+            setAdditionalGuests(new HashMap<Integer, Guest>());
+        }
         if (getAddNewGuest() != null && getAddNewGuest() == true) {
             guest = new HouseHold(1).primaryGuest();
+            getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
         } else {
             guest = getHouseHold().primaryGuest();
-            if (additionalGuests.get() == null) {
-                setAdditionalGuests(new HashMap<Integer, Guest>());
-            }
             getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
         }
+
+        if (isValid(getAddChildGuest()) && getAddChildGuest() == true) {
+            guest.setAge("3");
+        }
+        guest.primaryAddress().setCity("Winston Salem");
         getBook().addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, guest);
     }
 
@@ -1401,6 +1418,18 @@ public class AccommodationBaseTest extends BaseRestTest {
                 return true;
             }
 
+        } else if (obj instanceof Collection<?>) {
+            if (((Collection<?>) obj).isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (obj instanceof Map<?, ?>) {
+            if (((Map<?, ?>) obj).isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
             return valid;
         }

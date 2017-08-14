@@ -56,6 +56,5 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest ex
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(false, getBook().getTravelPlanId());
-        validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
     }
 }

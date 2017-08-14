@@ -209,6 +209,97 @@ public class ValidationHelper {
         return rs;
     }
 
+    public Recordset validateGuestInformation(String tpId, HouseHold hh, Map<Integer, Guest> additionalGuests) {
+        TestReporter.logStep("Validated guest information");
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        String sql = "select b.IDVL_FST_NM, b.IDVL_LST_NM, b.IDVL_MID_NM, e.* "
+                + "from res_mgmt.tp_pty a "
+                + "join guest.txn_idvl_pty b on b.TXN_IDVL_PTY_ID = a.TXN_PTY_ID "
+                + "join guest.TXN_PTY_LCTR d on a.TXN_PTY_ID = d.TXN_PTY_ID "
+                + "join guest.TXN_PTY_ADDR_LCTR e on d.TXN_PTY_LCTR_ID = e.TXN_PTY_ADDR_LCTR_ID "
+                + "where a.tp_id = " + tpId;
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        // rs.print();
+        Map<Integer, Guest> allGuests = new HashMap<>();
+        allGuests.put(1, hh.primaryGuest());
+        for (int i = 1; i <= additionalGuests.size(); i++) {
+            allGuests.put(i + 1, additionalGuests.get(i));
+        }
+        // System.out.println();
+        boolean addressFound = false;
+        boolean emailFound = false;
+        boolean phoneFound = false;
+        for (int i = 1; i < allGuests.size(); i++) {
+            Guest guest = allGuests.get(i);
+            do {
+                addressFound = (rs.getValue("IDVL_FST_NM").equalsIgnoreCase(guest.getFirstName()) &&
+                        rs.getValue("IDVL_MID_NM").equalsIgnoreCase(guest.getMiddleName()) &&
+                        rs.getValue("IDVL_LST_NM").equalsIgnoreCase(guest.getLastName()) &&
+                        rs.getValue("ADDR_LN_1_TX").equalsIgnoreCase(guest.primaryAddress().getAddress1()) &&
+                        rs.getValue("CITY_NM").equalsIgnoreCase(guest.primaryAddress().getCity()) &&
+                        rs.getValue("RGN_CD").equalsIgnoreCase(guest.primaryAddress().getStateAbbv()) &&
+                        rs.getValue("PSTL_CD").equalsIgnoreCase(guest.primaryAddress().getZipCode()));
+                // System.out.println();
+                rs.moveNext();
+                // TestReporter.assertAll();
+            } while (rs.hasNext() && !addressFound);
+            rs.moveFirst();
+            if (addressFound) {
+                break;
+            }
+        }
+
+        sql = "select e.* "
+                + "from res_mgmt.tp_pty a "
+                + "join guest.txn_idvl_pty b on b.TXN_IDVL_PTY_ID = a.TXN_PTY_ID "
+                + "join guest.TXN_PTY_LCTR d on a.TXN_PTY_ID = d.TXN_PTY_ID "
+                + "join guest.TXN_PTY_EML_LCTR e on d.TXN_PTY_LCTR_ID = e.TXN_PTY_EML_LCTR_ID "
+                + "where a.tp_id = " + tpId;
+        rs = new Recordset(db.getResultSet(sql));
+        // rs.print();
+        // System.out.println();
+        for (int i = 1; i < allGuests.size(); i++) {
+            Guest guest = allGuests.get(i);
+            do {
+                emailFound = (rs.getValue("TXN_PTY_EML_ADDR_TX").equalsIgnoreCase(guest.primaryEmail().getEmail()));
+                // System.out.println();
+                rs.moveNext();
+                // TestReporter.assertAll();
+            } while (rs.hasNext() && !emailFound);
+            rs.moveFirst();
+            if (emailFound) {
+                break;
+            }
+        }
+
+        sql = "select e.* "
+                + "from res_mgmt.tp_pty a "
+                + "join guest.txn_idvl_pty b on b.TXN_IDVL_PTY_ID = a.TXN_PTY_ID "
+                + "join guest.TXN_PTY_LCTR d on a.TXN_PTY_ID = d.TXN_PTY_ID "
+                + "join guest.TXN_PTY_PHN_LCTR e on d.TXN_PTY_LCTR_ID = e.TXN_PTY_PHN_LCTR_ID "
+                + "where a.tp_id = " + tpId;
+        rs = new Recordset(db.getResultSet(sql));
+        // rs.print();
+        System.out.println();
+        for (int i = 1; i < allGuests.size(); i++) {
+            Guest guest = allGuests.get(i);
+            do {
+                phoneFound = (rs.getValue("PHN_NB").equalsIgnoreCase(guest.primaryPhone().getNumber()));
+                // System.out.println();
+                rs.moveNext();
+                // TestReporter.assertAll();
+            } while (rs.hasNext() && !phoneFound);
+            rs.moveFirst();
+            if (phoneFound) {
+                break;
+            }
+        }
+        TestReporter.assertTrue(addressFound, "Verify that the guest address information matches that which is expected.");
+        TestReporter.assertTrue(emailFound, "Verify that the guest email information matches that which is expected.");
+        TestReporter.assertTrue(phoneFound, "Verify that the guest phone information matches that which is expected.");
+        return rs;
+    }
+
     public void validateGuestInformation(String tpId, HouseHold hh, String membershipTypeName, String membershipRefId, String tpPtyId) {
         TestReporter.logStep("Validated guest information");
         Database db = new OracleDatabase(environment, Database.DREAMS);
@@ -580,7 +671,7 @@ public class ValidationHelper {
         String sql = "select a.TXN_PTY_ID "
                 + "from res_mgmt.tp_pty a "
                 + "where a.tp_id = '" + tpId + "'";
-
+        System.out.println();
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         Map<String, String> temp = new HashMap<>();

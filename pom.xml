@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>com.disney.gqe</groupId>
 			<artifactId>APIUtilsSoap</artifactId>
-			<version>1.0.63</version>
+			<version>1.0.64</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
