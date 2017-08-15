@@ -4,8 +4,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
+import com.disney.utils.Environment;
+import com.disney.utils.Randomness;
+import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest extends AccommodationBaseTest {
     private String tpPtyId = null;
@@ -51,5 +56,37 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest ex
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(false, getBook().getTravelPlanId());
+
+        // Validate the Old to the New
+        if (Environment.isSpecialEnvironment(environment)) {
+            ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();
+            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+            clone.sendRequest();
+            if (!clone.getResponseStatusCode().equals("200")) {
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+            }
+            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
+            clone.addExcludedBaselineAttributeValidations("@xsi:type");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
+                    "Validating Response Comparison");
+
+            try {
+                Cancel cancel = new Cancel(getEnvironment(), "Main");
+                cancel.setCancelDate(Randomness.generateCurrentXMLDate());
+                cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
+                cancel.sendRequest();
+            } catch (Exception e) {
+
+            }
+        }
     }
 }
