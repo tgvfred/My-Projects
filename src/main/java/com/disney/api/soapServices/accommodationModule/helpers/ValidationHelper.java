@@ -1485,9 +1485,9 @@ public class ValidationHelper {
         Recordset rs2 = new Recordset(db.getResultSet(sql2));
         TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
 
-        TestReporter.softAssertTrue(!rs.getValue("TPS_TRVL_AGCY_PTY_ID").equals("NULL"), "Verify that the [" + rs.getValue("TPS_TRVL_AGCY_PTY_ID") + "] is not null.");
-        TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_PTY_ID").equals("NULL"), "Verify that the [" + rs.getValue("TRVL_AGCY_PTY_ID") + "] is not null.");
-        TestReporter.softAssertTrue(!rs.getValue("TC_TRVL_AGCY_PTY_ID").equals("NULL"), "Verify that the [" + rs.getValue("TC_TRVL_AGCY_PTY_ID") + "] is not null.");
+        TestReporter.softAssertTrue(!rs.getValue("TPS_TRVL_AGCY_PTY_ID").equals("NULL"), "Verify that the TPS travel agency party ID [" + rs.getValue("TPS_TRVL_AGCY_PTY_ID") + "] is not null.");
+        TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_PTY_ID").equals("NULL"), "Verify that the travel agent party ID [" + rs.getValue("TRVL_AGT_PTY_ID") + "] is not null.");
+        TestReporter.softAssertTrue(!rs.getValue("TC_TRVL_AGCY_PTY_ID").equals("NULL"), "Verify that the TC travel agency party ID[" + rs.getValue("TC_TRVL_AGCY_PTY_ID") + "] is not null.");
 
         TestReporter.log("Validate folio root charge group");
         sql = "select d.TRVL_AGT_ID "
@@ -1502,7 +1502,7 @@ public class ValidationHelper {
                 + "where a.TXN_ORG_PTY_ID = " + rs.getValue("TRVL_AGT_ID");
         rs2 = new Recordset(db.getResultSet(sql2));
         TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
-        TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
+        TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the travel agent ID [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
 
         if (!(isValid(base.getIsLibgoBooking()) && base.getIsLibgoBooking() == true) ||
                 !(isValid(base.isWdtcBooking()) && base.isWdtcBooking() == true)) {
@@ -1522,7 +1522,7 @@ public class ValidationHelper {
                     + "where a.TXN_ORG_PTY_ID = " + rs.getValue("TRVL_AGT_ID");
             rs2 = new Recordset(db.getResultSet(sql2));
             TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
-            TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
+            TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the travel agent ID [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
         }
         TestReporter.assertAll();
     }
