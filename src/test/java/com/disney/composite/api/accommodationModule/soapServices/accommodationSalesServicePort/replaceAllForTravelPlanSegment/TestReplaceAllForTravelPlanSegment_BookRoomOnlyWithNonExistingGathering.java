@@ -12,7 +12,7 @@ import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnly extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithNonExistingGathering extends AccommodationBaseTest {
     private String tpPtyId = null;
 
     @Override
@@ -25,12 +25,12 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly extends Accommodati
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setAddGathering(true);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnly() {
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithNonExistingGathering() {
         bookReservation();
-        getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
         tpPtyId = getBook().getGuestId();
 
         ValidationHelper validations = new ValidationHelper(getEnvironment());
@@ -56,9 +56,9 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly extends Accommodati
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(false, getBook().getTravelPlanId());
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
-        validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1, "N", "NULL", getFacilityId());
+        validations.validateGathering(getBook().getTravelPlanId(), getGatheringData());
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {

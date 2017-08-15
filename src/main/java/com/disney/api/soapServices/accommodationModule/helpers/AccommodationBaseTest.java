@@ -907,6 +907,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void createGathering() {
+        setGatheringData(new HashMap<String, String>());
         getGatheringData().put(GATHERING_ID, Randomness.randomString(12));
         getGatheringData().put(GATHERING_NAME, Randomness.randomString(12));
         getGatheringData().put(GATHERING_TYPE, "TW");

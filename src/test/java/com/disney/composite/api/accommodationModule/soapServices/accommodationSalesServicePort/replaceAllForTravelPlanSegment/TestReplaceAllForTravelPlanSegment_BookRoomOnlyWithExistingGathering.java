@@ -1,5 +1,8 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.replaceAllForTravelPlanSegment;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -8,11 +11,12 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
+import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.GatheringHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnly extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering extends AccommodationBaseTest {
     private String tpPtyId = null;
 
     @Override
@@ -25,12 +29,19 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly extends Accommodati
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        GatheringHelper helper = new GatheringHelper(getEnvironment());
+        helper.createGathering(getFacilityId());
+
+        Map<String, String> gatheringData = new HashMap<>();
+        gatheringData.put(GATHERING_ID, helper.getGroupCode());
+        gatheringData.put(GATHERING_NAME, helper.getGroupName());
+        gatheringData.put(GATHERING_TYPE, "TW");
+        setGatheringData(gatheringData);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnly() {
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering() {
         bookReservation();
-        getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
         tpPtyId = getBook().getGuestId();
 
         ValidationHelper validations = new ValidationHelper(getEnvironment());
@@ -56,9 +67,9 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly extends Accommodati
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(false, getBook().getTravelPlanId());
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
-        validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1, "N", "NULL", getFacilityId());
+        validations.validateGathering(getBook().getTravelPlanId(), getGatheringData());
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
