@@ -136,6 +136,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> addPrimaryGuestMembership = new ThreadLocal<>();
     private ThreadLocal<Map<String, String>> membershipData = new ThreadLocal<>();
     private ThreadLocal<Boolean> addPrimaryGuestODS = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addTravelAgency = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -668,6 +669,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addPrimaryGuestODS.get();
     }
 
+    public void setAddTravelAgency(Boolean addTravelAgency) {
+        this.addTravelAgency.set(addTravelAgency);
+    }
+
+    public Boolean getAddTravelAgency() {
+        return this.addTravelAgency.get();
+    }
+
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -974,6 +983,10 @@ public class AccommodationBaseTest extends BaseRestTest {
                 }
                 getBook().setTravelPlanGuest_GuestIdReferences("ODS", getHouseHold().primaryGuest().getOdsId());
                 getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails_GuestIdRefs("ODS", getHouseHold().primaryGuest().getOdsId());
+            }
+
+            if (isValid(getAddTravelAgency()) && getAddTravelAgency() == true) {
+                getBook().setTravelAgency("99999998");
             }
 
             if (getSendRequest() == null || getSendRequest() == true) {

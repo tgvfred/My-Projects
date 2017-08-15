@@ -208,11 +208,13 @@ public class ValidationHelper {
         TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM", 1), hh.primaryGuest().getFirstName(), "Verify that the guest first name [" + rs.getValue("IDVL_FST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getFirstName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_MID_NM", 1), hh.primaryGuest().getMiddleName(), "Verify that the guest middle [" + rs.getValue("IDVL_MID_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getMiddleName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM", 1), hh.primaryGuest().getLastName(), "Verify that the guest last name [" + rs.getValue("IDVL_LST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getLastName() + "].");
-        TestReporter.softAssertTrue(rs.getValue("ADDR_LN_1_TX", 1).contains(hh.primaryGuest().primaryAddress().getAddress1()), "Verify that the address line 1 [" + rs.getValue("ADDR_LN_1_TX", 1) + "] contains that which is expected [" + hh.primaryGuest().primaryAddress().getAddress1() + "].");
-        TestReporter.softAssertEquals(rs.getValue("CITY_NM", 1), hh.primaryGuest().primaryAddress().getCity(), "Verify that the address city [" + rs.getValue("CITY_NM", 1) + "] is that which is expected [" + hh.primaryGuest().primaryAddress().getCity() + "].");
+        TestReporter.softAssertTrue(rs.getValue("ADDR_LN_1_TX", 1).toUpperCase().contains(hh.primaryGuest().primaryAddress().getAddress1().toUpperCase()), "Verify that the address line 1 [" + rs.getValue("ADDR_LN_1_TX", 1) + "] contains that which is expected [" + hh.primaryGuest().primaryAddress().getAddress1() + "].");
+        if (!hh.primaryGuest().getOdsId().equals("0")) {
+            TestReporter.softAssertEquals(rs.getValue("CITY_NM", 1), hh.primaryGuest().primaryAddress().getCity(), "Verify that the address city [" + rs.getValue("CITY_NM", 1) + "] is that which is expected [" + hh.primaryGuest().primaryAddress().getCity() + "].");
+        }
         TestReporter.softAssertEquals(rs.getValue("RGN_CD", 1), hh.primaryGuest().primaryAddress().getStateAbbv(), "Verify that the state [" + rs.getValue("RGN_CD", 1) + "] is that which is expected [" + hh.primaryGuest().primaryAddress().getStateAbbv() + "].");
         TestReporter.softAssertEquals(rs.getValue("PSTL_CD", 1), hh.primaryGuest().primaryAddress().getZipCode(), "Verify that the zip code [" + rs.getValue("PSTL_CD", 1) + "] is that which is expected [" + hh.primaryGuest().primaryAddress().getZipCode() + "].");
-        TestReporter.softAssertEquals(rs.getValue("TXN_PTY_EML_ADDR_TX", 1), hh.primaryGuest().primaryEmail().getEmail(), "Verify that the email address [" + rs.getValue("TXN_PTY_EML_ADDR_TX", 1) + "] is that which is expected [" + hh.primaryGuest().primaryEmail().getEmail() + "].");
+        TestReporter.softAssertEquals(rs.getValue("TXN_PTY_EML_ADDR_TX", 1).toUpperCase(), hh.primaryGuest().primaryEmail().getEmail().toUpperCase(), "Verify that the email address [" + rs.getValue("TXN_PTY_EML_ADDR_TX", 1) + "] is that which is expected [" + hh.primaryGuest().primaryEmail().getEmail() + "].");
         TestReporter.softAssertEquals(rs.getValue("PHN_NB", 1), hh.primaryGuest().primaryPhone().getNumber(), "Verify that the phone number [" + rs.getValue("PHN_NB", 1) + "] is that which is expected [" + hh.primaryGuest().primaryPhone().getNumber() + "].");
         TestReporter.assertAll();
         return rs;
@@ -1460,6 +1462,68 @@ public class ValidationHelper {
         TestReporter.softAssertEquals(rs.getValue("MBRSHP_END_DT").split(" ")[0], membershipData.get(MEMBERSHIP_EXP_DATE).split(" ")[0], "Verify that the [" + rs.getValue("MBRSHP_END_DT") + "] is that which is expected [" + membershipData.get(MEMBERSHIP_EXP_DATE) + "].");
         TestReporter.softAssertEquals(rs.getValue("PLCY_ID"), membershipData.get(MEMBERSHIP_POLICY_ID), "Verify that the [" + rs.getValue("PLCY_ID") + "] is that which is expected [" + membershipData.get(MEMBERSHIP_POLICY_ID) + "].");
         TestReporter.softAssertEquals(rs.getValue("PROD_CHAN_ID"), membershipData.get(MEMBERSHIP_PROD_CHANNEL_ID), "Verify that the [" + rs.getValue("PROD_CHAN_ID") + "] is that which is expected [" + membershipData.get(MEMBERSHIP_PROD_CHANNEL_ID) + "].");
+        TestReporter.assertAll();
+    }
+
+    public void verifyTravelAgency(AccommodationBaseTest base) {
+        TestReporter.logStep("Validate Travel Agency");
+        Map<String, String> ta = base.getBook().getAgencyDetails();
+
+        TestReporter.log("Validate reservation management");
+        String sql = "select a.TRVL_AGCY_PTY_ID TPS_TRVL_AGCY_PTY_ID, a.TRVL_AGT_PTY_ID, c.TRVL_AGCY_PTY_ID TC_TRVL_AGCY_PTY_ID "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "where a.tp_id =  " + base.getBook().getTravelPlanId() + " "
+                + "and c.TC_TYP_NM = 'AccommodationComponent'";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        String sql2 = "select * "
+                + "from guest.TXN_ORG_PTY a "
+                + "where a.TXN_ORG_PTY_ID = " + rs.getValue("TPS_TRVL_AGCY_PTY_ID");
+        Recordset rs2 = new Recordset(db.getResultSet(sql2));
+        TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
+
+        TestReporter.softAssertTrue(!rs.getValue("TPS_TRVL_AGCY_PTY_ID").equals("NULL"), "Verify that the [" + rs.getValue("TPS_TRVL_AGCY_PTY_ID") + "] is not null.");
+        TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_PTY_ID").equals("NULL"), "Verify that the [" + rs.getValue("TRVL_AGCY_PTY_ID") + "] is not null.");
+        TestReporter.softAssertTrue(!rs.getValue("TC_TRVL_AGCY_PTY_ID").equals("NULL"), "Verify that the [" + rs.getValue("TC_TRVL_AGCY_PTY_ID") + "] is not null.");
+
+        TestReporter.log("Validate folio root charge group");
+        sql = "select d.TRVL_AGT_ID "
+                + "from folio.EXTNL_REF a "
+                + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
+                + "left outer join folio.ROOT_CHRG_GRP d on c.CHRG_GRP_ID = d.ROOT_CHRG_GRP_ID "
+                + "where a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
+        rs = new Recordset(db.getResultSet(sql));
+        sql2 = "select * "
+                + "from guest.TXN_ORG_PTY a "
+                + "where a.TXN_ORG_PTY_ID = " + rs.getValue("TRVL_AGT_ID");
+        rs2 = new Recordset(db.getResultSet(sql2));
+        TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
+        TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
+
+        if (!(isValid(base.getIsLibgoBooking()) && base.getIsLibgoBooking() == true) ||
+                !(isValid(base.isWdtcBooking()) && base.isWdtcBooking() == true)) {
+            TestReporter.log("Validate folio product charge");
+            sql = "SELECT e.TRVL_AGT_ID "
+                    + "FROM  FOLIO.EXTNL_REF a "
+                    + "INNER JOIN FOLIO.CHRG_GRP_EXTNL_REF b ON a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                    + "INNER JOIN FOLIO.NODE_CHRG_GRP c ON b.CHRG_GRP_ID = c.ROOT_CHRG_GRP_ID "
+                    + "INNER JOIN FOLIO.CHRG d ON c.NODE_CHRG_GRP_ID = d.CHRG_GRP_ID "
+                    + "INNER JOIN FOLIO.PROD_CHRG e ON d.CHRG_ID = e.CHRG_ID "
+                    + "WHERE a.EXTNL_SRC_NM = 'DREAMS_TP' "
+                    + "AND a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
+            rs = new Recordset(db.getResultSet(sql));
+            rs = new Recordset(db.getResultSet(sql));
+            sql2 = "select * "
+                    + "from guest.TXN_ORG_PTY a "
+                    + "where a.TXN_ORG_PTY_ID = " + rs.getValue("TRVL_AGT_ID");
+            rs2 = new Recordset(db.getResultSet(sql2));
+            TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
+            TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
+        }
         TestReporter.assertAll();
     }
 }

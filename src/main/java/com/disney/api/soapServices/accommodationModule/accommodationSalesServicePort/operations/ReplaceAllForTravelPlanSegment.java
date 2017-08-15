@@ -9,12 +9,18 @@ import static com.disney.api.soapServices.accommodationModule.helpers.Accommodat
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.getAgeTypeByAge;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.isValid;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.disney.AutomationException;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operations.SearchOrganizationByMembershipId;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
+import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
@@ -23,6 +29,7 @@ import com.disney.utils.dataFactory.guestFactory.Phone;
 
 public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePort {
     private int totalRate;
+    private Map<String, String> agencyDetails;
 
     public int getTotalRate() {
         return totalRate;
@@ -30,6 +37,14 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setTotalRate(int totalRate) {
         this.totalRate = totalRate;
+    }
+
+    public Map<String, String> getAgencyDetails() {
+        return agencyDetails;
+    }
+
+    public void setAgencyDetails(Map<String, String> agencyDetails) {
+        this.agencyDetails = agencyDetails;
     }
 
     public ReplaceAllForTravelPlanSegment(String environment, String scenario) {
@@ -645,29 +660,74 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setTaxExemptDetailType(type);
     }
 
-    public void setTravelAgency() {
+    public void setTravelAgency(String agencyId) {
         int numTravelAgencies = getNumberOfRequestNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelAgency");
         if (numTravelAgencies == 0) {
             addTravelAgency();
         }
-        setTravelAgencyAgencyIataNumber("99999998");
-        setTravelAgencyAgencyName("SYSTEM SUPPORT TEST AGENCY");
-        setTravelAgencyAgencyOdsId("423996915");
-        setTravelAgencyGuestTravelAgencyId("0");
-        setTravelAgencyAgentId("1788217880");
-        setTravelAgencyConfirmationLocatorValue("0");
-        setTravelAgencyGuestAgentId("0");
-        setTravelAgencyGuestConfirmationLocationId("0");
 
-        setTravelAgency_PrimaryAddressAddressLine1("11234 Minnie Mouse Lane");
-        setTravelAgency_PrimaryAddressLocatorId("827970903");
-        setTravelAgency_PrimaryAddressGuestLocatorId("0");
-        setTravelAgency_PrimaryAddressLocatorUseType("UNKNOWN");
-        setTravelAgency_PrimaryAddressPrimary("true");
-        setTravelAgency_PrimaryAddressCity("Anaheim");
-        setTravelAgency_PrimaryAddressCountry("USA");
-        setTravelAgency_PrimaryAddressPostalCode("92805");
-        setTravelAgency_PrimaryAddressState("CA");
+        int maxTries = 10;
+        boolean success = false;
+        SearchOrganizationByMembershipId search = new SearchOrganizationByMembershipId(getEnvironment(), "Main");
+
+        for (int tries = 0; tries < maxTries; tries++) {
+            try {
+                search.setOrganizationMembershipName(BaseSoapCommands.REMOVE_NODE.toString());
+            } catch (XPathNotFoundException e) {
+            }
+            search.setOrganizationMembershipValue(agencyId);
+            search.sendRequest();
+            if (search.getResponseStatusCode().equals("200")) {
+                success = true;
+                break;
+            } else {
+                Sleeper.sleep(Randomness.randomNumberBetween(3, 7) * 1000);
+            }
+        }
+        if (!success) {
+            TestReporter.log("An error occurred searching for an organization by ID [" + agencyId + "].");
+            TestReporter.log("\nREQUEST: " + search.getRequest());
+            TestReporter.log("\nRESPONSE: " + search.getRequest());
+        }
+
+        setAgencyDetails(new HashMap<String, String>());
+        getAgencyDetails().put("iataNumber", agencyId);
+        getAgencyDetails().put("agencyName", search.getName());
+        getAgencyDetails().put("agencyOdsId", search.getId());
+        getAgencyDetails().put("guestTravelAgencyId", "0");
+        getAgencyDetails().put("agentId", search.getFirstAgentId());
+        getAgencyDetails().put("guestAgentId", "0");
+        getAgencyDetails().put("confirmationLocatorValue", "0");
+        getAgencyDetails().put("guestConfirmationLocationId", "0");
+        getAgencyDetails().put("locatorId", search.getAddressLocatorId());
+        getAgencyDetails().put("guestLocatorId", "0");
+        getAgencyDetails().put("locatorUseType", "UNKNOWN");
+        getAgencyDetails().put("primary", "true");
+        getAgencyDetails().put("addressLine1", search.getAddress1());
+        getAgencyDetails().put("city", search.getCity());
+        getAgencyDetails().put("country", search.getCountry());
+        getAgencyDetails().put("postalCode", search.getPostalCode());
+        getAgencyDetails().put("state", search.getState());
+        getAgencyDetails().put("name", search.getName());
+
+        setTravelAgencyAgencyIataNumber(agencyId);
+        setTravelAgencyAgencyName(getAgencyDetails().get("name"));
+        setTravelAgencyAgencyOdsId(getAgencyDetails().get("agencyOdsId"));
+        setTravelAgencyGuestTravelAgencyId(getAgencyDetails().get("guestTravelAgencyId"));
+        setTravelAgencyAgentId(getAgencyDetails().get("agentId"));
+        setTravelAgencyConfirmationLocatorValue(getAgencyDetails().get("confirmationLocatorValue"));
+        setTravelAgencyGuestAgentId(getAgencyDetails().get("guestAgentId"));
+        setTravelAgencyGuestConfirmationLocationId(getAgencyDetails().get("guestConfirmationLocationId"));
+
+        setTravelAgency_PrimaryAddressAddressLine1(getAgencyDetails().get("addressLine1"));
+        setTravelAgency_PrimaryAddressLocatorId(getAgencyDetails().get("locatorId"));
+        setTravelAgency_PrimaryAddressGuestLocatorId(getAgencyDetails().get("guestLocatorId"));
+        setTravelAgency_PrimaryAddressLocatorUseType(getAgencyDetails().get("locatorUseType"));
+        setTravelAgency_PrimaryAddressPrimary(getAgencyDetails().get("primary"));
+        setTravelAgency_PrimaryAddressCity(getAgencyDetails().get("city"));
+        setTravelAgency_PrimaryAddressCountry(getAgencyDetails().get("country"));
+        setTravelAgency_PrimaryAddressPostalCode(getAgencyDetails().get("postalCode"));
+        setTravelAgency_PrimaryAddressState(getAgencyDetails().get("state"));
     }
 
     private void addTravelAgency() {
