@@ -4,6 +4,10 @@ import static com.disney.api.soapServices.accommodationModule.helpers.Accommodat
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.GATHERING_ID;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.GATHERING_NAME;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.GATHERING_TYPE;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_EXP_DATE;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_POLICY_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_PROD_CHANNEL_ID;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.isValid;
 
 import java.util.HashMap;
@@ -1341,6 +1345,24 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("GSR_IN"), gsr, "Verify that the res mgmt type [" + rs.getValue("GSR_IN") + "] is that which is expected [" + gsr + "].");
             rs.moveNext();
         } while (rs.hasNext());
+        TestReporter.assertAll();
+    }
+
+    public void verifyGuestMembership(Map<String, String> membershipData) {
+        TestReporter.logStep("Validate guest membership");
+        String sql = "select b.* "
+                + "from res_mgmt.tp_pty a "
+                + "join guest.TXN_IDVL_PTY_MBSHP b on b.TXN_IDVL_PTY_ID = a.TXN_PTY_ID "
+                + "where a.tp_id =  " + membershipData.get("TP");
+
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that the guest is associated with a membership.");
+
+        TestReporter.softAssertEquals(rs.getValue("MBRSHP_ID"), membershipData.get(MEMBERSHIP_ID), "Verify that the [" + rs.getValue("MBRSHP_ID") + "] is that which is expected [" + membershipData.get(MEMBERSHIP_ID) + "].");
+        TestReporter.softAssertEquals(rs.getValue("MBRSHP_END_DT").split(" ")[0], membershipData.get(MEMBERSHIP_EXP_DATE).split(" ")[0], "Verify that the [" + rs.getValue("MBRSHP_END_DT") + "] is that which is expected [" + membershipData.get(MEMBERSHIP_EXP_DATE) + "].");
+        TestReporter.softAssertEquals(rs.getValue("PLCY_ID"), membershipData.get(MEMBERSHIP_POLICY_ID), "Verify that the [" + rs.getValue("PLCY_ID") + "] is that which is expected [" + membershipData.get(MEMBERSHIP_POLICY_ID) + "].");
+        TestReporter.softAssertEquals(rs.getValue("PROD_CHAN_ID"), membershipData.get(MEMBERSHIP_PROD_CHANNEL_ID), "Verify that the [" + rs.getValue("PROD_CHAN_ID") + "] is that which is expected [" + membershipData.get(MEMBERSHIP_PROD_CHANNEL_ID) + "].");
         TestReporter.assertAll();
     }
 }

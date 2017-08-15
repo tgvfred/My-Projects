@@ -58,6 +58,13 @@ public class AccommodationBaseTest extends BaseRestTest {
     public final static String COMMENT_TEXT = "commentText";
     public final static String COMMENT_TO = "to";
     public final static String COMMENT_FROM = "from";
+    public final static String MEMBERSHIP_EXP_DATE = "expirationDate";
+    public final static String MEMBERSHIP_TYPE = "memberShipType";
+    public final static String MEMBERSHIP_ID = "membershipId";
+    public final static String MEMBERSHIP_POLICY_ID = "policyId";
+    public final static String MEMBERSHIP_PROD_CHANNEL_ID = "productChannelId";
+    public final static String MEMBERSHIP_GUEST_MEMBERSHIP_ID = "guestMembershipId";
+
     protected static String environment;
     protected ThreadLocal<Integer> daysOut = new ThreadLocal<Integer>();
     protected ThreadLocal<Integer> nights = new ThreadLocal<Integer>();
@@ -126,6 +133,8 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<TicketsHelper> ticketsHelper = new ThreadLocal<>();
     private ThreadLocal<Boolean> nonZeroVip = new ThreadLocal<>();
     private ThreadLocal<String> vipLevel = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addPrimaryGuestMembership = new ThreadLocal<>();
+    private ThreadLocal<Map<String, String>> membershipData = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -548,6 +557,15 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.gatheringData.get();
     }
 
+    public void setMembershipData(Map<String, String> membershipData) {
+        setAddPrimaryGuestMembership(true);
+        this.membershipData.set(membershipData);
+    }
+
+    public Map<String, String> getMembershipData() {
+        return this.membershipData.get();
+    }
+
     public void setAddComments(Boolean addComments) {
         this.addComments.set(addComments);
     }
@@ -631,6 +649,14 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public String getVipLevel() {
         return this.vipLevel.get();
+    }
+
+    public void setAddPrimaryGuestMembership(Boolean addPrimaryGuestMembership) {
+        this.addPrimaryGuestMembership.set(addPrimaryGuestMembership);
+    }
+
+    public Boolean getAddPrimaryGuestMembership() {
+        return this.addPrimaryGuestMembership.get();
     }
 
     @BeforeSuite(alwaysRun = true)
@@ -806,7 +832,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setRoomDetailsLocationId(getLocationId());
             getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
             getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
-            getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
+            // getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
 
             if (isADA() != null && isADA() == true) {
                 getBook().setRoomDetailsSpecialNeedsRequested("true");
@@ -887,7 +913,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                             getCommentsData().get(COMMENT_TEXT),
                             "true",
                             getCommentsData().get(COMMENT_FROM),
-                            BaseSoapCommands.REMOVE_NODE.toString(),
+                            "CREUN",
                             getCommentsData().get(COMMENT_TO));
                 }
             }
@@ -910,6 +936,27 @@ public class AccommodationBaseTest extends BaseRestTest {
                         break;
                 }
                 getBook().setVipLevel(getVipLevel());
+            }
+
+            if (isValid(getAddPrimaryGuestMembership()) && getAddPrimaryGuestMembership() == true) {
+                setMembershipData(new HashMap<String, String>());
+                if (!isValid(getMembershipData())) {
+                    getMembershipData().put(MEMBERSHIP_EXP_DATE, Randomness.generateCurrentXMLDate());
+                    getMembershipData().put(MEMBERSHIP_GUEST_MEMBERSHIP_ID, Randomness.randomNumber(12));
+                    getMembershipData().put(MEMBERSHIP_ID, Randomness.randomNumber(8));
+                    getMembershipData().put(MEMBERSHIP_ID, getMembershipData().get(MEMBERSHIP_ID).startsWith("0") ? getMembershipData().get(MEMBERSHIP_ID).replaceFirst("0", "1") : getMembershipData().get(MEMBERSHIP_ID));
+                    getMembershipData().put(MEMBERSHIP_POLICY_ID, Randomness.randomNumber(6));
+                    getMembershipData().put(MEMBERSHIP_POLICY_ID, getMembershipData().get(MEMBERSHIP_POLICY_ID).startsWith("0") ? getMembershipData().get(MEMBERSHIP_POLICY_ID).replaceFirst("0", "1") : getMembershipData().get(MEMBERSHIP_POLICY_ID));
+                    getMembershipData().put(MEMBERSHIP_PROD_CHANNEL_ID, Randomness.randomNumber(6));
+                    getMembershipData().put(MEMBERSHIP_PROD_CHANNEL_ID, getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID).startsWith("0") ? getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID).replaceFirst("0", "1") : getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID));
+                    getMembershipData().put(MEMBERSHIP_TYPE, Randomness.randomString(8));
+                }
+                getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails_MembershipDetails(getMembershipData().get(MEMBERSHIP_EXP_DATE),
+                        getMembershipData().get(MEMBERSHIP_TYPE), getMembershipData().get(MEMBERSHIP_ID), getMembershipData().get(MEMBERSHIP_POLICY_ID),
+                        getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID), getMembershipData().get(MEMBERSHIP_GUEST_MEMBERSHIP_ID));
+                getBook().setTravelPlanGuest_Guest_MembershipDetails(getMembershipData().get(MEMBERSHIP_EXP_DATE),
+                        getMembershipData().get(MEMBERSHIP_TYPE), getMembershipData().get(MEMBERSHIP_ID), getMembershipData().get(MEMBERSHIP_POLICY_ID),
+                        getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID), getMembershipData().get(MEMBERSHIP_GUEST_MEMBERSHIP_ID));
             }
 
             if (getSendRequest() == null || getSendRequest() == true) {

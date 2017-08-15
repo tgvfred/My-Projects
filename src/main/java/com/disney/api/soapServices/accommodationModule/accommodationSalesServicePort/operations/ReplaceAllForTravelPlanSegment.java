@@ -1,5 +1,11 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations;
 
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_EXP_DATE;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_GUEST_MEMBERSHIP_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_POLICY_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_PROD_CHANNEL_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_TYPE;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.getAgeTypeByAge;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.isValid;
 
@@ -100,7 +106,9 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         int numAuditDetails = getNumberOfRequestNodesByXPath(baseXpath + "/auditDetail");
         setRequestNodeValueByXPath(baseXpath.replace("/auditDetail", ""), BaseSoapCommands.ADD_NODE.commandAppend("auditDetail"));
         numAuditDetails++;
-        baseXpath += "/auditDetail[" + String.valueOf(numAuditDetails) + "]";
+        if (!baseXpath.contains("auditDetail")) {
+            baseXpath += "/auditDetail[" + String.valueOf(numAuditDetails) + "]";
+        }
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("createdBy"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("createdDate"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("updatedBy"));
@@ -209,7 +217,8 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
             addRoomDetails_RoomReservationDetail_Comments(baseXpath, numComments);
         }
         baseXpath += "/";
-        setAuditDetails(baseXpath, "AutoJUnit.us", Randomness.generateCurrentDatetime(), "AutoJUnit.us", Randomness.generateCurrentDatetime(), auditStatus);
+        setAuditDetails(baseXpath, "AutoJUnit.us", Randomness.generateCurrentXMLDate(), "AutoJUnit.us", Randomness.generateCurrentXMLDate(), auditStatus);
+        baseXpath = baseXpath.replace("/comments", "");
         setCommentsCommentText(baseXpath, commentText);
         setCommentsDefault(baseXpath, defaultIndicator);
         setCommentsFrom(baseXpath, from);
@@ -221,11 +230,13 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         String nodeName = "comments";
         setRequestNodeValueByXPath(baseXpath.replace("/" + nodeName, ""), BaseSoapCommands.ADD_NODE.commandAppend(nodeName));
         numComments++;
-        baseXpath += "/" + nodeName + "[" + String.valueOf(numComments) + "]";
+        baseXpath += "[" + String.valueOf(numComments) + "]";
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(AccommodationBaseTest.COMMENT_TEXT));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(AccommodationBaseTest.COMMENT_TO));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(AccommodationBaseTest.COMMENT_FROM));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("default"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("routings"));
+        setRequestNodeValueByXPath(baseXpath + "/routings", BaseSoapCommands.ADD_NODE.commandAppend("name"));
         addAuditDetail(baseXpath + "/auditDetail");
     }
 
@@ -237,13 +248,27 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public void setRoomDetails_RoomReservationDetail_GuestRefDetails_MembershipDetails(String expDate, String membershipType, String membershipId, String policyId, String prodChannelId, String guestMembershipId) {
-        String baseXpath = "//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/";
+        String baseXpath = "//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/membershipDetail";
+        int numNodes = getNumberOfRequestNodesByXPath(baseXpath);
+        if (numNodes == 0) {
+            addMembershipDetails(baseXpath, numNodes);
+        }
         setMembershipDetailsExpirationDate(baseXpath, expDate);
         setMembershipDetailsGuestMembershipId(baseXpath, guestMembershipId);
         setMembershipDetailsMembershipId(baseXpath, membershipId);
         setMembershipDetailsMembershipType(baseXpath, membershipType);
         setMembershipDetailsPolicyId(baseXpath, policyId);
         setMembershipDetailsProdChannelId(baseXpath, prodChannelId);
+    }
+
+    public void addMembershipDetails(String baseXpath, int numNodes) {
+        setRequestNodeValueByXPath(baseXpath.replace("/membershipDetail", ""), BaseSoapCommands.ADD_NODE.commandAppend("membershipDetail"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(MEMBERSHIP_EXP_DATE));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(MEMBERSHIP_GUEST_MEMBERSHIP_ID));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(MEMBERSHIP_ID));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(MEMBERSHIP_POLICY_ID));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(MEMBERSHIP_PROD_CHANNEL_ID));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(MEMBERSHIP_TYPE));
     }
 
     public void setRoomDetails_RoomReservationDetail_GuestRefDetails_GuestIdRefs(String type, String value) {
@@ -516,6 +541,21 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setReservationDetail_GuestRefDetails_Guest_MembershipDetails(String expDate, String membershipType, String membershipId, String policyId, String prodChannelId, String guestMembershipId) {
         String baseXpath = "//replaceAllForTravelPlanSegment/request/reservationDetail/guestReferenceDetails/guest";
+        setMembershipDetailsExpirationDate(baseXpath, expDate);
+        setMembershipDetailsGuestMembershipId(baseXpath, guestMembershipId);
+        setMembershipDetailsMembershipId(baseXpath, membershipId);
+        setMembershipDetailsMembershipType(baseXpath, membershipType);
+        setMembershipDetailsPolicyId(baseXpath, policyId);
+        setMembershipDetailsProdChannelId(baseXpath, prodChannelId);
+    }
+
+    public void setTravelPlanGuest_Guest_MembershipDetails(String expDate, String membershipType, String membershipId, String policyId, String prodChannelId, String guestMembershipId) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/travelPlanGuest/membershipDetail";
+        int numNodes = getNumberOfRequestNodesByXPath(baseXpath);
+        if (numNodes == 0) {
+            addMembershipDetails(baseXpath, numNodes);
+        }
+
         setMembershipDetailsExpirationDate(baseXpath, expDate);
         setMembershipDetailsGuestMembershipId(baseXpath, guestMembershipId);
         setMembershipDetailsMembershipId(baseXpath, membershipId);
@@ -1144,7 +1184,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     private void setCommentsRountingsName(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "routings/name", value);
+            setRequestNodeValueByXPath(baseXpath + "comments/routings/name", value);
         }
     }
 
