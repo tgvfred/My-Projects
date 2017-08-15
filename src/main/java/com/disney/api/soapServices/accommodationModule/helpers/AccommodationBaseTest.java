@@ -124,6 +124,8 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> addRoomResDetailsComments = new ThreadLocal<>();
     private ThreadLocal<Map<Integer, Guest>> additionalGuests = new ThreadLocal<Map<Integer, Guest>>();
     private ThreadLocal<TicketsHelper> ticketsHelper = new ThreadLocal<>();
+    private ThreadLocal<Boolean> nonZeroVip = new ThreadLocal<>();
+    private ThreadLocal<String> vipLevel = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -572,6 +574,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addRoomResDetailsComments.get();
     }
 
+    public void setNonZeroVip(Boolean setNonZeroVip) {
+        this.nonZeroVip.set(setNonZeroVip);
+    }
+
+    public Boolean getNonZeroVip() {
+        return this.nonZeroVip.get();
+    }
+
     public void setCommentsData(HashMap<String, String> comments) {
         setAddComments(true);
         this.comments.set(comments);
@@ -613,6 +623,14 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public TicketsHelper getTicketsHelper() {
         return this.ticketsHelper.get();
+    }
+
+    public void setVipLevel(String vipLevel) {
+        this.vipLevel.set(vipLevel);
+    }
+
+    public String getVipLevel() {
+        return this.vipLevel.get();
     }
 
     @BeforeSuite(alwaysRun = true)
@@ -872,6 +890,26 @@ public class AccommodationBaseTest extends BaseRestTest {
                             BaseSoapCommands.REMOVE_NODE.toString(),
                             getCommentsData().get(COMMENT_TO));
                 }
+            }
+
+            if (isValid(getNonZeroVip())) {
+                int intVipLevel = Randomness.randomNumberBetween(1, 4);
+                setVipLevel(null);
+                switch (intVipLevel) {
+                    case 1:
+                        setVipLevel("ONE");
+                        break;
+                    case 2:
+                        setVipLevel("TWO");
+                        break;
+                    case 3:
+                        setVipLevel("THREE");
+                        break;
+                    default:
+                        setVipLevel("FOUR");
+                        break;
+                }
+                getBook().setVipLevel(getVipLevel());
             }
 
             if (getSendRequest() == null || getSendRequest() == true) {

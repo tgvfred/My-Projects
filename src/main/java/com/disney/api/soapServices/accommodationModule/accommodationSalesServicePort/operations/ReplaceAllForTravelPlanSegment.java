@@ -67,8 +67,9 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         int numInternalComments = getNumberOfRequestNodesByXPath(baseXpath);
         if (numInternalComments == 0) {
             addInternalComments(baseXpath, numInternalComments);
+            numInternalComments++;
         }
-        baseXpath += "/";
+        baseXpath += "[" + numInternalComments + "]/";
         setCommentsCommentText(baseXpath, commentText);
         setCommentsCommentType(baseXpath, commentType);
         setAuditDetails(baseXpath, "AutoJUnit.us", Randomness.generateCurrentXMLDate(), "AutoJUnit.us", Randomness.generateCurrentXMLDate(), auditStatus);
@@ -84,15 +85,27 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         addAuditDetail(baseXpath);
     }
 
+    public void addInternalComments(int intnumInternalComments) {
+        String baseXpath = "//replaceAllForTravelPlanSegment/request/internalComments";
+        String nodeName = "internalComments";
+        setRequestNodeValueByXPath(baseXpath.replace("/" + nodeName, ""), BaseSoapCommands.ADD_NODE.commandAppend("internalComments"));
+        intnumInternalComments++;
+        baseXpath = baseXpath + "[" + String.valueOf(intnumInternalComments) + "]";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("commentText"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("commentType"));
+        addAuditDetail(baseXpath);
+    }
+
     private void addAuditDetail(String baseXpath) {
-        int numAuditDetails = getNumberOfRequestNodesByXPath(baseXpath);
+        int numAuditDetails = getNumberOfRequestNodesByXPath(baseXpath + "/auditDetail");
         setRequestNodeValueByXPath(baseXpath.replace("/auditDetail", ""), BaseSoapCommands.ADD_NODE.commandAppend("auditDetail"));
         numAuditDetails++;
-        setRequestNodeValueByXPath(baseXpath + "[" + String.valueOf(numAuditDetails) + "]/auditDetail", "createdBy");
-        setRequestNodeValueByXPath(baseXpath + "[" + String.valueOf(numAuditDetails) + "]/auditDetail", "createdDate");
-        setRequestNodeValueByXPath(baseXpath + "[" + String.valueOf(numAuditDetails) + "]/auditDetail", "updatedBy");
-        setRequestNodeValueByXPath(baseXpath + "[" + String.valueOf(numAuditDetails) + "]/auditDetail", "updatedDate");
-        setRequestNodeValueByXPath(baseXpath + "[" + String.valueOf(numAuditDetails) + "]/auditDetail", "status");
+        baseXpath += "/auditDetail[" + String.valueOf(numAuditDetails) + "]";
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("createdBy"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("createdDate"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("updatedBy"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("updatedDate"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("status"));
     }
 
     public void setReservationDetail_Comments(String commentText, String defaultIndicator, String from, String rountingName, String to, String auditStatus) {
@@ -1093,13 +1106,21 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     private void setCommentsCommentText(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "comments/commentText", value);
+            if (baseXpath.contains("internalComments")) {
+                setRequestNodeValueByXPath(baseXpath + "commentText", value);
+            } else {
+                setRequestNodeValueByXPath(baseXpath + "comments/commentText", value);
+            }
         }
     }
 
     private void setCommentsCommentType(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "comments/commentType", value);
+            if (baseXpath.contains("internalComments")) {
+                setRequestNodeValueByXPath(baseXpath + "commentType", value);
+            } else {
+                setRequestNodeValueByXPath(baseXpath + "comments/commentType", value);
+            }
         }
     }
 
