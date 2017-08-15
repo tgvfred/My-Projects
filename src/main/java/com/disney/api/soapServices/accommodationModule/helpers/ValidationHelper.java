@@ -1190,4 +1190,66 @@ public class ValidationHelper {
 
         TestReporter.assertAll();
     }
+
+    public void validateConfirmationDetails(String tpsId, String deliveryMethod, String partyId, String defaultConfirmation, String confirmationSent, String contactName) {
+        TestReporter.logStep("Validate TPS confirmation details");
+        String sql = "select * "
+                + "from res_mgmt.tps_cnfirm_rcpnt a "
+                + "where a.tps_id = " + tpsId;
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.assertTrue(rs.getRowCount() == 1, "Verify that a confirmation recipient was created for TPS ID [" + tpsId + "].");
+        TestReporter.softAssertEquals(rs.getValue("DLVR_METH_NM"), deliveryMethod, "Verify that the delivery method [" + rs.getValue("DLVR_METH_NM") + "] is that which is expected [" + deliveryMethod + "].");
+        TestReporter.softAssertEquals(rs.getValue("LACD_IN"), "N", "Verify that the LACD indicator [" + rs.getValue("LACD_IN") + "] is that which is expected [N].");
+        TestReporter.softAssertEquals(rs.getValue("PTY_ID"), partyId, "Verify that the party ID [" + rs.getValue("PTY_ID") + "] is that which is expected [" + partyId + "].");
+        TestReporter.softAssertEquals(rs.getValue("DFLT_CNFIRM_IN"), defaultConfirmation, "Verify that the default confirmation indicator [" + rs.getValue("DFLT_CNFIRM_IN") + "] is that which is expected [" + defaultConfirmation + "].");
+        TestReporter.softAssertEquals(rs.getValue("DVC_MBRSHP_IN"), "N", "Verify that the DVC membership indicator [" + rs.getValue("DVC_MBRSHP_IN") + "] is that which is expected [N].");
+        TestReporter.softAssertEquals(rs.getValue("CNFIRM_SENT_IN"), confirmationSent, "Verify that the confirmation sent indicator [" + rs.getValue("CNFIRM_SENT_IN") + "] is that which is expected [" + confirmationSent + "].");
+        TestReporter.softAssertEquals(rs.getValue("CNFIRM_SPRS_IN"), "N", "Verify that the confirmation suppress indicator [" + rs.getValue("CNFIRM_SPRS_IN") + "] is that which is expected [N].");
+        TestReporter.softAssertEquals(rs.getValue("CNTCT_NM"), contactName, "Verify that the contact name [" + rs.getValue("CNTCT_NM") + "] is that which is expected [" + contactName + "].");
+
+        if (!rs.getValue("DLVR_METH_NM").equals(deliveryMethod)) {
+
+            String locatorId = rs.getValue("LCTR_ID");
+            // Use the confirmation locator ID to determine the source of the locator (address, email, or phone)
+            boolean address = false;
+            boolean email = false;
+            boolean phone = false;
+            sql = "select * "
+                    + "from guest.TXN_PTY_ADDR_LCTR a "
+                    + "where a.TXN_PTY_ADDR_LCTR_ID = " + locatorId;
+            rs = new Recordset(db.getResultSet(sql));
+            if (rs.getRowCount() == 1) {
+                address = true;
+            }
+
+            if (!address) {
+                sql = sql.replace("TXN_PTY_ADDR_LCTR", "TXN_PTY_EML_LCTR").replace("TXN_PTY_ADDR_LCTR_ID", "TXN_PTY_EML_LCTR_ID");
+                rs = new Recordset(db.getResultSet(sql));
+                if (rs.getRowCount() == 1) {
+                    email = true;
+                }
+            }
+
+            if (!address && !email) {
+                sql = sql.replace("TXN_PTY_EML_LCTR", "TXN_PTY_PHN_LCTR").replace("TXN_PTY_EML_LCTR_ID", "TXN_PTY_PHN_LCTR_ID");
+                rs = new Recordset(db.getResultSet(sql));
+                if (rs.getRowCount() == 1) {
+                    phone = true;
+                }
+            }
+
+            String actualLocatorValue = "";
+            if (address) {
+                actualLocatorValue = "Address/Print";
+            } else if (email) {
+                actualLocatorValue = "Email/Email";
+            } else if (phone) {
+                actualLocatorValue = "Phone/SMS";
+            }
+            TestReporter.softAssertEquals(rs.getValue("DLVR_METH_NM"), deliveryMethod, "The locator ID was found to be of type [" + actualLocatorValue + "].");
+        }
+
+        TestReporter.assertAll();
+    }
 }

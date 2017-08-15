@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -15,8 +16,9 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends AccommodationBaseTest {
-    private String tpPtyId = null;
+public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithConfirmationDetails_SourceExtRef extends AccommodationBaseTest {
+
+    private String tpPtyId;
     private String odsGuestId;
 
     @Override
@@ -29,12 +31,20 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends A
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
-        setAddTickets(true);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnly() {
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithConfirmationDetails_SourceExtRef() {
+        setSendRequest(false);
+        setAddConfirmationDetails(true);
         bookReservation();
+        getBook().setRoomDetails_SourceExtRef(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), getExternalRefSource(), "RESERVATION");
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        validations();
+    }
+
+    private void validations() {
         tpPtyId = getBook().getGuestId();
         String sql = "select b.TXN_PTY_EXTNL_REF_VAL "
                 + "from res_mgmt.tp_pty a "
@@ -42,9 +52,36 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends A
                 + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
+        // odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
-        validations();
+        ValidationHelper validations = new ValidationHelper(getEnvironment());
+
+        // Validate reservation
+        validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
+                getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
+        validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
+        validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
+
+        // Validate Folio
+        validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
+        validations.verifyNumberOfChargesByStatus("UnEarned", 1, getBook().getTravelPlanId());
+        validations.verifyChargeDetail(4, getBook().getTravelPlanId());
+        validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
+
+        // Validate RIM
+        validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
+        validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
+        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
+
+        // Validate guest
+        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
+        validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
+        validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
+        // validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
+
+        // Validate TPS confirmation
+        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Email", tpPtyId, "Y", "Y", getHouseHold().primaryGuest().getFirstName() + " " + getHouseHold().primaryGuest().getLastName());
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
@@ -77,37 +114,5 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends A
 
             }
         }
-    }
-
-    private void validations() {
-
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
-
-        // Validate reservation
-        validations.validateModificationBackend(3, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
-                getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
-        validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
-        validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
-        String admissionComponentId = validations.validateAdmissionComponentAdded(getBook().getTravelComponentGroupingId());
-        String ticketComponentPrice = validations.validateAdmissionComponentDetails(admissionComponentId, getTicketsHelper().getCode());
-        validations.validateAdmissionComponentPrice(getBook().getTravelPlanId(), ticketComponentPrice);
-
-        // Validate Folio
-        validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
-        validations.verifyNumberOfChargesByStatus("UnEarned", 2, getBook().getTravelPlanId());
-        validations.verifyChargeDetail(5, getBook().getTravelPlanId());
-        validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
-
-        // Validate RIM
-        validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
-        validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
-        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
-
-        // Validate guest
-        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
-        validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
-        validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
-        validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
     }
 }

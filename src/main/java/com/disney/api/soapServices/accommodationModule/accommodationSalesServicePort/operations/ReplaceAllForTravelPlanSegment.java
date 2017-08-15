@@ -157,6 +157,10 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setRoomDetails_SourceExtRef(String code, String number, String source, String type) {
         String baseXpath = "//replaceAllForTravelPlanSegment/request/roomDetails/sourceExternalReference/";
+        int numNodes = getNumberOfRequestNodesByXPath(baseXpath.substring(0, baseXpath.lastIndexOf("/")));
+        if (numNodes == 0) {
+            setRequestNodeValueByXPath("//roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("sourceExternalReference"));
+        }
         setExtRefCode(baseXpath, code);
         setExtRefNumber(baseXpath, number);
         setExtRefSource(baseXpath, source);
@@ -271,7 +275,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
             addConfirmationDetails(numConfirmationDetails);
         }
         String baseXpath = "//confirmationDetails/guestDetail/";
-        setConfirmationDetails_ConfirmationDetailId(indicator);
+        setConfirmationDetails_ConfirmationDetailId(id);
         setConfirmationDetails_ConfirmationIndicator(indicator);
         setConfirmationDetails_ConfirmationType(type);
         setConfirmationDetails_DefaultConfirmationIndicator(defaultConfirmationIndicator);
@@ -279,12 +283,29 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setConfirmationDetails_JdoSequenceNumber(jdoSeqNumber);
         setConfirmationDetails_LocatorId(locatorId);
         setConfirmationDetails_PartyId(partyId);
+        setConfirmationDetails_ContactName(guest.getFirstName() + " " + guest.getLastName());
+        setConfirmationDetails_FirstName(guest.getFirstName());
+        setConfirmationDetails_LastName(guest.getLastName());
+
+        // Age and age type nodes are created for a typical guest. This is not required for the confirmation guest
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/confirmationDetails/age", BaseSoapCommands.REMOVE_NODE.toString());
+        } catch (XPathNotFoundException e) {
+
+        }
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/confirmationDetails/ageType", BaseSoapCommands.REMOVE_NODE.toString());
+        } catch (XPathNotFoundException e) {
+
+        }
         setGuest(baseXpath, guest);
     }
 
     private void addConfirmationDetails(int numConfirmationDetails) {
         String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request";
-        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("confirmationDetails"));
+        addGuest("/Envelope/Body/replaceAllForTravelPlanSegment/request/confirmationDetails", false, false, "guestDetail");
+
+        // setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("confirmationDetails"));
         numConfirmationDetails++;
         baseXpath += "/confirmationDetails[" + String.valueOf(numConfirmationDetails) + "]";
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("confirmationDetailId"));
@@ -298,7 +319,6 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("lastName"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("partyId"));
-        addGuest("/Envelope/Body/replaceAllForTravelPlanSegment/request/confirmationDetails", false, false, "guestDetail");
     }
 
     public void setReservationDetail_GuestRefDetails_Guest_GuestIdRefs(String type, String value) {
@@ -348,7 +368,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(guestNodeName));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("age"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("ageType"));
-        baseXpath += "/guest";
+        baseXpath += "/" + guestNodeName;
         // Add the remaining nodes
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("title"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("firstName"));
@@ -374,7 +394,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("extension"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("number"));
 
-        baseXpath = xPath + "/guest/addressDetails";
+        baseXpath = xPath + "/" + guestNodeName + "/addressDetails";
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primary"));
@@ -385,16 +405,16 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("state"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("regionName"));
 
-        baseXpath = xPath + "/guest/emailDetails";
+        baseXpath = xPath + "/" + guestNodeName + "/emailDetails";
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primary"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("address"));
 
         if (isValid(addMembership) && addMembership == true) {
-            baseXpath = xPath + "/guest";
+            baseXpath = xPath + "/" + guestNodeName;
             setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("membershipDetail"));
-            baseXpath = xPath + "/guest/membershipDetail";
+            baseXpath = xPath + "/" + guestNodeName + "/membershipDetail";
             setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("expirationDate"));
             setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("memberShipType"));
             setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("membershipId"));
@@ -404,9 +424,9 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         }
 
         if (isValid(addGuestIdReferences) && addGuestIdReferences == true) {
-            baseXpath = xPath + "/guest";
+            baseXpath = xPath + "/" + guestNodeName;
             setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestIdReferences"));
-            baseXpath = xPath + "/guest/guestIdReferences";
+            baseXpath = xPath + "/" + guestNodeName + "/guestIdReferences";
             setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("type"));
             setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("value"));
         }
@@ -651,6 +671,33 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     // *********************************************************************************************************
     // *********************************************************************************************************
     // *********************************************************************************************************
+
+    private void setConfirmationDetails_ContactName(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/contactName";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "0");
+        }
+    }
+
+    private void setConfirmationDetails_FirstName(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/firstName";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "0");
+        }
+    }
+
+    private void setConfirmationDetails_LastName(String value) {
+        String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/lastName";
+        if (isValid(value)) {
+            setRequestNodeValueByXPath(xpath, value);
+        } else {
+            setRequestNodeValueByXPath(xpath, "0");
+        }
+    }
 
     private void setConfirmationDetails_ConfirmationDetailId(String value) {
         String xpath = "//replaceAllForTravelPlanSegment/request/confirmationDetails/confirmationDetailId";
