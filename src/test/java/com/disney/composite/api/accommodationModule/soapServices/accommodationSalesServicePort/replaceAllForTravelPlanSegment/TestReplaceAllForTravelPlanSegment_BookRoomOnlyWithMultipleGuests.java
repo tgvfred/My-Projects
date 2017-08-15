@@ -15,9 +15,7 @@ import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child extends AccommodationBaseTest {
-
-    private String tpPtyId;
+public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithMultipleGuests extends AccommodationBaseTest {
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -29,21 +27,19 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child extend
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setAddNewGuest(true);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child() {
-        setSendRequest(false);
-        setAddChildGuest(true);
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithMultipleGuests() {
         bookReservation();
-        getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         validations();
     }
 
     private void validations() {
-        tpPtyId = getBook().getGuestId();
-
+        int numGuests = getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails");
+        TestReporter.assertTrue(numGuests == 2, "Verify that two guests were returned in the response.");
         ValidationHelper validations = new ValidationHelper(getEnvironment());
 
         // Validate reservation
@@ -61,7 +57,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child extend
         // Validate RIM
         validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
         validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
-        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "1", true);
+        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "2", "0", true);
         // System.out.println();
 
         // Validate guest
@@ -71,13 +67,11 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child extend
         Map<String, String> tpPartyIds = new HashMap<>();
         String partyId = getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests[1]/guest/guestId");
         tpPartyIds.put(partyId, partyId);
-        validations.verifyOdsGuestIdCreated(false, partyId);
+        validations.verifyOdsGuestIdCreated(true, partyId);
         partyId = getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests[2]/guest/guestId");
         tpPartyIds.put(partyId, partyId);
         validations.verifyOdsGuestIdCreated(false, partyId);
         validations.verifyTpPartyIds(tpPartyIds, getBook().getTravelPlanId());
-        getAdditionalGuests().get(1).setPrimary(false);
-        validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), getHouseHold().primaryGuest(), 1, 1, "N", "NULL", getFacilityId(), getAdditionalGuests());
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {

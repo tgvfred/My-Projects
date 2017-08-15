@@ -171,6 +171,23 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setGuestIdReferencesValue(baseXpath, value);
     }
 
+    public void setTravelPlanGuest_GuestIdReferences(String type, String value) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/travelPlanGuest/guestIdReferences";
+        int numNodes = getNumberOfRequestNodesByXPath(baseXpath);
+        if (numNodes == 0) {
+            addGuestIdReferences(baseXpath, numNodes);
+            numNodes++;
+        }
+        setGuestIdReferencesType(baseXpath, type);
+        setGuestIdReferencesValue(baseXpath, value);
+    }
+
+    public void addGuestIdReferences(String baseXpath, int numNodes) {
+        setRequestNodeValueByXPath(baseXpath.replace("/guestIdReferences", ""), BaseSoapCommands.ADD_NODE.commandAppend("guestIdReferences"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("type"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("value"));
+    }
+
     public void setTravelPlanGuest(Guest guest) {
         String baseXpath = "//replaceAllForTravelPlanSegment/request/travelPlanGuest";
         setGuest(baseXpath, guest);
@@ -272,7 +289,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public void setRoomDetails_RoomReservationDetail_GuestRefDetails_GuestIdRefs(String type, String value) {
-        String baseXpath = "//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest";
+        String baseXpath = "//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestIdReferences";
+        int numNodes = getNumberOfRequestNodesByXPath(baseXpath);
+        if (numNodes == 0) {
+            addGuestIdReferences(baseXpath, numNodes);
+            numNodes++;
+        }
         setGuestIdReferencesType(baseXpath, type);
         setGuestIdReferencesValue(baseXpath, value);
     }
@@ -1422,13 +1444,13 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     private void setGuestIdReferencesType(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/guestIdReferences/type", value);
+            setRequestNodeValueByXPath(baseXpath + "/type", value);
         }
     }
 
     private void setGuestIdReferencesValue(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/guestIdReferences/value", value);
+            setRequestNodeValueByXPath(baseXpath + "/value", value);
         }
     }
 

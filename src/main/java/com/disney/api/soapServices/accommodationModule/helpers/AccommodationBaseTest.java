@@ -135,6 +135,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> vipLevel = new ThreadLocal<>();
     private ThreadLocal<Boolean> addPrimaryGuestMembership = new ThreadLocal<>();
     private ThreadLocal<Map<String, String>> membershipData = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addPrimaryGuestODS = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -659,6 +660,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addPrimaryGuestMembership.get();
     }
 
+    public void setAddPrimaryGuestODS(Boolean addPrimaryGuestODS) {
+        this.addPrimaryGuestODS.set(addPrimaryGuestODS);
+    }
+
+    public Boolean getAddPrimaryGuestODS() {
+        return this.addPrimaryGuestODS.get();
+    }
+
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -957,6 +966,14 @@ public class AccommodationBaseTest extends BaseRestTest {
                 getBook().setTravelPlanGuest_Guest_MembershipDetails(getMembershipData().get(MEMBERSHIP_EXP_DATE),
                         getMembershipData().get(MEMBERSHIP_TYPE), getMembershipData().get(MEMBERSHIP_ID), getMembershipData().get(MEMBERSHIP_POLICY_ID),
                         getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID), getMembershipData().get(MEMBERSHIP_GUEST_MEMBERSHIP_ID));
+            }
+
+            if (isValid(getAddPrimaryGuestODS()) && getAddPrimaryGuestODS() == true) {
+                if (getHouseHold().primaryGuest().getOdsId().equals("0")) {
+                    getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
+                }
+                getBook().setTravelPlanGuest_GuestIdReferences("ODS", getHouseHold().primaryGuest().getOdsId());
+                getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails_GuestIdRefs("ODS", getHouseHold().primaryGuest().getOdsId());
             }
 
             if (getSendRequest() == null || getSendRequest() == true) {
