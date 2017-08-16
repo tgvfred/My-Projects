@@ -1,6 +1,8 @@
 package com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.AccommodationBatchComponentWSPort;
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 
 public class StageMassModifyTransactional extends AccommodationBatchComponentWSPort {
@@ -101,6 +103,25 @@ public class StageMassModifyTransactional extends AccommodationBatchComponentWSP
 
     public void setMassModifyRoomDetailPrimaryGuestDetailACtive(String value) {
         setRequestNodeValueByXPath("//massModifyRoomDetail/primaryGuestDetail/active", value);
+    }
+
+    public void setInventoryReasonCode(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/inventoryReasonCode", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("inventoryReasonCode"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/inventoryReasonCode", value);
+        }
+    }
+
+    public void setInventoryReasonContactName(String value) {
+        // setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/inventoryContactName", value);
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/inventoryContactName", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("inventoryContactName"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/inventoryContactName", value);
+        }
     }
 
     public String getResponseProcessId() {
