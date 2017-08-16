@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResm;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
@@ -52,7 +52,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, LiloResm.INVALID_REQUEST);
+        validateApplicationError(checkout, LiloResmErrorCode.INVALID_REQUEST);
 
     }
 
@@ -91,7 +91,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, LiloResm.INVALID_REQUEST);
+        validateApplicationError(checkout, LiloResmErrorCode.INVALID_REQUEST);
 
     }
 
@@ -118,7 +118,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, LiloResm.EXTERNAL_REFERENCE_REQUIRED);
+        validateApplicationError(checkout, LiloResmErrorCode.EXTERNAL_REFERENCE_REQUIRED);
 
     }
 }

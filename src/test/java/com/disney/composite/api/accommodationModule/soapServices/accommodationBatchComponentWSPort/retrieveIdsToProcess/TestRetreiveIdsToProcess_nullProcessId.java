@@ -5,8 +5,8 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.RetreiveIdsToProcess;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
@@ -30,7 +30,7 @@ public class TestRetreiveIdsToProcess_nullProcessId extends AccommodationBaseTes
         retreiveIds.sendRequest();
 
         TestReporter.assertTrue(retreiveIds.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retreiveIds.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retreiveIds, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(retreiveIds, LiloSystemErrorCode.UNEXPECTED_ERROR);
 
         TestReporter.logStep("Response node return validation count.");
         try {

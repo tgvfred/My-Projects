@@ -1,5 +1,6 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -57,6 +58,13 @@ public class AccommodationBaseTest extends BaseRestTest {
     public final static String COMMENT_TEXT = "commentText";
     public final static String COMMENT_TO = "to";
     public final static String COMMENT_FROM = "from";
+    public final static String MEMBERSHIP_EXP_DATE = "expirationDate";
+    public final static String MEMBERSHIP_TYPE = "memberShipType";
+    public final static String MEMBERSHIP_ID = "membershipId";
+    public final static String MEMBERSHIP_POLICY_ID = "policyId";
+    public final static String MEMBERSHIP_PROD_CHANNEL_ID = "productChannelId";
+    public final static String MEMBERSHIP_GUEST_MEMBERSHIP_ID = "guestMembershipId";
+
     protected static String environment;
     protected ThreadLocal<Integer> daysOut = new ThreadLocal<Integer>();
     protected ThreadLocal<Integer> nights = new ThreadLocal<Integer>();
@@ -75,7 +83,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> guestAddressLocatorId = new ThreadLocal<String>();
     protected ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>();
     private ThreadLocal<String> externalRefNumber = new ThreadLocal<String>();
-    private String externalRefSource = "DPMSProperty";
+    protected static String externalRefSource = "DPMSProperty";
     private static String[][] roomTypeAndFacInfo = new String[40][6];
     private Map<String, String> noPackageCodes = new HashMap<String, String>();
     protected ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>();
@@ -101,6 +109,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> isRSR = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isShared = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addGuest = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> addChildGuest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addNewGuest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> skipDeposit = new ThreadLocal<Boolean>();
     private ThreadLocal<String> firstDiningTcg = new ThreadLocal<String>();
@@ -120,6 +129,14 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Map<String, String>> comments = new ThreadLocal<>();
     private ThreadLocal<Boolean> addInternalComments = new ThreadLocal<>();
     private ThreadLocal<Boolean> addRoomResDetailsComments = new ThreadLocal<>();
+    private ThreadLocal<Map<Integer, Guest>> additionalGuests = new ThreadLocal<Map<Integer, Guest>>();
+    private ThreadLocal<TicketsHelper> ticketsHelper = new ThreadLocal<>();
+    private ThreadLocal<Boolean> nonZeroVip = new ThreadLocal<>();
+    private ThreadLocal<String> vipLevel = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addPrimaryGuestMembership = new ThreadLocal<>();
+    private ThreadLocal<Map<String, String>> membershipData = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addPrimaryGuestODS = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addTravelAgency = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -429,6 +446,15 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addGuest.get();
     }
 
+    public void setAddChildGuest(Boolean addChildGuest) {
+        setAddNewGuest(addChildGuest);
+        this.addChildGuest.set(addChildGuest);
+    }
+
+    public Boolean getAddChildGuest() {
+        return this.addChildGuest.get();
+    }
+
     public void setSkipDeposit(Boolean skipDeposit) {
         this.skipDeposit.set(skipDeposit);
     }
@@ -533,6 +559,15 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.gatheringData.get();
     }
 
+    public void setMembershipData(Map<String, String> membershipData) {
+        setAddPrimaryGuestMembership(true);
+        this.membershipData.set(membershipData);
+    }
+
+    public Map<String, String> getMembershipData() {
+        return this.membershipData.get();
+    }
+
     public void setAddComments(Boolean addComments) {
         this.addComments.set(addComments);
     }
@@ -559,6 +594,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addRoomResDetailsComments.get();
     }
 
+    public void setNonZeroVip(Boolean setNonZeroVip) {
+        this.nonZeroVip.set(setNonZeroVip);
+    }
+
+    public Boolean getNonZeroVip() {
+        return this.nonZeroVip.get();
+    }
+
     public void setCommentsData(HashMap<String, String> comments) {
         setAddComments(true);
         this.comments.set(comments);
@@ -566,6 +609,14 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public Map<String, String> getCommentsData() {
         return this.comments.get();
+    }
+
+    public void setAdditionalGuests(HashMap<Integer, Guest> additionalGuests) {
+        this.additionalGuests.set(additionalGuests);
+    }
+
+    public Map<Integer, Guest> getAdditionalGuests() {
+        return this.additionalGuests.get();
     }
 
     /**
@@ -584,6 +635,46 @@ public class AccommodationBaseTest extends BaseRestTest {
      */
     public Boolean getIsLibgoBooking() {
         return this.isLibgoBooking.get();
+    }
+
+    public void setTicketsHelper(TicketsHelper ticketsHelper) {
+        this.ticketsHelper.set(ticketsHelper);
+    }
+
+    public TicketsHelper getTicketsHelper() {
+        return this.ticketsHelper.get();
+    }
+
+    public void setVipLevel(String vipLevel) {
+        this.vipLevel.set(vipLevel);
+    }
+
+    public String getVipLevel() {
+        return this.vipLevel.get();
+    }
+
+    public void setAddPrimaryGuestMembership(Boolean addPrimaryGuestMembership) {
+        this.addPrimaryGuestMembership.set(addPrimaryGuestMembership);
+    }
+
+    public Boolean getAddPrimaryGuestMembership() {
+        return this.addPrimaryGuestMembership.get();
+    }
+
+    public void setAddPrimaryGuestODS(Boolean addPrimaryGuestODS) {
+        this.addPrimaryGuestODS.set(addPrimaryGuestODS);
+    }
+
+    public Boolean getAddPrimaryGuestODS() {
+        return this.addPrimaryGuestODS.get();
+    }
+
+    public void setAddTravelAgency(Boolean addTravelAgency) {
+        this.addTravelAgency.set(addTravelAgency);
+    }
+
+    public Boolean getAddTravelAgency() {
+        return this.addTravelAgency.get();
     }
 
     @BeforeSuite(alwaysRun = true)
@@ -686,7 +777,6 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void bookReservation() {
         if (getHouseHold() == null) {
             createHouseHold();
-            hh.get().sendToApi("latest");
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
@@ -760,6 +850,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setRoomDetailsLocationId(getLocationId());
             getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
             getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
+            // getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
 
             if (isADA() != null && isADA() == true) {
                 getBook().setRoomDetailsSpecialNeedsRequested("true");
@@ -778,20 +869,30 @@ public class AccommodationBaseTest extends BaseRestTest {
             }
 
             if (isValid(getSetTickets()) && getSetTickets() == true) {
-                TicketsHelper tickets = new TicketsHelper(getEnvironment(), getBook(), getPackageCode());
-                if (isValid(getTicketDescription())) {
-                    tickets.setTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                if ((isValid(isWdtcBooking()) && isWdtcBooking() == true) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook(), getPackageCode()));
                 } else {
-                    tickets.setTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook()));
+                }
+                ticketsHelper.get().setAdultTicket(true);
+                if (isValid(getTicketDescription())) {
+                    ticketsHelper.get().setTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                } else {
+                    ticketsHelper.get().setTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
                 }
             }
 
             if (isValid(getAddTickets()) && getAddTickets() == true) {
-                TicketsHelper tickets = new TicketsHelper(getEnvironment(), getBook(), getPackageCode());
-                if (isValid(getTicketDescription())) {
-                    tickets.addTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                if ((isValid(isWdtcBooking()) && isWdtcBooking() == true) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook(), getPackageCode()));
                 } else {
-                    tickets.addTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook()));
+                }
+                ticketsHelper.get().setAdultTicket(true);
+                if (isValid(getTicketDescription())) {
+                    ticketsHelper.get().addTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                } else {
+                    ticketsHelper.get().addTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
                 }
             }
 
@@ -830,9 +931,62 @@ public class AccommodationBaseTest extends BaseRestTest {
                             getCommentsData().get(COMMENT_TEXT),
                             "true",
                             getCommentsData().get(COMMENT_FROM),
-                            BaseSoapCommands.REMOVE_NODE.toString(),
+                            "CREUN",
                             getCommentsData().get(COMMENT_TO));
                 }
+            }
+
+            if (isValid(getNonZeroVip())) {
+                int intVipLevel = Randomness.randomNumberBetween(1, 4);
+                setVipLevel(null);
+                switch (intVipLevel) {
+                    case 1:
+                        setVipLevel("ONE");
+                        break;
+                    case 2:
+                        setVipLevel("TWO");
+                        break;
+                    case 3:
+                        setVipLevel("THREE");
+                        break;
+                    default:
+                        setVipLevel("FOUR");
+                        break;
+                }
+                getBook().setVipLevel(getVipLevel());
+            }
+
+            if (isValid(getAddPrimaryGuestMembership()) && getAddPrimaryGuestMembership() == true) {
+                setMembershipData(new HashMap<String, String>());
+                if (!isValid(getMembershipData())) {
+                    getMembershipData().put(MEMBERSHIP_EXP_DATE, Randomness.generateCurrentXMLDate());
+                    getMembershipData().put(MEMBERSHIP_GUEST_MEMBERSHIP_ID, Randomness.randomNumber(12));
+                    getMembershipData().put(MEMBERSHIP_ID, Randomness.randomNumber(8));
+                    getMembershipData().put(MEMBERSHIP_ID, getMembershipData().get(MEMBERSHIP_ID).startsWith("0") ? getMembershipData().get(MEMBERSHIP_ID).replaceFirst("0", "1") : getMembershipData().get(MEMBERSHIP_ID));
+                    getMembershipData().put(MEMBERSHIP_POLICY_ID, Randomness.randomNumber(6));
+                    getMembershipData().put(MEMBERSHIP_POLICY_ID, getMembershipData().get(MEMBERSHIP_POLICY_ID).startsWith("0") ? getMembershipData().get(MEMBERSHIP_POLICY_ID).replaceFirst("0", "1") : getMembershipData().get(MEMBERSHIP_POLICY_ID));
+                    getMembershipData().put(MEMBERSHIP_PROD_CHANNEL_ID, Randomness.randomNumber(6));
+                    getMembershipData().put(MEMBERSHIP_PROD_CHANNEL_ID, getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID).startsWith("0") ? getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID).replaceFirst("0", "1") : getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID));
+                    getMembershipData().put(MEMBERSHIP_TYPE, Randomness.randomString(8));
+                }
+                getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails_MembershipDetails(getMembershipData().get(MEMBERSHIP_EXP_DATE),
+                        getMembershipData().get(MEMBERSHIP_TYPE), getMembershipData().get(MEMBERSHIP_ID), getMembershipData().get(MEMBERSHIP_POLICY_ID),
+                        getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID), getMembershipData().get(MEMBERSHIP_GUEST_MEMBERSHIP_ID));
+                getBook().setTravelPlanGuest_Guest_MembershipDetails(getMembershipData().get(MEMBERSHIP_EXP_DATE),
+                        getMembershipData().get(MEMBERSHIP_TYPE), getMembershipData().get(MEMBERSHIP_ID), getMembershipData().get(MEMBERSHIP_POLICY_ID),
+                        getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID), getMembershipData().get(MEMBERSHIP_GUEST_MEMBERSHIP_ID));
+            }
+
+            if (isValid(getAddPrimaryGuestODS()) && getAddPrimaryGuestODS() == true) {
+                if (getHouseHold().primaryGuest().getOdsId().equals("0")) {
+                    getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
+                }
+                getBook().setTravelPlanGuest_GuestIdReferences("ODS", getHouseHold().primaryGuest().getOdsId());
+                getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails_GuestIdRefs("ODS", getHouseHold().primaryGuest().getOdsId());
+            }
+
+            if (isValid(getAddTravelAgency()) && getAddTravelAgency() == true) {
+                getBook().setTravelAgency("99999998");
             }
 
             if (getSendRequest() == null || getSendRequest() == true) {
@@ -868,6 +1022,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void createGathering() {
+        setGatheringData(new HashMap<String, String>());
         getGatheringData().put(GATHERING_ID, Randomness.randomString(12));
         getGatheringData().put(GATHERING_NAME, Randomness.randomString(12));
         getGatheringData().put(GATHERING_TYPE, "TW");
@@ -918,13 +1073,22 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     private void addGuest() {
         Guest guest;
+        if (additionalGuests.get() == null) {
+            setAdditionalGuests(new HashMap<Integer, Guest>());
+        }
         if (getAddNewGuest() != null && getAddNewGuest() == true) {
             guest = new HouseHold(1).primaryGuest();
+            getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
         } else {
             guest = getHouseHold().primaryGuest();
+            getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
         }
-        getBook().addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, guest);
 
+        if (isValid(getAddChildGuest()) && getAddChildGuest() == true) {
+            guest.setAge("3");
+        }
+        guest.primaryAddress().setCity("Winston Salem");
+        getBook().addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, guest);
     }
 
     public String freezeInventory() {
@@ -1389,6 +1553,18 @@ public class AccommodationBaseTest extends BaseRestTest {
                 return true;
             }
 
+        } else if (obj instanceof Collection<?>) {
+            if (((Collection<?>) obj).isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (obj instanceof Map<?, ?>) {
+            if (((Map<?, ?>) obj).isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
             return valid;
         }

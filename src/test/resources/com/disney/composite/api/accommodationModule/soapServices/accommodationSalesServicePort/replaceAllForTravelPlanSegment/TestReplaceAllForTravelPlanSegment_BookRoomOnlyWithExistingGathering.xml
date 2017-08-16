@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering" parallel="methods" thread-count="20">
+	<parameter name="environment" value="latest" />
+	<test name="TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering">
+		<!-- <groups>
+			<run>
+				<include name="debug"></include>
+			</run>
+		</groups> -->
+		<classes>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.replaceAllForTravelPlanSegment.TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering" />
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
