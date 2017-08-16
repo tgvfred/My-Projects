@@ -6,6 +6,12 @@ import static com.disney.api.soapServices.accommodationModule.helpers.Accommodat
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_POLICY_ID;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_PROD_CHANNEL_ID;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_TYPE;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_CODE;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_DESCRIPTION;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_ROUTINGS_NAME;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_SELECTABLE;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_TYPE;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.getAgeTypeByAge;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.isValid;
 
@@ -156,6 +162,37 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setExperienceMediaDetailsColor(baseXpath, color);
         setExperienceMediaDetailsPrintedName(baseXpath, printedName);
         setExperienceMediaDetailsOptOutAvailable(baseXpath, optOutAvailable);
+    }
+
+    public void setReservationDetail_Profiles(Map<String, String> profileData) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/profiles";
+        int numNodes = getNumberOfRequestNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/profiles");
+        if (numNodes == 0) {
+            addReservationDetail_Profiles(baseXpath, numNodes);
+        }
+        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail";
+        setAuditDetails(baseXpath += "/profiles/", "AutoJUnit.us", Randomness.generateCurrentXMLDate(), "AutoJUnit.us", Randomness.generateCurrentXMLDate(), BaseSoapCommands.REMOVE_NODE.toString());
+        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail";
+        setProfileCode(baseXpath, profileData.get(PROFILE_CODE));
+        setProfileDescription(baseXpath, profileData.get(PROFILE_DESCRIPTION));
+        setProfileId(baseXpath, profileData.get(PROFILE_ID));
+        setProfileName(baseXpath, profileData.get(PROFILE_ROUTINGS_NAME));
+        setProfileProfileType(baseXpath, profileData.get(PROFILE_TYPE));
+        setProfileSelectable(baseXpath, profileData.get(PROFILE_SELECTABLE));
+        setProfileType(baseXpath, BaseSoapCommands.REMOVE_NODE.toString());
+        // baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail";
+        // setAuditDetails(baseXpath += "/profiles/", "AutoJUnit.us", Randomness.generateCurrentXMLDate(), "AutoJUnit.us", Randomness.generateCurrentXMLDate(), BaseSoapCommands.REMOVE_NODE.toString());
+    }
+
+    public void addReservationDetail_Profiles(String baseXpath, int numNodes) {
+        setRequestNodeValueByXPath(baseXpath.replace("/profiles", ""), BaseSoapCommands.ADD_NODE.commandAppend("profiles"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_CODE));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_DESCRIPTION));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_ID));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_SELECTABLE));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_TYPE));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_ROUTINGS_NAME.split("_")[0]));
+        setRequestNodeValueByXPath(baseXpath + "/" + PROFILE_ROUTINGS_NAME.split("_")[0], BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_ROUTINGS_NAME.split("_")[1]));
     }
 
     public void setReservationDetail_Profiles(String code, String description, String id, String name, String profileType, String selectable, String status, String type) {
@@ -569,11 +606,31 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     private void setAuditDetails(String baseXpath, String createdBy, String createdDate, String updatedBy, String updatedDate, String status) {
+        int numNodes = 0;
+        if (baseXpath.endsWith("/")) {
+            numNodes = getNumberOfRequestNodesByXPath(baseXpath + "auditDetail");
+        } else {
+            numNodes = getNumberOfRequestNodesByXPath(baseXpath + "/auditDetail");
+        }
+        if (numNodes == 0) {
+            addAuditDetails(baseXpath);
+        }
         setAuditDetailsCreatedBy(baseXpath, createdBy);
         setAuditDetailsCreatedDate(baseXpath, createdDate);
         setAuditDetailsUpdatedBy(baseXpath, updatedBy);
         setAuditDetailsUpdatedDate(baseXpath, updatedDate);
         setAuditDetailsStatus(baseXpath, status);
+    }
+
+    public void addAuditDetails(String baseXpath) {
+        if (baseXpath.endsWith("/")) {
+            baseXpath = baseXpath.substring(0, baseXpath.lastIndexOf("/"));
+        }
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("auditDetail"));
+        setRequestNodeValueByXPath(baseXpath + "/auditDetail", BaseSoapCommands.ADD_NODE.commandAppend("createdBy"));
+        setRequestNodeValueByXPath(baseXpath + "/auditDetail", BaseSoapCommands.ADD_NODE.commandAppend("createdDate"));
+        setRequestNodeValueByXPath(baseXpath + "/auditDetail", BaseSoapCommands.ADD_NODE.commandAppend("updatedBy"));
+        setRequestNodeValueByXPath(baseXpath + "/auditDetail", BaseSoapCommands.ADD_NODE.commandAppend("updatedDate"));
     }
 
     public void setReservationDetail_GuestRefDetails_Guest_MembershipDetails(String expDate, String membershipType, String membershipId, String policyId, String prodChannelId, String guestMembershipId) {
@@ -1420,49 +1477,69 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     private void setAuditDetailsStatus(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "auditDetail/status", value);
+            try {
+                setRequestNodeValueByXPath(baseXpath + "auditDetail/status", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath(baseXpath + "auditDetail", BaseSoapCommands.ADD_NODE.commandAppend("status"));
+                setRequestNodeValueByXPath(baseXpath + "auditDetail/status", value);
+            }
         }
     }
 
     private void setProfileCode(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/code", Randomness.generateCurrentXMLDate());
+            setRequestNodeValueByXPath(baseXpath + "/profiles/code", value);
         }
     }
 
     private void setProfileDescription(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/description", Randomness.generateCurrentXMLDate());
+            setRequestNodeValueByXPath(baseXpath + "/profiles/description", value);
         }
     }
 
     private void setProfileId(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/id", Randomness.generateCurrentXMLDate());
+            setRequestNodeValueByXPath(baseXpath + "/profiles/id", value);
         }
     }
 
     private void setProfileProfileType(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/profileType", Randomness.generateCurrentXMLDate());
+            setRequestNodeValueByXPath(baseXpath + "/profiles/profileType", value);
         }
     }
 
     private void setProfileName(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/routings/name", Randomness.generateCurrentXMLDate());
+            setRequestNodeValueByXPath(baseXpath + "/profiles/routings/name", value);
         }
     }
 
     private void setProfileSelectable(String baseXpath, String value) {
+        switch (value) {
+            case "Y":
+                value = "true";
+                break;
+            case "N":
+                value = "false";
+                break;
+            default:
+                break;
+        }
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/selectable", Randomness.generateCurrentXMLDate());
+            setRequestNodeValueByXPath(baseXpath + "/profiles/selectable", value);
         }
     }
 
     private void setProfileType(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/type", Randomness.generateCurrentXMLDate());
+            try {
+                setRequestNodeValueByXPath(baseXpath + "/profiles/type", Randomness.generateCurrentXMLDate());
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath(baseXpath + "/profiles", BaseSoapCommands.ADD_NODE.commandAppend("type"));
+                setRequestNodeValueByXPath(baseXpath + "/profiles/type", Randomness.generateCurrentXMLDate());
+            }
         }
     }
 

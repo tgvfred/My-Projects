@@ -64,6 +64,12 @@ public class AccommodationBaseTest extends BaseRestTest {
     public final static String MEMBERSHIP_POLICY_ID = "policyId";
     public final static String MEMBERSHIP_PROD_CHANNEL_ID = "productChannelId";
     public final static String MEMBERSHIP_GUEST_MEMBERSHIP_ID = "guestMembershipId";
+    public final static String PROFILE_CODE = "code";
+    public final static String PROFILE_DESCRIPTION = "description";
+    public final static String PROFILE_ID = "id";
+    public final static String PROFILE_TYPE = "profileType";
+    public final static String PROFILE_ROUTINGS_NAME = "routings_name";
+    public final static String PROFILE_SELECTABLE = "selectable";
 
     protected static String environment;
     protected ThreadLocal<Integer> daysOut = new ThreadLocal<Integer>();
@@ -137,6 +143,8 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Map<String, String>> membershipData = new ThreadLocal<>();
     private ThreadLocal<Boolean> addPrimaryGuestODS = new ThreadLocal<>();
     private ThreadLocal<Boolean> addTravelAgency = new ThreadLocal<>();
+    private ThreadLocal<Map<String, String>> profileData = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addProfile = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -568,12 +576,29 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.membershipData.get();
     }
 
+    public void setProfileData(Map<String, String> profileData) {
+        setAddProfile(true);
+        this.profileData.set(profileData);
+    }
+
+    public Map<String, String> getProfileData() {
+        return this.profileData.get();
+    }
+
     public void setAddComments(Boolean addComments) {
         this.addComments.set(addComments);
     }
 
     public Boolean getAddComments() {
         return this.addComments.get();
+    }
+
+    public void setAddProfile(Boolean addProfile) {
+        this.addProfile.set(addProfile);
+    }
+
+    public Boolean getAddProfile() {
+        return this.addProfile.get();
     }
 
     public void setAddInternalComments(Boolean addComments) {
@@ -987,6 +1012,22 @@ public class AccommodationBaseTest extends BaseRestTest {
 
             if (isValid(getAddTravelAgency()) && getAddTravelAgency() == true) {
                 getBook().setTravelAgency("99999998");
+            }
+
+            if (isValid(getAddProfile()) && getAddProfile() == true) {
+                if (!isValid(getProfileData())) {
+                    setProfileData(new HashMap<String, String>());
+                    getProfileData().put(PROFILE_ID, "600");
+                }
+                Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+                Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getProfileInformationById(getProfileData().get(PROFILE_ID))));
+                TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that a profile is found in the DB for profile ID [" + getProfileData().get(PROFILE_ID) + "].");
+                getProfileData().put(PROFILE_CODE, rs.getValue("PROFILE_CODE"));
+                getProfileData().put(PROFILE_DESCRIPTION, rs.getValue("PROFILE_DESCRIPTION"));
+                getProfileData().put(PROFILE_TYPE, rs.getValue("PROFILE_TYPE"));
+                getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PROFILE_ROUTINGS_NAME"));
+                getProfileData().put(PROFILE_SELECTABLE, rs.getValue("PROFILE_SELECTABLE"));
+                getBook().setReservationDetail_Profiles(getProfileData());
             }
 
             if (getSendRequest() == null || getSendRequest() == true) {
@@ -1539,34 +1580,35 @@ public class AccommodationBaseTest extends BaseRestTest {
     // }
 
     public static Boolean isValid(Object obj) {
-        Boolean valid = null;
+        Boolean valid = false;
         if (obj != null) {
             valid = true;
         } else {
-            valid = false;
+            return false;
         }
 
-        if (obj instanceof String) {
-            if (StringUtils.isEmpty(((String) obj))) {
-                return false;
-            } else {
-                return true;
-            }
+        if (valid) {
+            if (obj instanceof String) {
+                if (StringUtils.isEmpty(((String) obj))) {
+                    return false;
+                } else {
+                    return true;
+                }
 
-        } else if (obj instanceof Collection<?>) {
-            if (((Collection<?>) obj).isEmpty()) {
-                return false;
-            } else {
-                return true;
+            } else if (obj instanceof Collection<?>) {
+                if (((Collection<?>) obj).isEmpty()) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if (obj instanceof Map<?, ?>) {
+                if (((Map<?, ?>) obj).isEmpty()) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
-        } else if (obj instanceof Map<?, ?>) {
-            if (((Map<?, ?>) obj).isEmpty()) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return valid;
         }
+        return valid;
     }
 }

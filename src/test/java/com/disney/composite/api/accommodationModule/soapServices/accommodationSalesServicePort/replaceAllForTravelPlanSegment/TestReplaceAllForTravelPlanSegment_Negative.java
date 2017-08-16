@@ -375,7 +375,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         String faultString = " Travel Agency is invalid  : null";
 
         bookReservation();
-        getBook().setTravelAgency();
+        getBook().setTravelAgency("99999998");
         // String invalidValue = Randomness.randomNumber(20);
         getBook().setTravelAgencyAgencyIataNumber(Randomness.randomNumber(20));
         getBook().setTravelAgencyAgencyOdsId(Randomness.randomNumber(15));
