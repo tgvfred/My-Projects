@@ -63,4 +63,7 @@ public class GetStagedRecordsForMassModify extends AccommodationBatchComponentWS
         return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/roomReservationDetail/guestReferenceDetails/guest/lastName");
     }
 
+    public String getPreferredLanguage() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/travelPlanGuest/preferredLanguage");
+    }
 }

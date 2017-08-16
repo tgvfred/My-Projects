@@ -115,12 +115,113 @@ public class StageMassModifyTransactional extends AccommodationBatchComponentWSP
     }
 
     public void setInventoryReasonContactName(String value) {
-        // setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/inventoryContactName", value);
         try {
             setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/inventoryContactName", value);
         } catch (XPathNotFoundException e) {
             setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("inventoryContactName"));
             setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/inventoryContactName", value);
+        }
+    }
+
+    public void setAdultTicket(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/adultTicket", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("ticketdetail"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail", BaseSoapCommands.ADD_NODE.commandAppend("adultTicket"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/adultTicket", value);
+        }
+    }
+
+    public void setHardTicketedEvent(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/hardTicketedEvent", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail", BaseSoapCommands.ADD_NODE.commandAppend("hardTicketedEvent"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/hardTicketedEvent", value);
+        }
+    }
+
+    public void setBaseAdmissionProductId(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/baseAdmissionProductId", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail", BaseSoapCommands.ADD_NODE.commandAppend("baseAdmissionProductId"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/baseAdmissionProductId", value);
+        }
+    }
+
+    public void setCode(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/code", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail", BaseSoapCommands.ADD_NODE.commandAppend("code"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/code", value);
+        }
+    }
+
+    public void setComponentId(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/componentId", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail", BaseSoapCommands.ADD_NODE.commandAppend("componentId"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/componentId", value);
+        }
+    }
+
+    public void setDayCount(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/dayCount", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail", BaseSoapCommands.ADD_NODE.commandAppend("dayCount"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/dayCount", value);
+        }
+    }
+
+    public void setAge(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference/age", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail", BaseSoapCommands.ADD_NODE.commandAppend("guestReference"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference", BaseSoapCommands.ADD_NODE.commandAppend("age"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference/age", value);
+        }
+    }
+
+    public void setAgeType(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference/ageType", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference", BaseSoapCommands.ADD_NODE.commandAppend("ageType"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference/ageType", value);
+        }
+    }
+
+    public void setTicketGuestFirstName(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference/guest/firstName", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference", BaseSoapCommands.ADD_NODE.commandAppend("guest"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference/guest", BaseSoapCommands.ADD_NODE.commandAppend("firstName"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference/guest/firstName", value);
+        }
+    }
+
+    public void setTicketGuestLastName(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference/guest/lastName", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference/guest", BaseSoapCommands.ADD_NODE.commandAppend("lastName"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/guestReference/guest/lastName", value);
+        }
+    }
+
+    public void setPartOfPackage(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/partOfPackage", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail", BaseSoapCommands.ADD_NODE.commandAppend("partOfPackage"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/ticketdetail/partOfPackage", value);
         }
     }
 
