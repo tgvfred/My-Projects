@@ -19,7 +19,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestReplaceAllForTravelPlanSegment_BookWDTCWithTravelAgency extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_BookWholesaler extends AccommodationBaseTest {
     private String tpPtyId = null;
     private String odsGuestId;
 
@@ -33,12 +33,11 @@ public class TestReplaceAllForTravelPlanSegment_BookWDTCWithTravelAgency extends
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
-        setAddTravelAgency(true);
-        setIsWdtcBooking(true);
+        setIsLibgoBooking(true);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookWDTCWithTravelAgency() {
+    public void restReplaceAllForTravelPlanSegment_BookWholesaler() {
         bookReservation();
         tpPtyId = getBook().getGuestId();
         String sql = "select b.TXN_PTY_EXTNL_REF_VAL "
@@ -52,15 +51,15 @@ public class TestReplaceAllForTravelPlanSegment_BookWDTCWithTravelAgency extends
         ValidationHelper validations = new ValidationHelper(getEnvironment());
 
         // Validate reservation
-        validations.validateModificationBackend(13, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
-                getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), "01825");
+        validations.validateModificationBackend(12, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
+                getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), "01905");
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
 
         // Validate Folio
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
-        validations.verifyNumberOfChargesByStatus("UnEarned", 9, getBook().getTravelPlanId());
-        validations.verifyChargeDetail(13, getBook().getTravelPlanId());
+        validations.verifyNumberOfChargesByStatus("UnEarned", 6, getBook().getTravelPlanId());
+        validations.verifyChargeDetail(10, getBook().getTravelPlanId());
         validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
         Map<String, String> groupDelegateSmallBalanceWriteoff = new HashMap<String, String>();
         groupDelegateSmallBalanceWriteoff.put(ServiceConstants.FolioExternalReference.DREAMS_TCG, "N");
@@ -85,7 +84,7 @@ public class TestReplaceAllForTravelPlanSegment_BookWDTCWithTravelAgency extends
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
         validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
 
-        validations.verifyTravelAgency(this);
+        validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1, "N", "01905", getFacilityId());
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {

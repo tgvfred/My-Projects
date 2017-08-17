@@ -106,7 +106,7 @@ public class ValidationHelper {
         validateModificationBackend(numRecords, travelStatusName, securityValue, arrivalDate, departuredate, extRefType, extRefValue, tpId, tpsId, tcgId);
     }
 
-    public void validateModificationBackend(int numRecords, String travelStatusName, String securityValue, String arrivalDate, String departuredate,
+    public Recordset validateModificationBackend(int numRecords, String travelStatusName, String securityValue, String arrivalDate, String departuredate,
             String extRefType, String extRefValue, String tpId, String tpsId, String tcgId) {
         TestReporter.logStep("Validated reservation backend data after modification");
         Database db = new OracleDatabase(environment, Database.DREAMS);
@@ -153,6 +153,18 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
         }
+        TestReporter.assertAll();
+        return rs;
+    }
+
+    public void validateModificationBackend(int numRecords, String travelStatusName, String securityValue, String arrivalDate, String departuredate,
+            String extRefType, String extRefValue, String tpId, String tpsId, String tcgId, String blockCode) {
+        Recordset rs = validateModificationBackend(numRecords, travelStatusName, securityValue, arrivalDate, departuredate, extRefType, extRefValue, tpId, tpsId, tcgId);
+        rs.moveFirst();
+        do {
+            TestReporter.softAssertEquals(rs.getValue("BLK_CD"), blockCode, "Verify that the block code [" + rs.getValue("BLK_CD") + "] is that which is expected [" + blockCode + "].");
+            rs.moveNext();
+        } while (rs.hasNext());
         TestReporter.assertAll();
     }
 
@@ -1634,9 +1646,9 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("WHSL_IN"), wholesaler, "Verify that the wholesaler indicator [" + rs.getValue("WHSL_IN") + "] is that which is expected [" + wholesaler + "].");
             TestReporter.softAssertEquals(rs.getValue("GUAR_IN"), guaranteed, "Verify that the wholesaler indicator [" + rs.getValue("GUAR_IN") + "] is that which is expected [" + guaranteed + "].");
             String blockCode;
-            if (base.isWdtcBooking()) {
+            if (isValid(base.isWdtcBooking()) && base.isWdtcBooking()) {
                 blockCode = "01825";
-            } else if (base.getIsLibgoBooking()) {
+            } else if (isValid(base.getIsLibgoBooking()) && base.getIsLibgoBooking()) {
                 blockCode = "01905";
             } else {
                 blockCode = "NULL";

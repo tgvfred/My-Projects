@@ -145,6 +145,8 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> addTravelAgency = new ThreadLocal<>();
     private ThreadLocal<Map<String, String>> profileData = new ThreadLocal<>();
     private ThreadLocal<Boolean> addProfile = new ThreadLocal<>();
+    private ThreadLocal<Boolean> mywPackageCode = new ThreadLocal<>();
+    private ThreadLocal<Boolean> mywPlusDinePackageCode = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -702,6 +704,22 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addTravelAgency.get();
     }
 
+    public void setMywPackageCode(Boolean mywPackageCode) {
+        this.mywPackageCode.set(mywPackageCode);
+    }
+
+    public Boolean getMywPackageCode() {
+        return this.mywPackageCode.get();
+    }
+
+    public void setMywPlusDinePackageCode(Boolean mywPlusDinePackageCode) {
+        this.mywPlusDinePackageCode.set(mywPlusDinePackageCode);
+    }
+
+    public Boolean getMywPlusDinePackageCode() {
+        return this.mywPlusDinePackageCode.get();
+    }
+
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -823,7 +841,13 @@ public class AccommodationBaseTest extends BaseRestTest {
 
             if (isWdtcBooking() != null && isWdtcBooking() == true) {
                 setPackageBillCode("*WDTC");
-                setPackageDescription("R MYW Pkg + Deluxe Dining");
+                if (isValid(getMywPackageCode()) && getMywPackageCode()) {
+                    setPackageDescription("R MYW Pkg");
+                } else if (isValid(getMywPlusDinePackageCode()) && getMywPlusDinePackageCode()) {
+                    setPackageDescription("R MYW Pkg + Dining");
+                } else {
+                    setPackageDescription("R MYW Pkg + Deluxe Dining");
+                }
                 setPackageType("WDW PKG");
                 try {
                     getBook().setRoomDetailsBlockCode("01825");
