@@ -59,6 +59,8 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithRoomDetailsRoomR
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
+        validations.validateProfile(getBook(), getProfileData());
+
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
             ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();

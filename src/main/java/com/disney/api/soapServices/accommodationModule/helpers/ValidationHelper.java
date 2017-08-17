@@ -8,6 +8,10 @@ import static com.disney.api.soapServices.accommodationModule.helpers.Accommodat
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_ID;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_POLICY_ID;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_PROD_CHANNEL_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_DESCRIPTION;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_ROUTINGS_NAME;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_TYPE;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.getAgeTypeByAge;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.isValid;
 
@@ -18,6 +22,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 import com.disney.AutomationException;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Randomness;
@@ -1524,6 +1529,32 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
             TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the travel agent ID [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
         }
+        TestReporter.assertAll();
+    }
+
+    public void validateProfile(ReplaceAllForTravelPlanSegment book, Map<String, String> profileData) {
+        String sql = "select a.RES_MGMT_REQ_ID, RES_MGMT_REQ_TYP_NM PROFILE_TYPE, CMT_REQ_TYP_NM, RES_MGMT_PRFL_ID PROFILE_ID, RES_MGMT_REQ_TX PROFILE_DESCRIPTION, CFDNTL_IN, GSR_IN, REQ_INACTV_DTS, RES_MGMT_RTE_NM "
+                + "from res_mgmt_req a "
+                + "left outer join res_mgmt.RES_MGMT_REQ_RTE b on a.RES_MGMT_REQ_ID = b.RES_MGMT_REQ_ID "
+                + "where a.tp_id = 472292078811";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        String commentId = null;
+        TestReporter.logStep("Validate profile data for comment ID [" + commentId + "]");
+        do {
+            if (rs.getValue("PROFILE_ID").equals(profileData.get(PROFILE_ID))) {
+                commentId = rs.getValue("RES_MGMT_REQ_ID");
+                TestReporter.softAssertEquals(rs.getValue("PROFILE_TYPE"), profileData.get(PROFILE_TYPE), "Verify that the profile type [" + rs.getValue("PROFILE_TYPE") + "] is that which is expected [" + profileData.get(PROFILE_TYPE) + "].");
+                // TestReporter.softAssertEquals(rs.getValue("CMT_REQ_TYP_NM"), profileData.get(PROFILE), "Verify that the profile ["+rs.getValue("CMT_REQ_TYP_NM")+"] is that which is expected ["+profileData.get(key)+"].");
+                TestReporter.softAssertEquals(rs.getValue("PROFILE_ID"), profileData.get(PROFILE_ID), "Verify that the profile ID [" + rs.getValue("PROFILE_ID") + "] is that which is expected [" + profileData.get(PROFILE_ID) + "].");
+                TestReporter.softAssertEquals(rs.getValue("PROFILE_DESCRIPTION"), profileData.get(PROFILE_DESCRIPTION), "Verify that the profile description [" + rs.getValue("PROFILE_DESCRIPTION") + "] is that which is expected [" + profileData.get(PROFILE_DESCRIPTION) + "].");
+                TestReporter.softAssertEquals(rs.getValue("CFDNTL_IN"), "N", "Verify that the profile confidential indicator [" + rs.getValue("CFDNTL_IN") + "] is that which is expected [N].");
+                TestReporter.softAssertEquals(rs.getValue("GSR_IN"), "N", "Verify that the profile GSR [" + rs.getValue("GSR_IN") + "] is that which is expected [N].");
+                TestReporter.softAssertEquals(rs.getValue("REQ_INACTV_DTS"), "NULL", "Verify that the profile inactive DTS [" + rs.getValue("REQ_INACTV_DTS") + "] is that which is expected [NULL].");
+                TestReporter.softAssertEquals(rs.getValue("RES_MGMT_RTE_NM"), profileData.get(PROFILE_ROUTINGS_NAME), "Verify that the profile routing type [" + rs.getValue("RES_MGMT_RTE_NM") + "] is that which is expected [" + profileData.get(PROFILE_ROUTINGS_NAME) + "].");
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
         TestReporter.assertAll();
     }
 }
