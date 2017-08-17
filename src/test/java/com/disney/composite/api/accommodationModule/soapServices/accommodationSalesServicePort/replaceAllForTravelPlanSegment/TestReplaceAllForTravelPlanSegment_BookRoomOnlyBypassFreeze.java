@@ -56,8 +56,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyBypassFreeze extends
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(false, getBook().getTravelPlanId());
-        // validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
