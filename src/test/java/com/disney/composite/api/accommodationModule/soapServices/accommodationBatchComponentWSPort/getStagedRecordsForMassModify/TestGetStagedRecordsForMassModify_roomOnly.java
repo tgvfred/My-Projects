@@ -11,10 +11,10 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends AccommodationBaseTest {
+public class TestGetStagedRecordsForMassModify_roomOnly extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "getStagedRecordsForMassModify", "accommodation" })
-    public void testGetStagedRecordsForMassModify_Wdtc_RoomOnly() {
+    public void testGetStagedRecordsForMassModify_roomOnly() {
 
         String processName = "MASS_MODIFY";
         String tcId = getBook().getTravelComponentId();
@@ -23,6 +23,8 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         String startDate = getArrivalDate();
         String endDate = getDepartureDate();
         String packageCode = getPackageCode();
+        String resortCode = getResortCode();
+        String roomType = getRoomTypeCode();
         String firstName = getHouseHold().primaryGuest().getFirstName();
         String lastName = getHouseHold().primaryGuest().getLastName();
         String partyId = "0";
@@ -33,7 +35,6 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         String inventoryContactName = "Inventory Contact";
         String guestId = getBook().getGuestId();
 
-        // WDTC to room only
         StageMassModifyTransactional stage = new StageMassModifyTransactional(environment, "MainProcLst");
         stage.setProcessName(processName);
         stage.setMassModifyRoomDetailTcId(tcId);
@@ -42,6 +43,8 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         stage.setMassModifyRoomDetailPeriodStartDate(startDate);
         stage.setMassModifyRoomDetailPeriodEndDates(endDate);
         stage.setMassModifyRoomDetailPackageCode(packageCode);
+        stage.setMassModifyRoomDetailResortCode(resortCode);
+        stage.setMassModifyRoomDetailRoomType(roomType);
         stage.setInventoryReasonCode(inventoryReasonCode);
         stage.setInventoryReasonContactName(inventoryContactName);
         stage.setMassModifyRoomDetailPrimaryGuestDetailFirstName(firstName);
@@ -81,6 +84,8 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         TestReporter.softAssertEquals(mod.getTcgId(), tcgId, "Verify that the retrieved TCG ID [" + mod.getTcgId() + "] matches the expected [" + tcgId + "]");
         TestReporter.softAssertEquals(mod.getTcId(), tcId, "Verify that the retrieved TC ID [" + mod.getTcId() + "] matches the expected [" + tcId + "]");
         TestReporter.softAssertEquals(mod.getTpsId(), tpsId, "Verify that the retrieved TPS ID [" + mod.getTpsId() + "] matches the expected [" + tpsId + "]");
+        TestReporter.softAssertEquals(mod.getResortCode(), resortCode, "Verify that the retrieved resort code [" + mod.getResortCode() + "] matches the expected [" + resortCode + "]");
+        TestReporter.softAssertEquals(mod.getRoomType(), roomType, "Verify that the retrieved room type [" + mod.getRoomType() + "] matches the expected [" + roomType + "]");
         TestReporter.softAssertEquals(mod.getGuestId(), guestId, "Verify that the retrieved Guest ID [" + mod.getGuestId() + "] matches the expected [" + guestId + "]");
         TestReporter.assertAll();
 

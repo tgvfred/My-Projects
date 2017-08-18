@@ -5,16 +5,16 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForMassModify;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassModifyTransactional;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends AccommodationBaseTest {
+public class TestGetStagedRecordsForMassModify_roomOnlyWithTravelAgency extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "getStagedRecordsForMassModify", "accommodation" })
-    public void testGetStagedRecordsForMassModify_Wdtc_RoomOnly() {
+    public void testGetStagedRecordsForMassModify_roomOnly_roomOnlyWithTravelAgency() {
 
         String processName = "MASS_MODIFY";
         String tcId = getBook().getTravelComponentId();
@@ -29,19 +29,48 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         String doNotMail = "true";
         String doNotPhone = "true";
         String preferredLanguage = "eng";
+        String resortCode = getResortCode();
+        String roomType = getRoomTypeCode();
         String inventoryReasonCode = "RIN8";
         String inventoryContactName = "Inventory Contact";
         String guestId = getBook().getGuestId();
+        String active = "true";
+        String confirmationIndicator = "true";
+        String adultTicket = "true";
+        String hardTicketedEvent = "false";
+        String baseAdmissionProductId = "2640488";
+        String componentId = "0";
+        String dayCount = "2";
+        String guestReferenceAge = "2" + Randomness.randomNumber(1);
+        String ageType = "ADULT";
+        String ticketDetailGuestFirstName = getHouseHold().primaryGuest().getFirstName();
+        String ticketDetailGuestLastName = getHouseHold().primaryGuest().getLastName();
+        String partofPackage = "false";
+        String travelAgencyId = "4" + Randomness.randomNumber(4);
+        String agencylataNumber = "99999998";
+        String agencyName = "SYSTEM SUPPORT TEST AGENCY";
+        String guestTravelAgencyId = "0";
+        String agentId = Randomness.randomNumber(10);
+        String guestAgentId = "0";
+        String comfirmationLocatorValue = "0";
+        String guestComfirmationLocationId = "0";
+        String locatorId = getLocationId();
+        String guestLocationID = "0";
+        String locatorUseType = "UNKNOWN";
+        String primary = "true";
+        String addressLine1 = "11234 Minnie Mouse Lane";
+        String city = "Anaheim";
+        String country = "USA";
+        String postalCode = "92805";
+        String state = "CA";
 
-        // WDTC to room only
         StageMassModifyTransactional stage = new StageMassModifyTransactional(environment, "MainProcLst");
         stage.setProcessName(processName);
-        stage.setMassModifyRoomDetailTcId(tcId);
-        stage.setMassModifyRoomDetailTpsId(tpsId);
-        stage.setMassModifyRoomDetailTcgID(tcgId);
-        stage.setMassModifyRoomDetailPeriodStartDate(startDate);
         stage.setMassModifyRoomDetailPeriodEndDates(endDate);
+        stage.setMassModifyRoomDetailPeriodStartDate(startDate);
         stage.setMassModifyRoomDetailPackageCode(packageCode);
+        stage.setMassModifyRoomDetailResortCode(resortCode);
+        stage.setMassModifyRoomDetailRoomType(roomType);
         stage.setInventoryReasonCode(inventoryReasonCode);
         stage.setInventoryReasonContactName(inventoryContactName);
         stage.setMassModifyRoomDetailPrimaryGuestDetailFirstName(firstName);
@@ -51,8 +80,39 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         stage.setMassModifyRoomDetailPrimaryGuestDetailDoNotPhone(doNotPhone);
         stage.setMassModifyRoomDetailPrimaryGuestDetailPreferredLanguage(preferredLanguage);
         stage.setMassModifyRoomDetailPrimaryGuestDetailGuestId(guestId);
-        stage.setMassModifyRoomDetailPrimaryGuestDetailACtive(BaseSoapCommands.REMOVE_NODE.toString());
-        stage.setMassModifyRoomDetailConfirmationIndicator(BaseSoapCommands.REMOVE_NODE.toString());
+        stage.setMassModifyRoomDetailPrimaryGuestDetailACtive(active);
+        stage.setMassModifyRoomDetailConfirmationIndicator(confirmationIndicator);
+        stage.setAdultTicket(adultTicket);
+        stage.setHardTicketedEvent(hardTicketedEvent);
+        stage.setBaseAdmissionProductId(baseAdmissionProductId);
+        stage.setCode(baseAdmissionProductId);
+        stage.setComponentId(componentId);
+        stage.setDayCount(dayCount);
+        stage.setAge(guestReferenceAge);
+        stage.setTicketGuestFirstName(ticketDetailGuestFirstName);
+        stage.setTicketGuestLastName(ticketDetailGuestLastName);
+        stage.setComponentId(componentId);
+        stage.setDayCount(dayCount);
+        stage.setAgeType(ageType);
+        stage.setPartOfPackage(partofPackage);
+
+        stage.setMassModifyRoomDetailAgencyIataNumber(agencylataNumber);
+        stage.setMassModifyRoomDetailAgencyName(agencyName);
+        stage.setMassModifyRoomDetailGuestTravelAgencyId(travelAgencyId);
+        stage.setMassModifyRoomDetailGuestTravelAgencyId(guestTravelAgencyId);
+        stage.setMassModifyRoomDetailagentId(agentId);
+        stage.setMassModifyRoomDetailGuestAgentId(guestAgentId);
+        stage.setMassModifyRoomDetailComfirmationLocatorValue(comfirmationLocatorValue);
+        stage.setMassModifyRoomDetailGuestComfirmationLocationId(guestComfirmationLocationId);
+        stage.setPrimaryAddressLocatorId(locatorId);
+        stage.setPrimaryAddressGuestLocatorId(guestLocationID);
+        stage.setPrimaryAddressLocatorUseType(locatorUseType);
+        stage.setPrimaryAddressPrimary(primary);
+        stage.setPrimaryAddressLine(addressLine1);
+        stage.setPrimaryAddressCity(city);
+        stage.setPrimaryAddressCountry(country);
+        stage.setPrimaryAddressPostalCode(postalCode);
+        stage.setPrimaryAddressState(state);
         stage.sendRequest();
 
         TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Error sending request", stage);
@@ -82,6 +142,13 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         TestReporter.softAssertEquals(mod.getTcId(), tcId, "Verify that the retrieved TC ID [" + mod.getTcId() + "] matches the expected [" + tcId + "]");
         TestReporter.softAssertEquals(mod.getTpsId(), tpsId, "Verify that the retrieved TPS ID [" + mod.getTpsId() + "] matches the expected [" + tpsId + "]");
         TestReporter.softAssertEquals(mod.getGuestId(), guestId, "Verify that the retrieved Guest ID [" + mod.getGuestId() + "] matches the expected [" + guestId + "]");
+        TestReporter.softAssertEquals(mod.getHardTicketedEvent(), hardTicketedEvent, "Verify that the retrieved get hard ticketed event [" + mod.getHardTicketedEvent() + "] matches the expected [" + hardTicketedEvent + "]");
+        TestReporter.softAssertEquals(mod.getBaseAdmissionProductId(), baseAdmissionProductId, "Verify that the base admission product ID [" + mod.getBaseAdmissionProductId() + "] matches the expected [" + baseAdmissionProductId + "]");
+        TestReporter.softAssertEquals(mod.getAge(), guestReferenceAge, "Verify that the retrieved age [" + mod.getAge() + "] matches the expected [" + guestReferenceAge + "]");
+        TestReporter.softAssertEquals(mod.getAgeType(), ageType, "Verify that the retrieved age type [" + mod.getAgeType() + "] matches the expected [" + ageType + "]");
+        TestReporter.softAssertEquals(mod.getTicketGuestFirstName(), ticketDetailGuestFirstName, "Verify that the retrieved ticket guest first name [" + mod.getTicketGuestFirstName() + "] matches the expected [" + ticketDetailGuestFirstName + "]");
+        TestReporter.softAssertEquals(mod.getTicketGuestLastName(), ticketDetailGuestLastName, "Verify that the retrieved ticket guest last name [" + mod.getTicketGuestLastName() + "] matches the expected [" + ticketDetailGuestLastName + "]");
+        TestReporter.softAssertEquals(mod.getPartOfPackage(), partofPackage, "Verify that the retrieved part of package [" + mod.getPartOfPackage() + "] matches the expected [" + partofPackage + "]");
         TestReporter.assertAll();
 
     }

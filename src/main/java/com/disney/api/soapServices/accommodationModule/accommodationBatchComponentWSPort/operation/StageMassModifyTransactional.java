@@ -49,6 +49,162 @@ public class StageMassModifyTransactional extends AccommodationBatchComponentWSP
         setRequestNodeValueByXPath("//massModifyRoomDetail/tcgId", value);
     }
 
+    public void setMassModifyRoomDetailAgencyIataNumber(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/agencyIataNumber", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("travelAgency"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency", BaseSoapCommands.ADD_NODE.commandAppend("agencyIataNumber"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/agencyIataNumber", value);
+        }
+    }
+
+    public void setMassModifyRoomDetailAgencyName(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/agencyName", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency", BaseSoapCommands.ADD_NODE.commandAppend("agencyName"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/agencyName", value);
+        }
+    }
+
+    public void setMassModifyRoomDetailAgencyOdsId(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/agencyOdsId", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency", BaseSoapCommands.ADD_NODE.commandAppend("agencyOdsId"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/agencyOdsId", value);
+        }
+    }
+
+    public void setMassModifyRoomDetailGuestTravelAgencyId(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/guestTravelAgencyId", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency", BaseSoapCommands.ADD_NODE.commandAppend("guestTravelAgencyId"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/guestTravelAgencyId", value);
+        }
+    }
+
+    public void setMassModifyRoomDetailagentId(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/agentId", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency", BaseSoapCommands.ADD_NODE.commandAppend("agentId"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/agentId", value);
+        }
+    }
+
+    public void setMassModifyRoomDetailGuestAgentId(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/guestAgentId", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency", BaseSoapCommands.ADD_NODE.commandAppend("guestAgentId"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/guestAgentId", value);
+        }
+    }
+
+    public void setMassModifyRoomDetailComfirmationLocatorValue(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/confirmationLocatorValue", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency", BaseSoapCommands.ADD_NODE.commandAppend("confirmationLocatorValue"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/confirmationLocatorValue", value);
+        }
+    }
+
+    public void setMassModifyRoomDetailGuestComfirmationLocationId(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/guestConfirmationLocationId", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency", BaseSoapCommands.ADD_NODE.commandAppend("guestConfirmationLocationId"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/guestConfirmationLocationId", value);
+        }
+    }
+
+    public void setPrimaryAddressLocatorId(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/locatorId", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency", BaseSoapCommands.ADD_NODE.commandAppend("primaryAddress"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress", BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/locatorId", value);
+        }
+    }
+
+    public void setPrimaryAddressGuestLocatorId(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/guestLocatorId", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency", BaseSoapCommands.ADD_NODE.commandAppend("primaryAddress"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress", BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/guestLocatorId", value);
+        }
+    }
+
+    public void setPrimaryAddressLocatorUseType(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/locatorUseType", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress", BaseSoapCommands.ADD_NODE.commandAppend("locatorUseType"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/locatorUseType", value);
+        }
+    }
+
+    public void setPrimaryAddressPrimary(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/primary", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress", BaseSoapCommands.ADD_NODE.commandAppend("primary"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/primary", value);
+        }
+    }
+
+    public void setPrimaryAddressLine(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/addressLine1", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress", BaseSoapCommands.ADD_NODE.commandAppend("addressLine1"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/addressLine1", value);
+        }
+    }
+
+    public void setPrimaryAddressCity(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/city", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress", BaseSoapCommands.ADD_NODE.commandAppend("city"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/city", value);
+        }
+    }
+
+    public void setPrimaryAddressCountry(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/country", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress", BaseSoapCommands.ADD_NODE.commandAppend("country"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/country", value);
+        }
+    }
+
+    public void setPrimaryAddressPostalCode(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/postalCode", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress", BaseSoapCommands.ADD_NODE.commandAppend("postalCode"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/postalCode", value);
+        }
+    }
+
+    public void setPrimaryAddressState(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/state", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress", BaseSoapCommands.ADD_NODE.commandAppend("state"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/travelAgency/primaryAddress/state", value);
+        }
+    }
+
     public void setMassModifyRoomDetailPackageCode(String value) {
         setRequestNodeValueByXPath("//massModifyRoomDetail/packageCode", value);
     }
@@ -59,6 +215,15 @@ public class StageMassModifyTransactional extends AccommodationBatchComponentWSP
 
     public void setMassModifyRoomDetailRoomType(String value) {
         setRequestNodeValueByXPath("//massModifyRoomDetail/roomType", value);
+    }
+
+    public void setMassModifyRoomDetailBlockCode(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/blockCode", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/blockCode", value);
+        }
     }
 
     public void setMassModifyRoomDetailConfirmationIndicator(String value) {
@@ -83,6 +248,15 @@ public class StageMassModifyTransactional extends AccommodationBatchComponentWSP
 
     public void setMassModifyRoomDetailPrimaryGuestDetailPartyId(String value) {
         setRequestNodeValueByXPath("//massModifyRoomDetail/primaryGuestDetail/partyId", value);
+    }
+
+    public void setRoomReservationGuestReferenceAge(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/roomDetails/", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("bookingDate"));
+            setRequestNodeValueByXPath("/Envelope/Body/stageMassModifyTransactional/massModifyRequest/massModifyRoomDetail/roomDetails/bookingDate", value);
+        }
     }
 
     public void setMassModifyRoomDetailPrimaryGuestDetailDoNotMail(String value) {

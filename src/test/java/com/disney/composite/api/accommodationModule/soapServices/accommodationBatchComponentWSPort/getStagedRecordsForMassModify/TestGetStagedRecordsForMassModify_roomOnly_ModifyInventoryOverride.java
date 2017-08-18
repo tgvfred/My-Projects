@@ -5,13 +5,12 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForMassModify;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassModifyTransactional;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends AccommodationBaseTest {
+public class TestGetStagedRecordsForMassModify_roomOnly_ModifyInventoryOverride extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "getStagedRecordsForMassModify", "accommodation" })
     public void testGetStagedRecordsForMassModify_Wdtc_RoomOnly() {
@@ -25,6 +24,8 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         String packageCode = getPackageCode();
         String firstName = getHouseHold().primaryGuest().getFirstName();
         String lastName = getHouseHold().primaryGuest().getLastName();
+        String resortCode = getResortCode();
+        String roomType = getRoomTypeCode();
         String partyId = "0";
         String doNotMail = "true";
         String doNotPhone = "true";
@@ -32,16 +33,18 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         String inventoryReasonCode = "RIN8";
         String inventoryContactName = "Inventory Contact";
         String guestId = getBook().getGuestId();
+        String active = "true";
 
-        // WDTC to room only
         StageMassModifyTransactional stage = new StageMassModifyTransactional(environment, "MainProcLst");
         stage.setProcessName(processName);
+        stage.setMassModifyRoomDetailTcgID(tcgId);
         stage.setMassModifyRoomDetailTcId(tcId);
         stage.setMassModifyRoomDetailTpsId(tpsId);
-        stage.setMassModifyRoomDetailTcgID(tcgId);
-        stage.setMassModifyRoomDetailPeriodStartDate(startDate);
         stage.setMassModifyRoomDetailPeriodEndDates(endDate);
+        stage.setMassModifyRoomDetailPeriodStartDate(startDate);
         stage.setMassModifyRoomDetailPackageCode(packageCode);
+        stage.setMassModifyRoomDetailResortCode(resortCode);
+        stage.setMassModifyRoomDetailRoomType(roomType);
         stage.setInventoryReasonCode(inventoryReasonCode);
         stage.setInventoryReasonContactName(inventoryContactName);
         stage.setMassModifyRoomDetailPrimaryGuestDetailFirstName(firstName);
@@ -51,8 +54,7 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         stage.setMassModifyRoomDetailPrimaryGuestDetailDoNotPhone(doNotPhone);
         stage.setMassModifyRoomDetailPrimaryGuestDetailPreferredLanguage(preferredLanguage);
         stage.setMassModifyRoomDetailPrimaryGuestDetailGuestId(guestId);
-        stage.setMassModifyRoomDetailPrimaryGuestDetailACtive(BaseSoapCommands.REMOVE_NODE.toString());
-        stage.setMassModifyRoomDetailConfirmationIndicator(BaseSoapCommands.REMOVE_NODE.toString());
+        stage.setMassModifyRoomDetailPrimaryGuestDetailACtive(active);
         stage.sendRequest();
 
         TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Error sending request", stage);
@@ -81,6 +83,8 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         TestReporter.softAssertEquals(mod.getTcgId(), tcgId, "Verify that the retrieved TCG ID [" + mod.getTcgId() + "] matches the expected [" + tcgId + "]");
         TestReporter.softAssertEquals(mod.getTcId(), tcId, "Verify that the retrieved TC ID [" + mod.getTcId() + "] matches the expected [" + tcId + "]");
         TestReporter.softAssertEquals(mod.getTpsId(), tpsId, "Verify that the retrieved TPS ID [" + mod.getTpsId() + "] matches the expected [" + tpsId + "]");
+        TestReporter.softAssertEquals(mod.getInventoryReasonCode(), inventoryReasonCode, "Verify that the retrieved inventory reason code [" + mod.getInventoryReasonCode() + "] matches the expected [" + inventoryReasonCode + "]");
+        TestReporter.softAssertEquals(mod.getInventoryContactName(), inventoryContactName, "Verify that the retrieved inventory contact name [" + mod.getInventoryContactName() + "] matches the expected [" + inventoryContactName + "]");
         TestReporter.softAssertEquals(mod.getGuestId(), guestId, "Verify that the retrieved Guest ID [" + mod.getGuestId() + "] matches the expected [" + guestId + "]");
         TestReporter.assertAll();
 

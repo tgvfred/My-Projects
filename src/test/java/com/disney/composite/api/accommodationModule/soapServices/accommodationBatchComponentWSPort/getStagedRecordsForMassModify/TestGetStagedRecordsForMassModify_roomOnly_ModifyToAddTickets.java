@@ -110,28 +110,14 @@ public class TestGetStagedRecordsForMassModify_roomOnly_ModifyToAddTickets exten
         TestReporter.softAssertEquals(mod.getTcId(), tcId, "Verify that the retrieved TC ID [" + mod.getTcId() + "] matches the expected [" + tcId + "]");
         TestReporter.softAssertEquals(mod.getTpsId(), tpsId, "Verify that the retrieved TPS ID [" + mod.getTpsId() + "] matches the expected [" + tpsId + "]");
         TestReporter.softAssertEquals(mod.getGuestId(), guestId, "Verify that the retrieved Guest ID [" + mod.getGuestId() + "] matches the expected [" + guestId + "]");
+        TestReporter.softAssertEquals(mod.getHardTicketedEvent(), hardTicketedEvent, "Verify that the retrieved get hard ticketed event [" + mod.getHardTicketedEvent() + "] matches the expected [" + hardTicketedEvent + "]");
+        TestReporter.softAssertEquals(mod.getBaseAdmissionProductId(), baseAdmissionProductId, "Verify that the base admission product ID [" + mod.getBaseAdmissionProductId() + "] matches the expected [" + baseAdmissionProductId + "]");
+        TestReporter.softAssertEquals(mod.getAge(), guestReferenceAge, "Verify that the retrieved age [" + mod.getAge() + "] matches the expected [" + guestReferenceAge + "]");
+        TestReporter.softAssertEquals(mod.getAgeType(), ageType, "Verify that the retrieved age type [" + mod.getAgeType() + "] matches the expected [" + ageType + "]");
+        TestReporter.softAssertEquals(mod.getTicketGuestFirstName(), ticketDetailGuestFirstName, "Verify that the retrieved ticket guest first name [" + mod.getTicketGuestFirstName() + "] matches the expected [" + ticketDetailGuestFirstName + "]");
+        TestReporter.softAssertEquals(mod.getTicketGuestLastName(), ticketDetailGuestLastName, "Verify that the retrieved ticket guest last name [" + mod.getTicketGuestLastName() + "] matches the expected [" + ticketDetailGuestLastName + "]");
+        TestReporter.softAssertEquals(mod.getPartOfPackage(), partofPackage, "Verify that the retrieved part of package [" + mod.getPartOfPackage() + "] matches the expected [" + partofPackage + "]");
         TestReporter.assertAll();
-
-        // Inventory Override Reason
-        // StageMassModifyTransactional stage = new StageMassModifyTransactional(environment, "MainProcLst");
-        // stage.setProcessName(processName);
-        // stage.setMassModifyRoomDetailTcgID(tcgId);
-        // stage.setMassModifyRoomDetailTcId(tcId);
-        // stage.setMassModifyRoomDetailTpsId(tpsId);
-        // stage.setMassModifyRoomDetailPeriodEndDates(endDate);
-        // stage.setMassModifyRoomDetailPeriodStartDate(startDate);
-        // stage.setMassModifyRoomDetailPackageCode(packageCode);
-        // stage.setMassModifyRoomDetailResortCode(resortCode);
-        // stage.setMassModifyRoomDetailRoomType(roomType);
-        // stage.setMassModifyRoomDetailPrimaryGuestDetailFirstName(firstName);
-        // stage.setMassModifyRoomDetailPrimaryGuestDetailLastName(lastName);
-        // stage.setMassModifyRoomDetailPrimaryGuestDetailPartyId(partyId);
-        // stage.setMassModifyRoomDetailPrimaryGuestDetailDoNotMail(doNotMail);
-        // stage.setMassModifyRoomDetailPrimaryGuestDetailDoNotPhone(doNotPhone);
-        // stage.setMassModifyRoomDetailPrimaryGuestDetailPreferredLanguage(preferredLanguage);
-        // stage.setMassModifyRoomDetailPrimaryGuestDetailGuestId(guestId);
-        // stage.setMassModifyRoomDetailPrimaryGuestDetailACtive(active);
-        // stage.sendRequest();
 
     }
 }
