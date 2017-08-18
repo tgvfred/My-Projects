@@ -12,7 +12,7 @@ import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithRoomDetailsRoomReservationDetailsProfile extends AccommodationBaseTest {
     private String tpPtyId = null;
 
     @Override
@@ -25,11 +25,13 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest ex
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setAddProfile(true);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest() {
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithRoomDetailsRoomReservationDetailsProfile() {
         bookReservation();
+        getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
         tpPtyId = getBook().getGuestId();
 
         ValidationHelper validations = new ValidationHelper(getEnvironment());
@@ -56,6 +58,8 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithUnFormedGuest ex
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
+
+        validations.validateProfile(getBook(), getProfileData());
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {

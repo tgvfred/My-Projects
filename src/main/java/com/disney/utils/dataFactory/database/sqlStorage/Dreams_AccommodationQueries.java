@@ -184,4 +184,12 @@ public class Dreams_AccommodationQueries extends Dreams {
                 + "WHERE tp2.tp_id = tp1.tp_id+1 ) "
                 + "AND ROWNUM = 1";
     }
+
+    public static String getProfileInformationById(String id) {
+        return "select a.PRFL_TYP_NM PROFILE_TYPE, a.PRFL_VAL_CD PROFILE_CODE, a.PRFL_VAL_DS PROFILE_DESCRIPTION, b.PRFL_RTE_TYP_NM PROFILE_ROUTINGS_NAME, c.SLCT_IN PROFILE_SELECTABLE "
+                + "from prfl_mgmt.prfl a "
+                + "left outer join prfl_mgmt.prfl_crtra c on c.prfl_id = a.prfl_id "
+                + "left outer join prfl_mgmt.prfl_rte b on a.prfl_id = b.PRFL_ID "
+                + "where a.PRFL_ID = " + id;
+    }
 }

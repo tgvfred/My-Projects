@@ -8,6 +8,10 @@ import static com.disney.api.soapServices.accommodationModule.helpers.Accommodat
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_ID;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_POLICY_ID;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_PROD_CHANNEL_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_DESCRIPTION;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_ID;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_ROUTINGS_NAME;
+import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_TYPE;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.getAgeTypeByAge;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.isValid;
 
@@ -18,6 +22,8 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 import com.disney.AutomationException;
+import com.disney.api.soapServices.ServiceConstants;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Randomness;
@@ -100,7 +106,7 @@ public class ValidationHelper {
         validateModificationBackend(numRecords, travelStatusName, securityValue, arrivalDate, departuredate, extRefType, extRefValue, tpId, tpsId, tcgId);
     }
 
-    public void validateModificationBackend(int numRecords, String travelStatusName, String securityValue, String arrivalDate, String departuredate,
+    public Recordset validateModificationBackend(int numRecords, String travelStatusName, String securityValue, String arrivalDate, String departuredate,
             String extRefType, String extRefValue, String tpId, String tpsId, String tcgId) {
         TestReporter.logStep("Validated reservation backend data after modification");
         Database db = new OracleDatabase(environment, Database.DREAMS);
@@ -147,6 +153,18 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
         }
+        TestReporter.assertAll();
+        return rs;
+    }
+
+    public void validateModificationBackend(int numRecords, String travelStatusName, String securityValue, String arrivalDate, String departuredate,
+            String extRefType, String extRefValue, String tpId, String tpsId, String tcgId, String blockCode) {
+        Recordset rs = validateModificationBackend(numRecords, travelStatusName, securityValue, arrivalDate, departuredate, extRefType, extRefValue, tpId, tpsId, tcgId);
+        rs.moveFirst();
+        do {
+            TestReporter.softAssertEquals(rs.getValue("BLK_CD"), blockCode, "Verify that the block code [" + rs.getValue("BLK_CD") + "] is that which is expected [" + blockCode + "].");
+            rs.moveNext();
+        } while (rs.hasNext());
         TestReporter.assertAll();
     }
 
@@ -1497,33 +1515,147 @@ public class ValidationHelper {
                 + "left outer join folio.ROOT_CHRG_GRP d on c.CHRG_GRP_ID = d.ROOT_CHRG_GRP_ID "
                 + "where a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
         rs = new Recordset(db.getResultSet(sql));
-        sql2 = "select * "
-                + "from guest.TXN_ORG_PTY a "
-                + "where a.TXN_ORG_PTY_ID = " + rs.getValue("TRVL_AGT_ID");
-        rs2 = new Recordset(db.getResultSet(sql2));
-        TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
-        TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the travel agent ID [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
-
-        if (!(isValid(base.getIsLibgoBooking()) && base.getIsLibgoBooking() == true) ||
+        if (!(isValid(base.getIsLibgoBooking()) && base.getIsLibgoBooking() == true) &&
                 !(isValid(base.isWdtcBooking()) && base.isWdtcBooking() == true)) {
-            TestReporter.log("Validate folio product charge");
-            sql = "SELECT e.TRVL_AGT_ID "
-                    + "FROM  FOLIO.EXTNL_REF a "
-                    + "INNER JOIN FOLIO.CHRG_GRP_EXTNL_REF b ON a.EXTNL_REF_ID = b.EXTNL_REF_ID "
-                    + "INNER JOIN FOLIO.NODE_CHRG_GRP c ON b.CHRG_GRP_ID = c.ROOT_CHRG_GRP_ID "
-                    + "INNER JOIN FOLIO.CHRG d ON c.NODE_CHRG_GRP_ID = d.CHRG_GRP_ID "
-                    + "INNER JOIN FOLIO.PROD_CHRG e ON d.CHRG_ID = e.CHRG_ID "
-                    + "WHERE a.EXTNL_SRC_NM = 'DREAMS_TP' "
-                    + "AND a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
-            rs = new Recordset(db.getResultSet(sql));
-            rs = new Recordset(db.getResultSet(sql));
             sql2 = "select * "
                     + "from guest.TXN_ORG_PTY a "
                     + "where a.TXN_ORG_PTY_ID = " + rs.getValue("TRVL_AGT_ID");
             rs2 = new Recordset(db.getResultSet(sql2));
             TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
             TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the travel agent ID [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
+        } else {
+            do {
+                TestReporter.softAssertTrue(rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that there is no travel agent associated with the group reservation");
+                rs.moveNext();
+            } while (rs.hasNext());
         }
+
+        TestReporter.log("Validate folio product charge");
+        sql = "SELECT e.TRVL_AGT_ID "
+                + "FROM  FOLIO.EXTNL_REF a "
+                + "INNER JOIN FOLIO.CHRG_GRP_EXTNL_REF b ON a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                + "INNER JOIN FOLIO.NODE_CHRG_GRP c ON b.CHRG_GRP_ID = c.ROOT_CHRG_GRP_ID "
+                + "INNER JOIN FOLIO.CHRG d ON c.NODE_CHRG_GRP_ID = d.CHRG_GRP_ID "
+                + "INNER JOIN FOLIO.PROD_CHRG e ON d.CHRG_ID = e.CHRG_ID "
+                + "WHERE a.EXTNL_SRC_NM = 'DREAMS_TP' "
+                + "AND a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
+        rs = new Recordset(db.getResultSet(sql));
+        if (!(isValid(base.getIsLibgoBooking()) && base.getIsLibgoBooking() == true) &&
+                !(isValid(base.isWdtcBooking()) && base.isWdtcBooking() == true)) {
+            sql2 = "select * "
+                    + "from guest.TXN_ORG_PTY a "
+                    + "where a.TXN_ORG_PTY_ID = " + rs.getValue("TRVL_AGT_ID");
+            rs2 = new Recordset(db.getResultSet(sql2));
+            TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
+            TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the travel agent ID [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
+        } else {
+            do {
+                TestReporter.softAssertTrue(rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that there is no travel agent associated with the group reservation");
+                rs.moveNext();
+            } while (rs.hasNext());
+        }
+        TestReporter.assertAll();
+    }
+
+    public void validateProfile(ReplaceAllForTravelPlanSegment book, Map<String, String> profileData) {
+        String sql = "select a.RES_MGMT_REQ_ID, RES_MGMT_REQ_TYP_NM PROFILE_TYPE, CMT_REQ_TYP_NM, RES_MGMT_PRFL_ID PROFILE_ID, RES_MGMT_REQ_TX PROFILE_DESCRIPTION, CFDNTL_IN, GSR_IN, REQ_INACTV_DTS, RES_MGMT_RTE_NM "
+                + "from res_mgmt_req a "
+                + "left outer join res_mgmt.RES_MGMT_REQ_RTE b on a.RES_MGMT_REQ_ID = b.RES_MGMT_REQ_ID "
+                + "where a.tp_id = 472292078811";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        String commentId = null;
+        TestReporter.logStep("Validate profile data for comment ID [" + commentId + "]");
+        do {
+            if (rs.getValue("PROFILE_ID").equals(profileData.get(PROFILE_ID))) {
+                commentId = rs.getValue("RES_MGMT_REQ_ID");
+                TestReporter.softAssertEquals(rs.getValue("PROFILE_TYPE"), profileData.get(PROFILE_TYPE), "Verify that the profile type [" + rs.getValue("PROFILE_TYPE") + "] is that which is expected [" + profileData.get(PROFILE_TYPE) + "].");
+                // TestReporter.softAssertEquals(rs.getValue("CMT_REQ_TYP_NM"), profileData.get(PROFILE), "Verify that the profile ["+rs.getValue("CMT_REQ_TYP_NM")+"] is that which is expected ["+profileData.get(key)+"].");
+                TestReporter.softAssertEquals(rs.getValue("PROFILE_ID"), profileData.get(PROFILE_ID), "Verify that the profile ID [" + rs.getValue("PROFILE_ID") + "] is that which is expected [" + profileData.get(PROFILE_ID) + "].");
+                TestReporter.softAssertEquals(rs.getValue("PROFILE_DESCRIPTION"), profileData.get(PROFILE_DESCRIPTION), "Verify that the profile description [" + rs.getValue("PROFILE_DESCRIPTION") + "] is that which is expected [" + profileData.get(PROFILE_DESCRIPTION) + "].");
+                TestReporter.softAssertEquals(rs.getValue("CFDNTL_IN"), "N", "Verify that the profile confidential indicator [" + rs.getValue("CFDNTL_IN") + "] is that which is expected [N].");
+                TestReporter.softAssertEquals(rs.getValue("GSR_IN"), "N", "Verify that the profile GSR [" + rs.getValue("GSR_IN") + "] is that which is expected [N].");
+                TestReporter.softAssertEquals(rs.getValue("REQ_INACTV_DTS"), "NULL", "Verify that the profile inactive DTS [" + rs.getValue("REQ_INACTV_DTS") + "] is that which is expected [NULL].");
+                TestReporter.softAssertEquals(rs.getValue("RES_MGMT_RTE_NM"), profileData.get(PROFILE_ROUTINGS_NAME), "Verify that the profile routing type [" + rs.getValue("RES_MGMT_RTE_NM") + "] is that which is expected [" + profileData.get(PROFILE_ROUTINGS_NAME) + "].");
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+        TestReporter.assertAll();
+    }
+
+    public void verifyFolioGuaranteeStatus(AccommodationBaseTest base, Map<String, String> groupDelegateSmallBalanceWriteoff, Map<String, String> guaranteeTypes, String groupPayDepositPayoff) {
+        TestReporter.logStep("Verify the folio guarantee status");
+        String sql = "select a.EXTNL_SRC_NM, c.CHRG_GRP_TYP_NM, c.GRP_DLGT_SML_BAL_WRTOFF_IN, d.GRP_PAY_DPST_APPLY_IN, e.GUAR_TYP_NM "
+                + "from folio.EXTNL_REF a "
+                + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
+                + "left outer join folio.root_chrg_grp d on c.CHRG_GRP_ID = d.ROOT_CHRG_GRP_ID "
+                + "left outer join folio.node_chrg_grp e on c.CHRG_GRP_ID = e.NODE_CHRG_GRP_ID "
+                + "where a.EXTNL_REF_VAL in ( "
+                + "        (select to_char(a.tp_id) "
+                + "        from res_mgmt.tps a "
+                + "        where a.tp_id = '" + base.getBook().getTravelPlanId() + "'), "
+                + "        (select to_char(a.tps_id) "
+                + "        from res_mgmt.tps a "
+                + "        where a.tp_id = '" + base.getBook().getTravelPlanId() + "'), "
+                + "        (select to_char(b.tc_grp_nb) "
+                + "        from res_mgmt.tps a "
+                + "        join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "        where a.tp_id = '" + base.getBook().getTravelPlanId() + "') "
+                + ")";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        do {
+            if (rs.getValue("EXTNL_SRC_NM").equals(ServiceConstants.FolioExternalReference.DREAMS_TCG)) {
+                TestReporter.log("Validate TCG node charge group");
+                TestReporter.softAssertEquals(rs.getValue("GRP_DLGT_SML_BAL_WRTOFF_IN"), groupDelegateSmallBalanceWriteoff.get(ServiceConstants.FolioExternalReference.DREAMS_TCG),
+                        "Verify that the group delegate small balance writeoff indicator [" + rs.getValue("GRP_DLGT_SML_BAL_WRTOFF_IN") + "] is that which is expected [" + groupDelegateSmallBalanceWriteoff.get(ServiceConstants.FolioExternalReference.DREAMS_TCG) + "].");
+                TestReporter.softAssertEquals(rs.getValue("GUAR_TYP_NM"), guaranteeTypes.get(ServiceConstants.FolioExternalReference.DREAMS_TCG),
+                        "Verify that the guarantee type [" + rs.getValue("GUAR_TYP_NM") + "] is that which is expected [" + guaranteeTypes.get(ServiceConstants.FolioExternalReference.DREAMS_TCG) + "].");
+            } else if (rs.getValue("EXTNL_SRC_NM").equals(ServiceConstants.FolioExternalReference.DREAMS_TPS)) {
+                TestReporter.log("Validate TPS node charge group");
+                TestReporter.softAssertEquals(rs.getValue("GRP_DLGT_SML_BAL_WRTOFF_IN"), groupDelegateSmallBalanceWriteoff.get(ServiceConstants.FolioExternalReference.DREAMS_TPS),
+                        "Verify that the group delegate small balance writeoff indicator [" + rs.getValue("GRP_DLGT_SML_BAL_WRTOFF_IN") + "] is that which is expected [" + groupDelegateSmallBalanceWriteoff.get(ServiceConstants.FolioExternalReference.DREAMS_TPS) + "].");
+                TestReporter.softAssertEquals(rs.getValue("GUAR_TYP_NM"), guaranteeTypes.get(ServiceConstants.FolioExternalReference.DREAMS_TPS),
+                        "Verify that the guarantee type [" + rs.getValue("GUAR_TYP_NM") + "] is that which is expected [" + guaranteeTypes.get(ServiceConstants.FolioExternalReference.DREAMS_TPS) + "].");
+            } else {
+                TestReporter.log("Validate TP node charge group");
+                TestReporter.softAssertEquals(rs.getValue("GRP_DLGT_SML_BAL_WRTOFF_IN"), groupDelegateSmallBalanceWriteoff.get(ServiceConstants.FolioExternalReference.DREAMS_TP),
+                        "Verify that the group delegate small balance writeoff indicator [" + rs.getValue("GRP_DLGT_SML_BAL_WRTOFF_IN") + "] is that which is expected [" + groupDelegateSmallBalanceWriteoff.get(ServiceConstants.FolioExternalReference.DREAMS_TP) + "].");
+                TestReporter.softAssertEquals(rs.getValue("GUAR_TYP_NM"), guaranteeTypes.get(ServiceConstants.FolioExternalReference.DREAMS_TP),
+                        "Verify that the guarantee type [" + rs.getValue("GUAR_TYP_NM") + "] is that which is expected [" + guaranteeTypes.get(ServiceConstants.FolioExternalReference.DREAMS_TP) + "].");
+                TestReporter.softAssertEquals(rs.getValue("GRP_PAY_DPST_APPLY_IN"), groupPayDepositPayoff,
+                        "Verify that the group pays deposit indicator [" + rs.getValue("GRP_PAY_DPST_APPLY_IN") + "] is that which is expected [" + groupPayDepositPayoff + "].");
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+        TestReporter.assertAll();
+    }
+
+    public void verifyRIMGuaranteeStatus(AccommodationBaseTest base, String wholesaler, String guaranteed) {
+        TestReporter.logStep("Verify the RIM guarantee status");
+        String sql = "select d.WHSL_IN, d.GUAR_IN, d.BLK_CD "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "join rsrc_inv.RSRC_ASGN_OWNR d on c.ASGN_OWN_ID = d.ASGN_OWNR_ID "
+                + "where a.tp_id =  " + base.getBook().getTravelPlanId();
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        do {
+            TestReporter.softAssertEquals(rs.getValue("WHSL_IN"), wholesaler, "Verify that the wholesaler indicator [" + rs.getValue("WHSL_IN") + "] is that which is expected [" + wholesaler + "].");
+            TestReporter.softAssertEquals(rs.getValue("GUAR_IN"), guaranteed, "Verify that the wholesaler indicator [" + rs.getValue("GUAR_IN") + "] is that which is expected [" + guaranteed + "].");
+            String blockCode;
+            if (isValid(base.isWdtcBooking()) && base.isWdtcBooking()) {
+                blockCode = "01825";
+            } else if (isValid(base.getIsLibgoBooking()) && base.getIsLibgoBooking()) {
+                blockCode = "01905";
+            } else {
+                blockCode = "NULL";
+            }
+            TestReporter.softAssertEquals(rs.getValue("BLK_CD"), blockCode, "Verify that the wholesaler indicator [" + rs.getValue("BLK_CD") + "] is that which is expected [" + blockCode + "].");
+            rs.moveNext();
+        } while (rs.hasNext());
         TestReporter.assertAll();
     }
 }

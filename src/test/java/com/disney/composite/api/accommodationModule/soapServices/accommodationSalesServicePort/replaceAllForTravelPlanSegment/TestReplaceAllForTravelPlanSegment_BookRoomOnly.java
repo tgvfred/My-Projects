@@ -56,7 +56,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly extends Accommodati
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(false, getBook().getTravelPlanId());
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
         validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1, "N", "NULL", getFacilityId());
 
