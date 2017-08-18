@@ -116,4 +116,6 @@ public class AccommodationErrorCode {
             " Accommodation Component not found ");
     public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
             " No Accommodation Component found. ");
+    public static final ApplicationErrorCode GUARANTEE_STATUS_CANNOT_CHANGE = new ApplicationErrorCode(MOD_NAME, 7195,
+            " Guarantee status can not be changed ");
 }
