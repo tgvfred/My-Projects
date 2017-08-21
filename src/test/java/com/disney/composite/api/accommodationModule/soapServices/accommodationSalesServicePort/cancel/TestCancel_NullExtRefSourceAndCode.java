@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
@@ -18,8 +19,6 @@ public class TestCancel_NullExtRefSourceAndCode extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
-        // to invoke lower levels of reporting
         setEnvironment(environment);
         daysOut.set(0);
         nights.set(1);
@@ -27,7 +26,7 @@ public class TestCancel_NullExtRefSourceAndCode extends AccommodationBaseTest {
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues();
+        setValues(Environment.getBaseEnvironmentName(getEnvironment()));
         bookReservation();
     }
 
