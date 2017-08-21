@@ -1645,7 +1645,7 @@ public class ValidationHelper {
         Recordset rs = new Recordset(db.getResultSet(sql));
         do {
             TestReporter.softAssertEquals(rs.getValue("WHSL_IN"), wholesaler, "Verify that the wholesaler indicator [" + rs.getValue("WHSL_IN") + "] is that which is expected [" + wholesaler + "].");
-            TestReporter.softAssertEquals(rs.getValue("GUAR_IN"), guaranteed, "Verify that the wholesaler indicator [" + rs.getValue("GUAR_IN") + "] is that which is expected [" + guaranteed + "].");
+            TestReporter.softAssertEquals(rs.getValue("GUAR_IN"), guaranteed, "Verify that the guaranteed indicator [" + rs.getValue("GUAR_IN") + "] is that which is expected [" + guaranteed + "].");
             String blockCode;
             if (isValid(base.isWdtcBooking()) && base.isWdtcBooking()) {
                 blockCode = "01825";
@@ -1654,7 +1654,7 @@ public class ValidationHelper {
             } else {
                 blockCode = "NULL";
             }
-            TestReporter.softAssertEquals(rs.getValue("BLK_CD"), blockCode, "Verify that the wholesaler indicator [" + rs.getValue("BLK_CD") + "] is that which is expected [" + blockCode + "].");
+            TestReporter.softAssertEquals(rs.getValue("BLK_CD"), blockCode, "Verify that the block code [" + rs.getValue("BLK_CD") + "] is that which is expected [" + blockCode + "].");
             rs.moveNext();
         } while (rs.hasNext());
         TestReporter.assertAll();
