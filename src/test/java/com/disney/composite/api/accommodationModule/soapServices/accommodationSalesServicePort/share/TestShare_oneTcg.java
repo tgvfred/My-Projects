@@ -68,10 +68,10 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
         int numExpectedRecords2 = 1;
         helper.validateShareInFlag(numExpectedRecords2, getBook().getTravelComponentGroupingId());
 
-        int numExpectedRecords3 = 1;
+        int numExpectedRecords3 = 2;
         helper.validateAssignmentOwnerIdChanges(numExpectedRecords3, assignOwnerId, getBook().getTravelComponentGroupingId());
 
-        int numExpectedRecords4 = 4;
+        int numExpectedRecords4 = 8;
         helper.validateFolioGuaranteeType(numExpectedRecords4, getBook().getTravelComponentGroupingId());
     }
 
