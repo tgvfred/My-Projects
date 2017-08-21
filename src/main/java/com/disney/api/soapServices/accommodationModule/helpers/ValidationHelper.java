@@ -413,7 +413,7 @@ public class ValidationHelper {
     }
 
     public void verifyModificationIsFoundInResHistory(String tpId) {
-        TestReporter.logStep("Verify Booking Is Found In Res History");
+        TestReporter.logStep("Verify MOdification Is Found In Res History");
         Database db = new OracleDatabase(environment, Database.DREAMS);
 
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getReservationHistoryByTpId(tpId)));
@@ -1570,7 +1570,8 @@ public class ValidationHelper {
             if (rs.getValue("PROFILE_ID").equals(profileData.get(PROFILE_ID))) {
                 commentId = rs.getValue("RES_MGMT_REQ_ID");
                 TestReporter.softAssertEquals(rs.getValue("PROFILE_TYPE"), profileData.get(PROFILE_TYPE), "Verify that the profile type [" + rs.getValue("PROFILE_TYPE") + "] is that which is expected [" + profileData.get(PROFILE_TYPE) + "].");
-                // TestReporter.softAssertEquals(rs.getValue("CMT_REQ_TYP_NM"), profileData.get(PROFILE), "Verify that the profile ["+rs.getValue("CMT_REQ_TYP_NM")+"] is that which is expected ["+profileData.get(key)+"].");
+                // TestReporter.softAssertEquals(rs.getValue("CMT_REQ_TYP_NM"), profileData.get(PROFILE), "Verify that the profile
+                // ["+rs.getValue("CMT_REQ_TYP_NM")+"] is that which is expected ["+profileData.get(key)+"].");
                 TestReporter.softAssertEquals(rs.getValue("PROFILE_ID"), profileData.get(PROFILE_ID), "Verify that the profile ID [" + rs.getValue("PROFILE_ID") + "] is that which is expected [" + profileData.get(PROFILE_ID) + "].");
                 TestReporter.softAssertEquals(rs.getValue("PROFILE_DESCRIPTION"), profileData.get(PROFILE_DESCRIPTION), "Verify that the profile description [" + rs.getValue("PROFILE_DESCRIPTION") + "] is that which is expected [" + profileData.get(PROFILE_DESCRIPTION) + "].");
                 TestReporter.softAssertEquals(rs.getValue("CFDNTL_IN"), "N", "Verify that the profile confidential indicator [" + rs.getValue("CFDNTL_IN") + "] is that which is expected [N].");

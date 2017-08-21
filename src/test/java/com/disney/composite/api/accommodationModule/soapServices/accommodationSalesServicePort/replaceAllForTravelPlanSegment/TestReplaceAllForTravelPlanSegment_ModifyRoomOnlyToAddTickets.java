@@ -15,9 +15,14 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddTickets extends AccommodationBaseTest {
     private String tpPtyId = null;
     private String odsGuestId;
+    private String tpId = null;
+    private String tpsId = null;
+    private String tcgId = null;
+    private String tcId = null;
+    private String extRefNum = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -29,12 +34,27 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends A
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
-        setAddTickets(true);
+        bookReservation();
+        tpId = getBook().getTravelPlanId();
+        tpsId = getBook().getTravelPlanSegmentId();
+        tcgId = getBook().getTravelComponentGroupingId();
+        tcId = getBook().getTravelComponentId();
+        extRefNum = getExternalRefNumber();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnly() {
+    public void testReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddTickets() {
+        setAddTickets(true);
+        setSendRequest(false);
         bookReservation();
+        getBook().setTravelPlanId(tpId);
+        getBook().setTravelPlanSegementId(tpsId);
+        getBook().setTravelComponentGroupingId(tcgId);
+        getBook().setTravelComponentId(tcId);
+        getBook().setReplaceAll("true");
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
+
         tpPtyId = getBook().getGuestId();
         String sql = "select b.TXN_PTY_EXTNL_REF_VAL "
                 + "from res_mgmt.tp_pty a "
