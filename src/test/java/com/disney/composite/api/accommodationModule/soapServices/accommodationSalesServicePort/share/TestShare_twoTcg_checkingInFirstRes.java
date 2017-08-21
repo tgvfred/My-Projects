@@ -26,6 +26,8 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
     String ownerIdOne;
     String ownerIdTwo;
     String guestId;
+    String firstTC;
+    String firstTPS;
 
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -42,6 +44,8 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
         bookReservation();
         book = getBook();
         firstTCG = getBook().getTravelComponentGroupingId();
+        firstTC = getBook().getTravelComponentId();
+        firstTPS = getBook().getTravelPlanSegmentId();
         guestId = getBook().getGuestId();
         captureFirstOwnerId();
 
@@ -85,17 +89,26 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
     }
 
     public void validateResponse() {
-        TestReporter.logStep("Validate date in the response node.");
+        TestReporter.logStep("Validate data in the response node.");
         String tpsId = share.getTravelPlanSegmentId();
+        String tpsId2 = share.getSecondTravelPlanSegmentId();
         String tcgId = share.getTravelComponentGroupingId();
+        String tcgId2 = share.getSecondTravelComponentGroupingId();
         String tcId = share.getTravelComponentId();
+        String tcId2 = share.getSecondTravelComponentId();
         String bookingDate = share.getBookingDate();
         String travelStatus = share.getTravelStatus();
 
-        TestReporter.softAssertEquals(getBook().getTravelPlanSegmentId(), tpsId, "Verify that the response returns the tpsID [" + getBook().getTravelPlanSegmentId() + "] that which is expected [" + tpsId + "].");
-        TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), tcgId, "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "] that which is expected [" + tcgId + "].");
-        TestReporter.softAssertEquals(getBook().getTravelComponentId(), tcId, "Verify that the response returns the tcId [" + getBook().getTravelComponentId() + "] that which is expected [" + tcId + "].");
-        TestReporter.softAssertEquals(Randomness.generateCurrentXMLDate(), bookingDate, "Verify that the booking date [" + Randomness.generateCurrentXMLDate() + "] that which is expected [" + bookingDate + "].");
+        TestReporter.softAssertEquals(firstTPS, tpsId, "Verify that the response returns the tpsID [" + getBook().getTravelPlanSegmentId() + "] that which is expected [" + tpsId + "].");
+        TestReporter.softAssertEquals(getBook().getTravelPlanSegmentId(), tpsId2, "Verify that the response returns the tpsID [" + getBook().getTravelPlanSegmentId() + "] that which is expected [" + tpsId + "].");
+
+        TestReporter.softAssertEquals(firstTCG, tcgId, "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "] that which is expected [" + tcgId + "].");
+        TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), tcgId2, "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "] that which is expected [" + tcgId + "].");
+
+        TestReporter.softAssertEquals(firstTC, tcId, "Verify that the response returns the tcId [" + getBook().getTravelComponentId() + "] that which is expected [" + tcId + "].");
+        TestReporter.softAssertEquals(getBook().getTravelComponentId(), tcId2, "Verify that the response returns the tcId [" + getBook().getTravelComponentId() + "] that which is expected [" + tcId + "].");
+
+        TestReporter.softAssertEquals(Randomness.generateCurrentXMLDate(), bookingDate.substring(0, 10), "Verify that the booking date [" + Randomness.generateCurrentXMLDate() + "] that which is expected [" + bookingDate.substring(0, 10) + "].");
         TestReporter.softAssertEquals(travelStatus, "Booked", "Verify that the response returns the travel status [" + getBook().getTravelComponentId() + "] that which is expected [Booked].");
         TestReporter.assertAll();
 

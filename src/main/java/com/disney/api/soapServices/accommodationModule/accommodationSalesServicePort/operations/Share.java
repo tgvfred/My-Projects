@@ -58,12 +58,24 @@ public class Share extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentGroupingId");
     }
 
+    public String getSecondTravelComponentGroupingId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails[2]/sharedRoomDetail/travelComponentGroupingId");
+    }
+
     public String getTravelComponentId() {
         return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentId");
     }
 
+    public String getSecondTravelComponentId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails[2]/sharedRoomDetail/travelComponentId");
+    }
+
     public String getTravelPlanSegmentId() {
         return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/travelPlanSegmentId");
+    }
+
+    public String getSecondTravelPlanSegmentId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails[2]/travelPlanSegmentId");
     }
 
     public String getBookingDate() {
