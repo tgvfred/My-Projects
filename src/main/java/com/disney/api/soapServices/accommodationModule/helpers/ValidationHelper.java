@@ -1810,4 +1810,20 @@ public class ValidationHelper {
         } while (rs.hasNext());
         TestReporter.assertAll();
     }
+
+    public void validateResortAndRoomType(String tpId, String facilityId, String roomTypeCode) {
+        TestReporter.logStep("Validate facility and room type code.");
+        String sql = "select c.FAC_ID, d.RSRC_INVTRY_TYP_CD "
+                + "from rsrc_inv.rsrc_own_ref a "
+                + "join rsrc_inv.rsrc_own b on a.RSRC_OWN_ID = b.RSRC_OWN_ID "
+                + "join rsrc_inv.rsrc_asgn_ownr c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID "
+                + "join rsrc_inv.rsrc_invtry_typ d on c.RSRC_INVTRY_TYP_ID = d.RSRC_INVTRY_TYP_ID "
+                + "where a.EXTNL_OWN_REF_VAL = '" + tpId + "'";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.softAssertEquals(rs.getValue("FAC_ID"), facilityId, "Verify that the facility ID [" + rs.getValue("FAC_ID") + "] is that which is expected [" + facilityId + "].");
+        TestReporter.softAssertEquals(rs.getValue("RSRC_INVTRY_TYP_CD"), roomTypeCode, "Verify that the facility ID [" + rs.getValue("RSRC_INVTRY_TYP_CD") + "] is that which is expected [" + roomTypeCode + "].");
+        TestReporter.assertAll();
+
+    }
 }
