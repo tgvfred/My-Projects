@@ -54,7 +54,7 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
         TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), tcgId, "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "] that which is expected [" + tcgId + "].");
         TestReporter.softAssertEquals(getBook().getTravelComponentId(), tcId, "Verify that the response returns the tcId [" + getBook().getTravelComponentId() + "] that which is expected [" + tcId + "].");
         TestReporter.softAssertEquals(Randomness.generateCurrentXMLDate(), bookingDate.substring(0, 10), "Verify that the booking date [" + Randomness.generateCurrentXMLDate() + "] that which is expected [" + bookingDate.substring(0, 10) + "].");
-        TestReporter.softAssertEquals(travelStatus, "Booked", "Verify that the response returns the travel status [" + getBook().getTravelComponentId() + "] that which is expected [Booked].");
+        TestReporter.softAssertEquals(travelStatus, "Booked", "Verify that the response returns the travel status [" + travelStatus + "] that which is expected [Booked].");
         TestReporter.assertAll();
 
     }
@@ -63,16 +63,16 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
         ShareHelper helper = new ShareHelper(getEnvironment());
 
         int numExpectedRecords = 2;
-        helper.validateReservationHistory(numExpectedRecords);
+        helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;
-        helper.validateShareInFlag(numExpectedRecords2);
+        helper.validateShareInFlag(numExpectedRecords2, getBook().getTravelComponentGroupingId());
 
         int numExpectedRecords3 = 1;
-        helper.validateAssignmentOwnerIdChanges(numExpectedRecords3, assignOwnerId);
+        helper.validateAssignmentOwnerIdChanges(numExpectedRecords3, assignOwnerId, getBook().getTravelComponentGroupingId());
 
         int numExpectedRecords4 = 4;
-        helper.validateFolioGuaranteeType(numExpectedRecords4);
+        helper.validateFolioGuaranteeType(numExpectedRecords4, getBook().getTravelComponentGroupingId());
     }
 
     public void captureOwnerId() {
