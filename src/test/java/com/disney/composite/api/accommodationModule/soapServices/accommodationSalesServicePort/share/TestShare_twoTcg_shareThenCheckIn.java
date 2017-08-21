@@ -70,6 +70,8 @@ public class TestShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         checkIn.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in the second reservation " + share.getFaultString(), share);
+        validateResponse();
+        validations();
 
         if (Environment.isSpecialEnvironment(environment)) {
             Share clone = (Share) share.clone();
@@ -82,8 +84,7 @@ public class TestShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(share, true), "Validating Response Comparison");
-            validateResponse();
-            validations();
+
         }
     }
 
