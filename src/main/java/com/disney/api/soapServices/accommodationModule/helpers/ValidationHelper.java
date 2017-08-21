@@ -1724,19 +1724,28 @@ public class ValidationHelper {
                 + "where a.tp_id = " + tpId + " "
                 + "and a.CMT_REQ_TYP_NM = '" + commentType + "'";
 
+        if (commentType.equals("NULL")) {
+            sql = sql.replace("and a.CMT_REQ_TYP_NM = '" + commentType + "'", "and a.CMT_REQ_TYP_NM is null");
+        }
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         TestReporter.assertTrue(rs.getRowCount() == numComments, "Verify that the number of comments [" + rs.getRowCount() + "] is that which is expected [" + numComments + "].");
+        boolean commentFound = false;
         do {
-            TestReporter.log("Testing comment ID [" + rs.getValue("RES_MGMT_REQ_ID") + "]");
-            TestReporter.softAssertEquals(rs.getValue("RES_MGMT_REQ_TYP_NM"), resMgmtType, "Verify that the res mgmt type [" + rs.getValue("RES_MGMT_REQ_TYP_NM") + "] is that which is expected [" + resMgmtType + "].");
-            TestReporter.softAssertEquals(rs.getValue("CMT_REQ_TYP_NM"), commentType, "Verify that the comment type [" + rs.getValue("CMT_REQ_TYP_NM") + "] is that which is expected [" + commentType + "].");
-            TestReporter.softAssertEquals(rs.getValue("RES_MGMT_PRFL_ID"), profile, "Verify that the profil ID [" + rs.getValue("RES_MGMT_PRFL_ID") + "] is that which is expected [" + profile + "].");
-            TestReporter.softAssertEquals(rs.getValue("RES_MGMT_REQ_TX"), commentsData.get(COMMENT_TEXT), "Verify that the comment text [" + rs.getValue("RES_MGMT_REQ_TX") + "] is that which is expected [" + commentsData.get(COMMENT_TEXT) + "].");
-            TestReporter.softAssertEquals(rs.getValue("CFDNTL_IN"), confidential, "Verify that the res mgmt type [" + rs.getValue("CFDNTL_IN") + "] is that which is expected [" + confidential + "].");
-            TestReporter.softAssertEquals(rs.getValue("GSR_IN"), gsr, "Verify that the res mgmt type [" + rs.getValue("GSR_IN") + "] is that which is expected [" + gsr + "].");
-            rs.moveNext();
-        } while (rs.hasNext());
+            if (rs.getValue("RES_MGMT_REQ_TX").equals(commentsData.get(COMMENT_TEXT))) {
+                TestReporter.log("Testing comment ID [" + rs.getValue("RES_MGMT_REQ_ID") + "]");
+                TestReporter.softAssertEquals(rs.getValue("RES_MGMT_REQ_TYP_NM"), resMgmtType, "Verify that the res mgmt type [" + rs.getValue("RES_MGMT_REQ_TYP_NM") + "] is that which is expected [" + resMgmtType + "].");
+                TestReporter.softAssertEquals(rs.getValue("CMT_REQ_TYP_NM"), commentType, "Verify that the comment type [" + rs.getValue("CMT_REQ_TYP_NM") + "] is that which is expected [" + commentType + "].");
+                TestReporter.softAssertEquals(rs.getValue("RES_MGMT_PRFL_ID"), profile, "Verify that the profil ID [" + rs.getValue("RES_MGMT_PRFL_ID") + "] is that which is expected [" + profile + "].");
+                TestReporter.softAssertEquals(rs.getValue("RES_MGMT_REQ_TX"), commentsData.get(COMMENT_TEXT), "Verify that the comment text [" + rs.getValue("RES_MGMT_REQ_TX") + "] is that which is expected [" + commentsData.get(COMMENT_TEXT) + "].");
+                TestReporter.softAssertEquals(rs.getValue("CFDNTL_IN"), confidential, "Verify that the res mgmt type [" + rs.getValue("CFDNTL_IN") + "] is that which is expected [" + confidential + "].");
+                TestReporter.softAssertEquals(rs.getValue("GSR_IN"), gsr, "Verify that the res mgmt type [" + rs.getValue("GSR_IN") + "] is that which is expected [" + gsr + "].");
+                commentFound = true;
+            } else {
+                rs.moveNext();
+            }
+        } while (rs.hasNext() && !commentFound);
+        TestReporter.softAssertTrue(commentFound, "Verify that the comment was found.");
         TestReporter.assertAll();
     }
 

@@ -978,7 +978,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
                     getBook().setRoomDetails_RoomReservationDetail_Comments(BaseSoapCommands.REMOVE_NODE.toString(),
                             getCommentsData().get(COMMENT_TEXT),
-                            "true",
+                            "false",
                             getCommentsData().get(COMMENT_FROM),
                             "CREUN",
                             getCommentsData().get(COMMENT_TO));

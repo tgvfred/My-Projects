@@ -78,7 +78,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyROToAddRoomDetailsRoomResD
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
-        validations.validateComments(getBook().getTravelPlanId(), getCommentsData(), "Internal", "N", "N", 1, "TravelPlanSegmentComment", "NULL");
+        validations.validateComments(getBook().getTravelPlanId(), getCommentsData(), "NULL", "N", "N", 2, "TravelComponentComment", "NULL");
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
