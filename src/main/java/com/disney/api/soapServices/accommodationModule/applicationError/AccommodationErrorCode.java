@@ -111,15 +111,18 @@ public class AccommodationErrorCode {
             " Required parameters are missing ");
     public static final ApplicationErrorCode EXT_REF_SRC_REQ = new ApplicationErrorCode(MOD_NAME, 7090,
             " External Reference Source or Code required ");
+    public static final ApplicationErrorCode CANNOT_CALC_CANCEL_FEE = new ApplicationErrorCode(MOD_NAME, 7080,
+            " Cannot calculate Cancel fee ");
 
     public static final ApplicationErrorCode ACCOMMODATION_COMPONENT_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 9083,
             " Accommodation Component not found ");
     public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
             " No Accommodation Component found. ");
+    public static final ApplicationErrorCode TRVL_PLAN_SGMT_CANNOT_BE_NULL = new ApplicationErrorCode(MOD_NAME, 7008,
+            " Travel Plan Segment Not Found");
 
+    private static final String APPLICATION = "LILO System";
 
-private static final String APPLICATION = "LILO System";
-
-public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode( APPLICATION, 1001,
-		"Unexpected Error occurred");
+    public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode(APPLICATION, 1001,
+            "Unexpected Error occurred");
 }
