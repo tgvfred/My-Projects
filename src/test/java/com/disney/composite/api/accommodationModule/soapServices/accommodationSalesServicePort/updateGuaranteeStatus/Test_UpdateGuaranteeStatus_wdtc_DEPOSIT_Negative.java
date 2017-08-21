@@ -31,7 +31,7 @@ public class Test_UpdateGuaranteeStatus_wdtc_DEPOSIT_Negative extends Accommodat
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_wdtc_DEPOSIT_Negative() {
 
-        String faultString = " Guarantee status can not be changed : guarantee status can not be changed";
+        String faultString = " Guarantee status can not be changed  : guarantee status can not be changed";
 
         setDaysOut(0);
         setNights(1);

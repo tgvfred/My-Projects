@@ -31,7 +31,7 @@ public class Test_UpdateGuaranteeStatus_wdtc_CREDIT_CARD_Negative extends Accomm
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_wdtc_CREDIT_CARD_Negative() {
 
-        String faultString = " Guarantee status can not be changed : guarantee status can not be changed";
+        String faultString = " Guarantee status can not be changed  : guarantee status can not be changed";
 
         setDaysOut(0);
         setNights(1);
