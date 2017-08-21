@@ -32,10 +32,10 @@ public class TestShare_twoTcg_nullRoomNumber extends AccommodationBaseTest {
         // to invoke lower levels of reporting
         Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
-        daysOut.set(0);
-        nights.set(1);
-        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
-        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+        setDaysOut(0);
+        setArrivalDate(getDaysOut());
+        setNights(2);
+        setDepartureDate(getNights());
         setValues();
         bookReservation();
 
@@ -43,7 +43,10 @@ public class TestShare_twoTcg_nullRoomNumber extends AccommodationBaseTest {
         firstTC = getBook().getTravelComponentId();
         firstTPS = getBook().getTravelPlanSegmentId();
         captureFirstOwnerId();
-
+        setDaysOut(1);
+        setArrivalDate(getDaysOut());
+        setNights(2);
+        setDepartureDate(getNights());
         bookReservation();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 

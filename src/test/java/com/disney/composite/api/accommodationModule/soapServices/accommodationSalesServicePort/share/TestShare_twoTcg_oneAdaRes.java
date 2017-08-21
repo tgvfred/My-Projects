@@ -52,6 +52,9 @@ public class TestShare_twoTcg_oneAdaRes extends AccommodationBaseTest {
     public void Test_Share_twoTcg() {
         captureSecondOwnerId();
 
+        // verify the ADA tag is true
+        TestReporter.softAssertEquals(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/specialNeedsRequested"), "true", "Verify that the ADA tag is true in the response [" + getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/specialNeedsRequested") + "].");
+
         // verify that the owner id's for the first and second tcg do not match.
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
 

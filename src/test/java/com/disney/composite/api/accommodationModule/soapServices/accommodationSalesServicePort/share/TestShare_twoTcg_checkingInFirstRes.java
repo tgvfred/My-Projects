@@ -36,10 +36,10 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
         // to invoke lower levels of reporting
         Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
-        daysOut.set(0);
-        nights.set(1);
-        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
-        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+        setDaysOut(0);
+        setArrivalDate(getDaysOut());
+        setNights(2);
+        setDepartureDate(getNights());
         setValues();
         bookReservation();
         book = getBook();
@@ -48,7 +48,9 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
         firstTPS = getBook().getTravelPlanSegmentId();
         guestId = getBook().getGuestId();
         captureFirstOwnerId();
-
+        setDaysOut(1);
+        setArrivalDate(getDaysOut());
+        setNights(2);
         bookReservation();
 
     }
