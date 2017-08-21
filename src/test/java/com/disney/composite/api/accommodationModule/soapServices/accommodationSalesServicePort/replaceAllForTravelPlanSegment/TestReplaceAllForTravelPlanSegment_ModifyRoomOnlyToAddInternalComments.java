@@ -38,7 +38,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddInternalComme
         extRefNum = getExternalRefNumber();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddInternalComments() {
         setAddInternalComments(true);
         setSendRequest(false);
@@ -58,6 +58,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddInternalComme
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
+        validations.verifyModificationIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
 
         // Validate Folio
