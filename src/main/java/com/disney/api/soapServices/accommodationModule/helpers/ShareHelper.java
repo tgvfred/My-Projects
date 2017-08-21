@@ -137,7 +137,7 @@ public class ShareHelper {
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords4, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords4 + "].");
 
         do {
-            TestReporter.assertEquals(rs.getValue("GUAR_TYP_NM"), "Group_Guaranteed", "Verify the guarantee type name [" + rs.getValue("GUAR_TYP_NM") + "] is that which is expected in the DB [Group_Guaranteed]");
+            TestReporter.assertEquals(rs.getValue("GUAR_TYP_NM"), "GROUP_GUARANTEED", "Verify the guarantee type name [" + rs.getValue("GUAR_TYP_NM") + "] is that which is expected in the DB [GROUP_GUARANTEED]");
             rs.moveNext();
             TestReporter.assertAll();
         } while (rs.hasNext());
