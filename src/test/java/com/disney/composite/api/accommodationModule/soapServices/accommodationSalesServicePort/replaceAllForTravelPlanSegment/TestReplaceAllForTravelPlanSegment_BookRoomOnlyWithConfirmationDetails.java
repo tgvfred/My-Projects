@@ -79,7 +79,8 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithConfirmationDeta
         // validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
 
         // Validate TPS confirmation
-        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Email", tpPtyId, "Y", "N", getHouseHold().primaryGuest().getFirstName() + " " + getHouseHold().primaryGuest().getLastName());
+        String contactName = getBook().getRequestNodeValueByXPath("//request/contactName");
+        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Print", tpPtyId, "Y", "N", contactName);
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {

@@ -33,7 +33,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends A
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnly() {
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets() {
         bookReservation();
         tpPtyId = getBook().getGuestId();
         String sql = "select b.TXN_PTY_EXTNL_REF_VAL "
@@ -87,7 +87,6 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyAddTickets extends A
         validations.validateModificationBackend(3, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
-        validations.verifyModificationIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
         String admissionComponentId = validations.validateAdmissionComponentAdded(getBook().getTravelComponentGroupingId());
         String ticketComponentPrice = validations.validateAdmissionComponentDetails(admissionComponentId, getTicketsHelper().getCode());
