@@ -176,7 +176,7 @@ public class ValidationHelper {
 
         Map<String, String> tcgs = new HashMap<>();
         tcgs.putAll(mTcgs);
-        if (isDiningAddedOn() != null && isDiningAddedOn() == true) {
+        if (isValid(isDiningAddedOn()) && isDiningAddedOn()) {
             String sql = "select b.tc_grp_nb "
                     + "from res_mgmt.tps a, res_mgmt.tc_grp b "
                     + "where a.tp_id = " + tpId + " "
@@ -184,7 +184,7 @@ public class ValidationHelper {
                     + "and b.tc_grp_typ_nm = 'ADD_ON_PACKAGE'";
             rs = new Recordset(db.getResultSet(sql));
             tcgs.put(rs.getValue("TC_GRP_NB", 1), rs.getValue("TC_GRP_NB", 1));
-        } else if (isBundleAdded() == true) {
+        } else if (isValid(isBundleAdded()) && isBundleAdded()) {
             String sql = "select b.tc_grp_nb "
                     + "from res_mgmt.tps a, res_mgmt.tc_grp b "
                     + "where a.tp_id = " + tpId + " "
@@ -194,6 +194,55 @@ public class ValidationHelper {
             tcgs.put(rs.getValue("TC_GRP_NB", 1), rs.getValue("TC_GRP_NB", 1));
         }
         rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getReservationInfoByTpId(tpId)));
+        // rs.print();
+
+        TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            TestReporter.log("Verify Row: " + String.valueOf(i));
+            TestReporter.softAssertEquals(rs.getValue("TP_ID", i), tpId, "Verify that the TP ID [" + rs.getValue("TP_ID", i) + "] is that which is expected [" + tpId + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_ID", i), tpsId, "Verify that the TPS ID [" + rs.getValue("TPS_ID", i) + "] is that which is expected [" + tpsId + "].");
+            TestReporter.softAssertTrue(tcgs.containsKey(rs.getValue("TC_GRP_NB", i)), "Verify that the TCG ID [" + rs.getValue("TC_GRP_NB", i) + "] is included in the TCGs which are expected [" + tcgs + "].");
+            TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM", i), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM", i) + "] is that which is expected [" + travelStatusName + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT", i).split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT", i).split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT", i).split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT", i).split(" ")[0] + "] is that which is expected [" + departuredate + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
+        }
+        TestReporter.assertAll();
+    }
+
+    public void validateModificationBackendMultiAccomm(int numRecords, String travelStatusName, String securityValue, String arrivalDate, String departuredate,
+            String extRefType, String extRefValue, String tpId, String tpsId, Map<String, String> mTcgs) {
+        TestReporter.logStep("Validated reservation backend data after modification");
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = null;
+
+        Map<String, String> tcgs = new HashMap<>();
+        tcgs.putAll(mTcgs);
+        if (isValid(isDiningAddedOn()) && isDiningAddedOn()) {
+            String sql = "select b.tc_grp_nb "
+                    + "from res_mgmt.tps a, res_mgmt.tc_grp b "
+                    + "where a.tp_id = " + tpId + " "
+                    + "and a.tps_id = b.tps_id "
+                    + "and b.tc_grp_typ_nm = 'ADD_ON_PACKAGE'";
+            rs = new Recordset(db.getResultSet(sql));
+            tcgs.put(rs.getValue("TC_GRP_NB", 1), rs.getValue("TC_GRP_NB", 1));
+        } else if (isValid(isBundleAdded()) && isBundleAdded()) {
+            String sql = "select b.tc_grp_nb "
+                    + "from res_mgmt.tps a, res_mgmt.tc_grp b "
+                    + "where a.tp_id = " + tpId + " "
+                    + "and a.tps_id = b.tps_id "
+                    + "and b.tc_grp_typ_nm = 'PACKAGE'";
+            rs = new Recordset(db.getResultSet(sql));
+            tcgs.put(rs.getValue("TC_GRP_NB", 1), rs.getValue("TC_GRP_NB", 1));
+        }
+        String sql = "select * "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "join res_mgmt.TPS_EXTNL_REF d on a.tps_id = d.tps_id "
+                + "where a.tp_id = '" + tpId + "' ";
+        rs = new Recordset(db.getResultSet(sql));
         // rs.print();
 
         TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
@@ -1255,7 +1304,7 @@ public class ValidationHelper {
         sql = sql.replace("b.*", "c.*");
         rs = new Recordset(db.getResultSet(sql));
         TestReporter.softAssertEquals(rs.getValue("DEST_NM"), "WDW", "Verify that the sales order destination name [" + rs.getValue("DEST_NM") + "] is that which is expected [WDW].");
-        TestReporter.softAssertEquals(rs.getValue("SLS_ORD_STS_NM"), status, "Verify that the sales order status [" + rs.getValue("SLS_ORD_ARVL_DT") + "] is that which is expected [" + status + "].");
+        TestReporter.softAssertEquals(rs.getValue("SLS_ORD_STS_NM"), status, "Verify that the sales order status [" + rs.getValue("SLS_ORD_STS_NM") + "] is that which is expected [" + status + "].");
         TestReporter.softAssertEquals(rs.getValue("SLS_ORD_ARVL_DT").split(" ")[0], arrivalDate, "Verify that the sales order start date [" + rs.getValue("SLS_ORD_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
         TestReporter.softAssertEquals(rs.getValue("SLS_ORD_DPRT_DT").split(" ")[0], departureDate, "Verify that the sales order end date [" + rs.getValue("SLS_ORD_DPRT_DT").split(" ")[0] + "] is that which is expected [" + departureDate + "].");
 
@@ -1278,6 +1327,81 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("SLS_ORD_ITEM_STRT_DTS").split(" ")[0], arrivalDate, "Verify that the sales order item start date [" + rs.getValue("SLS_ORD_ITEM_STRT_DTS").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
             TestReporter.softAssertEquals(rs.getValue("SLS_ORD_ITEM_END_DTS").split(" ")[0], departureDate, "Verify that the sales order item end date [" + rs.getValue("SLS_ORD_ITEM_END_DTS").split(" ")[0] + "] is that which is expected [" + departureDate + "].");
             TestReporter.softAssertEquals(rs.getValue("SLS_ORD_ITEM_STS_NM"), status, "Verify that the sales order item status [" + rs.getValue("SLS_ORD_ITEM_STS_NM") + "] is that which is expected [" + status + "].");
+            TestReporter.softAssertEquals(rs.getValue("FAC_ID"), facilityId, "Verify that the sales order item facility ID [" + rs.getValue("FAC_ID") + "] is that which is expected [" + facilityId + "].");
+            TestReporter.softAssertEquals(rs.getValue("GRP_CD"), groupCode, "Verify that the sales order item group code [" + rs.getValue("GRP_CD") + "] is that which is expected [" + groupCode + "].");
+            TestReporter.softAssertEquals(rs.getValue("SPCL_NEED_REQ_IN"), ada, "Verify that the sales order item ADA flag [" + rs.getValue("SPCL_NEED_REQ_IN") + "] is that which is expected [" + ada + "].");
+            rs.moveNext();
+        } while (rs.hasNext());
+        TestReporter.softAssertEquals(accommFound, accommCount, "Verify that the number of accommodation items found [" + accommFound + "] is that which is expected [" + accommCount + "].");
+        TestReporter.softAssertEquals(packageFound, packageCount, "Verify that the number of package items found [" + packageFound + "] is that which is expected [" + packageCount + "].");
+
+        TestReporter.assertAll();
+    }
+
+    public void validateTPV3(String tpId, Map<String, String> status, String arrivalDate, String departureDate, String tpPartyId, Guest guest, int accommCount, int packageCount, String ada, String groupCode, String facilityId) {
+        TestReporter.logStep("Validating TPV3 record creation");
+        String sql = "select a.* "
+                + "from sales_tp.tp a "
+                + "join sales_tp.tp_pty b on a.tp_id = b.tp_id "
+                + "join sales_tp.sls_ord c on b.tp_id = c.tp_id "
+                + "where a.tp_id = " + tpId;
+        Database db = new OracleDatabase(getEnvironment(), Database.SALESTP);
+        Recordset rs = null;
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            rs = new Recordset(db.getResultSet(sql));
+            if (rs.getRowCount() > 0) {
+                success = true;
+            }
+            tries++;
+        } while (tries < maxTries && !success);
+
+        TestReporter.log("Validating TP table");
+        TestReporter.softAssertEquals(rs.getValue("MKTG_TP_AGE_GRP_NM"), "FAMILY_BOTH", "Verify that the market TP age group name [" + rs.getValue("MKTG_TP_AGE_GRP_NM") + "] is that which is expected [FAMILY_BOTH].");
+        TestReporter.softAssertEquals(rs.getValue("TP_STRT_DT").split(" ")[0], arrivalDate, "Verify that the start date [" + rs.getValue("TP_STRT_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
+        TestReporter.softAssertEquals(rs.getValue("TP_END_DT").split(" ")[0], departureDate, "Verify that the end date [" + rs.getValue("TP_END_DT").split(" ")[0] + "] is that which is expected [" + departureDate + "].");
+
+        TestReporter.log("Validating TP_PTY table");
+        sql = sql.replace("a.*", "b.*");
+        rs = new Recordset(db.getResultSet(sql));
+        TestReporter.softAssertEquals(rs.getValue("AGE_TYP_NM"), "Adult", "Verify that the guest age type [" + rs.getValue("AGE_TYP_NM") + "] is that which is expected [Adult].");
+        TestReporter.softAssertEquals(rs.getValue("RL_NM"), "Guest", "Verify that the guest role [" + rs.getValue("RL_NM") + "] is that which is expected [Guest].");
+        TestReporter.softAssertEquals(rs.getValue("TXN_GST_ID"), tpPartyId, "Verify that the guest ID [" + rs.getValue("TXN_GST_ID") + "] is that which is expected [" + tpPartyId + "].");
+        TestReporter.softAssertEquals(rs.getValue("PRMY_GST_IN"), "Y", "Verify that the primary guest indicator [" + rs.getValue("PRMY_GST_IN") + "] is that which is expected [Y].");
+        TestReporter.softAssertEquals(rs.getValue("AGE_NB"), guest.getAge(), "Verify that the guest age [" + rs.getValue("AGE_NB") + "] is that which is expected [" + guest.getAge() + "].");
+        TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM"), guest.getLastName(), "Verify that the guest last name [" + rs.getValue("TP_STRT_DT") + "] is that which is expected [" + guest.getLastName() + "].");
+        TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM"), guest.getFirstName(), "Verify that the guest first name [" + rs.getValue("TP_STRT_DT") + "] is that which is expected [" + guest.getFirstName() + "].");
+
+        TestReporter.log("Validating SLS_ORD table");
+        sql = sql.replace("b.*", "c.*");
+        rs = new Recordset(db.getResultSet(sql));
+        TestReporter.softAssertEquals(rs.getValue("DEST_NM"), "WDW", "Verify that the sales order destination name [" + rs.getValue("DEST_NM") + "] is that which is expected [WDW].");
+        TestReporter.softAssertTrue(status.containsKey(rs.getValue("SLS_ORD_STS_NM")), "Verify that the sales order status [" + rs.getValue("SLS_ORD_STS_NM") + "] is contained in the map of expected value [" + status + "].");
+        TestReporter.softAssertEquals(rs.getValue("SLS_ORD_ARVL_DT").split(" ")[0], arrivalDate, "Verify that the sales order start date [" + rs.getValue("SLS_ORD_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
+        TestReporter.softAssertEquals(rs.getValue("SLS_ORD_DPRT_DT").split(" ")[0], departureDate, "Verify that the sales order end date [" + rs.getValue("SLS_ORD_DPRT_DT").split(" ")[0] + "] is that which is expected [" + departureDate + "].");
+
+        TestReporter.log("Validating SLS_ORD_ITEM table");
+        sql = "select d.* "
+                + "from sales_tp.tp a "
+                + "join sales_tp.sls_ord c on a.tp_id = c.tp_id "
+                + "join sales_tp.sls_ord_item d on c.sls_ord = d.sls_ord "
+                + "where a.tp_id = " + tpId;
+        rs = new Recordset(db.getResultSet(sql));
+        TestReporter.softAssertEquals(rs.getRowCount(), accommCount + packageCount, "Verify that the number of sales order items [" + rs.getRowCount() + "[ is that which is expected [" + accommCount + packageCount + "].");
+        int accommFound = 0;
+        int packageFound = 0;
+        do {
+            if (rs.getValue("SLS_ORD_ITEM_TYP_NM").equals("PACKAGE")) {
+                packageFound++;
+            } else if (rs.getValue("SLS_ORD_ITEM_TYP_NM").equals("ACCOMMODATION")) {
+                accommFound++;
+            }
+            TestReporter.softAssertEquals(rs.getValue("SLS_ORD_ITEM_STRT_DTS").split(" ")[0], arrivalDate, "Verify that the sales order item start date [" + rs.getValue("SLS_ORD_ITEM_STRT_DTS").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
+            TestReporter.softAssertEquals(rs.getValue("SLS_ORD_ITEM_END_DTS").split(" ")[0], departureDate, "Verify that the sales order item end date [" + rs.getValue("SLS_ORD_ITEM_END_DTS").split(" ")[0] + "] is that which is expected [" + departureDate + "].");
+            TestReporter.softAssertTrue(status.containsKey(rs.getValue("SLS_ORD_ITEM_STS_NM")), "Verify that the sales order status [" + rs.getValue("SLS_ORD_ITEM_STS_NM") + "] is contained in the map of expected value [" + status + "].");
             TestReporter.softAssertEquals(rs.getValue("FAC_ID"), facilityId, "Verify that the sales order item facility ID [" + rs.getValue("FAC_ID") + "] is that which is expected [" + facilityId + "].");
             TestReporter.softAssertEquals(rs.getValue("GRP_CD"), groupCode, "Verify that the sales order item group code [" + rs.getValue("GRP_CD") + "] is that which is expected [" + groupCode + "].");
             TestReporter.softAssertEquals(rs.getValue("SPCL_NEED_REQ_IN"), ada, "Verify that the sales order item ADA flag [" + rs.getValue("SPCL_NEED_REQ_IN") + "] is that which is expected [" + ada + "].");

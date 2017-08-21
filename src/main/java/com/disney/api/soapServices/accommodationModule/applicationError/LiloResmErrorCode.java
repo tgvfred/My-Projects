@@ -14,6 +14,8 @@ public class LiloResmErrorCode {
 
     public static final ApplicationErrorCode EXTERNAL_REFERENCE_REQUIRED = new ApplicationErrorCode(
             APP_NAME, 7088, "External Reference is required");
+    public static final ApplicationErrorCode CANNOT_MODIFY_CHECKEDIN_ACCOMMODATION = new ApplicationErrorCode(
+            APP_NAME, 7187, "Checked In Accommodation cannot be modified");
     public static final ApplicationErrorCode INVALID_REQUEST = new ApplicationErrorCode(
             APP_NAME, 9042, "INVALID REQUEST");
     public static final ApplicationErrorCode SEARCH_CRITERIA_INVALID = new ApplicationErrorCode(APP_NAME, 7124,
