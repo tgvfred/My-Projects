@@ -4,29 +4,53 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForMassModify;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassModifyTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.GetStagedRecordsForMassModifyHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Randomness;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestGetStagedRecordsForMassModify_roomOnly_Wdtc extends AccommodationBaseTest {
+    private String assignOwner = null;
+    private ReplaceAllForTravelPlanSegment book;
 
     @Test(groups = { "api", "regression", "getStagedRecordsForMassModify", "accommodation" })
     public void testGetStagedRecordsForMassModify_roomOnly_Wdtc() {
+        String sql = "select a.TRVL_AGCY_PTY_ID, a.TRVL_AGT_PTY_ID, a.TPS_SECUR_VL, a.TPS_GUAR_IN, a.TPS_ARVL_DT, a.TPS_DPRT_DT, c.TC_STRT_DTS, c.TC_END_DTS, c.ASGN_OWN_ID "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "where a.tps_id = " + getBook().getTravelPlanSegmentId();
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        do {
+            if (!rs.getValue("ASGN_OWN_ID").equals("NULL")) {
+                assignOwner = rs.getValue("ASGN_OWN_ID");
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
 
         String processName = "MASS_MODIFY";
         String tcId = getBook().getTravelComponentId();
         String tpsId = getBook().getTravelPlanSegmentId();
         String tcgId = getBook().getTravelComponentGroupingId();
+        String guestId = getBook().getGuestId();
+        book = getBook();
+
+        setSendRequest(false);
+        setIsWdtcBooking(true);
+        bookReservation();
+
         String startDate = getArrivalDate();
         String endDate = getDepartureDate();
         String packageCode = getPackageCode();
         String resortCode = getResortCode();
         String roomType = getRoomTypeCode();
-        String blockCode = Randomness.randomNumber(5);
+        String blockCode = "01825";
         String firstName = getHouseHold().primaryGuest().getFirstName();
         String lastName = getHouseHold().primaryGuest().getLastName();
         String partyId = "0";
@@ -35,7 +59,6 @@ public class TestGetStagedRecordsForMassModify_roomOnly_Wdtc extends Accommodati
         String preferredLanguage = "eng";
         String inventoryReasonCode = "RIN8";
         String inventoryContactName = "Inventory Contact";
-        String guestId = getBook().getGuestId();
 
         StageMassModifyTransactional stage = new StageMassModifyTransactional(environment, "MainProcLst");
         stage.setProcessName(processName);
@@ -63,12 +86,12 @@ public class TestGetStagedRecordsForMassModify_roomOnly_Wdtc extends Accommodati
 
         TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Error sending request", stage);
 
-        String sql = "select a.GRP_RES_PROC_RUN_ID " +
+        sql = "select a.GRP_RES_PROC_RUN_ID " +
                 " from res_mgmt.GRP_RES_PROC_RUN a " +
                 " where a. GRP_RES_PROC_ID = " + stage.getResponseProcessId() + " ";
 
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
+        db = new OracleDatabase(environment, Database.DREAMS);
+        rs = new Recordset(db.getResultSet(sql));
 
         TestReporter.logStep("Retrieve staged record for Mass Modify");
         GetStagedRecordsForMassModify mod = new GetStagedRecordsForMassModify(environment);
@@ -92,5 +115,13 @@ public class TestGetStagedRecordsForMassModify_roomOnly_Wdtc extends Accommodati
         TestReporter.softAssertEquals(mod.getGuestId(), guestId, "Verify that the retrieved Guest ID [" + mod.getGuestId() + "] matches the expected [" + guestId + "]");
         TestReporter.assertAll();
 
+        setBook(book);
+        validations();
+    }
+
+    private void validations() {
+        GetStagedRecordsForMassModifyHelper helper = new GetStagedRecordsForMassModifyHelper(Environment.getBaseEnvironmentName(getEnvironment()), this);
+        helper.validateNumberOfTcs(1);
+        helper.validateReservationDetails("NULL", "NULL", "NULL", "N", getArrivalDate(), getDepartureDate(), assignOwner, false);
     }
 }

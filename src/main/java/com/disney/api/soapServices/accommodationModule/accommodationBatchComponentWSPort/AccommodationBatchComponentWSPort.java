@@ -11,5 +11,6 @@ public class AccommodationBatchComponentWSPort extends BaseSoapService {
 
     public AccommodationBatchComponentWSPort(String environment) {
         setEnvironmentServiceURL("AccommodationBatchComponentWSPort", environment);
+        setXmlRepo("xml/accommodationBatchComponentWSPort");
     }
 }

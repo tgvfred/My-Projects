@@ -1,6 +1,7 @@
 package com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.AccommodationBatchComponentWSPort;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 
 public class GetStagedRecordsForMassModify extends AccommodationBatchComponentWSPort {
@@ -44,7 +45,11 @@ public class GetStagedRecordsForMassModify extends AccommodationBatchComponentWS
     }
 
     public String getBlockCode() {
-        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/blockCode");
+        try {
+            return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/blockCode");
+        } catch (XPathNotFoundException e) {
+            return null;
+        }
     }
 
     public String getTcgId() {
