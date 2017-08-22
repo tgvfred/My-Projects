@@ -715,6 +715,9 @@ public class AccommodationBaseTest extends BaseRestTest {
             }
 
             if (getSendRequest() == null || getSendRequest() == true) {
+                if (isValid(isComo)) {
+                    getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+                }
                 getBook().sendRequest();
                 TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
                 tries++;

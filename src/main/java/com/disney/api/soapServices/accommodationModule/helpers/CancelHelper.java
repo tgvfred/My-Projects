@@ -23,7 +23,6 @@ import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.DB2Database;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.DVCSalesDreams;
-import com.disney.utils.dataFactory.guestFactory.DVCMember;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class CancelHelper {
