@@ -1,9 +1,9 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.AccommodationSalesComponentService;
 import com.disney.utils.XMLTools;
 
-public class AutoCancel extends AccommodationSalesServicePort {
+public class AutoCancel extends AccommodationSalesComponentService {
 
     public AutoCancel(String environment, String scenario) {
         super(environment);
