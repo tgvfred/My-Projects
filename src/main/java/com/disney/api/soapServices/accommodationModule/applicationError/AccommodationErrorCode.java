@@ -117,9 +117,19 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
             " No Accommodation Component found. ");
 
+    public static final ApplicationErrorCode GUARANTEE_STATUS_CANNOT_CHANGE = new ApplicationErrorCode(MOD_NAME, 7195,
+            " Guarantee status can not be changed ");
 
-private static final String APPLICATION = "LILO System";
+    private static final String APPLICATION = "LILO System";
 
-public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode( APPLICATION, 1001,
-		"Unexpected Error occurred");
+    public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode(APPLICATION, 1001,
+            "Unexpected Error occurred");
+    public static final ApplicationErrorCode ACCOMMODATION_INVALID_FOR_SHARE = new ApplicationErrorCode(MOD_NAME, 7130,
+            "Accommodation is invalid for Share");
+    public static final ApplicationErrorCode TRAVEL_STATUS_INVALID_FOR_SHARE = new ApplicationErrorCode(MOD_NAME, 7131,
+            "Travel Status is invalid for Share");
+    public static final ApplicationErrorCode CANNOT_CHANGE_PACKAGE = new ApplicationErrorCode(MOD_NAME, 7208,
+            "Cannot change Block/Resort/Package for an shared Accommodation.");
+
+    private static final String MODULE_NAME = "LILO System";
 }
