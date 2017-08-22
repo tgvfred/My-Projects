@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
@@ -26,8 +27,10 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
         setIsShared(true);
         bookReservation();
 
-        Share share = new Share(environment, "oneTcgOnly");
+        Share share = new Share(environment);
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+		share.setRoomNumber(BaseSoapCommands.REMOVE_NODE.toString());
+		share.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
         share.sendRequest();
         TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Validate billy this guy");
     }
