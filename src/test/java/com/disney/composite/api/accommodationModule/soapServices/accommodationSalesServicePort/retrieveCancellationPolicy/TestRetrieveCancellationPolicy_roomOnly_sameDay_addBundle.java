@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveCancellationPolicy;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveTravelPlanMediaCustomization;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -29,7 +28,7 @@ public class TestRetrieveCancellationPolicy_roomOnly_sameDay_addBundle extends A
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy" })
-    public void testRetrieveCancellationPolicy_roomOnly_sameDay_fullRequest() {
+    public void testRetrieveCancellationPolicy_roomOnly_sameDay_addBundle() {
 
         String cancelFee = "0.0";
 
@@ -81,12 +80,8 @@ public class TestRetrieveCancellationPolicy_roomOnly_sameDay_addBundle extends A
         TestReporter.assertFalse(retrieve.getcancelFee().equals(cancelFee), "Verify that cancel fee [" + retrieve.getcancelFee() + "] is NOT zero");
 
         // Verify that fee waived node is not included in the response xml
-        TestReporter.logStep("Verify that the fee waived node is not included in the response xml");
-        try {
-            retrieve.getFeeWaived();
-        } catch (XPathNotFoundException e) {
-            TestReporter.assertTrue(true, "The fee waived node is not found in the response xml.");
-        }
+        TestReporter.logStep("Verify that the fee waived node is true");
+        TestReporter.assertEquals(retrieve.getFeeWaived(), "true", "Verify that the Fee waived node [" + retrieve.getFeeWaived() + "] is true");
 
         // Verify that the policyText node is empty
         TestReporter.logStep("Verify that the policy text is empty");
