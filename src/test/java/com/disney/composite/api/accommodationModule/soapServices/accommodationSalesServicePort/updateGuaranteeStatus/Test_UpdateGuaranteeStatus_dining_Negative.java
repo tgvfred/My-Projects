@@ -29,11 +29,11 @@ public class Test_UpdateGuaranteeStatus_dining_Negative extends AccommodationBas
         String faultString = " Guarantee status can not be changed  : guarantee status can not be changed";
 
         ScheduledEventReservation dining = new ShowDiningReservation(getEnvironment().toLowerCase().replace("_cm", ""));
-        dining.setTravelPlanId("472322115628");
+        dining.setTravelPlanId(getBook().getTravelPlanId());
         dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);
-        update.setRequestTravelComponentGroupingId("472322234257");
+        update.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         update.setRequestguaranteedByEnum("CREDIT CARD");
         update.sendRequest();
 

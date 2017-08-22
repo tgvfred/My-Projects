@@ -20,10 +20,10 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_invalidTcg() {
 
-        String faultString = " No Accommodation Component found. : NO ACCOMMODATION FOUND FOR TCG NUMBER#472122156260";
+        String faultString = " No Accommodation Component found. : NO ACCOMMODATION FOUND FOR TCG NUMBER#4815162342";
 
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);
-        update.setRequestTravelComponentGroupingId("472122156260");
+        update.setRequestTravelComponentGroupingId("4815162342");
         update.setRequestguaranteedByEnum("CREDIT CARD");
         update.sendRequest();
 
