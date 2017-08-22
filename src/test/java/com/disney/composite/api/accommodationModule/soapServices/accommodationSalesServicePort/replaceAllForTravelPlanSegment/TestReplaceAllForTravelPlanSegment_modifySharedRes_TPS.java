@@ -17,7 +17,7 @@ import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestReplaceAllForTravelPlanSegment_modifySharedRes extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends AccommodationBaseTest {
     private String tpPtyId = null;
     private String tpId = null;
     private String tpsId = null;
@@ -65,7 +65,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes extends Accommod
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
-    public void testReplaceAllForTravelPlanSegment_modifySharedRes() {
+    public void testReplaceAllForTravelPlanSegment_modifySharedRes_TPS() {
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         // getBook().setTravelComponentGroupingId(tcgId);
