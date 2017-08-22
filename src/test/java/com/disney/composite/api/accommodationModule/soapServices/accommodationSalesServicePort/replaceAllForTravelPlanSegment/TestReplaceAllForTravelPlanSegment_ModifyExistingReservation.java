@@ -95,6 +95,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extend
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
         validations.validateResortAndRoomType(getBook().getTravelPlanId(), getFacilityId(), getRoomTypeCode());
+        validations.validateAreaPeriod(getBook().getTravelPlanId(), getArrivalDate(), getDepartureDate());
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {

@@ -2054,4 +2054,16 @@ public class ValidationHelper {
         TestReporter.assertAll();
 
     }
+
+    public void validateAreaPeriod(String travelPlanId, String arrivalDate, String departureDate) {
+        TestReporter.logStep("Validate area period");
+        String sql = "select * "
+                + "from res_mgmt.tp a "
+                + "where a.tp_id = " + travelPlanId;
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.softAssertEquals(rs.getValue("TP_STRT_DT").split(" ")[0], arrivalDate, "Verify that the area arrival date [" + rs.getValue("TP_STRT_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
+        TestReporter.softAssertEquals(rs.getValue("TP_END_DT").split(" ")[0], departureDate, "Verify that the area arrival date [" + rs.getValue("TP_END_DT").split(" ")[0] + "] is that which is expected [" + departureDate + "].");
+        TestReporter.assertAll();
+    }
 }
