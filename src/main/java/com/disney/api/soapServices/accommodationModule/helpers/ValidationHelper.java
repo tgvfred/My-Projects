@@ -1775,6 +1775,40 @@ public class ValidationHelper {
         TestReporter.assertAll();
     }
 
+    public void validateGathering(String travelPlanId, Map<String, String> gatheringData, boolean tpv3Association) {
+        if (!isValid(tpv3Association)) {
+            throw new AutomationException("The value for the TPV3 association flag cannot be null.");
+        }
+        TestReporter.logStep("Validate gathering information");
+
+        TestReporter.log("Validate gathering in Dreams DB");
+        String sql = "select * "
+                + "from res_mgmt.tp_gthr "
+                + "where tp_id = " + travelPlanId;
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that the TP ID [" + travelPlanId + "] is associate with a gathering in the Dreams DB");
+        TestReporter.softAssertEquals(rs.getValue("GTHR_CD"), gatheringData.get(GATHERING_ID), "Verify that the gathering code [" + rs.getValue("GTHR_CD") + "] is that which is expected [" + gatheringData.get(GATHERING_ID) + "].");
+        TestReporter.softAssertEquals(rs.getValue("GTHR_TYP_NM"), gatheringData.get(GATHERING_TYPE), "Verify that the gathering type [" + rs.getValue("GTHR_TYP_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_TYPE) + "].");
+        TestReporter.softAssertEquals(rs.getValue("GTHR_NM"), gatheringData.get(GATHERING_NAME), "Verify that the gathering name [" + rs.getValue("GTHR_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_NAME) + "].");
+
+        TestReporter.log("Validate gathering in Dreams DB");
+        sql = "select * "
+                + "from sales_tp.tp_gthr "
+                + "where tp_id = " + travelPlanId;
+        db = new OracleDatabase(getEnvironment(), Database.SALESTP);
+        rs = new Recordset(db.getResultSet(sql));
+        if (tpv3Association) {
+            TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that the TP ID [" + travelPlanId + "] is associate with a gathering in the SALESTP DB");
+            TestReporter.softAssertEquals(rs.getValue("GTHR_CD"), gatheringData.get(GATHERING_ID), "Verify that the gathering code [" + rs.getValue("GTHR_CD") + "] is that which is expected [" + gatheringData.get(GATHERING_ID) + "].");
+            TestReporter.softAssertEquals(rs.getValue("GTHR_TYP_NM"), gatheringData.get(GATHERING_TYPE), "Verify that the gathering type [" + rs.getValue("GTHR_TYP_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_TYPE) + "].");
+            TestReporter.softAssertEquals(rs.getValue("GTHR_NM"), gatheringData.get(GATHERING_NAME), "Verify that the gathering name [" + rs.getValue("GTHR_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_NAME) + "].");
+        } else {
+            TestReporter.assertTrue(rs.getRowCount() == 0, "Verify that the TP ID [" + travelPlanId + "] is not associated with a gathering in the SALESTP DB");
+        }
+        TestReporter.assertAll();
+    }
+
     public void validateVIP(String tpId, String vipLevel) {
         TestReporter.logStep("Validate the VIP level in Dreams and the VIP indicator in RIM");
         String sql = "select a.VIP_LVL_NM, d.VIP_IN "

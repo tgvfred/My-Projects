@@ -90,7 +90,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddExistingGathe
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
-        validations.validateGathering(getBook().getTravelPlanId(), getGatheringData());
+        validations.validateGathering(getBook().getTravelPlanId(), getGatheringData(), false);
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
