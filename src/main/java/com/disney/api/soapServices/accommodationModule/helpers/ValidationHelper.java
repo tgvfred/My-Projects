@@ -585,6 +585,23 @@ public class ValidationHelper {
         TestReporter.assertAll();
     }
 
+    public void verifyUpgradeIsFoundInResHistory(String tpId) {
+        TestReporter.logStep("Verify MOdification Is Found In Res History");
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+
+        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getReservationHistoryByTpId(tpId)));
+        // rs.print();
+        Boolean upgraded = false;
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            if (rs.getValue("RES_HIST_PROC_DS", i).equals("Upgrade")) {
+                upgraded = true;
+            }
+        }
+        TestReporter.softAssertTrue(upgraded,
+                "Verify that the reservation history shows a upgrade for TPS ID [" + tpId + "].");
+        TestReporter.assertAll();
+    }
+
     public void verifyBookingIsFoundInResHistory(String tpId) {
         TestReporter.logStep("Verify Booking Is Found In Res History");
         Database db = new OracleDatabase(environment, Database.DREAMS);
@@ -2099,5 +2116,15 @@ public class ValidationHelper {
         TestReporter.softAssertEquals(rs.getValue("TP_STRT_DT").split(" ")[0], arrivalDate, "Verify that the area arrival date [" + rs.getValue("TP_STRT_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
         TestReporter.softAssertEquals(rs.getValue("TP_END_DT").split(" ")[0], departureDate, "Verify that the area arrival date [" + rs.getValue("TP_END_DT").split(" ")[0] + "] is that which is expected [" + departureDate + "].");
         TestReporter.assertAll();
+    }
+
+    public void verifyTcStatusByTcg(String travelComponentGroupingId, String status, String tcType) {
+        String sql = "select * "
+                + "from res_mgmt.tc a "
+                + "where a.tc_grp_nb = " + travelComponentGroupingId + " "
+                + "and a.TC_TYP_NM = '" + tcType + "'";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), status, "Verify that the status [" + rs.getValue("TRVL_STS_NM") + "] for TC ID [" + rs.getValue("TC_ID") + "] is that which is expected [" + status + "].");
     }
 }
