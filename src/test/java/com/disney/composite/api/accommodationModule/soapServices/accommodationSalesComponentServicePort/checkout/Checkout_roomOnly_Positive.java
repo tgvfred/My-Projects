@@ -25,7 +25,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());

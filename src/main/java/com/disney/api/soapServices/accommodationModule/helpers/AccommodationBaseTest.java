@@ -100,7 +100,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     protected ThreadLocal<String> tpsId = new ThreadLocal<String>();
     protected ThreadLocal<String> tcgId = new ThreadLocal<String>();
     protected ThreadLocal<String> tcId = new ThreadLocal<String>();
-    protected String isComo = "";
+    protected ThreadLocal<String> isComo = new ThreadLocal<>();
     private ThreadLocal<Boolean> skipCancel = new ThreadLocal<Boolean>();
     private ThreadLocal<String> ageType = new ThreadLocal<String>();
     private ThreadLocal<String> age = new ThreadLocal<String>();
@@ -725,7 +725,8 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void beforeSuite(String environment) {
         skipCancel.set(false);
         BaseSoapService.isExactResponseRequired(false);
-        this.isComo = System.getenv("isComo") == null ? "false" : System.getenv("isComo");
+        isComo.set(new String());
+        this.isComo.set(System.getenv("isComo") == null ? "false" : System.getenv("isComo"));
         setEnvironment(environment);
         String dbEnv = "";
         if (getEnvironment().toLowerCase().contains("_cm")) {
@@ -1055,6 +1056,9 @@ public class AccommodationBaseTest extends BaseRestTest {
             }
 
             if (getSendRequest() == null || getSendRequest() == true) {
+                if (isValid(isComo.get()) && isComo.get().equals("false")) {
+                    getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+                }
                 getBook().sendRequest();
                 TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
                 tries++;
