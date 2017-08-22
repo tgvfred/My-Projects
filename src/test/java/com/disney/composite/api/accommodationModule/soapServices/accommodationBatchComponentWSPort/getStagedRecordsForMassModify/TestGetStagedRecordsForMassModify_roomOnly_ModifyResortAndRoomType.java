@@ -10,25 +10,25 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestGetStagedRecordsForMassModify_roomOnly_ModifyDates extends AccommodationBaseTest {
+public class TestGetStagedRecordsForMassModify_roomOnly_ModifyResortAndRoomType extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "getStagedRecordsForMassModify", "accommodation" })
-    public void testGetStagedRecordsForMassModify_roomOnly_ModifyDates() {
+    public void testGetStagedRecordsForMassModify_roomOnly_ModifyResortAndRoomType() {
 
         String processName = "MASS_MODIFY";
         String tcId = getBook().getTravelComponentId();
         String tpsId = getBook().getTravelPlanSegmentId();
         String tcgId = getBook().getTravelComponentGroupingId();
-        String startDate = getArrivalDate();
-        String endDate = getDepartureDate();
+        String resortCode = getResortCode();
+        String roomType = getRoomTypeCode();
 
         StageMassModifyTransactional stage = new StageMassModifyTransactional(environment, "MainProcLst");
         stage.setProcessName(processName);
         stage.setMassModifyRoomDetailTcId(tcId);
         stage.setMassModifyRoomDetailTpsId(tpsId);
         stage.setMassModifyRoomDetailTcgID(tcgId);
-        stage.setMassModifyRoomDetailPeriodStartDate(startDate);
-        stage.setMassModifyRoomDetailPeriodEndDates(endDate);
+        stage.setMassModifyRoomDetailResortCode(resortCode);
+        stage.setMassModifyRoomDetailRoomType(roomType);
         stage.sendRequest();
 
         TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Error sending request", stage);
@@ -48,8 +48,9 @@ public class TestGetStagedRecordsForMassModify_roomOnly_ModifyDates extends Acco
         TestReporter.logAPI(!mod.getResponseStatusCode().equals("200"), "Error sending request", mod);
 
         TestReporter.softAssertEquals(mod.getTcgId(), tcgId, "Verify that the retrieved TCG ID [" + mod.getTcgId() + "] matches the expected [" + tcgId + "]");
-        TestReporter.softAssertEquals(mod.getStartDate(), startDate + "T00:00:00", "Verify that the retrieved start date [" + mod.getStartDate() + "] matches the expected [" + startDate + "T00:00:00" + "]");
-        TestReporter.softAssertEquals(mod.getEndDate(), endDate + "T00:00:00", "Verify that the retrieved end date [" + mod.getEndDate() + "] matches the expected [" + endDate + "T00:00:00" + "]");
+        TestReporter.softAssertEquals(mod.getResortCode(), resortCode, "Verify that the retrieved resort code [" + mod.getResortCode() + "] matches the expected [" + resortCode + "]");
+        TestReporter.softAssertEquals(mod.getRoomType(), roomType, "Verify that the retrieved room type [" + mod.getRoomType() + "] matches the expected [" + roomType + "]");
         TestReporter.assertAll();
+
     }
 }

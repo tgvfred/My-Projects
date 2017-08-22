@@ -5,56 +5,28 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForMassModify;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassModifyTransactional;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestGetStagedRecordsForMassModify_roomOnlyMultipleGuests extends AccommodationBaseTest {
+public class TestGetStagedRecordsForMassModify_roomOnly_ModifyPrimaryGuest extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "getStagedRecordsForMassModify", "accommodation" })
-    public void testGetStagedRecordsForMassModify_roomOnlyMultipleGuests() {
+    public void testGetStagedRecordsForMassModify_roomOnly_ModifyPrimaryGuest() {
 
-        String processName = "MASS_MODIFY";
         String tcId = getBook().getTravelComponentId();
         String tpsId = getBook().getTravelPlanSegmentId();
         String tcgId = getBook().getTravelComponentGroupingId();
         String firstName = getHouseHold().primaryGuest().getFirstName();
         String lastName = getHouseHold().primaryGuest().getLastName();
-        String confirmationIndicator = "true";
-        String adultTicket = "true";
-        String hardTicketedEvent = "false";
-        String baseAdmissionProductId = "2640488";
-        String componentId = "0";
-        String dayCount = "2";
-        String guestReferenceAge = "2" + Randomness.randomNumber(1);
-        String ageType = "ADULT";
-        String ticketDetailGuestFirstName = getHouseHold().primaryGuest().getFirstName();
-        String ticketDetailGuestLastName = getHouseHold().primaryGuest().getLastName();
-        String partofPackage = "false";
 
         StageMassModifyTransactional stage = new StageMassModifyTransactional(environment, "MainProcLst");
-        stage.setProcessName(processName);
         stage.setMassModifyRoomDetailTcId(tcId);
         stage.setMassModifyRoomDetailTpsId(tpsId);
         stage.setMassModifyRoomDetailTcgID(tcgId);
         stage.setMassModifyRoomDetailPrimaryGuestDetailFirstName(firstName);
         stage.setMassModifyRoomDetailPrimaryGuestDetailLastName(lastName);
-        stage.setMassModifyRoomDetailConfirmationIndicator(confirmationIndicator);
-        stage.setAdultTicket(adultTicket);
-        stage.setHardTicketedEvent(hardTicketedEvent);
-        stage.setBaseAdmissionProductId(baseAdmissionProductId);
-        stage.setCode(baseAdmissionProductId);
-        stage.setComponentId(componentId);
-        stage.setDayCount(dayCount);
-        stage.setAge(guestReferenceAge);
-        stage.setTicketGuestFirstName(ticketDetailGuestFirstName);
-        stage.setTicketGuestLastName(ticketDetailGuestLastName);
-        stage.setComponentId(componentId);
-        stage.setDayCount(dayCount);
-        stage.setAgeType(ageType);
-        stage.setPartOfPackage(partofPackage);
         stage.sendRequest();
 
         TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Error sending request", stage);
@@ -73,10 +45,8 @@ public class TestGetStagedRecordsForMassModify_roomOnlyMultipleGuests extends Ac
 
         TestReporter.logAPI(!mod.getResponseStatusCode().equals("200"), "Error sending request", mod);
 
-        TestReporter.softAssertEquals(mod.getFirstName(), firstName, "Verify that the retrieved first name [" + mod.getFirstName() + "] matches the expected [" + firstName + "]");
-        TestReporter.softAssertEquals(mod.getLastName(), lastName, "Verify that the retrieved last name [" + mod.getLastName() + "] matches the expected [" + lastName + "]");
-        TestReporter.softAssertEquals(mod.getTicketGuestFirstName(), ticketDetailGuestFirstName, "Verify that the retrieved ticket guest first name [" + mod.getTicketGuestFirstName() + "] matches the expected [" + ticketDetailGuestFirstName + "]");
-        TestReporter.softAssertEquals(mod.getTicketGuestLastName(), ticketDetailGuestLastName, "Verify that the retrieved ticket guest last name [" + mod.getTicketGuestLastName() + "] matches the expected [" + ticketDetailGuestLastName + "]");
+        TestReporter.softAssertEquals(mod.getFirstName(), firstName, "Verify that the retrieved firstName [" + mod.getFirstName() + "] matches the expected [" + firstName + "]");
+        TestReporter.softAssertEquals(mod.getLastName(), lastName, "Verify that the retrieved lastName [" + mod.getLastName() + "] matches the expected [" + lastName + "]");
         TestReporter.assertAll();
 
     }

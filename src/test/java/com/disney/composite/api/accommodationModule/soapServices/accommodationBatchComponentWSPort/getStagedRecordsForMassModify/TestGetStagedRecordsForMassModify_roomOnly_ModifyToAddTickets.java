@@ -91,7 +91,6 @@ public class TestGetStagedRecordsForMassModify_roomOnly_ModifyToAddTickets exten
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        rs.print();
 
         TestReporter.logStep("Retrieve staged record for Mass Modify");
         GetStagedRecordsForMassModify mod = new GetStagedRecordsForMassModify(environment);
@@ -112,7 +111,6 @@ public class TestGetStagedRecordsForMassModify_roomOnly_ModifyToAddTickets exten
         TestReporter.softAssertEquals(mod.getGuestId(), guestId, "Verify that the retrieved Guest ID [" + mod.getGuestId() + "] matches the expected [" + guestId + "]");
         TestReporter.softAssertEquals(mod.getHardTicketedEvent(), hardTicketedEvent, "Verify that the retrieved get hard ticketed event [" + mod.getHardTicketedEvent() + "] matches the expected [" + hardTicketedEvent + "]");
         TestReporter.softAssertEquals(mod.getBaseAdmissionProductId(), baseAdmissionProductId, "Verify that the base admission product ID [" + mod.getBaseAdmissionProductId() + "] matches the expected [" + baseAdmissionProductId + "]");
-        TestReporter.softAssertEquals(mod.getAge(), guestReferenceAge, "Verify that the retrieved age [" + mod.getAge() + "] matches the expected [" + guestReferenceAge + "]");
         TestReporter.softAssertEquals(mod.getAgeType(), ageType, "Verify that the retrieved age type [" + mod.getAgeType() + "] matches the expected [" + ageType + "]");
         TestReporter.softAssertEquals(mod.getTicketGuestFirstName(), ticketDetailGuestFirstName, "Verify that the retrieved ticket guest first name [" + mod.getTicketGuestFirstName() + "] matches the expected [" + ticketDetailGuestFirstName + "]");
         TestReporter.softAssertEquals(mod.getTicketGuestLastName(), ticketDetailGuestLastName, "Verify that the retrieved ticket guest last name [" + mod.getTicketGuestLastName() + "] matches the expected [" + ticketDetailGuestLastName + "]");

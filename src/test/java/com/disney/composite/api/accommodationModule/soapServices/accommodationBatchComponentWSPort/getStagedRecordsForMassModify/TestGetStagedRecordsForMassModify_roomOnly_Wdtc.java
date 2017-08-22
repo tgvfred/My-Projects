@@ -69,7 +69,6 @@ public class TestGetStagedRecordsForMassModify_roomOnly_Wdtc extends Accommodati
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        rs.print();
 
         TestReporter.logStep("Retrieve staged record for Mass Modify");
         GetStagedRecordsForMassModify mod = new GetStagedRecordsForMassModify(environment);
