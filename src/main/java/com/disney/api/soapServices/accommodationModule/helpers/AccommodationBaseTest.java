@@ -514,7 +514,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         String dbEnv = "";
         if (getEnvironment().toLowerCase().contains("_cm")) {
             dbEnv = getEnvironment().toLowerCase().replace("_cm", "");
-            setEnvironment(Environment.getBaseEnvironmentName(environment));
         } else {
             dbEnv = getEnvironment();
         }
@@ -548,11 +547,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void setup(String environment) {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
-        if (environment.toLowerCase().contains("_cm")) {
-            setEnvironment(Environment.getBaseEnvironmentName(environment));
-        } else {
-            setEnvironment(environment);
-        }
+        setEnvironment(environment);
         daysOut.set(Randomness.randomNumberBetween(1, 12));
         nights.set(Randomness.randomNumberBetween(1, 3));
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
