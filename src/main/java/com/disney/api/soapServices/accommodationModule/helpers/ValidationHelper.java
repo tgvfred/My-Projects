@@ -302,6 +302,48 @@ public class ValidationHelper {
         TestReporter.assertAll();
     }
 
+    public void validateModificationBackendMultiAccomm(int numRecords, String travelStatusName, String securityValue, String arrivalDate, String departuredate,
+            Map<String, String> extRefTypes, Map<String, String> extRefs, String tpId, Map<String, String> tpsIds, Map<String, String> mTcgs) {
+        TestReporter.logStep("Validated reservation backend data after modification");
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = null;
+
+        Map<String, String> tcgs = new HashMap<>();
+        tcgs.putAll(mTcgs);
+        String sql = "select * "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "left outer join res_mgmt.TPS_EXTNL_REF d on a.tps_id = d.tps_id "
+                + "where a.tp_id = '" + tpId + "' ";
+        rs = new Recordset(db.getResultSet(sql));
+        // rs.print();
+
+        TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        int counter = 1;
+        String mapKey = null;
+        do {
+            TestReporter.log("Verify Row: " + String.valueOf(counter));
+            TestReporter.softAssertEquals(rs.getValue("TP_ID"), tpId, "Verify that the TP ID [" + rs.getValue("TP_ID") + "] is that which is expected [" + tpId + "].");
+            for (String key : mTcgs.keySet()) {
+                if (mTcgs.get(key).equals(rs.getValue("TC_GRP_NB"))) {
+                    mapKey = key;
+                    break;
+                }
+            }
+            TestReporter.softAssertEquals(rs.getValue("TPS_ID"), tpsIds.get(mapKey), "Verify that the TPS ID [" + rs.getValue("TPS_ID") + "] is that which is expected [" + tpsIds.get(mapKey) + "].");
+            TestReporter.softAssertTrue(tcgs.containsValue(rs.getValue("TC_GRP_NB")), "Verify that the TCG ID [" + rs.getValue("TC_GRP_NB") + "] is included in the TCGs which are expected [" + tcgs + "].");
+            TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM") + "] is that which is expected [" + travelStatusName + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT").split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT").split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT").split(" ")[0] + "] is that which is expected [" + departuredate + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefTypes.get(mapKey), "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefTypes.get(mapKey) + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefs.get(mapKey), "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefs.get(mapKey) + "].");
+            rs.moveNext();
+            counter++;
+        } while (rs.hasNext());
+        TestReporter.assertAll();
+    }
+
     public void validateModificationBackend(int numRecords, String travelStatusName, String securityValue, Map<String, String> arrivalDates, Map<String, String> departureDates,
             String extRefType, String extRefValue, String tpId, Map<String, String> tpsIds, Map<String, String> mTcgs) {
         TestReporter.logStep("Validated reservation backend data after modification");
@@ -1258,6 +1300,30 @@ public class ValidationHelper {
         Recordset rs = new Recordset(db.getResultSet(sql));
         for (int i = 1; i <= rs.getRowCount(); i++) {
             TestReporter.softAssertEquals(rs.getValue("SPCL_NEED_REQ_IN", i), flag, "Verify that the RIM special needs flag [" + rs.getValue("SPCL_NEED_REQ_IN", i) + "] is that which is expected [" + flag + "]");
+        }
+        TestReporter.assertAll();
+    }
+
+    public void validateSpecialNeeds(String tpId, Map<String, String> flags) {
+        for (int i = 1; i <= flags.size(); i++) {
+            if (flags.get(String.valueOf(i)).equals("true")) {
+                flags.put(String.valueOf(i), "Y");
+            } else if (flags.get(String.valueOf(i)).equals("false")) {
+                flags.put(String.valueOf(i), "N");
+            }
+        }
+        TestReporter.logStep("Validate Special Needs in RIM");
+        String sql = "select d.SPCL_NEED_REQ_IN "
+                + "from res_mgmt.tps a "
+                + "left join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "left join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "left join rsrc_inv.RSRC_ASGN_OWNR d on c.ASGN_OWN_ID = d.ASGN_OWNR_ID "
+                + "where a.tp_id = '" + tpId + "' "
+                + "and c.PROD_TYP_NM = 'AccommodationProduct'";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            TestReporter.softAssertEquals(rs.getValue("SPCL_NEED_REQ_IN", i), flags.get(String.valueOf(i)), "Verify that the RIM special needs flag [" + rs.getValue("SPCL_NEED_REQ_IN", i) + "] is that which is expected [" + flags.get(String.valueOf(i)) + "]");
         }
         TestReporter.assertAll();
     }
