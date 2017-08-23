@@ -34,6 +34,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddTickets exten
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
@@ -60,7 +61,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddTickets exten
                 + "from res_mgmt.tp_pty a "
                 + "join guest.TXN_PTY_EXTNL_REF b on a.TXN_PTY_ID = b.TXN_PTY_ID "
                 + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
-        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
@@ -101,7 +102,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddTickets exten
 
     private void validations() {
 
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         validations.validateModificationBackend(3, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),

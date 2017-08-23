@@ -31,6 +31,7 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails extends
         setDepartureDate(getNights());
         setValues(getEnvironment());
         setAddRoom(true);
+        isComo.set("true");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
@@ -65,7 +66,7 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails extends
                     "Validating Response Comparison");
 
             try {
-                Cancel cancel = new Cancel(getEnvironment(), "Main");
+                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
                 cancel.setCancelDate(Randomness.generateCurrentXMLDate());
                 cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
                 cancel.sendRequest();
@@ -76,7 +77,7 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails extends
     }
 
     private void validations() {
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         Map<String, String> tcgIds = new HashMap<>();

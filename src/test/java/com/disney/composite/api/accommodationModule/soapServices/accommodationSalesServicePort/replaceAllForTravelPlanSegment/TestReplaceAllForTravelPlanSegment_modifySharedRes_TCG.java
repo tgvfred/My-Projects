@@ -34,6 +34,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TCG extends Acco
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();

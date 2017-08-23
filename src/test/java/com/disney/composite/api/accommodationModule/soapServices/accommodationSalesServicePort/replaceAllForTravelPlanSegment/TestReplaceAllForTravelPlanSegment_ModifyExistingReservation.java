@@ -31,6 +31,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extend
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
@@ -45,7 +46,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extend
         // Acquire a different resort code. In doing so, a new room type code is acquired
         String oldValue = getResortCode();
         do {
-            setValues();
+            setValues(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
         } while (getResortCode().equals(oldValue));
 
         // Set new dates
@@ -68,7 +69,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extend
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
 
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
@@ -120,7 +121,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extend
                     "Validating Response Comparison");
 
             try {
-                Cancel cancel = new Cancel(getEnvironment(), "Main");
+                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
                 cancel.setCancelDate(Randomness.generateCurrentXMLDate());
                 cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
                 cancel.sendRequest();

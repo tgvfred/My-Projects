@@ -774,6 +774,10 @@ public class AccommodationBaseTest extends BaseRestTest {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
         setEnvironment(environment);
+        if (!isValid(isComo.get())) {
+            isComo.set(new String());
+            this.isComo.set(System.getenv("isComo") == null ? "false" : System.getenv("isComo"));
+        }
         daysOut.set(Randomness.randomNumberBetween(1, 12));
         nights.set(Randomness.randomNumberBetween(1, 3));
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
@@ -1076,7 +1080,10 @@ public class AccommodationBaseTest extends BaseRestTest {
             }
 
             if (getSendRequest() == null || getSendRequest() == true) {
-                if (isValid(isComo.get()) && isComo.get().equals("false")) {
+                if (!isValid(isComo.get())) {
+                    throw new AutomationException("The 'isComo' field cannot be null or empty.");
+                }
+                if (isComo.get().equals("false")) {
                     getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
                 }
                 getBook().sendRequest();

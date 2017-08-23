@@ -34,11 +34,12 @@ public class TestReplaceAllForTravelPlanSegment_ModifyDiningTpToAddAccommodation
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("true");
         setHouseHold(new HouseHold(1));
-        dining = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
+        dining = new ShowDiningReservation(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), getHouseHold());
         dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
         tpId = dining.getTravelPlanId();
-        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(getEnvironment()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_DVCQueries.getAllTCGsByTpId(tpId)));
         tcgId = rs.getValue("TC_GRP_NB");
     }
@@ -74,7 +75,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyDiningTpToAddAccommodation
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
 
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(getEnvironment()));
 
         // Validate reservation
         Map<String, String> tpsIds = new HashMap<String, String>();
@@ -118,7 +119,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyDiningTpToAddAccommodation
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
                 + "join res_mgmt.tc_gst d on c.tc_id = d.tc_id "
                 + "where a.tp_id =  " + getBook().getTravelPlanId();
-        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(getEnvironment()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         do {
             partyIds.put(rs.getValue("TXN_IDVL_PTY_ID"), "TXN_IDVL_PTY_ID");

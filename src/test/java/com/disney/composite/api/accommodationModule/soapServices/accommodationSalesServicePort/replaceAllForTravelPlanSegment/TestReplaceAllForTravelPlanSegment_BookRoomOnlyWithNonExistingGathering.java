@@ -26,6 +26,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithNonExistingGathe
         setDepartureDate(getNights());
         setValues(getEnvironment());
         setAddGathering(true);
+        isComo.set("true");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
@@ -33,7 +34,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithNonExistingGathe
         bookReservation();
         tpPtyId = getBook().getGuestId();
 
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
@@ -83,7 +84,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithNonExistingGathe
                     "Validating Response Comparison");
 
             try {
-                Cancel cancel = new Cancel(getEnvironment(), "Main");
+                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
                 cancel.setCancelDate(Randomness.generateCurrentXMLDate());
                 cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
                 cancel.sendRequest();

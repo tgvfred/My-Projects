@@ -20,6 +20,7 @@ public class TestReplaceAllForTravelPlanSegment_nonZeroVIP extends Accommodation
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("true");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -34,7 +35,7 @@ public class TestReplaceAllForTravelPlanSegment_nonZeroVIP extends Accommodation
         getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
         tpPtyId = getBook().getGuestId();
 
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(getEnvironment()));
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),

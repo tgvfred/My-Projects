@@ -35,6 +35,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWDTCWithRoomOnly extends A
         setDepartureDate(getNights());
         setValues(getEnvironment());
         setIsWdtcBooking(true);
+        isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
@@ -57,7 +58,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWDTCWithRoomOnly extends A
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
 
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", extRefNum,
@@ -118,7 +119,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWDTCWithRoomOnly extends A
                     "Validating Response Comparison");
 
             try {
-                Cancel cancel = new Cancel(getEnvironment(), "Main");
+                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
                 cancel.setCancelDate(Randomness.generateCurrentXMLDate());
                 cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
                 cancel.sendRequest();

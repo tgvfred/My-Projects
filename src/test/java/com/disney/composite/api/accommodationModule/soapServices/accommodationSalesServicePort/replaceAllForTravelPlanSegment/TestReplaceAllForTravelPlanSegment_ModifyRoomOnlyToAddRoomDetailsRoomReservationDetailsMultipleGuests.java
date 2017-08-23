@@ -32,6 +32,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddRoomDetailsRo
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
@@ -58,7 +59,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddRoomDetailsRo
     private void validations() {
         int numGuests = getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails");
         TestReporter.assertTrue(numGuests == 2, "Verify that two guests were returned in the response.");
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         validations.validateModificationBackend(3, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
@@ -114,7 +115,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddRoomDetailsRo
                     "Validating Response Comparison");
 
             try {
-                Cancel cancel = new Cancel(getEnvironment(), "Main");
+                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
                 cancel.setCancelDate(Randomness.generateCurrentXMLDate());
                 cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
                 cancel.sendRequest();

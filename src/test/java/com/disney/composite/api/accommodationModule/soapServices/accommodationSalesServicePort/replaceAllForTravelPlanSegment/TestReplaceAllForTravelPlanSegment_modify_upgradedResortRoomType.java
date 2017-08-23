@@ -33,6 +33,7 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         setDepartureDate(getNights());
         setValues("80010385", "CA", "51");
         setSendRequest(false);
+        isComo.set("true");
         bookReservation();
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
@@ -84,7 +85,7 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
                     "Validating Response Comparison");
 
             try {
-                Cancel cancel = new Cancel(getEnvironment(), "Main");
+                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
                 cancel.setCancelDate(Randomness.generateCurrentXMLDate());
                 cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
                 cancel.sendRequest();
@@ -95,7 +96,7 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
     }
 
     private void validations() {
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",

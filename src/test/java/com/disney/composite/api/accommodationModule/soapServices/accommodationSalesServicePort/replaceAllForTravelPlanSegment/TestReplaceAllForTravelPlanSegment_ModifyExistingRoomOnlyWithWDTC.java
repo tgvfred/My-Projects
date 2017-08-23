@@ -38,6 +38,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
@@ -64,7 +65,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
                 + "from res_mgmt.tp_pty a "
                 + "join guest.TXN_PTY_EXTNL_REF b on a.TXN_PTY_ID = b.TXN_PTY_ID "
                 + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
-        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
@@ -128,7 +129,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
                     "Validating Response Comparison");
 
             try {
-                Cancel cancel = new Cancel(getEnvironment(), "Main");
+                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
                 cancel.setCancelDate(Randomness.generateCurrentXMLDate());
                 cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
                 cancel.sendRequest();

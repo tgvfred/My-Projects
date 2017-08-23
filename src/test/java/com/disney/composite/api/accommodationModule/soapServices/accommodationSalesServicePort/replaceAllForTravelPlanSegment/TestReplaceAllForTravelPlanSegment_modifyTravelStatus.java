@@ -30,6 +30,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyTravelStatus extends Accom
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
@@ -89,7 +90,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyTravelStatus extends Accom
     }
 
     private void validations() {
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
         System.out.println();
         // Validate reservation
         validations.validateModificationBackend(2, "Checked In", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),

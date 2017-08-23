@@ -30,6 +30,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails exten
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("true");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -94,7 +95,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails exten
     }
 
     private void validations() {
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         Map<String, String> tcgIds = new HashMap<>();

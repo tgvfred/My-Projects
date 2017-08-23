@@ -34,6 +34,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddExistingGathe
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        isComo.set("true");
         bookReservation();
     }
 
@@ -46,7 +47,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddExistingGathe
         extRefNum = getExternalRefNumber();
         tpPtyId = getBook().getGuestId();
 
-        GatheringHelper helper = new GatheringHelper(getEnvironment());
+        GatheringHelper helper = new GatheringHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
         helper.createGathering(getFacilityId());
 
         Map<String, String> gatheringData = new HashMap<>();
@@ -64,7 +65,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddExistingGathe
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
 
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
@@ -115,7 +116,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddExistingGathe
                     "Validating Response Comparison");
 
             try {
-                Cancel cancel = new Cancel(getEnvironment(), "Main");
+                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
                 cancel.setCancelDate(Randomness.generateCurrentXMLDate());
                 cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
                 cancel.sendRequest();

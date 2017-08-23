@@ -37,6 +37,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
@@ -112,7 +113,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
     }
 
     private void validations() {
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         validations.validateModificationBackendMultiAccomm(6, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),

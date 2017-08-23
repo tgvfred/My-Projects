@@ -30,6 +30,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithRoomDetailsRoomR
         setDepartureDate(getNights());
         setValues(getEnvironment());
         setAddPrimaryGuestODS(true);
+        isComo.set("true");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
@@ -41,11 +42,11 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithRoomDetailsRoomR
                 + "from res_mgmt.tp_pty a "
                 + "join guest.TXN_PTY_EXTNL_REF b on a.TXN_PTY_ID = b.TXN_PTY_ID "
                 + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
-        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
@@ -94,7 +95,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithRoomDetailsRoomR
                     "Validating Response Comparison");
 
             try {
-                Cancel cancel = new Cancel(getEnvironment(), "Main");
+                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
                 cancel.setCancelDate(Randomness.generateCurrentXMLDate());
                 cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
                 cancel.sendRequest();
