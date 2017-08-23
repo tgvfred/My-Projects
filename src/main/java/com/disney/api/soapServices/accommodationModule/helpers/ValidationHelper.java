@@ -1568,7 +1568,7 @@ public class ValidationHelper {
                 + "join sales_tp.sls_ord_item d on c.sls_ord = d.sls_ord "
                 + "where a.tp_id = " + tpId;
         rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertEquals(rs.getRowCount(), accommCount + packageCount, "Verify that the number of sales order items [" + rs.getRowCount() + "[ is that which is expected [" + accommCount + packageCount + "].");
+        TestReporter.softAssertEquals(rs.getRowCount(), accommCount + packageCount, "Verify that the number of sales order items [" + rs.getRowCount() + "[ is that which is expected [" + (accommCount + packageCount) + "].");
         int accommFound = 0;
         int packageFound = 0;
         do {
@@ -1745,7 +1745,7 @@ public class ValidationHelper {
                 + "join sales_tp.sls_ord_item d on c.sls_ord = d.sls_ord "
                 + "where a.tp_id = " + tpId;
         rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertEquals(rs.getRowCount(), accommCount + packageCount, "Verify that the number of sales order items [" + rs.getRowCount() + "[ is that which is expected [" + accommCount + packageCount + "].");
+        TestReporter.softAssertEquals(rs.getRowCount(), accommCount + packageCount, "Verify that the number of sales order items [" + rs.getRowCount() + "[ is that which is expected [" + (accommCount + packageCount) + "].");
         int accommFound = 0;
         int packageFound = 0;
         do {
