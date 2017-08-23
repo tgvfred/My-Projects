@@ -81,7 +81,7 @@ public class TestCancel_RO_AdditionalAdult extends TravelPlanBaseTest {
             book.setPhoneNumber(getHouseHold().primaryGuest().primaryPhone().getNumber());
             book.setEmail(getHouseHold().primaryGuest().primaryEmail().getEmail());
             book.sendRequest();
-            TestReporter.logAPI(false, "", book);
+            TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify that no error occurred during booking: " + book.getFaultString(), book);
             if (book.getResponseStatusCode().equals("200")) {
                 bookSuccess = true;
             } else {

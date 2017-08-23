@@ -21,6 +21,7 @@ public class Test_RetrieveSummary_twoTcg_roomOnly extends AccommodationBaseTest 
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -28,10 +29,10 @@ public class Test_RetrieveSummary_twoTcg_roomOnly extends AccommodationBaseTest 
         setValues(environment);
         bookReservation();
 
-        book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
+        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "RoomOnlyNoTickets");
         book.sendRequest();
 
-        book1 = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
+        book1 = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "RoomOnlyNoTickets");
         book1.sendRequest();
 
     }

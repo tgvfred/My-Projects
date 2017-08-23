@@ -19,6 +19,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoGuests extends Accommodation
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -26,9 +27,10 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoGuests extends Accommodation
         setValues(environment);
         bookReservation();
 
-        book = new ReplaceAllForTravelPlanSegment(environment, "book2AdultsAndTwoRoom");
+        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "book2AdultsAndTwoRoom");
         book.sendRequest();
         book.getResponse();
+        TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify that no error occurred booking a res: " + book.getFaultString(), book);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
@@ -37,7 +39,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoGuests extends Accommodation
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.logStep("Verify two guestReferences nodes are returned");
         TestReporter.assertTrue(retrieve.getGuestReferenceDetails("1") != null && retrieve.getGuestReferenceDetails("2") != null, "Two guestReferenceDetails nodes found! ");

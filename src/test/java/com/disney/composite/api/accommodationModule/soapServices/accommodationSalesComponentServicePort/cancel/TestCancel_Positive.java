@@ -278,7 +278,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
 
     private void sendRequestAndValidateSoapResponse(Cancel cancel) {
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "The cancel was not successful.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "The cancel was not successful: " + cancel.getFaultString(), cancel);
         String tcg = cancel.getRequestNodeValueByXPath("/Envelope/Body/cancel/request/travelComponentGroupingId");
         Recordset results = new Recordset(db.getResultSet("SELECT a.TPS_ID, b.TC_ID FROM RES_MGMT.TC_GRP a "
                 + "JOIN RES_MGMT.TC b ON a.TC_GRP_NB = b.TC_GRP_NB "

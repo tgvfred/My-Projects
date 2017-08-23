@@ -22,6 +22,7 @@ public class TestRetrieveRates_wdtc_twoNights extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(2);
         setArrivalDate(getDaysOut());

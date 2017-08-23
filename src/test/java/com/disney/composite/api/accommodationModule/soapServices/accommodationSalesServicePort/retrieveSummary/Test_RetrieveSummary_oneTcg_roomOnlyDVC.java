@@ -28,7 +28,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyDVC extends BookDVCCashHelper {
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestTravelComponentGroupingId(getFirstBooking().getTravelPlanSegmentId());
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getFirstBooking().getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getFirstBooking().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
         // Old vs New Validation
         if (Environment.isSpecialEnvironment(environment)) {

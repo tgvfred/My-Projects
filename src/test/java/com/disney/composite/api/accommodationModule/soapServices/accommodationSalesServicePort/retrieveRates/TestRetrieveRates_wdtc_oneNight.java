@@ -17,6 +17,7 @@ public class TestRetrieveRates_wdtc_oneNight extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -24,6 +25,7 @@ public class TestRetrieveRates_wdtc_oneNight extends AccommodationBaseTest {
         setValues(getEnvironment());
         setIsWdtcBooking(true);
         bookReservation();
+        isComo.set("false");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })

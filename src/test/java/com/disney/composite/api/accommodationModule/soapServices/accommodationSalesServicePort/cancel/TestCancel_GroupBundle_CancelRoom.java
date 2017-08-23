@@ -164,7 +164,7 @@ public class TestCancel_GroupBundle_CancelRoom extends TravelPlanBaseTest {
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred canceling a Reservation with TPS ID [" + book.getTravelPlanSegmentId() + "]: " + cancel.getFaultString(), cancel);

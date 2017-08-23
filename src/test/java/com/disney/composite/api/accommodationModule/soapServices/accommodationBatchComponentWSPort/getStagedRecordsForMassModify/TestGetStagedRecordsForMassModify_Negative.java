@@ -3,8 +3,8 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForMassModify;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
 
@@ -21,7 +21,7 @@ public class TestGetStagedRecordsForMassModify_Negative extends AccommodationBas
         get.sendRequest();
 
         TestReporter.assertTrue(get.getFaultString().contains(faultString), "Verify that the fault string [" + get.getFaultString() + "] contains [" + faultString + "].");
-        validateApplicationError(get, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(get, LiloSystemErrorCode.UNEXPECTED_ERROR);
 
     }
 
@@ -36,7 +36,7 @@ public class TestGetStagedRecordsForMassModify_Negative extends AccommodationBas
         get.sendRequest();
 
         TestReporter.assertTrue(get.getFaultString().contains(faultString), "Verify that the fault string [" + get.getFaultString() + "] contains [" + faultString + "].");
-        validateApplicationError(get, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(get, LiloSystemErrorCode.UNEXPECTED_ERROR);
 
     }
 

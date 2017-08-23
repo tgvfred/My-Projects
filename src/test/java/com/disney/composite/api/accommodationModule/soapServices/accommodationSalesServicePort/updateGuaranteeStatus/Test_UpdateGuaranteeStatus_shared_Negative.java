@@ -17,6 +17,7 @@ public class Test_UpdateGuaranteeStatus_shared_Negative extends AccommodationBas
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -29,7 +30,7 @@ public class Test_UpdateGuaranteeStatus_shared_Negative extends AccommodationBas
         Share share = new Share(environment, "oneTcgOnly");
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
-        TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Validate billy this guy");
+        TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing a reservation: " + share.getFaultString());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })

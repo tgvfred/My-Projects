@@ -19,6 +19,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationB
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -26,9 +27,10 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationB
         setValues(environment);
         bookReservation();
 
-        book = new ReplaceAllForTravelPlanSegment(environment, "book2AdultsAndTwoRoom");
+        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "book2AdultsAndTwoRoom");
         book.sendRequest();
         book.getResponse();
+        TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify no error occurred booking a res: " + book.getFaultString(), book);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
