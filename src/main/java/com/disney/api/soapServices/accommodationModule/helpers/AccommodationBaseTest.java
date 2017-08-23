@@ -1125,12 +1125,12 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     private void addBundle() {
-        details = new RetrieveDetailsByTravelPlanId(environment, "Main");
+        details = new RetrieveDetailsByTravelPlanId(Environment.getBaseEnvironmentName(getEnvironment()), "Main");
         details.setTravelPlanId(getBook().getTravelPlanId());
         details.sendRequest();
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
 
-        add = new AddBundle(environment, "Main");
+        add = new AddBundle(Environment.getBaseEnvironmentName(getEnvironment()), "Main");
         add.setGuestsGuestNameFirstName(hh.get().primaryGuest().getFirstName());
         add.setGuestsGuestNameLastName(hh.get().primaryGuest().getLastName());
         add.setGuestsGuestReferenceId(details.getGuestsId());
@@ -1144,7 +1144,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         add.retrieveSalesOrderId(getBook().getTravelPlanId());
         add.setSalesOrderId(add.getBundleSalesOrderIds()[0]);
 
-        FindMiscPackages find = new FindMiscPackages(environment, "MinimalInfo");
+        FindMiscPackages find = new FindMiscPackages(Environment.getBaseEnvironmentName(getEnvironment()), "MinimalInfo");
         find.setArrivalDate(Randomness.generateCurrentXMLDate(getDaysOut()));
         find.setBookDate(Randomness.generateCurrentXMLDate());
         find.sendRequest();
@@ -1556,7 +1556,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     private void addDining() {
-        diningRes = new ShowDiningReservation(environment.toLowerCase().replace("_cm", ""), hh.get());
+        diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), hh.get());
         diningRes.setTravelPlanId(getBook().getTravelPlanId());
         diningRes.setFacilityName("Pioneer Hall");
         diningRes.setProductName("Hoop-Dee-Doo-Cat 2-1st Show");

@@ -21,6 +21,7 @@ public class TestShare_twoTcg_differentResorts_Negative extends AccommodationBas
     public void setup(String environment) {
         Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setArrivalDate(getDaysOut());
         setNights(2);

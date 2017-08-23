@@ -5,7 +5,6 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveCancellationPolicy;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveTravelPlanMediaCustomization;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
@@ -19,6 +18,7 @@ public class TestRetrieveCancellationPolicy_roomOnly_sameDay_tpsAndTcgOnly exten
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -41,7 +41,7 @@ public class TestRetrieveCancellationPolicy_roomOnly_sameDay_tpsAndTcgOnly exten
 
         // Validate old vs. new service
         if (Environment.isSpecialEnvironment(getEnvironment())) {
-            RetrieveTravelPlanMediaCustomization clone = (RetrieveTravelPlanMediaCustomization) retrieve.clone();
+            RetrieveCancellationPolicy clone = (RetrieveCancellationPolicy) retrieve.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
             int tries = 0;
             int maxTries = 40;

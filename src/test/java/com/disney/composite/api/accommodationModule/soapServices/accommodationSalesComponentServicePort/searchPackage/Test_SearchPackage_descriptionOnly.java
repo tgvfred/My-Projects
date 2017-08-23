@@ -22,7 +22,7 @@ public class Test_SearchPackage_descriptionOnly extends AccommodationBaseTest {
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setPackageDescription("Basic Package");
         search.sendRequest();
-        TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", search);
+        TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + search.getFaultString(), search);
 
         packageCheck(search.getPackageDescriptionByPackageCode(pkgCode));
 

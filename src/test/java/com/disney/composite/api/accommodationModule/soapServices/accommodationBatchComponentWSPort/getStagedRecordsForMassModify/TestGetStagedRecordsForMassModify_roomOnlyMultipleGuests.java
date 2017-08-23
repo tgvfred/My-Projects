@@ -23,6 +23,7 @@ public class TestGetStagedRecordsForMassModify_roomOnlyMultipleGuests extends Ac
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setValues(Environment.getBaseEnvironmentName(getEnvironment()));
         setDaysOut(0);
         setNights(1);

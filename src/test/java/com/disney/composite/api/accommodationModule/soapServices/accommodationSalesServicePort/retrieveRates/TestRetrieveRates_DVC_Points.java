@@ -10,13 +10,14 @@ import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveRates_DVC_Points extends BookDVCPointsHelper {
+    private String locEnv = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
-
+        setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+        locEnv = environment;
         setUseDvcResort(true);
         setUseNonZeroPoints(true);
         setBook(bookDvcReservation("testBookWithPay_MP", 1));
@@ -38,7 +39,7 @@ public class TestRetrieveRates_DVC_Points extends BookDVCPointsHelper {
         String pointsValue = "1";
 
         TestReporter.logScenario("Retieve DVC Points");
-        RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
+        RetrieveRates retrieveRates = new RetrieveRates(locEnv, "retrieveRates");
         retrieveRates.setTravelComponentGroupingId(tcgId);
         retrieveRates.sendRequest();
         TestReporter.logAPI(!retrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getFirstBooking().getTravelComponentGroupingId() + "]", retrieveRates);

@@ -25,6 +25,7 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
 
         int tries = 0;
         setEnvironment(environment);
+        isComo.set("false");
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));

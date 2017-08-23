@@ -37,7 +37,7 @@ public class TestUpdateComments_parentTC_parentIdOnly extends AccommodationBaseT
         // Validate that the nodes are not present in the xml
         TestReporter.logStep("Verify the nodes are not present in the response xml");
         TestReporter.setAssertFailed(false);
-        TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred getting options by filter", update);
+        TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred getting updating comments: " + update.getFaultString(), update);
         try {
             update.getSendToGSR();
         } catch (XPathNotFoundException e) {

@@ -15,7 +15,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneAccommodationsSummaryDetails
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.logStep("Verify one AccommodationsSummaryDetails node is found.");
         TestReporter.assertTrue(retrieve.getAccommodationsSummaryDetails() <= 1, "Only one AccommodationsSummaryDetails node found! ");
