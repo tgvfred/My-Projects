@@ -31,8 +31,13 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
-        setValues(getEnvironment());
+        setValues("80010385", "CA", "51");
+        setSendRequest(false);
         bookReservation();
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
@@ -44,9 +49,7 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType() {
-
-        setSendRequest(false);
-        bookReservation();
+        setValues("80010385", "CA", "51");
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         getBook().setTravelComponentGroupingId(tcgId);
@@ -56,34 +59,7 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying a booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
 
-        ValidationHelper validations = new ValidationHelper(getEnvironment());
-
-        // Validate reservation
-        validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
-                getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
-        validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
-        validations.verifyModificationIsFoundInResHistory(getBook().getTravelPlanId());
-        validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
-
-        // Validate Folio
-        validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
-        validations.verifyNumberOfChargesByStatus("UnEarned", 2, getBook().getTravelPlanId());
-        validations.verifyChargeDetail(8, getBook().getTravelPlanId());
-        validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
-
-        // Validate RIM
-        validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
-        validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
-        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
-
-        // Validate guest
-        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
-        validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
-        validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
-
-        validations.validateResortAndRoomType(getBook().getTravelPlanId(), getFacilityId(), getRoomTypeCode());
-        validations.validateAreaPeriod(getBook().getTravelPlanId(), getArrivalDate(), getDepartureDate());
+        validations();
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
@@ -118,12 +94,40 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         }
     }
 
+    private void validations() {
+        ValidationHelper validations = new ValidationHelper(getEnvironment());
+
+        // Validate reservation
+        validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",
+                getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
+        validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
+        validations.verifyModificationIsFoundInResHistory(getBook().getTravelPlanId());
+        validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
+
+        // Validate Folio
+        validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
+        validations.verifyNumberOfChargesByStatus("UnEarned", 1, getBook().getTravelPlanId());
+        validations.verifyChargeDetail(4, getBook().getTravelPlanId());
+        validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
+
+        // Validate RIM
+        validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
+        validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
+        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
+
+        // Validate guest
+        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
+        validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
+        validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
+
+        validations.validateResortAndRoomType(getBook().getTravelPlanId(), getFacilityId(), getRoomTypeCode());
+        validations.validateAreaPeriod(getBook().getTravelPlanId(), getArrivalDate(), getDepartureDate());
+    }
+
     private void upgrade() {
-        // String oldResortCode = getResortCode();
-        // String oldRoomTypeCode = getRoomTypeCode();
-        // do {
-        // setValues();
-        // } while (getRoomTypeCode().equals(oldRoomTypeCode) && getResortCode().equals(oldResortCode));
+
+        setValues("80010385", "CB", "51");
         UpgradeResortRoomType upgrade = new UpgradeResortRoomType(Environment.getBaseEnvironmentName(getEnvironment()));
         upgrade.setAuthorizationCode(BaseSoapCommands.REMOVE_NODE.toString());
         upgrade.setBypassFreeze("true");
