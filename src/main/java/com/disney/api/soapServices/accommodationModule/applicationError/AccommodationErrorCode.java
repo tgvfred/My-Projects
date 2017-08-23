@@ -77,23 +77,55 @@ public class AccommodationErrorCode {
             " Rollback Implemenation Validation. ");
 
     private static final String MOD_NAME = "LILO_RESM";
-    public static final ApplicationErrorCode GUARANTEE_STATUS_CANNOT_CHANGE = new ApplicationErrorCode(MOD_NAME, 7195,
-            " Guarantee status can not be changed ");
+
+    // LILO_RESM errors
+    public static final ApplicationErrorCode SEARCH_CRITERIA_INVALID = new ApplicationErrorCode(MOD_NAME, 7124,
+            "Search Criteria is Invalid");
+    public static final ApplicationErrorCode NO_TRAVEL_PLAN_DATA_FOUND = new ApplicationErrorCode(MOD_NAME, 7183,
+            "No travel plan data found.");
+    public static final ApplicationErrorCode RESULT_SIZE_TOO_LARGE_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 91443,
+            " Validation Failed. ");
+    public static final ApplicationErrorCode DATA_NOT_FOUND_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 91443,
+            " Data not found. ");
+    public static final ApplicationErrorCode ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL = new ApplicationErrorCode(MOD_NAME, 7192,
+            " Accommodation should be in Booked status to be cancelled");
+    public static final ApplicationErrorCode ACCOMMODATIONS_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 7192,
+            "Accommodations not found");
+    public static final ApplicationErrorCode COMMENT_LEVEL_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
+            " Create Comments Request Invalid ");
+    public static final ApplicationErrorCode REQUEST_REQUIRED = new ApplicationErrorCode(MOD_NAME, 8078,
+            " Create Comments Request Invalid ");
+    public static final ApplicationErrorCode ACCOMMODATION_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 7192,
+            " Accommodations not found ");
+    public static final ApplicationErrorCode ACCOMMODATION_NOT_IN_BOOKED_STATUS = new ApplicationErrorCode(MOD_NAME, 7192,
+            " Accommodation should be in Booked status to be cancelled ");
+    public static final ApplicationErrorCode REQ_PARAM_MISSING = new ApplicationErrorCode(MOD_NAME, 7064,
+            " Required parameters are missing ");
+    public static final ApplicationErrorCode EXT_REF_SRC_REQ = new ApplicationErrorCode(MOD_NAME, 7090,
+            " External Reference Source or Code required ");
+    public static final ApplicationErrorCode CANNOT_CALC_CANCEL_FEE = new ApplicationErrorCode(MOD_NAME, 7080,
+            " Cannot calculate Cancel fee ");
+
+    public static final ApplicationErrorCode ACCOMMODATION_COMPONENT_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 9083,
+            " Accommodation Component not found ");
+    public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
+            " No Accommodation Component found. ");
+    public static final ApplicationErrorCode TRVL_PLAN_SGMT_CANNOT_BE_NULL = new ApplicationErrorCode(MOD_NAME, 7008,
+            " Travel Plan Segment Not Found");
 
     private static final String APPLICATION = "LILO System";
 
     public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode(APPLICATION, 1001,
             "Unexpected Error occurred");
+    public static final ApplicationErrorCode GUARANTEE_STATUS_CANNOT_CHANGE = new ApplicationErrorCode(MOD_NAME, 7195,
+            " Guarantee status can not be changed ");
+
     public static final ApplicationErrorCode ACCOMMODATION_INVALID_FOR_SHARE = new ApplicationErrorCode(MOD_NAME, 7130,
             "Accommodation is invalid for Share");
     public static final ApplicationErrorCode TRAVEL_STATUS_INVALID_FOR_SHARE = new ApplicationErrorCode(MOD_NAME, 7131,
             "Travel Status is invalid for Share");
     public static final ApplicationErrorCode CANNOT_CHANGE_PACKAGE = new ApplicationErrorCode(MOD_NAME, 7208,
             "Cannot change Block/Resort/Package for an shared Accommodation.");
-    public static final ApplicationErrorCode ACCOMMODATION_COMPONENT_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 9083,
-            " Accommodation Component not found ");
-    public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
-            " No Accommodation Component found. ");
 
     private static final String MODULE_NAME = "Accommodation Sales";
     public static final ApplicationErrorCode PACKAGE_CODE_INVALID = new ApplicationErrorCode(MODULE_NAME, 7104,

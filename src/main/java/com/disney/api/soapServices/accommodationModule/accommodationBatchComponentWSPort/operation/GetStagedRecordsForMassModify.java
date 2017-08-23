@@ -1,6 +1,7 @@
 package com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.AccommodationBatchComponentWSPort;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 
 public class GetStagedRecordsForMassModify extends AccommodationBatchComponentWSPort {
@@ -39,6 +40,18 @@ public class GetStagedRecordsForMassModify extends AccommodationBatchComponentWS
         return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/resortCode");
     }
 
+    public String getRoomType() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/roomTypeCode");
+    }
+
+    public String getBlockCode() {
+        try {
+            return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/blockCode");
+        } catch (XPathNotFoundException e) {
+            return null;
+        }
+    }
+
     public String getTcgId() {
         return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/travelComponentGroupingId");
     }
@@ -49,6 +62,14 @@ public class GetStagedRecordsForMassModify extends AccommodationBatchComponentWS
 
     public String getTpsId() {
         return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/travelPlanSegmentId");
+    }
+
+    public String getInventoryReasonCode() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/inventoryOverrideReason");
+    }
+
+    public String getInventoryContactName() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/inventoryOverrideContactName");
     }
 
     public String getGuestId() {
@@ -63,4 +84,39 @@ public class GetStagedRecordsForMassModify extends AccommodationBatchComponentWS
         return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/roomReservationDetail/guestReferenceDetails/guest/lastName");
     }
 
+    public String getPreferredLanguage() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/travelPlanGuest/preferredLanguage");
+    }
+
+    public String getAdultTicket() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/ticketDetails/adultTicket");
+    }
+
+    public String getHardTicketedEvent() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/ticketDetails/hardTicketedEvent");
+    }
+
+    public String getBaseAdmissionProductId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/ticketDetails/baseAdmissionProductId");
+    }
+
+    public String getAge() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/ticketDetails/guestReference/age");
+    }
+
+    public String getAgeType() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/ticketDetails/guestReference/ageType");
+    }
+
+    public String getTicketGuestFirstName() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/ticketDetails/guestReference/guest/firstName");
+    }
+
+    public String getTicketGuestLastName() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/ticketDetails/guestReference/guest/lastName");
+    }
+
+    public String getPartOfPackage() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForMassModifyResponse/return/roomDetail/ticketDetails/partOfPackage");
+    }
 }
