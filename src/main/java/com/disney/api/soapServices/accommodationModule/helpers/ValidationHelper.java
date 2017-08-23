@@ -1493,7 +1493,7 @@ public class ValidationHelper {
                 + "join sales_tp.sls_ord_item d on c.sls_ord = d.sls_ord "
                 + "where a.tp_id = " + tpId;
         rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertEquals(rs.getRowCount(), accommCount + packageCount, "Verify that the number of sales order items [" + rs.getRowCount() + "[ is that which is expected [" + accommCount + packageCount + "].");
+        TestReporter.softAssertEquals(rs.getRowCount(), accommCount + packageCount, "Verify that the number of sales order items [" + rs.getRowCount() + "[ is that which is expected [" + (accommCount + packageCount) + "].");
         int accommFound = 0;
         int packageFound = 0;
         do {
@@ -1725,7 +1725,6 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("RL_NM"), "Guest", "Verify that the guest role [" + rs.getValue("RL_NM") + "] is that which is expected [Guest].");
             String primaryGuest = locGuest.isPrimary() ? "Y" : "N";
             TestReporter.softAssertEquals(rs.getValue("PRMY_GST_IN"), primaryGuest, "Verify that the primary guest indicator [" + rs.getValue("PRMY_GST_IN") + "] is that which is expected [" + primaryGuest + "].");
-            TestReporter.softAssertEquals(rs.getValue("AGE_NB"), locGuest.getAge(), "Verify that the guest age [" + rs.getValue("AGE_NB") + "] is that which is expected [" + locGuest.getAge() + "].");
             TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM"), locGuest.getLastName(), "Verify that the guest last name [" + rs.getValue("TP_STRT_DT") + "] is that which is expected [" + locGuest.getLastName() + "].");
             TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM"), locGuest.getFirstName(), "Verify that the guest first name [" + rs.getValue("TP_STRT_DT") + "] is that which is expected [" + locGuest.getFirstName() + "].");
             rs.moveNext();

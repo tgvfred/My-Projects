@@ -147,6 +147,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> addProfile = new ThreadLocal<>();
     private ThreadLocal<Boolean> mywPackageCode = new ThreadLocal<>();
     private ThreadLocal<Boolean> mywPlusDinePackageCode = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addRoom = new ThreadLocal<>();
 
     protected void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -720,6 +721,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.mywPlusDinePackageCode.get();
     }
 
+    public void setAddRoom(Boolean addRoom) {
+        this.addRoom.set(addRoom);
+    }
+
+    public Boolean getAddRoom() {
+        return this.addRoom.get();
+    }
+
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -1053,6 +1062,17 @@ public class AccommodationBaseTest extends BaseRestTest {
                 getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PROFILE_ROUTINGS_NAME"));
                 getProfileData().put(PROFILE_SELECTABLE, rs.getValue("PROFILE_SELECTABLE"));
                 getBook().setReservationDetail_Profiles(getProfileData());
+            }
+
+            if (isValid(getAddRoom()) && getAddRoom()) {
+
+                Guest guest = new HouseHold(1).primaryGuest();
+                ;
+                if (additionalGuests.get() == null) {
+                    setAdditionalGuests(new HashMap<Integer, Guest>());
+                }
+                getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
+                getBook().addRoom(this);
             }
 
             if (getSendRequest() == null || getSendRequest() == true) {

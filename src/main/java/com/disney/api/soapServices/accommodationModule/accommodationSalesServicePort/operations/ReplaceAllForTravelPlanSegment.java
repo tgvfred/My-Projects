@@ -382,6 +382,13 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setExtRefType(baseXpath, type);
     }
 
+    public void setRoomDetails_ExternalRefs(String code, String number, String source, String type, String baseXpath) {
+        setExtRefCode(baseXpath, code);
+        setExtRefNumber(baseXpath, number);
+        setExtRefSource(baseXpath, source);
+        setExtRefType(baseXpath, type);
+    }
+
     public void setConfirmationDetails(String id, String indicator, String type, String defaultConfirmationIndicator, String individual, String jdoSeqNumber, String locatorId, String partyId, Guest guest) {
         int numConfirmationDetails = getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/confirmationDetails");
         if (numConfirmationDetails == 0) {
@@ -447,6 +454,14 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(Boolean addMembership, Boolean addGuestIdReferences, Guest guest) {
         String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails";
+        int numGuestNodes = addAndSetGuest(baseXpath, addMembership, addGuestIdReferences, guest, "guest");
+
+        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails[" + String.valueOf(numGuestNodes) + "]";
+        setRequestNodeValueByXPath(baseXpath + "/age", guest.getAge());
+        setRequestNodeValueByXPath(baseXpath + "/ageType", getAgeTypeByAge(guest.getAge()));
+    }
+
+    public void addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(Boolean addMembership, Boolean addGuestIdReferences, Guest guest, String baseXpath) {
         int numGuestNodes = addAndSetGuest(baseXpath, addMembership, addGuestIdReferences, guest, "guest");
 
         baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails[" + String.valueOf(numGuestNodes) + "]";
@@ -706,6 +721,11 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     public void setRoomDetails_ResortPeriod(String startDate, String endDate) {
         setRoomDetails_ResortPeriodStartDate(startDate);
         setRoomDetails_ResortPeriodEndDate(endDate);
+    }
+
+    public void setRoomDetails_ResortPeriod(String startDate, String endDate, String baseXpath) {
+        setRoomDetails_ResortPeriodStartDate(startDate, baseXpath);
+        setRoomDetails_ResortPeriodEndDate(endDate, baseXpath);
     }
 
     public void setAreaPeriod(String startDate, String endDate) {
@@ -1062,6 +1082,14 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setRoomDetails_ResortPeriodStartDate(String value) {
         setStartDate("//replaceAllForTravelPlanSegment/request/roomDetails/resortPeriod/", value);
+    }
+
+    public void setRoomDetails_ResortPeriodEndDate(String value, String baseXpath) {
+        setEndDate(baseXpath, value);
+    }
+
+    public void setRoomDetails_ResortPeriodStartDate(String value, String baseXpath) {
+        setStartDate(baseXpath, value);
     }
 
     public void setEndDate(String baseXpath, String value) {
@@ -1961,5 +1989,78 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public String getPartyId(String index) {
         return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails[" + index + "]/guest/partyId");
+    }
+
+    public void addRoom(AccommodationBaseTest base) {
+        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails";
+        int numRooms = getNumberOfRequestNodesByXPath(baseXpath);
+        setRequestNodeValueByXPath(baseXpath.replace("/roomDetails", ""), BaseSoapCommands.ADD_NODE.commandAppend("roomDetails"));
+        numRooms++;
+        baseXpath = baseXpath + "[" + String.valueOf(numRooms) + "]";
+        // Set the top-level values (roomTypeCode, resortCode, etc.)
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("bookingDate"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("freezeId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guaranteeStatus"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("inventoryStatus"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("overideFreeze"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("packageCode"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("resortCode"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("roomTypeCode"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("rsrReservation"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("travelComponentGroupingId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("travelComponentId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("travelStatus"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("shared"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("specialNeedsRequested"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("externalReferences"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("resortPeriod"));
+        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("roomReservationDetail"));
+        setRequestNodeValueByXPath(baseXpath + "/bookingDate", Randomness.generateCurrentXMLDate());
+        setRequestNodeValueByXPath(baseXpath + "/freezeId", "0");
+        setRequestNodeValueByXPath(baseXpath + "/guaranteeStatus", "NONE");
+        setRequestNodeValueByXPath(baseXpath + "/inventoryStatus", "Unassigned");
+        setRequestNodeValueByXPath(baseXpath + "/overideFreeze", "true");
+        setRequestNodeValueByXPath(baseXpath + "/packageCode", base.getPackageCode());
+        setRequestNodeValueByXPath(baseXpath + "/resortCode", base.getResortCode());
+        setRequestNodeValueByXPath(baseXpath + "/roomTypeCode", base.getRoomTypeCode());
+        if (isValid(base.isRSR()) && base.isRSR()) {
+            setRequestNodeValueByXPath(baseXpath + "/rsrReservation", "true");
+        } else {
+            setRequestNodeValueByXPath(baseXpath + "/rsrReservation", "false");
+        }
+        setRequestNodeValueByXPath(baseXpath + "/travelComponentGroupingId", "0");
+        setRequestNodeValueByXPath(baseXpath + "/travelComponentId", "0");
+        setRequestNodeValueByXPath(baseXpath + "/travelStatus", "Booked");
+        setRequestNodeValueByXPath(baseXpath + "/locationId", base.getLocationId());
+        if (isValid(base.isShared()) && base.isShared()) {
+            setRequestNodeValueByXPath(baseXpath + "/shared", "true");
+        } else {
+            setRequestNodeValueByXPath(baseXpath + "/shared", "false");
+        }
+        if (isValid(base.isADA()) && base.isADA()) {
+            setRequestNodeValueByXPath(baseXpath + "/specialNeedsRequested", "true");
+        } else {
+            setRequestNodeValueByXPath(baseXpath + "/specialNeedsRequested", "false");
+        }
+
+        // Add the external references
+        String tempXpath = baseXpath + "/externalReferences";
+        setRequestNodeValueByXPath(tempXpath, BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceType"));
+        setRequestNodeValueByXPath(tempXpath, BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceNumber"));
+        setRequestNodeValueByXPath(tempXpath, BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceSource"));
+        setRoomDetails_ExternalRefs(BaseSoapCommands.REMOVE_NODE.toString(), base.getExternalRefNumber(), base.getExternalRefSource(), "RESERVATION", tempXpath + "/");
+
+        // Add the resort period
+        tempXpath = baseXpath + "/resortPeriod";
+        setRequestNodeValueByXPath(tempXpath, BaseSoapCommands.ADD_NODE.commandAppend("endDate"));
+        setRequestNodeValueByXPath(tempXpath, BaseSoapCommands.ADD_NODE.commandAppend("startDate"));
+        setRoomDetails_ResortPeriod(base.getArrivalDate(), base.getDepartureDate(), tempXpath + "/");
+
+        // Add the guest reference details
+        tempXpath = baseXpath + "/roomReservationDetail";
+        // setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestReferenceDetails"));
+        tempXpath = tempXpath + "/guestReferenceDetails";
+        addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, base.getAdditionalGuests().get(base.getAdditionalGuests().size()), tempXpath);
     }
 }
