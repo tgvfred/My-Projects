@@ -6,8 +6,8 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 
+@Deprecated
 public class Book extends AccommodationSalesServicePort {
-
     public Book(String environment, String scenario) {
         super(environment);
 
