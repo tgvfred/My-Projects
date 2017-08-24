@@ -25,23 +25,20 @@ public class TestUnShare_twoTcg_nullRoomNumber extends AccommodationBaseTest {
     String ownerIdOne;
     String ownerIdTwo;
 
+    @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
-        // to invoke lower levels of reporting
-        Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
-        daysOut.set(0);
-        nights.set(1);
-        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
-        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
-        setValues();
-        bookReservation();
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getNights());
+        setValues(getEnvironment());
+        isComo.set("true");
 
         firstTCG = getBook().getTravelComponentGroupingId();
         captureFirstOwnerId();
-
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
