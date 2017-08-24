@@ -32,6 +32,7 @@ public class TestShare_twoTcg_shareTwice extends AccommodationBaseTest {
         // to invoke lower levels of reporting
         Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
+        isComo.set("false");
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));

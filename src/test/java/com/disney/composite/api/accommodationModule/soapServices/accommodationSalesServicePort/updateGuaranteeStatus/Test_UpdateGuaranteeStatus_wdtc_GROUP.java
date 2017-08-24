@@ -19,6 +19,7 @@ public class Test_UpdateGuaranteeStatus_wdtc_GROUP extends AccommodationBaseTest
     @Parameters("environment")
     public void setup(String environment) {
         this.environment = environment;
+        isComo.set("false");
 
     }
 

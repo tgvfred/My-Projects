@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
@@ -23,6 +23,6 @@ public class TestCancel_NullRequest extends AccommodationBaseTest {
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(cancel, LiloResmErrorCode.REQ_PARAM_MISSING);
     }
 }

@@ -1,7 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
@@ -12,9 +10,6 @@ import com.disney.utils.TestReporter;
 public class TestShare_twoTcg_oneInvalidTcg_Negative extends AccommodationBaseTest {
 
     private Share share;
-
-    @BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share", "negative" })
     public void Test_Share_twoTcg_oneInvalidTcg_Negative() {

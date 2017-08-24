@@ -18,6 +18,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -29,10 +30,10 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
 
         Share share = new Share(environment);
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-		share.setRoomNumber(BaseSoapCommands.REMOVE_NODE.toString());
-		share.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
+        share.setRoomNumber(BaseSoapCommands.REMOVE_NODE.toString());
+        share.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
         share.sendRequest();
-        TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Validate billy this guy");
+        TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing a res: " + share.getFaultString());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })

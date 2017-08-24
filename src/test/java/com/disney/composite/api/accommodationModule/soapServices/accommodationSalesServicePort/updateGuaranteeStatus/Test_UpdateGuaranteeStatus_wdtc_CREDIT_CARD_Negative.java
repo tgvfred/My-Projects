@@ -19,13 +19,18 @@ public class Test_UpdateGuaranteeStatus_wdtc_CREDIT_CARD_Negative extends Accomm
     @Parameters("environment")
     public void setup(String environment) {
         this.environment = environment;
+        isComo.set("false");
 
     }
 
     @Override
     @AfterMethod(alwaysRun = true)
     public void teardown() {
-        cancel();
+        try {
+            cancel();
+        } catch (Exception e) {
+
+        }
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })

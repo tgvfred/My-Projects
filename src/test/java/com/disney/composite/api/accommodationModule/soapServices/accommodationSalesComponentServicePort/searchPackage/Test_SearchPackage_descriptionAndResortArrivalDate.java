@@ -24,7 +24,7 @@ public class Test_SearchPackage_descriptionAndResortArrivalDate extends Accommod
         search.setPackageDescription("Basic Package");
         search.setResortArrivalDate(Randomness.generateCurrentXMLDate());
         search.sendRequest();
-        TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", search);
+        TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + search.getFaultString(), search);
 
         packageCheck(search.getPackageDescriptionByPackageCode(pkgCode));
 

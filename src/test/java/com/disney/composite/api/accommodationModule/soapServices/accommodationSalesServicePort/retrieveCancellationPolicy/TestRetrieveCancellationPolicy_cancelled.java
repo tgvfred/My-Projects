@@ -20,7 +20,7 @@ public class TestRetrieveCancellationPolicy_cancelled extends AccommodationBaseT
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
 
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred when sending request", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred when sending request: " + cancel.getFaultString(), cancel);
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());

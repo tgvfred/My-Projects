@@ -36,6 +36,7 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
         // to invoke lower levels of reporting
         Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setArrivalDate(getDaysOut());
         setNights(2);

@@ -19,7 +19,7 @@ public class TestRetrieveCancellationPolicy_checkIn extends AccommodationBaseTes
         check.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         check.sendRequest();
 
-        TestReporter.logAPI(!check.getResponseStatusCode().equals("200"), "An error occurred when sending request", check);
+        TestReporter.logAPI(!check.getResponseStatusCode().equals("200"), "An error occurred when sending request: " + check.getFaultString(), check);
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());

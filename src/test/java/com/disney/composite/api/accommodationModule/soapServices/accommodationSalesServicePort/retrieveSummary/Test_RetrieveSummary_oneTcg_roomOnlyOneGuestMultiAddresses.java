@@ -18,6 +18,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuestMultiAddresses extends 
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -25,9 +26,9 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuestMultiAddresses extends 
         setValues(environment);
         bookReservation();
 
-        book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTicketsMultiAddr");
+        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "RoomOnlyNoTicketsMultiAddr");
         book.sendRequest();
-
+        TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify that no error occurred while booking: " + book.getFaultString(), book);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })

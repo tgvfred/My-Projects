@@ -16,6 +16,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyADA extends AccommodationBaseTe
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -33,7 +34,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyADA extends AccommodationBaseTe
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
         // Everything is correct in the RS, but the validation says it's not
         TestReporter.assertTrue(retrieve.getADA().equals("true"), "ADA Successfully flipped! [" + retrieve.getADA() + "] ");
 

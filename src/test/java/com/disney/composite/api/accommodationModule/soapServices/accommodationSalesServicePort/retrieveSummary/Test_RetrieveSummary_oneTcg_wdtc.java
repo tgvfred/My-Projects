@@ -19,13 +19,18 @@ public class Test_RetrieveSummary_oneTcg_wdtc extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         this.environment = environment;
+        isComo.set("false");
 
     }
 
     @Override
     @AfterMethod(alwaysRun = true)
     public void teardown() {
-        cancel();
+        try {
+            cancel();
+        } catch (Exception e) {
+
+        }
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
@@ -42,7 +47,7 @@ public class Test_RetrieveSummary_oneTcg_wdtc extends AccommodationBaseTest {
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.logStep("Verify roomOnly node is false.");
         TestReporter.assertTrue(retrieve.getRoomOnlyStatus().equals("false"), "Room Only node returns false! ");

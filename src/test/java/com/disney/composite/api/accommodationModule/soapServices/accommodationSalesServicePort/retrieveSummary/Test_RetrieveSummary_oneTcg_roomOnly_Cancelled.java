@@ -28,7 +28,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_Cancelled extends Accommodatio
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
         TestReporter.assertTrue(retrieve.getStatus().equals("Cancelled"), "Successfully cancelled! ");
 
         // Old vs New Validation

@@ -4,7 +4,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.GetAccommodationExternalReferences;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
@@ -36,7 +36,7 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(get, LiloResmErrorCode.REQ_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
@@ -49,7 +49,7 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(get, LiloResmErrorCode.REQ_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
@@ -63,7 +63,7 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(get, LiloResmErrorCode.REQ_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
@@ -89,6 +89,6 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.NO_ACCOMMODATION_COMPONENT_EXCEPTION);
+        validateApplicationError(get, LiloResmErrorCode.NO_ACCOMMODATION_COMPONENT_EXCEPTION);
     }
 }

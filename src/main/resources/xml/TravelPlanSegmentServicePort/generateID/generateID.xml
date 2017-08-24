@@ -1,0 +1,26 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:seg="http://transferobject.booking.dreams.wdw.com/Segment">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <seg:generateId>
+         <context>
+            <addressRole>?</addressRole>
+            <conversationId>?</conversationId>
+            <messageId>?</messageId>
+            <party1Id>?</party1Id>
+            <party1Type>?</party1Type>
+            <party2Id>?</party2Id>
+            <party2Type>?</party2Type>
+            <pathHostName>?</pathHostName>
+            <pathId>?</pathId>
+            <principalId>?</principalId>
+            <principalMethod>?</principalMethod>
+            <principalRole>?</principalRole>
+            <principalUri>?</principalUri>
+            <principalValue>?</principalValue>
+            <requestTimeStamp>?</requestTimeStamp>
+            <toAddressRole>?</toAddressRole>
+            <userName>?</userName>
+         </context>
+      </seg:generateId>
+   </soapenv:Body>
+</soapenv:Envelope>

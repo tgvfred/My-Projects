@@ -24,6 +24,7 @@ public class Test_RetrieveSummary_oneTcg_wdtcWithTickets extends AccommodationBa
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -127,7 +128,7 @@ public class Test_RetrieveSummary_oneTcg_wdtcWithTickets extends AccommodationBa
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.logStep("Verify Ticket Group node is found.");
         TestReporter.assertTrue(retrieve.getTicketGroup() != null, "Ticket Group found! [" + retrieve.getTicketGroup() + "] ");

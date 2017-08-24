@@ -25,6 +25,7 @@ public class TestShare_twoTcg_differentPackageCodes_Negative extends Accommodati
         // to invoke lower levels of reporting
         Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
+        isComo.set("false");
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
@@ -41,6 +42,7 @@ public class TestShare_twoTcg_differentPackageCodes_Negative extends Accommodati
         setSendRequest(false);
         bookReservation();
         getBook().setRoomDetailsPackageCode(packageCode);
+        getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
     }
