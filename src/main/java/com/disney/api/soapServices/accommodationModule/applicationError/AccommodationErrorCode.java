@@ -117,8 +117,6 @@ public class AccommodationErrorCode {
 
     public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode(APPLICATION, 1001,
             "Unexpected Error occurred");
-    public static final ApplicationErrorCode GUARANTEE_STATUS_CANNOT_CHANGE = new ApplicationErrorCode(MOD_NAME, 7195,
-            " Guarantee status can not be changed ");
 
     public static final ApplicationErrorCode ACCOMMODATION_INVALID_FOR_SHARE = new ApplicationErrorCode(MOD_NAME, 7130,
             "Accommodation is invalid for Share");
@@ -132,16 +130,36 @@ public class AccommodationErrorCode {
             "Package Code is invalid");
     public static final ApplicationErrorCode INVALID_RESORT_PERIOD = new ApplicationErrorCode(MODULE_NAME, 7107,
             " Resort Period is invalid ");
+    public static final ApplicationErrorCode TPS_CANNOT_BE_NULL = new ApplicationErrorCode(MODULE_NAME, 7008,
+            "TRAVEL_PLAN_SEGMENT_NOT_FOUND");
+    public static final ApplicationErrorCode COMMENT_LVL_REQUIRED = new ApplicationErrorCode(MODULE_NAME, 8078,
+            " Create Comments Request Invalid ");
+    public static final ApplicationErrorCode NO_ACCOMM_COMPONENT_EXCEPTION = new ApplicationErrorCode(MODULE_NAME, 7177,
+            " No Accommodation Component found. ");
+    public static final ApplicationErrorCode ACCOMM_INVALID_FOR_SHARE = new ApplicationErrorCode(MODULE_NAME, 7130,
+            "Accommodation is invalid for Share");
+    public static final ApplicationErrorCode CANNOT_CHANGE_PACKAGE_ACCOM = new ApplicationErrorCode(MODULE_NAME, 7208,
+            "Cannot change Block/Resort/Package for an shared Accommodation.");
     public static final ApplicationErrorCode INVALID_GATHERING_DETAIL = new ApplicationErrorCode(MODULE_NAME, 7156,
             "Gathering Detail is not valid");
+    public static final ApplicationErrorCode ACCOMM_NOT_FOUND = new ApplicationErrorCode(MODULE_NAME, 9121,
+            "Accommodations not found");
+    public static final ApplicationErrorCode ACCOMMODATION_INVALID_SHARE = new ApplicationErrorCode(MODULE_NAME, 7130,
+            "Accommodation is invalid for Share");
+    public static final ApplicationErrorCode GUARANTEE_STATUS_CANNOT_CHANGE = new ApplicationErrorCode(MODULE_NAME, 7195,
+            " Guarantee status can not be changed ");
     public static final ApplicationErrorCode EXTERNAL_REFERENCE_REQUIRED = new ApplicationErrorCode(
             MODULE_NAME, 7088, "External Reference is required");
     public static final ApplicationErrorCode DIRECT_CONNECT_BOTH_FPLOSID_AND_FREEZEID_CANNOT_EXIST = new ApplicationErrorCode(MODULE_NAME, 7216,
             "FPLOSID AND FREEZEID CANNOT BE USED TOGETHER!");
     public static final ApplicationErrorCode TRAVEL_STATUS_INVALID = new ApplicationErrorCode(MODULE_NAME, 7110,
             " Travel Status is invalid ");
+    public static final ApplicationErrorCode REQUIRED_PARAM_MISSING = new ApplicationErrorCode(MODULE_NAME, 7064,
+            " Required parameters are missing ");
     public static final ApplicationErrorCode EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED = new ApplicationErrorCode(MODULE_NAME, 7090,
             "External Reference Source or Code required");
+    public static final ApplicationErrorCode TCG_NOT_FOUND = new ApplicationErrorCode(MODULE_NAME, 9120,
+            "Travel Component Grouping not found");
     public static final ApplicationErrorCode INVALID_RESORT_CODE = new ApplicationErrorCode(MODULE_NAME, 7106,
             "Resort Code is invalid");
     public static final ApplicationErrorCode TRAVEL_PLAN_NOT_FOUND = new ApplicationErrorCode(MODULE_NAME, 7007,

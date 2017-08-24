@@ -9,7 +9,6 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestRetreiveIdsToProcess_nullProcessId extends AccommodationBaseTest {
@@ -40,18 +39,18 @@ public class TestRetreiveIdsToProcess_nullProcessId extends AccommodationBaseTes
             TestReporter.assertTrue(true,
                     "Validating no ProcessDataIdList returned in the reponse for getRetreiveIdsToProcessResponse");
         }
-
-        if (Environment.isSpecialEnvironment(environment)) {
-            RetreiveIdsToProcess clone = (RetreiveIdsToProcess) retreiveIds.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(retreiveIds, true), "Validating Response Comparison");
-        }
+        // Shouldn't be needed since the old environment will bring back different negative faults than the new environment
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // RetreiveIdsToProcess clone = (RetreiveIdsToProcess) retreiveIds.clone();
+        // clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+        // clone.sendRequest();
+        // if (!clone.getResponseStatusCode().equals("200")) {
+        // TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
+        // }
+        // clone.addExcludedBaselineAttributeValidations("@xsi:nil");
+        // clone.addExcludedBaselineAttributeValidations("@xsi:type");
+        // TestReporter.assertTrue(clone.validateResponseNodeQuantity(retreiveIds, true), "Validating Response Comparison");
+        // }
     }
 
 }

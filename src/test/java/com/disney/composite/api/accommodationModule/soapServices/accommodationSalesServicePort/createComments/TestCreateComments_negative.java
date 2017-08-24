@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateComments;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
@@ -46,7 +46,7 @@ public class TestCreateComments_negative extends AccommodationBaseTest {
         create.sendRequest();
 
         TestReporter.assertEquals(create.getFaultString(), faultString, "Verify that the fault string [" + create.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(create, LiloResmErrorCode.COMMENT_LEVEL_REQUIRED);
+        validateApplicationError(create, AccommodationErrorCode.COMMENT_LVL_REQUIRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments", "negative" })
@@ -58,7 +58,7 @@ public class TestCreateComments_negative extends AccommodationBaseTest {
         create.sendRequest();
 
         TestReporter.assertEquals(create.getFaultString(), faultString, "Verify that the fault string [" + create.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(create, LiloResmErrorCode.REQUEST_REQUIRED);
+        validateApplicationError(create, AccommodationErrorCode.COMMENT_LVL_REQUIRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments", "negative" })
@@ -93,7 +93,7 @@ public class TestCreateComments_negative extends AccommodationBaseTest {
         create.sendRequest();
 
         TestReporter.assertEquals(create.getFaultString(), faultString, "Verify that the fault string [" + create.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(create, LiloResmErrorCode.REQUEST_REQUIRED);
+        validateApplicationError(create, AccommodationErrorCode.COMMENT_LVL_REQUIRED);
     }
 
 }

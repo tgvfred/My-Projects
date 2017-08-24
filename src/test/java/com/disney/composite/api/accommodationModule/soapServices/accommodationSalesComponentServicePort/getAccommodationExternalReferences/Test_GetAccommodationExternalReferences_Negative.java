@@ -4,7 +4,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.GetAccommodationExternalReferences;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
@@ -30,32 +30,32 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
     public void testGetAccommodationExternalReferences_nullRequest() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Missing Required Parameters";
 
         GetAccommodationExternalReferences get = new GetAccommodationExternalReferences(environment, "Main");
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, LiloResmErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(get, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
     public void testGetAccommodationExternalReferences_tpsOnly() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Missing Required Parameters";
 
         GetAccommodationExternalReferences get = new GetAccommodationExternalReferences(environment, "Main");
         get.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, LiloResmErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(get, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
     public void testGetAccommodationExternalReferences_negativeTcg() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Missing Required Parameters";
 
         GetAccommodationExternalReferences get = new GetAccommodationExternalReferences(environment, "Main");
         get.setTravelComponentGroupingId("-1");
@@ -63,14 +63,14 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, LiloResmErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(get, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
     public void testGetAccommodationExternalReferences_showDiningReservation() {
 
         String tcg;
-        String faultString = " No Accommodation Component found. : null";
+        String faultString = " No Accommodation Component found. : No Accommodation Found";
 
         // Removed dining.setTravelPlanId(getBook().getTravelPlanId()); to make it a stand-alone, include it to add to the Accommodation
         ScheduledEventReservation dining = new ShowDiningReservation(getEnvironment().toLowerCase().replace("_cm", ""));
@@ -89,6 +89,6 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, LiloResmErrorCode.NO_ACCOMMODATION_COMPONENT_EXCEPTION);
+        validateApplicationError(get, AccommodationErrorCode.NO_ACCOMM_COMPONENT_EXCEPTION);
     }
 }

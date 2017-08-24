@@ -13,7 +13,7 @@ public class Test_UpdateGuaranteeStatus_roomOnly_CREDIT_CARD_Negative extends Ac
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_roomOnly_CREDIT_CARD_Negative() {
 
-        String faultString = " Guarantee status can not be changed  : guarantee status can not be changed";
+        String faultString = " Guarantee status can not be changed  : Guarantee status can not be changed";
 
         UpdateGuaranteeStatusHelper helper = new UpdateGuaranteeStatusHelper(environment);
 
