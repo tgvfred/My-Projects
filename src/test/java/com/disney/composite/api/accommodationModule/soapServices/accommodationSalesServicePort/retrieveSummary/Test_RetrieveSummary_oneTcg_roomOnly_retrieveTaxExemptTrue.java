@@ -31,29 +31,17 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestRetrieveTaxExempt("true");
-        retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+        if (Environment.isSpecialEnvironment(environment)) {
+            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        } else {
+            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
+        }
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.logStep("Verify Tax Exempt Details are found.");
         TestReporter.assertTrue(retrieve.getTaxExemptCertificateNumber().equals("1"), "Tax Exempt Certificate Number Found [1]! ");
         TestReporter.assertTrue(retrieve.getTaxExemptType().equals("Military"), "Tax Exempt Type Found [Military]!");
-
-        // Old vs New Validation
-        if (Environment.isSpecialEnvironment(environment)) {
-            RetrieveSummary clone = (RetrieveSummary) retrieve.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
-        }
 
     }
 
