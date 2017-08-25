@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="BookByExtendingBaseTest" parallel="methods" thread-count="50" >
-	<parameter name="environment" value="latest" />
+	<parameter name="environment" value="latest_cm" />
 	<test name="BookByExtendingBaseTest">
 		<classes>
 			<class name="com.disney.composite.api.accommodationModule.soapServices._examples.BookByExtendingBaseTest"></class>

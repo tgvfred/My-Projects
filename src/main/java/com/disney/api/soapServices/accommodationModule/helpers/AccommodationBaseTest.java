@@ -41,6 +41,7 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.ResortInfo;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.FacilityDatabase;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.DVCSalesDreams;
@@ -743,7 +744,8 @@ public class AccommodationBaseTest extends BaseRestTest {
         } else {
             dbEnv = getEnvironment();
         }
-        Database db = new OracleDatabase(dbEnv, "DREAMS");
+        // System.out.println();
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts()));
         for (int i = 0; i < roomTypeAndFacInfo.length; i++) {
             roomTypeAndFacInfo[i][0] = rs.getValue("NUMROOMS", i + 1);
@@ -1285,11 +1287,12 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setLocationId(roomTypeAndFacInfo[index][5]);
 
                 String sql = "select d.WRK_LOC_ID "
-                        + "from rsrc_inv.wrk_loc d "
-                        + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
+                        + "from tfdb_3.wrk_loc d "
+                        + "where d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
                         + "and d.TXN_ACCT_CTR_ID is not null "
                         + "order by d.CREATE_DTS asc";
-                Database db = new OracleDatabase(getEnvironment().toLowerCase().replace("_cm", ""), Database.DREAMS);
+                System.out.println();
+                Database db = new Database(FacilityDatabase.getInfo(environment));
                 Recordset rs = new Recordset(db.getResultSet(sql));
 
                 if (rs.getRowCount() == 0) {

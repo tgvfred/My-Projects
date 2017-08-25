@@ -72,6 +72,11 @@
 			<artifactId>DVCCorp</artifactId>
 			<version>1.0.00</version>
 		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Facility</artifactId>
+			<version>1.0.3</version>
+		</dependency>
 	</dependencies>	
 	<properties>
 		<aspectj.version>1.8.5</aspectj.version>
