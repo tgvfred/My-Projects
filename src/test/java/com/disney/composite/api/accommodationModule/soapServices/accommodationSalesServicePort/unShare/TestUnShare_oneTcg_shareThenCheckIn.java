@@ -4,10 +4,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UnShare;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UnShareHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -15,7 +17,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestUnShare_twoTcg_twoAttempts_invertOrderOnSecondAttempt extends AccommodationBaseTest {
+public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
 
     private UnShare unshare;
     private Share share;
@@ -46,61 +48,25 @@ public class TestUnShare_twoTcg_twoAttempts_invertOrderOnSecondAttempt extends A
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
-    public void Test_unShare_twoTcgs_twoAttempts_invertOrderOnSecondAttempt() {
+    public void Test_unShare_oneTcg_shareThenCheckIn() {
 
         share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
+
+        CheckIn checkIn = new CheckIn(environment, "Main");
+        checkIn.setTravelComponentGroupingId(firstTCG);
+        checkIn.setRequestNodeValueByXPath("/Envelope/Body/checkIn/request/checkInGuestDetails/guestId", BaseSoapCommands.REMOVE_NODE.toString());
+        checkIn.sendRequest();
+        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + share.getFaultString(), share);
 
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(firstTCG);
-        unshare.sendRequest();
-        TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
-        validateResponse();
-
-        // book second reservation.
-        setDaysOut(1);
-        setNights(2);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getNights());
-        setValues(getEnvironment());
-        isComo.set("true");
-        setSendRequest(false);
-        bookReservation();
-        getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
-        getBook().sendRequest();
-        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
-        captureSecondOwnerId();
-
-        // verify that the owner id's for the first and second tcg do not match.
-        TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
-
-        share = new Share(environment, "Main_oneTcg");
-        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        share.sendRequest();
-        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
-
-        // unshare the second reservation.
-        unshare = new UnShare(environment, "Main");
-        unshare.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         unshare.sendRequest();
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
         validateResponse();
         validations();
-
-        // unshare the second reservation.
-        unshare = new UnShare(environment, "Main");
-        unshare.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        unshare.sendRequest();
-        TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
-        validateResponse();
-
-        unshare = new UnShare(environment, "Main");
-        unshare.setTravelComponentGroupingId(firstTCG);
-        unshare.sendRequest();
-        TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
-        validateInvertUnShare();
 
         if (Environment.isSpecialEnvironment(environment)) {
             UnShare clone = (UnShare) unshare.clone();
@@ -130,7 +96,7 @@ public class TestUnShare_twoTcg_twoAttempts_invertOrderOnSecondAttempt extends A
         TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), tcgId, "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "] that which is expected [" + tcgId + "].");
         TestReporter.softAssertEquals(getBook().getTravelComponentId(), tcId, "Verify that the response returns the tcId [" + getBook().getTravelComponentId() + "] that which is expected [" + tcId + "].");
         TestReporter.softAssertEquals(Randomness.generateCurrentXMLDate(), bookingDate.substring(0, 10), "Verify that the booking date [" + Randomness.generateCurrentXMLDate() + "] that which is expected [" + bookingDate.substring(0, 10) + "].");
-        TestReporter.softAssertEquals(travelStatus, "Booked", "Verify that the response returns the travel status [" + travelStatus + "] that which is expected [Booked].");
+        TestReporter.softAssertEquals(travelStatus, "Checked In", "Verify that the response returns the travel status [" + travelStatus + "] that which is expected [Checked In].");
         TestReporter.assertAll();
 
     }
@@ -138,26 +104,11 @@ public class TestUnShare_twoTcg_twoAttempts_invertOrderOnSecondAttempt extends A
     public void validations() {
         UnShareHelper helper = new UnShareHelper(getEnvironment());
 
-        int numExpectedRecords = 3;
-        helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
-
-        int numExpectedRecords2 = 1;
-        helper.validateShareInFlag(numExpectedRecords2, getBook().getTravelComponentGroupingId());
-
-        helper.validateMultipleOwnerIds(firstTCG, getBook().getTravelComponentGroupingId());
-
-    }
-
-    public void validateInvertUnShare() {
-        UnShareHelper helper = new UnShareHelper(getEnvironment());
-
         int numExpectedRecords = 4;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;
         helper.validateShareInFlag(numExpectedRecords2, getBook().getTravelComponentGroupingId());
-
-        helper.validateMultipleOwnerIds(firstTCG, getBook().getTravelComponentGroupingId());
 
     }
 
@@ -180,5 +131,4 @@ public class TestUnShare_twoTcg_twoAttempts_invertOrderOnSecondAttempt extends A
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
 
     }
-
 }
