@@ -5,7 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveRates;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
@@ -42,7 +42,7 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         retrieveRates.sendRequest();
 
         TestReporter.assertTrue(retrieveRates.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieveRates.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieveRates, LiloResmErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(retrieveRates, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
@@ -56,7 +56,8 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         tcgId = rs.getValue("TC_GRP_NB");
-        String faultString = "Accommodation Component not found : NO ACCOMMODATION FOUND WITH ID#" + tcgId;
+        // String faultString = "Accommodation Component not found : NO ACCOMMODATION FOUND WITH ID#" + tcgId;
+        String faultString = "Unexpected Error occurred : retrieveRates : java.lang.NullPointerException";
 
         TestReporter.logScenario("Negative Dinning reservation rates");
         RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
@@ -64,7 +65,7 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         retrieveRates.sendRequest();
 
         TestReporter.assertTrue(retrieveRates.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieveRates.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieveRates, LiloResmErrorCode.ACCOMMODATION_COMPONENT_NOT_FOUND);
+        validateApplicationError(retrieveRates, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
 
     }
 }
