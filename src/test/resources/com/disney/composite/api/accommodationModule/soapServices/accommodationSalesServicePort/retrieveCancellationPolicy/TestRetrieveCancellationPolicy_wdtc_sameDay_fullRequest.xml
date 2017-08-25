@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestRetrieveCancellationPolicy_wdtc_sameDay_fullRequest" parallel="methods" thread-count="20">
-	<parameter name="environment" value="latest_cm" />
+	<parameter name="environment" value="latest" />
 	<test name="TestRetrieveCancellationPolicy_wtdc_sameDay_fullRequest">
 		<classes>
 			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveCancellationPolicy.TestRetrieveCancellationPolicy_wdtc_sameDay_fullRequest" />

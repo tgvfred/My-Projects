@@ -60,19 +60,19 @@ public class TestRetrieveRates_wdtc_oneNight extends AccommodationBaseTest {
 
         // Will not work bc a similar node has different values depending on environment
         // Validate the Old to the New
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // RetrieveRates clone = (RetrieveRates) retrieveRates.clone();
-        // clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-        // clone.sendRequest();
-        // if (!clone.getResponseStatusCode().equals("200")) {
-        // TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-        // }
-        // clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-        // clone.addExcludedBaselineAttributeValidations("@xsi:type");
-        // clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-        // clone.addExcludedBaselineXpathValidations("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/billCode");
-        // TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieveRates, true),
-        // "Validating Response Comparison");
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            RetrieveRates clone = (RetrieveRates) retrieveRates.clone();
+            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+            clone.sendRequest();
+            if (!clone.getResponseStatusCode().equals("200")) {
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+            }
+            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
+            clone.addExcludedBaselineAttributeValidations("@xsi:type");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/billCode");
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieveRates, true),
+                    "Validating Response Comparison");
+        }
     }
 }
