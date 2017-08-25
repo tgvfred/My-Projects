@@ -41,6 +41,7 @@ public class TestRetrieveCancellationPolicy_roomOnly_sameDay_addBundle extends A
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred when sending request", retrieve);
 
+        // may not be possible bc of similar nods bringing back different values depending on environment
         // Validate old vs. new service
         if (Environment.isSpecialEnvironment(getEnvironment())) {
             RetrieveTravelPlanMediaCustomization clone = (RetrieveTravelPlanMediaCustomization) retrieve.clone();

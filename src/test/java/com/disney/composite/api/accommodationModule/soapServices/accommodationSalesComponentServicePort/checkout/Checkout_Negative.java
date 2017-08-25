@@ -66,6 +66,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceCode("Accovia");
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");

@@ -130,6 +130,9 @@ public class AccommodationErrorCode {
             "Package Code is invalid");
     public static final ApplicationErrorCode INVALID_RESORT_PERIOD = new ApplicationErrorCode(MODULE_NAME, 7107,
             " Resort Period is invalid ");
+
+    public static final ApplicationErrorCode ACCOMM_NOT_IN_BOOKED_STATUS = new ApplicationErrorCode(MODULE_NAME, 7192,
+            " Accommodation should be in Booked status to be cancelled");
     public static final ApplicationErrorCode TPS_CANNOT_BE_NULL = new ApplicationErrorCode(MODULE_NAME, 7008,
             "TRAVEL_PLAN_SEGMENT_NOT_FOUND");
     public static final ApplicationErrorCode COMMENT_LVL_REQUIRED = new ApplicationErrorCode(MODULE_NAME, 8078,
