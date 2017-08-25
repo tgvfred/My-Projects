@@ -26,6 +26,7 @@ public class Test_SearchPackage_packageCodeAndSalesChannelId extends Accommodati
             if (!clone.getResponseStatusCode().equals("200")) {
                 TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
             }
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(search, true), "Validating Response Comparison");
         }
     }
