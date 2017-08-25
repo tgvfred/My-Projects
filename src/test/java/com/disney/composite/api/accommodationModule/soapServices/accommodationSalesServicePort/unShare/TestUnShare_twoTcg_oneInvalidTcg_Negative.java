@@ -15,7 +15,6 @@ public class TestUnShare_twoTcg_oneInvalidTcg_Negative extends AccommodationBase
 
     private UnShare unshare;
     private Share share;
-    private String firstTCG;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -33,9 +32,6 @@ public class TestUnShare_twoTcg_oneInvalidTcg_Negative extends AccommodationBase
         getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
-
-        firstTCG = getBook().getTravelComponentGroupingId();
-
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
@@ -47,7 +43,7 @@ public class TestUnShare_twoTcg_oneInvalidTcg_Negative extends AccommodationBase
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
         unshare = new UnShare(environment, "Main");
-        unshare.setTravelComponentGroupingId(firstTCG);
+        unshare.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         unshare.sendRequest();
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
 

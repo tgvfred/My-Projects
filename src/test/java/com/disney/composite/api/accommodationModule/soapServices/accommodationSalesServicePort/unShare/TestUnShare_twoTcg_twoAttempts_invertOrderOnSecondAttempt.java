@@ -4,6 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UnShare;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UnShareHelper;
@@ -14,16 +15,15 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBaseTest {
+public class TestUnShare_twoTcg_twoAttempts_invertOrderOnSecondAttempt extends AccommodationBaseTest {
 
     private UnShare unshare;
+    private Share share;
     String firstOwnerId;
     String secondOwnerId;
     String firstTCG;
     String ownerIdOne;
     String ownerIdTwo;
-    String firstTC;
-    String firstTPS;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -46,9 +46,13 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
-    public void Test_unShare_unshareNonSharedAccommodations() {
+    public void Test_unShare_twoTcgs_twoAttempts_invertOrderOnSecondAttempt() {
 
-        // unshare the first reservation.
+        share = new Share(environment, "Main_oneTcg");
+        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        share.sendRequest();
+        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
+
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(firstTCG);
         unshare.sendRequest();
@@ -72,6 +76,11 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         // verify that the owner id's for the first and second tcg do not match.
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
 
+        share = new Share(environment, "Main_oneTcg");
+        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        share.sendRequest();
+        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
+
         // unshare the second reservation.
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -79,6 +88,20 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
         validateResponse();
         validations();
+
+        // unshare the second reservation.
+        unshare = new UnShare(environment, "Main");
+        unshare.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        unshare.sendRequest();
+        TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
+        validateResponse();
+        validations();
+
+        unshare = new UnShare(environment, "Main");
+        unshare.setTravelComponentGroupingId(firstTCG);
+        unshare.sendRequest();
+        TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
+        validateResponse();
 
         if (Environment.isSpecialEnvironment(environment)) {
             UnShare clone = (UnShare) unshare.clone();
@@ -116,7 +139,7 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
     public void validations() {
         UnShareHelper helper = new UnShareHelper(getEnvironment());
 
-        int numExpectedRecords = 2;
+        int numExpectedRecords = 3;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;
@@ -145,4 +168,5 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
 
     }
+
 }
