@@ -1286,11 +1286,20 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setRoomTypeCode(roomTypeAndFacInfo[index][1]);
                 setLocationId(roomTypeAndFacInfo[index][5]);
 
-                String sql = "select d.WRK_LOC_ID "
-                        + "from tfdb_3.wrk_loc d "
-                        + "where d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
-                        + "and d.TXN_ACCT_CTR_ID is not null "
-                        + "order by d.CREATE_DTS asc";
+                String sql = null;
+                if (Environment.getBaseEnvironmentName(environment).toLowerCase().equals("grumpy")) {
+                    sql = "select d.WRK_LOC_ID "
+                            + "from RSRC_INV.wrk_loc d "
+                            + "where d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
+                            + "and d.TXN_ACCT_CTR_ID is not null "
+                            + "order by d.CREATE_DTS asc";
+                } else {
+                    sql = "select d.WRK_LOC_ID "
+                            + "from tfdb_3.wrk_loc d "
+                            + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
+                            + "and d.TXN_ACCT_CTR_ID is not null "
+                            + "order by d.CREATE_DTS asc";
+                }
                 System.out.println();
                 Database db = new Database(FacilityDatabase.getInfo(environment));
                 Recordset rs = new Recordset(db.getResultSet(sql));
