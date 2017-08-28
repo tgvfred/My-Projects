@@ -7,4 +7,4 @@
 			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.updateComments.TestUpdateComments_parentTC_updateNothing"/>
 		</classes>
 	</test> 
-</suite> 
+</suite>
