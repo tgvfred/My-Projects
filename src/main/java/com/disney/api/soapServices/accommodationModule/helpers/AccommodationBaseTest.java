@@ -1290,13 +1290,13 @@ public class AccommodationBaseTest extends BaseRestTest {
                 if (Environment.getBaseEnvironmentName(environment).toLowerCase().equals("grumpy")) {
                     sql = "select d.WRK_LOC_ID "
                             + "from RSRC_INV.wrk_loc d "
-                            + "where d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
+                            + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
                             + "and d.TXN_ACCT_CTR_ID is not null "
                             + "order by d.CREATE_DTS asc";
                 } else {
                     sql = "select d.WRK_LOC_ID "
                             + "from tfdb_3.wrk_loc d "
-                            + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
+                            + "where d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
                             + "and d.TXN_ACCT_CTR_ID is not null "
                             + "order by d.CREATE_DTS asc";
                 }
