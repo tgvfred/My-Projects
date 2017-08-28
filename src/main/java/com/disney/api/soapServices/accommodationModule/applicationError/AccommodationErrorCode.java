@@ -132,7 +132,12 @@ public class AccommodationErrorCode {
             "Package Code is invalid");
     public static final ApplicationErrorCode INVALID_RESORT_PERIOD = new ApplicationErrorCode(MODULE_NAME, 7107,
             " Resort Period is invalid ");
-
+    public static final ApplicationErrorCode CANNOT_CALCULATE_CANCEL_FEE = new ApplicationErrorCode(MODULE_NAME, 7080,
+            "cannot calculate Cancel fee");
+    public static final ApplicationErrorCode NO_TP_DATA_FOUND = new ApplicationErrorCode(MODULE_NAME, 7183,
+            "No travel plan data found.");
+    public static final ApplicationErrorCode INVALID_SEARCH_CRITERIA = new ApplicationErrorCode(MODULE_NAME, 7028,
+            "Invalid Search Criteria ");
     public static final ApplicationErrorCode ACCOMM_NOT_IN_BOOKED_STATUS = new ApplicationErrorCode(MODULE_NAME, 7192,
             " Accommodation should be in Booked status to be cancelled");
     public static final ApplicationErrorCode TPS_CANNOT_BE_NULL = new ApplicationErrorCode(MODULE_NAME, 7008,
@@ -155,6 +160,8 @@ public class AccommodationErrorCode {
             " Guarantee status can not be changed ");
     public static final ApplicationErrorCode EXTERNAL_REFERENCE_REQUIRED = new ApplicationErrorCode(
             MODULE_NAME, 7088, "External Reference is required");
+    public static final ApplicationErrorCode CANNOT_CANCEL_DVC_RES = new ApplicationErrorCode(
+            MODULE_NAME, 9122, "Cannot cancel DVC Reservation");
     public static final ApplicationErrorCode DIRECT_CONNECT_BOTH_FPLOSID_AND_FREEZEID_CANNOT_EXIST = new ApplicationErrorCode(MODULE_NAME, 7216,
             "FPLOSID AND FREEZEID CANNOT BE USED TOGETHER!");
     public static final ApplicationErrorCode TRAVEL_STATUS_INVALID = new ApplicationErrorCode(MODULE_NAME, 7110,

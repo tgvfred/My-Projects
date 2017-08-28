@@ -13,7 +13,7 @@ public class TestRetrieveCancellationPolicy_autoCancelled extends AccommodationB
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_autoCancelled() {
 
-        String faultString = "Cannot calculate Cancel fee";
+        String faultString = "cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
         AutoCancel autoCancel = new AutoCancel(getEnvironment(), "Main");
         autoCancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -27,7 +27,7 @@ public class TestRetrieveCancellationPolicy_autoCancelled extends AccommodationB
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALC_CANCEL_FEE);
+        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
 
     }
 }
