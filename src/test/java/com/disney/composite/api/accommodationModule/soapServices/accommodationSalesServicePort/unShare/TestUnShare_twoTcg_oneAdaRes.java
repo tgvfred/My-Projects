@@ -15,7 +15,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestUnShare_twoTcg extends AccommodationBaseTest {
+public class TestUnShare_twoTcg_oneAdaRes extends AccommodationBaseTest {
 
     private UnShare unshare;
     private Share share;
@@ -66,6 +66,7 @@ public class TestUnShare_twoTcg extends AccommodationBaseTest {
         setDepartureDate(getNights());
         setValues(getEnvironment());
         isComo.set("true");
+        setIsADA(true);
         setSendRequest(false);
         bookReservation();
         getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));

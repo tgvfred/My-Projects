@@ -15,7 +15,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestUnShare_twoTcg extends AccommodationBaseTest {
+public class TestUnShare_twoTcg_differentPartyMixes extends AccommodationBaseTest {
 
     private UnShare unshare;
     private Share share;
@@ -46,7 +46,7 @@ public class TestUnShare_twoTcg extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare" })
-    public void Test_unShare_twoTcgs() {
+    public void Test_unShare_twoTcgs_differentPartyMixes() {
 
         share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -67,6 +67,7 @@ public class TestUnShare_twoTcg extends AccommodationBaseTest {
         setValues(getEnvironment());
         isComo.set("true");
         setSendRequest(false);
+        setAddGuest(true);
         bookReservation();
         getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
         getBook().sendRequest();

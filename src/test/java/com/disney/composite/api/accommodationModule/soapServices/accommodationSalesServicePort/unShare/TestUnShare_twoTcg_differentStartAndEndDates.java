@@ -15,7 +15,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestUnShare_twoTcg extends AccommodationBaseTest {
+public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationBaseTest {
 
     private UnShare unshare;
     private Share share;
@@ -31,7 +31,7 @@ public class TestUnShare_twoTcg extends AccommodationBaseTest {
     public void setup(String environment) {
         setEnvironment(environment);
         setDaysOut(0);
-        setNights(1);
+        setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
@@ -46,7 +46,7 @@ public class TestUnShare_twoTcg extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare" })
-    public void Test_unShare_twoTcgs() {
+    public void Test_unShare_twoTcgs_differentStartAndEndDates() {
 
         share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
