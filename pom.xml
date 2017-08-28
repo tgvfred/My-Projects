@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.gqe.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.0.23</version>
+	<version>1.0.24</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -36,51 +36,58 @@
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Folio</artifactId>
 			<version>1.0.8</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>TravelPlanSegment</artifactId>
 			<version>1.0.01</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Resource</artifactId>
 			<version>1.0.8</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Dining</artifactId>
 			<version>1.0.6</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Activity</artifactId>
 			<version>1.0.2</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>DVCSales</artifactId>
 			<version>1.0.14</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>DVCPoints</artifactId>
 			<version>1.0.00</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>DVCCorp</artifactId>
 			<version>1.0.00</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Facility</artifactId>
 			<version>1.0.3</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>	
 	<properties>
-		<aspectj.version>1.8.5</aspectj.version>
-		<allure.version>{latest-allure-version}</allure.version>
 		<additionalparam>-Xdoclint:none</additionalparam>
 		<testNGSourceDirectory>src/test/resources</testNGSourceDirectory>
 	</properties>
