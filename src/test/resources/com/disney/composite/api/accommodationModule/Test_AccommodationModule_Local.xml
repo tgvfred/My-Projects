@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="AccommodationModule_Suite" parallel="methods" thread-count="100" >
-	<parameter name="environment" value="Latest" />
-	<test name="AccommodationModule">
+<suite name="AccommodationModule_Suite" parallel="methods" thread-count="20" configfailurepolicy="continue">
+	<parameter name="environment" value="latest_cm" />
+<!-- 	<test name="AccommodationModule_checkout" parallel="methods" thread-count="5">
+		<groups>
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
+				<exclude name="dev"/>
+				<include name="checkout"></include>
+				<exclude name="example"></exclude>
+			</run>
+		</groups>
 		<packages>
 			<package name="com.disney.composite.api.accommodationModule.*"></package>
 		</packages>
-			
+	</test> -->
+	<test name="AccommodationModule">
+		<groups>
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
+				<exclude name="dev"/>
+				<exclude name="checkout"></exclude>
+				<exclude name="example"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.*"></package>
+		</packages>
 	</test>
 </suite>

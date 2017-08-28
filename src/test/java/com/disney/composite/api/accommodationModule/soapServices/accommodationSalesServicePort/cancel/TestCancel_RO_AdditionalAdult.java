@@ -81,7 +81,7 @@ public class TestCancel_RO_AdditionalAdult extends TravelPlanBaseTest {
             book.setPhoneNumber(getHouseHold().primaryGuest().primaryPhone().getNumber());
             book.setEmail(getHouseHold().primaryGuest().primaryEmail().getEmail());
             book.sendRequest();
-            TestReporter.logAPI(false, "", book);
+            TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify that no error occurred during booking: " + book.getFaultString(), book);
             if (book.getResponseStatusCode().equals("200")) {
                 bookSuccess = true;
             } else {
@@ -110,6 +110,8 @@ public class TestCancel_RO_AdditionalAdult extends TravelPlanBaseTest {
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");

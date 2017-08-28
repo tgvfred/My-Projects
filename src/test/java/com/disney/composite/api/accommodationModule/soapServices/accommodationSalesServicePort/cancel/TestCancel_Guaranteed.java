@@ -23,6 +23,7 @@ public class TestCancel_Guaranteed extends AccommodationBaseTest {
     public void setup(String environment) {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
+        isComo.set("false");
         setEnvironment(environment);
         daysOut.set(0);
         nights.set(1);
@@ -42,8 +43,11 @@ public class TestCancel_Guaranteed extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "Verify that a cancellation number was returned.");

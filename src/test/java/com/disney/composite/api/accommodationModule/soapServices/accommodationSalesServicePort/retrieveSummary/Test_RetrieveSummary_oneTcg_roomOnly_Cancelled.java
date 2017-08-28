@@ -3,6 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
@@ -24,28 +25,22 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_Cancelled extends Accommodatio
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
     public void testRetrieveSummary_oneTcg_roomOnly_Cancelled() {
 
-        cancel();
-        RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-        retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
-        retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", retrieve);
-        TestReporter.assertTrue(retrieve.getStatus().equals("Cancelled"), "Successfully cancelled! ");
+        Cancel cancel = new Cancel(environment);
+        cancel.setCancelDate(getArrivalDate());
+        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.sendRequest();
 
-        // Old vs New Validation
+        RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         if (Environment.isSpecialEnvironment(environment)) {
-            RetrieveSummary clone = (RetrieveSummary) retrieve.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", getBook().getTravelPlanSegmentId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", getBook().getTravelComponentGroupingId());
+            // retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        } else {
+            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         }
+        retrieve.sendRequest();
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
+        TestReporter.assertTrue(retrieve.getStatus().equals("Cancelled"), "Successfully cancelled! ");
 
         cancelCheck(getBook().getTravelComponentGroupingId());
     }

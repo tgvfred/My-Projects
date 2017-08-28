@@ -163,4 +163,3 @@ public class TestUpdateComments_parentTC_updateCommentText extends Accommodation
             }
         }
     }
-}

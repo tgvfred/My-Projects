@@ -162,7 +162,7 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
         retrieveResortReservations.sendRequest();
 
         // Response validation
-        TestReporter.logAPI(!retrieveResortReservations.getResponseStatusCode().equals("200"), "The response was not successful.", retrieveResortReservations);
+        TestReporter.logAPI(!retrieveResortReservations.getResponseStatusCode().equals("200"), "The response was not successful: " + retrieveResortReservations.getFaultString(), retrieveResortReservations);
         TestReporter.assertEquals(tpsID, retrieveResortReservations.getTravelPlanSegmentId(), "The response contains the correct TPS ID.");
 
         // Database validation

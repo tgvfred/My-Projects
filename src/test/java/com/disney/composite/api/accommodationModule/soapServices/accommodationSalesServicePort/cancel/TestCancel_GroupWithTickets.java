@@ -71,9 +71,9 @@ public class TestCancel_GroupWithTickets extends TravelPlanBaseTest {
         ticketGroupName = find.getTicketGroupName();
 
         GetTicketProducts get = new GetTicketProducts(locEnv, "Main");
-        get.setTicketGroupName(find.getTicketGroupName());
+        get.setTicketGroupName(ticketGroupName);
         get.sendRequest();
-        TestReporter.assertTrue(get.getResponseStatusCode().equals("200"), "Verify that no error occurred finding ticket products for ticket group name [" + find.getTicketGroupName() + "].");
+        TestReporter.assertTrue(get.getResponseStatusCode().equals("200"), "Verify that no error occurred finding ticket products for ticket group name [" + ticketGroupName + "].");
         String admissionProductId = get.getAdmissionProductIdByTicketDescription("2 Day Base Ticket");
         book.setTicketDetailsBaseAdmissionProductId(admissionProductId);
         book.setTicketDetailsCode(admissionProductId);
@@ -107,7 +107,11 @@ public class TestCancel_GroupWithTickets extends TravelPlanBaseTest {
         book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/phoneDetails/number", getHouseHold().primaryGuest().primaryPhone().getNumber());
         book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/emailDetails/address", getHouseHold().primaryGuest().primaryEmail().getEmail());
 
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelAgent", BaseSoapCommands.REMOVE_NODE.toString());
+        try {
+            book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelAgent", BaseSoapCommands.REMOVE_NODE.toString());
+        } catch (XPathNotFoundException e) {
+
+        }
 
         book.sendRequest();
         if (book.getResponse().contains("Error Invoking Pricing Service")) {
@@ -125,8 +129,13 @@ public class TestCancel_GroupWithTickets extends TravelPlanBaseTest {
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
+        cancel.setRequestNodeValueByXPath("/Envelope/Body/cancel/request", BaseSoapCommands.ADD_NODE.commandAppend("cancelReasonCode"));
+        cancel.setRequestNodeValueByXPath("//cancelReasonCode", "AIR");
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "Verify that a cancellation number was returned.");
@@ -187,9 +196,9 @@ public class TestCancel_GroupWithTickets extends TravelPlanBaseTest {
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         // Verify the reasonID matches the reason code used for the given TCId
         cancelHelper.verifyProductReasonID(book.getTravelComponentId());
-        cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
-        cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
-        cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
+        cancelHelper.verifyTPV3GuestRecordCreated(book.getTravelPlanId(), getHouseHold().primaryGuest());
+        cancelHelper.verifyTPV3RecordCreated(book.getTravelPlanId());
+        cancelHelper.verifyTPV3SalesOrderRecordCreated(book.getTravelPlanId());
         TestReporter.assertAll();
     }
 

@@ -6,8 +6,9 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -23,22 +24,19 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
     public void setup(String environment) {
 
         int tries = 0;
-        String locEnv = null;
-        if (environment.toLowerCase().contains("_cm")) {
-            locEnv = environment.toLowerCase().replace("_cm", "");
-        }
-        setEnvironment(locEnv);
+        setEnvironment(environment);
+        isComo.set("false");
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues();
+        setValues(Environment.getBaseEnvironmentName(getEnvironment()));
         bookReservation();
-        checkingIn(locEnv);
+        checkingIn(Environment.getBaseEnvironmentName(getEnvironment()));
 
-        CheckIn checkIn = new CheckIn(locEnv, "UI_Booking");
+        CheckIn checkIn = new CheckIn(Environment.getBaseEnvironmentName(getEnvironment()), "UI_Booking");
         checkIn.setGuestId(getBook().getGuestId());
         checkIn.setLocationId(getLocationId());
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -64,10 +62,13 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS);
+        validateApplicationError(cancel, LiloResmErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS);
 
     }
 }

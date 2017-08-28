@@ -37,6 +37,7 @@ public class TestCancel_GroupBundle_CancelRoom extends TravelPlanBaseTest {
     private String firstBundleTcg;
     private static final int maxTries = 3;
 
+    @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters({ "environment" })
     public void setup(String environment) {
@@ -163,7 +164,7 @@ public class TestCancel_GroupBundle_CancelRoom extends TravelPlanBaseTest {
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred canceling a Reservation with TPS ID [" + book.getTravelPlanSegmentId() + "]: " + cancel.getFaultString(), cancel);
@@ -227,9 +228,10 @@ public class TestCancel_GroupBundle_CancelRoom extends TravelPlanBaseTest {
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(book.getTravelComponentId());
-        cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
-        cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
-        cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
+        // cancelHelper.verifyTPV3GuestRecordCreated(book.getTravelPlanId(), getHouseHold().primaryGuest());
+        cancelHelper.verifyTPV3GuestRecordCreated(book.getTravelPlanId(), hh.primaryGuest());
+        cancelHelper.verifyTPV3RecordCreated(book.getTravelPlanId());
+        cancelHelper.verifyTPV3SalesOrderRecordCreated(book.getTravelPlanId());
         TestReporter.assertAll();
     }
 

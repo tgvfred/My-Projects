@@ -12,6 +12,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationAssignmentSe
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.travelPlanModule.TravelPlanBaseTest;
@@ -134,7 +135,7 @@ public class TestCancel_RO_WithCancellationFee extends TravelPlanBaseTest {
         TestReporter.assertTrue(roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoom.getFaultString());
 
         retrieveReservation(environment);
-        makeFirstNightDeposit(environment);
+        // makeFirstNightDeposit(environment);
         retrieveReservation(environment);
     }
 
@@ -145,8 +146,12 @@ public class TestCancel_RO_WithCancellationFee extends TravelPlanBaseTest {
         Cancel cancel = new Cancel(environment, "Main_WithFee");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+
+        cancel.setRequestNodeValueByXPath("/Envelope/Body/cancel/request/overridden", BaseSoapCommands.REMOVE_NODE.toString());
+        cancel.setRequestNodeValueByXPath("/Envelope/Body/cancel/request/waived", BaseSoapCommands.REMOVE_NODE.toString());
+        cancel.setRequestNodeValueByXPath("/Envelope/Body/cancel/request/overriddenCancelFee", BaseSoapCommands.REMOVE_NODE.toString());
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "Verify that a cancellation number was returned.");
@@ -216,7 +221,7 @@ public class TestCancel_RO_WithCancellationFee extends TravelPlanBaseTest {
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
-        cancelHelper.verifyTcFee(getBook().getTravelComponentId(), true);
+        cancelHelper.verifyTcFeeByTcg(getBook().getTravelComponentGroupingId(), true);
         TestReporter.assertAll();
     }
 

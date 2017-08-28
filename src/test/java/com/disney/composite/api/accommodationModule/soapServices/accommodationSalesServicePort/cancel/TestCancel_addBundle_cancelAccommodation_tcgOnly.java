@@ -21,6 +21,7 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         daysOut.set(Randomness.randomNumberBetween(1, 12));
         nights.set(Randomness.randomNumberBetween(1, 3));
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
@@ -40,8 +41,11 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "Verify that a cancellation number was returned.");
@@ -102,7 +106,7 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(getBook().getTravelComponentId());
-        cancelHelper.verifyTcStatusByTcg(getFirstBundleTcg(), "Booked");
+        cancelHelper.verifyTcStatusByTcg(getBundleTcg(), "Booked");
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());

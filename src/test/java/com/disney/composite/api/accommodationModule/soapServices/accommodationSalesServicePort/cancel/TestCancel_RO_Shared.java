@@ -36,7 +36,7 @@ public class TestCancel_RO_Shared extends TravelPlanBaseTest {
         book = book();
         hh = getHouseHold();
 
-        Share share = new Share(environment.toLowerCase().replace("_cm", ""), "Share");
+        Share share = new Share(environment.toLowerCase().replace("_cm", ""));
         share.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
         share.setRequestNodeValueByXPath("/Envelope/Body/share/request/roomNumber", "fx:removenode");
         share.setRequestNodeValueByXPath("/Envelope/Body/share/request/locationId", getLocationId());
@@ -51,8 +51,11 @@ public class TestCancel_RO_Shared extends TravelPlanBaseTest {
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "Verify that a cancellation number was returned.");
@@ -113,9 +116,9 @@ public class TestCancel_RO_Shared extends TravelPlanBaseTest {
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(book.getTravelComponentId());
-        cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
-        cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
-        cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
+        cancelHelper.verifyTPV3GuestRecordCreated(book.getTravelPlanId(), getHouseHold().primaryGuest());
+        cancelHelper.verifyTPV3RecordCreated(book.getTravelPlanId());
+        cancelHelper.verifyTPV3SalesOrderRecordCreated(book.getTravelPlanId());
         TestReporter.assertAll();
     }
 
