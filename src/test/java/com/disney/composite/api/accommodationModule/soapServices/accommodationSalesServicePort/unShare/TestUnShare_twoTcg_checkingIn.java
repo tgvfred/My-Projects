@@ -48,31 +48,12 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         firstTCG = getBook().getTravelComponentGroupingId();
         captureFirstOwnerId();
-    }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
-    public void Test_unShare_twoTcgs_checkingIn() {
-
-        CheckInHelper checkingIn = new CheckInHelper(environment, book);
-        checkingIn.checkingIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-
-        share = new Share(environment, "Main_oneTcg");
-        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        share.sendRequest();
-        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
-
-        unshare = new UnShare(environment, "Main");
-        unshare.setTravelComponentGroupingId(firstTCG);
-        unshare.sendRequest();
-        TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
-        validateResponse();
 
         // book second reservation.
         setDaysOut(0);
         setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
-        setValues(getEnvironment());
         isComo.set("true");
         setSendRequest(false);
         bookReservation();
@@ -82,16 +63,30 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         captureSecondOwnerId();
 
-        // verify that the owner id's for the first and second tcg do not match.
-        TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
+    }
 
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
+    public void Test_unShare_twoTcgs_checkingIn() {
+
+        CheckInHelper checkingIn = new CheckInHelper(environment, book);
+        checkingIn.checkingIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
         checkingIn = new CheckInHelper(environment, book2);
         checkingIn.checkingIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         share = new Share(environment, "Main_oneTcg");
-        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        share.setTravelComponentGroupingId(firstTCG);
+        share.addSharedComponent();
+        share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
+
+        unshare = new UnShare(environment, "Main");
+        unshare.setTravelComponentGroupingId(firstTCG);
+        unshare.sendRequest();
+        TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
+
+        // verify that the owner id's for the first and second tcg do not match.
+        TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
 
         // unshare the second reservation.
         unshare = new UnShare(environment, "Main");
@@ -137,7 +132,7 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
     public void validations() {
         UnShareHelper helper = new UnShareHelper(getEnvironment());
 
-        int numExpectedRecords = 4;
+        int numExpectedRecords = 5;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;

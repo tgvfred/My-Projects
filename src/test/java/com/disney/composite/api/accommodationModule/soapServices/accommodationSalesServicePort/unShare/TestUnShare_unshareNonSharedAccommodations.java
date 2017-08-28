@@ -43,6 +43,20 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         firstTCG = getBook().getTravelComponentGroupingId();
         captureFirstOwnerId();
+
+        // book second reservation.
+        setDaysOut(0);
+        setNights(2);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getNights());
+        isComo.set("true");
+        setSendRequest(false);
+        bookReservation();
+        getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        captureSecondOwnerId();
+
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
@@ -53,21 +67,6 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         unshare.setTravelComponentGroupingId(firstTCG);
         unshare.sendRequest();
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
-        validateResponse();
-
-        // book second reservation.
-        setDaysOut(1);
-        setNights(2);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getNights());
-        setValues(getEnvironment());
-        isComo.set("true");
-        setSendRequest(false);
-        bookReservation();
-        getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
-        getBook().sendRequest();
-        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
-        captureSecondOwnerId();
 
         // verify that the owner id's for the first and second tcg do not match.
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
