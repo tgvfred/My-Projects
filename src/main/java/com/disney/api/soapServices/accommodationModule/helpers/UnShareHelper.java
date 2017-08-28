@@ -143,4 +143,23 @@ public class UnShareHelper {
             TestReporter.assertAll();
         } while (rs.hasNext());
     }
+
+    public void validateChargeGroupUpdateFields(int numExpectedRecords5, String TpsId) {
+        TestReporter.logStep("Verify reservation history");
+
+        String sql = "select * from res_mgmt.res_hist a where a.tps_id = '" + TpsId + "'";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords5, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords5 + "].");
+
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            if (rs.getValue("RES_HIST_PROC_DS", i).equals("Shared")) {
+                TestReporter.assertNotNull(rs.getValue("UPDT_USR_ID_CD", i), "Verify the update user ID field [" + rs.getValue("UPDT_USR_ID_CD", i) + "] is not null.");
+                TestReporter.assertNotNull(rs.getValue("UPDT_DTS", i), "Verify the update user field [" + rs.getValue("UPDT_DTS", i) + "] is not null.");
+
+            }
+            TestReporter.assertAll();
+        }
+    }
 }
