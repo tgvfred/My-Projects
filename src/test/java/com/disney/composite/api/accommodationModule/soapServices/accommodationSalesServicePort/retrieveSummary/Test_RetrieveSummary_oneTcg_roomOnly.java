@@ -13,9 +13,10 @@ public class Test_RetrieveSummary_oneTcg_roomOnly extends AccommodationBaseTest 
     public void testRetrieveSummary_oneTcg_roomOnly() {
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-        // Used to take TPSID in place of TCGID
         if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", getBook().getTravelPlanSegmentId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", getBook().getTravelComponentGroupingId());
+            // retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         } else {
             retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         }

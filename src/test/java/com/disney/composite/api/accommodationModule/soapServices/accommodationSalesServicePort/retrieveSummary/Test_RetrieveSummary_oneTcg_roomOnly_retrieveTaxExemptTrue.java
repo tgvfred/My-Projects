@@ -21,7 +21,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
     public void testBefore(String environment) {
         this.environment = environment;
 
-        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "book2AdultsAndTwoRoom");
+        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "RoomOnlyNoTicketsTaxExempt");
         book.sendRequest();
         TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify that no error occurred booking a res: " + book.getFaultString(), book);
     }
@@ -32,9 +32,11 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestRetrieveTaxExempt("true");
         if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", book.getTravelPlanSegmentId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", book.getTravelComponentGroupingId());
+            // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
         } else {
-            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
+            retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
         }
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);

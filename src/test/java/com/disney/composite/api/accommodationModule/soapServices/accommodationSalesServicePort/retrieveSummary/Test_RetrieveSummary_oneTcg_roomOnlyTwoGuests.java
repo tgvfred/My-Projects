@@ -27,7 +27,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoGuests extends Accommodation
         setValues(environment);
         bookReservation();
 
-        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "book2AdultsAndTwoRoom");
+        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "ROTwoAdults");
         book.sendRequest();
         book.getResponse();
         TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify that no error occurred booking a res: " + book.getFaultString(), book);
@@ -38,7 +38,9 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoGuests extends Accommodation
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", book.getTravelPlanSegmentId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", book.getTravelComponentGroupingId());
+            // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
         } else {
             retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
         }

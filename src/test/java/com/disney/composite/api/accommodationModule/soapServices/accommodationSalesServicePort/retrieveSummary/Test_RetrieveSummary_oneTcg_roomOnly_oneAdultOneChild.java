@@ -37,7 +37,9 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_oneAdultOneChild extends Accom
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", book.getTravelPlanSegmentId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", book.getTravelComponentGroupingId());
+            // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
         } else {
             retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
         }
