@@ -71,6 +71,7 @@ public class TestRetrieveRates_wdtc_oneNight extends AccommodationBaseTest {
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/billCode");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/billCode[text()='TRAVEL COMPANY PKGS']");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieveRates, true),
                     "Validating Response Comparison");
         }

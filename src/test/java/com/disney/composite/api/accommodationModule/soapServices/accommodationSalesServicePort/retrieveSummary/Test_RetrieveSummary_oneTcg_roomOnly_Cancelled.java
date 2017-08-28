@@ -3,6 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
@@ -24,7 +25,11 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_Cancelled extends Accommodatio
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
     public void testRetrieveSummary_oneTcg_roomOnly_Cancelled() {
 
-        cancel();
+        Cancel cancel = new Cancel(environment);
+        cancel.setCancelDate(getArrivalDate());
+        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.sendRequest();
+
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         if (Environment.isSpecialEnvironment(environment)) {
             retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", getBook().getTravelPlanSegmentId());

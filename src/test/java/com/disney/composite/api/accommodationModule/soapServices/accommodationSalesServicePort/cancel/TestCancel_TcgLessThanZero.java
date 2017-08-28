@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
@@ -14,7 +14,7 @@ public class TestCancel_TcgLessThanZero extends AccommodationBaseTest {
     public void testCancel_TcgLessThanZero() {
         TestReporter.logScenario("Test Cancel TCG less than zero");
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : TravelComponentGrouping Id or ExternalReferenceDetail is required";
 
         Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
@@ -22,6 +22,6 @@ public class TestCancel_TcgLessThanZero extends AccommodationBaseTest {
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, LiloResmErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(cancel, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
     }
 }
