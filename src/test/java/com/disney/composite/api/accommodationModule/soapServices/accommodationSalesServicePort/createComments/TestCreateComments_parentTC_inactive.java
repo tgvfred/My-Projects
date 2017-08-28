@@ -51,8 +51,6 @@ public class TestCreateComments_parentTC_inactive extends AccommodationBaseTest 
         create.setTpsExternalReferenceNumber(getBook().getTravelPlanSegmentId());
         create.setTpsExternalReferenceSource(ServiceConstants.FolioExternalReference.DREAMS_TPS);
         create.setCommentType("TravelComponentComment");
-        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
-        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create.sendRequest();
 
         // Validate node response values
@@ -146,7 +144,7 @@ public class TestCreateComments_parentTC_inactive extends AccommodationBaseTest 
         TestReporter.logStep("Validate comment with a call to retreiveComments service.");
         TestReporter.setAssertFailed(false);
 
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= retrieve.getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
             if (create.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
                 TestReporter.softAssertEquals(create.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + create.getIsActive() + "]");

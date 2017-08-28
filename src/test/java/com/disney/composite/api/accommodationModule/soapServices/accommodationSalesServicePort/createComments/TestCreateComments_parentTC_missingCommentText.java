@@ -28,8 +28,6 @@ public class TestCreateComments_parentTC_missingCommentText extends Accommodatio
         String expectedGSR = "true";
         String expectedCommentLevel = "TC";
         String expectedCreatedBy = "AutoJUnit.us";
-        // String expectedProfileCode = "RoomReadyN";
-        // String expectedProfileId = "1065";
         parentId = getBook().getTravelComponentId();
         create = new CreateComments(environment, "Main");
         create.setParentIds(parentId);
@@ -54,8 +52,6 @@ public class TestCreateComments_parentTC_missingCommentText extends Accommodatio
         create.setTpsExternalReferenceNumber(getBook().getTravelPlanSegmentId());
         create.setTpsExternalReferenceSource(ServiceConstants.FolioExternalReference.DREAMS_TPS);
         create.setCommentType("TravelComponentComment");
-        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
-        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create.sendRequest();
         TestReporter.logAPI(!create.getResponseStatusCode().equals("200"), "An error occurred getting options by filter", create);
         commentId = create.getCommentId();
