@@ -12,11 +12,14 @@ import com.disney.api.soapServices.accommodationModule.accommodationAssignmentSe
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckOut;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckingIn;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Book;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.accommodationStatusComponentService.operations.UpdateSingleRoomStatus;
 import com.disney.api.utils.dataFactory.database.sqlStorage.Dreams;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -43,7 +46,7 @@ public class CheckInHelper {
     }
 
     public void setEnvironment(String environment) {
-        this.environment = environment;
+        this.environment = Environment.getBaseEnvironmentName(environment);
     }
 
     public String[] getRoomRsrc() {
@@ -141,6 +144,18 @@ public class CheckInHelper {
                 setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
                 setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
                 setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
+            } else if (ws instanceof Add) {
+                setTpId(((Add) ws).getTravelPlanId());
+                setTpsId(((Add) ws).getTravelPlanSegmentId());
+                setTcgId(((Add) ws).getTravelComponentGroupingId());
+                setTcId(((Add) ws).getTravelComponentId());
+            } else if (ws instanceof Book) {
+                setTpId(((Book) ws).getTravelPlanId());
+                setTpsId(((Book) ws).getTravelPlanSegmentId());
+                setTcgId(((Book) ws).getTravelComponentGroupingId());
+                setTcId(((Book) ws).getTravelComponentId());
+            } else {
+                throw new AutomationException("The WebService object is not supported by this class.");
             }
         }
         retrieveReservation();
@@ -260,7 +275,11 @@ public class CheckInHelper {
         }
         ;
 
-        updateSingleRoomStatus("updateToCleanAndVacant");
+        try {
+            updateSingleRoomStatus("updateToCleanAndVacant");
+        } catch (Exception e) {
+
+        }
     }
 
     public void updateSingleRoomStatus(String scenario, String roomNumner, String resourceId) {
@@ -285,6 +304,7 @@ public class CheckInHelper {
 
         do {
             retrieve.setRequestNodeValueByXPath("//request/locationId", rs.getValue("WRK_LOC_ID"));
+            retrieve.setTravelPlanSegmentId(getTpsId());
             retrieve.sendRequest();
             if (retrieve.getResponseStatusCode().equals("200")) {
                 setLocationId(rs.getValue("WRK_LOC_ID"));

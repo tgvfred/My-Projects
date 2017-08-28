@@ -30,25 +30,16 @@ public class Test_RetrieveSummary_oneTcg_dining extends AccommodationBaseTest {
         dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-        retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
-        retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", retrieve);
-
-        // Old vs New Validation
         if (Environment.isSpecialEnvironment(environment)) {
-            RetrieveSummary clone = (RetrieveSummary) retrieve.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
+            // retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", getBook().getTravelPlanSegmentId());
+            // retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", getBook().getTravelComponentGroupingId());
+            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        } else {
+            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         }
+        retrieve.sendRequest();
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
+
     }
 
 }

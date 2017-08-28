@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<<<<<<< HEAD
 <suite name="TestCreateComments_parentTC_nullConfidential" parallel="methods" thread-count="20">
+	<parameter name="environment" value="Latest_cm" />
+=======
 	<parameter name="environment" value="Latest" />
+>>>>>>> 99985fe6a0ee3e9371dc144e7eabfee06220ef3c
 	<test name="TestCreateComments_parentTC_nullConfidential">
 		<classes>
 			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.createComments.TestCreateComments_parentTC_nullConfidential"/>

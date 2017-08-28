@@ -1,7 +1,10 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.AfterMethod;
@@ -11,7 +14,12 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Parameters;
 
 import com.disney.AutomationException;
+import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.restServices.BaseRestTest;
+import com.disney.api.soapServices.ServiceConstants;
+import com.disney.api.soapServices.accommodationModule.accommodationAssignmentServicePort.operations.FindRoomForReservation;
+import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckingIn;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
@@ -19,27 +27,56 @@ import com.disney.api.soapServices.accommodationModule.availabilityWSPort.operat
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.api.soapServices.folioModule.folioServicePort.operations.RetrieveFolioBalanceDue;
+import com.disney.api.soapServices.folioModule.paymentService.operations.PostCardPayment;
+import com.disney.api.soapServices.pricingModule.packagingService.operations.FindMiscPackages;
+import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
+import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
+import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Environment;
 import com.disney.utils.PackageCodes;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
-import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.ResortInfo;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.FacilityDatabase;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.database.sqlStorage.DVCSalesDreams;
 import com.disney.utils.dataFactory.database.sqlStorage.Dreams_AccommodationQueries;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class AccommodationBaseTest extends BaseRestTest {
-    protected static String environment;
-    protected ThreadLocal<Integer> daysOut = new ThreadLocal<Integer>();
-    protected ThreadLocal<Integer> nights = new ThreadLocal<Integer>();
-    protected ThreadLocal<String> arrivalDate = new ThreadLocal<String>();
-    protected ThreadLocal<String> departureDate = new ThreadLocal<String>();
+    public final static String GATHERING_ID = "gatheringId";
+    public final static String GATHERING_NAME = "gatheringName";
+    public final static String GATHERING_TYPE = "gatheringType";
+    public final static String COMMENT_TYPE = "commentType";
+    public final static String COMMENT_TEXT = "commentText";
+    public final static String COMMENT_TO = "to";
+    public final static String COMMENT_FROM = "from";
+    public final static String MEMBERSHIP_EXP_DATE = "expirationDate";
+    public final static String MEMBERSHIP_TYPE = "memberShipType";
+    public final static String MEMBERSHIP_ID = "membershipId";
+    public final static String MEMBERSHIP_POLICY_ID = "policyId";
+    public final static String MEMBERSHIP_PROD_CHANNEL_ID = "productChannelId";
+    public final static String MEMBERSHIP_GUEST_MEMBERSHIP_ID = "guestMembershipId";
+    public final static String PROFILE_CODE = "code";
+    public final static String PROFILE_DESCRIPTION = "description";
+    public final static String PROFILE_ID = "id";
+    public final static String PROFILE_TYPE = "profileType";
+    public final static String PROFILE_ROUTINGS_NAME = "routings_name";
+    public final static String PROFILE_SELECTABLE = "selectable";
+
+    public static String environment;
+    public ThreadLocal<Integer> daysOut = new ThreadLocal<Integer>();
+    public ThreadLocal<Integer> nights = new ThreadLocal<Integer>();
+    public ThreadLocal<String> arrivalDate = new ThreadLocal<String>();
+    public ThreadLocal<String> departureDate = new ThreadLocal<String>();
     private ThreadLocal<String> locationId = new ThreadLocal<String>();
     private ThreadLocal<String> resortCode = new ThreadLocal<String>();
     private ThreadLocal<String> facilityId = new ThreadLocal<String>();
@@ -51,20 +88,20 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> partyId = new ThreadLocal<String>();
     private ThreadLocal<String> packageCode = new ThreadLocal<String>();
     private ThreadLocal<String> guestAddressLocatorId = new ThreadLocal<String>();
-    protected ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>();
+    public ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>();
     private ThreadLocal<String> externalRefNumber = new ThreadLocal<String>();
-    private String externalRefSource = "DPMSProperty";
+    public static String externalRefSource = "DPMSProperty";
     private static String[][] roomTypeAndFacInfo = new String[40][6];
     private Map<String, String> noPackageCodes = new HashMap<String, String>();
-    protected ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>();
+    public ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>();
     private ThreadLocal<HouseHold> hh = new ThreadLocal<HouseHold>();
     private ThreadLocal<ReplaceAllForTravelPlanSegment> book = new ThreadLocal<>();
     private ThreadLocal<Retrieve> retrieve = new ThreadLocal<Retrieve>();
-    protected ThreadLocal<String> tpId = new ThreadLocal<String>();
-    protected ThreadLocal<String> tpsId = new ThreadLocal<String>();
-    protected ThreadLocal<String> tcgId = new ThreadLocal<String>();
-    protected ThreadLocal<String> tcId = new ThreadLocal<String>();
-    protected String isComo = "";
+    public ThreadLocal<String> tpId = new ThreadLocal<String>();
+    public ThreadLocal<String> tpsId = new ThreadLocal<String>();
+    public ThreadLocal<String> tcgId = new ThreadLocal<String>();
+    public ThreadLocal<String> tcId = new ThreadLocal<String>();
+    public ThreadLocal<String> isComo = new ThreadLocal<>();
     private ThreadLocal<Boolean> skipCancel = new ThreadLocal<Boolean>();
     private ThreadLocal<String> ageType = new ThreadLocal<String>();
     private ThreadLocal<String> age = new ThreadLocal<String>();
@@ -72,13 +109,48 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> packageDescription = new ThreadLocal<>();
     private ThreadLocal<String> packageType = new ThreadLocal<>();
     private ThreadLocal<Boolean> isWdtcBooking = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> isLibgoBooking = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isADA = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> isBundle = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> isDining = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isRSR = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> isShared = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addGuest = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> addChildGuest = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addNewGuest = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> skipDeposit = new ThreadLocal<Boolean>();
+    private ThreadLocal<String> firstDiningTcg = new ThreadLocal<String>();
+    private AddBundle add;
+    private RetrieveDetailsByTravelPlanId details;
+    private ThreadLocal<String> bundleTcg = new ThreadLocal<>();
+    private ScheduledEventReservation diningRes;
+    private ThreadLocal<Boolean> sendRequest = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> setTickets = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> addTickets = new ThreadLocal<Boolean>();
+    private ThreadLocal<String> ticketDescription = new ThreadLocal<>();
+    private ThreadLocal<Boolean> bypassFreeze = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> addConfirmatinoDetails = new ThreadLocal<Boolean>();
+    private ThreadLocal<Boolean> addGathering = new ThreadLocal<Boolean>();
+    private ThreadLocal<Map<String, String>> gatheringData = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addComments = new ThreadLocal<>();
+    private ThreadLocal<Map<String, String>> comments = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addInternalComments = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addRoomResDetailsComments = new ThreadLocal<>();
+    private ThreadLocal<Map<Integer, Guest>> additionalGuests = new ThreadLocal<Map<Integer, Guest>>();
+    private ThreadLocal<TicketsHelper> ticketsHelper = new ThreadLocal<>();
+    private ThreadLocal<Boolean> nonZeroVip = new ThreadLocal<>();
+    private ThreadLocal<String> vipLevel = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addPrimaryGuestMembership = new ThreadLocal<>();
+    private ThreadLocal<Map<String, String>> membershipData = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addPrimaryGuestODS = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addTravelAgency = new ThreadLocal<>();
+    private ThreadLocal<Map<String, String>> profileData = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addProfile = new ThreadLocal<>();
+    private ThreadLocal<Boolean> mywPackageCode = new ThreadLocal<>();
+    private ThreadLocal<Boolean> mywPlusDinePackageCode = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addRoom = new ThreadLocal<>();
 
-    protected void addToNoPackageCodes(String key, String value) {
+    public void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
     }
 
@@ -86,105 +158,105 @@ public class AccommodationBaseTest extends BaseRestTest {
         environment = env;
     }
 
-    protected void setFacilityId(String facilityId) {
+    public void setFacilityId(String facilityId) {
         this.facilityId.set(facilityId);
     }
 
-    protected void setLocationId(String locationId) {
+    public void setLocationId(String locationId) {
         this.locationId.set(locationId);
     }
 
-    protected void setResortCode(String resortCode) {
+    public void setResortCode(String resortCode) {
         this.resortCode.set(resortCode);
     }
 
-    protected void setSourceAccountingCenter(String sourceAccoutingCenter) {
+    public void setSourceAccountingCenter(String sourceAccoutingCenter) {
         this.sourceAccoutingCenter.set(sourceAccoutingCenter);
     }
 
-    protected void setRoomTypeCode(String roomTypeCode) {
+    public void setRoomTypeCode(String roomTypeCode) {
         this.roomTypeCode.set(roomTypeCode);
     }
 
-    protected void setAgencyId(String agencyId) {
+    public void setAgencyId(String agencyId) {
         this.agencyId.set(agencyId);
     }
 
-    protected void setNights(int nights) {
+    public void setNights(int nights) {
         this.nights.set(nights);
     }
 
-    protected void setDaysOut(int daysOut) {
+    public void setDaysOut(int daysOut) {
         this.daysOut.set(daysOut);
     }
 
-    protected void setArrivalDate(String arrivalDate) {
+    public void setArrivalDate(String arrivalDate) {
         this.arrivalDate.set(arrivalDate);
     }
 
-    protected void setDepartureDate(String departureDate) {
+    public void setDepartureDate(String departureDate) {
         this.departureDate.set(departureDate);
     }
 
-    protected void setDepartureDate(int nights) {
+    public void setDepartureDate(int nights) {
         setNights(nights);
         this.departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
     }
 
-    protected void setArrivalDate(int daysOut) {
+    public void setArrivalDate(int daysOut) {
         setDaysOut(daysOut);
         this.arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
     }
 
-    protected void setBook(ReplaceAllForTravelPlanSegment book) {
+    public void setBook(ReplaceAllForTravelPlanSegment book) {
         this.book.set(book);
     }
 
-    protected void setRetrieve(Retrieve retrieve) {
+    public void setRetrieve(Retrieve retrieve) {
         this.retrieve.set(retrieve);
     }
 
-    protected void setFixedDates(Boolean fixedDates) {
+    public void setFixedDates(Boolean fixedDates) {
         this.fixedDates.set(fixedDates);
     }
 
-    protected void setSkipExternalRef(Boolean skip) {
+    public void setSkipExternalRef(Boolean skip) {
         skipExternalRef.set(skip);
     }
 
-    protected void setTpId(String tpId) {
+    public void setTpId(String tpId) {
         this.tpId.set(tpId);
     }
 
-    protected void setTpsId(String tpsId) {
+    public void setTpsId(String tpsId) {
         this.tpsId.set(tpsId);
     }
 
-    protected void setTcgId(String tcgId) {
+    public void setTcgId(String tcgId) {
         this.tcgId.set(tcgId);
     }
 
-    protected void setTcId(String tcId) {
+    public void setTcId(String tcId) {
         this.tcId.set(tcId);
     }
 
-    protected String getTpId() {
+    public String getTpId() {
         return this.tpId.get();
     }
 
-    protected String getTpsId() {
+    public String getTpsId() {
         return this.tpsId.get();
     }
 
-    protected String getTcgId() {
+    public String getTcgId() {
         return this.tcgId.get();
     }
 
-    protected String getTcId() {
+    public String getTcId() {
         return this.tcId.get();
     }
 
-    protected void setCampusId(String campusId) {
+    public void setCampusId(String campusId) {
         this.campusId.set(campusId);
     }
 
@@ -320,10 +392,20 @@ public class AccommodationBaseTest extends BaseRestTest {
         return packageType.get();
     }
 
+    /**
+     * This flag is used to determine if a particular wholesaler (Group# 01825) is to be used for booking
+     *
+     * @param isLibgoBooking
+     */
     public void setIsWdtcBooking(Boolean isWdtcBooking) {
         this.isWdtcBooking.set(isWdtcBooking);
     }
 
+    /**
+     * This flag is used to determine if a particular wholesaler (Group# 01825) is to be used for booking
+     *
+     * @param isLibgoBooking
+     */
     public Boolean isWdtcBooking() {
         return this.isWdtcBooking.get();
     }
@@ -334,6 +416,22 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public Boolean isADA() {
         return this.isADA.get();
+    }
+
+    public void setIsBundle(Boolean isBundle) {
+        this.isBundle.set(isBundle);
+    }
+
+    public Boolean isBundle() {
+        return this.isBundle.get();
+    }
+
+    public void setIsDining(Boolean isDining) {
+        this.isDining.set(isDining);
+    }
+
+    public Boolean isDining() {
+        return this.isDining.get();
     }
 
     public void setIsRSR(Boolean isRSR) {
@@ -360,6 +458,31 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addGuest.get();
     }
 
+    public void setAddChildGuest(Boolean addChildGuest) {
+        setAddNewGuest(addChildGuest);
+        this.addChildGuest.set(addChildGuest);
+    }
+
+    public Boolean getAddChildGuest() {
+        return this.addChildGuest.get();
+    }
+
+    public void setSkipDeposit(Boolean skipDeposit) {
+        this.skipDeposit.set(skipDeposit);
+    }
+
+    public Boolean getSkipDeposit() {
+        return this.skipDeposit.get();
+    }
+
+    public void setSendRequest(Boolean sendRequest) {
+        this.sendRequest.set(sendRequest);
+    }
+
+    public Boolean getSendRequest() {
+        return this.sendRequest.get();
+    }
+
     public void setAddNewGuest(Boolean addNewGuest) {
         this.addNewGuest.set(addNewGuest);
         this.addGuest.set(addNewGuest);
@@ -369,12 +492,251 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addNewGuest.get();
     }
 
+    public String getFirstDiningTcg() {
+        return this.firstDiningTcg.get();
+    }
+
+    public void setBundleTcg(String bundleTcg) {
+        this.bundleTcg.set(bundleTcg);
+    }
+
+    public String getBundleTcg() {
+        return this.bundleTcg.get();
+    }
+
+    public void setAddTickets(Boolean addTickets) {
+        this.addTickets.set(addTickets);
+    }
+
+    public void setAddTickets(String ticketDescription) {
+        this.setTicketDescription(ticketDescription);
+        this.addTickets.set(true);
+    }
+
+    public Boolean getAddTickets() {
+        return this.addTickets.get();
+    }
+
+    public void setTicketDescription(String ticketDescription) {
+        this.ticketDescription.set(ticketDescription);
+    }
+
+    public String getTicketDescription() {
+        return this.ticketDescription.get();
+    }
+
+    public void setSetTickets(Boolean setTickets) {
+        this.setTickets.set(setTickets);
+    }
+
+    public void setSetTickets(String ticketDescription) {
+        this.setTicketDescription(ticketDescription);
+        this.setTickets.set(true);
+    }
+
+    public Boolean getSetTickets() {
+        return this.setTickets.get();
+    }
+
+    public void setBypassFreeze(Boolean bypassFreeze) {
+        this.bypassFreeze.set(bypassFreeze);
+    }
+
+    public Boolean getBypassFreeze() {
+        return this.bypassFreeze.get();
+    }
+
+    public void setAddConfirmationDetails(Boolean addConfirmatinoDetails) {
+        this.addConfirmatinoDetails.set(addConfirmatinoDetails);
+    }
+
+    public Boolean getAddConfirmationDetails() {
+        return this.addConfirmatinoDetails.get();
+    }
+
+    public void setAddGathering(Boolean addGathering) {
+        this.addGathering.set(addGathering);
+    }
+
+    public Boolean getAddGathering() {
+        return this.addGathering.get();
+    }
+
+    public void setGatheringData(Map<String, String> gatheringData) {
+        setAddGathering(true);
+        this.gatheringData.set(gatheringData);
+    }
+
+    public Map<String, String> getGatheringData() {
+        return this.gatheringData.get();
+    }
+
+    public void setMembershipData(Map<String, String> membershipData) {
+        setAddPrimaryGuestMembership(true);
+        this.membershipData.set(membershipData);
+    }
+
+    public Map<String, String> getMembershipData() {
+        return this.membershipData.get();
+    }
+
+    public void setProfileData(Map<String, String> profileData) {
+        setAddProfile(true);
+        this.profileData.set(profileData);
+    }
+
+    public Map<String, String> getProfileData() {
+        return this.profileData.get();
+    }
+
+    public void setAddComments(Boolean addComments) {
+        this.addComments.set(addComments);
+    }
+
+    public Boolean getAddComments() {
+        return this.addComments.get();
+    }
+
+    public void setAddProfile(Boolean addProfile) {
+        this.addProfile.set(addProfile);
+    }
+
+    public Boolean getAddProfile() {
+        return this.addProfile.get();
+    }
+
+    public void setAddInternalComments(Boolean addComments) {
+        setAddComments(addComments);
+        this.addInternalComments.set(addComments);
+    }
+
+    public Boolean getAddInternalComments() {
+        return this.addInternalComments.get();
+    }
+
+    public void setAddRoomResDetailsComments(Boolean addComments) {
+        setAddComments(addComments);
+        this.addRoomResDetailsComments.set(addComments);
+    }
+
+    public Boolean getAddRoomResDetailsComments() {
+        return this.addRoomResDetailsComments.get();
+    }
+
+    public void setNonZeroVip(Boolean setNonZeroVip) {
+        this.nonZeroVip.set(setNonZeroVip);
+    }
+
+    public Boolean getNonZeroVip() {
+        return this.nonZeroVip.get();
+    }
+
+    public void setCommentsData(HashMap<String, String> comments) {
+        setAddComments(true);
+        this.comments.set(comments);
+    }
+
+    public Map<String, String> getCommentsData() {
+        return this.comments.get();
+    }
+
+    public void setAdditionalGuests(HashMap<Integer, Guest> additionalGuests) {
+        this.additionalGuests.set(additionalGuests);
+    }
+
+    public Map<Integer, Guest> getAdditionalGuests() {
+        return this.additionalGuests.get();
+    }
+
+    /**
+     * This flag is used to determine if a particular wholesaler (Group# 01905) is to be used for booking
+     *
+     * @param isLibgoBooking
+     */
+    public void setIsLibgoBooking(Boolean isLibgoBooking) {
+        this.isLibgoBooking.set(isLibgoBooking);
+    }
+
+    /**
+     * This flag is used to determine if a particular wholesaler (Group# 01905) is to be used for booking
+     *
+     * @param isLibgoBooking
+     */
+    public Boolean getIsLibgoBooking() {
+        return this.isLibgoBooking.get();
+    }
+
+    public void setTicketsHelper(TicketsHelper ticketsHelper) {
+        this.ticketsHelper.set(ticketsHelper);
+    }
+
+    public TicketsHelper getTicketsHelper() {
+        return this.ticketsHelper.get();
+    }
+
+    public void setVipLevel(String vipLevel) {
+        this.vipLevel.set(vipLevel);
+    }
+
+    public String getVipLevel() {
+        return this.vipLevel.get();
+    }
+
+    public void setAddPrimaryGuestMembership(Boolean addPrimaryGuestMembership) {
+        this.addPrimaryGuestMembership.set(addPrimaryGuestMembership);
+    }
+
+    public Boolean getAddPrimaryGuestMembership() {
+        return this.addPrimaryGuestMembership.get();
+    }
+
+    public void setAddPrimaryGuestODS(Boolean addPrimaryGuestODS) {
+        this.addPrimaryGuestODS.set(addPrimaryGuestODS);
+    }
+
+    public Boolean getAddPrimaryGuestODS() {
+        return this.addPrimaryGuestODS.get();
+    }
+
+    public void setAddTravelAgency(Boolean addTravelAgency) {
+        this.addTravelAgency.set(addTravelAgency);
+    }
+
+    public Boolean getAddTravelAgency() {
+        return this.addTravelAgency.get();
+    }
+
+    public void setMywPackageCode(Boolean mywPackageCode) {
+        this.mywPackageCode.set(mywPackageCode);
+    }
+
+    public Boolean getMywPackageCode() {
+        return this.mywPackageCode.get();
+    }
+
+    public void setMywPlusDinePackageCode(Boolean mywPlusDinePackageCode) {
+        this.mywPlusDinePackageCode.set(mywPlusDinePackageCode);
+    }
+
+    public Boolean getMywPlusDinePackageCode() {
+        return this.mywPlusDinePackageCode.get();
+    }
+
+    public void setAddRoom(Boolean addRoom) {
+        this.addRoom.set(addRoom);
+    }
+
+    public Boolean getAddRoom() {
+        return this.addRoom.get();
+    }
+
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
         skipCancel.set(false);
         BaseSoapService.isExactResponseRequired(false);
-        this.isComo = System.getenv("isComo") == null ? "false" : System.getenv("isComo");
+        isComo.set(new String());
+        this.isComo.set(System.getenv("isComo") == null ? "false" : System.getenv("isComo"));
         setEnvironment(environment);
         String dbEnv = "";
         if (getEnvironment().toLowerCase().contains("_cm")) {
@@ -382,7 +744,8 @@ public class AccommodationBaseTest extends BaseRestTest {
         } else {
             dbEnv = getEnvironment();
         }
-        Database db = new OracleDatabase(dbEnv, "DREAMS");
+        // System.out.println();
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts()));
         for (int i = 0; i < roomTypeAndFacInfo.length; i++) {
             roomTypeAndFacInfo[i][0] = rs.getValue("NUMROOMS", i + 1);
@@ -404,6 +767,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                     " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
                     " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
         }
+        setSendRequest(true);
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -412,6 +776,10 @@ public class AccommodationBaseTest extends BaseRestTest {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
         setEnvironment(environment);
+        if (!isValid(isComo.get())) {
+            isComo.set(new String());
+            this.isComo.set(System.getenv("isComo") == null ? "false" : System.getenv("isComo"));
+        }
         daysOut.set(Randomness.randomNumberBetween(1, 12));
         nights.set(Randomness.randomNumberBetween(1, 3));
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
@@ -419,6 +787,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
         setIsWdtcBooking(false);
         setValues();
+        setSendRequest(true);
         bookReservation();
     }
 
@@ -467,7 +836,6 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void bookReservation() {
         if (getHouseHold() == null) {
             createHouseHold();
-            hh.get().sendToApi("latest");
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
@@ -483,21 +851,43 @@ public class AccommodationBaseTest extends BaseRestTest {
         int maxTries = 10;
         int tries = 0;
         do {
-            getBook().setAreaPeriodStartDate(Randomness.generateCurrentXMLDate(getDaysOut()));
-            getBook().setAreaPeriodEndDate(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
-            getBook().setRoomDetails_ResortPeriodEndDate(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
-            getBook().setRoomDetails_ResortPeriodStartDate(Randomness.generateCurrentXMLDate(getDaysOut()));
+            getBook().setAreaPeriod(Randomness.generateCurrentXMLDate(getDaysOut()), Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+            getBook().setRoomDetails_ResortPeriod(Randomness.generateCurrentXMLDate(getDaysOut()), Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
             getBook().setRoomDetailsBookingDate(Randomness.generateCurrentXMLDate());
 
             if (isWdtcBooking() != null && isWdtcBooking() == true) {
                 setPackageBillCode("*WDTC");
-                setPackageDescription("R MYW Pkg + Deluxe Dining");
+                if (isValid(getMywPackageCode()) && getMywPackageCode()) {
+                    setPackageDescription("R MYW Pkg");
+                } else if (isValid(getMywPlusDinePackageCode()) && getMywPlusDinePackageCode()) {
+                    setPackageDescription("R MYW Pkg + Dining");
+                } else {
+                    setPackageDescription("R MYW Pkg + Deluxe Dining");
+                }
                 setPackageType("WDW PKG");
                 try {
                     getBook().setRoomDetailsBlockCode("01825");
                 } catch (XPathNotFoundException e) {
                     getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
                     getBook().setRoomDetailsBlockCode("01825");
+                }
+                if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
+                    getBook().setExternalReference("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setRoomDetails_ExternalRefs("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                }
+            } else if (isValid(getIsLibgoBooking()) && getIsLibgoBooking() == true) {
+                setPackageBillCode("*DWSL");
+                setPackageDescription("ANN MYW Pkg + Dining");
+                setPackageType("WHOLESALE");
+                try {
+                    getBook().setRoomDetailsBlockCode("01905");
+                } catch (XPathNotFoundException e) {
+                    getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+                    getBook().setRoomDetailsBlockCode("01905");
+                }
+                if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
+                    getBook().setExternalReference("01905", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setRoomDetails_ExternalRefs("01905", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                 }
             } else {
                 setPackageBillCode("");
@@ -525,6 +915,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setRoomDetailsLocationId(getLocationId());
             getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
             getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
+            // getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
 
             if (isADA() != null && isADA() == true) {
                 getBook().setRoomDetailsSpecialNeedsRequested("true");
@@ -542,118 +933,260 @@ public class AccommodationBaseTest extends BaseRestTest {
                 addGuest();
             }
 
-            getBook().sendRequest();
-            TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
-            tries++;
-        } while (!getBook().getResponseStatusCode().equals("200") && tries < maxTries);
+            if (isValid(getSetTickets()) && getSetTickets() == true) {
+                if ((isValid(isWdtcBooking()) && isWdtcBooking() == true) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook(), getPackageCode()));
+                } else {
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook()));
+                }
+                ticketsHelper.get().setAdultTicket(true);
+                if (isValid(getTicketDescription())) {
+                    ticketsHelper.get().setTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                } else {
+                    ticketsHelper.get().setTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
+                }
+            }
+
+            if (isValid(getAddTickets()) && getAddTickets() == true) {
+                if ((isValid(isWdtcBooking()) && isWdtcBooking() == true) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook(), getPackageCode()));
+                } else {
+                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook()));
+                }
+                ticketsHelper.get().setAdultTicket(true);
+                if (isValid(getTicketDescription())) {
+                    ticketsHelper.get().addTickets(getTicketDescription(), getHouseHold().primaryGuest());
+                } else {
+                    ticketsHelper.get().addTickets("2 Day Base Ticket", getHouseHold().primaryGuest());
+                }
+            }
+
+            if (isValid(getBypassFreeze()) && getBypassFreeze() == true) {
+                try {
+                    getBook().setByPassFreeze("true");
+                } catch (XPathNotFoundException e) {
+                    getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request", BaseSoapCommands.ADD_NODE.commandAppend("byPassFreeze"));
+                    getBook().setByPassFreeze("true");
+                }
+            }
+
+            if (isValid(getAddConfirmationDetails()) && getAddConfirmationDetails() == true) {
+                getBook().setConfirmationDetails("0", "true", "Email", "true", "true", "1", "0", "0", getHouseHold().primaryGuest());
+            }
+
+            if (isValid(getAddGathering()) && getAddGathering() == true) {
+                addGathering();
+            }
+
+            if (isValid(getAddComments())) {
+                if (isValid(getAddInternalComments()) && getAddInternalComments() == true) {
+                    setCommentsData(new HashMap<String, String>());
+                    getCommentsData().put(COMMENT_TEXT, Randomness.randomString(20));
+                    getCommentsData().put(COMMENT_TYPE, Randomness.randomString(20));
+
+                    getBook().setInternalComments(getCommentsData().get(COMMENT_TEXT), getCommentsData().get(COMMENT_TYPE), BaseSoapCommands.REMOVE_NODE.toString());
+                }
+                if (isValid(getAddRoomResDetailsComments()) && getAddRoomResDetailsComments() == true) {
+                    setCommentsData(new HashMap<String, String>());
+                    getCommentsData().put(COMMENT_TEXT, Randomness.randomString(20));
+                    getCommentsData().put(COMMENT_FROM, Randomness.randomString(20));
+                    getCommentsData().put(COMMENT_TO, Randomness.randomString(20));
+
+                    getBook().setRoomDetails_RoomReservationDetail_Comments(BaseSoapCommands.REMOVE_NODE.toString(),
+                            getCommentsData().get(COMMENT_TEXT),
+                            "false",
+                            getCommentsData().get(COMMENT_FROM),
+                            "CREUN",
+                            getCommentsData().get(COMMENT_TO));
+                }
+            }
+
+            if (isValid(getNonZeroVip())) {
+                int intVipLevel = Randomness.randomNumberBetween(1, 4);
+                setVipLevel(null);
+                switch (intVipLevel) {
+                    case 1:
+                        setVipLevel("ONE");
+                        break;
+                    case 2:
+                        setVipLevel("TWO");
+                        break;
+                    case 3:
+                        setVipLevel("THREE");
+                        break;
+                    default:
+                        setVipLevel("FOUR");
+                        break;
+                }
+                getBook().setVipLevel(getVipLevel());
+            }
+
+            if (isValid(getAddPrimaryGuestMembership()) && getAddPrimaryGuestMembership() == true) {
+                setMembershipData(new HashMap<String, String>());
+                if (!isValid(getMembershipData())) {
+                    getMembershipData().put(MEMBERSHIP_EXP_DATE, Randomness.generateCurrentXMLDate());
+                    getMembershipData().put(MEMBERSHIP_GUEST_MEMBERSHIP_ID, Randomness.randomNumber(12));
+                    getMembershipData().put(MEMBERSHIP_ID, Randomness.randomNumber(8));
+                    getMembershipData().put(MEMBERSHIP_ID, getMembershipData().get(MEMBERSHIP_ID).startsWith("0") ? getMembershipData().get(MEMBERSHIP_ID).replaceFirst("0", "1") : getMembershipData().get(MEMBERSHIP_ID));
+                    getMembershipData().put(MEMBERSHIP_POLICY_ID, Randomness.randomNumber(6));
+                    getMembershipData().put(MEMBERSHIP_POLICY_ID, getMembershipData().get(MEMBERSHIP_POLICY_ID).startsWith("0") ? getMembershipData().get(MEMBERSHIP_POLICY_ID).replaceFirst("0", "1") : getMembershipData().get(MEMBERSHIP_POLICY_ID));
+                    getMembershipData().put(MEMBERSHIP_PROD_CHANNEL_ID, Randomness.randomNumber(6));
+                    getMembershipData().put(MEMBERSHIP_PROD_CHANNEL_ID, getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID).startsWith("0") ? getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID).replaceFirst("0", "1") : getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID));
+                    getMembershipData().put(MEMBERSHIP_TYPE, Randomness.randomString(8));
+                }
+                getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails_MembershipDetails(getMembershipData().get(MEMBERSHIP_EXP_DATE),
+                        getMembershipData().get(MEMBERSHIP_TYPE), getMembershipData().get(MEMBERSHIP_ID), getMembershipData().get(MEMBERSHIP_POLICY_ID),
+                        getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID), getMembershipData().get(MEMBERSHIP_GUEST_MEMBERSHIP_ID));
+                getBook().setTravelPlanGuest_Guest_MembershipDetails(getMembershipData().get(MEMBERSHIP_EXP_DATE),
+                        getMembershipData().get(MEMBERSHIP_TYPE), getMembershipData().get(MEMBERSHIP_ID), getMembershipData().get(MEMBERSHIP_POLICY_ID),
+                        getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID), getMembershipData().get(MEMBERSHIP_GUEST_MEMBERSHIP_ID));
+            }
+
+            if (isValid(getAddPrimaryGuestODS()) && getAddPrimaryGuestODS() == true) {
+                if (getHouseHold().primaryGuest().getOdsId().equals("0")) {
+                    getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
+                }
+                getBook().setTravelPlanGuest_GuestIdReferences("ODS", getHouseHold().primaryGuest().getOdsId());
+                getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails_GuestIdRefs("ODS", getHouseHold().primaryGuest().getOdsId());
+            }
+
+            if (isValid(getAddTravelAgency()) && getAddTravelAgency() == true) {
+                getBook().setTravelAgency("99999998");
+            }
+
+            if (isValid(getAddProfile()) && getAddProfile() == true) {
+                if (!isValid(getProfileData())) {
+                    setProfileData(new HashMap<String, String>());
+                    getProfileData().put(PROFILE_ID, "600");
+                }
+                Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+                Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getProfileInformationById(getProfileData().get(PROFILE_ID))));
+                TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that a profile is found in the DB for profile ID [" + getProfileData().get(PROFILE_ID) + "].");
+                getProfileData().put(PROFILE_CODE, rs.getValue("PROFILE_CODE"));
+                getProfileData().put(PROFILE_DESCRIPTION, rs.getValue("PROFILE_DESCRIPTION"));
+                getProfileData().put(PROFILE_TYPE, rs.getValue("PROFILE_TYPE"));
+                getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PROFILE_ROUTINGS_NAME"));
+                getProfileData().put(PROFILE_SELECTABLE, rs.getValue("PROFILE_SELECTABLE"));
+                getBook().setReservationDetail_Profiles(getProfileData());
+            }
+
+            if (isValid(getAddRoom()) && getAddRoom()) {
+
+                Guest guest = new HouseHold(1).primaryGuest();
+                ;
+                if (additionalGuests.get() == null) {
+                    setAdditionalGuests(new HashMap<Integer, Guest>());
+                }
+                getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
+                getBook().addRoom(this);
+            }
+
+            if (getSendRequest() == null || getSendRequest() == true) {
+                if (!isValid(isComo.get())) {
+                    throw new AutomationException("The 'isComo' field cannot be null or empty.");
+                }
+                if (isComo.get().equals("false")) {
+                    getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+                }
+                getBook().sendRequest();
+                TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+                tries++;
+            } else {
+                tries = maxTries;
+            }
+        } while ((getSendRequest() == null ? !getBook().getResponseStatusCode().equals("200") : false) && tries < maxTries);
+
+        if (getSendRequest() == null || getSendRequest() == true) {
+            retrieveReservation();
+        }
+
+        if (isBundle() != null && isBundle() == true) {
+            addBundle();
+        }
+        if (isDining() != null && isDining() == true) {
+            addDining();
+        }
+    }
+
+    public void addGathering() {
+        if (!isValid(getGatheringData())) {
+            createGathering();
+        }
+        addGathering(getGatheringData());
+    }
+
+    public void addGathering(Map<String, String> gatheringData) {
+        getBook().setGatheringDetail(getGatheringData().get(GATHERING_ID), getGatheringData().get(GATHERING_NAME), getGatheringData().get(GATHERING_TYPE));
+    }
+
+    public void createGathering() {
+        setGatheringData(new HashMap<String, String>());
+        getGatheringData().put(GATHERING_ID, Randomness.randomString(12));
+        getGatheringData().put(GATHERING_NAME, Randomness.randomString(12));
+        getGatheringData().put(GATHERING_TYPE, "TW");
+    }
+
+    private void addBundle() {
+        details = new RetrieveDetailsByTravelPlanId(Environment.getBaseEnvironmentName(getEnvironment()), "Main");
+        details.setTravelPlanId(getBook().getTravelPlanId());
+        details.sendRequest();
+        TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
+
+        add = new AddBundle(Environment.getBaseEnvironmentName(getEnvironment()), "Main");
+        add.setGuestsGuestNameFirstName(hh.get().primaryGuest().getFirstName());
+        add.setGuestsGuestNameLastName(hh.get().primaryGuest().getLastName());
+        add.setGuestsGuestReferenceId(details.getGuestsId());
+        add.setGuestsId(details.getGuestsId());
+        add.setPackageBundleRequestsBookDate(Randomness.generateCurrentXMLDate());
+        add.setPackageBundleRequestsContactName(hh.get().primaryGuest().getFirstName() + " " + hh.get().primaryGuest().getLastName());
+        add.setPackageBundleRequestsEndDate(Randomness.generateCurrentXMLDate(getDaysOut() + 2) + "T00:00:00");
+        add.setPackageBundleRequestsSalesOrderItemGuestsGUestReferenceId(details.getGuestsId());
+        add.setPackageBundleRequestsStartDate(Randomness.generateCurrentXMLDate(getDaysOut() + 1) + "T00:00:00");
+        add.setTravelPlanId(getBook().getTravelPlanId());
+        add.retrieveSalesOrderId(getBook().getTravelPlanId());
+        add.setSalesOrderId(add.getBundleSalesOrderIds()[0]);
+
+        FindMiscPackages find = new FindMiscPackages(Environment.getBaseEnvironmentName(getEnvironment()), "MinimalInfo");
+        find.setArrivalDate(Randomness.generateCurrentXMLDate(getDaysOut()));
+        find.setBookDate(Randomness.generateCurrentXMLDate());
+        find.sendRequest();
+        TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred adding a bundle to TP ID [" + getBook().getTravelPlanId() + "]: " + add.getFaultString());
+        add.setPackageBundleRequestsCode(find.getPackageCode());
+
+        add.sendRequest();
+        // convos.put("add", add.getRequestNodeValueByXPath("/Envelope/Header/ServiceContext/@conversationId"));
+        TestReporter.assertEquals(add.getResponseStatusCode(), "200", "An error occurred while adding a bundle.\nRequest:\n" + add.getRequest() + "\nResonse:\n" + add.getResponse());
+
+        setBundleTcg(findBundleTcg(getBook().getTravelPlanId()));
+
+        details.sendRequest();
+        TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
+
+        retrieveReservation();
+        if (getSkipDeposit() != null && getSkipDeposit() == false) {
+            makeFirstNightDeposit();
+        }
         retrieveReservation();
     }
 
     private void addGuest() {
         Guest guest;
+        if (additionalGuests.get() == null) {
+            setAdditionalGuests(new HashMap<Integer, Guest>());
+        }
         if (getAddNewGuest() != null && getAddNewGuest() == true) {
             guest = new HouseHold(1).primaryGuest();
+            getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
         } else {
             guest = getHouseHold().primaryGuest();
+            getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
         }
 
-        int numGuests = 0;
-        try {
-            numGuests = XMLTools.getNodeList(getBook().getRequestDocument(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails").getLength();
-        } catch (XPathNotFoundException e) {
-
+        if (isValid(getAddChildGuest()) && getAddChildGuest() == true) {
+            guest.setAge("3");
         }
-        String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail";
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestReferenceDetails"));
-        numGuests++;
-
-        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails[" + numGuests + "]";
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("age"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("ageType"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guest"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("correlationID"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("experienceMediaDetails"));
-        getBook().setRequestNodeValueByXPath(baseXpath + "/experienceMediaDetails", BaseSoapCommands.ADD_NODE.commandAppend("id"));
-        getBook().setRequestNodeValueByXPath(baseXpath + "/age", guest.getAge());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/ageType", AccommodationBaseTest.getAgeTypeByAge(guest.getAge()));
-        getBook().setRequestNodeValueByXPath(baseXpath + "/correlationID", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/experienceMediaDetails/id", "0");
-
-        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails[" + numGuests + "]/guest";
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("title"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("firstName"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("lastName"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("middleName"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("partyId"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("phoneDetails"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("addressDetails"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("emailDetails"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("doNotMailIndicator"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("doNotPhoneIndicator"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("preferredLanguage"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("dclGuestId"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestId"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("active"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("dob"));
-        getBook().setRequestNodeValueByXPath(baseXpath + "/title", guest.getTitle());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/firstName", guest.getFirstName());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/lastName", guest.getLastName());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/middleName", guest.getMiddleName());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/partyId", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/doNotMailIndicator", "true");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/doNotPhoneIndicator", "true");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/preferredLanguage", guest.getLanguagePreference());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/dclGuestId", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/guestId", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/active", "true");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/dob", guest.getBirthDate());
-
-        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails[" + numGuests + "]/guest/phoneDetails";
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorUseType"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primary"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("deviceType"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("extension"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("number"));
-        getBook().setRequestNodeValueByXPath(baseXpath + "/locatorId", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/guestLocatorId", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/locatorUseType", "HOUSEHOLD");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/primary", "true");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/deviceType", "HANDSET");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/extension", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/number", guest.primaryPhone().getNumber());
-
-        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails[" + numGuests + "]/guest/addressDetails";
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primary"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("addressLine1"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("city"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("country"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("postalCode"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("state"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("regionName"));
-        getBook().setRequestNodeValueByXPath(baseXpath + "/locatorId", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/guestLocatorId", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/primary", "true");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/addressLine1", guest.primaryAddress().getAddress1());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/city", guest.primaryAddress().getCity());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/country", guest.primaryAddress().getCountry());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/postalCode", guest.primaryAddress().getZipCode());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/state", guest.primaryAddress().getStateAbbv());
-        getBook().setRequestNodeValueByXPath(baseXpath + "/regionName", guest.primaryAddress().getState());
-
-        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails[" + numGuests + "]/guest/emailDetails";
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("locatorId"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestLocatorId"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primary"));
-        getBook().setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("address"));
-        getBook().setRequestNodeValueByXPath(baseXpath + "/locatorId", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/guestLocatorId", "0");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/primary", "true");
-        getBook().setRequestNodeValueByXPath(baseXpath + "/address", guest.primaryEmail().getEmail());
-
+        guest.primaryAddress().setCity("Winston Salem");
+        getBook().addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, guest);
     }
 
     public String freezeInventory() {
@@ -709,7 +1242,38 @@ public class AccommodationBaseTest extends BaseRestTest {
         guestAddressLocatorId.set(getRetrieve().getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest/addressDetails/guestLocatorId"));
     }
 
-    protected void setValues() {
+    public void retrieveReservation(Book book) {
+        Sleeper.sleep(5000);
+        retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
+        getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", book.getTravelPlanId());
+        getRetrieve().setRequestNodeValueByXPath("//request/locationId", getLocationId());
+        getRetrieve().sendRequest();
+        if (getRetrieve().getFaultString().toLowerCase().replaceAll("\\s", "").contains("No Accommodation Component found".toLowerCase().replaceAll("\\s", ""))) {
+            String sql = "select d.WRK_LOC_ID "
+                    + "from rsrc_inv.wrk_loc d "
+                    + "where d.HM_RSRT_FAC_ID in (select c.fac_id FAC_ID "
+                    + "from res_mgmt.tps a, res_mgmt.tc_grp b, res_mgmt.tc c "
+                    + "where a.tp_id = '" + getBook().getTravelPlanId() + "' "
+                    + "and a.tps_id = b.tps_id "
+                    + "and b.tc_grp_nb = c.tc_grp_nb "
+                    + "and c.fac_id is not null )";
+            Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+            Recordset rs = new Recordset(db.getResultSet(sql));
+            for (int i = 1; i <= rs.getRowCount(); i++) {
+                getRetrieve().setRequestNodeValueByXPath("//request/locationId", rs.getValue("WRK_LOC_ID", i));
+                getRetrieve().sendRequest();
+                if (getRetrieve().getResponseStatusCode().equals("200")) {
+                    break;
+                }
+            }
+        }
+        TestReporter.assertTrue(getRetrieve().getResponseStatusCode().equals("200"), "Verify that an error did not occurred retrieving the prereq reservation: " + getRetrieve().getFaultString());
+        partyId.set(getRetrieve().getPartyId());
+        guestId.set(getRetrieve().getGuestId());
+        guestAddressLocatorId.set(getRetrieve().getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest/addressDetails/guestLocatorId"));
+    }
+
+    public void setValues() {
         boolean success = false;
         int index;
         if (getEnvironment() == null) {
@@ -722,12 +1286,22 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setRoomTypeCode(roomTypeAndFacInfo[index][1]);
                 setLocationId(roomTypeAndFacInfo[index][5]);
 
-                String sql = "select d.WRK_LOC_ID "
-                        + "from rsrc_inv.wrk_loc d "
-                        + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
-                        + "and d.TXN_ACCT_CTR_ID is not null "
-                        + "order by d.CREATE_DTS asc";
-                Database db = new OracleDatabase(getEnvironment().toLowerCase().replace("_cm", ""), Database.DREAMS);
+                String sql = null;
+                if (Environment.getBaseEnvironmentName(environment).toLowerCase().equals("grumpy")) {
+                    sql = "select d.WRK_LOC_ID "
+                            + "from RSRC_INV.wrk_loc d "
+                            + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
+                            + "and d.TXN_ACCT_CTR_ID is not null "
+                            + "order by d.CREATE_DTS asc";
+                } else {
+                    sql = "select d.WRK_LOC_ID "
+                            + "from tfdb_3.wrk_loc d "
+                            + "where d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
+                            + "and d.TXN_ACCT_CTR_ID is not null "
+                            + "order by d.CREATE_DTS asc";
+                }
+                System.out.println();
+                Database db = new Database(FacilityDatabase.getInfo(environment));
                 Recordset rs = new Recordset(db.getResultSet(sql));
 
                 if (rs.getRowCount() == 0) {
@@ -754,12 +1328,12 @@ public class AccommodationBaseTest extends BaseRestTest {
         } while (!success);
     }
 
-    protected void setValues(String environment) {
+    public void setValues(String environment) {
         setEnvironment(environment);
         setValues();
     }
 
-    protected void setValues(String facilityId, String roomTypeCode, String locationId) {
+    public void setValues(String facilityId, String roomTypeCode, String locationId) {
         setFacilityId(facilityId);
         setRoomTypeCode(roomTypeCode);
         setLocationId(locationId);
@@ -797,20 +1371,311 @@ public class AccommodationBaseTest extends BaseRestTest {
         return ageType;
     }
 
-    public static boolean isValid(Object o) {
-        boolean valid = false;
-        if (o == null) {
-            valid = false;
+    public void makeFirstNightDeposit() {
+        RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
+        if (getBook() != null && getBook().getTravelPlanId() != null) {
+            retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getBook().getTravelPlanId());
+        } else {
+            retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, tpId.get());
         }
 
-        if (o instanceof String) {
-            if (StringUtils.isEmpty((String) o)) {
-                valid = false;
-            } else {
-                valid = true;
+        retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
+        String sqlTpId;
+        if (getBook() != null && getBook().getTravelPlanId() != null) {
+            sqlTpId = getBook().getTravelPlanId();
+        } else {
+            sqlTpId = tpId.get();
+        }
+        String sql = "select d.WRK_LOC_ID "
+                + "from rsrc_inv.wrk_loc d "
+                + "where d.HM_RSRT_FAC_ID in (select c.fac_id FAC_ID "
+                + "from res_mgmt.tps a, res_mgmt.tc_grp b, res_mgmt.tc c "
+                + "where a.tp_id = '" + sqlTpId + "' "
+                + "and a.tps_id = b.tps_id "
+                + "and b.tc_grp_nb = c.tc_grp_nb "
+                + "and c.fac_id is not null )";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            setLocationId(rs.getValue("WRK_LOC_ID", i));
+
+            retrieveBalance.setLocationId(getLocationId());
+            retrieveBalance.sendRequest();
+            if (retrieveBalance.getResponseStatusCode().equals("200")) {
+                break;
             }
         }
+        if (!retrieveBalance.getResponseStatusCode().equals("200")) {
+            if (getBook() != null) {
+                TestReporter.log("\n\nAn error occurred retrieving the balance for the TP ID [" + getBook().getTravelPlanId() + "],");
+            } else if (tpId != null && tpId.get() != null) {
+                TestReporter.log("\n\nAn error occurred retrieving the balance for the TP ID [" + tpId.get() + "],");
+            } else {
+                TestReporter.log("\n\nAn error occurred retrieving the balance");
+            }
+            TestReporter.log("Fault String: " + retrieveBalance.getFaultString());
+            TestReporter.log("ENDPOINT: " + retrieveBalance.getServiceURL());
+            TestReporter.logNoXmlTrim("\n\nRQ:\n\n" + retrieveBalance.getRequest());
+            TestReporter.logNoXmlTrim("\n\nRS:\n\n" + retrieveBalance.getResponse());
+        }
+        TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200", "Verify that no error occurred retrieving the balance for the reservation: " + retrieveBalance.getFaultString());
 
+        PostCardPayment postPayment = new PostCardPayment(environment, "Visa-CreditCard");
+        postPayment.setAmount(retrieveBalance.getDepositRequired());
+        postPayment.setFolioId(retrieveBalance.getFolioId());
+        if (getBook() != null && getBook().getTravelPlanId() != null) {
+            postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, getBook().getTravelPlanId());
+        } else {
+            postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, tpId.get());
+        }
+        if (getBook() != null && getBook().getTravelPlanId() != null) {
+            postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, getBook().getTravelComponentId());
+        } else {
+            postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, tcId.get());
+        }
+        postPayment.setLocationId(getLocationId());
+        postPayment.setPartyId(getPartyId());
+        try {
+            postPayment.setPrimaryLastname(hh.get().primaryGuest().getLastName());
+        } catch (NullPointerException | AutomationException e) {
+            postPayment.setPrimaryLastname(getHouseHold().primaryGuest().getLastName());
+        }
+        if (getBook() != null && getBook().getTravelPlanId() != null) {
+            postPayment.setTravelPlanId(getBook().getTravelPlanId());
+        } else {
+            postPayment.setTravelPlanId(tpId.get());
+        }
+        if (getBook() != null && getBook().getTravelPlanSegmentId() != null) {
+            postPayment.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        } else {
+            postPayment.setTravelPlanSegmentId(tpsId.get());
+        }
+        postPayment.setRetreivalReferenceNumber();
+        postPayment.sendRequest();
+        TestReporter.assertEquals(postPayment.getResponseStatusCode(), "200", "Response was not 200");
+        TestReporter.log("Payment ID: " + postPayment.getPaymentId());
+    }
+
+    public void makeFirstNightDeposit(Book book) {
+        RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
+        if (book != null && book.getTravelPlanId() != null) {
+            retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, book.getTravelPlanId());
+        } else {
+            retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, tpId.get());
+        }
+
+        retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
+        String sqlTpId;
+        if (book != null && book.getTravelPlanId() != null) {
+            sqlTpId = book.getTravelPlanId();
+        } else {
+            sqlTpId = tpId.get();
+        }
+        String sql = "select d.WRK_LOC_ID "
+                + "from rsrc_inv.wrk_loc d "
+                + "where d.HM_RSRT_FAC_ID in (select c.fac_id FAC_ID "
+                + "from res_mgmt.tps a, res_mgmt.tc_grp b, res_mgmt.tc c "
+                + "where a.tp_id = '" + sqlTpId + "' "
+                + "and a.tps_id = b.tps_id "
+                + "and b.tc_grp_nb = c.tc_grp_nb "
+                + "and c.fac_id is not null )";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            setLocationId(rs.getValue("WRK_LOC_ID", i));
+
+            retrieveBalance.setLocationId(getLocationId());
+            retrieveBalance.sendRequest();
+            if (retrieveBalance.getResponseStatusCode().equals("200")) {
+                break;
+            }
+        }
+        if (!retrieveBalance.getResponseStatusCode().equals("200")) {
+            if (book != null) {
+                TestReporter.log("\n\nAn error occurred retrieving the balance for the TP ID [" + book.getTravelPlanId() + "],");
+            } else if (tpId != null && tpId.get() != null) {
+                TestReporter.log("\n\nAn error occurred retrieving the balance for the TP ID [" + tpId.get() + "],");
+            } else {
+                TestReporter.log("\n\nAn error occurred retrieving the balance");
+            }
+            TestReporter.log("Fault String: " + retrieveBalance.getFaultString());
+            TestReporter.log("ENDPOINT: " + retrieveBalance.getServiceURL());
+            TestReporter.logNoXmlTrim("\n\nRQ:\n\n" + retrieveBalance.getRequest());
+            TestReporter.logNoXmlTrim("\n\nRS:\n\n" + retrieveBalance.getResponse());
+        }
+        TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200", "Verify that no error occurred retrieving the balance for the reservation: " + retrieveBalance.getFaultString());
+
+        PostCardPayment postPayment = new PostCardPayment(environment, "Visa-CreditCard");
+        postPayment.setAmount(retrieveBalance.getDepositRequired());
+        postPayment.setFolioId(retrieveBalance.getFolioId());
+        if (book != null && book.getTravelPlanId() != null) {
+            postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, book.getTravelPlanId());
+        } else {
+            postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, tpId.get());
+        }
+        if (book != null && book.getTravelPlanId() != null) {
+            postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, book.getTravelComponentId());
+        } else {
+            postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, tcId.get());
+        }
+        postPayment.setLocationId(getLocationId());
+        postPayment.setPartyId(getPartyId());
+        try {
+            postPayment.setPrimaryLastname(hh.get().primaryGuest().getLastName());
+        } catch (NullPointerException | AutomationException e) {
+            postPayment.setPrimaryLastname(getHouseHold().primaryGuest().getLastName());
+        }
+        if (book != null && book.getTravelPlanId() != null) {
+            postPayment.setTravelPlanId(book.getTravelPlanId());
+        } else {
+            postPayment.setTravelPlanId(tpId.get());
+        }
+        if (book != null && book.getTravelPlanSegmentId() != null) {
+            postPayment.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
+        } else {
+            postPayment.setTravelPlanSegmentId(tpsId.get());
+        }
+        postPayment.setRetreivalReferenceNumber();
+        postPayment.sendRequest();
+        TestReporter.assertEquals(postPayment.getResponseStatusCode(), "200", "Response was not 200");
+        TestReporter.log("Payment ID: " + postPayment.getPaymentId());
+    }
+
+    public String findBundleTcg(String tpId) {
+        String baseSql = DVCSalesDreams.getReservationInfoByTpId(tpId).replace("and rownum = 1", "").replace("*", "unique(c.TC_GRP_NB)");
+        String sql = "select PROD_TYP_NM from res_mgmt.tc a where a.tc_grp_nb in({INPUT})";
+        Database db = new OracleDatabase(DVCSalesBaseTest.removeCM(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(baseSql));
+
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            String locSql = sql;
+            locSql = locSql.replace("{INPUT}", rs.getValue("TC_GRP_NB", i));
+            Recordset rs2 = new Recordset(db.getResultSet(locSql));
+            if (rs2.getRowCount() > 1) {
+                for (int j = 1; j <= rs2.getRowCount(); j++) {
+                    if (rs2.getValue("PROD_TYP_NM", j).contains("Memory Maker")) {
+                        return rs.getValue("TC_GRP_NB", i);
+                    }
+                }
+            }
+        }
+        if (rs.getRowCount() == 0) {
+            throw new AutomationException("No bundle was found to be associated with TP ID [" + tpId + "].");
+        }
+        return null;
+    }
+
+    private void addDining() {
+        diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), hh.get());
+        diningRes.setTravelPlanId(getBook().getTravelPlanId());
+        diningRes.setFacilityName("Pioneer Hall");
+        diningRes.setProductName("Hoop-Dee-Doo-Cat 2-1st Show");
+        diningRes.setServiceStartDate(getArrivalDate());
+        diningRes.book("NoComponentsNoAddons");
+
+        firstDiningTcg.set(findDiningResTcg(diningRes.getConfirmationNumber()));
+    }
+
+    private String findDiningResTcg(String confirmationNumber) {
+        Database db = new OracleDatabase(environment.toLowerCase().replace("_cm", ""), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(DVCSalesDreams.getReservationInfoByTpsId(confirmationNumber)));
+        return rs.getValue("TC_GRP_NB", 1);
+    }
+
+    public void checkingIn(String environment) {
+
+        FindRoomForReservation findRoom = new FindRoomForReservation(environment, "UI Booking");
+        findRoom.setTravelPlanId(getBook().getTravelPlanId());
+        findRoom.setNumberOfResponseRows("50");
+        findRoom.sendRequest();
+        TestReporter.assertTrue(findRoom.getResponseStatusCode().equals("200"), "Verify no error occurred finding a room for a reservation: " + findRoom.getFaultString());
+
+        String resourceId = null;
+        String roomNumber = null;
+        AssignRoomForReservation assignRoom = null;
+        boolean roomAdded = false;
+        Map<String, String> values = findRoom.getAllRoomAndResourceIds();
+        Iterator<Entry<String, String>> it = values.entrySet().iterator();
+        while (!roomAdded && it.hasNext()) {
+            Entry<String, String> et = it.next();
+            roomNumber = et.getKey();
+            resourceId = et.getValue();
+
+            assignRoom = new AssignRoomForReservation(environment, "UI Booking");
+            assignRoom.setArrivalAndDepartureDaysOut(String.valueOf(getDaysOut()), String.valueOf(getNights()));
+            assignRoom.setAssignmentOwnerNumber(findRoom.getAssignmentOwnerNumber());
+            assignRoom.setFacilityId(getFacilityId());
+            assignRoom.setRoomNumber(roomNumber);
+            assignRoom.setRoomResourceNumber(resourceId);
+            assignRoom.sendRequest();
+            if (assignRoom.getFaultString().contains("LOCK ASSIGNMENT ERROR")) {
+                Sleeper.sleep(Randomness.randomNumberBetween(3, 7) * 1000);
+                assignRoom.sendRequest();
+            }
+            if (assignRoom.getResponseStatusCode().equals("200")) {
+                roomAdded = true;
+            }
+        }
+        ;
+        TestReporter.assertTrue(roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoom.getFaultString());
+
+        CheckingIn checkingIn = new CheckingIn(environment, "UI_Booking");
+        checkingIn.setLocationId(getLocationId());
+        checkingIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        checkingIn.sendRequest();
+        TestReporter.assertTrue(checkingIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getBook().getTravelPlanId() + "]: " + getBook().getFaultString());
+
+    }
+
+    // public static boolean isValid(Object o) {
+    // boolean valid = false;
+    // if (o == null) {
+    // valid = false;
+    // }
+    //
+    // if (o instanceof String) {
+    // if (StringUtils.isEmpty((String) o)) {
+    // valid = false;
+    // } else {
+    // valid = true;
+    // }
+    // }
+    //
+    // return valid;
+    // }
+
+    public static Boolean isValid(Object obj) {
+        Boolean valid = false;
+        if (obj != null) {
+            valid = true;
+        } else {
+            return false;
+        }
+
+        if (valid) {
+            if (obj instanceof String) {
+                if (StringUtils.isEmpty(((String) obj))) {
+                    return false;
+                } else {
+                    return true;
+                }
+
+            } else if (obj instanceof Collection<?>) {
+                if (((Collection<?>) obj).isEmpty()) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if (obj instanceof Map<?, ?>) {
+                if (((Map<?, ?>) obj).isEmpty()) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
         return valid;
     }
 }
