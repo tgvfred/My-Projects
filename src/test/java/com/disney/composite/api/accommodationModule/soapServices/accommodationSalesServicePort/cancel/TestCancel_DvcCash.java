@@ -7,8 +7,9 @@ import org.testng.annotations.Test;
 
 import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
@@ -23,7 +24,7 @@ public class TestCancel_DvcCash extends BookDVCCashHelper {
         setUseDvcResort(true);
         bookDvcReservation("testCancel_M$", 1);
         setTpId(getFirstBooking().getTravelPlanId());
-        makeCCPayment(environment);
+        makeCCPayment(Environment.getBaseEnvironmentName(environment));
 
         /*
          * Pausing script to ensure events making it downstream to DVC Corp
@@ -57,6 +58,6 @@ public class TestCancel_DvcCash extends BookDVCCashHelper {
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS);
+        validateApplicationError(cancel, LiloResmErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS);
     }
 }

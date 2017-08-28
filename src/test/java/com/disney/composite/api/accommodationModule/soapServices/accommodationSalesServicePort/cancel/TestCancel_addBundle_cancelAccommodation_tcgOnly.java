@@ -21,6 +21,7 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         daysOut.set(Randomness.randomNumberBetween(1, 12));
         nights.set(Randomness.randomNumberBetween(1, 3));
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
@@ -41,7 +42,7 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "Verify that a cancellation number was returned.");

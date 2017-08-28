@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -11,19 +12,21 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.AddBundleHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
-    private CheckInHelper helper;
+    private ThreadLocal<CheckInHelper> helper = new ThreadLocal<>();
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -32,11 +35,43 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         bookReservation();
     }
 
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            helper.get().checkOut(getLocationId());
+            helper.get().updateSingleRoomStatus("updateToCleanAndVacant");
+        } catch (Exception e) {
+
+        }
+
+        try {
+            helper.get().updateSingleRoomStatus("updateToCleanAndVacant");
+        } catch (Exception e) {
+
+        }
+    }
+
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_BEREAV() {
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -71,8 +106,23 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_DOMDISP() {
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -107,8 +157,23 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_DUPRES() {
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -143,8 +208,23 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_ECERR() {
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -180,8 +260,23 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_FAMEM() {
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -215,8 +310,23 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_ILL() {
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -252,8 +362,23 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_LVNOUTWDW() {
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -289,8 +414,23 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_WTHRCKO() {
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -326,8 +466,23 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_tpsExtRefAndTcg() {
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -364,14 +519,53 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         AddBundleHelper bundleHelper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         bundleHelper.addBundle(getBook().getTravelPlanId(), getDaysOut());
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-        helper.checkOut(getLocationId());
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+
+                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
+        // helper.get().checkOut(getLocationId());
+        String status = "false";
+        String tcgId = getBook().getTravelComponentGroupingId();
+        String locationId = getLocationId();
+        String checkoutDate = Randomness.generateCurrentXMLDate();
+        String earlyCheckoutReason = "BEREAV";
+        String refType = "RESERVATION";
+        String refNumber = getExternalRefNumber();
+        String refSource = getExternalRefSource();
+
+        Checkout checkout = new Checkout(getEnvironment(), "main");
+        checkout.setEarlyCheckOutReason(earlyCheckoutReason);
+        checkout.setIsBellServiceRequired(status);
+        checkout.setIsSameRoomNumberAssigned(status);
+        checkout.setTravelComponentGroupingId(tcgId);
+        checkout.setExternalReferenceType(refType);
+        checkout.setExternalReferenceNumber(refNumber);
+        checkout.setExternalReferenceSource(refSource);
+        checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setCheckoutDate(checkoutDate);
+        checkout.setLocationId(locationId);
+        checkout.sendRequest();
 
         String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
         validateRIM(assignOwnerId);
-        additionalValidations(assignOwnerId);
+        additionalValidations_Bundle(assignOwnerId);
         validateChargeGroupsChargesAndFolio_Bundle();
+    }
+
+    private void additionalValidations_Bundle(String assignOwnerId) {
+        validateCheckoutReason();
+        validateRIMInventoryReleased(assignOwnerId);
     }
 
     private void additionalValidations(String assignOwnerId) {
@@ -380,6 +574,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     }
 
     private void validateRIMInventoryReleased(String assignOwnerId) {
+        TestReporter.logStep("Validate RIM Inventory Released");
         String sql = "select a.RSRC_INVTRY_TYP_ID, a.AUTO_ASGN_RSRC_ID, a.OWNR_STS_NM, b.RSRC_ASGN_REQ_ID, c.ASGN_ID "
                 + "from rsrc_inv.RSRC_ASGN_OWNR a "
                 + "left outer join rsrc_inv.RSRC_ASGN_REQ b on a.ASGN_OWNR_ID = b.ASGN_OWNR_ID "
@@ -444,7 +639,19 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 + "and c.tc_typ_nm = 'AccommodationComponent'";
 
         db = new OracleDatabase(environment, Database.DREAMS);
-        rs = new Recordset(db.getResultSet(sql));
+        rs = null;
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            rs = new Recordset(db.getResultSet(sql));
+            if (rs.getValue("TPS_STS").equals("Past Visit")) {
+                success = true;
+            }
+            tries++;
+        } while (tries < maxTries && !success);
         do {
             if (rs.getValue("TC_ID").equals(TcId)) {
                 TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Past Visit", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Past Visit].");
@@ -549,7 +756,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         TestReporter.softAssertTrue(rs.getRowCount() == 4, "Verify that 4 charges were found.");
         do {
             TestReporter.softAssertEquals(rs.getValue("CHRG_PST_ST_NM"), "Earned", "Verify that the charge past state name [" + rs.getValue("CHRG_PST_ST_NM") + "] is that which is expected [Earned].");
-            TestReporter.softAssertEquals(rs.getValue("CHRG_ACTV_IN"), "N", "Verify that the charge active indicator [" + rs.getValue("CHRG_ACTV_IN") + "] is that which is expected [N].");
+            TestReporter.softAssertEquals(rs.getValue("CHRG_ACTV_IN"), "Y", "Verify that the charge active indicator [" + rs.getValue("CHRG_ACTV_IN") + "] is that which is expected [Y].");
             TestReporter.softAssertEquals(rs.getValue("RECOG_STS_NM"), "APPROVED", "Verify that the RECOG status [" + rs.getValue("RECOG_STS_NM") + "] is that which is expected [APPROVED].");
             rs.moveNext();
         } while (rs.hasNext());

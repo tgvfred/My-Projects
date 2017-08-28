@@ -5,9 +5,10 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
@@ -18,16 +19,15 @@ public class TestCancel_NullExtRefSourceAndCode extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
-        // to invoke lower levels of reporting
         setEnvironment(environment);
+        isComo.set("false");
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues();
+        setValues(Environment.getBaseEnvironmentName(getEnvironment()));
         bookReservation();
     }
 
@@ -45,6 +45,6 @@ public class TestCancel_NullExtRefSourceAndCode extends AccommodationBaseTest {
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.EXT_REF_SRC_REQ);
+        validateApplicationError(cancel, LiloResmErrorCode.EXT_REF_SRC_REQ);
     }
 }

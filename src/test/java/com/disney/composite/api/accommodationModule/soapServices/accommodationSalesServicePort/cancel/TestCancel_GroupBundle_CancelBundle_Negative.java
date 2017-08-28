@@ -8,7 +8,7 @@ import com.disney.AutomationException;
 import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.FindMiscPackages;
 import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
@@ -166,7 +166,7 @@ public class TestCancel_GroupBundle_CancelBundle_Negative extends TravelPlanBase
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.ACCOMMODATION_NOT_FOUND);
+        validateApplicationError(cancel, LiloResmErrorCode.ACCOMMODATION_NOT_FOUND);
 
     }
 

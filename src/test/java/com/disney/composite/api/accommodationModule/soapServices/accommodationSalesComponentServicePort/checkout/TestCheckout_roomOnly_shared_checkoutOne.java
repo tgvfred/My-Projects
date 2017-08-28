@@ -22,6 +22,7 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());

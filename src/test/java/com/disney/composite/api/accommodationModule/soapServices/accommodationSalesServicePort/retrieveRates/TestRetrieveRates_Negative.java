@@ -23,6 +23,7 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -41,7 +42,7 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         retrieveRates.sendRequest();
 
         TestReporter.assertTrue(retrieveRates.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieveRates.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieveRates, AccommodationErrorCode.REQ_PARAM_MISSING);
+        validateApplicationError(retrieveRates, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveRates" })
@@ -55,7 +56,8 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         tcgId = rs.getValue("TC_GRP_NB");
-        String faultString = "Accommodation Component not found : NO ACCOMMODATION FOUND WITH ID#" + tcgId;
+        // String faultString = "Accommodation Component not found : NO ACCOMMODATION FOUND WITH ID#" + tcgId;
+        String faultString = "Unexpected Error occurred : retrieveRates : java.lang.NullPointerException";
 
         TestReporter.logScenario("Negative Dinning reservation rates");
         RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
@@ -63,7 +65,7 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         retrieveRates.sendRequest();
 
         TestReporter.assertTrue(retrieveRates.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieveRates.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieveRates, AccommodationErrorCode.ACCOMMODATION_COMPONENT_NOT_FOUND);
+        validateApplicationError(retrieveRates, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
 
     }
 }

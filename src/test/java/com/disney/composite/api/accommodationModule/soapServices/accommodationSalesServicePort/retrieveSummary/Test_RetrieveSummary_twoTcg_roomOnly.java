@@ -21,6 +21,7 @@ public class Test_RetrieveSummary_twoTcg_roomOnly extends AccommodationBaseTest 
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -28,10 +29,10 @@ public class Test_RetrieveSummary_twoTcg_roomOnly extends AccommodationBaseTest 
         setValues(environment);
         bookReservation();
 
-        book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
+        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "RoomOnlyNoTickets");
         book.sendRequest();
 
-        book1 = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
+        book1 = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "RoomOnlyNoTickets");
         book1.sendRequest();
 
     }
@@ -40,29 +41,18 @@ public class Test_RetrieveSummary_twoTcg_roomOnly extends AccommodationBaseTest 
     public void testRetrieveSummary_twoTcg_roomOnly() {
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main2TCG");
-        retrieve.setRequestTravelComponentGroupingIdIndex("1", book.getTravelPlanSegmentId());
-        retrieve.setRequestTravelComponentGroupingIdIndex("2", book1.getTravelPlanSegmentId());
+        if (Environment.isSpecialEnvironment(environment)) {
+            retrieve.setRequestTravelComponentGroupingIdIndex("1", book.getTravelComponentGroupingId());
+            retrieve.setRequestTravelComponentGroupingIdIndex("2", book1.getTravelComponentGroupingId());
+        } else {
+            retrieve.setRequestTravelComponentGroupingIdIndex("1", book.getTravelPlanSegmentId());
+            retrieve.setRequestTravelComponentGroupingIdIndex("2", book1.getTravelPlanSegmentId());
+        }
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]", retrieve);
 
         TestReporter.logStep("Verify two AccommodationsSummaryDetails node is found & that two different TPS IDs are found.");
         TestReporter.assertTrue(retrieve.getAccommodationsSummaryDetails().equals(two), "Number of AccommodationsSummaryDetails nodes found is [" + retrieve.getAccommodationsSummaryDetails() + "]! and the two TPS IDs are [" + retrieve.getTravelPlanSegmentId("1") + "] & [" + retrieve.getTravelPlanSegmentId("2") + "]");
-
-        // Old vs New Validation
-        if (Environment.isSpecialEnvironment(environment)) {
-            RetrieveSummary clone = (RetrieveSummary) retrieve.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
-        }
 
     }
 
