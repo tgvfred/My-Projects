@@ -40,6 +40,7 @@ public class TestRetrieveCancellationPolicy_wdtc_sameDay_fullRequest extends Acc
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred when sending request", retrieve);
 
+        // may not be possible bc of similar nods bringing back different values depending on environment
         // Validate old vs. new service
         if (Environment.isSpecialEnvironment(getEnvironment())) {
             RetrieveCancellationPolicy clone = (RetrieveCancellationPolicy) retrieve.clone();
@@ -77,7 +78,7 @@ public class TestRetrieveCancellationPolicy_wdtc_sameDay_fullRequest extends Acc
 
         // Verify that cancel fee is 0.0
         TestReporter.logStep("Verify that the cancel fee is NOT 0.0");
-        TestReporter.assertFalse(retrieve.getcancelFee().equals(cancelFee), "Verify that cancel fee [" + retrieve.getcancelFee() + "] is NOT zero");
+        TestReporter.assertFalse(retrieve.getcancelFee().equals(0.0), "Verify that cancel fee [" + retrieve.getcancelFee() + "] is NOT zero");
 
         // Verify that fee waived node is not included in the response xml
         TestReporter.logStep("Verify that the fee waived node is included in the response xml");

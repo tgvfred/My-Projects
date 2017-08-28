@@ -6,6 +6,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentS
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveCancellationPolicy;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveCancellationPolicy_checkIn extends AccommodationBaseTest {
@@ -17,6 +18,7 @@ public class TestRetrieveCancellationPolicy_checkIn extends AccommodationBaseTes
 
         CheckIn check = new CheckIn(environment, "Main");
         check.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        check.setRequestNodeValueByXPath("/Envelope/Body/checkIn/request/checkInGuestDetails/guestId", BaseSoapCommands.REMOVE_NODE.toString());
         check.sendRequest();
 
         TestReporter.logAPI(!check.getResponseStatusCode().equals("200"), "An error occurred when sending request: " + check.getFaultString(), check);
