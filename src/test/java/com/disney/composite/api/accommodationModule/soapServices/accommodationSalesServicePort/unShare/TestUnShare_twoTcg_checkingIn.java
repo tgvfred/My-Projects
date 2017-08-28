@@ -4,6 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UnShare;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -25,8 +26,8 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
     String firstTCG;
     String ownerIdOne;
     String ownerIdTwo;
-    String book;
-    String book2;
+    ReplaceAllForTravelPlanSegment book;
+    ReplaceAllForTravelPlanSegment book2;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -67,7 +68,7 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
         validateResponse();
 
         // book second reservation.
-        setDaysOut(1);
+        setDaysOut(0);
         setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -128,7 +129,7 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
         TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), tcgId, "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "] that which is expected [" + tcgId + "].");
         TestReporter.softAssertEquals(getBook().getTravelComponentId(), tcId, "Verify that the response returns the tcId [" + getBook().getTravelComponentId() + "] that which is expected [" + tcId + "].");
         TestReporter.softAssertEquals(Randomness.generateCurrentXMLDate(), bookingDate.substring(0, 10), "Verify that the booking date [" + Randomness.generateCurrentXMLDate() + "] that which is expected [" + bookingDate.substring(0, 10) + "].");
-        TestReporter.softAssertEquals(travelStatus, "Booked", "Verify that the response returns the travel status [" + travelStatus + "] that which is expected [Booked].");
+        TestReporter.softAssertEquals(travelStatus, "Checking In", "Verify that the response returns the travel status [" + travelStatus + "] that which is expected [Checking In].");
         TestReporter.assertAll();
 
     }
@@ -136,7 +137,7 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
     public void validations() {
         UnShareHelper helper = new UnShareHelper(getEnvironment());
 
-        int numExpectedRecords = 3;
+        int numExpectedRecords = 4;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;

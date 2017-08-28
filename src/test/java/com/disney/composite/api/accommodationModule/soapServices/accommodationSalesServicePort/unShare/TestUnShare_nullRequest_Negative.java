@@ -21,7 +21,7 @@ public class TestUnShare_nullRequest_Negative extends AccommodationBaseTest {
 
         String faultString = "Required parameters are missing : Invalid Request. Atleast one TravelComponentGroupingId Should be Provided for unshare";
 
-        validateApplicationError(unshare, AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(unshare, AccommodationErrorCode.REQ_PARAM_MISSING);
 
         TestReporter.assertEquals(unshare.getFaultString(), faultString, "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
 
