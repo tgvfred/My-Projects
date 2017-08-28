@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
@@ -50,14 +50,17 @@ public class TestCancel_DvcCash extends BookDVCCashHelper {
     public void testCancel_DvcCash() {
         TestReporter.logScenario("Test Cancel dvc cash negative");
 
-        String faultString = "Cant cancel DVC";
+        String faultString = "Cannot cancel DVC Reservation : This is DVC Reservation";
 
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getFirstBooking().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getFirstBooking().getResponseNodeValueByXPath("/Envelope/Body/bookResponse/bookResponse/externalReferenceDetail/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getFirstBooking().getResponseNodeValueByXPath("/Envelope/Body/bookResponse/bookResponse/externalReferenceDetail/externalReferenceSource"));
+
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, LiloResmErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS);
+        validateApplicationError(cancel, AccommodationErrorCode.CANNOT_CANCEL_DVC_RES);
     }
 }

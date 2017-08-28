@@ -158,6 +158,8 @@ public class AccommodationErrorCode {
             " Guarantee status can not be changed ");
     public static final ApplicationErrorCode EXTERNAL_REFERENCE_REQUIRED = new ApplicationErrorCode(
             MODULE_NAME, 7088, "External Reference is required");
+    public static final ApplicationErrorCode CANNOT_CANCEL_DVC_RES = new ApplicationErrorCode(
+            MODULE_NAME, 9122, "Cannot cancel DVC Reservation");
     public static final ApplicationErrorCode DIRECT_CONNECT_BOTH_FPLOSID_AND_FREEZEID_CANNOT_EXIST = new ApplicationErrorCode(MODULE_NAME, 7216,
             "FPLOSID AND FREEZEID CANNOT BE USED TOGETHER!");
     public static final ApplicationErrorCode TRAVEL_STATUS_INVALID = new ApplicationErrorCode(MODULE_NAME, 7110,
