@@ -124,7 +124,7 @@ public class TestShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
     public void validations() {
         ShareHelper helper = new ShareHelper(getEnvironment());
 
-        int numExpectedRecords = 2;
+        int numExpectedRecords = 3;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;
