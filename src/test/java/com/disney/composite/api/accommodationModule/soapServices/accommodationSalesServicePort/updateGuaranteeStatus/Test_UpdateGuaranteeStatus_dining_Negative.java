@@ -26,7 +26,7 @@ public class Test_UpdateGuaranteeStatus_dining_Negative extends AccommodationBas
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_dining_Negative() {
 
-        String faultString = " Guarantee status can not be changed  : guarantee status can not be changed";
+        String faultString = " Guarantee status can not be changed  : Guarantee status can not be changed";
 
         ScheduledEventReservation dining = new ShowDiningReservation(getEnvironment().toLowerCase().replace("_cm", ""));
         dining.setTravelPlanId(getBook().getTravelPlanId());

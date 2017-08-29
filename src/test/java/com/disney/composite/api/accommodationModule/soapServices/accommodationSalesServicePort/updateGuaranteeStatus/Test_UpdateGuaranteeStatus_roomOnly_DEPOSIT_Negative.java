@@ -12,7 +12,7 @@ public class Test_UpdateGuaranteeStatus_roomOnly_DEPOSIT_Negative extends Accomm
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_roomOnly_DEPOSIT_Negative() {
 
-        String faultString = " Guarantee status can not be changed  : guarantee status can not be changed";
+        String faultString = " Guarantee status can not be changed  : Guarantee status can not be changed";
 
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);
         update.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());

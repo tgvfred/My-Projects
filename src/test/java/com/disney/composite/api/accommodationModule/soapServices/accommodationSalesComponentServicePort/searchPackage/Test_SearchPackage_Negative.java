@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.SearchPackage;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
@@ -14,26 +14,27 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_emptyRequest() {
 
-        String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
+        String faultString = "INVALID REQUEST! : SalesChannel provided is NULL! !";
 
         SearchPackage search = new SearchPackage(environment, "Main");
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, LiloResmErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
+        validateApplicationError(search, AccommodationErrorCode.ROOM_DETAIL_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_salesChannelIdOnly() {
 
-        String faultString = "Data not found\\. : No Packages could be found for channelIDs='\\[1\\]' and bookDate='[a-z A-Z 0-9].*' and arriveDate='null' and packageCode='null' and packageDescription='null' and roomOnly=null";
-
+        // String faultString = "Unexpected Error occurred\\. : searchPackage\\. : No Packages could be found for channelIDs='\\[1\\]' and bookDate='[a-z A-Z
+        // 0-9].*' and arriveDate='null' and packageCode='null' and packageDescription='null' and roomOnly=null";
+        String faultString = "Unexpected Error occurred : searchPackage : No Packages could be found for channelIDs=\\'\\[1\\]\\' and bookDate='[a-z A-Z 0-9].*' and arriveDate='null' and packageCode='null' and packageDescription='null' and roomOnly=null";
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setSalesChannelIDs("1");
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, LiloResmErrorCode.DATA_NOT_FOUND_EXCEPTION);
+        validateApplicationError(search, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
@@ -41,7 +42,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
 
         String book = Randomness.generateCurrentXMLDate();
 
-        String faultString = "Data not found\\. : No Packages could be found for channelIDs='\\[1\\]' and bookDate='[a-z A-Z 0-9].*' and arriveDate='[a-z A-Z 0-9].*' and packageCode=' ' and packageDescription='R Room Only' and roomOnly=null";
+        String faultString = "Unexpected Error occurred : searchPackage : No Packages could be found for channelIDs=\\'\\[1\\]\\' and bookDate='[a-z A-Z 0-9].*' and arriveDate='[a-z A-Z 0-9].*' and packageCode=' ' and packageDescription='R Room Only' and roomOnly=null";
 
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setBookingDate(book);
@@ -52,33 +53,34 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, LiloResmErrorCode.DATA_NOT_FOUND_EXCEPTION);
+        validateApplicationError(search, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_resortArrivalDateOnly() {
 
-        String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
+        // String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
+        String faultString = "INVALID REQUEST! : SalesChannel provided is NULL! !";
 
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setResortArrivalDate(Randomness.generateCurrentXMLDate());
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, LiloResmErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
+        validateApplicationError(search, AccommodationErrorCode.ROOM_DETAIL_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_bookingDateOnly() {
 
-        String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
+        String faultString = "INVALID REQUEST! : SalesChannel provided is NULL! !";
 
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setBookingDate(Randomness.generateCurrentXMLDate());
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, LiloResmErrorCode.RESULT_SIZE_TOO_LARGE_EXCEPTION);
+        validateApplicationError(search, AccommodationErrorCode.ROOM_DETAIL_MISSING);
     }
 
 }

@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -65,6 +66,9 @@ public class Checkout_Negative extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+        cancel.setExternalReferenceCode("Accovia");
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
@@ -83,8 +87,8 @@ public class Checkout_Negative extends AccommodationBaseTest {
 
         checkout.setTravelComponentGroupingId(tcgId);
         checkout.setExternalReferenceType(refType);
-        checkout.setExternalReferenceNumber(refNumber);
-        checkout.setExternalReferenceSource(refSource);
+        checkout.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        checkout.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
 
         checkout.setCheckoutDate(BaseSoapCommands.REMOVE_NODE.toString());
@@ -119,7 +123,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, LiloResmErrorCode.EXTERNAL_REFERENCE_REQUIRED);
+        validateApplicationError(checkout, AccommodationErrorCode.EXTERNAL_REFERENCE_REQUIRED);
 
     }
 }

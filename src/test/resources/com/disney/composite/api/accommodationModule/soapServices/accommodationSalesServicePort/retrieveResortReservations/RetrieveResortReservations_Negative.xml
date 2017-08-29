@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="RetrieveResortReservations_Negative" parallel="methods" thread-count="10">   
+	<parameter name="environment" value="latest_cm" />
+	<test name="RetrieveResortReservations_Negative">                                            
+		<packages>
+	      <package name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveResortReservations.TestRetrieveResortReservations_Negative"/>
+	    </packages>
+  	</test>
+</suite>

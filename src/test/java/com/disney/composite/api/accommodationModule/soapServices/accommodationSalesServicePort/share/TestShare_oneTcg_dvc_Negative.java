@@ -35,7 +35,7 @@ public class TestShare_oneTcg_dvc_Negative extends BookDVCCashHelper {
         String faultString = "Accommodation is invalid for Share : DVC reservations should not be shared";
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(share, AccommodationErrorCode.ACCOMMODATION_INVALID_FOR_SHARE);
+        validateApplicationError(share, AccommodationErrorCode.ACCOMMODATION_INVALID_SHARE);
     }
 
 }
