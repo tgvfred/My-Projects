@@ -238,3 +238,4 @@ public class TestUpdateComments_parentTC_updateNothing extends AccommodationBase
             }
         }
     }
+}
