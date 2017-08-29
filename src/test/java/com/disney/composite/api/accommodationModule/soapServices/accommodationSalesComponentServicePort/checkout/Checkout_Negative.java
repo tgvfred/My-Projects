@@ -66,6 +66,8 @@ public class Checkout_Negative extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.setExternalReferenceCode("Accovia");
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
@@ -85,8 +87,8 @@ public class Checkout_Negative extends AccommodationBaseTest {
 
         checkout.setTravelComponentGroupingId(tcgId);
         checkout.setExternalReferenceType(refType);
-        checkout.setExternalReferenceNumber(refNumber);
-        checkout.setExternalReferenceSource(refSource);
+        checkout.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        checkout.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
 
         checkout.setCheckoutDate(BaseSoapCommands.REMOVE_NODE.toString());
