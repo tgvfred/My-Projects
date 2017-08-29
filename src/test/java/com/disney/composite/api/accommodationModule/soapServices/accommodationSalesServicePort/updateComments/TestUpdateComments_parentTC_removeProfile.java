@@ -52,7 +52,7 @@ public class TestUpdateComments_parentTC_removeProfile extends AccommodationBase
         // Validate node response values
         TestReporter.logStep("Validate Response node values.");
         TestReporter.setAssertFailed(false);
-        TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred updating comments: " + update.getFaultString(), update);
+        TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred getting options by filter", update);
         TestReporter.softAssertTrue(update.getSendToGSR().equals(sendToGSR), "Verify that the sendToGSR node [" + update.getSendToGSR() + "] is what is expected [" + sendToGSR + "]");
         TestReporter.softAssertTrue(update.getConfidential().equals(confidential), "Verify that the confidential node [" + update.getConfidential() + "] is what is expected [" + confidential + "]");
         TestReporter.softAssertTrue(update.getCommentText().equals(commentText), "Verify that the commentText node [" + update.getCommentText() + "] is what is expected [" + commentText + "]");
@@ -147,7 +147,7 @@ public class TestUpdateComments_parentTC_removeProfile extends AccommodationBase
         TestReporter.logStep("Validate comment with a call to retreiveComments service.");
         TestReporter.setAssertFailed(false);
 
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
             if (update.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
                 TestReporter.softAssertEquals(update.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + update.getIsActive() + "]");
@@ -165,4 +165,3 @@ public class TestUpdateComments_parentTC_removeProfile extends AccommodationBase
             }
         }
     }
-}
