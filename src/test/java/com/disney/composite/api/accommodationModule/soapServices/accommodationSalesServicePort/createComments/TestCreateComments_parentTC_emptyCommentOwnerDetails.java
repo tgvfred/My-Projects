@@ -2,6 +2,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateComments;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveComments;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -42,6 +43,11 @@ public class TestCreateComments_parentTC_emptyCommentOwnerDetails extends Accomm
         create.setUpdatedDate(BaseSoapCommands.REMOVE_NODE.toString());
         create.setUpdatedBy("Thomas " + Randomness.randomAlphaNumeric(4));
         create.setStatus(BaseSoapCommands.REMOVE_NODE.toString());
+        create.setRoomExternalReferenceNumber(getBook().getTravelComponentId());
+        create.setRoomExternalReferenceSource(ServiceConstants.FolioExternalReference.DREAMS_TC);
+        create.setTpsExternalReferenceNumber(getBook().getTravelPlanSegmentId());
+        create.setTpsExternalReferenceSource(ServiceConstants.FolioExternalReference.DREAMS_TPS);
+        create.setCommentType("TravelComponentComment");
         create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create.sendRequest();
@@ -135,7 +141,7 @@ public class TestCreateComments_parentTC_emptyCommentOwnerDetails extends Accomm
         TestReporter.logStep("Validate comment with a call to retreiveComments service.");
         TestReporter.setAssertFailed(false);
 
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= retrieve.getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
             if (create.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
                 TestReporter.softAssertEquals(create.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + create.getIsActive() + "]");
