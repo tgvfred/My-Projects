@@ -12,7 +12,7 @@ public class TestUnShare_oneTcg_invalidTcg_Negative extends AccommodationBaseTes
     private UnShare unshare;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
-    public void Test_unShare_invalidTcg_Negative() {
+    public void testUnShare_oneTcg_invalidTcg_Negative() {
 
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId("1234");

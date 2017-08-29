@@ -61,7 +61,7 @@ public class TestUnShare_twoTcg_oneAdaRes extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare" })
-    public void Test_unShare_twoTcgs() {
+    public void testUnShare_twoTcg_oneAdaRes() {
 
         share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(firstTCG);
