@@ -74,6 +74,7 @@ public class TestCreateComments_parentTPS extends AccommodationBaseTest {
                 " AND GSR_IN = '" + GSR_IN + "' " +
                 " AND CFDNTL_IN = '" + CFDNTL_IN + "' " +
                 " AND RES_MGMT_REQ_TX = '" + create.getCommentText() + "' ";
+
         Database RES_MGMT_REQ_VALIDATE_db = new OracleDatabase(environment, Database.DREAMS);
         Recordset RES_MGMT_REQ_VALIDATE_rs = new Recordset(RES_MGMT_REQ_VALIDATE_db.getResultSet(RES_MGMT_REQ_VALIDATE_sql));
         TestReporter.logStep("Verify that the comment shows up in the RES_MGMT_REQ_VALIDATE database.");
@@ -123,7 +124,7 @@ public class TestCreateComments_parentTPS extends AccommodationBaseTest {
         TestReporter.logStep("Validate comment with a call to retreiveComments service.");
         TestReporter.setAssertFailed(false);
 
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
             if (create.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
                 TestReporter.softAssertEquals(create.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + create.getIsActive() + "]");

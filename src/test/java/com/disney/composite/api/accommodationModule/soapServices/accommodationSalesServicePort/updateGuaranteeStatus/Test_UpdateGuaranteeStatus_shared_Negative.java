@@ -36,7 +36,7 @@ public class Test_UpdateGuaranteeStatus_shared_Negative extends AccommodationBas
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_shared() {
 
-        String faultString = " Guarantee status can not be changed  : guarantee status can not be changed on shared room ";
+        String faultString = " Guarantee status can not be changed  : Guarantee status can not be changed on shared room ";
 
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);
         update.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());

@@ -15,8 +15,8 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
 
     private String pkg;
     private String desc;
-    // private String pkgCode = "H557K";
-    private String pkgCode = "H333E";
+    private String pkgCode = "H557K";
+    private String pkgCodeCM = "H333E";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
     public void testSearchPackage_descriptionAndBookingDate() {
@@ -30,7 +30,11 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
         search.sendRequest();
         TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + search.getFaultString(), search);
 
-        packageCheck(search.getPackageDescriptionByPackageCode(pkgCode), pkgCode);
+        if (Environment.isSpecialEnvironment(environment)) {
+            packageCheck(search.getPackageDescriptionByPackageCode(pkgCodeCM), pkgCodeCM);
+        } else {
+            packageCheck(search.getPackageDescriptionByPackageCode(pkgCode), pkgCode);
+        }
 
         // Old vs New Validation
         if (Environment.isSpecialEnvironment(environment)) {
