@@ -2,6 +2,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateComments;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveComments;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;

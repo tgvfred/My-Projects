@@ -11,7 +11,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestCreateComments_parentTP extends AccommodationBaseTest {
+public class TestCreateComments_parentTPS extends AccommodationBaseTest {
     String commentId = Randomness.randomAlphaNumeric(10);
     String commentText = "This is test comment " + Randomness.randomAlphaNumeric(4);
     String parentId = "";
