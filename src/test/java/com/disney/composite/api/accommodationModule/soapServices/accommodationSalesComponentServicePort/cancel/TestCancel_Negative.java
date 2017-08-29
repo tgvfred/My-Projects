@@ -1,15 +1,16 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.cancel;
 
-import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode.ACCOMMODATIONS_NOT_FOUND;
-import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode.ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL;
-import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED;
-import static com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode.REQUIRED_PARAMETERS_MISSING;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMM_NOT_FOUND;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMM_NOT_IN_BOOKED_STATUS;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.REQUIRED_PARAM_MISSING;
 
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestCancel_Negative extends AccommodationBaseTest {
@@ -20,7 +21,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment);
         cancel.sendRequest();
 
-        validateApplicationError(cancel, REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(cancel, REQUIRED_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
@@ -43,7 +44,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
         cancel.setTravelComponentGroupingId("-1");
         cancel.sendRequest();
 
-        validateApplicationError(cancel, REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(cancel, REQUIRED_PARAM_MISSING);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
@@ -55,7 +56,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
         cancel.sendRequest();
         cancel.sendRequest();
 
-        validateApplicationError(cancel, ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL);
+        validateApplicationError(cancel, ACCOMM_NOT_IN_BOOKED_STATUS);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
@@ -66,7 +67,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
         cancel.setTravelComponentGroupingId("9999999999999");
         cancel.sendRequest();
 
-        validateApplicationError(cancel, ACCOMMODATIONS_NOT_FOUND);
+        validateApplicationError(cancel, ACCOMM_NOT_FOUND);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
@@ -79,7 +80,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
         setValues();
         bookReservation();
 
-        CheckInHelper helper = new CheckInHelper(getEnvironment(), getBook());
+        CheckInHelper helper = new CheckInHelper(Environment.getBaseEnvironmentName(environment), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         TestReporter.logScenario("Test - Cancel - Checked In");
@@ -88,6 +89,6 @@ public class TestCancel_Negative extends AccommodationBaseTest {
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
 
-        validateApplicationError(cancel, ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL);
+        validateApplicationError(cancel, ACCOMM_NOT_IN_BOOKED_STATUS);
     }
 }

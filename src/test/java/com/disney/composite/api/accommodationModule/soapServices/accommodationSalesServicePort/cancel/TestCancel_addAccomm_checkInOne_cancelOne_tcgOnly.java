@@ -48,6 +48,9 @@ public class TestCancel_addAccomm_checkInOne_cancelOne_tcgOnly extends Accommoda
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
         cancel.sendRequest();
         TestReporter.assertEquals(cancel.getFaultString(), faultString, "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(cancel, LiloResmErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS);

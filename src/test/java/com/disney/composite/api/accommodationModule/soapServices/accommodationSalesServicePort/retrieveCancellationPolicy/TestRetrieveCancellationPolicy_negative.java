@@ -13,21 +13,21 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_nullRequest() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Missing Required Parameters";
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationPolicy/request", BaseSoapCommands.REMOVE_NODE.toString());
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_nullTcg() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Missing Required Parameters";
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
@@ -35,14 +35,14 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_negativeTcg() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Missing Required Parameters";
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId("-1");
@@ -50,14 +50,14 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_nullTps() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Missing Required Parameters";
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
@@ -65,14 +65,14 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_negativeTps() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Missing Required Parameters";
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId("-1");
@@ -80,14 +80,14 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_invalidTps() {
 
-        String faultString = "Travel Plan Segment Should not be NULL";
+        String faultString = "TRAVEL_PLAN_SEGMENT_NOT_FOUND : Travel Plan Segment  Not Found for TPSId ";
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId("5555555");
@@ -95,14 +95,14 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.TRVL_PLAN_SGMT_CANNOT_BE_NULL);
+        validateApplicationError(retrieve, AccommodationErrorCode.TPS_CANNOT_BE_NULL);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_invalidTcg() {
 
-        String faultString = "Accommodations not found";
+        String faultString = "Travel Component Grouping not found : Travel Component grouping Not Found for TCGId - TPSId555555 - " + getBook().getTravelPlanSegmentId() + "";
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
@@ -110,7 +110,7 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND);
+        validateApplicationError(retrieve, AccommodationErrorCode.TCG_NOT_FOUND);
 
     }
 

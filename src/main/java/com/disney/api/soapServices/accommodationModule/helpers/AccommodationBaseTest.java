@@ -41,6 +41,7 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.ResortInfo;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.FacilityDatabase;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.DVCSalesDreams;
@@ -71,11 +72,11 @@ public class AccommodationBaseTest extends BaseRestTest {
     public final static String PROFILE_ROUTINGS_NAME = "routings_name";
     public final static String PROFILE_SELECTABLE = "selectable";
 
-    protected static String environment;
-    protected ThreadLocal<Integer> daysOut = new ThreadLocal<Integer>();
-    protected ThreadLocal<Integer> nights = new ThreadLocal<Integer>();
-    protected ThreadLocal<String> arrivalDate = new ThreadLocal<String>();
-    protected ThreadLocal<String> departureDate = new ThreadLocal<String>();
+    public static String environment;
+    public ThreadLocal<Integer> daysOut = new ThreadLocal<Integer>();
+    public ThreadLocal<Integer> nights = new ThreadLocal<Integer>();
+    public ThreadLocal<String> arrivalDate = new ThreadLocal<String>();
+    public ThreadLocal<String> departureDate = new ThreadLocal<String>();
     private ThreadLocal<String> locationId = new ThreadLocal<String>();
     private ThreadLocal<String> resortCode = new ThreadLocal<String>();
     private ThreadLocal<String> facilityId = new ThreadLocal<String>();
@@ -87,20 +88,20 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> partyId = new ThreadLocal<String>();
     private ThreadLocal<String> packageCode = new ThreadLocal<String>();
     private ThreadLocal<String> guestAddressLocatorId = new ThreadLocal<String>();
-    protected ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>();
+    public ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>();
     private ThreadLocal<String> externalRefNumber = new ThreadLocal<String>();
-    protected static String externalRefSource = "DPMSProperty";
+    public static String externalRefSource = "DPMSProperty";
     private static String[][] roomTypeAndFacInfo = new String[40][6];
     private Map<String, String> noPackageCodes = new HashMap<String, String>();
-    protected ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>();
+    public ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>();
     private ThreadLocal<HouseHold> hh = new ThreadLocal<HouseHold>();
     private ThreadLocal<ReplaceAllForTravelPlanSegment> book = new ThreadLocal<>();
     private ThreadLocal<Retrieve> retrieve = new ThreadLocal<Retrieve>();
-    protected ThreadLocal<String> tpId = new ThreadLocal<String>();
-    protected ThreadLocal<String> tpsId = new ThreadLocal<String>();
-    protected ThreadLocal<String> tcgId = new ThreadLocal<String>();
-    protected ThreadLocal<String> tcId = new ThreadLocal<String>();
-    protected ThreadLocal<String> isComo = new ThreadLocal<>();
+    public ThreadLocal<String> tpId = new ThreadLocal<String>();
+    public ThreadLocal<String> tpsId = new ThreadLocal<String>();
+    public ThreadLocal<String> tcgId = new ThreadLocal<String>();
+    public ThreadLocal<String> tcId = new ThreadLocal<String>();
+    public ThreadLocal<String> isComo = new ThreadLocal<>();
     private ThreadLocal<Boolean> skipCancel = new ThreadLocal<Boolean>();
     private ThreadLocal<String> ageType = new ThreadLocal<String>();
     private ThreadLocal<String> age = new ThreadLocal<String>();
@@ -149,7 +150,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> mywPlusDinePackageCode = new ThreadLocal<>();
     private ThreadLocal<Boolean> addRoom = new ThreadLocal<>();
 
-    protected void addToNoPackageCodes(String key, String value) {
+    public void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
     }
 
@@ -157,105 +158,105 @@ public class AccommodationBaseTest extends BaseRestTest {
         environment = env;
     }
 
-    protected void setFacilityId(String facilityId) {
+    public void setFacilityId(String facilityId) {
         this.facilityId.set(facilityId);
     }
 
-    protected void setLocationId(String locationId) {
+    public void setLocationId(String locationId) {
         this.locationId.set(locationId);
     }
 
-    protected void setResortCode(String resortCode) {
+    public void setResortCode(String resortCode) {
         this.resortCode.set(resortCode);
     }
 
-    protected void setSourceAccountingCenter(String sourceAccoutingCenter) {
+    public void setSourceAccountingCenter(String sourceAccoutingCenter) {
         this.sourceAccoutingCenter.set(sourceAccoutingCenter);
     }
 
-    protected void setRoomTypeCode(String roomTypeCode) {
+    public void setRoomTypeCode(String roomTypeCode) {
         this.roomTypeCode.set(roomTypeCode);
     }
 
-    protected void setAgencyId(String agencyId) {
+    public void setAgencyId(String agencyId) {
         this.agencyId.set(agencyId);
     }
 
-    protected void setNights(int nights) {
+    public void setNights(int nights) {
         this.nights.set(nights);
     }
 
-    protected void setDaysOut(int daysOut) {
+    public void setDaysOut(int daysOut) {
         this.daysOut.set(daysOut);
     }
 
-    protected void setArrivalDate(String arrivalDate) {
+    public void setArrivalDate(String arrivalDate) {
         this.arrivalDate.set(arrivalDate);
     }
 
-    protected void setDepartureDate(String departureDate) {
+    public void setDepartureDate(String departureDate) {
         this.departureDate.set(departureDate);
     }
 
-    protected void setDepartureDate(int nights) {
+    public void setDepartureDate(int nights) {
         setNights(nights);
         this.departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
     }
 
-    protected void setArrivalDate(int daysOut) {
+    public void setArrivalDate(int daysOut) {
         setDaysOut(daysOut);
         this.arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
     }
 
-    protected void setBook(ReplaceAllForTravelPlanSegment book) {
+    public void setBook(ReplaceAllForTravelPlanSegment book) {
         this.book.set(book);
     }
 
-    protected void setRetrieve(Retrieve retrieve) {
+    public void setRetrieve(Retrieve retrieve) {
         this.retrieve.set(retrieve);
     }
 
-    protected void setFixedDates(Boolean fixedDates) {
+    public void setFixedDates(Boolean fixedDates) {
         this.fixedDates.set(fixedDates);
     }
 
-    protected void setSkipExternalRef(Boolean skip) {
+    public void setSkipExternalRef(Boolean skip) {
         skipExternalRef.set(skip);
     }
 
-    protected void setTpId(String tpId) {
+    public void setTpId(String tpId) {
         this.tpId.set(tpId);
     }
 
-    protected void setTpsId(String tpsId) {
+    public void setTpsId(String tpsId) {
         this.tpsId.set(tpsId);
     }
 
-    protected void setTcgId(String tcgId) {
+    public void setTcgId(String tcgId) {
         this.tcgId.set(tcgId);
     }
 
-    protected void setTcId(String tcId) {
+    public void setTcId(String tcId) {
         this.tcId.set(tcId);
     }
 
-    protected String getTpId() {
+    public String getTpId() {
         return this.tpId.get();
     }
 
-    protected String getTpsId() {
+    public String getTpsId() {
         return this.tpsId.get();
     }
 
-    protected String getTcgId() {
+    public String getTcgId() {
         return this.tcgId.get();
     }
 
-    protected String getTcId() {
+    public String getTcId() {
         return this.tcId.get();
     }
 
-    protected void setCampusId(String campusId) {
+    public void setCampusId(String campusId) {
         this.campusId.set(campusId);
     }
 
@@ -743,7 +744,8 @@ public class AccommodationBaseTest extends BaseRestTest {
         } else {
             dbEnv = getEnvironment();
         }
-        Database db = new OracleDatabase(dbEnv, "DREAMS");
+        // System.out.println();
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts()));
         for (int i = 0; i < roomTypeAndFacInfo.length; i++) {
             roomTypeAndFacInfo[i][0] = rs.getValue("NUMROOMS", i + 1);
@@ -1271,7 +1273,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         guestAddressLocatorId.set(getRetrieve().getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest/addressDetails/guestLocatorId"));
     }
 
-    protected void setValues() {
+    public void setValues() {
         boolean success = false;
         int index;
         if (getEnvironment() == null) {
@@ -1284,12 +1286,22 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setRoomTypeCode(roomTypeAndFacInfo[index][1]);
                 setLocationId(roomTypeAndFacInfo[index][5]);
 
-                String sql = "select d.WRK_LOC_ID "
-                        + "from rsrc_inv.wrk_loc d "
-                        + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
-                        + "and d.TXN_ACCT_CTR_ID is not null "
-                        + "order by d.CREATE_DTS asc";
-                Database db = new OracleDatabase(getEnvironment().toLowerCase().replace("_cm", ""), Database.DREAMS);
+                String sql = null;
+                if (Environment.getBaseEnvironmentName(environment).toLowerCase().equals("grumpy")) {
+                    sql = "select d.WRK_LOC_ID "
+                            + "from RSRC_INV.wrk_loc d "
+                            + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
+                            + "and d.TXN_ACCT_CTR_ID is not null "
+                            + "order by d.CREATE_DTS asc";
+                } else {
+                    sql = "select d.WRK_LOC_ID "
+                            + "from tfdb_3.wrk_loc d "
+                            + "where d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
+                            + "and d.TXN_ACCT_CTR_ID is not null "
+                            + "order by d.CREATE_DTS asc";
+                }
+                System.out.println();
+                Database db = new Database(FacilityDatabase.getInfo(environment));
                 Recordset rs = new Recordset(db.getResultSet(sql));
 
                 if (rs.getRowCount() == 0) {
@@ -1316,12 +1328,12 @@ public class AccommodationBaseTest extends BaseRestTest {
         } while (!success);
     }
 
-    protected void setValues(String environment) {
+    public void setValues(String environment) {
         setEnvironment(environment);
         setValues();
     }
 
-    protected void setValues(String facilityId, String roomTypeCode, String locationId) {
+    public void setValues(String facilityId, String roomTypeCode, String locationId) {
         setFacilityId(facilityId);
         setRoomTypeCode(roomTypeCode);
         setLocationId(locationId);
@@ -1359,7 +1371,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         return ageType;
     }
 
-    protected void makeFirstNightDeposit() {
+    public void makeFirstNightDeposit() {
         RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
         if (getBook() != null && getBook().getTravelPlanId() != null) {
             retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getBook().getTravelPlanId());
@@ -1445,7 +1457,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         TestReporter.log("Payment ID: " + postPayment.getPaymentId());
     }
 
-    protected void makeFirstNightDeposit(Book book) {
+    public void makeFirstNightDeposit(Book book) {
         RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
         if (book != null && book.getTravelPlanId() != null) {
             retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, book.getTravelPlanId());
@@ -1572,7 +1584,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         return rs.getValue("TC_GRP_NB", 1);
     }
 
-    protected void checkingIn(String environment) {
+    public void checkingIn(String environment) {
 
         FindRoomForReservation findRoom = new FindRoomForReservation(environment, "UI Booking");
         findRoom.setTravelPlanId(getBook().getTravelPlanId());

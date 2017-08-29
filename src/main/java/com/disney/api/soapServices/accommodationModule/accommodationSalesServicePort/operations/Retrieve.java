@@ -4,6 +4,8 @@ package com.disney.api.soapServices.accommodationModule.accommodationSalesServic
 import java.util.Arrays;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
@@ -136,6 +138,12 @@ public class Retrieve extends AccommodationSalesServicePort {
     }
 
     public void setTravelPlanSegmentId(String value) {
-        setRequestNodeValueByXPath("//request/travelPlanSegmentId", value);
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/retrieve/request/travelPlanSegmentId", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/retrieve/request", BaseSoapCommands.ADD_NODE.commandAppend("travelPlanSegmentId"));
+            setRequestNodeValueByXPath("/Envelope/Body/retrieve/request/travelPlanSegmentId", value);
+        }
     }
+
 }

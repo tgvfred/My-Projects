@@ -20,7 +20,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_invalidTcg() {
 
-        String faultString = " No Accommodation Component found. : NO ACCOMMODATION FOUND FOR TCG NUMBER#4815162342";
+        String faultString = "Accommodations not found : ACCOMMODATIONS NOT FOUND";
 
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);
         update.setRequestTravelComponentGroupingId("4815162342");
@@ -28,14 +28,14 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.NO_ACCOMMODATION_COMPONENT_EXCEPTION);
+        validateApplicationError(update, AccommodationErrorCode.ACCOMM_NOT_FOUND);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_negativeTcg() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Invalid Request";
 
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);
         update.setRequestTravelComponentGroupingId("-1");
@@ -43,14 +43,14 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_nullRequest() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Invalid Request";
 
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);
         update.setRequestNodeValueByXPath("/Envelope/Body/updateGuaranteeStatus/request/travelComponentGroupingId", BaseSoapCommands.REMOVE_NODE.toString());
@@ -58,14 +58,14 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_nullTcg() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Invalid Request";
 
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);
         update.setRequestNodeValueByXPath("/Envelope/Body/updateGuaranteeStatus/request/travelComponentGroupingId", BaseSoapCommands.REMOVE_NODE.toString());
@@ -73,14 +73,14 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_nullGuaranteedByEnum() {
 
-        String faultString = "Required parameters are missing : null";
+        String faultString = "Required parameters are missing : Invalid Request";
 
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);
         update.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -88,14 +88,14 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_cancelled() {
 
-        String faultString = " Guarantee status can not be changed  : guarantee status can not be changed on shared room ";
+        String faultString = " Guarantee status can not be changed  : Guarantee status can not be changed";
 
         cancel();
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);

@@ -1,6 +1,8 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 
 public class Cancel extends AccommodationSalesServicePort {
@@ -38,11 +40,39 @@ public class Cancel extends AccommodationSalesServicePort {
     }
 
     public void setExternalReferenceCode(String value) {
-        setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceCode", value);
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceCode", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceCode"));
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceCode", value);
+        }
+    }
+
+    public void setExternalReferenceType(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceType", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceType"));
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceType", value);
+        }
+    }
+
+    public void setExternalReferenceNumber(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceNumber", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceNumber"));
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceNumber", value);
+        }
     }
 
     public void setExternalReferenceSource(String value) {
-        setRequestNodeValueByXPath(" /Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceSource", value);
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceSource", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceSource"));
+            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/externalReferenceDetail/externalReferenceSource", value);
+        }
     }
 
 }
