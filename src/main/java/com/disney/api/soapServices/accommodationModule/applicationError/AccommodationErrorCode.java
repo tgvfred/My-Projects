@@ -112,6 +112,8 @@ public class AccommodationErrorCode {
             " No Accommodation Component found. ");
     public static final ApplicationErrorCode TRVL_PLAN_SGMT_CANNOT_BE_NULL = new ApplicationErrorCode(MOD_NAME, 7008,
             " Travel Plan Segment Not Found");
+    public static final ApplicationErrorCode TRVL_PLAN_COMPONENT_ID_REQ = new ApplicationErrorCode(MOD_NAME, 7037,
+            "Travel Component Id is required");
 
     private static final String APPLICATION = "LILO System";
 

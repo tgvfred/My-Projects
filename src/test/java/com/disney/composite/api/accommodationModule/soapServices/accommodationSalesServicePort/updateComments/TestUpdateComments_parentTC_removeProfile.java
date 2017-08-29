@@ -165,3 +165,7 @@ public class TestUpdateComments_parentTC_removeProfile extends AccommodationBase
             }
         }
     }
+<<<<<<< HEAD
+=======
+}
+>>>>>>> 2f93cc307cce8ad70cce0737066bdaccb215edf3

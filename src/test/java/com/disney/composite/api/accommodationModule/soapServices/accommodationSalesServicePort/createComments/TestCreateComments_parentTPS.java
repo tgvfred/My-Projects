@@ -17,24 +17,24 @@ public class TestCreateComments_parentTPS extends AccommodationBaseTest {
     String parentId = "";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments" })
-    public void testCreateComments_parentTP() {
+    public void testCreateComments_parentTPS() {
 
         String expectedIsActive = "true";
         String expectedGSR = "false";
         String expectedConfidential = "true";
-        String expectedCommentLevel = "TP";
+        String expectedCommentLevel = "TPS";
         String expectedCreatedBy = "AutoJUnit.us";
-        String TpExternalReferenceNumber = getExternalRefNumber();
-        String TpExternalReferenceSource = getExternalRefSource();
-        String TpExternalReferenceType = "RESERVATION";
-        parentId = getBook().getTravelPlanId();
+        String TpsExternalReferenceNumber = getExternalRefNumber();
+        String TpsExternalReferenceSource = getExternalRefSource();
+        String TpsExternalReferenceType = "RESERVATION";
+        parentId = getBook().getTravelPlanSegmentId();
         CreateComments create = new CreateComments(environment, "Main");
         create.setParentIds(parentId);
         create.setIsActive(expectedIsActive);
         create.setSendToGSR(expectedGSR);
         create.setConfidential(expectedConfidential);
-        create.setProfileId("1065");
-        create.setProfileCode("RoomReadyN");
+        create.setProfileId(BaseSoapCommands.REMOVE_NODE.toString());
+        create.setProfileCode(BaseSoapCommands.REMOVE_NODE.toString());
         create.setCommentId(BaseSoapCommands.REMOVE_NODE.toString());
         create.setCommentText(commentText);
         create.setCommentLevel(expectedCommentLevel);
@@ -46,11 +46,10 @@ public class TestCreateComments_parentTPS extends AccommodationBaseTest {
         create.setUpdatedDate(BaseSoapCommands.REMOVE_NODE.toString());
         create.setUpdatedBy("Thomas " + Randomness.randomAlphaNumeric(4));
         create.setStatus(BaseSoapCommands.REMOVE_NODE.toString());
-        create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
-        create.setRoomExternalReferenceNumber(TpExternalReferenceNumber);
-        create.setRoomExternalReferenceSource(TpExternalReferenceSource);
-        create.setRoomExternalReferenceType(TpExternalReferenceType);
-        create.setRoomExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
+        create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
+        create.setTpsExternalReferenceNumber(TpsExternalReferenceNumber);
+        create.setTpsExternalReferenceSource(TpsExternalReferenceSource);
+        create.setTpsExternalReferenceType(TpsExternalReferenceType);
         create.sendRequest();
 
         // Validate node response values
@@ -62,8 +61,6 @@ public class TestCreateComments_parentTPS extends AccommodationBaseTest {
         TestReporter.softAssertTrue(create.getCommentText().equals(commentText), "Verify that the commentText node [" + create.getCommentText() + "] is what is expected [" + commentText + "]");
         TestReporter.softAssertTrue(create.getCommentLevel().equals(expectedCommentLevel), "Verify that the commentLevel node [" + create.getCommentLevel() + "] is what is expected [" + expectedCommentLevel + "]");
         TestReporter.softAssertTrue(create.getCreatedBy().equals(expectedCreatedBy), "Verify that the createdBy node [" + create.getCreatedBy() + "] is what is expected [" + expectedCreatedBy + "]");
-        TestReporter.softAssertTrue(create.getProfileCode().equals("RoomReadyN"), "Verify that the profile code node [" + create.getCreatedBy() + "] is what is expected [RoomReadyN]");
-        TestReporter.softAssertTrue(create.getProfileId().equals("1065"), "Verify that the profile ID  node [" + create.getCreatedBy() + "] is what is expected [1065]");
         TestReporter.assertAll();
 
         // Validate comment data in RES_MGMT_REQ table
@@ -72,7 +69,7 @@ public class TestCreateComments_parentTPS extends AccommodationBaseTest {
 
         String RES_MGMT_REQ_VALIDATE_sql = "SELECT * " +
                 " FROM RES_MGMT.RES_MGMT_REQ " +
-                " WHERE TP_ID = " + parentId + " " +
+                " WHERE TPS_ID = " + parentId + " " +
                 " AND GSR_IN = '" + GSR_IN + "' " +
                 " AND CFDNTL_IN = '" + CFDNTL_IN + "' " +
                 " AND RES_MGMT_REQ_TX = '" + create.getCommentText() + "' ";
@@ -81,11 +78,10 @@ public class TestCreateComments_parentTPS extends AccommodationBaseTest {
         Recordset RES_MGMT_REQ_VALIDATE_rs = new Recordset(RES_MGMT_REQ_VALIDATE_db.getResultSet(RES_MGMT_REQ_VALIDATE_sql));
         TestReporter.logStep("Verify that the comment shows up in the RES_MGMT_REQ_VALIDATE database.");
         TestReporter.setAssertFailed(false);
-        TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("TP_ID"), parentId, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("TP_ID") + "] matches the comment data [ " + parentId + "]");
+        TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("TPS_ID"), parentId, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("TPS_ID") + "] matches the comment data [ " + parentId + "]");
         TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("RES_MGMT_REQ_TX"), create.getCommentText(), "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("RES_MGMT_REQ_TX") + "] matches the comment data [ " + create.getCommentText() + "]");
         TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("GSR_IN"), GSR_IN, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("GSR_IN") + "] matches the comment data [ " + GSR_IN + "]");
         TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("CFDNTL_IN"), CFDNTL_IN, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("CFDNTL_IN") + "] matches the comment data [ " + CFDNTL_IN + "]");
-        TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("RES_MGMT_PRFL_ID"), "1065", "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("RES_MGMT_PRFL_ID") + "] matches the comment data [1065]");
         TestReporter.assertAll();
 
         // If sendToGsr=true, validate GSR data in EXT_INTF.GSR_RCD, EXT_INTF.GSR_GUEST, and EXT_INTF.GSR_TXN tables
@@ -121,4 +117,8 @@ public class TestCreateComments_parentTPS extends AccommodationBaseTest {
         TestReporter.assertAll();
 
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2f93cc307cce8ad70cce0737066bdaccb215edf3
