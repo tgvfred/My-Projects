@@ -117,8 +117,4 @@ public class TestCreateComments_parentTPS extends AccommodationBaseTest {
         TestReporter.assertAll();
 
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 2f93cc307cce8ad70cce0737066bdaccb215edf3
