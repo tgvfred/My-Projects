@@ -7,6 +7,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveComments;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -94,10 +95,10 @@ public class TestCreateComments_parentTC_nullAuditDetails extends AccommodationB
             String sql = "select * " +
                     " from ext_intf.gsr_rcd a " +
                     " join ext_intf.gsr_guest b on a.GSR_GUEST_ID = b.GSR_GUEST_ID " +
-                    " where a.tps_id = '" + getBook().getTravelPlanSegmentId() + "'" +
+                    " where a.tps_id = '" + create.getTpsId() + "'" +
                     " and a.cmt_tx = '" + create.getCommentText() + "' ";
 
-            Database db = new OracleDatabase(environment, Database.DREAMS);
+            Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
             Recordset rs = null;
 
             int tries = 0;
@@ -140,7 +141,7 @@ public class TestCreateComments_parentTC_nullAuditDetails extends AccommodationB
         TestReporter.logStep("Validate comment with a call to retreiveComments service.");
         TestReporter.setAssertFailed(false);
 
-        for (int i = 1; i <= retrieve.getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
+        for (int i = 1; i <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
             if (create.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
                 TestReporter.softAssertEquals(create.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + create.getIsActive() + "]");

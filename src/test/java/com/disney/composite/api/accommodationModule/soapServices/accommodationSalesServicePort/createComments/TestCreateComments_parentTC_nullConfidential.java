@@ -7,6 +7,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveComments;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -50,8 +51,6 @@ public class TestCreateComments_parentTC_nullConfidential extends AccommodationB
         create.setTpsExternalReferenceNumber(getBook().getTravelPlanSegmentId());
         create.setTpsExternalReferenceSource(ServiceConstants.FolioExternalReference.DREAMS_TPS);
         create.setCommentType("TravelComponentComment");
-        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
-        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create.sendRequest();
 
         // Validate node response values
@@ -92,13 +91,14 @@ public class TestCreateComments_parentTC_nullConfidential extends AccommodationB
 
         // If sendToGsr=true, validate GSR data in EXT_INTF.GSR_RCD, EXT_INTF.GSR_GUEST, and EXT_INTF.GSR_TXN tables
         if (create.getSendToGSR().equals("true")) {
+
             String sql = "select * " +
                     " from ext_intf.gsr_rcd a " +
                     " join ext_intf.gsr_guest b on a.GSR_GUEST_ID = b.GSR_GUEST_ID " +
-                    " where a.tps_id = '" + getBook().getTravelPlanSegmentId() + "'" +
+                    " where a.tps_id = '" + create.getTpsId() + "'" +
                     " and a.cmt_tx = '" + create.getCommentText() + "' ";
 
-            Database db = new OracleDatabase(environment, Database.DREAMS);
+            Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
             Recordset rs = null;
 
             int tries = 0;
@@ -119,6 +119,7 @@ public class TestCreateComments_parentTC_nullConfidential extends AccommodationB
             TestReporter.softAssertEquals(rs.getValue("CMT_TX"), create.getCommentText(), "Verify that the GSR_RCD comment text [ " + rs.getValue("CMT_TX") + "] matches the comment data [ " + create.getCommentText() + "]");
             TestReporter.softAssertEquals(rs.getValue("PTY_ID"), getBook().getGuestId(), "Verify that the GSR_RCD party id [ " + rs.getValue("PTY_ID") + "] matches the comment data [ " + getBook().getGuestId() + "]");
             TestReporter.assertAll();
+
         }
 
         // Verify that the comment exists in the TPV3 database table
@@ -141,7 +142,7 @@ public class TestCreateComments_parentTC_nullConfidential extends AccommodationB
         TestReporter.logStep("Validate comment with a call to retreiveComments service.");
         TestReporter.setAssertFailed(false);
 
-        for (int i = 1; i <= retrieve.getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
+        for (int i = 1; i <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
             if (create.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
                 TestReporter.softAssertEquals(create.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + create.getIsActive() + "]");

@@ -23,14 +23,14 @@ public class TestCreateComments_parentTC_emptyCommentOwnerDetails extends Accomm
     public void testCreateComments_parentTP_emptyCommentOwnerDetails() {
 
         String expectedGSR = "true";
-        String expectedConfidential = "true";
+        String expectedConfidential = "false";
         String expectedCommentLevel = "TC";
         String expectedCreatedBy = "AutoJUnit.us";
         parentId = getBook().getTravelComponentId();
         CreateComments create = new CreateComments(environment, "Main");
         create.setParentIds(parentId);
         create.setIsActive("true");
-        create.setSendToGSR("true");
+        create.setSendToGSR("false");
         create.setConfidential("true");
         create.setProfileId(BaseSoapCommands.REMOVE_NODE.toString());
         create.setProfileCode(BaseSoapCommands.REMOVE_NODE.toString());
@@ -56,7 +56,7 @@ public class TestCreateComments_parentTC_emptyCommentOwnerDetails extends Accomm
         TestReporter.logStep("Validate Response node values.");
         TestReporter.setAssertFailed(false);
         TestReporter.logAPI(!create.getResponseStatusCode().equals("200"), "An error occurred getting options by filter", create);
-        TestReporter.softAssertTrue(create.getSendToGSR().equals("true"), "Verify that the sendToGSR node [" + create.getSendToGSR() + "] is what is expected [" + expectedGSR + "]");
+        TestReporter.softAssertTrue(create.getSendToGSR().equals("false"), "Verify that the sendToGSR node [" + create.getSendToGSR() + "] is what is expected [" + expectedGSR + "]");
         TestReporter.softAssertTrue(create.getConfidential().equals("true"), "Verify that the confidential node [" + create.getConfidential() + "] is what is expected [" + expectedConfidential + "]");
         TestReporter.softAssertTrue(create.getCommentText().equals(commentText), "Verify that the commentText node [" + create.getCommentText() + "] is what is expected [" + commentText + "]");
         TestReporter.softAssertTrue(create.getCommentLevel().equals(expectedCommentLevel), "Verify that the commentLevel node [" + create.getCommentLevel() + "] is what is expected [" + expectedCommentLevel + "]");
@@ -93,46 +93,49 @@ public class TestCreateComments_parentTC_emptyCommentOwnerDetails extends Accomm
         TestReporter.assertAll();
 
         // If sendToGsr=true, validate GSR data in EXT_INTF.GSR_RCD, EXT_INTF.GSR_GUEST, and EXT_INTF.GSR_TXN tables
-        String sql = "select * " +
-                " from ext_intf.gsr_rcd a " +
-                " join ext_intf.gsr_guest b on a.GSR_GUEST_ID = b.GSR_GUEST_ID " +
-                " where a.tps_id = '" + getBook().getTravelPlanSegmentId() + "'" +
-                " and a.cmt_tx = '" + create.getCommentText() + "' ";
+        if (create.getSendToGSR().equals("true")) {
+            String sql = "select * " +
+                    " from ext_intf.gsr_rcd a " +
+                    " join ext_intf.gsr_guest b on a.GSR_GUEST_ID = b.GSR_GUEST_ID " +
+                    " where a.tc_id = '" + parentId + "'";
+            // " and a.cmt_tx = '" + create.getCommentText() + "' ";
 
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = null;
+            Database db = new OracleDatabase(environment, Database.DREAMS);
+            Recordset rs = null;
 
-        int tries = 0;
-        int maxTries = 20;
-        boolean success = false;
-        do {
-            Sleeper.sleep(1000);
-            rs = new Recordset(db.getResultSet(sql));
-            if (rs.getRowCount() > 0) {
-                success = true;
-            }
-            tries++;
-        } while (!success && tries < maxTries);
+            int tries = 0;
+            int maxTries = 20;
+            boolean success = false;
+            do {
+                Sleeper.sleep(1000);
+                rs = new Recordset(db.getResultSet(sql));
+                if (rs.getRowCount() > 0) {
+                    success = true;
+                }
+                tries++;
+            } while (!success && tries < maxTries);
 
-        TestReporter.logStep("Verify that the comment shows up in the GSR_RCD, GSR_GUEST AND GSR_TXN database.");
-        TestReporter.setAssertFailed(false);
-        TestReporter.softAssertEquals(rs.getValue("TPS_ID"), getBook().getTravelPlanSegmentId(), "Verify that the GSR_RCD tps id [ " + rs.getValue("TPS_ID") + "] matches the comment data [ " + getBook().getTravelPlanSegmentId() + "]");
-        TestReporter.softAssertEquals(rs.getValue("CMT_TX"), create.getCommentText(), "Verify that the GSR_RCD comment text [ " + rs.getValue("CMT_TX") + "] matches the comment data [ " + create.getCommentText() + "]");
-        TestReporter.softAssertEquals(rs.getValue("PTY_ID"), getBook().getGuestId(), "Verify that the GSR_RCD party id [ " + rs.getValue("PTY_ID") + "] matches the comment data [ " + getBook().getGuestId() + "]");
-        TestReporter.assertAll();
+            rs.print();
+            TestReporter.logStep("Verify that the comment shows up in the GSR_RCD, GSR_GUEST AND GSR_TXN database.");
+            TestReporter.setAssertFailed(false);
+            TestReporter.softAssertEquals(rs.getValue("TPS_ID"), getBook().getTravelPlanSegmentId(), "Verify that the GSR_RCD tps id [ " + rs.getValue("TPS_ID") + "] matches the comment data [ " + getBook().getTravelPlanSegmentId() + "]");
+            TestReporter.softAssertEquals(rs.getValue("CMT_TX"), create.getCommentText(), "Verify that the GSR_RCD comment text [ " + rs.getValue("CMT_TX") + "] matches the comment data [ " + create.getCommentText() + "]");
+            TestReporter.softAssertEquals(rs.getValue("PTY_ID"), getBook().getGuestId(), "Verify that the GSR_RCD party id [ " + rs.getValue("PTY_ID") + "] matches the comment data [ " + getBook().getGuestId() + "]");
+            TestReporter.assertAll();
 
-        // Verify that the comment exists in the TPV3 database table
-        String TPV3_sql = "select * " +
-                " from sales_tp.tp " +
-                " where tp_id = '" + getBook().getTravelPlanId() + "' ";
+            // Verify that the comment exists in the TPV3 database table
+            String TPV3_sql = "select * " +
+                    " from sales_tp.tp " +
+                    " where tp_id = '" + getBook().getTravelPlanId() + "' ";
 
-        Database TPV3_db = new OracleDatabase(environment, Database.SALESTP);
-        Recordset TPV3_rs = new Recordset(TPV3_db.getResultSet(TPV3_sql));
+            Database TPV3_db = new OracleDatabase(environment, Database.SALESTP);
+            Recordset TPV3_rs = new Recordset(TPV3_db.getResultSet(TPV3_sql));
 
-        TestReporter.logStep("Verify that the comment shows up in the TPV3 database.");
-        TestReporter.setAssertFailed(false);
-        TestReporter.softAssertEquals(TPV3_rs.getValue("TP_ID"), getBook().getTravelPlanId(), "Verify that the TPV3 databse tp id [ " + TPV3_rs.getValue("TP_ID") + "] matches the comment data [ " + getBook().getTravelPlanId() + "]");
-        TestReporter.assertAll();
+            TestReporter.logStep("Verify that the comment shows up in the TPV3 database.");
+            TestReporter.setAssertFailed(false);
+            TestReporter.softAssertEquals(TPV3_rs.getValue("TP_ID"), getBook().getTravelPlanId(), "Verify that the TPV3 databse tp id [ " + TPV3_rs.getValue("TP_ID") + "] matches the comment data [ " + getBook().getTravelPlanId() + "]");
+            TestReporter.assertAll();
+        }
 
     }
 
@@ -141,7 +144,7 @@ public class TestCreateComments_parentTC_emptyCommentOwnerDetails extends Accomm
         TestReporter.logStep("Validate comment with a call to retreiveComments service.");
         TestReporter.setAssertFailed(false);
 
-        for (int i = 1; i <= retrieve.getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
+        for (int i = 1; i <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
             if (create.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
                 TestReporter.softAssertEquals(create.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + create.getIsActive() + "]");

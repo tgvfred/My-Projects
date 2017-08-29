@@ -23,7 +23,7 @@ public class TestCreateComments_parentTC_notConfidential extends AccommodationBa
     public void testCreateComments_parentTP_notConfidential() {
 
         String expectedIsActive = "true";
-        String expectedGSR = "true";
+        String expectedGSR = "false";
         String expectedConfidential = "false";
         String expectedCommentLevel = "TC";
         String expectedCreatedBy = "AutoJUnit.us";
@@ -51,8 +51,6 @@ public class TestCreateComments_parentTC_notConfidential extends AccommodationBa
         create.setTpsExternalReferenceNumber(getBook().getTravelPlanSegmentId());
         create.setTpsExternalReferenceSource(ServiceConstants.FolioExternalReference.DREAMS_TPS);
         create.setCommentType("TravelComponentComment");
-        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
-        // create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create.sendRequest();
 
         // Validate node response values
@@ -100,7 +98,7 @@ public class TestCreateComments_parentTC_notConfidential extends AccommodationBa
             String sql = "select * " +
                     " from ext_intf.gsr_rcd a " +
                     " join ext_intf.gsr_guest b on a.GSR_GUEST_ID = b.GSR_GUEST_ID " +
-                    " where a.tps_id = '" + getBook().getTravelPlanSegmentId() + "'" +
+                    " where a.tps_id = '" + create.getTpsId() + "'" +
                     " and a.cmt_tx = '" + create.getCommentText() + "' ";
 
             Database db = new OracleDatabase(environment, Database.DREAMS);
@@ -146,7 +144,7 @@ public class TestCreateComments_parentTC_notConfidential extends AccommodationBa
         TestReporter.logStep("Validate comment with a call to retreiveComments service.");
         TestReporter.setAssertFailed(false);
 
-        for (int i = 1; i <= retrieve.getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
+        for (int i = 1; i <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
             if (create.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
                 TestReporter.softAssertEquals(create.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + create.getIsActive() + "]");
