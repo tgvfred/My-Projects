@@ -57,7 +57,7 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
     public void testCancel_RO_CancelCheckedIn() {
         TestReporter.logScenario("Test Cancel RO Checked IN negative");
 
-        String faultString = "Accommodation should be in Booked status to be cancelled : null";
+        String faultString = "Accommodation should be in Booked status to be cancelled";
 
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
