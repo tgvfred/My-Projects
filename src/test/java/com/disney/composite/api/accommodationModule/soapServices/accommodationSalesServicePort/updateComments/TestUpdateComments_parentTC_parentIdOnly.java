@@ -26,8 +26,9 @@ public class TestUpdateComments_parentTC_parentIdOnly extends AccommodationBaseT
         update.setProfileId(BaseSoapCommands.REMOVE_NODE.toString());
         update.setProfileCode(BaseSoapCommands.REMOVE_NODE.toString());
         update.setCommentId(BaseSoapCommands.REMOVE_NODE.toString());
-        update.setcommentText(BaseSoapCommands.REMOVE_NODE.toString());
-        update.setCommentLevel(BaseSoapCommands.REMOVE_NODE.toString());
+        update.setcommentText(commentText);
+        update.setCommentLevel("TC");
+        update.setRequestNodeValueByXPath("/Envelope/Body/updateComments/request/commentsInfo/commentType", BaseSoapCommands.REMOVE_NODE.toString());
         update.setRequestNodeValueByXPath("/Envelope/Body/updateComments/request/commentsInfo/auditDetail", BaseSoapCommands.REMOVE_NODE.toString());
         update.setRequestNodeValueByXPath("/Envelope/Body/updateComments/request/commentsInfo/commentOwnerDetail", BaseSoapCommands.REMOVE_NODE.toString());
         update.setRequestNodeValueByXPath("/Envelope/Body/updateComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
