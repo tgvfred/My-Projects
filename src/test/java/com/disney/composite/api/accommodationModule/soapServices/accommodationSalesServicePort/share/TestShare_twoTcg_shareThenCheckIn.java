@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -54,6 +55,11 @@ public class TestShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
     public void Test_Share_twoTcg_shareThenCheckIn() {
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
+            }
+        }
         captureSecondOwnerId();
 
         // verify that the owner id's for the first and second tcg do not match.
@@ -124,7 +130,7 @@ public class TestShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
     public void validations() {
         ShareHelper helper = new ShareHelper(getEnvironment());
 
-        int numExpectedRecords = 2;
+        int numExpectedRecords = 3;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;

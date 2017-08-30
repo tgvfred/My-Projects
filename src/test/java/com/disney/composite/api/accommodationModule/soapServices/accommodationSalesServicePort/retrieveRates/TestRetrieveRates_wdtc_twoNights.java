@@ -10,7 +10,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveRates;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
@@ -39,7 +38,6 @@ public class TestRetrieveRates_wdtc_twoNights extends AccommodationBaseTest {
         String roomCode = getRoomTypeCode();
         String rateDate = "";
         String billCode = "TRAVEL COMPANY PKGS";
-        String billCodeCM = "Group Pays No Charges";
 
         RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
         retrieveRates.setTravelComponentGroupingId(tcgId);
@@ -49,11 +47,8 @@ public class TestRetrieveRates_wdtc_twoNights extends AccommodationBaseTest {
         TestReporter.log("Travel Plan ID: " + tpId);
         TestReporter.assertEquals(retrieveRates.getroomTypeCode(), roomCode, "Verify that the room code matches '" + roomCode + "' for tcgId " + tcgId);
         TestReporter.assertEquals(Randomness.generateCurrentXMLDate(), rateDate.split("T")[0], "Validate the Rate Date of '" + rateDate.split("T")[0] + "' matches for tcgId '" + tcgId + "'.");
-        if (Environment.isSpecialEnvironment(environment)) {
-            TestReporter.assertEquals(retrieveRates.getBillCode(), billCodeCM, "Validate the package name of '" + billCodeCM + "' matches for tcgId " + tcgId);
-        } else {
-            TestReporter.assertEquals(retrieveRates.getBillCode(), billCode, "Validate the package name of '" + billCode + "' matches for tcgId " + tcgId);
-        }
+        TestReporter.assertEquals(retrieveRates.getBillCode(), billCode, "Validate the package name of '" + billCode + "' matches for tcgId " + tcgId);
+
         TestReporter.logStep("Verify number of nodes being returned");
         TestReporter.assertTrue(retrieveRates.getRateDetails("1") != null && retrieveRates.getRateDetails("2") != null, "Two rate details nodes are present ");
 

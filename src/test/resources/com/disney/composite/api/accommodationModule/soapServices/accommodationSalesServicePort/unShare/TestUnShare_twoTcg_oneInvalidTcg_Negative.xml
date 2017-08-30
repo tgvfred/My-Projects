@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestUnShare_twoTcg_oneInvalidTcg_Negative" parallel="methods" thread-count="20">
+	<parameter name="environment" value="latest" />
+	<test name="TestUnShare_twoTcg_oneInvalidTcg_Negative">
+		 <classes>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare.TestUnShare_twoTcg_oneInvalidTcg_Negative"></class>
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->

@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
@@ -14,7 +14,7 @@ public class TestCancel_InvalidTcg extends AccommodationBaseTest {
     public void testCancel_InvalidTcg() {
         TestReporter.logScenario("Test Cancel Invalid Tcg");
 
-        String faultString = "Accommodations not found : null";
+        String faultString = "Accommodations not found : Accommodations not found for TCG Id";
 
         Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
@@ -22,6 +22,6 @@ public class TestCancel_InvalidTcg extends AccommodationBaseTest {
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, LiloResmErrorCode.ACCOMMODATION_NOT_FOUND);
+        validateApplicationError(cancel, AccommodationErrorCode.ACCOMM_NOT_FOUND);
     }
 }
