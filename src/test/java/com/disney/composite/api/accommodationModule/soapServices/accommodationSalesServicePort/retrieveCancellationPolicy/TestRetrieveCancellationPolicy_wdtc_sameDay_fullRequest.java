@@ -72,6 +72,8 @@ public class TestRetrieveCancellationPolicy_wdtc_sameDay_fullRequest extends Acc
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/retrieveCancellationPolicy/request/blockCode");
             clone.addExcludedXpathValidations(
                     "/Envelope/Body/retrieveCancellationPolicyResponse/cancellationPolicyResponse/cancelFee");
+            clone.addExcludedBaselineXpathValidations(
+                    "/Envelope/Body/retrieveCancellationPolicyResponse/cancellationPolicyResponse/cancelFee");
             TestReporter.assertTrue(retrieve.validateResponseNodeQuantity(clone, true),
                     "Validating Response Comparison");
         }

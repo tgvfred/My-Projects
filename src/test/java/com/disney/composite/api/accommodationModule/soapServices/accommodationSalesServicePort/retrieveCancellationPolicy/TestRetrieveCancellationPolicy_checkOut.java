@@ -26,7 +26,7 @@ public class TestRetrieveCancellationPolicy_checkOut extends AccommodationBaseTe
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate());
         departureDate.set(Randomness.generateCurrentXMLDate());
-        isComo.set("true");
+        isComo.set("false");
         setValues();
         bookReservation();
     }
@@ -34,7 +34,7 @@ public class TestRetrieveCancellationPolicy_checkOut extends AccommodationBaseTe
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_checkOut() {
 
-        String faultString = "Cannot calculate Cancel fee";
+        String faultString = "cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
         CheckIn checkIn = new CheckIn(environment, "Main");
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -54,7 +54,7 @@ public class TestRetrieveCancellationPolicy_checkOut extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALC_CANCEL_FEE);
+        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
 
     }
 }
