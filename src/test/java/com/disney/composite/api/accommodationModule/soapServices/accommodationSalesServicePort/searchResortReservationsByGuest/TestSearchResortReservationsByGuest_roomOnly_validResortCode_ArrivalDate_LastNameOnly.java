@@ -28,6 +28,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
         setValues(getEnvironment());
         setIsWdtcBooking(true);
         setAddNewGuest(true);
+        isComo.set("false");
         bookReservation();
     }
 
@@ -52,7 +53,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
         // searchRRByGuest.setArrivalDate(arrivalDate);
         searchRRByGuest.setResortCode(getResortCode());
         searchRRByGuest.sendRequest();
-        System.out.print(searchRRByGuest.getResponse());
+        // System.out.print(searchRRByGuest.getResponse());
         TestReporter.logAPI(!searchRRByGuest.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", searchRRByGuest);
 
         int numberOfResortReservations;
@@ -62,7 +63,8 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
         numberOfResortReservations = searchRRByGuest.getNumberOfResponseNodesByXPath("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations");
 
         // Validate the returned reservations are either BOOKED, CHECKED-IN, or CHECKED-OUT on the current date
-        // If number of results is > 150, the service should throw an error. If < 150, verify that the booked reservation is found in the response Validate the data for the prereq reservation
+        // If number of results is > 150, the service should throw an error. If < 150, verify that the booked reservation is found in the response Validate the
+        // data for the prereq reservation
 
         if (numberOfResortReservations > 150) {
             TestReporter.assertTrue(numberOfResortReservations < 150, "Error the Response returned more than 150 results. Number of Results: " + numberOfResortReservations);
@@ -75,7 +77,8 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
 
                     TestReporter.assertTrue(reservationStatus.equals("Booked"), "The Reservation at index [" + index + "] has a Reservation Status of " + reservationStatus + ".");
 
-                    // TestReporter.assertEquals(searchRRByGuest.getGuestLastName(), guest.getLastName(), "The Last Name for the response [" + searchRRByGuest.getGuestLastName() + "] matches the request [" + guest.getLastName() + "]");
+                    // TestReporter.assertEquals(searchRRByGuest.getGuestLastName(), guest.getLastName(), "The Last Name for the response [" +
+                    // searchRRByGuest.getGuestLastName() + "] matches the request [" + guest.getLastName() + "]");
 
                     TestReporter.assertEquals(searchRRByGuest.getResortStartDate(), getArrivalDate(), "The Arrival Date for the response [" + searchRRByGuest.getResortStartDate() + "] matches the request date [" + getArrivalDate() + "]");
                     TestReporter.assertEquals(searchRRByGuest.getResortCode(), getResortCode(), "The Resort Code for the response  [" + searchRRByGuest.getResortCode() + "] matches the request resort code [" + getResortCode() + "]");

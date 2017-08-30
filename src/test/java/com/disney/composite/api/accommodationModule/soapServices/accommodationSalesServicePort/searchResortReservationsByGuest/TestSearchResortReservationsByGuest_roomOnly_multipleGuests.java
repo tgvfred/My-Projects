@@ -28,7 +28,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_multipleGuests extends
         setValues(getEnvironment());
         setIsWdtcBooking(true);
         setAddNewGuest(true);
-
+        isComo.set("false");
         bookReservation();
 
     }
@@ -53,7 +53,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_multipleGuests extends
         int numberOfPartyRoles;
         String reservationStatus;
 
-        System.out.print(searchRRByGuest.getResponse());
+        // System.out.print(searchRRByGuest.getResponse());
 
         numberOfResortReservations = searchRRByGuest.getNumberOfResponseNodesByXPath("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations");
         numberOfPartyRoles = searchRRByGuest.getNumberOfResponseNodesByXPath("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/partyRoles");
@@ -68,7 +68,8 @@ public class TestSearchResortReservationsByGuest_roomOnly_multipleGuests extends
         }
 
         // Validate the returned reservations are either BOOKED, CHECKED-IN, or CHECKED-OUT on the current date
-        // If number of results is > 150, the service should throw an error. If < 150, verify that the booked reservation is found in the response Validate the data for the prereq reservation
+        // If number of results is > 150, the service should throw an error. If < 150, verify that the booked reservation is found in the response Validate the
+        // data for the prereq reservation
 
         if (numberOfResortReservations > 150) {
             TestReporter.assertTrue(numberOfResortReservations < 150, "Error the Response returned more than 150 results. Number of Results: " + numberOfResortReservations);
@@ -134,7 +135,5 @@ public class TestSearchResortReservationsByGuest_roomOnly_multipleGuests extends
             // }
 
         }
-
     }
-
 }

@@ -31,10 +31,10 @@ public class TestSearchResortReservationsByGuest_roomOnly_validPostalCode_GuestL
         setValues(getEnvironment());
         setIsWdtcBooking(true);
         setAddNewGuest(true);
-
+        isComo.set("false");
         bookReservation();
         // getHouseHold().sendToApi(getEnvironment());
-        System.out.println(getBook().getTravelPlanSegmentId());
+        // System.out.println(getBook().getTravelPlanSegmentId());
         // System.out.print(getBook().getRequest());
         // System.out.println(getBook().getResponse());
     }
@@ -59,8 +59,8 @@ public class TestSearchResortReservationsByGuest_roomOnly_validPostalCode_GuestL
         searchRRByGuest.setResortCode(BaseSoapCommands.REMOVE_NODE.toString());
         searchRRByGuest.sendRequest();
 
-        System.out.print(searchRRByGuest.getRequest());
-        System.out.println(searchRRByGuest.getResponse());
+        // System.out.print(searchRRByGuest.getRequest());
+        // System.out.println(searchRRByGuest.getResponse());
         TestReporter.logAPI(!searchRRByGuest.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", searchRRByGuest);
 
         int numberOfResortReservations;
@@ -70,7 +70,8 @@ public class TestSearchResortReservationsByGuest_roomOnly_validPostalCode_GuestL
         numberOfResortReservations = searchRRByGuest.getNumberOfResponseNodesByXPath("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations");
 
         // Validate the returned reservations are either BOOKED, CHECKED-IN, or CHECKED-OUT on the current date
-        // If number of results is > 150, the service should throw an error. If < 150, verify that the booked reservation is found in the response Validate the data for the prereq reservation
+        // If number of results is > 150, the service should throw an error. If < 150, verify that the booked reservation is found in the response Validate the
+        // data for the prereq reservation
 
         if (numberOfResortReservations > 150) {
             TestReporter.assertTrue(numberOfResortReservations < 150, "Error the Response returned more than 150 results. Number of Results: " + numberOfResortReservations);
