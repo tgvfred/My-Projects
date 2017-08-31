@@ -40,6 +40,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>EAI</artifactId>
+			<version>1.0.12</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>TravelPlanSegment</artifactId>
 			<version>1.0.01</version>
 			<scope>provided</scope>
