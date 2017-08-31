@@ -132,6 +132,8 @@ public class AccommodationErrorCode {
             "Package Code is invalid");
     public static final ApplicationErrorCode INVALID_RESORT_PERIOD = new ApplicationErrorCode(MODULE_NAME, 7107,
             " Resort Period is invalid ");
+    public static final ApplicationErrorCode UNEXPECTED_ERR_OCCURRED = new ApplicationErrorCode(MODULE_NAME, 1001,
+            "Unexpected Error occurred");
     public static final ApplicationErrorCode CANNOT_CALCULATE_CANCEL_FEE = new ApplicationErrorCode(MODULE_NAME, 7080,
             "cannot calculate Cancel fee");
     public static final ApplicationErrorCode NO_TP_DATA_FOUND = new ApplicationErrorCode(MODULE_NAME, 7183,

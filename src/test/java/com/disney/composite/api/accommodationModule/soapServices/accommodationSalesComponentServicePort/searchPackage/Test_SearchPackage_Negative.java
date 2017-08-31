@@ -14,13 +14,15 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_emptyRequest() {
 
-        String faultString = "INVALID REQUEST! : SalesChannel provided is NULL! !";
+        String faultString = "Unexpected Error occurred : searchPackage : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
 
         SearchPackage search = new SearchPackage(environment, "Main");
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, AccommodationErrorCode.ROOM_DETAIL_MISSING);
+        // TestReporter.assertEquals(faultString, search.getFaultString(), "Verify that the fault string [" + search.getFaultString() + "] is that which is
+        // expected.[" + faultString + "]");
+        validateApplicationError(search, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
@@ -60,27 +62,31 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
     public void testSearchPackage_resortArrivalDateOnly() {
 
         // String faultString = "Validation Failed. : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
-        String faultString = "INVALID REQUEST! : SalesChannel provided is NULL! !";
+        String faultString = "Unexpected Error occurred : searchPackage : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
 
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setResortArrivalDate(Randomness.generateCurrentXMLDate());
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, AccommodationErrorCode.ROOM_DETAIL_MISSING);
+        // TestReporter.assertEquals(faultString, search.getFaultString(), "Verify that the fault string [" + search.getFaultString() + "] is that which is
+        // expected.[" + faultString + "]");
+        validateApplicationError(search, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
     public void testSearchPackage_bookingDateOnly() {
 
-        String faultString = "INVALID REQUEST! : SalesChannel provided is NULL! !";
+        String faultString = "Unexpected Error occurred : searchPackage : Result size too large. [0-9].* rows selected, which exceeds the maximum of 500";
 
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setBookingDate(Randomness.generateCurrentXMLDate());
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, AccommodationErrorCode.ROOM_DETAIL_MISSING);
+        // TestReporter.assertEquals(faultString, search.getFaultString(), "Verify that the fault string [" + search.getFaultString() + "] is that which is
+        // expected.[" + faultString + "]");
+        validateApplicationError(search, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
     }
 
 }

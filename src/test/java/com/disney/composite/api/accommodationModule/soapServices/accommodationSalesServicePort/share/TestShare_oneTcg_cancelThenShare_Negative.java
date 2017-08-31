@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -8,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
@@ -34,6 +36,11 @@ public class TestShare_oneTcg_cancelThenShare_Negative extends AccommodationBase
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share", "negative" })
     public void Test_Share_oneTcg_cancelThenShare_Negative() {
 
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
+            }
+        }
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());

@@ -29,6 +29,7 @@ public class Test_UpdateGuaranteeStatus_roomOnly_AGENT extends AccommodationBase
             helper.validation(getBook().getTravelPlanId(), "DEPOSIT", "AGENT_GUARANTEED", "Y");
 
         }
+
     }
 
 }
