@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestCreateComments_parentTP_notConfidential" parallel="methods" thread-count="20">
-	<parameter name="environment" value="Latest_cm" />
-	<test name="TestCreateComments_parentTP_notConfidential">
-=======
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">tTC_nullConfidential" parallel="methods" thread-count="20">
-	<parameter name="environment" value="Latest_cm" />
+<suite name="TestCreateComments_parentTC_nullConfidential" parallel="methods" thread-count="20">
+	<parameter name="environment" value="Latest" />
 	<test name="TestCreateComments_parentTC_nullConfidential">
->>>>>>> 99985fe6a0ee3e9371dc144e7eabfee06220ef3c
 		<classes>
 			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.createComments.TestCreateComments_parentTC_notConfidential"/>
 		</classes>

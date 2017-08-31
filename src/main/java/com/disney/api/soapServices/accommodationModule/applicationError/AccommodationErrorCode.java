@@ -112,6 +112,8 @@ public class AccommodationErrorCode {
             " No Accommodation Component found. ");
     public static final ApplicationErrorCode TRVL_PLAN_SGMT_CANNOT_BE_NULL = new ApplicationErrorCode(MOD_NAME, 7008,
             " Travel Plan Segment Not Found");
+    public static final ApplicationErrorCode TRVL_PLAN_COMPONENT_ID_REQ = new ApplicationErrorCode(MOD_NAME, 7037,
+            "Travel Component Id is required");
 
     private static final String APPLICATION = "LILO System";
 
@@ -130,6 +132,8 @@ public class AccommodationErrorCode {
             "Package Code is invalid");
     public static final ApplicationErrorCode INVALID_RESORT_PERIOD = new ApplicationErrorCode(MODULE_NAME, 7107,
             " Resort Period is invalid ");
+    public static final ApplicationErrorCode UNEXPECTED_ERR_OCCURRED = new ApplicationErrorCode(MODULE_NAME, 1001,
+            "Unexpected Error occurred");
     public static final ApplicationErrorCode CANNOT_CALCULATE_CANCEL_FEE = new ApplicationErrorCode(MODULE_NAME, 7080,
             "cannot calculate Cancel fee");
     public static final ApplicationErrorCode NO_TP_DATA_FOUND = new ApplicationErrorCode(MODULE_NAME, 7183,

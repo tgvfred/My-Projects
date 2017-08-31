@@ -15,8 +15,8 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
 
     private String pkg;
     private String desc;
-    // private String pkgCode = "H557K";
-    private String pkgCode = "H333E";
+    private String pkgCode = "H557K";
+    private String pkgCodeCM = "H333E";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
     public void testSearchPackage_descriptionAndBookingDate() {
@@ -24,9 +24,6 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setPackageDescription("Basic Package");
         search.setBookingDate(Randomness.generateCurrentXMLDate());
-        if (Environment.isSpecialEnvironment(environment)) {
-            search.setSalesChannelIDs("40748164");
-        }
         search.sendRequest();
         TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + search.getFaultString(), search);
 
@@ -40,6 +37,7 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
             if (!clone.getResponseStatusCode().equals("200")) {
                 TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
             }
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(search, true), "Validating Response Comparison");
         }
     }
