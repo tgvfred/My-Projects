@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationBatchComponentWSPort.getStagedRecordsForReinstate;
 
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
@@ -43,6 +44,12 @@ public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends
 
     @Test(groups = { "api", "regression", "getStagedRecordsForReinstate", "accommodation" })
     public void Test_GetStagedRecordsForReinstate_twoReservations_oneRequest() {
+
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("RS doesn't bring back multiple Records.");
+            }
+        }
         setupData(environment);
 
         // First invocation to stage reinstate transactions.
