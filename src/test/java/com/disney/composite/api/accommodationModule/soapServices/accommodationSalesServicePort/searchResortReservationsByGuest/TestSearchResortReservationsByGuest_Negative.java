@@ -77,7 +77,7 @@ public class TestSearchResortReservationsByGuest_Negative extends AccommodationB
 
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationByGuest", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest", "negative" })
     public void testSearchResortReservationsByGuest_roomOnly_reservationNumberOnly_CheckedOut() {
         String reservationNumber = "471431814399";
         String fault = "No travel plan data found. : NO RESULTS FOUND";

@@ -21,6 +21,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -31,7 +32,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest", "smoke" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_roomOnly_validResortCode_ArrivalDate_LastNameOnly() {
         // DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
         // Date localDate = new Date();

@@ -21,6 +21,7 @@ public class TestSearchResortReservationsByGuest_wdtc_reservationNumberOnly exte
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -36,7 +37,7 @@ public class TestSearchResortReservationsByGuest_wdtc_reservationNumberOnly exte
         // System.out.println(book.getRequest());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest", "smoke" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_wdtc_reservationNumberOnly() {
 
         TestReporter.logScenario("Test - SearchResortReservationsByGuest - wdtc- reservationNumberOnly");

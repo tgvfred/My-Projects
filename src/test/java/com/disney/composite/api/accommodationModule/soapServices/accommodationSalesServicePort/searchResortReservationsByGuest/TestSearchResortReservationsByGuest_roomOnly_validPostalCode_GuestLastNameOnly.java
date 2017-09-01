@@ -18,6 +18,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_validPostalCode_GuestL
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
+        isComo.set("false");
         createHouseHold();
         getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         getHouseHold().primaryGuest().primaryAddress().setState("North Carolina");
@@ -39,7 +40,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_validPostalCode_GuestL
         // System.out.println(getBook().getResponse());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest", "smoke" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_roomOnly_validPostalCode_GuestLastNameOnly() {
 
         Guest guest = getHouseHold().primaryGuest();

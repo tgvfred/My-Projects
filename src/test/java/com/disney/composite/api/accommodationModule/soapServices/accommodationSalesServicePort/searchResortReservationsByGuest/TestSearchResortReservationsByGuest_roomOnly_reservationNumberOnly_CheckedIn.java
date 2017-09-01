@@ -21,6 +21,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_reservationNumberOnly_
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -39,7 +40,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_reservationNumberOnly_
 
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "seachResortReservationsByGuest", "smoke" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "seachResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_roomOnly_reservationNumberOnly_CheckedIn() {
         TestReporter.logScenario("Test - SearchResortReservationsByGuest - Room Only -reservationNumberOnly-CheckedIn");
 
