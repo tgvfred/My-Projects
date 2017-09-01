@@ -33,7 +33,9 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyADA extends AccommodationBaseTe
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", getBook().getTravelPlanSegmentId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", getBook().getTravelComponentGroupingId());
+            // retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         } else {
             retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         }

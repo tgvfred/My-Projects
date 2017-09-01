@@ -27,7 +27,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_nonZeroVip_reservation
         setDepartureDate(getDaysOut() + getNights());
         setNonZeroVip(true);
         setValues(environment);
-
+        isComo.set("false");
         bookReservation();
 
         book = new ReplaceAllForTravelPlanSegment(environment, "book1Adult1Child");
@@ -52,7 +52,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_nonZeroVip_reservation
         searchRRByGuest.setResortCode(BaseSoapCommands.REMOVE_NODE.toString());
         searchRRByGuest.sendRequest();
         TestReporter.logAPI(!searchRRByGuest.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", searchRRByGuest);
-        System.out.println(searchRRByGuest.getResponse());
+        // System.out.println(searchRRByGuest.getResponse());
         int numberOfResortReservations;
 
         String reservationStatus;
@@ -70,7 +70,8 @@ public class TestSearchResortReservationsByGuest_roomOnly_nonZeroVip_reservation
         }
 
         // Validate the returned reservations are either BOOKED, CHECKED-IN, or CHECKED-OUT on the current date
-        // If number of results is > 150, the service should throw an error. If < 150, verify that the booked reservation is found in the response Validate the data for the prereq reservation
+        // If number of results is > 150, the service should throw an error. If < 150, verify that the booked reservation is found in the response Validate the
+        // data for the prereq reservation
 
         if (numberOfResortReservations > 150) {
             TestReporter.assertTrue(numberOfResortReservations < 150, "Error the Response returned more than 150 results. Number of Results: " + numberOfResortReservations);

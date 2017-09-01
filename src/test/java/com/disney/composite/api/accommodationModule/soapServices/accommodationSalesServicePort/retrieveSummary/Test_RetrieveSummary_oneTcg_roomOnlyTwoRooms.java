@@ -37,8 +37,12 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationB
     public void testRetrieveSummary_oneTcg_roomOnlyTwoRooms() {
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
+
         if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", book.getTravelPlanSegmentId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", book.getTravelComponentGroupingId());
+            retrieve.setRequestTravelComponentGroupingIdIndexAdd("3", book.getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails[2]/travelComponentGroupingId"));
+            // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
         } else {
             retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
         }

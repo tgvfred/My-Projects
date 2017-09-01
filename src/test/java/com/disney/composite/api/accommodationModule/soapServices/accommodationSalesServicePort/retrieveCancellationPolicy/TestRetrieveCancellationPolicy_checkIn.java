@@ -1,27 +1,40 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveCancellationPolicy;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveCancellationPolicy;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveCancellationPolicy_checkIn extends AccommodationBaseTest {
 
+    private CheckInHelper helper;
+
+    @Override
+    @Parameters("environment")
+    @BeforeMethod(alwaysRun = true)
+    public void setup(String environment) {
+        setEnvironment(environment);
+        isComo.set("false");
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(getEnvironment());
+        bookReservation();
+    }
+
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_checkIn() {
 
-        String faultString = "Cannot calculate Cancel fee";
+        String faultString = "cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
-        CheckIn check = new CheckIn(environment, "Main");
-        check.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        check.setRequestNodeValueByXPath("/Envelope/Body/checkIn/request/checkInGuestDetails/guestId", BaseSoapCommands.REMOVE_NODE.toString());
-        check.sendRequest();
-
-        TestReporter.logAPI(!check.getResponseStatusCode().equals("200"), "An error occurred when sending request: " + check.getFaultString(), check);
+        helper = new CheckInHelper(getEnvironment(), getBook());
+        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
@@ -29,7 +42,7 @@ public class TestRetrieveCancellationPolicy_checkIn extends AccommodationBaseTes
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALC_CANCEL_FEE);
+        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
 
     }
 }

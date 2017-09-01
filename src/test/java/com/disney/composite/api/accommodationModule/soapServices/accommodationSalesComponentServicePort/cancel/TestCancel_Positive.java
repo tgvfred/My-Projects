@@ -130,7 +130,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
      * Utility Functions
      */
     private AddAccommodationHelper addAccommodation() {
-        AddAccommodationHelper helper = new AddAccommodationHelper(environment, getBook());
+        AddAccommodationHelper helper = new AddAccommodationHelper(Environment.getBaseEnvironmentName(environment), getBook());
         helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
         return helper;
     }

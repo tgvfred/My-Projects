@@ -28,6 +28,7 @@ public class TestSearchResortReservationsByGuest_wdtc_reservationNumberOnly exte
         setDepartureDate(getDaysOut() + getNights());
         setValues(environment);
         setIsWdtcBooking(true);
+        isComo.set("false");
         bookReservation();
 
         book = new ReplaceAllForTravelPlanSegment(environment, "book2AdultsAndTwoRoom");
@@ -61,7 +62,8 @@ public class TestSearchResortReservationsByGuest_wdtc_reservationNumberOnly exte
         numberOfResortReservations = searchRRByGuest.getNumberOfResponseNodesByXPath("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations");
 
         // Validate the returned reservations are either BOOKED, CHECKED-IN, or CHECKED-OUT on the current date
-        // If number of results is > 150, the service should throw an error. If < 150, verify that the booked reservation is found in the response Validate the data for the prereq reservation
+        // If number of results is > 150, the service should throw an error. If < 150, verify that the booked reservation is found in the response Validate the
+        // data for the prereq reservation
 
         if (numberOfResortReservations > 150) {
             TestReporter.assertTrue(numberOfResortReservations < 150, "Error the Response returned more than 150 results. Number of Results: " + numberOfResortReservations);
