@@ -42,7 +42,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_reservationNumberOnly_
     }
 
     // test
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "seachResortReservationsByGuest" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_roomOnly_reservationNumberOnly_CheckedIn() {
         TestReporter.logScenario("Test - SearchResortReservationsByGuest - Room Only -reservationNumberOnly-CheckedIn");
 

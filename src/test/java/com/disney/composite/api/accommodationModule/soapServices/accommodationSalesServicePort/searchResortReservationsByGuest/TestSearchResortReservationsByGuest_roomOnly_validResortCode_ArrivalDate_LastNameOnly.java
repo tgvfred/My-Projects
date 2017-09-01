@@ -131,6 +131,12 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
             // clone.addExcludedXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/couponProducts[text()='2856383']");
             // clone.addExcludedXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/couponProducts[text()='2856382']");
             // clone.addExcludedBaselineXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/partyRoles/role");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/travelPlanSegmentId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/travelPlanId");
+            clone.addExcludedXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/travelPlanId");
+            clone.addExcludedXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/contactName");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/contactName");
+            clone.addExcludedXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/travelPlanSegmentId");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(searchRRByGuest, true), "Validating Response Comparison");
 
             // }
