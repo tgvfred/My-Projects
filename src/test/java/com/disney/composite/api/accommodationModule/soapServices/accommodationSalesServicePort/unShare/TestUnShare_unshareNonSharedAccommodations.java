@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -62,6 +63,11 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
     public void Test_unShare_unshareNonSharedAccommodations() {
 
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
+            }
+        }
         // unshare the first reservation.
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(firstTCG);

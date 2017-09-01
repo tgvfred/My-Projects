@@ -24,17 +24,10 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setPackageDescription("Basic Package");
         search.setBookingDate(Randomness.generateCurrentXMLDate());
-        if (Environment.isSpecialEnvironment(environment)) {
-            search.setSalesChannelIDs("40748164");
-        }
         search.sendRequest();
         TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + search.getFaultString(), search);
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            packageCheck(search.getPackageDescriptionByPackageCode(pkgCodeCM), pkgCodeCM);
-        } else {
-            packageCheck(search.getPackageDescriptionByPackageCode(pkgCode), pkgCode);
-        }
+        packageCheck(search.getPackageDescriptionByPackageCode(pkgCode), pkgCode);
 
         // Old vs New Validation
         if (Environment.isSpecialEnvironment(environment)) {
@@ -44,6 +37,7 @@ public class Test_SearchPackage_descriptionAndBookingDate extends AccommodationB
             if (!clone.getResponseStatusCode().equals("200")) {
                 TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
             }
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(search, true), "Validating Response Comparison");
         }
     }

@@ -37,8 +37,8 @@ public class TestCancel_Guaranteed extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
-    public void testCancel_addAccomm_cancelOne_tcgOnly() {
-        TestReporter.logScenario("Test Cancel RO ADA");
+    public void testCancel_Guaranteed() {
+        TestReporter.logScenario("Test Cancel Guaranteed");
 
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
