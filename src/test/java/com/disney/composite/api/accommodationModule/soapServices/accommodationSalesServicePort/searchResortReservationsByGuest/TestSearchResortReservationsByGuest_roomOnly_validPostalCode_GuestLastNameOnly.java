@@ -40,6 +40,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_validPostalCode_GuestL
         // System.out.println(getBook().getResponse());
     }
 
+    // test
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_roomOnly_validPostalCode_GuestLastNameOnly() {
 

@@ -77,6 +77,7 @@ public class TestSearchResortReservationsByGuest_Negative extends AccommodationB
 
     }
 
+    // test
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest", "negative" })
     public void testSearchResortReservationsByGuest_roomOnly_reservationNumberOnly_CheckedOut() {
         String reservationNumber = "471431814399";

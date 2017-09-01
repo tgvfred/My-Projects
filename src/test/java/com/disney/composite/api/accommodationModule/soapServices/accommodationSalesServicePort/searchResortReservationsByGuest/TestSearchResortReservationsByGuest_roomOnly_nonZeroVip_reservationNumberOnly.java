@@ -36,6 +36,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_nonZeroVip_reservation
         book.getResponse();
     }
 
+    // test
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_roomOnly_nonZeroVip_reservationNumberOnly() {
         TestReporter.logScenario("Test - SearchResortReservationsByGuest - Room Only -nonZeroVip- reservationNumberOnly");

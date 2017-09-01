@@ -34,6 +34,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_reservationNumberOnly 
         book.getResponse();
     }
 
+    // test
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_roomOnly_reservationNumberOnly() {
         TestReporter.logScenario("Test - SearchResortReservationsByGuest - Room Only -reservationNumberOnly");

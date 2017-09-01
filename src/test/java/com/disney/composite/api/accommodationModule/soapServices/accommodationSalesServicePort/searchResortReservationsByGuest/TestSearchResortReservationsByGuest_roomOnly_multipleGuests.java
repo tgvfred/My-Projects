@@ -34,6 +34,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_multipleGuests extends
 
     }
 
+    // test
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_roomOnly_multipleGuests() {
         TestReporter.logScenario("Test - SearchResortReservationsByGuest - Room Only- multipleGuests");

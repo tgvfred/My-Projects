@@ -37,6 +37,7 @@ public class TestSearchResortReservationsByGuest_wdtc_reservationNumberOnly exte
         // System.out.println(book.getRequest());
     }
 
+    // test
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_wdtc_reservationNumberOnly() {
 

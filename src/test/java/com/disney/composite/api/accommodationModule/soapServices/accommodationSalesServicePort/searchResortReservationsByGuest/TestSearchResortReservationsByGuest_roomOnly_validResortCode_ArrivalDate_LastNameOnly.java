@@ -32,6 +32,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
         bookReservation();
     }
 
+    // test
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_roomOnly_validResortCode_ArrivalDate_LastNameOnly() {
         // DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
