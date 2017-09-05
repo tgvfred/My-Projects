@@ -28,7 +28,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.ACCOMM_NOT_FOUND);
+        validateApplicationError(update, AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND);
 
     }
 
@@ -43,7 +43,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(update, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
     }
 
@@ -58,7 +58,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(update, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
     }
 
@@ -73,7 +73,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(update, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
     }
 
@@ -88,7 +88,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(update, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
     }
 
@@ -104,7 +104,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.GUARANTEE_STATUS_CANNOT_CHANGE);
+        validateApplicationError(update, AccommodationErrorCode.GAURANTEE_STATUS_CAN_NOT_BE_CHANGED);
 
     }
 

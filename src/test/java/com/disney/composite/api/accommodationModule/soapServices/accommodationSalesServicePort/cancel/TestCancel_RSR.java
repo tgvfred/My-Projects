@@ -95,7 +95,6 @@ public class TestCancel_RSR extends AccommodationBaseTest {
         CancelHelper cancelHelper = new CancelHelper(removeCM(environment), getBook().getTravelPlanId());
         cancelHelper.verifyChargeGroupsCancelled();
         cancelHelper.verifyCancellationIsFoundInResHistory(getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
-        // cancelHelper.verifyCancellationComment(getRetrieve(), "Air not available CancellationNumber : " + cancel.getCancellationNumber());
         cancelHelper.verifyNumberOfCharges(1);
         cancelHelper.verifyInventoryReleased(getBook().getTravelComponentGroupingId());
         cancelHelper.verifyNumberOfTpPartiesByTpId(1);
@@ -105,8 +104,6 @@ public class TestCancel_RSR extends AccommodationBaseTest {
         cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 0);
         cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
-        // Verify the reasonID matches the reason code used for the given TCId
-        // cancelHelper.verifyProductReasonID(getBook().getTravelComponentId());
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());

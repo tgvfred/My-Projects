@@ -35,7 +35,7 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+        setValues();
         createHouseHold();
         getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
         book = new BookReservations(Environment.getBaseEnvironmentName(getEnvironment()), "RoomOnly_TwoRooms");

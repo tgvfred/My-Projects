@@ -61,6 +61,6 @@ public class TestCancel_DvcCash extends BookDVCCashHelper {
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.CANNOT_CANCEL_DVC_RES);
+        validateApplicationError(cancel, AccommodationErrorCode.DVC_RESERVATION);
     }
 }

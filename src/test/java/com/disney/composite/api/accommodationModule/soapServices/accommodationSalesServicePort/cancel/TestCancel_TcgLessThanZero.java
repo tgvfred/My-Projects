@@ -22,6 +22,6 @@ public class TestCancel_TcgLessThanZero extends AccommodationBaseTest {
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(cancel, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
     }
 }

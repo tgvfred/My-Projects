@@ -56,7 +56,7 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails_ModifyO
         String oldResort = getResortCode();
         String oldRoomType = getRoomTypeCode();
         do {
-            setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+            setValues();
         } while (getResortCode().equals(oldResort) && getRoomTypeCode().equals(oldRoomType));
         setAddRoom(false);
         bookReservation();

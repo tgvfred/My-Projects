@@ -25,7 +25,7 @@ public class TestCancel_RO_Shared extends AccommodationBaseTest {
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
-        setValues(getEnvironment());
+        setValues();
         isComo.set("true");
         // setIsShared(true);
 

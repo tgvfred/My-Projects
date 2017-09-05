@@ -840,7 +840,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
-        book.set(new ReplaceAllForTravelPlanSegment(getEnvironment(), "roomOnlyWithoutTickets"));
+        book.set(new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "roomOnlyWithoutTickets"));
 
         if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
             externalRefNumber.set(Randomness.randomNumber(12));

@@ -23,7 +23,7 @@ public class TestUpdateComments_negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(update.getFaultString(), faultString, "Verify that the fault string [" + update.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(update, AccommodationErrorCode.COMMENT_LVL_REQUIRED);
+        validateApplicationError(update, AccommodationErrorCode.CREATE_COMMENTS);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "updateComments", "negative" })
@@ -37,7 +37,7 @@ public class TestUpdateComments_negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(update.getFaultString(), faultString, "Verify that the fault string [" + update.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(update, AccommodationErrorCode.COMMENT_LVL_REQUIRED);
+        validateApplicationError(update, AccommodationErrorCode.CREATE_COMMENTS);
     }
 
 }

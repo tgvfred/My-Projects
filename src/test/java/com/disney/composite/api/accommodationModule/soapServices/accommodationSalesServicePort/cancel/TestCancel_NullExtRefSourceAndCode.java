@@ -27,7 +27,7 @@ public class TestCancel_NullExtRefSourceAndCode extends AccommodationBaseTest {
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+        setValues();
         bookReservation();
     }
 
@@ -45,6 +45,6 @@ public class TestCancel_NullExtRefSourceAndCode extends AccommodationBaseTest {
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED);
+        validateApplicationError(cancel, AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_EXTERNAL_REFERENCE_CODE_REQUIRED);
     }
 }
