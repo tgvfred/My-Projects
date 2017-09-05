@@ -90,5 +90,6 @@ public class TestCancel_Negative extends AccommodationBaseTest {
         cancel.sendRequest();
 
         validateApplicationError(cancel, ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_CANCELLED);
+
     }
 }

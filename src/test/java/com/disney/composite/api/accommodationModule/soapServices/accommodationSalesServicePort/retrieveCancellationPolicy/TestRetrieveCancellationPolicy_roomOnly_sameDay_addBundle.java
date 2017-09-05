@@ -72,6 +72,8 @@ public class TestRetrieveCancellationPolicy_roomOnly_sameDay_addBundle extends A
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/retrieveCancellationPolicy/request/blockCode");
             clone.addExcludedXpathValidations(
                     "/Envelope/Body/retrieveCancellationPolicyResponse/cancellationPolicyResponse/cancelFee");
+            clone.addExcludedBaselineXpathValidations(
+                    "/Envelope/Body/retrieveCancellationPolicyResponse/cancellationPolicyResponse/cancelFee");
             TestReporter.assertTrue(retrieve.validateResponseNodeQuantity(clone, true),
                     "Validating Response Comparison");
         }
