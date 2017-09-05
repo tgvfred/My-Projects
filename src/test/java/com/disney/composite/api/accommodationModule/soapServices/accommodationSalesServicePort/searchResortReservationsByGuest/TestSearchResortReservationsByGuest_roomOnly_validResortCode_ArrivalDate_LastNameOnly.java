@@ -21,6 +21,7 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -32,7 +33,8 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest", "smoke" })
+    // test
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest" })
     public void testSearchResortReservationsByGuest_roomOnly_validResortCode_ArrivalDate_LastNameOnly() {
         // DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
         // Date localDate = new Date();
@@ -129,6 +131,12 @@ public class TestSearchResortReservationsByGuest_roomOnly_validResortCode_Arriva
             // clone.addExcludedXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/couponProducts[text()='2856383']");
             // clone.addExcludedXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/couponProducts[text()='2856382']");
             // clone.addExcludedBaselineXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/partyRoles/role");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/travelPlanSegmentId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/travelPlanId");
+            clone.addExcludedXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/travelPlanId");
+            clone.addExcludedXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/contactName");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/contactName");
+            clone.addExcludedXpathValidations("/Envelope/Body/searchResortReservationsByGuestResponse/resortReservations/travelPlanSegmentId");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(searchRRByGuest, true), "Validating Response Comparison");
 
             // }
