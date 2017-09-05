@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
@@ -37,7 +38,12 @@ public class TestRetrieveCancellationPolicy_checkOut extends AccommodationBaseTe
         String faultString = "cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
         CheckIn checkIn = new CheckIn(environment, "Main");
-        checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        try {
+            checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        } catch (XPathNotFoundException e) {
+            checkIn.setRequestNodeValueByXPath("/Envelope/Body/checkIn/request", BaseSoapCommands.ADD_NODE.commandAppend("travelComponentGroupingId"));
+            checkIn.setRequestNodeValueByXPath("/Envelope/Body/checkIn/request/travelComponentGroupingId", getBook().getTravelComponentGroupingId());
+        }
         checkIn.setRequestNodeValueByXPath("/Envelope/Body/checkIn/request/checkInGuestDetails/guestId", BaseSoapCommands.REMOVE_NODE.toString());
         checkIn.sendRequest();
 

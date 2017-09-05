@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>com.disney.gqe</groupId>
 			<artifactId>APIUtilsSoap</artifactId>
-			<version>1.0.67</version>
+			<version>1.0.68</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -36,6 +36,12 @@
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Folio</artifactId>
 			<version>1.0.8</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>EAI</artifactId>
+			<version>1.0.12</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

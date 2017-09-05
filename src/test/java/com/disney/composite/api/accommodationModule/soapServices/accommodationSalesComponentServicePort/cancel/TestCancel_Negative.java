@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.cancel;
 
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL;
 import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMM_NOT_FOUND;
 import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMM_NOT_IN_BOOKED_STATUS;
 import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED;
@@ -89,6 +90,6 @@ public class TestCancel_Negative extends AccommodationBaseTest {
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
 
-        validateApplicationError(cancel, ACCOMM_NOT_IN_BOOKED_STATUS);
+        validateApplicationError(cancel, ACCOMMODATION_MUST_BE_BOOKED_TO_CANCEL);
     }
 }
