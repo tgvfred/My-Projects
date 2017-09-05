@@ -20,7 +20,7 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(retrieve, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
     }
 
@@ -35,7 +35,7 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(retrieve, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
     }
 
@@ -50,7 +50,7 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(retrieve, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
     }
 
@@ -65,7 +65,7 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(retrieve, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
     }
 
@@ -80,7 +80,7 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(retrieve, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
     }
 
@@ -95,7 +95,7 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.TPS_CANNOT_BE_NULL);
+        validateApplicationError(retrieve, AccommodationErrorCode.TRAVEL_PLAN_SEGMENT_NOT_FOUND);
 
     }
 
@@ -110,7 +110,7 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.TCG_NOT_FOUND);
+        validateApplicationError(retrieve, AccommodationErrorCode.REVENUE_TYPE_NULL_FROM_PRICING);
 
     }
 

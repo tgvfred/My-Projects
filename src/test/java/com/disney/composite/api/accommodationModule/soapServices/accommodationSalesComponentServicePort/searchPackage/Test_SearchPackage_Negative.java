@@ -3,8 +3,8 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.SearchPackage;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.utils.Randomness;
 import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
@@ -22,7 +22,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
         // TestReporter.assertEquals(faultString, search.getFaultString(), "Verify that the fault string [" + search.getFaultString() + "] is that which is
         // expected.[" + faultString + "]");
-        validateApplicationError(search, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(search, LiloSystemErrorCode.UNEXPECTED_ERROR);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
@@ -36,7 +36,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(search, LiloSystemErrorCode.UNEXPECTED_ERROR);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
@@ -55,7 +55,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         search.sendRequest();
 
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
-        validateApplicationError(search, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(search, LiloSystemErrorCode.UNEXPECTED_ERROR);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
@@ -71,7 +71,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
         // TestReporter.assertEquals(faultString, search.getFaultString(), "Verify that the fault string [" + search.getFaultString() + "] is that which is
         // expected.[" + faultString + "]");
-        validateApplicationError(search, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(search, LiloSystemErrorCode.UNEXPECTED_ERROR);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage", "negative" })
@@ -86,7 +86,7 @@ public class Test_SearchPackage_Negative extends AccommodationBaseTest {
         TestReporter.assertTrue(Regex.match(faultString.replaceAll("\\s", ""), search.getFaultString().replaceAll("\\s", "")), "Regex Validation Passed");
         // TestReporter.assertEquals(faultString, search.getFaultString(), "Verify that the fault string [" + search.getFaultString() + "] is that which is
         // expected.[" + faultString + "]");
-        validateApplicationError(search, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(search, LiloSystemErrorCode.UNEXPECTED_ERROR);
     }
 
 }

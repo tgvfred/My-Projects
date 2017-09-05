@@ -74,7 +74,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 success = true;
             } catch (Exception e) {
                 cancel();
-                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                setValues();
                 bookReservation();
             }
         } while (tries < maxTries && !success);
@@ -125,7 +125,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 success = true;
             } catch (Exception e) {
                 cancel();
-                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                setValues();
                 bookReservation();
             }
         } while (tries < maxTries && !success);
@@ -176,7 +176,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 success = true;
             } catch (Exception e) {
                 cancel();
-                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                setValues();
                 bookReservation();
             }
         } while (tries < maxTries && !success);
@@ -227,7 +227,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 success = true;
             } catch (Exception e) {
                 cancel();
-                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                setValues();
                 bookReservation();
             }
         } while (tries < maxTries && !success);
@@ -279,7 +279,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 success = true;
             } catch (Exception e) {
                 cancel();
-                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                setValues();
                 bookReservation();
             }
         } while (tries < maxTries && !success);
@@ -329,7 +329,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 success = true;
             } catch (Exception e) {
                 cancel();
-                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                setValues();
                 bookReservation();
             }
         } while (tries < maxTries && !success);
@@ -381,7 +381,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 success = true;
             } catch (Exception e) {
                 cancel();
-                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                setValues();
                 bookReservation();
             }
         } while (tries < maxTries && !success);
@@ -433,7 +433,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 success = true;
             } catch (Exception e) {
                 cancel();
-                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                setValues();
                 bookReservation();
             }
         } while (tries < maxTries && !success);
@@ -485,7 +485,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 success = true;
             } catch (Exception e) {
                 cancel();
-                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                setValues();
                 bookReservation();
             }
         } while (tries < maxTries && !success);
@@ -536,7 +536,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 success = true;
             } catch (Exception e) {
                 cancel();
-                setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+                setValues();
                 bookReservation();
             }
         } while (tries < maxTries && !success);

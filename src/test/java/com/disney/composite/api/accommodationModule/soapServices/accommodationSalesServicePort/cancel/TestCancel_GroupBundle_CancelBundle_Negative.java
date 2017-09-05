@@ -98,7 +98,7 @@ public class TestCancel_GroupBundle_CancelBundle_Negative extends AccommodationB
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.INVALID_EXT_REF_DETAILS);
+        validateApplicationError(cancel, AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
 
     }
 

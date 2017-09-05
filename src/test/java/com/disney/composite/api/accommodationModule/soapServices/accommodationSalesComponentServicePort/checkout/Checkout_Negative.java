@@ -76,8 +76,6 @@ public class Checkout_Negative extends AccommodationBaseTest {
         String faultString = "INVALID REQUEST ! :  during AccommodationSalesService.checkout() - No Checked-In Accommodations found with the External Reference#4612616";
         String tcgId = getBook().getTravelComponentGroupingId();
         String refType = "RESERVATION";
-        String refNumber = "4612616";
-        String refSource = "Accovia";
 
         TestReporter.logScenario("Cancelled Checkout");
         Checkout checkout = new Checkout(environment, "main");
@@ -123,7 +121,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, AccommodationErrorCode.EXTERNAL_REFERENCE_REQUIRED);
+        validateApplicationError(checkout, AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
 
     }
 }

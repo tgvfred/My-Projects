@@ -30,7 +30,7 @@ public class TestShare_twoTcg_oneInvalidTcg_Negative extends AccommodationBaseTe
         String faultString = " No Accommodation Component found. : null";
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(share, AccommodationErrorCode.NO_ACCOMMODATION_COMPONENT_EXCEPTION);
+        validateApplicationError(share, AccommodationErrorCode.NO_ACCOMMODATION_FOUND);
     }
 
 }

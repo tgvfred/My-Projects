@@ -15,14 +15,14 @@ public class TestCancel_NullRequest extends AccommodationBaseTest {
     public void testCancel_NullRequest() {
         TestReporter.logScenario("Test Cancel Null Request");
 
-        String faultString = "Required parameters are missing : TravelComponentGrouping Id or ExternalReferenceDetail is required";
+        String faultString = "Required parameters are missing :";
 
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setRequest(BaseSoapCommands.REMOVE_NODE.toString());
         cancel.sendRequest();
 
-        TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        TestReporter.assertTrue(cancel.getFaultString().contains(faultString), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(cancel, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
     }
 }

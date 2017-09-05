@@ -52,7 +52,7 @@ public class Test_UpdateGuaranteeStatus_wdtc_CREDIT_CARD_Negative extends Accomm
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.GUARANTEE_STATUS_CANNOT_CHANGE);
+        validateApplicationError(update, AccommodationErrorCode.GAURANTEE_STATUS_CAN_NOT_BE_CHANGED);
     }
 
 }

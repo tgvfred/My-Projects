@@ -53,7 +53,7 @@ public class TestShare_oneTcg_cancelThenShare_Negative extends AccommodationBase
         String faultString = "Travel Status is invalid for Share : Travel Status should be Booked, Checking In or Checked In.";
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(share, AccommodationErrorCode.TRAVEL_STATUS_INVALID_FOR_SHARE);
+        validateApplicationError(share, AccommodationErrorCode.INVALID_TRAVEL_STATUS_FOR_SHARE);
     }
 
 }
