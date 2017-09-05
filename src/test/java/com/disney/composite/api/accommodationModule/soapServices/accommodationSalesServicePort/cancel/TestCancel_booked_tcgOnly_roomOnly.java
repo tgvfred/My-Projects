@@ -100,7 +100,7 @@ public class TestCancel_booked_tcgOnly_roomOnly extends AccommodationBaseTest {
         cancelHelper.verifyExchangeFeeFound(false);
         cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 2);
         cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 0);
-        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
+        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 0);
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(book.getTravelComponentId());

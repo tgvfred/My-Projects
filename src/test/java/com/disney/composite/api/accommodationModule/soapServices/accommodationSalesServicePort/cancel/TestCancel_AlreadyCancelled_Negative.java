@@ -11,7 +11,7 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
-public class TestCancel_cancelled extends AccommodationBaseTest {
+public class TestCancel_AlreadyCancelled_Negative extends AccommodationBaseTest {
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -20,7 +20,7 @@ public class TestCancel_cancelled extends AccommodationBaseTest {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
         setEnvironment(environment);
-        isComo.set("false");
+        isComo.set("true");
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
