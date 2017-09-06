@@ -35,16 +35,10 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        String locEnv;
-        if (environment.toLowerCase().contains("_cm")) {
-            locEnv = environment.toLowerCase().replace("_cm", "");
-        } else {
-            locEnv = environment;
-        }
         setValues();
         createHouseHold();
-        getHouseHold().sendToApi(locEnv);
-        book = new BookReservations(locEnv, "RoomOnly_TwoRooms");
+        getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
+        book = new BookReservations(Environment.getBaseEnvironmentName(getEnvironment()), "RoomOnly_TwoRooms");
         int daysOUt = 0;
         int nights = 1;
         setArrivalDate(daysOUt);
@@ -61,7 +55,7 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         boolean success = false;
         do {
             try {
-                packageCode = pkg.retrievePackageCode(locEnv, String.valueOf("0"),
+                packageCode = pkg.retrievePackageCode(Environment.getBaseEnvironmentName(getEnvironment()), String.valueOf(daysOUt),
                         getLocationId(), "DRC RO", "", getResortCode(), getRoomTypeCode(), "");
                 success = true;
             } catch (AssertionError e) {

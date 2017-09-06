@@ -243,9 +243,32 @@ public class CancelHelper {
         retrieveFolioDetails.setRequestNodeValueByXPath("/Envelope/Body/retrieveFolioDetails/transactionID", "fx:removenode");
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(DVCSalesDreams.getUniqueNodeChargeGroups(tpId)));
+        Recordset rs = null;
+        try {
+            String sql = "select e.* "
+                    + "from folio.EXTNL_REF a "
+                    + "join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                    + "join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
+                    + "join folio.ROOT_CHRG_GRP d on c.CHRG_GRP_ID = d.ROOT_CHRG_GRP_ID "
+                    + "join folio.NODE_CHRG_GRP e on d.ROOT_CHRG_GRP_ID = e.ROOT_CHRG_GRP_ID "
+                    + "where a.EXTNL_REF_VAL in ( "
+                    + "        (select to_char(a.tp_id) "
+                    + "        from res_mgmt.tps a "
+                    + "        where a.tp_id = '" + tpId + "'), "
+                    + "        (select to_char(a.tps_id) "
+                    + "        from res_mgmt.tps a "
+                    + "        where a.tp_id = '" + tpId + "'), "
+                    + "        (select to_char(b.tc_grp_nb) "
+                    + "        from res_mgmt.tps a "
+                    + "        join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                    + "        where a.tp_id = '" + tpId + "') "
+                    + ")";
+            rs = new Recordset(db.getResultSet(sql));
+        } catch (Exception e) {
+            rs = new Recordset(db.getResultSet(DVCSalesDreams.getUniqueNodeChargeGroups(tpId)));
+        }
         // rs.print();
-
+        // System.out.println();
         String nodeChargeGroups = "";
         for (int i = 1; i <= rs.getRowCount(); i++) {
             nodeChargeGroups += rs.getValue("NODE_CHRG_GRP_ID", i);
@@ -923,6 +946,21 @@ public class CancelHelper {
         String sql = "select * "
                 + "from res_mgmt.tc_fee a "
                 + "where a.tc_id = '" + tcId + "'";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        if (feeExpected) {
+            TestReporter.softAssertTrue(rs.getRowCount() > 0, "Verify that a TC fee was generated.");
+        } else {
+            TestReporter.softAssertTrue(rs.getRowCount() == 0, "Verify that no TC fee was generated.");
+        }
+    }
+
+    public void verifyTcFeeByTcg(String tcgId, boolean feeExpected) {
+        TestReporter.logStep("Verify TC fee was generated.");
+        String sql = "select * "
+                + "from res_mgmt.tc a "
+                + "join res_mgmt.tc_fee b on a.tc_id = b.tc_id "
+                + "where a.tc_grp_nb = " + tcgId;
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         if (feeExpected) {

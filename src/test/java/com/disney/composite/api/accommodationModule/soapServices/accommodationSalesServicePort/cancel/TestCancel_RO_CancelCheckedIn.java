@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentS
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -23,22 +24,19 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
     public void setup(String environment) {
 
         int tries = 0;
-        String locEnv = null;
-        if (environment.toLowerCase().contains("_cm")) {
-            locEnv = environment.toLowerCase().replace("_cm", "");
-        }
-        setEnvironment(locEnv);
+        setEnvironment(environment);
+        isComo.set("false");
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues(getEnvironment());
+        setValues();
         bookReservation();
-        checkingIn(locEnv);
+        checkingIn(Environment.getBaseEnvironmentName(getEnvironment()));
 
-        CheckIn checkIn = new CheckIn(locEnv, "UI_Booking");
+        CheckIn checkIn = new CheckIn(Environment.getBaseEnvironmentName(getEnvironment()), "UI_Booking");
         checkIn.setGuestId(getBook().getGuestId());
         checkIn.setLocationId(getLocationId());
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -59,15 +57,18 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
     public void testCancel_RO_CancelCheckedIn() {
         TestReporter.logScenario("Test Cancel RO Checked IN negative");
 
-        String faultString = "Accommodation should be in Booked status to be cancelled : null";
+        String faultString = "Accommodation should be in Booked status to be cancelled";
 
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
         cancel.sendRequest();
 
         TestReporter.assertTrue(cancel.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS);
+        validateApplicationError(cancel, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_CANCELLED);
 
     }
 }

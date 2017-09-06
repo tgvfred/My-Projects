@@ -10,6 +10,7 @@
 				<exclude name="dev"/>
 				<!-- <exclude name="debug"/> -->
 				<include name="checkout"></include>
+				<exclude name="example"></exclude>
 			</run>
 		</groups>
 		<packages>
@@ -24,6 +25,7 @@
 				<exclude name="dev"/>
 				<!-- <exclude name="debug"/> -->
 				<exclude name="checkout"></exclude>
+				<exclude name="example"></exclude>
 			</run>
 		</groups>
 		<packages>

@@ -151,22 +151,28 @@ public class TicketsHelper {
             throw new AutomationException("The book object cannot be null.");
         } else {
             setWs(ws);
-            // if (ws instanceof ReplaceAllForTravelPlanSegment) {
-            // setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
-            // setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
-            // setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
-            // setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
-            // } else if (ws instanceof Add) {
-            // setTpId(((Add) ws).getTravelPlanId());
-            // setTpsId(((Add) ws).getTravelPlanSegmentId());
-            // setTcgId(((Add) ws).getTravelComponentGroupingId());
-            // setTcId(((Add) ws).getTravelComponentId());
-            // }
+        }
+    }
+
+    public TicketsHelper(String environment, WebService ws) {
+        if (!isValid(environment)) {
+            throw new AutomationException("The environment field cannot be null or empty.");
+        } else {
+            setEnvironment(environment);
+        }
+        if (!isValid(ws)) {
+            throw new AutomationException("The book object cannot be null.");
+        } else {
+            setWs(ws);
         }
     }
 
     public void determineTicketCode(String ticketDescription) {
-        findTicketPriceGridByPackage();
+        if (isValid(packageCode)) {
+            findTicketPriceGridByPackage();
+        } else {
+            setTicketGroupName("634");
+        }
 
         GetTicketProducts get = getTicketProducts(ticketDescription);
         setCode(get.getCodeByTicketDescription(ticketDescription));
@@ -255,6 +261,7 @@ public class TicketsHelper {
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("title"));
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("firstName"));
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("lastName"));
+        bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("middleName"));
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("partyId"));
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("doNotMailIndicator"));
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("doNotPhoneIndicator"));
@@ -309,6 +316,8 @@ public class TicketsHelper {
     public void setTickets(String ticketDescription, Guest guest) {
         if (!isValid(getCode())) {
             determineTicketCode(ticketDescription);
+        } else {
+
         }
         determineBaseInfo();
 
@@ -336,6 +345,7 @@ public class TicketsHelper {
         bs.setRequestNodeValueByXPath(baseXpath + "/title", guest.getTitle());
         bs.setRequestNodeValueByXPath(baseXpath + "/firstName", guest.getFirstName());
         bs.setRequestNodeValueByXPath(baseXpath + "/lastName", guest.getLastName());
+        bs.setRequestNodeValueByXPath(baseXpath + "/middleName", guest.getMiddleName());
         bs.setRequestNodeValueByXPath(baseXpath + "/partyId", guest.getPartyId());
         bs.setRequestNodeValueByXPath(baseXpath + "/doNotMailIndicator", "0");
         bs.setRequestNodeValueByXPath(baseXpath + "/doNotPhoneIndicator", "0");

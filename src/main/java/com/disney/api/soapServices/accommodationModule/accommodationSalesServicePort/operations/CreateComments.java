@@ -187,5 +187,4 @@ public class CreateComments extends AccommodationSalesServicePort {
     public String getCommentType() {
         return getResponseNodeValueByXPath("/Envelope/Body/createCommentsResponse/response/commentsInfo/commentType");
     }
-
 }

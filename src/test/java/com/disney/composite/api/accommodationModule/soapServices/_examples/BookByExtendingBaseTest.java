@@ -141,7 +141,8 @@ public class BookByExtendingBaseTest extends AccommodationBaseTest {
         TestReporter.logStep("Validate reservation details: TC_GST");
         sql = sql.replace("c.*", "d.*");
         Recordset tcGstRs = new Recordset(db.getResultSet(sql));
-        // tcGstRs.print();i = 0;
+        // tcGstRs.print();
+        i = 0;
         do {
             i++;
             TestReporter.log("Validating record [" + i + "].");

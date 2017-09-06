@@ -23,6 +23,7 @@ public class TestCancel_RSR extends AccommodationBaseTest {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
         setEnvironment(environment);
+        isComo.set("false");
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
@@ -41,8 +42,11 @@ public class TestCancel_RSR extends AccommodationBaseTest {
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "Verify that a cancellation number was returned.");
@@ -91,7 +95,6 @@ public class TestCancel_RSR extends AccommodationBaseTest {
         CancelHelper cancelHelper = new CancelHelper(removeCM(environment), getBook().getTravelPlanId());
         cancelHelper.verifyChargeGroupsCancelled();
         cancelHelper.verifyCancellationIsFoundInResHistory(getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
-        // cancelHelper.verifyCancellationComment(getRetrieve(), "Air not available CancellationNumber : " + cancel.getCancellationNumber());
         cancelHelper.verifyNumberOfCharges(1);
         cancelHelper.verifyInventoryReleased(getBook().getTravelComponentGroupingId());
         cancelHelper.verifyNumberOfTpPartiesByTpId(1);
@@ -101,8 +104,6 @@ public class TestCancel_RSR extends AccommodationBaseTest {
         cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 0);
         cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
-        // Verify the reasonID matches the reason code used for the given TCId
-        // cancelHelper.verifyProductReasonID(getBook().getTravelComponentId());
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());

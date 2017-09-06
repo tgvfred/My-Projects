@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -8,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -21,7 +23,7 @@ public class Checkout_roomOnly_DVC extends BookDVCCashHelper {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
 
         setUseDvcResort(true);
         setCheckingIn(true);
@@ -31,6 +33,11 @@ public class Checkout_roomOnly_DVC extends BookDVCCashHelper {
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_DVC() {
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
+            }
+        }
 
         TestReporter.logScenario("Test Book DVC");
         TestReporter.log("Travel Plan ID: " + book.get().getTravelPlanId());

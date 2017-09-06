@@ -16,6 +16,7 @@ public class Test_GetAccommodationExternalReferences_bookingWithNoAccommExtRef e
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -25,6 +26,7 @@ public class Test_GetAccommodationExternalReferences_bookingWithNoAccommExtRef e
         bookReservation();
 
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+        getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 
@@ -50,6 +52,7 @@ public class Test_GetAccommodationExternalReferences_bookingWithNoAccommExtRef e
             if (!clone.getResponseStatusCode().equals("200")) {
                 TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
             }
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(get, true), "Validating Response Comparison");
         }
 
