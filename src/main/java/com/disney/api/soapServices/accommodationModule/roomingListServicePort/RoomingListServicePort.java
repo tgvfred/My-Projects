@@ -5,7 +5,7 @@ import com.disney.api.soapServices.core.BaseSoapService;
 public class RoomingListServicePort extends BaseSoapService {
 
     public RoomingListServicePort(String environment) {
-        setEnvironmentServiceURL("RoomingListServicePort", environment);
+        setEnvironmentServiceURL("RoomingListWSPort", environment);
         setXmlRepo("xml/roomingListServicePort");
     }
 
