@@ -3,18 +3,28 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.UpdateProcessStatusList;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageRoomingListReservationData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
 import com.disney.api.soapServices.accommodationModule.roomingListServicePort.operation.SaveRoomingListTemplate;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class Test_UpdateProcessStatusList_submittedToBooked_roomingList extends AccommodationBaseTest {
+
+    private String extRefVal;
+    private String tcg;
+    private String name;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationBatchComponentWS", "UpdateProcessStatusList" })
     public void testUpdateProcessStatusList_submittedToBooked_roomingList() {
 
+        // Sets up a Rooming List Template for use later on
         SaveRoomingListTemplate save = new SaveRoomingListTemplate(environment);
 
         save.setTemplateName("SomeUniqueName");
@@ -118,12 +128,34 @@ public class Test_UpdateProcessStatusList_submittedToBooked_roomingList extends 
         save.sendRequest();
         TestReporter.logAPI(!save.getResponseStatusCode().equals("200"), "Something got messed up, but here is the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", save);
 
+        // Stages the data for a Room List Reservation
+        StageRoomingListReservationData stage = new StageRoomingListReservationData(environment);
+
+        stage.setProcessName("ROOMINGLIST");
+        stage.setTemplateId(tempId());
+        stage.setReservationNumber(getBook().getTravelPlanSegmentId());
+        stage.setProcessingDate(Randomness.generateCurrentDatetime().substring(0, 10));
+        stage.setRowNumber("1");
+        stage.setCheckShared("true");
+        stage.setRenderFlag("true");
+        stage.setCheckReservation("true");
+        stage.setChecked("true");
+
+        // Remove unneeded nodes
+        stage.setRequestNodeValueByXPath("/Envelope/Body/stageRoomingListReservationData/request/processId", BaseSoapCommands.REMOVE_NODE.toString());
+        stage.setRequestNodeValueByXPath("/Envelope/Body/stageRoomingListReservationData/request/roomingListReservationTOList/inventoryOverrideReasonCode", BaseSoapCommands.REMOVE_NODE.toString());
+        stage.setRequestNodeValueByXPath("/Envelope/Body/stageRoomingListReservationData/request/roomingListReservationTOList/inventoryOverrideContactName", BaseSoapCommands.REMOVE_NODE.toString());
+        stage.setRequestNodeValueByXPath("/Envelope/Body/stageRoomingListReservationData/request/roomingListReservationTOList/reservationDataList", BaseSoapCommands.REMOVE_NODE.toString());
+        stage.setRequestNodeValueByXPath("/Envelope/Body/stageRoomingListReservationData/request/roomingListReservationTOList/errorTOList", BaseSoapCommands.REMOVE_NODE.toString());
+
+        stage.sendRequest();
+        TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Something got messed up, but here is the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", stage);
+
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
         UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
 
-        // update.setProcessDataIdList(helper.retrieveProcRunId(remove.getResponseProcessId()));
-        update.setProcessDataIdList("");
+        update.setProcessDataIdList(helper.retrieveProcRunId(stage.getProcessId()));
         update.setProcessType("ROOMINGLIST");
         update.setProcessingStatus("BOOKED");
         update.setTPSId(getBook().getTravelPlanSegmentId());
@@ -131,7 +163,23 @@ public class Test_UpdateProcessStatusList_submittedToBooked_roomingList extends 
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", update);
 
         // Validations
-        // helper.validationOverall(helper.retrieveProcRunId(remove.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
-        // helper.validationRoomList(helper.retrieveProcRunId(remove.getResponseProcessId()));
+        helper.validationOverall(helper.retrieveProcRunId(stage.getProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
+        helper.validationRoomList(helper.retrieveProcRunId(stage.getProcessId()), getBook().getTravelPlanSegmentId());
+    }
+
+    public String tempId() {
+
+        String sql = "select RM_LIST_TMPL_ID "
+                + "from res_mgmt.rm_list_tmpl a "
+                + "where a.RM_LIST_TMPL_NM = 'SomeUniqueName'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        extRefVal = rs.getValue("RM_LIST_TMPL_ID");
+
+        this.tcg = extRefVal;
+
+        return extRefVal;
     }
 }

@@ -239,7 +239,7 @@ public class UpdateProcessStatusListHelper {
 
     }
 
-    public void validationRoomList(String procRunId) {
+    public void validationRoomList(String procRunId, String res) {
 
         String sql = "select * "
                 + "from res_mgmt.RM_LIST_RES_RUN a "
@@ -249,16 +249,12 @@ public class UpdateProcessStatusListHelper {
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         grpID = rs.getValue("GRP_RES_PROC_RUN_ID");
-        rlID = rs.getValue("RM_LIST_RES_RUN_ID");
         resID = rs.getValue("RES_ID");
-        idCD = rs.getValue("UPDT_USR_ID_CD");
+        idCD = rs.getValue("CREATE_USR_ID_CD");
 
         TestReporter.assertTrue(!(grpID.equals(null)), "Group Reservation Process Run ID is found! [" + grpID + "]");
 
-        TestReporter.assertEquals(rlID, "", "Verify the Room List Reservation Run ID [0] matches the Room List Reservation Run ID found"
-                + " in the DB [" + rlID + "]");
-
-        TestReporter.assertEquals(resID, "", "Verify the Reservation ID [0] matches the Reservation ID found"
+        TestReporter.assertEquals(resID, res, "Verify the Reservation ID [" + res + "] matches the Reservation ID found"
                 + " in the DB [" + resID + "]");
 
         TestReporter.assertEquals(idCD, "AutoJUnit.us", "Verify the ID Code [AutoJUnit.us] matches the ID Code found"
