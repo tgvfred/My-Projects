@@ -3,8 +3,8 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.UpdateProcessStatusList;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.utils.TestReporter;
 
 public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest {
@@ -21,7 +21,7 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.UNEXPECTED_ERROR);
+        validateApplicationError(update, LiloSystemErrorCode.UNEXPECTED_ERROR);
 
     }
 
@@ -37,7 +37,7 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.UNEXPECTED_ERROR);
+        validateApplicationError(update, LiloSystemErrorCode.UNEXPECTED_ERROR);
 
     }
 
@@ -55,7 +55,7 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.UNEXPECTED_ERROR);
+        validateApplicationError(update, LiloSystemErrorCode.UNEXPECTED_ERROR);
 
     }
 }
