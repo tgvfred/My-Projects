@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
@@ -20,9 +20,9 @@ public class TestReinstate_nullRequest_Negative extends AccommodationBaseTest {
         reinstate.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
         reinstate.sendRequest();
 
-        String faultstring = "Required parameters are missing : null";
+        String faultstring = "Required parameters are missing : Missing Required Parameters";
 
-        validateApplicationError(reinstate, LiloResmErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(reinstate, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
         TestReporter.assertEquals(faultstring, reinstate.getFaultString(), "Verify that the fault string [" + reinstate.getFaultString() + "] is that which is expected.[" + faultstring + "]");
 

@@ -5,14 +5,17 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.Cancel;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestReinstate_nullCommunicationChannel_Negative extends AccommodationBaseTest {
 
     Reinstate reinstate;
+    Cancel cancel;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -31,6 +34,12 @@ public class TestReinstate_nullCommunicationChannel_Negative extends Accommodati
     @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodationsales", "negative" })
     public void Test_Reinstate_nullCommunicationChannel_Negative() {
 
+        cancel = new Cancel(environment, "Main");
+        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
+        cancel.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        cancel.sendRequest();
+        TestReporter.assertTrue(cancel.getResponseStatusCode().equals("200"), "Verify that no error occurred cancelling a reservation: " + cancel.getFaultString());
+
         reinstate = new Reinstate(environment, "Main_2");
         reinstate.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
@@ -39,7 +48,7 @@ public class TestReinstate_nullCommunicationChannel_Negative extends Accommodati
 
         String faultstring = "communication Channel is required : null";
 
-        validateApplicationError(reinstate, LiloResmErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
+        validateApplicationError(reinstate, AccommodationErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 
         TestReporter.assertEquals(faultstring, reinstate.getFaultString(), "Verify that the fault string [" + reinstate.getFaultString() + "] is that which is expected.[" + faultstring + "]");
 
