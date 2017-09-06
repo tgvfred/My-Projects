@@ -40,7 +40,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request", BaseSoapCommands.REMOVE_NODE.toString());
         getBook().sendRequest();
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.REQUIRED_PARAMETERS_MISSING);
+        validateApplicationError(getBook(), AccommodationErrorCode.INVALID_REQUEST);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -80,7 +80,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().setRoomDetailsPackageCode(BaseSoapCommands.REMOVE_NODE.toString());
         getBook().sendRequest();
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.PACKAGE_CODE_INVALID);
+        validateApplicationError(getBook(), AccommodationErrorCode.INVALID_PACKAGE_CODE);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -124,7 +124,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.REMOVE_NODE.toString());
         getBook().sendRequest();
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.ROOM_DETAIL_MISSING);
+        validateApplicationError(getBook(), AccommodationErrorCode.INVALID_REQUEST);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -165,7 +165,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.TRAVEL_STATUS_INVALID);
+        validateApplicationError(getBook(), AccommodationErrorCode.INVALID_TRAVEL_STATUS_FOR_SHARE);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -176,7 +176,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.EXTERNAL_REFERENCE_REQUIRED);
+        validateApplicationError(getBook(), AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -188,7 +188,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.INVALID_EXT_REF_DETAILS);
+        validateApplicationError(getBook(), AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -211,7 +211,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED);
+        validateApplicationError(getBook(), AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_EXTERNAL_REFERENCE_CODE_REQUIRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -222,7 +222,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED);
+        validateApplicationError(getBook(), AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_EXTERNAL_REFERENCE_CODE_REQUIRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -234,7 +234,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED);
+        validateApplicationError(getBook(), AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_EXTERNAL_REFERENCE_CODE_REQUIRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -256,7 +256,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
 
         try {
             TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-            validateApplicationError(getBook(), AccommodationErrorCode.CANNOT_BOOK_OR_MOD_DVC);
+            validateApplicationError(getBook(), AccommodationErrorCode.INVALID_REQUEST);
         } finally {
             dvc.cancel(dvc.getFirstBooking().getTravelComponentGroupingId());
         }
@@ -270,7 +270,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.INVALID_GATHERING_DETAIL);
+        validateApplicationError(getBook(), AccommodationErrorCode.NOT_VALID_GATHERING_DETAIL);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -329,7 +329,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
             getBook().sendRequest();
 
             TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-            validateApplicationError(getBook(), AccommodationErrorCode.INVALID_MODIFY_REQUEST);
+            validateApplicationError(getBook(), AccommodationErrorCode.INVALID_REQUEST);
         }
     }
 
@@ -366,7 +366,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
             getBook().sendRequest();
 
             TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-            validateApplicationError(getBook(), AccommodationErrorCode.INVALID_MODIFY_REQUEST);
+            validateApplicationError(getBook(), AccommodationErrorCode.INVALID_REQUEST);
         }
     }
 
@@ -383,7 +383,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.TRAVEL_AGENCY_INVALID);
+        validateApplicationError(getBook(), AccommodationErrorCode.INVALID_TRAVEL_AGENCY);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
@@ -408,7 +408,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
             getBook().sendRequest();
 
             TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-            validateApplicationError(getBook(), AccommodationErrorCode.INVALID_MODIFY_REQUEST);
+            validateApplicationError(getBook(), AccommodationErrorCode.INVALID_REQUEST);
         }
     }
 }

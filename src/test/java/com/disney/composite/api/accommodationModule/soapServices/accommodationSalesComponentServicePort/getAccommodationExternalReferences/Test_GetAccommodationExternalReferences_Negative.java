@@ -36,7 +36,7 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(get, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
@@ -49,7 +49,7 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(get, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
@@ -63,7 +63,7 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.REQUIRED_PARAM_MISSING);
+        validateApplicationError(get, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "GetAccommodationExternalReferences", "negative" })
@@ -89,6 +89,6 @@ public class Test_GetAccommodationExternalReferences_Negative extends Accommodat
         get.sendRequest();
 
         TestReporter.assertEquals(faultString, get.getFaultString(), "Verify that the fault string [" + get.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(get, AccommodationErrorCode.NO_ACCOMM_COMPONENT_EXCEPTION);
+        validateApplicationError(get, AccommodationErrorCode.NO_ACCOMMODATION_FOUND);
     }
 }

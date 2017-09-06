@@ -82,4 +82,6 @@ public class LiloResmErrorCode {
             "Invalid Modify Request");
     public static final ApplicationErrorCode TRAVEL_AGENCY_INVALID = new ApplicationErrorCode(APP_NAME, 7102,
             "Travel Agency is invalid");
+    public static final ApplicationErrorCode TRVL_PLAN_COMPONENT_ID_REQ = new ApplicationErrorCode(APP_NAME, 7037,
+            "Travel Component Id is required");
 }

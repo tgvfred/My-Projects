@@ -28,7 +28,7 @@ public class TestShare_oneTcg_invalidTcg_Negative extends AccommodationBaseTest 
         String faultString = "Accommodations not found : No TravelComponentGrouping found";
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(share, AccommodationErrorCode.ACCOMM_NOT_FOUND);
+        validateApplicationError(share, AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND);
     }
 
 }

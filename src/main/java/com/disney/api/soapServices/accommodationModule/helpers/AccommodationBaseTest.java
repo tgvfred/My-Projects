@@ -149,6 +149,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> mywPackageCode = new ThreadLocal<>();
     private ThreadLocal<Boolean> mywPlusDinePackageCode = new ThreadLocal<>();
     private ThreadLocal<Boolean> addRoom = new ThreadLocal<>();
+    private static String tempEnv;
 
     public void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -839,7 +840,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
-        book.set(new ReplaceAllForTravelPlanSegment(getEnvironment(), "roomOnlyWithoutTickets"));
+        book.set(new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "roomOnlyWithoutTickets"));
 
         if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
             externalRefNumber.set(Randomness.randomNumber(12));
@@ -1276,8 +1277,10 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void setValues() {
         boolean success = false;
         int index;
-        if (getEnvironment() == null) {
-            throw new AutomationException("The environment variable is null.");
+        if (!isValid(tempEnv) && !isValid(getEnvironment())) {
+            throw new AutomationException("The environment variable cannot be null or empty.");
+        } else if (!isValid(tempEnv)) {
+            tempEnv = getEnvironment();
         }
         do {
             try {
@@ -1287,7 +1290,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setLocationId(roomTypeAndFacInfo[index][5]);
 
                 String sql = null;
-                if (Environment.getBaseEnvironmentName(environment).toLowerCase().equals("grumpy")) {
+                if (Environment.getBaseEnvironmentName(tempEnv).toLowerCase().equals("grumpy")) {
                     sql = "select d.WRK_LOC_ID "
                             + "from RSRC_INV.wrk_loc d "
                             + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
@@ -1300,8 +1303,8 @@ public class AccommodationBaseTest extends BaseRestTest {
                             + "and d.TXN_ACCT_CTR_ID is not null "
                             + "order by d.CREATE_DTS asc";
                 }
-                System.out.println();
-                Database db = new Database(FacilityDatabase.getInfo(environment));
+                // System.out.println();
+                Database db = new Database(FacilityDatabase.getInfo(Environment.getBaseEnvironmentName(tempEnv)));
                 Recordset rs = new Recordset(db.getResultSet(sql));
 
                 if (rs.getRowCount() == 0) {
@@ -1317,7 +1320,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setResortCode(ResortInfo.getFacilityCD(ResortColumns.FACILITY_ID, getFacilityId()));
                 setSourceAccountingCenter(ResortInfo.getSourceAccountingCenterId(ResortColumns.FACILITY_ID, getFacilityId()));
 
-                db = new OracleDatabase(getEnvironment(), "DREAMS");
+                db = new OracleDatabase(Environment.getBaseEnvironmentName(tempEnv), "DREAMS");
                 rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getCampusIdByFacilityId().replace("{FAC_ID}", getFacilityId())));
                 setCampusId(rs.getValue("CMPS_ID", 1));
 
@@ -1329,7 +1332,8 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void setValues(String environment) {
-        setEnvironment(environment);
+        // setEnvironment(environment);
+        tempEnv = environment;
         setValues();
     }
 

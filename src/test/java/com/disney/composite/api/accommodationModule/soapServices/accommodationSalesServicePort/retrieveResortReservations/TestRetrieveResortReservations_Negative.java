@@ -1,7 +1,7 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveResortReservations;
 
 import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.INVALID_SEARCH_CRITERIA;
-import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.NO_TP_DATA_FOUND;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT;
 
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
@@ -37,49 +37,49 @@ public class TestRetrieveResortReservations_Negative extends BaseTest {
                 + "and c.prod_typ_nm = 'DiningProduct' "
                 + "where rownum < 100"
                 + "order by dbms_random.value");
-        sendRequestAndValidateApplicationError(tpsID, NO_TP_DATA_FOUND);
+        sendRequestAndValidateApplicationError(tpsID, TRAVEL_PLAN_SEARCH_NO_RESULT);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_Cancelled() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Cancelled");
         String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Cancelled"));
-        sendRequestAndValidateApplicationError(tpsID, NO_TP_DATA_FOUND);
+        sendRequestAndValidateApplicationError(tpsID, TRAVEL_PLAN_SEARCH_NO_RESULT);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_Arrived() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Arrived");
         String tpsID = getTPSIdForQuery(arrivedQueryBuilder("Arrived"));
-        sendRequestAndValidateApplicationError(tpsID, NO_TP_DATA_FOUND);
+        sendRequestAndValidateApplicationError(tpsID, TRAVEL_PLAN_SEARCH_NO_RESULT);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_AutoArrived() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Auto Arrived");
         String tpsID = getTPSIdForQuery(arrivedQueryBuilder("Auto Arrived"));
-        sendRequestAndValidateApplicationError(tpsID, NO_TP_DATA_FOUND);
+        sendRequestAndValidateApplicationError(tpsID, TRAVEL_PLAN_SEARCH_NO_RESULT);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_NoShow() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - No Show");
         String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("No Show"));
-        sendRequestAndValidateApplicationError(tpsID, NO_TP_DATA_FOUND);
+        sendRequestAndValidateApplicationError(tpsID, TRAVEL_PLAN_SEARCH_NO_RESULT);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_PastVisit() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Past Visit");
         String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Past Visit"));
-        sendRequestAndValidateApplicationError(tpsID, NO_TP_DATA_FOUND);
+        sendRequestAndValidateApplicationError(tpsID, TRAVEL_PLAN_SEARCH_NO_RESULT);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_AutoCancelled() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Auto Cancelled");
         String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Auto Cancelled"));
-        sendRequestAndValidateApplicationError(tpsID, NO_TP_DATA_FOUND);
+        sendRequestAndValidateApplicationError(tpsID, TRAVEL_PLAN_SEARCH_NO_RESULT);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
@@ -99,14 +99,14 @@ public class TestRetrieveResortReservations_Negative extends BaseTest {
         TestReporter.assertTrue(results.getRowCount() > 0 && Arrays.asList(results.getArray()[0]).contains("TPS_ID"), "The SQL Query returned a TPS ID");
         String tpsID = results.getValue("TPS_ID");
 
-        sendRequestAndValidateApplicationError(tpsID, NO_TP_DATA_FOUND);
+        sendRequestAndValidateApplicationError(tpsID, TRAVEL_PLAN_SEARCH_NO_RESULT);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_CheckingIn() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Checking In");
         String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Checking In"));
-        sendRequestAndValidateApplicationError(tpsID, NO_TP_DATA_FOUND);
+        sendRequestAndValidateApplicationError(tpsID, TRAVEL_PLAN_SEARCH_NO_RESULT);
     }
 
     /*

@@ -46,7 +46,7 @@ public class TestCreateComments_negative extends AccommodationBaseTest {
         create.sendRequest();
 
         TestReporter.assertEquals(create.getFaultString(), faultString, "Verify that the fault string [" + create.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(create, AccommodationErrorCode.COMMENT_LVL_REQUIRED);
+        validateApplicationError(create, AccommodationErrorCode.CREATE_COMMENTS);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments", "negative" })
@@ -58,7 +58,7 @@ public class TestCreateComments_negative extends AccommodationBaseTest {
         create.sendRequest();
 
         TestReporter.assertEquals(create.getFaultString(), faultString, "Verify that the fault string [" + create.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(create, AccommodationErrorCode.COMMENT_LVL_REQUIRED);
+        validateApplicationError(create, AccommodationErrorCode.CREATE_COMMENTS);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments", "negative" })
@@ -93,7 +93,7 @@ public class TestCreateComments_negative extends AccommodationBaseTest {
         create.sendRequest();
 
         TestReporter.assertEquals(create.getFaultString(), faultString, "Verify that the fault string [" + create.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(create, AccommodationErrorCode.COMMENT_LVL_REQUIRED);
+        validateApplicationError(create, AccommodationErrorCode.CREATE_COMMENTS);
     }
 
 }

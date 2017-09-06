@@ -28,7 +28,7 @@ public class TestCancel_RO_CheckingIn extends AccommodationBaseTest {
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues(Environment.getBaseEnvironmentName(getEnvironment()));
+        setValues();
         bookReservation();
         checkingIn(Environment.getBaseEnvironmentName(getEnvironment()));
     }

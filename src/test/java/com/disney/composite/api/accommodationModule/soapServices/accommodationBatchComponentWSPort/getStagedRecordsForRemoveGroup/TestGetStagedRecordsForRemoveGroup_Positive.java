@@ -2,6 +2,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 
 import java.util.LinkedHashMap;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -47,6 +48,12 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup", "debug" })
     public void TestGetStagedRecordsForRemoveGroup_twoReservations() {
+
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("RS doesn't bring back multiple Records.");
+            }
+        }
         createGroupBooking();
         String firstTcg = getBook().getTravelComponentGroupingId();
         createGroupBooking();

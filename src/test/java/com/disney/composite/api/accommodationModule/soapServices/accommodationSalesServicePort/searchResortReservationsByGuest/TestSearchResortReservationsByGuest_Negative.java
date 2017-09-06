@@ -77,7 +77,8 @@ public class TestSearchResortReservationsByGuest_Negative extends AccommodationB
 
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationByGuest", "negative" })
+    // test
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest", "negative" })
     public void testSearchResortReservationsByGuest_roomOnly_reservationNumberOnly_CheckedOut() {
         String reservationNumber = "471431814399";
         String fault = "No travel plan data found. : NO RESULTS FOUND";
@@ -96,7 +97,7 @@ public class TestSearchResortReservationsByGuest_Negative extends AccommodationB
         searchResortReservationsByGuest.sendRequest();
 
         TestReporter.logAPI(!searchResortReservationsByGuest.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + searchResortReservationsByGuest.getFaultString() + " ]", searchResortReservationsByGuest);
-        validateApplicationError(searchResortReservationsByGuest, AccommodationErrorCode.NO_TP_DATA_FOUND);
+        validateApplicationError(searchResortReservationsByGuest, AccommodationErrorCode.TRAVEL_PLAN_SEARCH_NO_RESULT);
 
     }
 

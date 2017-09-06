@@ -58,7 +58,7 @@ public class TestShare_twoTcg_wholesaler_Negative extends AccommodationBaseTest 
         String faultString = "Accommodation is invalid for Share : Wholesaler reservations should not be shared";
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(share, AccommodationErrorCode.ACCOMM_INVALID_FOR_SHARE);
+        validateApplicationError(share, AccommodationErrorCode.ACCOMMODATION_INVALID_FOR_SHARE);
 
     }
 
