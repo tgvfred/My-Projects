@@ -354,6 +354,10 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode TRAVEL_COMPONENT_GUEST_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7147,
             "Travel Component Guest not found");
 
+    private static final String MODULE_NAME = "Accommodation-Sales-Batch-Service";
+
+    public static final ApplicationErrorCode INVALID_RQ = new ApplicationErrorCode(MODULE_NAME, 9020,
+            "INVALID REQUEST !");
     /*
      * private static final String APP_NAME = "LILO FOLIO";
      *
