@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.UpdateProcessStatusList;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest {
@@ -14,7 +15,7 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
 
         String faultString = "Unexpected Error occurred : updateProcessStatusList : java.lang.NullPointerException";
 
-        UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
+        UpdateProcessStatusList update = new UpdateProcessStatusList(Environment.getBaseEnvironmentName(environment), "Main");
 
         update.setProcessDataIdList("20269510");
         update.setProcessingStatus("BOOKED");
@@ -30,7 +31,7 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
 
         String faultString = "Unexpected Error occurred : updateProcessStatusList : java.lang.NullPointerException";
 
-        UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
+        UpdateProcessStatusList update = new UpdateProcessStatusList(Environment.getBaseEnvironmentName(environment), "Main");
 
         update.setProcessDataIdList("20269510");
         update.setProcessType("MASS_CANCEL");
@@ -47,7 +48,7 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
 
         String faultString = "Unexpected Error occurred : updateProcessStatusList : java.lang.NullPointerException";
 
-        UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
+        UpdateProcessStatusList update = new UpdateProcessStatusList(Environment.getBaseEnvironmentName(environment), "Main");
 
         update.setProcessDataIdList("20274595");
         update.setProcessType("ROOMINGLIST");
