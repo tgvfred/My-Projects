@@ -49,7 +49,7 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
 
         UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
 
-        update.setProcessDataIdList("20264762");
+        update.setProcessDataIdList("20274595");
         update.setProcessType("ROOMINGLIST");
         update.setProcessingStatus("BOOKED");
         update.sendRequest();

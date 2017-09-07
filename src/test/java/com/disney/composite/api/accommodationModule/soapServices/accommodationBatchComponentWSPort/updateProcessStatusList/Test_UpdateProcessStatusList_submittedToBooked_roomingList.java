@@ -151,6 +151,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_roomingList extends 
         stage.sendRequest();
         TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Something got messed up, but here is the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", stage);
 
+        // Update Process Status List call
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
         UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
