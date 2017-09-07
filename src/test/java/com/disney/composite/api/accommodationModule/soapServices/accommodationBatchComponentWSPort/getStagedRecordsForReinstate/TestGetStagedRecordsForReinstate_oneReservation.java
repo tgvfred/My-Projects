@@ -20,7 +20,7 @@ public class TestGetStagedRecordsForReinstate_oneReservation extends Accommodati
     public void Test_GetStagedRecordsForReinstate_oneReservation() {
 
         // stage reinstate transactions.
-        stage = new StageMassReinstateTransactional(environment, "Main");
+        stage = new StageMassReinstateTransactional(Environment.getBaseEnvironmentName(environment), "Main");
         stage.setTcg(getBook().getTravelComponentGroupingId());
         stage.setTpId(getBook().getTravelPlanId());
         stage.sendRequest();
@@ -40,18 +40,18 @@ public class TestGetStagedRecordsForReinstate_oneReservation extends Accommodati
         validateResponseReturnNode();
         validations();
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            GetStagedRecordsForReinstate clone = (GetStagedRecordsForReinstate) stageReinstate.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(stageReinstate, true), "Validating Response Comparison");
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // GetStagedRecordsForReinstate clone = (GetStagedRecordsForReinstate) stageReinstate.clone();
+        // clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+        // clone.sendRequest();
+        // if (!clone.getResponseStatusCode().equals("200")) {
+        // TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+        // }
+        // clone.addExcludedBaselineAttributeValidations("@xsi:nil");
+        // clone.addExcludedBaselineAttributeValidations("@xsi:type");
+        // clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+        // TestReporter.assertTrue(clone.validateResponseNodeQuantity(stageReinstate, true), "Validating Response Comparison");
+        // }
     }
 
     public void validateResponseReturnNode() {
@@ -64,16 +64,16 @@ public class TestGetStagedRecordsForReinstate_oneReservation extends Accommodati
 
     public void validations() {
 
-        String communicationChannel = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/communicationchannel");
-        String overrideFreeze = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/roomdetails/overideFreeze");
-        String rsrReservation = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/roomdetails/rsrReservation");
-        String tcgId = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/roomdetails/travelComponentGroupingId");
-        String shared = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/roomdetails/shared");
-        String salesChannel = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/saleschannel");
-        String tpsId = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/travelPlanSegmentId");
-        String reinstateReasonCode = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateReasonCode");
-        String isCancelFeeWaived = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/isCancelFeeWaived");
-        String contactName = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/contactName");
+        String communicationChannel = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateRequest/communicationchannel");
+        String overrideFreeze = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateRequest/roomdetails/overideFreeze");
+        String rsrReservation = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateRequest/roomdetails/rsrReservation");
+        String tcgId = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateRequest/roomdetails/travelComponentGroupingId");
+        String shared = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateRequest/roomdetails/shared");
+        String salesChannel = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateRequest/saleschannel");
+        String tpsId = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateRequest/travelPlanSegmentId");
+        String reinstateReasonCode = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateRequest/reinstateReasonCode");
+        String isCancelFeeWaived = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateRequest/isCancelFeeWaived");
+        String contactName = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return/reinstateRequest/contactName");
 
         TestReporter.softAssertEquals(communicationChannel, "Guest Facing", "Verify that the response returns the communication channel [" + communicationChannel + "] that is expected [Guest Facing].");
         TestReporter.softAssertEquals(overrideFreeze, "false", "Verify that the response returns the override freeze [" + overrideFreeze + "] that is expected [false].");

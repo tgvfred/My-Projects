@@ -3,9 +3,9 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestGetStagedRecordsForReinstate_nullProcessDataId extends AccommodationBaseTest {
@@ -15,25 +15,30 @@ public class TestGetStagedRecordsForReinstate_nullProcessDataId extends Accommod
     @Test(groups = { "api", "regression", "getStagedRecordsForReinstate", "accommodation" })
     public void Test_GetStagedRecordsForReinstate_nullProcessDataId() {
 
+        String faultString = "INVALID REQUEST ! : Process Data Id Required";
+
         // get staged records for reinstate.
         stageReinstate = new GetStagedRecordsForReinstate(environment, "Main");
         stageReinstate.setRequestNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstate/processDataId", BaseSoapCommands.REMOVE_NODE.toString());
         stageReinstate.sendRequest();
-        TestReporter.logAPI(!stageReinstate.getResponseStatusCode().equals("200"), "Verify that no error occurred getting staged records for reinstate: " + stageReinstate.getFaultString(), stageReinstate);
-        validateResponseReturnNode();
+        TestReporter.assertEquals(faultString, stageReinstate.getFaultString(), "Verify that the fault string [" + stageReinstate.getFaultString() + "] is that which is expected.[" + faultString + "]");
+        validateApplicationError(stageReinstate, AccommodationErrorCode.INVALID_RQ);
+        // TestReporter.logAPI(!stageReinstate.getResponseStatusCode().equals("200"), "Verify that no error occurred getting staged records for reinstate: " +
+        // stageReinstate.getFaultString(), stageReinstate);
+        // validateResponseReturnNode();
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            GetStagedRecordsForReinstate clone = (GetStagedRecordsForReinstate) stageReinstate.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(stageReinstate, true), "Validating Response Comparison");
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // GetStagedRecordsForReinstate clone = (GetStagedRecordsForReinstate) stageReinstate.clone();
+        // clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+        // clone.sendRequest();
+        // if (!clone.getResponseStatusCode().equals("200")) {
+        // TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+        // }
+        // clone.addExcludedBaselineAttributeValidations("@xsi:nil");
+        // clone.addExcludedBaselineAttributeValidations("@xsi:type");
+        // clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+        // TestReporter.assertTrue(clone.validateResponseNodeQuantity(stageReinstate, true), "Validating Response Comparison");
+        // }
 
     }
 

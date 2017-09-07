@@ -354,9 +354,13 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode TRAVEL_COMPONENT_GUEST_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7147,
             "Travel Component Guest not found");
 
+    private static final String MODULE_NAME = "Accommodation-Sales-Batch-Service";
+
+    public static final ApplicationErrorCode INVALID_RQ = new ApplicationErrorCode(MODULE_NAME, 9020,
+            "INVALID REQUEST !");
     /*
      * private static final String APP_NAME = "LILO FOLIO";
-     * 
+     *
      * public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS = new ApplicationErrorCode(APP_NAME, 2901,
      * " Missing required fields. ");
      * public static final ApplicationErrorCode RESERVATION_MISSING_REQ_FIELDS_POST_REFUND_REQUEST = new ApplicationErrorCode(APP_NAME, 2902,
@@ -427,9 +431,9 @@ public class AccommodationErrorCode {
      * "No Travel Plan Found for given TC Id");
      * public static final ApplicationErrorCode ROLLBACK_IMPLEMENTATION_VALIDATION_EXCEPTION = new ApplicationErrorCode(APP_NAME, 2901,
      * " Rollback Implemenation Validation. ");
-     * 
+     *
      * private static final String MOD_NAME = "LILO_RESM";
-     * 
+     *
      * // LILO_RESM errors
      * public static final ApplicationErrorCode SEARCH_CRITERIA_INVALID = new ApplicationErrorCode(MOD_NAME, 7124,
      * "Search Criteria is Invalid");
@@ -457,7 +461,7 @@ public class AccommodationErrorCode {
      * " External Reference Source or Code required ");
      * public static final ApplicationErrorCode CANNOT_CALC_CANCEL_FEE = new ApplicationErrorCode(MOD_NAME, 7080,
      * " Cannot calculate Cancel fee ");
-     * 
+     *
      * public static final ApplicationErrorCode ACCOMMODATION_COMPONENT_NOT_FOUND = new ApplicationErrorCode(MOD_NAME, 9083,
      * " Accommodation Component not found ");
      * public static final ApplicationErrorCode NO_ACCOMMODATION_COMPONENT_EXCEPTION = new ApplicationErrorCode(MOD_NAME, 7177,
@@ -466,19 +470,19 @@ public class AccommodationErrorCode {
      * " Travel Plan Segment Not Found");
      * public static final ApplicationErrorCode TRVL_PLAN_COMPONENT_ID_REQ = new ApplicationErrorCode(MOD_NAME, 7037,
      * "Travel Component Id is required");
-     * 
+     *
      * private static final String APPLICATION = "LILO System";
-     * 
+     *
      * public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode(APPLICATION, 1001,
      * "Unexpected Error occurred");
-     * 
+     *
      * public static final ApplicationErrorCode ACCOMMODATION_INVALID_FOR_SHARE = new ApplicationErrorCode(MOD_NAME, 7130,
      * "Accommodation is invalid for Share");
      * public static final ApplicationErrorCode TRAVEL_STATUS_INVALID_FOR_SHARE = new ApplicationErrorCode(MOD_NAME, 7131,
      * "Travel Status is invalid for Share");
      * public static final ApplicationErrorCode CANNOT_CHANGE_PACKAGE = new ApplicationErrorCode(MOD_NAME, 7208,
      * "Cannot change Block/Resort/Package for an shared Accommodation.");
-     * 
+     *
      * private static final String MODULE_NAME = "Accommodation Sales";
      * public static final ApplicationErrorCode PACKAGE_CODE_INVALID = new ApplicationErrorCode(MODULE_NAME, 7104,
      * "Package Code is invalid");
