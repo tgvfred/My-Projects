@@ -1,9 +1,9 @@
-package com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation;
+package com.disney.api.soapServices.accommodationModule.roomingListServicePort.operation;
 
-import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.AccommodationBatchServicePort;
+import com.disney.api.soapServices.accommodationModule.roomingListServicePort.RoomingListServicePort;
 import com.disney.utils.XMLTools;
 
-public class RetrieveAvailableFields extends AccommodationBatchServicePort {
+public class RetrieveAvailableFields extends RoomingListServicePort {
     public RetrieveAvailableFields(String environment) {
         super(environment);
 
