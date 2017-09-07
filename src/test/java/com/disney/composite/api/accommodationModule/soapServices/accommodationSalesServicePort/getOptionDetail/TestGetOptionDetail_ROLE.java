@@ -25,8 +25,8 @@ public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "OptionKV")
-    public void testGetOptionDetail_ROLE(String args) {
-        System.out.println(args);
+    public void testGetOptionDetail_ROLE(String data, String data2) {
+
         // String optionKey = "";
         // int numberOfOptionKeys = 0;
         // int numberOfOptionValues = 0;
@@ -56,6 +56,7 @@ public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
 
     @DataProvider
     public Object[][] OptionKV() {
+
         GetOptions getOptions = new GetOptions(Environment.getBaseEnvironmentName(environment));
         getOptions.setOptionType("ROLE");
         getOptions.sendRequest();
@@ -63,23 +64,21 @@ public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
         System.out.println(getOptions.getRequest());
         TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "testing]", getOptions);
 
-        String OptionKey = "";
-        String OptionK[] = new String[23];
+        String OptionKey;
+        String OptionK[] = new String[21];
         String OptionV, OptionV2 = "";
         int numberOfOptionKeys = 0;
-        // int numberOfOptionValues = 0;
+
         numberOfOptionKeys = getOptions.getNumberOfResponseNodesByXPath("/Envelope/Body/getOptionsResponse/return/optionKey");
 
         System.out.println(numberOfOptionKeys);
         for (int index = 1; index <= numberOfOptionKeys; index++) {
             // int index = 1;
             OptionKey = getOptions.getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return[" + index + "]/optionKey");
-            // OptionV = getOptions.getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return[" + 1 + "]/optionValue");
-            // OptionK2 = getOptions.getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return[" + 2 + "]/optionKey");
-            // OptionV2 = getOptions.getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return[" + 2 + "]/optionKey");
+            OptionV = getOptions.getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return[" + index + "]/optionValue");
 
-            OptionK[index] = OptionKey;
-            // index++;
+            OptionK[index - 1] = OptionKey;
+
         }
 
         System.out.println(Arrays.toString(OptionK));
