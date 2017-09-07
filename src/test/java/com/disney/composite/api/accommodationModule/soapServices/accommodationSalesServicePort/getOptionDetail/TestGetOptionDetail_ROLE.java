@@ -1,6 +1,7 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.getOptionDetail;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -14,6 +15,8 @@ import com.disney.utils.TestReporter;
 
 public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
 
+    Map<String, String> allPairs = new HashMap<String, String>();
+
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -24,9 +27,10 @@ public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
 
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "OptionKV")
-    public void testGetOptionDetail_ROLE(String data, String data2) {
-
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
+    public void testGetOptionDetail_ROLE(String key, String value) {
+        System.out.println(key);
+        System.out.println(value);
         // String optionKey = "";
         // int numberOfOptionKeys = 0;
         // int numberOfOptionValues = 0;
@@ -54,9 +58,8 @@ public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
 
     }
 
-    @DataProvider
+    @DataProvider(name = "dp", parallel = true)
     public Object[][] OptionKV() {
-
         GetOptions getOptions = new GetOptions(Environment.getBaseEnvironmentName(environment));
         getOptions.setOptionType("ROLE");
         getOptions.sendRequest();
@@ -64,11 +67,11 @@ public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
         System.out.println(getOptions.getRequest());
         TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "testing]", getOptions);
 
-        String OptionKey;
-        String OptionK[] = new String[21];
+        String OptionKey = "";
+        // String OptionK[] = new String[23];
         String OptionV, OptionV2 = "";
         int numberOfOptionKeys = 0;
-
+        // int numberOfOptionValues = 0;
         numberOfOptionKeys = getOptions.getNumberOfResponseNodesByXPath("/Envelope/Body/getOptionsResponse/return/optionKey");
 
         System.out.println(numberOfOptionKeys);
@@ -77,13 +80,21 @@ public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
             OptionKey = getOptions.getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return[" + index + "]/optionKey");
             OptionV = getOptions.getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return[" + index + "]/optionValue");
 
-            OptionK[index - 1] = OptionKey;
-
+            allPairs.put(OptionKey, OptionV);
         }
 
-        System.out.println(Arrays.toString(OptionK));
-        return new Object[][] { OptionK };
-        // String[][] testData = { { OptionK, OptionV }, { OptionK2, OptionV2 }
+        System.out.println(allPairs.values());
+
+        Object[][] objKeyValue = new Object[allPairs.size()][2];
+        int i = 0;
+        for (String key : allPairs.keySet()) {
+            objKeyValue[i][0] = key;
+            objKeyValue[i][1] = allPairs.get(key);
+            i++;
+        }
+
+        return objKeyValue;
 
     }
+
 }
