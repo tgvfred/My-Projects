@@ -488,6 +488,41 @@ public class ReinstateHelper {
 
     }
 
+    public String validateTPV3SalesOrderAccomm(int numExpectedRecords11, String slsOrderArrivalDate, String slsOrderDepartDate) {
+        TestReporter.logStep("Verify the TPV3 sales order");
+        String salesOrder = null;
+        String sql = "select * from sales_tp.sls_ord a where a.tp_id = '" + tpID + "'";
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.SALESTP);
+        Recordset rs = null;
+
+        int tries = 0;
+        int maxTries = 60;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            rs = new Recordset(db.getResultSet(sql));
+            if (rs.getValue("SLS_ORD_STS_NM").equals("Booked")) {
+                success = true;
+            }
+            tries++;
+        } while (tries < maxTries && !success);
+
+        TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords11, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords11 + "].");
+
+        do {
+            salesOrder = rs.getValue("SLS_ORD");
+            TestReporter.softAssertEquals(rs.getValue("TP_ID"), tpID, "Verify the TP id [" + rs.getValue("TP_ID") + "] matches the TP id in the DB [" + tpID + "].");
+            TestReporter.softAssertEquals(rs.getValue("SLS_ORD_STS_NM"), "Booked", "Verify the sales order status [" + rs.getValue("SLS_ORD_STS_NM") + "] matches the sales order status in the DB [Booked]");
+            TestReporter.softAssertEquals(rs.getValue("SLS_ORD_ARVL_DT").split(" ")[0], slsOrderArrivalDate, "Verify the arrival date [" + rs.getValue("SLS_ORD_ARVL_DT").split(" ")[0] + "] matches the arrival date in the DB [" + slsOrderArrivalDate + "].");
+            TestReporter.softAssertEquals(rs.getValue("SLS_ORD_DPRT_DT").split(" ")[0], slsOrderDepartDate, "Verify the departure date [" + rs.getValue("SLS_ORD_DPRT_DT").split(" ")[0] + "] matches the departure date in the DB [" + slsOrderDepartDate + "].");
+            rs.moveNext();
+        } while (rs.hasNext());
+
+        TestReporter.assertAll();
+        return salesOrder;
+
+    }
+
     public void validateTPSReservationStatus(int numExpectedRecords12, String tpsCancelDate, String travelStatus, String tpsCancelNumber, String tpsArrivalDate, String tpsDepartureDate) {
         TestReporter.logStep("Verify the TPS reservation status");
         String sql = "select a.* from res_mgmt.tps a where a.tp_id = '" + tpID + "'";
@@ -583,6 +618,100 @@ public class ReinstateHelper {
             } else {
                 TestReporter.softAssertTrue(rs.getValue("FAC_ID").equals("0"), "Verify the facility ID [" + rs.getValue("FAC_ID") + "] is [0].");
                 TestReporter.softAssertTrue(rs.getValue("ASGN_OWN_ID").equals("0"), "Verify the asgnOwnId [" + rs.getValue("ASGN_OWN_ID") + "] is [0].");
+
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+
+        TestReporter.assertAll();
+    }
+
+    public void validateTCReservationStatusForTCG(int numExpectedRecords14, String tcID, String tcStartDate, String tcEndDate, String salesChannelId, String travelStatus, String facilityId, String tcGroupNumber) {
+        TestReporter.logStep("Verify the TC reservation status");
+        String sql = "select c.* from res_mgmt.tps a left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb where a.tp_id = '" + tpID + "' and c.tc_grp_nb = " + tcGroupNumber;
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = null;
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            rs = new Recordset(db.getResultSet(sql));
+            do {
+                if (rs.getValue("TC_TYP_NM").equalsIgnoreCase("AccommodationComponent")) {
+                    if (rs.getValue("FAC_ID").equals(facilityId) && !rs.getValue("ASGN_OWN_ID").equals("NULL")) {
+                        success = true;
+                    }
+                }
+                tries++;
+                rs.moveNext();
+            } while (rs.hasNext());
+        } while (tries < maxTries && !success);
+
+        TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
+
+        rs.moveFirst();
+        do {
+            TestReporter.softAssertEquals(rs.getValue("TC_GRP_NB"), tcGroupNumber, "Verify the TC group number [" + rs.getValue("TC_GRP_NB") + "] matches the TC group number in the DB [" + tcGroupNumber + "].");
+            TestReporter.softAssertEquals(rs.getValue("TC_STRT_DTS").split(" ")[0], tcStartDate, "Verify the start date [" + rs.getValue("TC_STRT_DTS").split(" ")[0] + "] matches the start date in the DB [" + tcStartDate + "].");
+            TestReporter.softAssertEquals(rs.getValue("TC_END_DTS").split(" ")[0], tcEndDate, "Verify the departure date [" + rs.getValue("TC_END_DTS").split(" ")[0] + "] matches the departure date in the DB [" + tcEndDate + "].");
+            TestReporter.softAssertEquals(rs.getValue("SLS_CHAN_ID"), salesChannelId, "Verify the sales channel id [" + rs.getValue("SLS_CHAN_ID") + "] matches the sales channel id in the DB [" + salesChannelId + "].");
+            TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatus, "Verify the travel status [" + rs.getValue("TRVL_STS_NM") + "] matches the travel status in the DB [" + travelStatus + "].");
+            if (rs.getValue("TC_TYP_NM").equalsIgnoreCase("AccommodationComponent")) {
+                TestReporter.softAssertEquals(rs.getValue("TC_ID"), tcID, "Verify the TC id [" + rs.getValue("TC_ID") + "] matches the TC id in the DB [" + tcID + "].");
+                TestReporter.softAssertEquals(rs.getValue("FAC_ID"), facilityId, "Verify the facility ID [" + rs.getValue("FAC_ID") + "] matches the facility ID in the DB [" + facilityId + "].");
+                TestReporter.softAssertTrue(!rs.getValue("ASGN_OWN_ID").equals("NULL"), "Verify the asgnOwnId [" + rs.getValue("ASGN_OWN_ID") + "] is not [NULL].");
+            } else {
+                TestReporter.softAssertTrue(rs.getValue("FAC_ID").equals("0"), "Verify the facility ID [" + rs.getValue("FAC_ID") + "] is [0].");
+                TestReporter.softAssertTrue(rs.getValue("ASGN_OWN_ID").equals("0"), "Verify the asgnOwnId [" + rs.getValue("ASGN_OWN_ID") + "] is [0].");
+
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+
+        TestReporter.assertAll();
+    }
+
+    public void validateTCReservationStatusForTCGs(int numExpectedRecords14, String tcID, String tcStartDate, String tcEndDate, String salesChannelId, String travelStatus, String facilityId, String tcGroupNumber) {
+        TestReporter.logStep("Verify the TC reservation status");
+        String sql = "select c.* from res_mgmt.tps a left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb where a.tp_id = '" + tpID + "' and c.tc_grp_nb = " + tcGroupNumber;
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = null;
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            rs = new Recordset(db.getResultSet(sql));
+            do {
+                if (rs.getValue("TC_TYP_NM").equalsIgnoreCase("AccommodationComponent")) {
+                    if (rs.getValue("FAC_ID").equals(facilityId) && !rs.getValue("ASGN_OWN_ID").equals("NULL")) {
+                        success = true;
+                    }
+                }
+                tries++;
+                rs.moveNext();
+            } while (rs.hasNext());
+        } while (tries < maxTries && !success);
+
+        TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
+
+        rs.moveFirst();
+        do {
+            TestReporter.softAssertEquals(rs.getValue("TC_GRP_NB"), tcGroupNumber, "Verify the TC group number [" + rs.getValue("TC_GRP_NB") + "] matches the TC group number in the DB [" + tcGroupNumber + "].");
+            TestReporter.softAssertEquals(rs.getValue("TC_STRT_DTS").split(" ")[0], tcStartDate, "Verify the start date [" + rs.getValue("TC_STRT_DTS").split(" ")[0] + "] matches the start date in the DB [" + tcStartDate + "].");
+            TestReporter.softAssertEquals(rs.getValue("TC_END_DTS").split(" ")[0], tcEndDate, "Verify the departure date [" + rs.getValue("TC_END_DTS").split(" ")[0] + "] matches the departure date in the DB [" + tcEndDate + "].");
+            TestReporter.softAssertEquals(rs.getValue("SLS_CHAN_ID"), salesChannelId, "Verify the sales channel id [" + rs.getValue("SLS_CHAN_ID") + "] matches the sales channel id in the DB [" + salesChannelId + "].");
+            TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatus, "Verify the travel status [" + rs.getValue("TRVL_STS_NM") + "] matches the travel status in the DB [" + travelStatus + "].");
+            if (rs.getValue("TC_TYP_NM").equalsIgnoreCase("AccommodationComponent")) {
+                TestReporter.softAssertEquals(rs.getValue("TC_ID"), tcID, "Verify the TC id [" + rs.getValue("TC_ID") + "] matches the TC id in the DB [" + tcID + "].");
+                TestReporter.softAssertEquals(rs.getValue("FAC_ID"), facilityId, "Verify the facility ID [" + rs.getValue("FAC_ID") + "] matches the facility ID in the DB [" + facilityId + "].");
+                TestReporter.softAssertTrue(!rs.getValue("ASGN_OWN_ID").equals("NULL"), "Verify the asgnOwnId [" + rs.getValue("ASGN_OWN_ID") + "] is not [NULL].");
+            } else {
+                TestReporter.softAssertTrue(rs.getValue("FAC_ID").equals("NULL"), "Verify the facility ID [" + rs.getValue("FAC_ID") + "] is [NULL].");
+                TestReporter.softAssertTrue(rs.getValue("ASGN_OWN_ID").equals("NULL"), "Verify the asgnOwnId [" + rs.getValue("ASGN_OWN_ID") + "] is [NULL].");
 
             }
             rs.moveNext();
