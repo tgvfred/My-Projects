@@ -27,6 +27,7 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList_submitOne ex
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(environment);
+        isComo.set("false");
         bookReservation();
 
         book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
