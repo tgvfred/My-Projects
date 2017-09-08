@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="AccommodationModule_Suite" parallel="methods" thread-count="25" configfailurepolicy="continue">
 	<parameter name="environment" value="${environment}" />
-	<test name="AccommodationModule" parallel="methods" thread-count="5">
+	<test name="AccommodationModule_checkout" parallel="methods" thread-count="5">
 		<groups>
 			<run>
 				<exclude name="presmoke"/>
@@ -10,6 +10,7 @@
 				<exclude name="dev"/>
 				<!-- <exclude name="debug"/> -->
 				<include name="checkout"></include>
+				<exclude name="example"></exclude>
 			</run>
 		</groups>
 		<packages>
@@ -23,7 +24,8 @@
 				<exclude name="smoke"/>					
 				<exclude name="dev"/>
 				<!-- <exclude name="debug"/> -->
-				<include name="checkout"></include>
+				<exclude name="checkout"></exclude>
+				<exclude name="example"></exclude>
 			</run>
 		</groups>
 		<packages>

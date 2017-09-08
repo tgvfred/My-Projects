@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.AddAccommodationHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
@@ -23,6 +24,7 @@ public class TestCancel_addAccomm_checkInOne_cancelOne_tcgOnly extends Accommoda
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
         setEnvironment(environment);
+        isComo.set("true");
         daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
@@ -33,9 +35,9 @@ public class TestCancel_addAccomm_checkInOne_cancelOne_tcgOnly extends Accommoda
         setIsADA(false);
         bookReservation();
 
-        helper = new AddAccommodationHelper(getEnvironment(), getBook());
+        helper = new AddAccommodationHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook());
         helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
-        CheckInHelper checkInHelper = new CheckInHelper(getEnvironment(), helper.getWs());
+        CheckInHelper checkInHelper = new CheckInHelper(Environment.getBaseEnvironmentName(getEnvironment()), helper.getWs());
         checkInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
     }
 
@@ -43,13 +45,16 @@ public class TestCancel_addAccomm_checkInOne_cancelOne_tcgOnly extends Accommoda
     public void testCancel_addAccomm_checkInOne_cancelOne_tcgOnly() {
         TestReporter.logScenario("Test Cancel RO ADA");
 
-        String faultString = " Accommodation should be in Booked status to be cancelled : null";
+        String faultString = " Accommodation should be in Booked status to be cancelled :";
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
         cancel.sendRequest();
-        TestReporter.assertEquals(cancel.getFaultString(), faultString, "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(cancel, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS);
+        TestReporter.assertTrue(cancel.getFaultString().contains(faultString), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(cancel, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_CANCELLED);
         // TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(),
         // cancel);
         // TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");

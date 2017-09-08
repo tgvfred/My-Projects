@@ -23,6 +23,7 @@ public class TestCancel_Guaranteed extends AccommodationBaseTest {
     public void setup(String environment) {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
+        isComo.set("false");
         setEnvironment(environment);
         daysOut.set(0);
         nights.set(1);
@@ -36,14 +37,17 @@ public class TestCancel_Guaranteed extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
-    public void testCancel_addAccomm_cancelOne_tcgOnly() {
-        TestReporter.logScenario("Test Cancel RO ADA");
+    public void testCancel_Guaranteed() {
+        TestReporter.logScenario("Test Cancel Guaranteed");
 
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "Verify that a cancellation number was returned.");
@@ -51,11 +55,7 @@ public class TestCancel_Guaranteed extends AccommodationBaseTest {
 
         retrieveReservation();
         TestReporter.setAssertFailed(false);
-        TestReporter.softAssertEquals(
-                getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/cancelDate").split("T")[0], DateTimeConversion.ConvertToDateYYYYMMDD("0"),
-                "Verify that the cancel date [" + getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/cancelDate").split("T")[0] + "] is that which is expected [" + DateTimeConversion.ConvertToDateYYYYMMDD("0") + "].");
-        TestReporter.softAssertEquals(getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/cancellationNumber"),
-                cancel.getCancellationNumber(),
+        TestReporter.softAssertEquals(getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/cancellationNumber"), cancel.getCancellationNumber(),
                 "Verify that the cancellation number [" + getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/cancellationNumber") + "] is that which is expected [" + cancel.getCancellationNumber() + "].");
         int index = 0;
         int numAuditDetails;

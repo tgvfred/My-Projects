@@ -21,6 +21,9 @@ public class Test_SearchPackage_packageCodeOnly extends AccommodationBaseTest {
 
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setPackageCode("H333E");
+        if (Environment.isSpecialEnvironment(environment)) {
+            search.setSalesChannelIDs("40748164");
+        }
         search.sendRequest();
         TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", search);
 
@@ -36,8 +39,6 @@ public class Test_SearchPackage_packageCodeOnly extends AccommodationBaseTest {
             }
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(search, true), "Validating Response Comparison");
         }

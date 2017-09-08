@@ -1,5 +1,4 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
-//package com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,14 +25,14 @@ public class AddAccommodationHelper {
     private Add add;
 
     public Add getAdd() {
-		return add;
-	}
+        return add;
+    }
 
-	public void setAdd(Add add) {
-		this.add = add;
-	}
+    public void setAdd(Add add) {
+        this.add = add;
+    }
 
-	public String getEnvironment() {
+    public String getEnvironment() {
         return environment;
     }
 
@@ -144,11 +143,11 @@ public class AddAccommodationHelper {
         if (ws instanceof Book) {
             setTpId(((Book) ws).getTravelPlanId());
             setTpsId(((Book) ws).getTravelPlanSegmentId());
-        }else if (ws instanceof ReplaceAllForTravelPlanSegment) {
+        } else if (ws instanceof ReplaceAllForTravelPlanSegment) {
             setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
             setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
-        }else{
-        	throw new AutomationException("The WebService object was not of a type supported by this class.");
+        } else {
+            throw new AutomationException("The WebService object was not of a type supported by this class.");
         }
     }
 

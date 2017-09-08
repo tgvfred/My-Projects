@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -8,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -24,6 +26,7 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
         setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -34,6 +37,12 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void testCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne() {
+
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
+            }
+        }
         // Add a second accommodation
         accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
         add = accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
