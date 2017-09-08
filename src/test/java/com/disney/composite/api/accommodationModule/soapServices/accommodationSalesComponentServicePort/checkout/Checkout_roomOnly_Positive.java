@@ -140,7 +140,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         validateChargeGroupsChargesAndFolio();
     }
 
-    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
+    @Test(groups = { "api", "regression", "checkout", "Accommodation"/* , "debug" */ })
     public void TestCheckout_roomOnly_ECERR() {
 
         helper = new CheckInHelper(getEnvironment(), getBook());
@@ -388,6 +388,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+        rs.print();
         TestReporter.softAssertTrue(rs.getRowCount() == 1, "Verify that 1 record was returned.");
         TestReporter.softAssertTrue(rs.getValue("AUTO_ASGN_RSRC_ID").equals("NULL"), "Verify that the auto asign resource ID [" + rs.getValue("AUTO_ASGN_RSRC_ID") + "] is null.");
         TestReporter.softAssertTrue(rs.getValue("OWNR_STS_NM").equals("COMPLETED"), "Verify that the owner status [" + rs.getValue("OWNR_STS_NM") + "] is that which is expected [COMPLETED].");
