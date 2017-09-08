@@ -3,11 +3,11 @@
 <suite name="Checkout_roomOnly_Positive" parallel="methods" thread-count="5" configfailurepolicy="continue">
 	<parameter name="environment" value="latest" />
 	<test name="Checkout_roomOnly_Positive">
-		<groups>
+		<!-- <groups>
 			<run>
 				<include name="debug"></include>
 			</run>
-		</groups>
+		</groups> -->
 		<classes>
 			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout.Checkout_roomOnly_Positive'></class>
 		</classes>

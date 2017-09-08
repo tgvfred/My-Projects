@@ -34,6 +34,7 @@ public class Checkout_Cancel extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
+        isComo.set("false");
         bookReservation();
     }
 

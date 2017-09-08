@@ -54,7 +54,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         }
     }
 
-    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
+    @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void TestCheckout_roomOnly_BEREAV() {
         if (Environment.isSpecialEnvironment(environment)) {
             if (true) {
@@ -65,7 +65,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 5;
+        int maxTries = 15;
         boolean success = false;
         do {
             try {
@@ -110,7 +110,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         validateChargeGroupsChargesAndFolio();
     }
 
-    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
+    @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void TestCheckout_roomOnly_DOMDISP() {
 
         if (Environment.isSpecialEnvironment(environment)) {
@@ -121,7 +121,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 5;
+        int maxTries = 15;
         boolean success = false;
         do {
             try {
@@ -166,7 +166,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         validateChargeGroupsChargesAndFolio();
     }
 
-    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
+    @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void TestCheckout_roomOnly_DUPRES() {
 
         if (Environment.isSpecialEnvironment(environment)) {
@@ -177,7 +177,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 5;
+        int maxTries = 15;
         boolean success = false;
         do {
             try {
@@ -222,7 +222,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         validateChargeGroupsChargesAndFolio();
     }
 
-    @Test(groups = { "api", "regression", "checkout", "Accommodation"/* , "debug" */ })
+    @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void TestCheckout_roomOnly_ECERR() {
 
         if (Environment.isSpecialEnvironment(environment)) {
@@ -233,7 +233,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 5;
+        int maxTries = 15;
         boolean success = false;
         do {
             try {
@@ -290,7 +290,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 5;
+        int maxTries = 15;
         boolean success = false;
         do {
             try {
@@ -346,7 +346,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 5;
+        int maxTries = 15;
         boolean success = false;
         do {
             try {
@@ -403,7 +403,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 5;
+        int maxTries = 15;
         boolean success = false;
         do {
             try {
@@ -460,7 +460,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 5;
+        int maxTries = 15;
         boolean success = false;
         do {
             try {
@@ -517,7 +517,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 5;
+        int maxTries = 15;
         boolean success = false;
         do {
             try {
@@ -574,7 +574,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         bundleHelper.addBundle(getBook().getTravelPlanId(), getDaysOut());
 
         int tries = 0;
-        int maxTries = 5;
+        int maxTries = 15;
         boolean success = false;
         do {
             try {
