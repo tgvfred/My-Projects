@@ -33,6 +33,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
+        isComo.set("false");
         bookReservation();
     }
 
@@ -564,11 +565,11 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void TestCheckout_bundle() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-            }
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // if (true) {
+        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+        // }
+        // }
         AddBundleHelper bundleHelper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         bundleHelper.addBundle(getBook().getTravelPlanId(), getDaysOut());
 
@@ -609,7 +610,9 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         checkout.setCheckoutDate(checkoutDate);
         checkout.setLocationId(locationId);
         checkout.sendRequest();
+        TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), checkout.getFaultString(), checkout);
 
+        Sleeper.sleep(5000);
         String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
         validateRIM(assignOwnerId);
         additionalValidations_Bundle(assignOwnerId);
