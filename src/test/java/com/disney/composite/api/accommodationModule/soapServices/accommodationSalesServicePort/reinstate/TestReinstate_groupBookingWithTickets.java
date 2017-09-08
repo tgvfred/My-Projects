@@ -8,6 +8,9 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ReinstateHelper;
+import com.disney.api.soapServices.pricingModule.packagingService.operations.FindMiscPackages;
+import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
+import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
@@ -15,44 +18,94 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.date.DateTimeConversion;
 
-public class TestReinstate_addBundle extends AccommodationBaseTest {
+public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest {
 
     private Cancel cancel;
     Reinstate reinstate;
     String TCG;
     private String travelStatus = "Booked";
     private String tpsCancelDate = Randomness.generateCurrentDatetime().split(" ")[0];
+    private HouseHold hh;
+    private AddBundle add;
+    private RetrieveDetailsByTravelPlanId details;
+    private int arrivalDaysOut = 0;
+    private int departureDaysOut = 4;
+    private String firstBundleTcg;
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        String locEnv;
+        if (environment.toLowerCase().contains("_cm")) {
+            locEnv = environment.toLowerCase().replace("_cm", "");
+        } else {
+            locEnv = environment;
+        }
+
+        setEnvironment(locEnv);
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setAddTickets(true);
+        setIsLibgoBooking(true);
         isComo.set("true");
-        setIsBundle(true);
+        // retrieveReservation();
         bookReservation();
 
-        TCG = getBook().getTravelComponentGroupingId();
+        details = new RetrieveDetailsByTravelPlanId(locEnv, "Main");
+        details.setTravelPlanId(getBook().getTravelPlanId());
+        details.sendRequest();
+        TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
+
+        add = new AddBundle(locEnv, "Main");
+        add.setGuestsGuestNameFirstName(getHouseHold().primaryGuest().getFirstName());
+        add.setGuestsGuestNameLastName(getHouseHold().primaryGuest().getLastName());
+        add.setGuestsGuestReferenceId(details.getGuestsId());
+        add.setGuestsId(details.getGuestsId());
+        add.setPackageBundleRequestsBookDate(Randomness.generateCurrentXMLDate(arrivalDaysOut));
+        add.setPackageBundleRequestsContactName(getHouseHold().primaryGuest().getFirstName() + " " + getHouseHold().primaryGuest().getLastName());
+        add.setPackageBundleRequestsEndDate(Randomness.generateCurrentXMLDate(departureDaysOut - 2) + "T00:00:00");
+        add.setPackageBundleRequestsSalesOrderItemGuestsGUestReferenceId(details.getGuestsId());
+        add.setPackageBundleRequestsStartDate(Randomness.generateCurrentXMLDate(arrivalDaysOut + 1) + "T00:00:00");
+        add.setTravelPlanId(getBook().getTravelPlanId());
+        add.retrieveSalesOrderId(getBook().getTravelPlanId());
+        add.setSalesOrderId(add.getBundleSalesOrderIds()[0]);
+
+        FindMiscPackages find = new FindMiscPackages(locEnv, "MinimalInfo");
+        find.setArrivalDate(Randomness.generateCurrentXMLDate(arrivalDaysOut));
+        find.setBookDate(Randomness.generateCurrentXMLDate());
+        find.sendRequest();
+        TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred adding a bundle to TP ID [" + getBook().getTravelPlanId() + "]: " + add.getFaultString());
+        add.setPackageBundleRequestsCode(find.getPackageCode());
+
+        add.sendRequest();
+        TestReporter.assertEquals(add.getResponseStatusCode(), "200", "An error occurred while adding a bundle.\nRequest:\n" + add.getRequest() + "\nResonse:\n" + add.getResponse());
+
+        firstBundleTcg = findBundleTcg(getBook().getTravelPlanId());
+
+        details.sendRequest();
+        TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
+
     }
 
     @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodatoinsales" })
-    public void Test_Reinstate_addBundle() {
-
+    public void Test_Reinstate_groupBookingWithTickets() {
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
 
-        cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
+        Cancel cancel = new Cancel(environment, "MainTickets");
+        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
         cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
+        TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         reinstate = new Reinstate(environment, "Main_2");
         reinstate.setTravelComponentGroupingId(TCG);
@@ -156,7 +209,11 @@ public class TestReinstate_addBundle extends AccommodationBaseTest {
         int numExpectedRecords11 = 1;
         reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), Randomness.generateCurrentXMLDate(getNights() + 1));
 
-        reinstateHelper.validateTCFee(true, 1);
+        reinstateHelper.validateTCFee(false, 0);
+
+        // int numExpectedRecords14 = 25;
+        reinstateHelper.validateTCReservationStatusCancelledAdmission(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "1", "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
+
     }
 
 }

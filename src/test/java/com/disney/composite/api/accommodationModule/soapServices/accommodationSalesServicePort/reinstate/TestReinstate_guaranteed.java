@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ReinstateHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
@@ -16,7 +17,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestReinstate_addBundle extends AccommodationBaseTest {
+public class TestReinstate_guaranteed extends AccommodationBaseTest {
 
     private Cancel cancel;
     Reinstate reinstate;
@@ -35,19 +36,19 @@ public class TestReinstate_addBundle extends AccommodationBaseTest {
         setDepartureDate(getNights());
         setValues(getEnvironment());
         isComo.set("true");
-        setIsBundle(true);
+        setIsWdtcBooking(true);
         bookReservation();
 
         TCG = getBook().getTravelComponentGroupingId();
     }
 
     @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodatoinsales" })
-    public void Test_Reinstate_addBundle() {
+    public void Test_Reinstate_guaranteed() {
 
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
 
-        cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
+        Cancel cancel = new Cancel(environment, "Main");
+        cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
         cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
