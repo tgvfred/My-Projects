@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="GetOptionDetail_LOCATOR_TYPE" parallel="methods" data-provider-thread-count="10" thread-count="10">
+	<parameter name="environment" value="latest" />
+	<test name="GetOptionDetail_LOCATOR_TYPE">
+		<classes>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.getOptionDetail.TestGetOptionDetail_LOCATOR_TYPE" />
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
