@@ -15,7 +15,7 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
 
         String faultString = "Unexpected Error occurred : updateProcessStatusList : java.lang.NullPointerException";
 
-        UpdateProcessStatusList update = new UpdateProcessStatusList(Environment.getBaseEnvironmentName(environment), "Main");
+        UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
 
         update.setProcessDataIdList("20269510");
         update.setProcessingStatus("BOOKED");
@@ -31,7 +31,7 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
 
         String faultString = "Unexpected Error occurred : updateProcessStatusList : java.lang.NullPointerException";
 
-        UpdateProcessStatusList update = new UpdateProcessStatusList(Environment.getBaseEnvironmentName(environment), "Main");
+        UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
 
         update.setProcessDataIdList("20269510");
         update.setProcessType("MASS_CANCEL");
