@@ -104,15 +104,15 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
         cancelHelper.verifyChargeGroupsCancelled();
         cancelHelper.verifyCancellationIsFoundInResHistory(getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
         // cancelHelper.verifyCancellationComment(getRetrieve(), "Air not available CancellationNumber : " + cancel.getCancellationNumber());
-        cancelHelper.verifyNumberOfCharges(0);
+        cancelHelper.verifyNumberOfCharges(1);
         cancelHelper.verifyInventoryReleased(getBook().getTravelComponentGroupingId());
         cancelHelper.verifyNumberOfTpPartiesByTpId(2);
         cancelHelper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Cancelled");
         cancelHelper.verifyExchangeFeeFound(false);
         cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 1);
         cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 2);
-        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 0);
-        cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
+        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
+        cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 1);
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(book.getTravelComponentId());
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
@@ -123,7 +123,7 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
         cancelHelper = new CancelHelper(removeCM(environment), helper.getTpId());
         cancelHelper.verifyChargeGroupsCancelled();
         cancelHelper.verifyCancellationNotFoundInResHistory(helper.getTpsId(), helper.getTcgId(), helper.getTcId());
-        cancelHelper.verifyNumberOfCharges(0);
+        cancelHelper.verifyNumberOfCharges(1);
         cancelHelper.setInventoryReleased(false);
         cancelHelper.verifyInventoryReleased(helper.getTcgId());
         cancelHelper.verifyTcStatusByTcg(helper.getTcgId(), "Booked");
