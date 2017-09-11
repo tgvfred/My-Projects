@@ -42,7 +42,7 @@ public class TestGetOptionDetail_LANGUAGE extends AccommodationBaseTest {
         getOptionDetail.sendRequest();
         TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "An error occurred getting option details: " + getOptionDetail.getFaultString(), getOptionDetail);
         TestReporter.assertTrue(getOptionDetail.getOptionKey().equals(key.split(",")[0]), "The response Option KEY [" + getOptionDetail.getOptionKey() + "] matches the PartyService getOptions key [" + key.split(",")[0] + "].");
-        TestReporter.assertTrue(getOptionDetail.getOptionValue().equals(value.split(",")[0]), "The response Option VALUE [" + getOptionDetail.getOptionValue() + "] matches the PartyService getOptions value [" + value.split(",")[0] + "].");
+        TestReporter.assertTrue(getOptionDetail.getOptionValue().contains(value.split(",")[0]), "The response Option VALUE [" + getOptionDetail.getOptionValue() + "] matches the PartyService getOptions value [" + value.split(",")[0] + "].");
         TestReporter.assertAll();
 
     }
