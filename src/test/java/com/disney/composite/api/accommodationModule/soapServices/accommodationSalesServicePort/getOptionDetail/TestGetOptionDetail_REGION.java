@@ -54,7 +54,7 @@ public class TestGetOptionDetail_REGION extends AccommodationBaseTest {
         getOptions.sendRequest();
         System.out.println(getOptions.getResponse());
         System.out.println(getOptions.getRequest());
-        TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "testing]", getOptions);
+        TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "Error with request", getOptions);
 
         String OptionKey = "";
         String OptionV = "";
