@@ -6,7 +6,6 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.GetOptionDetail;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -28,7 +27,7 @@ public class TestGetOptionDetail_LOCATOR_TYPE extends AccommodationBaseTest {
     }
 
     // accommodation sales request grabs data providers from party service response
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
+    // @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_LOCATOR_TYPE(String key, String value) {
 
         // System.out.println(key);

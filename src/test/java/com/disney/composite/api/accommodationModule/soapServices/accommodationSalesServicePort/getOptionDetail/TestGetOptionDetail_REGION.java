@@ -10,9 +10,11 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.GetOptionDetail;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.partyServicePort.operations.GetOptions;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestGetOptionDetail_REGION extends AccommodationBaseTest {
     Map<String, String> allPairs = new HashMap<String, String>();
@@ -30,10 +32,6 @@ public class TestGetOptionDetail_REGION extends AccommodationBaseTest {
     // accommodation sales request grabs data providers from party service response
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_REGION(String key, String value) {
-
-        // System.out.println(key);
-        // System.out.println(value);
-
         GetOptionDetail getOptionDetail = new GetOptionDetail(environment);
         getOptionDetail.setAccommodationSalesOptionsEnum("REGION");
 
@@ -42,7 +40,7 @@ public class TestGetOptionDetail_REGION extends AccommodationBaseTest {
         getOptionDetail.sendRequest();
         TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "An error occurred getting option details: " + getOptionDetail.getFaultString(), getOptionDetail);
         TestReporter.assertTrue(getOptionDetail.getOptionKey().equals(key.split(",")[0]), "The response Option KEY [" + getOptionDetail.getOptionKey() + "] matches the PartyService getOptions key [" + key.split(",")[0] + "].");
-        TestReporter.assertTrue(getOptionDetail.getOptionValue().equals(value.split(",")[0]), "The response Option VALUE [" + getOptionDetail.getOptionValue() + "] matches the PartyService getOptions value [" + value.split(",")[0] + "].");
+        TestReporter.assertTrue(getOptionDetail.getOptionValue().equals(value), "The response Option VALUE [" + getOptionDetail.getOptionValue() + "] matches the PartyService getOptions value [" + value + "].");
         TestReporter.assertAll();
 
     }
@@ -50,40 +48,30 @@ public class TestGetOptionDetail_REGION extends AccommodationBaseTest {
     // grabs the GetOptions operation from the Party Service Port and sends a request to get a key and value pair
     @DataProvider(name = "dp", parallel = true)
     public Object[][] OptionKV() {
-        GetOptions getOptions = new GetOptions(Environment.getBaseEnvironmentName(environment));
-        getOptions.setOptionType("REGION");
-        getOptions.sendRequest();
-        System.out.println(getOptions.getResponse());
-        System.out.println(getOptions.getRequest());
-        TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "Error in the Party Service request. Response status code not 200.", getOptions);
-
-        String OptionKey = "";
-        String OptionV = "";
-        int numberOfOptionKeys = 0;
-
-        numberOfOptionKeys = getOptions.getNumberOfResponseNodesByXPath("/Envelope/Body/getOptionsResponse/return/optionKey");
-        System.out.println(numberOfOptionKeys);
-
-        for (int index = 1; index <= numberOfOptionKeys; index++) {
-
-            OptionKey = getOptions.getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return[" + index + "]/optionKey");
-            OptionV = getOptions.getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return[" + index + "]/optionValue");
-
-            allPairs.put(OptionKey, OptionV);
-        }
-
-        System.out.println(allPairs.values());
-
-        Object[][] objKeyValue = new Object[allPairs.size()][2];
+        String sql = "select rgn_cd, PRMY_SUB_DIV_NM "
+                + "from guest.rgn "
+                + "where rgn_cd in ( "
+                + "        select rgn_cd "
+                + "        from( "
+                + "                select count(rgn_cd ) rgnCount, rgn_cd "
+                + "                from guest.rgn "
+                + "                group by rgn_cd "
+                + "                order by count(rgn_cd ) desc "
+                + "        ) "
+                + "        where  rgnCount < 2 "
+                + ")";
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        Object[][] objKeyValue = new Object[rs.getRowCount()][2];
         int i = 0;
-        for (String key : allPairs.keySet()) {
-            objKeyValue[i][0] = key;
-            objKeyValue[i][1] = allPairs.get(key);
+        do {
+            objKeyValue[i][0] = rs.getValue("RGN_CD");
+            objKeyValue[i][1] = rs.getValue("PRMY_SUB_DIV_NM");
+            rs.moveNext();
             i++;
-        }
+        } while (rs.hasNext());
 
         return objKeyValue;
-
     }
 
 }
