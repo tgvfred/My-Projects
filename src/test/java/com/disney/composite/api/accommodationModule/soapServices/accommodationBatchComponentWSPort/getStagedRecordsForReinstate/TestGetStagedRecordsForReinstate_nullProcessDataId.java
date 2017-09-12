@@ -23,6 +23,8 @@ public class TestGetStagedRecordsForReinstate_nullProcessDataId extends Accommod
         stageReinstate.sendRequest();
         TestReporter.assertEquals(faultString, stageReinstate.getFaultString(), "Verify that the fault string [" + stageReinstate.getFaultString() + "] is that which is expected.[" + faultString + "]");
         validateApplicationError(stageReinstate, AccommodationErrorCode.INVALID_RQ);
+
+        // Originally was set up as a positive test in the Old service, but in the New service it becomes a negative test
         // TestReporter.logAPI(!stageReinstate.getResponseStatusCode().equals("200"), "Verify that no error occurred getting staged records for reinstate: " +
         // stageReinstate.getFaultString(), stageReinstate);
         // validateResponseReturnNode();
