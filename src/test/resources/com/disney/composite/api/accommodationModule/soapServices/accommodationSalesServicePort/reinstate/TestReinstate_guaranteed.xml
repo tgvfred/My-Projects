@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestReinstate_guaranteed" parallel="methods" thread-count="20">
+<<<<<<< HEAD
 	<parameter name="environment" value="Latest_cm" />
+=======
+	<parameter name="environment" value="Latest_CM" />
+>>>>>>> 2b3eb9e2f7e69ff8f9144797bbebe60488315d57
 	<test name="TestReinstate_guaranteed">
 		<classes>
 			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.reinstate.TestReinstate_guaranteed"/>
