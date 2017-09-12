@@ -32,6 +32,7 @@ public class TestGetOptionDetail_RATE_OVERRIDE_REASON extends AccommodationBaseT
 
     }
 
+    // accommodation sales request grabs data providers from the database
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_INVENTORY_OVERRIDE_OVERRIDE_REASON(String TC_RSN_TYP_NM, String LGCY_RSN_CD, String TC_RSN_NM) {
         System.out.println(TC_RSN_TYP_NM + " " + LGCY_RSN_CD + " " + TC_RSN_NM);
@@ -41,14 +42,14 @@ public class TestGetOptionDetail_RATE_OVERRIDE_REASON extends AccommodationBaseT
 
         getOptionDetail.setOptionKeyVal(LGCY_RSN_CD);
         getOptionDetail.sendRequest();
-        System.out.println(getOptionDetail.getResponse());
-        System.out.println(getOptionDetail.getRequest());
-        TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "Error with request", getOptionDetail);
+        // System.out.println(getOptionDetail.getResponse());
+        // System.out.println(getOptionDetail.getRequest());
+        TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", getOptionDetail);
         TestReporter.assertTrue(getOptionDetail.getOptionValue().equals(TC_RSN_NM), "The response Option Value [" + getOptionDetail.getOptionValue() + "] matches the database TC_RSN_NM [" + TC_RSN_NM + "].");
 
     }
 
-    // grabs the GetOptions operation from the Party Service Port and sends a request to get a key and value pair
+    // grabs the GetOptions operation from the databse and sends a key and value pair
     @DataProvider(name = "dp", parallel = true)
     public Object[][] OptionKV() {
 

@@ -17,7 +17,8 @@ public class TestGetOptionDetail_Negative extends AccommodationBaseTest {
         TestReporter.logScenario("Test - Get Option Detail  - Null Option Key Value");
 
         GetOptionDetail getOptionDetail = new GetOptionDetail(environment);
-
+        // validation
+        // of removing optionKeyValue
         getOptionDetail.setOptionKeyVal(BaseSoapCommands.REMOVE_NODE.toString());
         getOptionDetail.setAccommodationSalesOptionsEnum(deviceType);
         getOptionDetail.sendRequest();
@@ -34,7 +35,8 @@ public class TestGetOptionDetail_Negative extends AccommodationBaseTest {
         TestReporter.logScenario("Test - Get Option Detail - Null Accommodation Sales Options Enum");
 
         GetOptionDetail getOptionDetail = new GetOptionDetail(environment);
-
+        // validation
+        // of removing AccommodationSalesOptionsEnum
         getOptionDetail.setAccommodationSalesOptionsEnum(BaseSoapCommands.REMOVE_NODE.toString());
         getOptionDetail.setOptionKeyVal(optionKeyValue);
         getOptionDetail.sendRequest();

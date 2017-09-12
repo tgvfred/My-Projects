@@ -32,6 +32,7 @@ public class TestGetOptionDetail_SALESCHANNELS extends AccommodationBaseTest {
 
     }
 
+    // accommodation sales request grabs data providers from the database
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_SALESCHANNELS(String SLS_CHAN_ID, String SLS_CHAN_NM) {
         System.out.println(SLS_CHAN_ID + " " + SLS_CHAN_NM);
@@ -41,14 +42,14 @@ public class TestGetOptionDetail_SALESCHANNELS extends AccommodationBaseTest {
 
         getOptionDetail.setOptionKeyVal(SLS_CHAN_ID);
         getOptionDetail.sendRequest();
-        System.out.println(getOptionDetail.getResponse());
-        System.out.println(getOptionDetail.getRequest());
-        TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "Error with request", getOptionDetail);
+        // System.out.println(getOptionDetail.getResponse());
+        // System.out.println(getOptionDetail.getRequest());
+        TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", getOptionDetail);
         TestReporter.assertTrue(getOptionDetail.getOptionValue().equals(SLS_CHAN_NM), "The response Option Value [" + getOptionDetail.getOptionValue() + "] matches the database SLS_CHAN_NM [" + SLS_CHAN_NM + "].");
 
     }
 
-    // grabs the GetOptions operation from the Party Service Port and sends a request to get a key and value pair
+    // grabs the GetOptions operation from the database and sends a key and value pair
     @DataProvider(name = "dp", parallel = true)
     public Object[][] OptionKV() {
 

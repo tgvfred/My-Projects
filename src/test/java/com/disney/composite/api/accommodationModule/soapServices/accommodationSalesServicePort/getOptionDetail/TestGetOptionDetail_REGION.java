@@ -27,6 +27,7 @@ public class TestGetOptionDetail_REGION extends AccommodationBaseTest {
 
     }
 
+    // accommodation sales request grabs data providers from party service response
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_REGION(String key, String value) {
 
@@ -54,7 +55,7 @@ public class TestGetOptionDetail_REGION extends AccommodationBaseTest {
         getOptions.sendRequest();
         System.out.println(getOptions.getResponse());
         System.out.println(getOptions.getRequest());
-        TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "Error with request", getOptions);
+        TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "Error in the Party Service request. Response status code not 200.", getOptions);
 
         String OptionKey = "";
         String OptionV = "";

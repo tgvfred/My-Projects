@@ -27,6 +27,7 @@ public class TestGetOptionDetail_ALTERNATE_COUNTRY_CODE extends AccommodationBas
 
     }
 
+    // accommodation sales request grabs data providers from party service response
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_LANGUAGE(String key, String value) {
 
@@ -35,10 +36,9 @@ public class TestGetOptionDetail_ALTERNATE_COUNTRY_CODE extends AccommodationBas
 
         GetOptionDetail getOptionDetail = new GetOptionDetail(environment);
         getOptionDetail.setAccommodationSalesOptionsEnum("ALTERNATE_COUNTRY_CODE");
-
         getOptionDetail.setOptionKeyVal(key.split(",")[0]);
-
         getOptionDetail.sendRequest();
+
         TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "An error occurred getting option details: " + getOptionDetail.getFaultString(), getOptionDetail);
         TestReporter.assertTrue(getOptionDetail.getOptionKey().equals(key.split(",")[0]), "The response Option KEY [" + getOptionDetail.getOptionKey() + "] matches the PartyService getOptions key [" + key.split(",")[0] + "].");
         TestReporter.assertTrue(getOptionDetail.getOptionValue().equals(value.split(",")[0]), "The response Option VALUE [" + getOptionDetail.getOptionValue() + "] matches the PartyService getOptions value [" + value.split(",")[0] + "].");
@@ -54,7 +54,7 @@ public class TestGetOptionDetail_ALTERNATE_COUNTRY_CODE extends AccommodationBas
         getOptions.sendRequest();
         System.out.println(getOptions.getResponse());
         System.out.println(getOptions.getRequest());
-        TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "testing]", getOptions);
+        TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "Error in the Party Service request. Response status code not 200.", getOptions);
 
         String OptionKey = "";
         String OptionV = "";

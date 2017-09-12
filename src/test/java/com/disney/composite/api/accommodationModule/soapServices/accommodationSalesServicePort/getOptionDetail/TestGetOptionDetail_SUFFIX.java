@@ -27,6 +27,7 @@ public class TestGetOptionDetail_SUFFIX extends AccommodationBaseTest {
 
     }
 
+    // accommodation sales request grabs data providers from party service response
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_SUFFIX(String key, String value) {
 
@@ -46,7 +47,7 @@ public class TestGetOptionDetail_SUFFIX extends AccommodationBaseTest {
 
     }
 
-    // grabs the GetOptions operation from the Party Service Port and sends a request to get a key and value pair
+    // grabs the GetOptions operation from the Party Service Port and sends a request to get the key and value pair
     @DataProvider(name = "dp", parallel = true)
     public Object[][] OptionKV() {
         GetOptions getOptions = new GetOptions(Environment.getBaseEnvironmentName(environment));
@@ -54,7 +55,7 @@ public class TestGetOptionDetail_SUFFIX extends AccommodationBaseTest {
         getOptions.sendRequest();
         System.out.println(getOptions.getResponse());
         System.out.println(getOptions.getRequest());
-        TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "testing]", getOptions);
+        TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "Error in the Party Service request. Response status code not 200.", getOptions);
 
         String OptionKey = "";
         String OptionV = "";
