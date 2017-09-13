@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tran="http://transferobject.service.party.wdw.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tran:getOptions>
+         <!--Optional:-->
+         <optionType>ALTERNATE_COUNTRY_CODE</optionType>
+         <!--Optional:-->
+         <context>
+            <!--Optional:-->
+            <addressRole>?</addressRole>
+            <!--Optional:-->
+            <conversationId>?</conversationId>
+            <!--Optional:-->
+            <messageId>?</messageId>
+            <!--Optional:-->
+            <party1Id>?</party1Id>
+            <!--Optional:-->
+            <party1Type>?</party1Type>
+            <!--Optional:-->
+            <party2Id>?</party2Id>
+            <!--Optional:-->
+            <party2Type>?</party2Type>
+            <!--Optional:-->
+            <pathHostName>?</pathHostName>
+            <!--Optional:-->
+            <pathId>?</pathId>
+            <!--Optional:-->
+            <principalId>?</principalId>
+            <!--Optional:-->
+            <principalMethod>?</principalMethod>
+            <!--Optional:-->
+            <principalRole>?</principalRole>
+            <!--Optional:-->
+            <principalUri>?</principalUri>
+            <!--Optional:-->
+            <principalValue>?</principalValue>
+            <!--Optional:-->
+            <requestTimeStamp>?</requestTimeStamp>
+            <!--Optional:-->
+            <toAddressRole>?</toAddressRole>
+            <!--Optional:-->
+            <userName>?</userName>
+         </context>
+      </tran:getOptions>
+   </soapenv:Body>
+</soapenv:Envelope>

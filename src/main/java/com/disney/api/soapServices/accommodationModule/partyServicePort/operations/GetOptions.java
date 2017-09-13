@@ -1,13 +1,13 @@
-package com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations;
+package com.disney.api.soapServices.accommodationModule.partyServicePort.operations;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.accommodationModule.partyServicePort.PartyServicePort;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 
-public class GetOptions extends AccommodationSalesServicePort {
+public class GetOptions extends PartyServicePort {
     public GetOptions(String environment, String scenario) {
         super(environment);
 
@@ -20,8 +20,15 @@ public class GetOptions extends AccommodationSalesServicePort {
 
     }
 
-    public void setOptionType(String optionType) {
+    public GetOptions(String environment) {
+        super(environment);
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("getOptions")));
+        removeComments();
+        removeWhiteSpace();
+        generateServiceContext();
+    }
 
+    public void setOptionType(String optionType) {
         setRequestNodeValueByXPath("/Envelope/Body/getOptions/optionType", optionType);
     }
 
@@ -29,12 +36,12 @@ public class GetOptions extends AccommodationSalesServicePort {
         setRequestNodeValueByXPath("/Envelope/Body/getOptions/accommodationSalesOptionsEnum", value);
     }
 
-    public String getoptionKey() {
-        return getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/response[1]/optionKey");
+    public String getOptionKey() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return/optionKey");
     }
 
-    public String getoptionValue() {
-        return getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/response[1]/optionValue");
+    public String getOptionValue() {
+        return getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/return/optionValue");
     }
 
     public Map<String, String> getKeyValuePairs() {
