@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UnShare;
@@ -24,11 +23,11 @@ public class TestUnShare_nonAccommodationReseravtion_Negative extends Accommodat
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
     public void Test_unShare_nonAccommodationReseravtion_Negative() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-            }
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // if (true) {
+        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
+        // }
+        // }
         ScheduledEventReservation dining = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
         tpId = dining.getTravelPlanId();
