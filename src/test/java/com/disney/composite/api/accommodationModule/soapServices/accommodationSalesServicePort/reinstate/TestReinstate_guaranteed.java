@@ -24,6 +24,7 @@ public class TestReinstate_guaranteed extends AccommodationBaseTest {
     String TCG;
     private String travelStatus = "Booked";
     private String tpsCancelDate = Randomness.generateCurrentDatetime().split(" ")[0];
+    String cancelNumber;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -54,6 +55,8 @@ public class TestReinstate_guaranteed extends AccommodationBaseTest {
         cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
+
+        cancelNumber = cancel.getCancellationNumber();
 
         reinstate = new Reinstate(environment, "Main_2");
         reinstate.setTravelComponentGroupingId(TCG);
@@ -123,41 +126,44 @@ public class TestReinstate_guaranteed extends AccommodationBaseTest {
         int numExpectedRecords = 3;
         reinstateHelper.validateActiveChargeGroup(numExpectedRecords);
 
-        int numExpectedRecords14 = 2;
-        reinstateHelper.validateTCReservationStatusForTCG(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "1",
+        int numExpectedRecords14 = 13;
+        reinstateHelper.validateTCReservationStatusForTCGFacId(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "3",
                 "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
 
         int numExpectedRecords12 = 1;
-        reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, cancel.getCancellationNumber(), getArrivalDate(), getDepartureDate());
+        reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, cancelNumber, getArrivalDate(), getDepartureDate());
 
-        int numExpectedRecords2 = 5;
+        int numExpectedRecords2 = 13;
         // String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, workLocation);
-        String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, null, 4, 0);
+        String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, null, 13, 0);
 
-        int numExpectedRecords3 = 5;
+        int numExpectedRecords3 = 13;
         // reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3);
-        reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3, 4, 0);
+        reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3, 13, 0);
 
-        int numExpectedRecords4 = 6;
+        int numExpectedRecords4 = 14;
         reinstateHelper.validateFolioStatus(numExpectedRecords4);
 
-        int numExpectedRecords5 = 6;
+        int numExpectedRecords5 = 13;
         reinstateHelper.validateFolioData(numExpectedRecords5);
 
-        int numExpectedRecords6 = 6;
+        int numExpectedRecords6 = 14;
         reinstateHelper.validateFolioItemData(numExpectedRecords6);
 
-        int numExpectedRecords8 = 4;
+        int numExpectedRecords8 = 3;
         reinstateHelper.validateReservationHistoryMultAccomm(numExpectedRecords8, getBook().getTravelComponentId());
         // reinstateHelper.validateReservationHistory(numExpectedRecords8);
 
         int numExpectedRecords10 = 1;
-        reinstateHelper.validateTPV3Records(numExpectedRecords10, getArrivalDate(), Randomness.generateCurrentXMLDate(getNights() + 1));
+        reinstateHelper.validateTPV3Records(numExpectedRecords10, getArrivalDate(), getDepartureDate());
 
         int numExpectedRecords11 = 1;
-        reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), Randomness.generateCurrentXMLDate(getNights() + 1));
+        reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), getDepartureDate());
 
-        reinstateHelper.validateTCFee(true, 1);
+        reinstateHelper.validateTCFee(false, 0);
+
+        int numExpectedRecords9 = 1;
+        reinstateHelper.validateRIM(numExpectedRecords9, getRoomTypeCode());
     }
 
 }

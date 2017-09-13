@@ -170,6 +170,9 @@ public class TestReinstate_twoAccomm_cancelBoth_reinstateOne extends Accommodati
         reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), getDepartureDate());
 
         reinstateHelper.validateTCFee(true, 1);
+        int numExpectedRecords9 = 1;
+
+        reinstateHelper.validateRIM(numExpectedRecords9, getRoomTypeCode());
     }
 
 }
