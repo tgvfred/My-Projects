@@ -17,8 +17,6 @@ import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestReinstate_guaranteed extends AccommodationBaseTest {
-
-    private Cancel cancel;
     Reinstate reinstate;
     String TCG;
     private String travelStatus = "Booked";
