@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationBatchComponentWSPort.getStagedRecordsForReinstate;
 
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
@@ -45,15 +44,10 @@ public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends
     @Test(groups = { "api", "regression", "getStagedRecordsForReinstate", "accommodation" })
     public void Test_GetStagedRecordsForReinstate_twoReservations_oneRequest() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("RS doesn't bring back multiple Records.");
-            }
-        }
         setupData(environment);
 
         // First invocation to stage reinstate transactions.
-        stage = new StageMassReinstateTransactional(environment, "Main_TwoReservations");
+        stage = new StageMassReinstateTransactional(Environment.getBaseEnvironmentName(environment), "Main_TwoReservations");
         stage.setTcg(firstResTCG);
         stage.setTpId(firstResTP);
         stage.sendRequest();
@@ -87,18 +81,18 @@ public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends
         validateResponseReturnNode();
         validations();
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            GetStagedRecordsForReinstate clone = (GetStagedRecordsForReinstate) stageReinstate.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(stageReinstate, true), "Validating Response Comparison");
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // GetStagedRecordsForReinstate clone = (GetStagedRecordsForReinstate) stageReinstate.clone();
+        // clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+        // clone.sendRequest();
+        // if (!clone.getResponseStatusCode().equals("200")) {
+        // TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+        // }
+        // clone.addExcludedBaselineAttributeValidations("@xsi:nil");
+        // clone.addExcludedBaselineAttributeValidations("@xsi:type");
+        // clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+        // TestReporter.assertTrue(clone.validateResponseNodeQuantity(stageReinstate, true), "Validating Response Comparison");
+        // }
     }
 
     public void validateResponseReturnNode() {
@@ -114,16 +108,16 @@ public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends
 
         for (int i = 1; i < returnNodes; i++) {
 
-            String communicationChannel = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/communicationchannel");
-            String overrideFreeze = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/roomdetails/overideFreeze");
-            String rsrReservation = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/roomdetails/rsrReservation");
-            String tcgId = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/roomdetails/travelComponentGroupingId");
-            String shared = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/roomdetails/shared");
-            String salesChannel = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/saleschannel");
-            String tpsId = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/travelPlanSegmentId");
-            String reinstateReasonCode = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateReasonCode");
-            String isCancelFeeWaived = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/isCancelFeeWaived");
-            String contactName = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/contactName");
+            String communicationChannel = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateRequest/communicationchannel");
+            String overrideFreeze = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateRequest/roomdetails/overideFreeze");
+            String rsrReservation = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateRequest/roomdetails/rsrReservation");
+            String tcgId = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateRequest/roomdetails/travelComponentGroupingId");
+            String shared = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateRequest/roomdetails/shared");
+            String salesChannel = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateRequest/saleschannel");
+            String tpsId = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateRequest/travelPlanSegmentId");
+            String reinstateReasonCode = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateRequest/reinstateReasonCode");
+            String isCancelFeeWaived = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateRequest/isCancelFeeWaived");
+            String contactName = stageReinstate.getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForReinstateResponse/return[" + i + "]/reinstateRequest/contactName");
 
             TestReporter.softAssertEquals(communicationChannel, "Guest Facing", "Verify that the response returns the communication channel [" + communicationChannel + "] that is expected [Guest Facing].");
             TestReporter.softAssertEquals(overrideFreeze, "false", "Verify that the response returns the override freeze [" + overrideFreeze + "] that is expected [false].");

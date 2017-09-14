@@ -25,7 +25,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_roomingList extends 
     public void testUpdateProcessStatusList_submittedToBooked_roomingList() {
 
         // Sets up a Rooming List Template for use later on
-        SaveRoomingListTemplate save = new SaveRoomingListTemplate(environment);
+        SaveRoomingListTemplate save = new SaveRoomingListTemplate(Environment.getBaseEnvironmentName(environment));
 
         save.setTemplateName("SomeUniqueName");
         save.setCreatedUpdatedBy("AutoJUnit.user");
@@ -129,7 +129,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_roomingList extends 
         TestReporter.logAPI(!save.getResponseStatusCode().equals("200"), "Something got messed up, but here is the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", save);
 
         // Stages the data for a Room List Reservation
-        StageRoomingListReservationData stage = new StageRoomingListReservationData(environment);
+        StageRoomingListReservationData stage = new StageRoomingListReservationData(Environment.getBaseEnvironmentName(environment));
 
         stage.setProcessName("ROOMINGLIST");
         stage.setTemplateId(tempId());
@@ -151,6 +151,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_roomingList extends 
         stage.sendRequest();
         TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Something got messed up, but here is the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", stage);
 
+        // Update Process Status List call
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
         UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");

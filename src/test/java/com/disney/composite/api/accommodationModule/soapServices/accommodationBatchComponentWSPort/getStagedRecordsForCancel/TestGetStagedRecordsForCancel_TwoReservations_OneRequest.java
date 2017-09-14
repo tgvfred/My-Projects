@@ -35,7 +35,7 @@ public class TestGetStagedRecordsForCancel_TwoReservations_OneRequest extends Ac
         firstResTCG = getBook().getTravelComponentGroupingId();
         firstResTP = getBook().getTravelPlanId();
 
-        StageMassCancelTransactional stageMassCancel = new StageMassCancelTransactional(environment, "Main");
+        StageMassCancelTransactional stageMassCancel = new StageMassCancelTransactional(Environment.getBaseEnvironmentName(environment), "Main");
         stageMassCancel.setCancelContactName(contactName);
         stageMassCancel.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancel.setCancelReasonCode(reasonCode);
@@ -57,7 +57,7 @@ public class TestGetStagedRecordsForCancel_TwoReservations_OneRequest extends Ac
         setValues();
         bookReservation();
 
-        StageMassCancelTransactional stageMassCancelTwo = new StageMassCancelTransactional(environment, "Main");
+        StageMassCancelTransactional stageMassCancelTwo = new StageMassCancelTransactional(Environment.getBaseEnvironmentName(environment), "Main");
         stageMassCancelTwo.setCancelContactName(contactName);
         stageMassCancelTwo.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancelTwo.setCancelReasonCode(reasonCode);

@@ -1,6 +1,7 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
 
 import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -141,7 +142,7 @@ public class UpdateProcessStatusListHelper {
     // Validations
 
     public void validationOverall(String procRunId, String status, String procDate) {
-
+        Sleeper.sleep(10000);
         String sql = "select a.GRP_RES_PROC_RUN_ID, a.GRP_RES_PROC_RUN_STS_NM, a.UPDT_USR_ID_CD, a.GRP_RES_PROC_RUN_DTS "
                 + "from res_mgmt.GRP_RES_PROC_RUN a "
                 + "where a.GRP_RES_PROC_RUN_ID = '" + procRunId + "'";

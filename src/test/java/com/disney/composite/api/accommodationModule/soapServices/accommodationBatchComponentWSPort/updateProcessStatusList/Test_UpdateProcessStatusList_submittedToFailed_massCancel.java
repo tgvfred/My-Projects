@@ -25,7 +25,7 @@ public class Test_UpdateProcessStatusList_submittedToFailed_massCancel extends A
 
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
-        StageMassCancelTransactional cancel = new StageMassCancelTransactional(environment, "Main");
+        StageMassCancelTransactional cancel = new StageMassCancelTransactional(Environment.getBaseEnvironmentName(environment), "Main");
         cancel.setCancelContactName("Cancel Name");
         cancel.setCancelDate("2017-17-07");
         cancel.setCancelReasonCode("AIR");
@@ -51,7 +51,9 @@ public class Test_UpdateProcessStatusList_submittedToFailed_massCancel extends A
         helper.validationMassCancel(helper.retrieveProcRunId(cancel.getResponseProcessId()), getBook().getTravelPlanId(), getBook().getTravelComponentGroupingId());
 
         // Test Case Only Validations
-        validation(helper.retrieveProcRunId(cancel.getResponseProcessId()));
+        // Validation only works in Old Service
+        // validation(helper.retrieveProcRunId(cancel.getResponseProcessId()));
+
     }
 
     // Validations specific for this test case

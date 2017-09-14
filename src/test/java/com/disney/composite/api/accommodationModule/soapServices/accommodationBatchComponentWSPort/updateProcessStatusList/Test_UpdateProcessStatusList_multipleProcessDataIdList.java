@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationBatchCompone
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
@@ -29,12 +30,13 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList extends Acco
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(environment);
+        isComo.set("false");
         bookReservation();
 
-        book = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
+        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "RoomOnlyNoTickets");
         book.sendRequest();
 
-        book1 = new ReplaceAllForTravelPlanSegment(environment, "RoomOnlyNoTickets");
+        book1 = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "RoomOnlyNoTickets");
         book1.sendRequest();
 
     }
@@ -44,7 +46,7 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList extends Acco
 
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
-        StageMassCancelTransactional cancel = new StageMassCancelTransactional(environment, "MainUpPrLst");
+        StageMassCancelTransactional cancel = new StageMassCancelTransactional(Environment.getBaseEnvironmentName(environment), "MainUpPrLst");
         cancel.setProcessName("MASS_CANCEL");
         cancel.setCancelContactName("Cancel Name");
         cancel.setCancelDate("2017-17-07");
