@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.ReinstateHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
@@ -160,13 +159,10 @@ public class TestReinstate_cancelFeeWaived extends AccommodationBaseTest {
         int numExpectedRecords11 = 1;
         reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), getDepartureDate());
 
-        reinstateHelper.validateTCFee(false, 0);
-
         int numExpectedRecords9 = 1;
         reinstateHelper.validateRIM(numExpectedRecords9, getRoomTypeCode());
 
-        CancelHelper cancelHelper = new CancelHelper((environment), getBook().getTravelPlanId());
-        cancelHelper.verifyCancellationFee();
+        reinstateHelper.validateTCFee(false, 0);
 
     }
 

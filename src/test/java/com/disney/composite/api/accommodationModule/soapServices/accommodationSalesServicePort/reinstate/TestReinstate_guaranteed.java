@@ -8,7 +8,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ReinstateHelper;
-import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
@@ -49,7 +48,7 @@ public class TestReinstate_guaranteed extends AccommodationBaseTest {
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
 
         Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
+        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
         cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
@@ -69,6 +68,7 @@ public class TestReinstate_guaranteed extends AccommodationBaseTest {
 
         validations();
         // cancel and reinstate in order to clone on the old service.
+
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
@@ -127,7 +127,7 @@ public class TestReinstate_guaranteed extends AccommodationBaseTest {
         reinstateHelper.validateActiveChargeGroup(numExpectedRecords);
 
         int numExpectedRecords14 = 13;
-        reinstateHelper.validateTCReservationStatusForTCGFacId(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "3",
+        reinstateHelper.validateTCReservationStatusForTCGFacId(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "1",
                 "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
 
         int numExpectedRecords12 = 1;

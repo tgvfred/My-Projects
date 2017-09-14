@@ -158,7 +158,7 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
         int numExpectedRecords13 = 1;
         reinstateHelper.validateTCGReservationStatus(numExpectedRecords13, getBook().getTravelComponentGroupingId());
 
-        reinstateHelper.validateTCFee(false, 0);
+        reinstateHelper.validateTCFee(true, 1);
     }
 
 }

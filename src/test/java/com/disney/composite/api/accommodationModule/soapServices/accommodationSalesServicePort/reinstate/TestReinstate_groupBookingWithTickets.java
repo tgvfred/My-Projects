@@ -34,6 +34,7 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
     private int arrivalDaysOut = 0;
     private int departureDaysOut = 4;
     private String firstBundleTcg;
+    String cancelNumber;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -106,6 +107,7 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
+        cancelNumber = cancel.getCancellationNumber();
 
         reinstate = new Reinstate(environment, "Main_2");
         reinstate.setTravelComponentGroupingId(TCG);
@@ -176,27 +178,27 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
         reinstateHelper.validateActiveChargeGroup(numExpectedRecords);
 
         int numExpectedRecords14 = 12;
-        reinstateHelper.validateTCReservationStatusForTCGFacId(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "3",
+        reinstateHelper.validateTCReservationStatusForTCGFacId(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "1",
                 "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
 
         int numExpectedRecords12 = 1;
-        reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, cancel.getCancellationNumber(), getArrivalDate(), getDepartureDate());
+        reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, cancelNumber, getArrivalDate(), getDepartureDate());
 
-        int numExpectedRecords2 = 5;
+        int numExpectedRecords2 = 11;
         // String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, workLocation);
-        String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, null, 4, 0);
+        String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, null, 11, 0);
 
-        int numExpectedRecords3 = 5;
+        int numExpectedRecords3 = 11;
         // reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3);
-        reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3, 4, 0);
+        reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3, 11, 0);
 
-        int numExpectedRecords4 = 6;
+        int numExpectedRecords4 = 12;
         reinstateHelper.validateFolioStatus(numExpectedRecords4);
 
-        int numExpectedRecords5 = 6;
+        int numExpectedRecords5 = 12;
         reinstateHelper.validateFolioData(numExpectedRecords5);
 
-        int numExpectedRecords6 = 6;
+        int numExpectedRecords6 = 12;
         reinstateHelper.validateFolioItemData(numExpectedRecords6);
 
         int numExpectedRecords8 = 4;
