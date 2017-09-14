@@ -167,6 +167,9 @@ public class TestReinstate_cancelFeeNotWaived extends AccommodationBaseTest {
 
         reinstateHelper.validateTCFee(true, 1);
 
+        int numExpectedRecords9 = 1;
+        reinstateHelper.validateRIM(numExpectedRecords9, getRoomTypeCode());
+
         CancelHelper cancelHelper = new CancelHelper((environment), getBook().getTravelPlanId());
         cancelHelper.verifyCancellationFee();
 

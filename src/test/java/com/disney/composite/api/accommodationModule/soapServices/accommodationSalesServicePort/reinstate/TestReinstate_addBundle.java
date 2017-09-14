@@ -157,6 +157,9 @@ public class TestReinstate_addBundle extends AccommodationBaseTest {
         reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), Randomness.generateCurrentXMLDate(getNights() + 1));
 
         reinstateHelper.validateTCFee(true, 1);
+
+        int numExpectedRecords9 = 1;
+        reinstateHelper.validateRIM(numExpectedRecords9, getRoomTypeCode());
     }
 
 }

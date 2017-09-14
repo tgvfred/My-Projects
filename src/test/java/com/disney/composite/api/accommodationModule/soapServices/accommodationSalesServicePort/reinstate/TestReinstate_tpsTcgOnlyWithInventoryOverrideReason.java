@@ -49,7 +49,7 @@ public class TestReinstate_tpsTcgOnlyWithInventoryOverrideReason extends Accommo
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
 
         Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
+        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
         cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
@@ -173,6 +173,9 @@ public class TestReinstate_tpsTcgOnlyWithInventoryOverrideReason extends Accommo
         reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), getDepartureDate());
 
         reinstateHelper.validateTCFee(true, 1);
+
+        int numExpectedRecords9 = 1;
+        reinstateHelper.validateRIM(numExpectedRecords9, getRoomTypeCode());
     }
 
 }

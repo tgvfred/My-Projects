@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
@@ -45,9 +45,9 @@ public class TestReinstate_dvcCash_Negative extends BookDVCCashHelper {
         reinstate.setTravelPlanSegmentId(getFirstBooking().getTravelPlanSegmentId());
         reinstate.sendRequest();
 
-        String faultstring = "This reservation is not eligible to be Re-instated. Please contact the appropriate Reservation Office, Operations Support or Manager for assistance : DVC Reservation can not be ReInstated";
+        String faultstring = "This reservation is not eligible to be Re-instated. Please contact the appropriate Reservation Office, Operations Support or Manager for assistance : Reservation is Not in Cancelled or AutoCancelled Status";
 
-        validateApplicationError(reinstate, LiloResmErrorCode.NOT_ELIGIBLE_FOR_REINSTATE);
+        validateApplicationError(reinstate, AccommodationErrorCode.REINSTATE_NOT_ALLOWED);
 
         TestReporter.assertEquals(faultstring, reinstate.getFaultString(), "Verify that the fault string [" + reinstate.getFaultString() + "] is that which is expected.[" + faultstring + "]");
 

@@ -49,7 +49,7 @@ public class TestReinstate_tpsOnly_Negative extends AccommodationBaseTest {
         reinstate.setCommChannel(BaseSoapCommands.REMOVE_NODE.toString());
         reinstate.sendRequest();
 
-        String faultstring = "Travel Component Grouping not found : Travel Component grouping Not Found for TCGId - TPSId0 - " + getBook().getTravelPlanSegmentId() + "";
+        String faultstring = "Travel Component Grouping not found : Travel Component grouping Not Found for TCGId - TPSId";
 
         validateApplicationError(reinstate, AccommodationErrorCode.TRAVEL_COMPONENT_GROUPING_NOT_FOUND);
 
