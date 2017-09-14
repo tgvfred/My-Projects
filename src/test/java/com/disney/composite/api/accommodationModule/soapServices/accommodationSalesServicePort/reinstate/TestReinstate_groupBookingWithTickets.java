@@ -18,22 +18,17 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.date.DateTimeConversion;
 
 public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest {
-
-    private Cancel cancel;
     Reinstate reinstate;
     String TCG;
     private String travelStatus = "Booked";
     private String tpsCancelDate = Randomness.generateCurrentDatetime().split(" ")[0];
-    private HouseHold hh;
     private AddBundle add;
     private RetrieveDetailsByTravelPlanId details;
     private int arrivalDaysOut = 0;
     private int departureDaysOut = 4;
-    private String firstBundleTcg;
     String cancelNumber;
 
     @Override
@@ -87,9 +82,6 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
 
         add.sendRequest();
         TestReporter.assertEquals(add.getResponseStatusCode(), "200", "An error occurred while adding a bundle.\nRequest:\n" + add.getRequest() + "\nResonse:\n" + add.getResponse());
-
-        firstBundleTcg = findBundleTcg(getBook().getTravelPlanId());
-
         details.sendRequest();
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
         TCG = getBook().getTravelComponentGroupingId();

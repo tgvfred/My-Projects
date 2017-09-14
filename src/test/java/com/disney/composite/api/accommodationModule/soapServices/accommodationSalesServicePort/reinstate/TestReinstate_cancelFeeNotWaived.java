@@ -20,8 +20,6 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.date.DateTimeConversion;
 
 public class TestReinstate_cancelFeeNotWaived extends AccommodationBaseTest {
-
-    private Cancel cancel;
     Reinstate reinstate;
     String TCG;
     private String travelStatus = "Booked";
