@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -15,20 +16,21 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseTest {
     private CheckInHelper helper;
+    private String locVar;
     // private Book book;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        setEnvironment("latest");
+        locVar = environment;
         bookReservation();
     }
 
@@ -46,7 +48,7 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
         share.sendRequest();
         TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing TCG ID [" + getBook().getTravelComponentGroupingId() + "]: " + share.getFaultString());
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
+        helper = new CheckInHelper(locVar, getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
         helper.checkOut(getLocationId());
 

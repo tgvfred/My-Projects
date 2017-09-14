@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -16,25 +17,27 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne extends AccommodationBaseTest {
     private CheckInHelper helper;
     private AddAccommodationHelper accommHelper;
+    private String locVar;
     // private Book book;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        setEnvironment("latest");
+        locVar = environment; // cm
         bookReservation();
     }
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void testCheckout_roomOnly_multAccomm_checkInOne_checkoutOne() {
+
         /*
          * if (Environment.isSpecialEnvironment(environment)) {
          * if (true) {
@@ -48,7 +51,7 @@ public class TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne extends Acc
                 getLocationId());
 
         // Checkin the first accommodation
-        helper = new CheckInHelper(getEnvironment(), getBook());
+        helper = new CheckInHelper(locVar, getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
         helper.checkOut(getLocationId());
 

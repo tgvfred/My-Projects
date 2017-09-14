@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -18,12 +19,13 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
     private CheckInHelper helper;
     private AddAccommodationHelper accommHelper;
     private Add add;
+    private String locVar;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
@@ -31,6 +33,7 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         setEnvironment("latest");
+        locVar = environment;
         bookReservation();
     }
 
@@ -50,7 +53,7 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
                 getLocationId());
 
         // Checkin the first accommodation
-        helper = new CheckInHelper(getEnvironment(), getBook());
+        helper = new CheckInHelper(locVar, getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         // Checkin and checkout the second accommodation
