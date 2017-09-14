@@ -1168,6 +1168,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             makeFirstNightDeposit();
         }
         retrieveReservation();
+
     }
 
     private void addGuest() {
