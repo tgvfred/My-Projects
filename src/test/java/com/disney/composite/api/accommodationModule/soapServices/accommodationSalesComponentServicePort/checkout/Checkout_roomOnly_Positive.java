@@ -20,12 +20,13 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     private ThreadLocal<CheckInHelper> helper = new ThreadLocal<>();
+    private String locVar;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
@@ -33,7 +34,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         isComo.set("false");
-        setEnvironment("latest");
+        locVar = environment;
         bookReservation();
     }
 
@@ -62,7 +63,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         // }
         // }
 
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+        helper.set(new CheckInHelper(locVar, getBook()));
 
         int tries = 0;
         int maxTries = 15;
@@ -70,7 +71,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             try {
 
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.set(new CheckInHelper(locVar, getBook()));
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
@@ -110,7 +111,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         validateChargeGroupsChargesAndFolio();
     }
 
-    @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
+    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_DOMDISP() {
 
         // if (Environment.isSpecialEnvironment(environment)) {
@@ -118,7 +119,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
         // }
         // }
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+        helper.set(new CheckInHelper(locVar, getBook()));
 
         int tries = 0;
         int maxTries = 15;
@@ -126,7 +127,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             try {
 
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.set(new CheckInHelper(locVar, getBook()));
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
@@ -166,7 +167,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         validateChargeGroupsChargesAndFolio();
     }
 
-    @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
+    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_DUPRES() {
 
         // if (Environment.isSpecialEnvironment(environment)) {
@@ -174,7 +175,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
         // }
         // }
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+        helper.set(new CheckInHelper(locVar, getBook()));
 
         int tries = 0;
         int maxTries = 15;
@@ -182,7 +183,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             try {
 
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.set(new CheckInHelper(locVar, getBook()));
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
@@ -222,7 +223,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         validateChargeGroupsChargesAndFolio();
     }
 
-    @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
+    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_ECERR() {
 
         // if (Environment.isSpecialEnvironment(environment)) {
@@ -230,7 +231,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
         // }
         // }
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+        helper.set(new CheckInHelper(locVar, getBook()));
 
         int tries = 0;
         int maxTries = 15;
@@ -238,7 +239,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             try {
 
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.set(new CheckInHelper(locVar, getBook()));
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
@@ -287,7 +288,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
         // }
         // }
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+        helper.set(new CheckInHelper(locVar, getBook()));
 
         int tries = 0;
         int maxTries = 15;
@@ -295,7 +296,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             try {
 
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.set(new CheckInHelper(locVar, getBook()));
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
@@ -343,7 +344,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
         // }
         // }
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+        helper.set(new CheckInHelper(locVar, getBook()));
 
         int tries = 0;
         int maxTries = 15;
@@ -351,7 +352,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             try {
 
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.set(new CheckInHelper(locVar, getBook()));
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
@@ -400,7 +401,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
         // }
         // }
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+        helper.set(new CheckInHelper(locVar, getBook()));
 
         int tries = 0;
         int maxTries = 15;
@@ -408,7 +409,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             try {
 
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.set(new CheckInHelper(locVar, getBook()));
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
@@ -457,7 +458,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
         // }
         // }
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+        helper.set(new CheckInHelper(locVar, getBook()));
 
         int tries = 0;
         int maxTries = 15;
@@ -465,7 +466,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             try {
 
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.set(new CheckInHelper(locVar, getBook()));
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
@@ -514,7 +515,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
         // }
         // }
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
+        helper.set(new CheckInHelper(locVar, getBook()));
 
         int tries = 0;
         int maxTries = 15;
@@ -522,7 +523,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             try {
 
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.set(new CheckInHelper(locVar, getBook()));
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
@@ -579,7 +580,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             try {
 
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
+                helper.set(new CheckInHelper(locVar, getBook()));
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
