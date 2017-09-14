@@ -164,7 +164,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_roomingList extends 
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", update);
 
         // Validations
-        helper.validationOverall(helper.retrieveProcRunId(stage.getProcessId()), "SUBMITTED", Randomness.generateCurrentDatetime().substring(0, 10));
+        helper.validationOverall(helper.retrieveProcRunId(stage.getProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
         helper.validationRoomList(helper.retrieveProcRunId(stage.getProcessId()), getBook().getTravelPlanSegmentId());
     }
 

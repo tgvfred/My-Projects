@@ -33,7 +33,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_removeGroup extends 
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", update);
 
         // Validations
-        helper.validationOverall(helper.retrieveProcRunId(remove.getResponseProcessId()), "SUBMITTED", Randomness.generateCurrentDatetime().substring(0, 10));
+        helper.validationOverall(helper.retrieveProcRunId(remove.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
         helper.validationRemoveGroup(helper.retrieveProcRunId(remove.getResponseProcessId()), getBook().getTravelComponentGroupingId());
     }
 

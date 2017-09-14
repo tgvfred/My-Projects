@@ -37,7 +37,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_massCancel extends A
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", update);
 
         // Validations
-        helper.validationOverall(helper.retrieveProcRunId(cancel.getResponseProcessId()), "SUBMITTED", Randomness.generateCurrentDatetime().substring(0, 10));
+        helper.validationOverall(helper.retrieveProcRunId(cancel.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
 
         helper.validationMassCancel(helper.retrieveProcRunId(cancel.getResponseProcessId()), getBook().getTravelPlanId(), getBook().getTravelComponentGroupingId());
 

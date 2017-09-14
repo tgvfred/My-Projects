@@ -358,6 +358,9 @@ public class AccommodationErrorCode {
 
     public static final ApplicationErrorCode INVALID_RQ = new ApplicationErrorCode(MODULE_NAME, 9020,
             "INVALID REQUEST !");
+
+    public static final ApplicationErrorCode INVALID_UPDATE_PROCESS_STATUS_RQ = new ApplicationErrorCode(MODULE_NAME, 9015,
+            "Invalid UpdateProcessStatus Request");
     /*
      * private static final String APP_NAME = "LILO FOLIO";
      *
