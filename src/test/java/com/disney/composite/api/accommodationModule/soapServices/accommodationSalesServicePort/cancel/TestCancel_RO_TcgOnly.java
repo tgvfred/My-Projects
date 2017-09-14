@@ -90,14 +90,14 @@ public class TestCancel_RO_TcgOnly extends AccommodationBaseTest {
         CancelHelper cancelHelper = new CancelHelper(removeCM(environment), getBook().getTravelPlanId());
         cancelHelper.verifyChargeGroupsCancelled();
         cancelHelper.verifyCancellationIsFoundInResHistory(getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
-        cancelHelper.verifyNumberOfCharges(0);
+        cancelHelper.verifyNumberOfCharges(1);
         cancelHelper.verifyInventoryReleased(getBook().getTravelComponentGroupingId());
         cancelHelper.verifyNumberOfTpPartiesByTpId(1);
         cancelHelper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Cancelled");
         cancelHelper.verifyExchangeFeeFound(false);
         cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 2);
         cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 0);
-        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 0);
+        cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
