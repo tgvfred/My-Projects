@@ -52,7 +52,7 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
         cancel.sendRequest();
         TestReporter.assertTrue(cancel.getResponseStatusCode().equals("200"), "Verify that no error occurred cancelling a reservation: " + cancel.getFaultString());
 
-        reinstate = new Reinstate(environment, "Main_2");
+        reinstate = new Reinstate(environment, "TCG_TPS_Only");
         reinstate.setTravelComponentGroupingId(TCG);
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         reinstate.sendRequest();

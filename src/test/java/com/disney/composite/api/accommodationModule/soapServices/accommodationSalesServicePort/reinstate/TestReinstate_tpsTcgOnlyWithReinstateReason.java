@@ -24,6 +24,7 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
     private String travelStatus = "Booked";
     private String tpsCancelDate = Randomness.generateCurrentDatetime().split(" ")[0];
     String cancelNumber;
+    String reinstateRsn;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -61,7 +62,7 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         reinstate.sendRequest();
         TestReporter.logAPI(!reinstate.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + reinstate.getFaultString(), reinstate);
-
+        reinstateRsn = reinstate.getRequestNodeValueByXPath("/Envelope/Body/reinstate/request/reinstateReasonCode");
         int numBookedComponents_reinstate = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
         TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate, "Verify that the number of booked components [" + numBookedComponents_reinstate + "] is that which is expected [" + numBookedComponents_book + "].");
 
@@ -121,6 +122,7 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
 
     public void validations() {
         ReinstateHelper reinstateHelper = new ReinstateHelper(environment, getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
+
         int numExpectedRecords = 3;
         reinstateHelper.validateActiveChargeGroup(numExpectedRecords);
 
@@ -162,6 +164,10 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
 
         int numExpectedRecords9 = 1;
         reinstateHelper.validateRIM(numExpectedRecords9, getRoomTypeCode());
+
+        int numExpextedRecords7 = 1;
+        reinstateHelper.validateTCReasons(numExpextedRecords7, getBook().getTravelComponentId(), "Reinstate", "Guest at the Desk", "NULL", reinstateRsn);
+
     }
 
 }

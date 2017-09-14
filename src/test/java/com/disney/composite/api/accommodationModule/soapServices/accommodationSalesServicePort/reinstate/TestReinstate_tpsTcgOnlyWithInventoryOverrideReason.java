@@ -26,6 +26,7 @@ public class TestReinstate_tpsTcgOnlyWithInventoryOverrideReason extends Accommo
     private String travelStatus = "Booked";
     private String tpsCancelDate = Randomness.generateCurrentDatetime().split(" ")[0];
     String cancelNumber;
+    String reinstateRsn;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -75,7 +76,7 @@ public class TestReinstate_tpsTcgOnlyWithInventoryOverrideReason extends Accommo
         }
         reinstate.sendRequest();
         TestReporter.logAPI(!reinstate.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + reinstate.getFaultString(), reinstate);
-
+        reinstateRsn = reinstate.getRequestNodeValueByXPath("/Envelope/Body/reinstate/request/reinstateReasonCode");
         int numBookedComponents_reinstate = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
         TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate, "Verify that the number of booked components [" + numBookedComponents_reinstate + "] is that which is expected [" + numBookedComponents_book + "].");
 
@@ -176,6 +177,10 @@ public class TestReinstate_tpsTcgOnlyWithInventoryOverrideReason extends Accommo
 
         int numExpectedRecords9 = 1;
         reinstateHelper.validateRIM(numExpectedRecords9, getRoomTypeCode());
+
+        int numExpextedRecords7 = 2;
+        reinstateHelper.validateTCReasons(numExpextedRecords7, getBook().getTravelComponentId(), "Reinstate", "Guest at the Desk", "NULL", reinstateRsn);
+
     }
 
 }
