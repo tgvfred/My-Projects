@@ -49,7 +49,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_massModify extends A
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", update);
 
         // Validations
-        helper.validationOverall(helper.retrieveProcRunId(modify.getResponseProcessId()), "SUBMITTED", Randomness.generateCurrentDatetime().substring(0, 10));
+        helper.validationOverall(helper.retrieveProcRunId(modify.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
         helper.validationMassModify(helper.retrieveProcRunId(modify.getResponseProcessId()), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
     }
 }

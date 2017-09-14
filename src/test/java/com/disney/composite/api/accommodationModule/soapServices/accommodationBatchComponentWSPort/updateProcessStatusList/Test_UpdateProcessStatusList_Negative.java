@@ -6,7 +6,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationBatchCompone
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
-import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.utils.TestReporter;
 
 public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest {
@@ -22,11 +21,6 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
         update.setProcessDataIdList("20269510");
         update.setProcessingStatus("BOOKED");
         update.sendRequest();
-        // TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" +
-        // getBook().getTravelComponentGroupingId() + "]", update);
-
-        // Validations
-        // helper.validationOverall("20269510", "FAILED", Randomness.generateCurrentDatetime().substring(0, 10));
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
         validateApplicationError(update, AccommodationErrorCode.INVALID_UPDATE_PROCESS_STATUS_RQ);
@@ -44,32 +38,10 @@ public class Test_UpdateProcessStatusList_Negative extends AccommodationBaseTest
         update.setProcessDataIdList("20269510");
         update.setProcessType("MASS_CANCEL");
         update.sendRequest();
-        // TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" +
-        // getBook().getTravelComponentGroupingId() + "]", update);
-
-        // Validations
-        // helper.validationOverall("20269510", "FAILED", Randomness.generateCurrentDatetime().substring(0, 10));
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
         validateApplicationError(update, AccommodationErrorCode.INVALID_UPDATE_PROCESS_STATUS_RQ);
 
     }
 
-    // May not be valid
-    @Test(groups = { "api", "regression", "accommodation", "accommodationBatchComponentWS", "UpdateProcessStatusList", "negative" })
-    public void testUpdateProcessStatusList_nullTpsId_roomingList() {
-
-        String faultString = "Unexpected Error occurred : updateProcessStatusList : java.lang.NullPointerException";
-
-        UpdateProcessStatusList update = new UpdateProcessStatusList(environment, "Main");
-
-        update.setProcessDataIdList("20274595");
-        update.setProcessType("ROOMINGLIST");
-        update.setProcessingStatus("BOOKED");
-        update.sendRequest();
-
-        TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, LiloSystemErrorCode.UNEXPECTED_ERROR);
-
-    }
 }
