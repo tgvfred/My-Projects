@@ -110,7 +110,7 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.REVENUE_TYPE_NULL_FROM_PRICING);
+        validateApplicationError(retrieve, AccommodationErrorCode.TRAVEL_COMPONENT_GROUPING_NOT_FOUND);
 
     }
 
