@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UnShare;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.TestReporter;
 
@@ -23,9 +23,9 @@ public class TestUnShare_oneTcg_invalidTcg_Negative extends AccommodationBaseTes
         unshare.setTravelComponentGroupingId("1234");
         unshare.sendRequest();
 
-        String faultString = "Travel Component Id is required : InventoryService::getShareChain:No AccommodationComponent object found for TravelComponentGrouping ID: 1234";
+        String faultString = "Accommodations not found : No TravelComponentGrouping found";
 
-        validateApplicationError(unshare, LiloResmErrorCode.TRVL_PLAN_COMPONENT_ID_REQ);
+        validateApplicationError(unshare, AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND);
 
         TestReporter.assertEquals(unshare.getFaultString(), faultString, "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
 
