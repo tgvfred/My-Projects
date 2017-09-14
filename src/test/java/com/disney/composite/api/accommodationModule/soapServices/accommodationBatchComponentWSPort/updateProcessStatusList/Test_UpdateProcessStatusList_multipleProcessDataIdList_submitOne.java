@@ -75,9 +75,11 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList_submitOne ex
         // Validations
         TestReporter.logStep("Multiple Proc Run ID's found in the DB: first Proc Run ID [" + helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()) + "] & second Proc Run ID [" + helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()) + "]");
         TestReporter.logStep("Verify Proc Run ID that was passed into the RQ [" + helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()) + "] has an updated status:");
+        // Sleeper.sleep(10000);
         helper.validationOverall(helper.retrieveProcRunIdMulti1(cancel.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
 
         TestReporter.logStep("Verify Proc Run ID that was not passed into the RQ [" + helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()) + "] doesn't have an updated status:");
-        helper.validationOverall(helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
+        // Sleeper.sleep(10000);
+        helper.validationOverall(helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()), "SUBMITTED", Randomness.generateCurrentDatetime().substring(0, 10));
     }
 }
