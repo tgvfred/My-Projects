@@ -137,7 +137,7 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
     public void validations() {
         UnShareHelper helper = new UnShareHelper(getEnvironment());
 
-        int numExpectedRecords = 5;
+        int numExpectedRecords = 4;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;

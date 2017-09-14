@@ -21,7 +21,7 @@ public class TestUnShare_nonAccommodationReseravtion_Negative extends Accommodat
     String tcgId;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
-    public void Test_unShare_nonAccommodationReseravtion_Negative() {
+    public void Test_unShare_nonAccommodationReservation_Negative() {
 
         // if (Environment.isSpecialEnvironment(environment)) {
         // if (true) {
