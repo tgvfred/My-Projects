@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -9,7 +8,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -29,16 +27,19 @@ public class TestCheckout_tcExtRefOnly extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
+        setEnvironment("latest");
         bookReservation();
     }
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void testCheckout_tcExtRefOnly() {
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
-            }
-        }
+        /*
+         * if (Environment.isSpecialEnvironment(environment)) {
+         * if (true) {
+         * throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
+         * }
+         * }
+         */
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 

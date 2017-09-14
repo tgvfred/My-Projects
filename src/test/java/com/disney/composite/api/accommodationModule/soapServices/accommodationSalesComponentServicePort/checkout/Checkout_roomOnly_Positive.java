@@ -33,6 +33,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         isComo.set("false");
+        setEnvironment("latest");
         bookReservation();
     }
 
