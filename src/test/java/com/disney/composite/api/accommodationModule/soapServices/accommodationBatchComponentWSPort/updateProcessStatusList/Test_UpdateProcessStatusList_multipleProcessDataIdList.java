@@ -30,6 +30,7 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList extends Acco
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(environment);
+        isComo.set("false");
         bookReservation();
 
         book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "RoomOnlyNoTickets");
