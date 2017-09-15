@@ -66,7 +66,11 @@ public class TestRetrieveComments_roomOnly_commentWithProfileId extends Accommod
         retrieve.setParentIds(parentId);
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred in the create comment request", retrieve);
+        
+        // Validates response nodes
         validate(create, retrieve);
+        
+        // Validates that active orders come before inactive ones
         validateActiveOrder(retrieve);
 
      

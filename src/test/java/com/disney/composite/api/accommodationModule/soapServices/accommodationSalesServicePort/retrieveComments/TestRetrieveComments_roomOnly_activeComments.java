@@ -90,7 +90,11 @@ public class TestRetrieveComments_roomOnly_activeComments extends AccommodationB
         retrieve.setParentIds(parentId);
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting options by filter", retrieve);
+        
+        // Validates that the first active order comes before the second
         validate(create, create2, retrieve);
+        
+        // Validates that active ones come before inactive
         validateActiveOrder(retrieve);
 
      
