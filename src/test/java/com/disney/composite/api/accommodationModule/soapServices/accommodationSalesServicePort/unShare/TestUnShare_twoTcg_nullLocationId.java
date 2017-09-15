@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -64,11 +63,11 @@ public class TestUnShare_twoTcg_nullLocationId extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
     public void Test_unShare_twoTcgs_nullLocationId() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-            }
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // if (true) {
+        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
+        // }
+        // }
         share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(firstTCG);
         share.addSharedComponent();
@@ -86,14 +85,15 @@ public class TestUnShare_twoTcg_nullLocationId extends AccommodationBaseTest {
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
 
         // unshare the second reservation.
-        unshare = new UnShare(environment, "Main");
-        unshare.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        unshare.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
-        unshare.sendRequest();
+        // unshare = new UnShare(environment, "Main");
+        // unshare.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        // unshare.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
+        // unshare.sendRequest();
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
         validateResponse();
         validations();
 
+        share.sendRequest();
         if (Environment.isSpecialEnvironment(environment)) {
             UnShare clone = (UnShare) unshare.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
@@ -130,7 +130,7 @@ public class TestUnShare_twoTcg_nullLocationId extends AccommodationBaseTest {
     public void validations() {
         UnShareHelper helper = new UnShareHelper(getEnvironment());
 
-        int numExpectedRecords = 4;
+        int numExpectedRecords = 3;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;
