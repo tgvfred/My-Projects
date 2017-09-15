@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="OverrideAccommodationRates_Negative" parallel="methods" thread-count="20">
+	<parameter name="environment" value="latest_cm" />
+	<test name="TestOverrideAccommodationRates_Negative">
+	<groups>
+        <run>
+            <include name="debug"></include>
+        </run>
+    </groups>
+		<classes>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.overrideAccommodationRates.TestOverrideAccommodationRates_Negative" />
+		</classes>
+	</test> <!-- Test -->
+</suite> 
