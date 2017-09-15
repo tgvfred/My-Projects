@@ -23,9 +23,13 @@ public class RemoveComments extends AccommodationSalesServicePort{
 	}
 	
 	public void setcommentText(String value ){
-		setRequestNodeValueByXPath("/Envelope/Body/removeComments/request/commentsInfo/commentText",value);
-	}
-	
+        setRequestNodeValueByXPath("/Envelope/Body/removeComments/request/commentsInfo/commentText",value);
+    }
+    
+	public void setcommentId(String value ){
+        setRequestNodeValueByXPath("/Envelope/Body/removeComments/request/commentsInfo/commentId",value);
+    }
+    
 	
 	
 	

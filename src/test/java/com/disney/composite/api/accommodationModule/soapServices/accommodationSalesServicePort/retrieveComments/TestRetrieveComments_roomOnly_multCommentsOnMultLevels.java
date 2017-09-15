@@ -185,6 +185,7 @@ public class TestRetrieveComments_roomOnly_multCommentsOnMultLevels extends Acco
         }
     }
     
+
     private void validateActiveOrder(RetrieveComments retrieve) {
         String cache = "";
         TestReporter.logStep("Validate Active Comments Come First");
@@ -192,14 +193,15 @@ public class TestRetrieveComments_roomOnly_multCommentsOnMultLevels extends Acco
 
         for (int i = 1; i <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";            
-                if (cache == "false") {                    
+                if (cache.equals("false")) {                    
                     TestReporter.softAssertEquals("false", retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected false");                    
                 }                         
                 cache = retrieve.getResponseNodeValueByXPath(commentXPath + "isActive");
-                TestReporter.assertAll();
-                break;                
-            }
+                                            
+            }     
+        TestReporter.assertAll();
         }
+        
 }
 
 
