@@ -23,12 +23,13 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
     private String tpsCancelDate = Randomness.generateCurrentDatetime().split(" ")[0];
     String cancelNumber;
     String reinstateRsn;
+    String env;
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -36,7 +37,7 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
         setValues(getEnvironment());
         isComo.set("true");
         bookReservation();
-
+        env = environment;
         TCG = getBook().getTravelComponentGroupingId();
     }
 
@@ -55,7 +56,7 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
 
         cancelNumber = cancel.getCancellationNumber();
 
-        reinstate = new Reinstate(environment, "Main_2");
+        reinstate = new Reinstate(env, "Main_2");
         reinstate.setTravelComponentGroupingId(TCG);
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         reinstate.sendRequest();
@@ -121,6 +122,9 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
     public void validations() {
         ReinstateHelper reinstateHelper = new ReinstateHelper(environment, getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
 
+        int numExpextedRecords7 = 1;
+        reinstateHelper.validateTCReasons(numExpextedRecords7, getBook().getTravelComponentId(), "Reinstate", "Guest at the Desk", "NULL", reinstateRsn);
+
         int numExpectedRecords = 3;
         reinstateHelper.validateActiveChargeGroup(numExpectedRecords);
 
@@ -162,9 +166,6 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
 
         int numExpectedRecords9 = 1;
         reinstateHelper.validateRIM(numExpectedRecords9, getRoomTypeCode());
-
-        int numExpextedRecords7 = 1;
-        reinstateHelper.validateTCReasons(numExpextedRecords7, getBook().getTravelComponentId(), "Reinstate", "Guest at the Desk", "NULL", reinstateRsn);
 
     }
 

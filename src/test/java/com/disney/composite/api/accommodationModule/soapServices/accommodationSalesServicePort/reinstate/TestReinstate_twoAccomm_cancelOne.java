@@ -25,12 +25,13 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
     private String travelStatus = "Booked";
     private String tpsCancelDate = "NULL";
     private AddAccommodationHelper helper;
+    private String env;
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -38,17 +39,15 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
         setValues(getEnvironment());
         isComo.set("true");
         bookReservation();
-
         TCG = getBook().getTravelComponentGroupingId();
+        env = environment;
     }
 
     @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodatoinsales" })
     public void Test_Reinstate_twoAccomm_cancelOne() {
         helper = new AddAccommodationHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook());
         helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
-
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
-
         cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -57,22 +56,19 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
 
-        reinstate = new Reinstate(environment, "Main_2");
+        reinstate = new Reinstate(env, "Main_2");
         reinstate.setTravelComponentGroupingId(TCG);
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         reinstate.sendRequest();
         TestReporter.logAPI(!reinstate.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + reinstate.getFaultString(), reinstate);
-
         int numBookedComponents_reinstate = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
         TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate, "Verify that the number of booked components [" + numBookedComponents_reinstate + "] is that which is expected [" + numBookedComponents_book + "].");
-
         validations();
         // cancel and reinstate in order to clone on the old service.
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
         reinstate.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         // reinstate.sendRequest();
@@ -80,7 +76,6 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
         if (Environment.isSpecialEnvironment(environment)) {
             Reinstate clone = (Reinstate) reinstate.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-
             int tries = 0;
             int maxTries = 10;
             boolean success = false;
@@ -90,7 +85,6 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
                     clone.sendRequest();
                     success = true;
                 } catch (Exception e) {
-
                 }
                 tries++;
             } while (tries < maxTries && !success);

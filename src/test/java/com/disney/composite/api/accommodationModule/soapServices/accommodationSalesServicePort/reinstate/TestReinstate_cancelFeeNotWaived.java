@@ -25,12 +25,13 @@ public class TestReinstate_cancelFeeNotWaived extends AccommodationBaseTest {
     private String travelStatus = "Booked";
     private String tpsCancelDate = Randomness.generateCurrentDatetime().split(" ")[0];
     String cancelNumber;
+    String env;
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -38,7 +39,7 @@ public class TestReinstate_cancelFeeNotWaived extends AccommodationBaseTest {
         setValues(getEnvironment());
         isComo.set("true");
         bookReservation();
-
+        env = environment;
         TCG = getBook().getTravelComponentGroupingId();
     }
 
@@ -61,7 +62,7 @@ public class TestReinstate_cancelFeeNotWaived extends AccommodationBaseTest {
 
         cancelNumber = cancel.getCancellationNumber();
 
-        reinstate = new Reinstate(environment, "Main_2");
+        reinstate = new Reinstate(env, "Main_2");
         reinstate.setTravelComponentGroupingId(TCG);
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         reinstate.sendRequest();

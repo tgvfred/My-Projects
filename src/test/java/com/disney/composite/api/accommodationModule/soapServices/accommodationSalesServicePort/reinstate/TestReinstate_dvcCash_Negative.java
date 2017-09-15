@@ -17,6 +17,7 @@ public class TestReinstate_dvcCash_Negative extends BookDVCCashHelper {
 
     Reinstate reinstate;
     Cancel cancel;
+    String env;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -27,7 +28,7 @@ public class TestReinstate_dvcCash_Negative extends BookDVCCashHelper {
         bookDvcReservation("testCancel_M$", 1);
         setTpId(getFirstBooking().getTravelPlanId());
         makeCCPayment(Environment.getBaseEnvironmentName(environment));
-
+        env = environment;
     }
 
     @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodationsales", "negative" })
@@ -40,7 +41,7 @@ public class TestReinstate_dvcCash_Negative extends BookDVCCashHelper {
         cancel.setExternalReferenceSource(getFirstBooking().getResponseNodeValueByXPath("/Envelope/Body/bookResponse/bookResponse/externalReferenceDetail/externalReferenceSource"));
 
         cancel.sendRequest();
-        reinstate = new Reinstate(environment, "Main_2");
+        reinstate = new Reinstate(env, "Main_2");
         reinstate.setTravelComponentGroupingId(getFirstBooking().getTravelComponentGroupingId());
         reinstate.setTravelPlanSegmentId(getFirstBooking().getTravelPlanSegmentId());
         reinstate.sendRequest();

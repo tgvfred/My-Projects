@@ -23,12 +23,13 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
     String TCG;
     private String travelStatus = "Booked";
     private String tpsCancelDate = Randomness.generateCurrentDatetime().split(" ")[0];
+    String env;
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -36,7 +37,7 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
         setValues(getEnvironment());
         isComo.set("true");
         bookReservation();
-
+        env = environment;
         TCG = getBook().getTravelComponentGroupingId();
     }
 
@@ -52,7 +53,7 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
         cancel.sendRequest();
         TestReporter.assertTrue(cancel.getResponseStatusCode().equals("200"), "Verify that no error occurred cancelling a reservation: " + cancel.getFaultString());
 
-        reinstate = new Reinstate(environment, "TCG_TPS_Only");
+        reinstate = new Reinstate(env, "TCG_TPS_Only");
         reinstate.setTravelComponentGroupingId(TCG);
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         reinstate.sendRequest();

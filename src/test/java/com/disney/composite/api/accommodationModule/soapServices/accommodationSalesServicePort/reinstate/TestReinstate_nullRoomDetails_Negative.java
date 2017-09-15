@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.Cancel;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
@@ -15,12 +16,13 @@ public class TestReinstate_nullRoomDetails_Negative extends AccommodationBaseTes
 
     Reinstate reinstate;
     Cancel cancel;
+    String env;
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -28,6 +30,7 @@ public class TestReinstate_nullRoomDetails_Negative extends AccommodationBaseTes
         setValues(getEnvironment());
         isComo.set("true");
         bookReservation();
+        env = environment;
     }
 
     @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodationsales", "negative" })
@@ -39,7 +42,7 @@ public class TestReinstate_nullRoomDetails_Negative extends AccommodationBaseTes
         cancel.sendRequest();
         TestReporter.assertTrue(cancel.getResponseStatusCode().equals("200"), "Verify that no error occurred cancelling a reservation: " + cancel.getFaultString());
 
-        reinstate = new Reinstate(environment, "Main_RoomDetails");
+        reinstate = new Reinstate(env, "Main_RoomDetails");
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         reinstate.sendRequest();
 

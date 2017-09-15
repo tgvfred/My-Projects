@@ -7,17 +7,19 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestReinstate_bookedReservation_Negative extends AccommodationBaseTest {
 
     Reinstate reinstate;
+    String env;
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -25,12 +27,13 @@ public class TestReinstate_bookedReservation_Negative extends AccommodationBaseT
         setValues(getEnvironment());
         isComo.set("true");
         bookReservation();
+        env = environment;
     }
 
     @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodationsales", "negative" })
     public void Test_Reinstate_bookedReservation_Negative() {
 
-        reinstate = new Reinstate(environment, "Main_2");
+        reinstate = new Reinstate(env, "Main_2");
         reinstate.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         reinstate.sendRequest();
