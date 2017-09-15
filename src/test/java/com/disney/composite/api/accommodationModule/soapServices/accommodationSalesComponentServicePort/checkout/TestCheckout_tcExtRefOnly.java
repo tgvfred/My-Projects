@@ -29,7 +29,6 @@ public class TestCheckout_tcExtRefOnly extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        setEnvironment("latest");
         locVar = environment;
         bookReservation();
     }
