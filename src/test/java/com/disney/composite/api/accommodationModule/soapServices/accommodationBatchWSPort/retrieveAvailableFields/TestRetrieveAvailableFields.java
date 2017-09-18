@@ -45,6 +45,7 @@ public class TestRetrieveAvailableFields extends AccommodationBaseTest {
             String isRepeatable = retrieve.getResponseNodeValueByXPath(xpath + iterator + "isRepeatable").equals("true") ? "Y" : "N";
             String defaultFieldIndicator = retrieve.getResponseNodeValueByXPath(xpath + iterator + "defaultFieldIndicator").equals("true") ? "Y" : "N";
 
+            TestReporter.logStep("Compare the nodes for field Id " + retrieve.getResponseNodeValueByXPath(xpath + iterator + "fieldId"));
             compare(rs.getValue("FLD_ID", i), retrieve.getResponseNodeValueByXPath(xpath + iterator + "fieldId"));
             compare(rs.getValue("DFLT_FLD_IN", i), defaultFieldIndicator);
             compare(rs.getValue("REPEAT_FLD_IN", i), isRepeatable);
@@ -54,8 +55,7 @@ public class TestRetrieveAvailableFields extends AccommodationBaseTest {
         }
 
         // Verify that there are no extra nodes in the response that are not in the database
-        int expectedNumofItems = 5;
-        int numOfChildNodes = XMLTools.getNodeList(retrieve.getResponseDocument(), xpath).item(0).getChildNodes().getLength();
+        TestReporter.logStep("Verify that there are no extra nodes in the response that are not in the database");
         // Make a map of the API fieldIds
         Map<String, String> api = makeApiMap(childNodes(xpath, retrieve));
         // Make a copy of the map of the API fieldIds
@@ -63,7 +63,7 @@ public class TestRetrieveAvailableFields extends AccommodationBaseTest {
         tempApi.putAll(api);
 
         // Make a map of the DB fieldIds
-        Map<String, String> db2 = new HashMap<>();
+        Map<String, String> db2 = makeApiMap(rs);
         // Make a copy of the map of the DB fieldIds
         Map<String, String> tempDb = new HashMap<>();
         tempDb.putAll(db2);
@@ -90,12 +90,12 @@ public class TestRetrieveAvailableFields extends AccommodationBaseTest {
 
         // System.out.println(childNodes);
 
-        TestReporter.logStep("Verify that there are no extra nodes in the response that are not in the database");
-        compare(numOfChildNodes, expectedNumofItems);
-
-        // Verify that there are no extra records in the database that are not in the response
-        TestReporter.logStep("Verify that there are no extra records in the database that are not in the response");
-        compare(rs.getColumnCount(), expectedNumofItems);
+        // TestReporter.logStep("Verify that there are no extra nodes in the response that are not in the database");
+        // compare(numOfChildNodes, expectedNumofItems);
+        //
+        // // Verify that there are no extra records in the database that are not in the response
+        // TestReporter.logStep("Verify that there are no extra records in the database that are not in the response");
+        // compare(rs.getColumnCount(), expectedNumofItems);
     }
 
     public NodeList childNodes(String xpath, RetrieveAvailableFields retrieve) {
@@ -112,57 +112,21 @@ public class TestRetrieveAvailableFields extends AccommodationBaseTest {
                     api.put(childNodes.item(i).getChildNodes().item(j).getTextContent(), childNodes.item(i).getChildNodes().item(j).getTextContent());
                     break;
                 }
-                if (childNodes.item(i).getChildNodes().item(j).getNodeName().equals("isRepeatable")) {
-                    api.put(childNodes.item(i).getChildNodes().item(j).getTextContent(), childNodes.item(i).getChildNodes().item(j).getTextContent());
-                    break;
-                }
-                if (childNodes.item(i).getChildNodes().item(j).getNodeName().equals("defaultFieldIndicator")) {
-                    api.put(childNodes.item(i).getChildNodes().item(j).getTextContent(), childNodes.item(i).getChildNodes().item(j).getTextContent());
-                    break;
-                }
-                if (childNodes.item(i).getChildNodes().item(j).getNodeName().equals("fieldName")) {
-                    api.put(childNodes.item(i).getChildNodes().item(j).getTextContent(), childNodes.item(i).getChildNodes().item(j).getTextContent());
-                    break;
-                }
-                if (childNodes.item(i).getChildNodes().item(j).getNodeName().equals("fieldDataType")) {
-                    api.put(childNodes.item(i).getChildNodes().item(j).getTextContent(), childNodes.item(i).getChildNodes().item(j).getTextContent());
-                    break;
-                }
             }
         }
-
+        System.out.println("The api data map is: " + api);
         return api;
     }
 
     public Map<String, String> makeApiMap(Recordset rs) {
         Map<String, String> db2 = new HashMap<>();
 
-        for (int i = 0; i < rs.getRowCount(); i++) {
-            for (int j = 0; j < rs.getColumnCount(); j++) {
-                if (rs.getValue(i, j).equals("FLD_ID")) {
-                    db2.put(rs.getValue(i, j), rs.getValue(i, j));
-                    break;
-                }
-                if (rs.getValue(i, j).equals("REPEAT_FLD_IN")) {
-                    db2.put(rs.getValue(i, j), rs.getValue(i, j));
-                    break;
-                }
-                if (rs.getValue(i, j).equals("DFLT_FLD_IN")) {
-                    db2.put(rs.getValue(i, j), rs.getValue(i, j));
-                    break;
-                }
-                if (rs.getValue(i, j).equals("FLD_NM")) {
-                    db2.put(rs.getValue(i, j), rs.getValue(i, j));
-                    break;
-                }
-                if (rs.getValue(i, j).equals("FLD_DATA_TYP_NM")) {
-                    db2.put(rs.getValue(i, j), rs.getValue(i, j));
-                    break;
-                }
-            }
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            db2.put(rs.getValue("FLD_ID", i), rs.getValue("FLD_ID", i));
         }
-
+        System.out.println("The db2 data map is: " + db2);
         return db2;
+
     }
 
     public void compare(String a, String b) {
