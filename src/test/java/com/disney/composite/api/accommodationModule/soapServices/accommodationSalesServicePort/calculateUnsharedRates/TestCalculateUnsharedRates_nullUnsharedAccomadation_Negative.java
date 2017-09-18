@@ -15,8 +15,8 @@ public class TestCalculateUnsharedRates_nullUnsharedAccomadation_Negative extend
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates", "negative" })
     public void Test_CalculateUnsharedRates_nullUnsharedAccomadation_Negative() {
 
-        calculate = new CalculateUnsharedRates(environment, "Main_2");
-        calculate.setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/unSharedRoomDetail/blockCode", BaseSoapCommands.REMOVE_NODE.toString());
+        calculate = new CalculateUnsharedRates(environment, "Main_NullUnsharedAccomm");
+        calculate.setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation", BaseSoapCommands.REMOVE_NODE.toString());
         calculate.sendRequest();
 
         String faultString = "Required parameters are missing : Missing Required Parameters";

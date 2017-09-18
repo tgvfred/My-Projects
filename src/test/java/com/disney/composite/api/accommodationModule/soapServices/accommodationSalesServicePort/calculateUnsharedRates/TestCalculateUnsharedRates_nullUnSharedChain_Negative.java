@@ -15,7 +15,7 @@ public class TestCalculateUnsharedRates_nullUnSharedChain_Negative extends Accom
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates", "negative" })
     public void Test_CalculateUnsharedRates_nullUnSharedChain_Negative() {
 
-        calculate = new CalculateUnsharedRates(environment, "Main_2");
+        calculate = new CalculateUnsharedRates(environment, "Main_NullUnsharedAccomm");
         calculate.setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain", BaseSoapCommands.REMOVE_NODE.toString());
         calculate.sendRequest();
 

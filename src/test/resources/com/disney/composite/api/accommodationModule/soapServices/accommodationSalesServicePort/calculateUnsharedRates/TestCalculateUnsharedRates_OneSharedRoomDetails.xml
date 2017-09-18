@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestCalculateUnsharedRates_OneSharedRoomDetails" parallel="methods" thread-count="20">
 	<parameter name="environment" value="latest_cm" />
-	<test name=TestCalculateUnsharedRates_OneSharedRoomDetails>
+	<test name= "TestCalculateUnsharedRates_OneSharedRoomDetails">
 		 <classes>
 			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.calculateUnsharedRates.TestCalculateUnsharedRates_OneSharedRoomDetails"></class>
 		</classes>
