@@ -19,7 +19,6 @@ import com.disney.api.restServices.BaseRestTest;
 import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.accommodationModule.accommodationAssignmentServicePort.operations.FindRoomForReservation;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckingIn;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
@@ -739,12 +738,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         isComo.set(new String());
         this.isComo.set(System.getenv("isComo") == null ? "false" : System.getenv("isComo"));
         setEnvironment(environment);
-        String dbEnv = "";
-        if (getEnvironment().toLowerCase().contains("_cm")) {
-            dbEnv = getEnvironment().toLowerCase().replace("_cm", "");
-        } else {
-            dbEnv = getEnvironment();
-        }
         // System.out.println();
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts()));
@@ -1244,7 +1237,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         guestAddressLocatorId.set(getRetrieve().getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest/addressDetails/guestLocatorId"));
     }
 
-    public void retrieveReservation(Book book) {
+    public void retrieveReservation(ReplaceAllForTravelPlanSegment book) {
         Sleeper.sleep(5000);
         retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
         getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", book.getTravelPlanId());
@@ -1462,7 +1455,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         TestReporter.log("Payment ID: " + postPayment.getPaymentId());
     }
 
-    public void makeFirstNightDeposit(Book book) {
+    public void makeFirstNightDeposit(ReplaceAllForTravelPlanSegment book) {
         RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
         if (book != null && book.getTravelPlanId() != null) {
             retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, book.getTravelPlanId());

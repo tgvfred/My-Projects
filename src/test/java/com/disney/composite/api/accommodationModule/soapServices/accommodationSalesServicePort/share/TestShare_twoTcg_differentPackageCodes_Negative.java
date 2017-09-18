@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -51,11 +50,11 @@ public class TestShare_twoTcg_differentPackageCodes_Negative extends Accommodati
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share", "negative" })
     public void Test_Share_twoTcg_differentRoomTypes_Negative() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-            }
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // if (true) {
+        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
+        // }
+        // }
 
         share = new Share(environment, "Main_twoTcg");
         share.setTravelComponentGroupingId(firstTCG);
