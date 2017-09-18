@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveComments;
 
-
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateComments;
@@ -10,9 +9,6 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.Database;
-import com.disney.utils.dataFactory.database.Recordset;
-import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestRetrieveComments_roomOnly_commentWithProfileId extends AccommodationBaseTest {
     String commentId = Randomness.randomAlphaNumeric(10);
@@ -66,15 +62,13 @@ public class TestRetrieveComments_roomOnly_commentWithProfileId extends Accommod
         retrieve.setParentIds(parentId);
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred in the create comment request", retrieve);
-        
+
         // Validates response nodes
         validate(create, retrieve);
-        
+
         // Validates that active orders come before inactive ones
         validateActiveOrder(retrieve);
 
-     
-        
         if (Environment.isSpecialEnvironment(environment)) {
 
             RetrieveComments clone = (RetrieveComments) retrieve.clone();
@@ -97,7 +91,7 @@ public class TestRetrieveComments_roomOnly_commentWithProfileId extends Accommod
         for (int i = 1; i <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
             if (create.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
-                                
+
                 TestReporter.softAssertEquals(create.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + create.getIsActive() + "]");
                 TestReporter.softAssertEquals(create.getSendToGSR(), retrieve.getResponseNodeValueByXPath(commentXPath + "sendToGSR"), "Verify that the retrieved sendToGSR node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "sendToGSR") + "] matches the expected [" + create.getSendToGSR() + "]");
                 TestReporter.softAssertEquals(create.getConfidential(), retrieve.getResponseNodeValueByXPath(commentXPath + "confidential"), "Verify that the retrieved confidential node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "confidential") + "] matches the expected [" + create.getConfidential() + "]");
@@ -110,11 +104,10 @@ public class TestRetrieveComments_roomOnly_commentWithProfileId extends Accommod
                 String[] retrievedDate = retrieve.getResponseNodeValueByXPath(commentXPath + "auditDetail/createdDate").split("T");
                 TestReporter.softAssertEquals(createdDate[0], retrievedDate[0], "Verify that the retrieved createdDate node [" + retrievedDate[0] + "] matches the expected [" + createdDate[0] + "]");
                 TestReporter.assertAll();
-                break;                
+                break;
             }
         }
     }
-
 
     private void validateActiveOrder(RetrieveComments retrieve) {
         String cache = "";
@@ -122,17 +115,14 @@ public class TestRetrieveComments_roomOnly_commentWithProfileId extends Accommod
         TestReporter.setAssertFailed(false);
 
         for (int i = 1; i <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
-            String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";            
-                if (cache.equals("false")) {                    
-                    TestReporter.softAssertEquals("false", retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected false");                    
-                }                         
-                cache = retrieve.getResponseNodeValueByXPath(commentXPath + "isActive");
-                                            
-            }     
-        TestReporter.assertAll();
+            String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
+            if (cache.equals("false")) {
+                TestReporter.softAssertEquals("false", retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected false");
+            }
+            cache = retrieve.getResponseNodeValueByXPath(commentXPath + "isActive");
+
         }
-        
+        TestReporter.assertAll();
+    }
+
 }
-
-
-
