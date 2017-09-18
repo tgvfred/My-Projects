@@ -59,7 +59,7 @@ public class Checkout_Cancel extends AccommodationBaseTest {
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         // Checkin One and then Checkout One

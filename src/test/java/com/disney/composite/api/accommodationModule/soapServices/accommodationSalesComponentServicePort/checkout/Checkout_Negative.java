@@ -13,11 +13,13 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
 public class Checkout_Negative extends AccommodationBaseTest {
+    private String locEnv;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
+        locEnv = environment;
         setEnvironment(environment);
         isComo.set("false");
         setDaysOut(0);
@@ -45,7 +47,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         String refNumber = "4612616";
         String refSource = "Accovia";
 
-        Checkout checkout = new Checkout(environment, "main");
+        Checkout checkout = new Checkout(locEnv, "main");
         checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
         checkout.setIsBellServiceRequired(BaseSoapCommands.REMOVE_NODE.toString());
         checkout.setIsSameRoomNumberAssigned(BaseSoapCommands.REMOVE_NODE.toString());
@@ -94,7 +96,8 @@ public class Checkout_Negative extends AccommodationBaseTest {
         String refType = "RESERVATION";
 
         // latest faultString
-        // String faultString = "INVALID REQUEST ! : during AccommodationSalesService.checkout() - No Checked-In Accommodations found with the External Reference#" + extRefValue;
+        // String faultString = "INVALID REQUEST ! : during AccommodationSalesService.checkout() - No Checked-In Accommodations found with the External
+        // Reference#" + extRefValue;
 
         // CM faultString
         String faultString = "INVALID REQUEST! : No Checked-In Accommodations found with the External Reference#";
