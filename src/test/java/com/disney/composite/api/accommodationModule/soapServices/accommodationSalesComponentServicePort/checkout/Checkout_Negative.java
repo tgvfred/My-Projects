@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
@@ -39,7 +39,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
          * }
          */
 
-        String faultString = "INVALID REQUEST ! :  during AccommodationSalesService.checkout() - No Checked-In Accommodations found with the External Reference#4612616";
+        String faultString = "INVALID REQUEST! : No Checked-In Accommodations found with the External Reference#";
         String tcgId = getBook().getTravelComponentGroupingId();
         String refType = "RESERVATION";
         String refNumber = "4612616";
@@ -61,7 +61,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, LiloResmErrorCode.INVALID_REQUEST);
+        validateApplicationError(checkout, AccommodationErrorCode.INVALID_REQUEST);
 
     }
 
@@ -94,10 +94,10 @@ public class Checkout_Negative extends AccommodationBaseTest {
         String refType = "RESERVATION";
 
         // latest faultString
-        String faultString = "INVALID REQUEST ! :  during AccommodationSalesService.checkout() - No Checked-In Accommodations found with the External Reference#" + extRefValue;
+        // String faultString = "INVALID REQUEST ! : during AccommodationSalesService.checkout() - No Checked-In Accommodations found with the External Reference#" + extRefValue;
 
         // CM faultString
-        // String faultString = "INVALID REQUEST ! : during AccommodationSalesService.checkout() - No Checked-In Accommodations found with the External Reference#4612616";
+        String faultString = "INVALID REQUEST! : No Checked-In Accommodations found with the External Reference#";
 
         TestReporter.logScenario("Cancelled Checkout");
         Checkout checkout = new Checkout(environment, "main");
@@ -116,7 +116,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, LiloResmErrorCode.INVALID_REQUEST);
+        validateApplicationError(checkout, AccommodationErrorCode.INVALID_REQUEST);
 
     }
 
@@ -150,10 +150,10 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        // validateApplicationError(checkout, AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
+        validateApplicationError(checkout, AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
 
         // latest validation error code
-        validateApplicationError(checkout, LiloResmErrorCode.EXTERNAL_REFERENCE_REQUIRED);
+        // validateApplicationError(checkout, LiloResmErrorCode.EXTERNAL_REFERENCE_REQUIRED);
 
     }
 }
