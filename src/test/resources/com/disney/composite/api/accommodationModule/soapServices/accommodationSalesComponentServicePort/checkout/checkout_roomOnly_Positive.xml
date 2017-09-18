@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Checkout_roomOnly_Positive" parallel="methods" thread-count="5" configfailurepolicy="continue">
+<suite name="Checkout_roomOnly_Positive" parallel="methods" thread-count="1" configfailurepolicy="continue">
 	<parameter name="environment" value="latest_cm" />
 	<test name="Checkout_roomOnly_Positive">
-		<!-- <groups>
+		<groups>
 			<run>
 				<include name="debug"></include>
 			</run>
-		</groups> -->
+		</groups>
 		<classes>
 			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout.Checkout_roomOnly_Positive'></class>
 		</classes>
