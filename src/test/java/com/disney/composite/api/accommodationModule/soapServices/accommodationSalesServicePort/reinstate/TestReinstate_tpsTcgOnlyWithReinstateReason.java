@@ -123,7 +123,7 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
         ReinstateHelper reinstateHelper = new ReinstateHelper(environment, getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
 
         int numExpextedRecords7 = 1;
-        reinstateHelper.validateTCReasons(numExpextedRecords7, getBook().getTravelComponentId(), "Reinstate", "Guest at the Desk", "NULL", reinstateRsn);
+        reinstateHelper.validateTCReasons(numExpextedRecords7, getBook().getTravelComponentId(), "Reinstate", "NULL", "NULL", reinstateRsn);
 
         int numExpectedRecords = 3;
         reinstateHelper.validateActiveChargeGroup(numExpectedRecords);
@@ -133,7 +133,7 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
                 "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
 
         int numExpectedRecords12 = 1;
-        reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, cancelNumber, getArrivalDate(), getDepartureDate());
+        reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, "0", getArrivalDate(), getDepartureDate());
 
         int numExpectedRecords2 = 5;
         // String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, workLocation);

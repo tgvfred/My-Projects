@@ -125,7 +125,7 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
                 "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
 
         int numExpectedRecords12 = 1;
-        reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, cancel.getCancellationNumber(), getArrivalDate(), getDepartureDate());
+        reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, "0", getArrivalDate(), getDepartureDate());
 
         int numExpectedRecords2 = 5;
         // String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, workLocation);
