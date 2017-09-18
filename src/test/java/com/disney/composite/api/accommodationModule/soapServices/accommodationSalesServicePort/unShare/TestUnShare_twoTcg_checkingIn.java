@@ -87,6 +87,7 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
 
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(firstTCG);
+        unshare.setLocationId(getLocationId());
         unshare.sendRequest();
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
 
@@ -94,13 +95,15 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
 
         // unshare the second reservation.
-        unshare = new UnShare(environment, "Main");
-        unshare.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        unshare.sendRequest();
+        // unshare = new UnShare(environment, "Main");
+        // unshare.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        // unshare.setLocationId(getLocationId());
+        // unshare.sendRequest();
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
         validateResponse();
         validations();
 
+        share.sendRequest();
         if (Environment.isSpecialEnvironment(environment)) {
             UnShare clone = (UnShare) unshare.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));

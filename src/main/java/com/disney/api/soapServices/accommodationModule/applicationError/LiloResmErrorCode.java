@@ -84,4 +84,6 @@ public class LiloResmErrorCode {
             "Travel Agency is invalid");
     public static final ApplicationErrorCode TRVL_PLAN_COMPONENT_ID_REQ = new ApplicationErrorCode(APP_NAME, 7037,
             "Travel Component Id is required");
+    public static final ApplicationErrorCode NOT_ELIGIBLE_FOR_REINSTATE = new ApplicationErrorCode(APP_NAME, 7229,
+            "This reservation is not eligible to be Re-instated. Please contact the appropriate Reservation Office, Operations Support or Manager for assistance");
 }
