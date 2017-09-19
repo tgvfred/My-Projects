@@ -12,9 +12,9 @@ public class TestCalculateUnsharedRates_oneSharedRoomDetails_twoGuestRefs extend
     CalculateUnsharedRates calculate;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates" })
-    public void Test_CalculateUnsharedRates_OneSharedRoomDetails() {
+    public void Test_CalculateUnsharedRates_OneSharedRoomDetails_twoGuestRefs() {
 
-        calculate = new CalculateUnsharedRates(environment, "Main_2");
+        calculate = new CalculateUnsharedRates(environment, "Main_TwoGuestRefs");
         calculate.setUnsharedChainSharedRoomDetailTCGId("0");
         calculate.setUnsharedChainSharedRoomDetailTCId("0");
         calculate.setUnsharedChainShareRoomDetailsTPSId("0");
@@ -27,6 +27,7 @@ public class TestCalculateUnsharedRates_oneSharedRoomDetails_twoGuestRefs extend
         calculate.setUnsharedAccommodationTPSId("0");
         // calculate.setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/exchangeFee", BaseSoapCommands.REMOVE_NODE.toString());
         calculate.sendRequest();
+        System.out.print(calculate.getRequest());
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 
         validateUnsharedRoomRateDetailsResponse();
