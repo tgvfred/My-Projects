@@ -26,6 +26,7 @@ public class Checkout_roomOnly_DVC extends BookDVCCashHelper {
 
         setUseDvcResort(true);
         setCheckingIn(true);
+        bookReservation();
         setBook(bookDvcReservation("testBook_MCash", 1));
         setTpId(getFirstBooking().getTravelPlanId());
     }
