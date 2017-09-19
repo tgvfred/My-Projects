@@ -154,6 +154,19 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
 
         // validates that active ones come before inactive
         validateActiveOrder(retrieve);
+        
+        if (Environment.isSpecialEnvironment(environment)) {
+
+            RetrieveComments clone = (RetrieveComments) retrieve.clone();
+            clone.setParentIds(parentId);
+            clone.sendRequest();
+            if (!clone.getResponseStatusCode().equals("200")) {
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned for cloned request", clone);
+            }
+
+            TestReporter.assertTrue(retrieve.validateResponseNodeQuantity(clone, true), "Validating Response Comparison");
+        }
+        
 
     }
 

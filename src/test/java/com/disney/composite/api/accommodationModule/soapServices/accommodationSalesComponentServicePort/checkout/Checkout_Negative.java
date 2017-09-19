@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -8,19 +7,19 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
 public class Checkout_Negative extends AccommodationBaseTest {
+    private String locEnv;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
+        locEnv = environment;
         setEnvironment(environment);
         isComo.set("false");
         setDaysOut(0);
@@ -34,19 +33,21 @@ public class Checkout_Negative extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "accommodation", "negative" })
     public void TestCheckout_booked() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-            }
-        }
+        /*
+         * if (Environment.isSpecialEnvironment(environment)) {
+         * if (true) {
+         * throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+         * }
+         * }
+         */
 
-        String faultString = "INVALID REQUEST ! :  during AccommodationSalesService.checkout() - No Checked-In Accommodations found with the External Reference#4612616";
+        String faultString = "INVALID REQUEST! : No Checked-In Accommodations found with the External Reference#";
         String tcgId = getBook().getTravelComponentGroupingId();
         String refType = "RESERVATION";
         String refNumber = "4612616";
         String refSource = "Accovia";
 
-        Checkout checkout = new Checkout(environment, "main");
+        Checkout checkout = new Checkout(locEnv, "main");
         checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
         checkout.setIsBellServiceRequired(BaseSoapCommands.REMOVE_NODE.toString());
         checkout.setIsSameRoomNumberAssigned(BaseSoapCommands.REMOVE_NODE.toString());
@@ -62,18 +63,20 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, LiloResmErrorCode.INVALID_REQUEST);
+        validateApplicationError(checkout, AccommodationErrorCode.INVALID_REQUEST);
 
     }
 
     @Test(groups = { "api", "regression", "checkout", "accommodation", "negative", "debug" })
     public void TestCheckout_cancelled() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-            }
-        }
+        /*
+         * if (Environment.isSpecialEnvironment(environment)) {
+         * if (true) {
+         * throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+         * }
+         * }
+         */
 
         TestReporter.logScenario("Cancel");
 
@@ -87,9 +90,17 @@ public class Checkout_Negative extends AccommodationBaseTest {
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
-        String faultString = "INVALID REQUEST ! :  during AccommodationSalesService.checkout() - No Checked-In Accommodations found with the External Reference#4612616";
+        String extRefValue = getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber");
+        String extRefSource = getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource");
         String tcgId = getBook().getTravelComponentGroupingId();
         String refType = "RESERVATION";
+
+        // latest faultString
+        // String faultString = "INVALID REQUEST ! : during AccommodationSalesService.checkout() - No Checked-In Accommodations found with the External
+        // Reference#" + extRefValue;
+
+        // CM faultString
+        String faultString = "INVALID REQUEST! : No Checked-In Accommodations found with the External Reference#";
 
         TestReporter.logScenario("Cancelled Checkout");
         Checkout checkout = new Checkout(environment, "main");
@@ -99,8 +110,8 @@ public class Checkout_Negative extends AccommodationBaseTest {
 
         checkout.setTravelComponentGroupingId(tcgId);
         checkout.setExternalReferenceType(refType);
-        checkout.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        checkout.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+        checkout.setExternalReferenceNumber(extRefValue);
+        checkout.setExternalReferenceSource(extRefSource);
         checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
 
         checkout.setCheckoutDate(BaseSoapCommands.REMOVE_NODE.toString());
@@ -108,19 +119,20 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, LiloResmErrorCode.INVALID_REQUEST);
+        validateApplicationError(checkout, AccommodationErrorCode.INVALID_REQUEST);
 
     }
 
     @Test(groups = { "api", "regression", "checkout", "accommodation", "negative" })
     public void TestCheckout_nullExtRefDetail() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-            }
-        }
-
+        /*
+         * if (Environment.isSpecialEnvironment(environment)) {
+         * if (true) {
+         * throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+         * }
+         * }
+         */
         String faultString = "External Reference is required : External Reference Number is missing !";
         String tcgId = getBook().getTravelComponentGroupingId();
         String status = "false";
@@ -142,6 +154,9 @@ public class Checkout_Negative extends AccommodationBaseTest {
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(checkout, AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
+
+        // latest validation error code
+        // validateApplicationError(checkout, LiloResmErrorCode.EXTERNAL_REFERENCE_REQUIRED);
 
     }
 }

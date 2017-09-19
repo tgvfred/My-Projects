@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -49,11 +48,11 @@ public class TestUnShare_oneTcg extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
     public void Test_unShare_oneTcg() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-            }
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // if (true) {
+        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
+        // }
+        // }
 
         share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -62,6 +61,7 @@ public class TestUnShare_oneTcg extends AccommodationBaseTest {
 
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(firstTCG);
+        unshare.setLocationId(getLocationId());
         unshare.sendRequest();
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
         validateResponse();
@@ -78,18 +78,16 @@ public class TestUnShare_oneTcg extends AccommodationBaseTest {
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(unshare, true), "Validating Response Comparison");
-
         }
-
     }
 
     public void validateResponse() {
         TestReporter.logStep("Validate data in the response node.");
         String tpsId = unshare.getTravelPlanSegmentId();
-        String tcgId = unshare.getTravelComponentGroupingId();
-        String tcId = unshare.getTravelComponentId();
-        String bookingDate = unshare.getBookingDate();
-        String travelStatus = unshare.getTravelStatus();
+        String tcgId = unshare.getTravelComponentGroupingId_unSharedRoomDetail();
+        String tcId = unshare.getTravelComponentId_unSharedRoomDetail();
+        String bookingDate = unshare.getBookingDate_unSharedRoomDetail();
+        String travelStatus = unshare.getTravelStatus_unSharedRoomDetail();
 
         TestReporter.softAssertEquals(getBook().getTravelPlanSegmentId(), tpsId, "Verify that the response returns the tpsID [" + getBook().getTravelPlanSegmentId() + "] that which is expected [" + tpsId + "].");
         TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), tcgId, "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "] that which is expected [" + tcgId + "].");
