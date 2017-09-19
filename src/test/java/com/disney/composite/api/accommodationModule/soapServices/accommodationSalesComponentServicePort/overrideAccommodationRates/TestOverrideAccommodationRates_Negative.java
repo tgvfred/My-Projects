@@ -8,12 +8,15 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCPointsHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTest {
+    private String locEnv = null;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_nullRequest() {
@@ -175,19 +178,40 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         validateApplicationError(oar, AccommodationErrorCode.OVERRIDE_RATE_RACK_RATE_ERROR);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug2" })
     public void TestOverrideAccommodationRates_dvcPoints() {
+        setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+        // locEnv = environment;
+        // BookDVCPointsHelper helper =new BookDVCPointsHelper()
+        // setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+        BookDVCPointsHelper bdvc = new BookDVCPointsHelper();
+
+        bdvc.setUseDvcResort(true);
+        bdvc.setUseNonZeroPoints(true);
+        bdvc.bookDvcReservation("testBookWithPay_MP", 1);
+        bdvc.getFirstBooking().getTravelPlanId();
+
+        // bdvc.bookReservation();
+        isComo.set("false");
+        // isComo.set("false");
+
+        // bookReservation();
         String fault = "Rates for DVC points reservation cannot be overridden";
 
         TestReporter.logScenario("Test - Override Accommodation Rates - dvcPoints");
 
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment);
+        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+        oar.setTpsID(getBook().getTravelPlanSegmentId());
+        oar.setTcgId(getBook().getTravelComponentGroupingId());
 
+        // oar.setOverrideReason("RTPRTSIZE");
+
+        oar.sendRequest();
         TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
         validateApplicationError(oar, AccommodationErrorCode.INVALID_REQUEST);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug2" })
     public void TestOverrideAccommodationRates_upgradeRes() {
 
         String fault = "Rate override failed : Rate override cannot be performed on an upgraded accommodation!";
@@ -200,11 +224,12 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues();
+        isComo.set("false");
         bookReservation();
-
+        String tcg_id = getBook().getTravelComponentGroupingId();
         // Upgrage reservation using AccommodationFulfillmentServicePort#upgradeResortRoomType
         UpgradeResortRoomType urrt = new UpgradeResortRoomType(environment, "upgradeResortRoomType");
-        urrt.setTcg(getBook().getTravelComponentGroupingId());
+        urrt.setTcg(tcg_id);
         urrt.setTc(getBook().getTravelComponentId());
         urrt.setFacilityId(BaseSoapCommands.REMOVE_NODE.toString());
         urrt.setLocationIdString(BaseSoapCommands.REMOVE_NODE.toString());
@@ -214,7 +239,8 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
 
         // Override the rate for the one night
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        oar.setTcgId(getBook().getTravelComponentGroupingId());
+        oar.setTcgId(tcg_id);
+
         oar.setAdditionalCharge("100");
         oar.setBasePrice("12");
         oar.setRackRateRate("562");
@@ -305,6 +331,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         validateApplicationError(oar, AccommodationErrorCode.CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS);
     }
 
+    // giving java null pointer exception -works in database
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug2" })
     public void TestOverrideAccommodationRates_cancelled() {
         String fault = "Cancelled accommodations cannot be overriden : null";
@@ -331,7 +358,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         validateApplicationError(oar, AccommodationErrorCode.CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug2" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
     public void TestOverrideAccommodationRates_invalidLocationId() {
 
         String fault = "ResManagementMapper.getSettlementLocationByFacility:ResManagementMapper.getSettlementLocationByFacility:";
@@ -349,11 +376,13 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         Cancel cancel = new Cancel(environment);
 
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        System.out.println(cancel.getRequest());
         cancel.sendRequest();
 
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
 
         oar.setTcgId(getBook().getTravelComponentGroupingId());
+
         oar.setLocationId("-1");
 
         oar.sendRequest();

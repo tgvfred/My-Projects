@@ -118,6 +118,19 @@ public class OverrideAccommodationRatesRequest extends AccommodationSalesCompone
         setRequestNodeValueByXPath("/Envelope/Body/overrideAccommodationRates/request/rateDetails", value);
     }
 
+    public void setRateDetails2(String value) {
+
+        setRequestNodeValueByXPath("/Envelope/Body/overrideAccommodationRates/request/rateDetails[2]", value);
+    }
+
+    public void setRateDetailsDate2(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/overrideAccommodationRates/request/rateDetails[2]/date", value);
+    }
+
+    public void setRackRateDate2(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/overrideAccommodationRates/request/rateDetails[2]/rackRate/date", value);
+    }
+
     public void setExternalReferenceNumber(String value) {
 
         setRequestNodeValueByXPath("/Envelope/Body/overrideAccommodationRates/request/externalReferenceDetail/externalReferenceNumber", value);
