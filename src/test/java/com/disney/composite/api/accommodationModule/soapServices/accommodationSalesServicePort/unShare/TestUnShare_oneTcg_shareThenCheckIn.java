@@ -68,22 +68,6 @@ public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
         validateResponse();
         validations();
-
-        share.sendRequest();
-        if (Environment.isSpecialEnvironment(environment)) {
-            UnShare clone = (UnShare) unshare.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(unshare, true), "Validating Response Comparison");
-
-        }
-
     }
 
     public void validateResponse() {
@@ -106,7 +90,7 @@ public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
     public void validations() {
         UnShareHelper helper = new UnShareHelper(getEnvironment());
 
-        int numExpectedRecords = 4;
+        int numExpectedRecords = 3;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;
