@@ -9,15 +9,24 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestRetrieveComments_roomOnly_commentWithProfileId extends AccommodationBaseTest {
+public class TestRetrieveComments_libgo extends AccommodationBaseTest {
     String commentId = Randomness.randomAlphaNumeric(10);
     String commentText = "This is test comment " + Randomness.randomAlphaNumeric(4);
     String parentId = "";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments" })
-    public void TestRetrieveComments_roomOnly_commentWithProfileId_positive() {
-
+    public void TestRetrieveComments_libgo_positive() {
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues();
+        setIsLibgoBooking(true);
+        bookReservation();
         String expectedIsActive = "true";
         String expectedGSR = "false";
         String expectedConfidential = "true";
@@ -69,6 +78,9 @@ public class TestRetrieveComments_roomOnly_commentWithProfileId extends Accommod
         // Validates that active orders come before inactive ones
         validateActiveOrder(retrieve);
 
+        // Validate LibGo Comments
+        validateLibGo(retrieve);
+
         if (Environment.isSpecialEnvironment(environment)) {
 
             RetrieveComments clone = (RetrieveComments) retrieve.clone();
@@ -91,23 +103,52 @@ public class TestRetrieveComments_roomOnly_commentWithProfileId extends Accommod
 
         for (int i = 1; i <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); i++) {
             String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + i + "]/";
-            if (create.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
 
-                TestReporter.softAssertEquals(create.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + create.getIsActive() + "]");
-                TestReporter.softAssertEquals(create.getSendToGSR(), retrieve.getResponseNodeValueByXPath(commentXPath + "sendToGSR"), "Verify that the retrieved sendToGSR node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "sendToGSR") + "] matches the expected [" + create.getSendToGSR() + "]");
-                TestReporter.softAssertEquals(create.getConfidential(), retrieve.getResponseNodeValueByXPath(commentXPath + "confidential"), "Verify that the retrieved confidential node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "confidential") + "] matches the expected [" + create.getConfidential() + "]");
-                TestReporter.softAssertEquals(create.getCommentId(), retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"), "Verify that the retrieved commentId node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "commentId") + "] matches the expected [" + create.getCommentId() + "]");
-                TestReporter.softAssertEquals(create.getCommentText(), retrieve.getResponseNodeValueByXPath(commentXPath + "commentText"), "Verify that the retrieved commentText node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "commentText") + "] matches the expected [" + create.getCommentText() + "]");
-                TestReporter.softAssertEquals(create.getCommentLevel(), retrieve.getResponseNodeValueByXPath(commentXPath + "commentLevel"), "Verify that the retrieved commentLevel node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "commentLevel") + "] matches the expected [" + create.getCommentLevel() + "]");
-                TestReporter.softAssertEquals(create.getCreatedBy(), retrieve.getResponseNodeValueByXPath(commentXPath + "auditDetail/createdBy"), "Verify that the retrieved createdBy node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "auditDetail/createdBy") + "] matches the expected [" + create.getCreatedBy() + "]");
-                TestReporter.softAssertEquals(create.getProfileId(), retrieve.getResponseNodeValueByXPath(commentXPath + "profileId"), "Verify that the retrieved profileID node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "profileId") + "] matches the expected [" + create.getProfileId() + "]");
-                String[] createdDate = create.getCreatedDate().split("T");
-                String[] retrievedDate = retrieve.getResponseNodeValueByXPath(commentXPath + "auditDetail/createdDate").split("T");
-                TestReporter.softAssertEquals(createdDate[0], retrievedDate[0], "Verify that the retrieved createdDate node [" + retrievedDate[0] + "] matches the expected [" + createdDate[0] + "]");
-                TestReporter.assertAll();
-                break;
+            if (i > 1) {
+                if (create.getCommentId().equals(retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"))) {
+
+                    TestReporter.softAssertEquals(create.getIsActive(), retrieve.getResponseNodeValueByXPath(commentXPath + "isActive"), "Verify that the retrieved isActive node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "isActive") + "] matches the expected [" + create.getIsActive() + "]");
+                    TestReporter.softAssertEquals(create.getSendToGSR(), retrieve.getResponseNodeValueByXPath(commentXPath + "sendToGSR"), "Verify that the retrieved sendToGSR node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "sendToGSR") + "] matches the expected [" + create.getSendToGSR() + "]");
+                    TestReporter.softAssertEquals(create.getConfidential(), retrieve.getResponseNodeValueByXPath(commentXPath + "confidential"), "Verify that the retrieved confidential node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "confidential") + "] matches the expected [" + create.getConfidential() + "]");
+                    TestReporter.softAssertEquals(create.getCommentId(), retrieve.getResponseNodeValueByXPath(commentXPath + "commentId"), "Verify that the retrieved commentId node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "commentId") + "] matches the expected [" + create.getCommentId() + "]");
+                    TestReporter.softAssertEquals(create.getCommentText(), retrieve.getResponseNodeValueByXPath(commentXPath + "commentText"), "Verify that the retrieved commentText node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "commentText") + "] matches the expected [" + create.getCommentText() + "]");
+                    TestReporter.softAssertEquals(create.getCommentLevel(), retrieve.getResponseNodeValueByXPath(commentXPath + "commentLevel"), "Verify that the retrieved commentLevel node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "commentLevel") + "] matches the expected [" + create.getCommentLevel() + "]");
+                    TestReporter.softAssertEquals(create.getCreatedBy(), retrieve.getResponseNodeValueByXPath(commentXPath + "auditDetail/createdBy"), "Verify that the retrieved createdBy node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "auditDetail/createdBy") + "] matches the expected [" + create.getCreatedBy() + "]");
+                    TestReporter.softAssertEquals(create.getProfileId(), retrieve.getResponseNodeValueByXPath(commentXPath + "profileId"), "Verify that the retrieved profileID node [" + retrieve.getResponseNodeValueByXPath(commentXPath + "profileId") + "] matches the expected [" + create.getProfileId() + "]");
+                    String[] createdDate = create.getCreatedDate().split("T");
+                    String[] retrievedDate = retrieve.getResponseNodeValueByXPath(commentXPath + "auditDetail/createdDate").split("T");
+                    TestReporter.softAssertEquals(createdDate[0], retrievedDate[0], "Verify that the retrieved createdDate node [" + retrievedDate[0] + "] matches the expected [" + createdDate[0] + "]");
+                    TestReporter.assertAll();
+                    break;
+                }
+            } else {
+
             }
         }
+    }
+
+    private void validateLibGo(RetrieveComments retrieve) {
+
+        TestReporter.logStep("Validate LibGo Comments");
+
+        String sql = "select * "
+                + "from group_mgmt.grp_cmt a "
+                + "where a.BLK_CD = '01905'";
+
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            boolean found = false;
+            for (int j = 1; j <= retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveCommentsResponse/response/commentsInfo"); j++) {
+                String commentXPath = "/Envelope/Body/retrieveCommentsResponse/response/commentsInfo[" + j + "]/";
+                if (retrieve.getResponseNodeValueByXPath(commentXPath + "commentText").equals(rs.getValue("GRP_CMT_TX", i))) {
+                    found = true;
+                }
+            }
+            TestReporter.assertTrue(found, "Validate that the following group comment was found: " + rs.getValue("GRP_CMT_ID", i));
+        }
+
     }
 
     private void validateActiveOrder(RetrieveComments retrieve) {

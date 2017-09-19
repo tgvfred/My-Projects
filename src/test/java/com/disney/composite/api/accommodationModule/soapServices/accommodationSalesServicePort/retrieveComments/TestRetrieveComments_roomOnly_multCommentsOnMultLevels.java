@@ -19,7 +19,7 @@ public class TestRetrieveComments_roomOnly_multCommentsOnMultLevels extends Acco
     String parentId = "";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments" })
-    public void testCreateComments_parentTC() {
+    public void TestRetrieveComments_roomOnly_multCommentsOnMultLevels_positive() {
 
         String expectedIsActive = "true";
         String expectedGSR = "false";
@@ -122,17 +122,10 @@ public class TestRetrieveComments_roomOnly_multCommentsOnMultLevels extends Acco
         }
         TestReporter.assertAll();
 
-        //
-        //
-        // TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("TC_ID"), parentId, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("TC_ID") + "] matches the comment data [ " + parentId + "]");
-        // TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("RES_MGMT_REQ_TX"), create.getCommentText(), "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("RES_MGMT_REQ_TX") + "] matches the comment data [ " + create.getCommentText() + "]");
-        // TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("GSR_IN"), GSR_IN, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("GSR_IN") + "] matches the comment data [ " + GSR_IN + "]");
-        // TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("CFDNTL_IN"), CFDNTL_IN, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("CFDNTL_IN") + "] matches the comment data [ " + CFDNTL_IN + "]");
-        // TestReporter.assertAll();
-
         if (Environment.isSpecialEnvironment(environment)) {
 
             RetrieveComments clone = (RetrieveComments) retrieve.clone();
+            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.setParentIds(parentId);
             clone.sendRequest();
             if (!clone.getResponseStatusCode().equals("200")) {

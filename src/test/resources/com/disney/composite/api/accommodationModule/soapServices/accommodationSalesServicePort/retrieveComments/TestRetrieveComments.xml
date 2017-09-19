@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestRetrieveComments" parallel="methods" thread-count="25">
+	<parameter name="environment" value="Latest_CM" />
+	<test name="TestRetrieveComments">	
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveComments.*"/>
+		</packages>
+	</test> 
+</suite> 

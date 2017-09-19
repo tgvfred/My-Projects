@@ -17,7 +17,7 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
     String parentId = "";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments" })
-    public void testCreateComments_parentTC() {
+    public void TestRetrieveComments_roomOnly_inactiveComments_positive() {
 
         String expectedIsActive = "true";
         String expectedGSR = "false";
@@ -130,12 +130,14 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
 
         // Remove third and fourth comments
         RemoveComments remove3 = new RemoveComments(environment, "Main");
+        remove3.setEnvironment(Environment.getBaseEnvironmentName(environment));
         remove3.setparentIds(getBook().getTravelComponentId());
         remove3.setcommentId(create3.getCommentId());
         remove3.sendRequest();
         TestReporter.logAPI(!remove3.getResponseStatusCode().equals("200"), "An error occurred with the request to remove the third comment", remove3);
 
         RemoveComments remove4 = new RemoveComments(environment, "Main");
+        remove4.setEnvironment(Environment.getBaseEnvironmentName(environment));
         remove4.setparentIds(getBook().getTravelComponentId());
         remove4.setcommentId(create4.getCommentId());
         remove4.sendRequest();
@@ -152,18 +154,6 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
 
         // validates that active ones come before inactive
         validateActiveOrder(retrieve);
-
-        if (Environment.isSpecialEnvironment(environment)) {
-
-            RetrieveComments clone = (RetrieveComments) retrieve.clone();
-            clone.setParentIds(parentId);
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned for cloned request", clone);
-            }
-
-            TestReporter.assertTrue(retrieve.validateResponseNodeQuantity(clone, true), "Validating Response Comparison");
-        }
 
     }
 
