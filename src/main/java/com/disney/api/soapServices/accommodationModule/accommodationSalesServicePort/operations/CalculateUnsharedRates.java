@@ -44,11 +44,11 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
     }
 
     public void setUnsharedAccommodationSharedRoomDetailsTCGId(String value) {
-        setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/unSharedRoomDetail/travelComponentGroupingId", value);
+        setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/travelComponentGroupingId", value);
     }
 
     public void setUnsharedAccommodationSharedRoomDetailsTCId(String value) {
-        setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/unSharedRoomDetail/travelComponentId", value);
+        setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/travelComponentId", value);
     }
 
     public void setUnsharedAccommodationTPSId(String value) {
