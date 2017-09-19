@@ -93,14 +93,8 @@ public class TestOverrideAccommodationRates_TA extends AccommodationBaseTest {
         int numberOfChargeItems = rs.getRowCount();
         String old_chargeID = rs.getValue("CHRG_ID", 4);
         String old_chargeAmount = rs.getValue("CHRG_AM", 4);
-        // String old_chargeItemID = rs.getValue("CHRG_ITEM_ID", 1);
-        // String old_chargeItemID2 = rs.getValue("CHRG_ITEM_ID", 2);
-        // String old_chargeItemID3 = rs.getValue("CHRG_ITEM_ID", 3);
         String old_chargeItemID4 = rs.getValue("CHRG_ITEM_ID", 4);
-        // int numberOfChargeItems = rs.getRowCount();
-        // String oldchargeItemAmount = rs.getValue("CHRG_ITEM_AM", 1);
-        // String oldchargeItemAmount2 = rs.getValue("CHRG_ITEM_AM", 2);
-        // String oldchargeItemAmount3 = rs.getValue("CHRG_ITEM_AM", 3);
+
         String oldchargeItemAmount4 = rs.getValue("CHRG_ITEM_AM", 4);
 
         // SQL2
@@ -121,8 +115,6 @@ public class TestOverrideAccommodationRates_TA extends AccommodationBaseTest {
         oar.setRackRateRate("1.0");
         oar.setDate(getArrivalDate());
         oar.setRackRateDate(getArrivalDate());
-
-        // oar.setOverrideReason("RTOTHER");
         oar.setOverrideReason("RTPRTSIZE");
         oar.setLocationId(locationId);
 
@@ -149,7 +141,7 @@ public class TestOverrideAccommodationRates_TA extends AccommodationBaseTest {
         TestReporter.assertTrue(!old_chargeAmount.equals(rs5.getValue("CHRG_AM", 4).toString()), "The old charge [" + old_chargeAmount + "] has been updated to [" + rs5.getValue("CHRG_AM", 4).toString() + "]. ");
         TestReporter.assertTrue(!old_chargeID.equals(rs5.getValue("CHRG_ID", 4).toString()), "The old charge item [" + old_chargeID + " ] has been updated to [" + rs5.getValue("CHRG_ID", 4).toString() + "]. ");
         TestReporter.assertTrue(!oldchargeItemAmount4.equals(rs5.getValue("CHRG_ITEM_AM", 4).toString()), "The charge Item amount [ " + oldchargeItemAmount4 + " ] has been updated to [" + rs5.getValue("CHRG_ITEM_AM", 4) + "].");
-
+        TestReporter.assertTrue(!old_chargeItemID4.equals(rs5.getValue("old_chargeItemID4", 4).toString()), "The charge item id [" + old_chargeItemID4 + "] has been updated to [" + rs5.getValue("old_chargeItemID4", 4) + "].");
         // sql2
         // captures the folio items, folio item id, and folio item amount
         TestReporter.assertTrue(numberOfFolioItems == rs6.getRowCount(), "The number of folio items [" + numberOfFolioItems + "].");

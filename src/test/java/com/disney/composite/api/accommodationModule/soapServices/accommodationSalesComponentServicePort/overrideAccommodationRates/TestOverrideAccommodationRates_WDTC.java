@@ -139,10 +139,11 @@ public class TestOverrideAccommodationRates_WDTC extends AccommodationBaseTest {
         // System.out.println(rs5.getRowCount());
 
         // Captures charge items, charge Amounts, charge ids, and charge item amount
-        TestReporter.assertTrue(numberOfChargeItems - rs5.getRowCount() == 1, "The number of charge items [" + numberOfChargeItems + "].");
+        TestReporter.assertTrue(numberOfChargeItems - rs5.getRowCount() == 1, "The number of charge items [" + rs5.getRowCount() + "].");
         TestReporter.assertTrue(!old_chargeAmount.equals(rs5.getValue("CHRG_AM", 4).toString()), "The old charge [" + old_chargeAmount + "] has been updated to [" + rs5.getValue("CHRG_AM", 4).toString() + "]. ");
         TestReporter.assertTrue(!old_chargeID.equals(rs5.getValue("CHRG_ID", 4).toString()), "The old charge item [" + old_chargeID + " ] has been updated to [" + rs5.getValue("CHRG_ID", 4).toString() + "]. ");
         TestReporter.assertTrue(!oldchargeItemAmount4.equals(rs5.getValue("CHRG_ITEM_AM", 4).toString()), "The charge Item amount [ " + oldchargeItemAmount4 + " ] has been updated to [" + rs5.getValue("CHRG_ITEM_AM", 4) + "].");
+        TestReporter.assertTrue(!old_chargeItemID4.equals(rs5.getValue("CHRG_ITEM_ID", 4).toString()), "The charge Item ID [ " + old_chargeItemID4 + " ] has been updated to [" + rs5.getValue("CHRG_ITEM_ID", 4) + "].");
 
         // additional charge counted in sql1 and updated after request is deleted
         // discount is removed after request
@@ -165,7 +166,7 @@ public class TestOverrideAccommodationRates_WDTC extends AccommodationBaseTest {
 
         // sql2
         // Captures folio items, folio item ids, and folio item amounts
-        TestReporter.assertTrue(numberOfFolioItems == rs6.getRowCount(), "The number of folio items [" + numberOfFolioItems + "].");
+        TestReporter.assertTrue(numberOfFolioItems == rs6.getRowCount(), "The number of folio items [" + rs6.getRowCount() + "].");
         TestReporter.assertTrue(!old_folioItemID.equals(rs6.getValue("FOLIO_ITEM_ID", 4).toString()), "The Folio item id [" + old_folioItemID + "] has been updated to [" + rs6.getValue("FOLIO_ITEM_ID", 4).toString() + "]. ");
         TestReporter.assertTrue(!old_folioItemAmount.equals(rs6.getValue("FOLIO_ITEM_AM", 4).toString()), "The Folio Item amount [" + old_folioItemAmount + "] has been updated to [" + rs6.getValue("FOLIO_ITEM_AM", 4).toString() + "].");
         TestReporter.assertAll();

@@ -112,9 +112,10 @@ public class TestOverrideAccommodationRates_extRefWithNullTCG extends Accommodat
         oar.setTpsID(getBook().getTravelPlanSegmentId());
         // oar.setTcgId(tcg_id);
         oar.setBasePrice("4");
-        oar.setExternalReferenceNumber("55564566");
+        oar.setExternalReferenceNumber(getExternalRefNumber());
+        oar.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         oar.setExternalReferenceType("DREAMS_TCG");
-        oar.setExternalReferenceSource("DPMSBooking");
+        oar.setExternalReferenceSource(getExternalRefSource());
         oar.setRackRateRate("1.0");
         oar.setDate(getArrivalDate());
         oar.setRackRateDate(getArrivalDate());

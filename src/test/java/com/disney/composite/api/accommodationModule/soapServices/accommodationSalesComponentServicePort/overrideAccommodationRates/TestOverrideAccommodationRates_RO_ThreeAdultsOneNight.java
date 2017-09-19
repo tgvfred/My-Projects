@@ -23,14 +23,9 @@ public class TestOverrideAccommodationRates_RO_ThreeAdultsOneNight extends Accom
         setEnvironment(environment);
         setDaysOut(0);
         setNights(1);
-        // setAddNewGuest(true);
-
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
-        // setAddGuest(true);
         setValues(getEnvironment());
-        // ReplaceAllForTravelPlanSegment replace = new ReplaceAllForTravelPlanSegment(environment, "ROThreeAdults");
-        // replace.sendRequest();
         book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "ROThreeAdults");
         book.sendRequest();
         System.out.print(book.getResponse());
