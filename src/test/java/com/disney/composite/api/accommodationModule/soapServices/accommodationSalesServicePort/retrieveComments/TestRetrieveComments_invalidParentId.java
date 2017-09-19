@@ -16,7 +16,7 @@ public class TestRetrieveComments_invalidParentId extends AccommodationBaseTest 
     String commentText = "This is test comment " + Randomness.randomAlphaNumeric(4);
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetriveComments", "negative" })
-    public void TestRetrieveComments_invalidParentId() {
+    public void TestRetrieveComments_invalidParentId_positive() {
         db = new OracleDatabase(environment, Database.DREAMS);
         String sql = "select * from "
                 + "( "

@@ -16,7 +16,7 @@ public class TestRetrieveComments_roomOnly_activeComments extends AccommodationB
     String parentId = "";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments" })
-    public void testCreateComments_parentTC() {
+    public void TestRetrieveComments_roomOnly_activeComments_positive() {
 
         String expectedIsActive = "true";
         String expectedGSR = "false";
@@ -96,6 +96,7 @@ public class TestRetrieveComments_roomOnly_activeComments extends AccommodationB
         if (Environment.isSpecialEnvironment(environment)) {
 
             RetrieveComments clone = (RetrieveComments) retrieve.clone();
+            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.setParentIds(parentId);
             clone.sendRequest();
             if (!clone.getResponseStatusCode().equals("200")) {
@@ -104,7 +105,6 @@ public class TestRetrieveComments_roomOnly_activeComments extends AccommodationB
 
             TestReporter.assertTrue(retrieve.validateResponseNodeQuantity(clone, true), "Validating Response Comparison");
         }
-
     }
 
     private void validate(CreateComments create, CreateComments create2, RetrieveComments retrieve) {
