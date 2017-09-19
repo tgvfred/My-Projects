@@ -7,7 +7,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
-public class TestCalculateUnsharedRates_OneSharedRoomDetails extends AccommodationBaseTest {
+public class TestCalculateUnsharedRates_oneSharedRoomDetails_twoGuestRefs extends AccommodationBaseTest {
 
     CalculateUnsharedRates calculate;
 
