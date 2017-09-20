@@ -7,8 +7,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCPointsHelper;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -52,7 +50,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalescService", "overrideAccommodationRates", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_nullRateDetails() {
         String fault = "Required parameters are missing : Rate Details is Null";
 
@@ -177,41 +175,9 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         validateApplicationError(oar, AccommodationErrorCode.OVERRIDE_RATE_RACK_RATE_ERROR);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
-    public void TestOverrideAccommodationRates_dvcPoints() {
+    // test TestOverrideAccommodationRates_dvcPoints in separate file
 
-        // locEnv = environment;
-        // BookDVCPointsHelper helper =new BookDVCPointsHelper()
-        // setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
-        BookDVCPointsHelper bdvc = new BookDVCPointsHelper();
-
-        bdvc.setUseDvcResort(true);
-        bdvc.setUseNonZeroPoints(true);
-        bdvc.setEnvironment(Environment.getBaseEnvironmentName(environment));
-        bdvc.bookDvcReservation("testBookWithPay_MP", 1);
-        bdvc.getFirstBooking().getTravelPlanId();
-
-        bdvc.bookReservation();
-        isComo.set("false");
-        // isComo.set("false");
-
-        // bookReservation();
-        String fault = "Rates for DVC points reservation cannot be overridden";
-
-        TestReporter.logScenario("Test - Override Accommodation Rates - dvcPoints");
-
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        oar.setTpsID(getBook().getTravelPlanSegmentId());
-        oar.setTcgId(getBook().getTravelComponentGroupingId());
-
-        // oar.setOverrideReason("RTPRTSIZE");
-
-        oar.sendRequest();
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.INVALID_REQUEST);
-    }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_upgradeRes() {
 
         String fault = "Rate override failed : Rate override cannot be performed on an upgraded accommodation!";

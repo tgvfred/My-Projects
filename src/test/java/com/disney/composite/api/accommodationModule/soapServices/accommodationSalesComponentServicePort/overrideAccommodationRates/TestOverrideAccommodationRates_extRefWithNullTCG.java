@@ -126,8 +126,12 @@ public class TestOverrideAccommodationRates_extRefWithNullTCG extends Accommodat
 
         oar.sendRequest();
 
-        System.out.print(oar.getRequest());
+        System.out.println(oar.getRequest());
         System.out.println(oar.getResponse());
+        TestReporter.logAPI(!oar.getResponseStatusCode().equals("200"), "An error occurred getting override Accomodation Rates: " + oar.getFaultString(), oar);
+        TestReporter.assertEquals(oar.getTcgID(), getBook().getTravelComponentGroupingId(), "The response Travel Component Grouping id [" + oar.getTcgID() + "] matches Travel Component Grouping id in the request [" + getBook().getTravelComponentGroupingId() + "].");
+        TestReporter.assertEquals(oar.getTcID(), getBook().getTravelComponentId(), "The response Travel Plan Segment id [" + oar.getTcID() + "] matches Travel Plan Segment id in the request [" + getBook().getTravelComponentId() + "].");
+
         Recordset rs5 = new Recordset(db.getResultSet(sql1));
         Recordset rs6 = new Recordset(db.getResultSet(sql2));
         Recordset rs7 = new Recordset(db.getResultSet(sql3));
@@ -138,11 +142,6 @@ public class TestOverrideAccommodationRates_extRefWithNullTCG extends Accommodat
         rs6.print();
         rs7.print();
         rs8.print();
-
-        TestReporter.logAPI(!oar.getResponseStatusCode().equals("200"), "An error occurred getting override Accomodation Rates: " + oar.getFaultString(), oar);
-        TestReporter.assertEquals(oar.getTcgID(), getBook().getTravelComponentGroupingId(), "The response Travel Component Grouping id [" + oar.getTcgID() + "] matches Travel Component Grouping id in the request [" + getBook().getTravelComponentGroupingId() + "].");
-        TestReporter.assertEquals(oar.getTcID(), getBook().getTravelComponentId(), "The response Travel Plan Segment id [" + oar.getTcID() + "] matches Travel Plan Segment id in the request [" + getBook().getTravelComponentId() + "].");
-
         // sql1
         // captures the number of charge items, charge amount, charge id and charge item amount
         TestReporter.assertTrue(numberOfChargeItems == rs5.getRowCount(), "The number of charge items [" + numberOfChargeItems + "].");
