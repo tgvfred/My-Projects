@@ -57,7 +57,7 @@ public class TestUpdateGuaranteedStatus_TC_true extends AccommodationBaseTest {
 
         rs.print();
 
-        TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID", 1), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID", 1) + "].");
+        TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID", 1), "The assignment owner id is [TC_True] [" + rs.getValue("ASGN_OWN_ID", 1) + "].");
 
         UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
 
@@ -107,16 +107,19 @@ public class TestUpdateGuaranteedStatus_TC_true extends AccommodationBaseTest {
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(ugs, true), "Validating Response Comparison");
 
         }
+
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationInventoryRequestComponentService", "updateGuaranteedStatus" })
     public void testUpdateGuaranteedStatus_TC_trueToFalse() {
 
+        String tp_id = getBook().getTravelPlanId();
+
         String sql1 = " select c.ASGN_OWN_ID"
                 + " from res_mgmt.tps a"
                 + " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
                 + " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb"
-                + " where a.tp_id =  1238927660"
+                + " where a.tp_id = '" + tp_id + "'"
                 + " and c.ASGN_OWN_ID is not null";
 
         String sql2 = " select d.GUAR_IN"
@@ -124,18 +127,18 @@ public class TestUpdateGuaranteedStatus_TC_true extends AccommodationBaseTest {
                 + " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
                 + " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb"
                 + " left outer join rsrc_inv.RSRC_ASGN_OWNR d on c.ASGN_OWN_ID = d.ASGN_OWNR_ID"
-                + " where a.tp_id =  1238927660"
+                + " where a.tp_id =  '" + tp_id + "'"
                 + " and c.ASGN_OWN_ID is not null";
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql1));
         rs.print();
-        TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
+        TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID", 1), "The assignment owner id is[TC_FALSE] " + rs.getValue("ASGN_OWN_ID", 1) + "].");
 
         UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
 
         ugs.setGuaranteedStatusFlag("false");
-        ugs.setOwnerReferenceNumber("1238927660");
+        ugs.setOwnerReferenceNumber(tp_id);
         ugs.setOwnerReferenceType("TC");
 
         ugs.sendRequest();
@@ -144,8 +147,8 @@ public class TestUpdateGuaranteedStatus_TC_true extends AccommodationBaseTest {
         Recordset rs2 = new Recordset(db.getResultSet(sql2));
         rs2.print();
         TestReporter.logAPI(!ugs.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", ugs);
-        TestReporter.assertTrue(ugs.getAssignmentOwnerId().equals(rs.getValue("ASGN_OWN_ID")), "The response Assignment Owner Id [" + ugs.getAssignmentOwnerId() + "] matches the database TC_RSN_NM [" + rs.getValue("ASGN_OWN_ID") + "].");
-        TestReporter.assertTrue("N".equals(rs2.getValue("GUAR_IN")), "The Guarante Indicator is set to [" + rs2.getValue("GUAR_IN") + "].");
+        TestReporter.assertTrue(ugs.getAssignmentOwnerId().equals(rs.getValue("ASGN_OWN_ID", 1)), "The response Assignment Owner Id [" + ugs.getAssignmentOwnerId() + "] matches the database TC_RSN_NM [" + rs.getValue("ASGN_OWN_ID") + "].");
+        TestReporter.assertTrue("N".equals(rs2.getValue("GUAR_IN", 1)), "The Guarante Indicator is set to [" + rs2.getValue("GUAR_IN", 1) + "].");
 
         // old vs. new
         if (Environment.isSpecialEnvironment(getEnvironment())) {
