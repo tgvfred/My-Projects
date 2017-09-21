@@ -111,15 +111,15 @@ public class TestOverrideAccommodationRates_extRefWithNullTCG extends Accommodat
         oar.setTcgId(BaseSoapCommands.REMOVE_NODE.toString());
         oar.setTpsID(getBook().getTravelPlanSegmentId());
         // oar.setTcgId(tcg_id);
-        oar.setBasePrice("4");
+        oar.setBasePrice("5");
         oar.setExternalReferenceNumber(getExternalRefNumber());
         oar.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         oar.setExternalReferenceType("DREAMS_TCG");
         oar.setExternalReferenceSource(getExternalRefSource());
-        oar.setRackRateRate("1.0");
+        oar.setRackRateRate("9.0");
         oar.setDate(getArrivalDate());
         oar.setRackRateDate(getArrivalDate());
-
+        oar.setOverridden("true");
         // oar.setOverrideReason("RTOTHER");
         oar.setOverrideReason("RTPRTSIZE");
         oar.setLocationId(locationId);
@@ -156,6 +156,8 @@ public class TestOverrideAccommodationRates_extRefWithNullTCG extends Accommodat
         TestReporter.assertTrue(!old_folioItemAmount.equals(rs6.getValue("FOLIO_ITEM_AM", 4).toString()), "The Folio Item amount [" + old_folioItemAmount + "] has been updated to [" + rs6.getValue("FOLIO_ITEM_AM", 4).toString() + "].");
         TestReporter.assertAll();
         // sql3
+        // Grabs the TC_RSN_NM in the sql7 after the request is sent
+        TestReporter.assertTrue(!rs7.getValue("TC_RSN_NM", 1).toString().equals(""), "The TC_RSN_TYP_NM before the request is empty and after the request has a TC_RSN_TYP_NM of [" + rs7.getValue("TC_RSN_TYP_NM", 1).toString() + "].");
 
         // sql5
 
