@@ -358,6 +358,12 @@ public class AccommodationErrorCode {
 
     public static final ApplicationErrorCode INVALID_RQ = new ApplicationErrorCode(MODULE_NAME, 9020,
             "INVALID REQUEST !");
+
+    private static final String APPLICATION = "LILO System";
+
+    public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode(APPLICATION, 1001,
+            "Unexpected Error occurred");
+
     /*
      * private static final String APP_NAME = "LILO FOLIO";
      *
