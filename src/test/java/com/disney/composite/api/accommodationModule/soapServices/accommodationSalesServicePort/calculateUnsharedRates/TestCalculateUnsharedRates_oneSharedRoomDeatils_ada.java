@@ -7,12 +7,11 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
-public class TestCalculateUnsharedRates_oneSharedRoomDetails_twoGuestRefs extends AccommodationBaseTest {
-
+public class TestCalculateUnsharedRates_oneSharedRoomDeatils_ada extends AccommodationBaseTest {
     CalculateUnsharedRates calculate;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates" })
-    public void Test_CalculateUnsharedRates_OneSharedRoomDetails_twoGuestRefs() {
+    public void Test_CalculateUnsharedRates_oneSharedRoomDeatils_ada() {
 
         calculate = new CalculateUnsharedRates(environment, "Main_TwoGuestRefs");
         calculate.setUnsharedChainSharedRoomDetailTCGId("0");
@@ -26,32 +25,21 @@ public class TestCalculateUnsharedRates_oneSharedRoomDetails_twoGuestRefs extend
         calculate.setUnsharedAccommodationUnSharedRoomDetailsTCId("0");
         calculate.setUnsharedAccommodationTPSId("0");
 
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-
-        calculate.addUnsharedChainSharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainSharedRoomDetailGuestReferenceDetails();
-
-        calculate.addUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
-
-        calculate.addUnsharedAccommSharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedAccommSharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainSharedRoomSpecialNeedsRequest("True");
+        calculate.setUnsharedChainUnsharedRoomSpecialNeedsRequest("True");
+        calculate.setUnsharedAccommSharedRoomSpecialNeedsRequest("True");
+        calculate.setUnsharedAccommUnsharedRoomSpecialNeedsRequest("True");
 
         // calculate.setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/exchangeFee", BaseSoapCommands.REMOVE_NODE.toString());
         calculate.sendRequest();
         System.out.print(calculate.getRequest());
-        TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates: " + calculate.getFaultString(), calculate);
+        TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 
         validateUnsharedRoomRateDetailsResponse();
         validateSharedRoomRateDetailsResponse();
         validateSharedRoomRateDetailsResponseDiffers();
         validateUnSharedRoomRateDetailsResponseDiffers();
-        validateNumberShareChainUnsharedRoomRateDetailsResponseNodes();
-        validateNumberShareChainSharedRoomRateDetailsResponseNodes();
-        validateUnSharedAccommNumberUnSharedRoomRateDetailsResponseNodes();
-        validateUnSharedAccommNumberSharedRoomRateDetailsResponseNodes();
-
+        validateSpecialNeedsRequest();
         calculate.sendRequest();
         if (Environment.isSpecialEnvironment(environment)) {
             CalculateUnsharedRates clone = (CalculateUnsharedRates) calculate.clone();
@@ -173,31 +161,13 @@ public class TestCalculateUnsharedRates_oneSharedRoomDetails_twoGuestRefs extend
 
     }
 
-    public void validateNumberShareChainUnsharedRoomRateDetailsResponseNodes() {
-        TestReporter.logStep("Validate the number of guest response nodes");
-        // Verify that 2 response nodes were returned for the guest node.
-        TestReporter.softAssertEquals(calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails"), 2, "Verify that there were two response nodes returned for the ShareChain/UnSharedRoom detail guest node.");
+    public void validateSpecialNeedsRequest() {
+        TestReporter.logStep("Validate ADA special needs request");
+        TestReporter.softAssertEquals(calculate.getUnsharedChainUnsharedRoomSpecialNeedsRequest(), "true", "Verify that the response returns the additional charge [" + calculate.getUnsharedChainUnsharedRoomSpecialNeedsRequest() + "] that which is expected [True].");
+        TestReporter.softAssertEquals(calculate.getUnsharedChainSharedRoomSpecialNeedsRequest(), "true", "Verify that the response returns the additional charge [" + calculate.getUnsharedChainSharedRoomSpecialNeedsRequest() + "] that which is expected [True].");
+        TestReporter.softAssertEquals(calculate.getUnsharedAccommUnsharedRoomSpecialNeedsRequest(), "true", "Verify that the response returns the additional charge [" + calculate.getUnsharedAccommUnsharedRoomSpecialNeedsRequest() + "] that which is expected [True].");
+        TestReporter.softAssertEquals(calculate.getUnsharedAccommSharedRoomSpecialNeedsRequest(), "true", "Verify that the response returns the additional charge [" + calculate.getUnsharedAccommSharedRoomSpecialNeedsRequest() + "] that which is expected [True].");
         TestReporter.assertAll();
     }
 
-    public void validateNumberShareChainSharedRoomRateDetailsResponseNodes() {
-        TestReporter.logStep("Validate the number of guest response nodes");
-        // Verify that 2 response nodes were returned for the guest node.
-        TestReporter.softAssertEquals(calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains/shareRoomDetails/sharedRoomDetail/roomReservationDetail/guestReferenceDetails"), 2, "Verify that there were two response nodes returned for the ShareChain/SharedRoom detail guest node.");
-        TestReporter.assertAll();
-    }
-
-    public void validateUnSharedAccommNumberUnSharedRoomRateDetailsResponseNodes() {
-        TestReporter.logStep("Validate the number of guest response nodes");
-        // Verify that 2 response nodes were returned for the guest node.
-        TestReporter.softAssertEquals(calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails"), 2, "Verify that there were two response nodes returned for the UnSharedAccommodation/UnSharedRoom detail guest node.");
-        TestReporter.assertAll();
-    }
-
-    public void validateUnSharedAccommNumberSharedRoomRateDetailsResponseNodes() {
-        TestReporter.logStep("Validate the number of guest response nodes");
-        // Verify that 2 response nodes were returned for the guest node.
-        TestReporter.softAssertEquals(calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/sharedRoomDetail/roomReservationDetail/guestReferenceDetails"), 2, "Verify that there were two response nodes returned for the UnSharedAccommodation/SharedRoom detail guest node.");
-        TestReporter.assertAll();
-    }
 }
