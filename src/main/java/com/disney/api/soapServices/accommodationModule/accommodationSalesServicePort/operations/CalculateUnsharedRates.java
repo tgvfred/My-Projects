@@ -571,7 +571,39 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
         setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/specialNeedsRequested", value);
     }
 
+    public void setUnsharedChainUnsharedRoomShared(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/unSharedRoomDetail/shared", value);
+    }
+
+    public void setUnsharedChainSharedRoomShared(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/sharedRoomDetail/shared", value);
+    }
+
+    public void setUnsharedAccommUnsharedRoomShared(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/unSharedRoomDetail/shared", value);
+    }
+
+    public void setUnsharedAccommSharedRoomShared(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/shared", value);
+    }
+
     // getters
+    public String getUnsharedChainUnsharedRoomShared() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains/shareRoomDetails/unSharedRoomDetail/shared");
+    }
+
+    public String getUnsharedChainSharedRoomShared() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains/shareRoomDetails/sharedRoomDetail/shared");
+    }
+
+    public String getUnsharedAccommUnsharedRoomShared() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/shared");
+    }
+
+    public String getUnsharedAccommSharedRoomShared() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/sharedRoomDetail/shared");
+    }
+
     public String getUnsharedChainUnsharedRoomSpecialNeedsRequest() {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains/shareRoomDetails/unSharedRoomDetail/specialNeedsRequested");
     }

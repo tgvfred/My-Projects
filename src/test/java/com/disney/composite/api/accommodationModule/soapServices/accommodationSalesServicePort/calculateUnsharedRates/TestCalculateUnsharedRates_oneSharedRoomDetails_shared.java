@@ -7,13 +7,14 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
-public class TestCalculateUnsharedRates_oneSharedRoomDeatils_ada extends AccommodationBaseTest {
+public class TestCalculateUnsharedRates_oneSharedRoomDetails_shared extends AccommodationBaseTest {
+
     CalculateUnsharedRates calculate;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates" })
     public void Test_CalculateUnsharedRates_oneSharedRoomDeatils_ada() {
 
-        calculate = new CalculateUnsharedRates(environment, "Main_TwoGuestRefs");
+        calculate = new CalculateUnsharedRates(environment, "Main_2");
         calculate.setUnsharedChainSharedRoomDetailTCGId("0");
         calculate.setUnsharedChainSharedRoomDetailTCId("0");
         calculate.setUnsharedChainShareRoomDetailsTPSId("0");
@@ -25,10 +26,10 @@ public class TestCalculateUnsharedRates_oneSharedRoomDeatils_ada extends Accommo
         calculate.setUnsharedAccommodationUnSharedRoomDetailsTCId("0");
         calculate.setUnsharedAccommodationTPSId("0");
 
-        calculate.setUnsharedChainSharedRoomSpecialNeedsRequest("True");
-        calculate.setUnsharedChainUnsharedRoomSpecialNeedsRequest("True");
-        calculate.setUnsharedAccommSharedRoomSpecialNeedsRequest("True");
-        calculate.setUnsharedAccommUnsharedRoomSpecialNeedsRequest("True");
+        calculate.setUnsharedChainSharedRoomShared("True");
+        calculate.setUnsharedChainUnsharedRoomShared("True");
+        calculate.setUnsharedAccommSharedRoomShared("True");
+        calculate.setUnsharedAccommUnsharedRoomShared("True");
 
         // calculate.setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/exchangeFee", BaseSoapCommands.REMOVE_NODE.toString());
         calculate.sendRequest();
@@ -162,11 +163,11 @@ public class TestCalculateUnsharedRates_oneSharedRoomDeatils_ada extends Accommo
     }
 
     public void validateSpecialNeedsRequest() {
-        TestReporter.logStep("Validate ADA special needs response");
-        TestReporter.softAssertEquals(calculate.getUnsharedChainUnsharedRoomSpecialNeedsRequest(), "true", "Verify that the response returns the special needs status [" + calculate.getUnsharedChainUnsharedRoomSpecialNeedsRequest() + "] that which is expected [true].");
-        TestReporter.softAssertEquals(calculate.getUnsharedChainSharedRoomSpecialNeedsRequest(), "true", "Verify that the response returns the special needs status [" + calculate.getUnsharedChainSharedRoomSpecialNeedsRequest() + "] that which is expected [true].");
-        TestReporter.softAssertEquals(calculate.getUnsharedAccommUnsharedRoomSpecialNeedsRequest(), "true", "Verify that the response returns the special needs status [" + calculate.getUnsharedAccommUnsharedRoomSpecialNeedsRequest() + "] that which is expected [true].");
-        TestReporter.softAssertEquals(calculate.getUnsharedAccommSharedRoomSpecialNeedsRequest(), "true", "Verify that the response returns the special needs status [" + calculate.getUnsharedAccommSharedRoomSpecialNeedsRequest() + "] that which is expected [true].");
+        TestReporter.logStep("Validate the shared nodes are set to 'true'");
+        TestReporter.softAssertEquals(calculate.getUnsharedChainUnsharedRoomShared(), "true", "Verify that the response returns the shared status [" + calculate.getUnsharedChainUnsharedRoomShared() + "] that which is expected [true].");
+        TestReporter.softAssertEquals(calculate.getUnsharedChainSharedRoomShared(), "true", "Verify that the response returns the shared status [" + calculate.getUnsharedChainSharedRoomShared() + "] that which is expected [true].");
+        TestReporter.softAssertEquals(calculate.getUnsharedAccommUnsharedRoomShared(), "true", "Verify that the response returns the shared status [" + calculate.getUnsharedAccommUnsharedRoomShared() + "] that which is expected [true].");
+        TestReporter.softAssertEquals(calculate.getUnsharedAccommSharedRoomShared(), "true", "Verify that the response returns the shared status [" + calculate.getUnsharedAccommSharedRoomShared() + "] that which is expected [true].");
         TestReporter.assertAll();
     }
 

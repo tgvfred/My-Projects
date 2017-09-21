@@ -52,7 +52,6 @@ public class TestCalculateUnsharedRates_oneSharedRoomDetails_twoGuestRefs extend
         validateUnSharedAccommNumberUnSharedRoomRateDetailsResponseNodes();
         validateUnSharedAccommNumberSharedRoomRateDetailsResponseNodes();
 
-        calculate.sendRequest();
         if (Environment.isSpecialEnvironment(environment)) {
             CalculateUnsharedRates clone = (CalculateUnsharedRates) calculate.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));

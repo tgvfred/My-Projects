@@ -34,7 +34,6 @@ public class TestCalculateUnsharedRates_OneSharedRoomDetails extends Accommodati
         validateSharedRoomRateDetailsResponseDiffers();
         validateUnSharedRoomRateDetailsResponseDiffers();
 
-        calculate.sendRequest();
         if (Environment.isSpecialEnvironment(environment)) {
             CalculateUnsharedRates clone = (CalculateUnsharedRates) calculate.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
