@@ -1,0 +1,5 @@
+package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.calculateUnsharedRates;
+
+public class TestCalculateUnsharedRates_tooManyGuests_unSharedChain_Negative {
+
+}
