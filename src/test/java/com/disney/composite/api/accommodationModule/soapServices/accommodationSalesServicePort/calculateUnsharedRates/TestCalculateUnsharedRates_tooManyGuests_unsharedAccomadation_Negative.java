@@ -7,11 +7,12 @@ import com.disney.api.soapServices.accommodationModule.applicationError.Accommod
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.TestReporter;
 
-public class TestCalculateUnsharedRates_tooManyGuests_unSharedChain_Negative extends AccommodationBaseTest {
+public class TestCalculateUnsharedRates_tooManyGuests_unsharedAccomadation_Negative extends AccommodationBaseTest {
+
     CalculateUnsharedRates calculate;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates", "negative" })
-    public void Test_CalculateUnsharedRates_tooManyGuests_unSharedChain_Negative() {
+    public void Test_CalculateUnsharedRates_tooManyGuests_unsharedAccomadation_Negative() {
 
         calculate = new CalculateUnsharedRates(environment, "Main_TwoGuestRefs");
         calculate.setUnsharedChainSharedRoomDetailTCGId("0");
@@ -25,16 +26,16 @@ public class TestCalculateUnsharedRates_tooManyGuests_unSharedChain_Negative ext
         calculate.setUnsharedAccommodationUnSharedRoomDetailsTCId("0");
         calculate.setUnsharedAccommodationTPSId("0");
 
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedAccommUnsharedRoomDetailGuestReferenceDetails();
         calculate.sendRequest();
 
         String faultString = "Error Invoking Packaging Service  : Party size of 6 exceeds maximum occupancy of 5 for the room type of CA.";
@@ -44,4 +45,5 @@ public class TestCalculateUnsharedRates_tooManyGuests_unSharedChain_Negative ext
         TestReporter.assertEquals(calculate.getFaultString(), faultString, "Verify that the fault string [" + calculate.getFaultString() + "] is that which is expected [" + faultString + "].");
 
     }
+
 }

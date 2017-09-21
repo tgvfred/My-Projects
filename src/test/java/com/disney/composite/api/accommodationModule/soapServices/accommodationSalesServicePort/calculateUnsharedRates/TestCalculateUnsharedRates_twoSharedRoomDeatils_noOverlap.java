@@ -1,0 +1,7 @@
+package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.calculateUnsharedRates;
+
+import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+
+public class TestCalculateUnsharedRates_twoSharedRoomDeatils_noOverlap extends AccommodationBaseTest {
+
+}
