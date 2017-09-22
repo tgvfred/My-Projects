@@ -5,7 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForCancel;
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassCancelTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageCancelData;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.BookReservations;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -134,7 +134,7 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         setTcId(book.getTravelComponentId());
 
         // Uses first book tcg to make massCancelAccommodationRequestDetails
-        StageMassCancelTransactional stageMassCancel = new StageMassCancelTransactional(environment, "Main");
+        StageCancelData stageMassCancel = new StageCancelData(environment, "Main");
         stageMassCancel.setCancelContactName(contactName);
         stageMassCancel.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancel.setCancelReasonCode(reasonCode);
@@ -225,9 +225,9 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
 
     }
 
-    private void buildSecondDetails(StageMassCancelTransactional stageMassCancel) {
+    private void buildSecondDetails(StageCancelData stageMassCancel) {
 
-        stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageMassCancelTransactional/massCancelRequest",
+        stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request",
                 BaseSoapCommands.ADD_NODE.commandAppend("massCancelAccommodationRequestDetails"));
         stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
                 BaseSoapCommands.ADD_NODE.commandAppend("cancelContactName"));
