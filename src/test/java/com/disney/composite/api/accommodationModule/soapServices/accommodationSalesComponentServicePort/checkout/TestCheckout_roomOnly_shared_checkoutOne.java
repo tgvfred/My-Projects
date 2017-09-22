@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -17,35 +16,39 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseTest {
     private CheckInHelper helper;
+    private String locVar;
     // private Book book;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
+        locVar = environment;
         bookReservation();
     }
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void testCheckout_roomOnly_shared_checkoutOne() {
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
-            }
-        }
+        /*
+         * if (Environment.isSpecialEnvironment(environment)) {
+         * if (true) {
+         * throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
+         * }
+         * }
+         */
         Share share = new Share(getEnvironment(), "oneTcgOnly");
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing TCG ID [" + getBook().getTravelComponentGroupingId() + "]: " + share.getFaultString());
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
+        helper = new CheckInHelper(locVar, getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
         helper.checkOut(getLocationId());
 

@@ -1,7 +1,6 @@
 
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -21,6 +20,7 @@ public class Checkout_WDTC extends AccommodationBaseTest {
     private CheckInHelper helper;
 
     @Override
+    @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
@@ -35,9 +35,6 @@ public class Checkout_WDTC extends AccommodationBaseTest {
         setAddNewGuest(true);
         bookReservation();
     }
-
-    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
-    public void TestCheckout_wdtc() {
 //        if (Environment.isSpecialEnvironment(environment)) {
 //            if (true) {
 //                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
