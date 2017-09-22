@@ -771,4 +771,14 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
     public String getUnSharedRoomDetailsPointsValue() {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/rateDetails/pointsValue");
     }
+
+    // need to update xpaths from the response**************
+    public String getShareChainUnSharedRoomDetailsStartDate() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/rateDetails/pointsValue");
+    }
+
+    // same as above.
+    public String getShareChainUnSharedRoomDetailsEndDate() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/rateDetails/pointsValue");
+    }
 }
