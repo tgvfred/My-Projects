@@ -98,7 +98,7 @@ public class TestUpdateGuaranteedStatus_TP_true extends AccommodationBaseTest {
         }
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationInventoryRequestComponentService", "updateGuaranteedStatus" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationInventoryRequestComponentService", "updateGuaranteedStatus" }, dependsOnMethods = { "testUpdateGuaranteedStatus_TP_true" })
     public void testUpdateGuaranteedStatus_TP_trueToFalse() {
 
         String sql1 = " select c.ASGN_OWN_ID"

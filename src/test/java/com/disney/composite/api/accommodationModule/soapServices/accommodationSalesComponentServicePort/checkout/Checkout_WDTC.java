@@ -9,7 +9,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -19,7 +18,6 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class Checkout_WDTC extends AccommodationBaseTest {
     private CheckInHelper helper;
 
-    @Override
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
@@ -35,11 +33,14 @@ public class Checkout_WDTC extends AccommodationBaseTest {
         setAddNewGuest(true);
         bookReservation();
     }
-//        if (Environment.isSpecialEnvironment(environment)) {
-//            if (true) {
-//                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
-//            }
-//        }
+
+    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
+    public void TestCheckout_wdtc() {
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // if (true) {
+        // throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
+        // }
+        // }
 
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());

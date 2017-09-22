@@ -110,7 +110,7 @@ public class TestUpdateGuaranteedStatus_TC_true extends AccommodationBaseTest {
 
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationInventoryRequestComponentService", "updateGuaranteedStatus" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationInventoryRequestComponentService", "updateGuaranteedStatus" }, dependsOnMethods = { "testUpdateGuaranteedStatus_TC_true" })
     public void testUpdateGuaranteedStatus_TC_trueToFalse() {
 
         String tp_id = getBook().getTravelPlanId();
