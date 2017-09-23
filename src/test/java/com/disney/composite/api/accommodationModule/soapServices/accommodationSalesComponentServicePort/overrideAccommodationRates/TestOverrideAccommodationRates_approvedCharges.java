@@ -7,6 +7,8 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.OverrideAccommodationRatesRequest;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -36,8 +38,6 @@ public class TestOverrideAccommodationRates_approvedCharges extends Accommodatio
         String tp_id1 = getBook().getTravelPlanId();
         String tp_id2;
         String tcg_id = getBook().getTravelComponentGroupingId();
-        // System.out.println(key);
-        // System.out.println(value);
 
         // Book room only booking (1 night, 1 adult)
         // Capture charge ids, charge amounts, charge items ids, charge item amounts, folio item ids, folio item amounts (to be used in a later validation)
@@ -84,28 +84,18 @@ public class TestOverrideAccommodationRates_approvedCharges extends Accommodatio
         Recordset rs3 = new Recordset(db.getResultSet(sql3));
         Recordset rs4 = new Recordset(db.getResultSet(sql5));
 
-        rs.print();
-        rs2.print();
-        rs3.print();
-        rs4.print();
-
         // SQL1
         int numberOfCharges = rs.getRowCount();
         int numberOfFolioItems = rs.getRowCount();
         int numberOfChargeItems = rs.getRowCount();
         String old_chargeID = rs.getValue("CHRG_ID", 4);
         String old_chargeAmount = rs.getValue("CHRG_AM", 4);
-
         String old_chargeItemID4 = rs.getValue("CHRG_ITEM_ID", 4);
-        // int numberOfChargeItems = rs.getRowCount();
-
         String oldchargeItemAmount4 = rs.getValue("CHRG_ITEM_AM", 4);
 
         // SQL2
-
         String old_folioItemID = rs2.getValue("FOLIO_ITEM_ID", 4);
         String old_folioItemAmount = rs2.getValue("FOLIO_ITEM_AM", 4);
-
         String basePriceSql = rs.getValue("CHRG_ITEM_AM", 4);
         String locationId = rs.getValue("WRK_LOC_ID", 4);
         TestReporter.assertTrue(numberOfCharges >= 1, "The number of charges is " + numberOfCharges);
@@ -128,17 +118,11 @@ public class TestOverrideAccommodationRates_approvedCharges extends Accommodatio
         oar.setLocationId(locationId);
 
         oar.sendRequest();
-        System.out.println(oar.getRequest());
+
         Recordset rs5 = new Recordset(db.getResultSet(sql1));
         Recordset rs6 = new Recordset(db.getResultSet(sql2));
         Recordset rs7 = new Recordset(db.getResultSet(sql3));
         Recordset rs8 = new Recordset(db.getResultSet(sql5));
-        System.out.println(tcg_id);
-        // System.out.println(tp_id1);
-        rs5.print();
-        rs6.print();
-        // rs7.print();
-        // rs8.print();
 
         TestReporter.logAPI(!oar.getResponseStatusCode().equals("200"), "An error occurred getting override Accomodation Rates: " + oar.getFaultString(), oar);
         TestReporter.assertEquals(oar.getTcgID(), getBook().getTravelComponentGroupingId(), "The response Travel Component Grouping id [" + oar.getTcgID() + "] matches Travel Component Grouping id in the request [" + getBook().getTravelComponentGroupingId() + "].");
@@ -154,7 +138,7 @@ public class TestOverrideAccommodationRates_approvedCharges extends Accommodatio
 
         // sql1
         // captures the charge items, charge amount, charge id, and charge item amount
-        // TestReporter.assertTrue(numberOfChargeItems == rs5.getRowCount(), "The number of charge items [" + numberOfChargeItems + "].");
+        TestReporter.assertTrue(numberOfChargeItems == rs5.getRowCount(), "The number of charge items before the request [" + numberOfChargeItems + "] and after the request is [" + rs5.getRowCount() + "].");
         TestReporter.assertTrue(!old_chargeAmount.equals(rs5.getValue("CHRG_AM", 4).toString()), "The old charge [" + old_chargeAmount + "] has been updated to [" + rs5.getValue("CHRG_AM", 4).toString() + "]. ");
         TestReporter.assertTrue(!old_chargeID.equals(rs5.getValue("CHRG_ID", 4).toString()), "The old charge item [" + old_chargeID + " ] has been updated to [" + rs5.getValue("CHRG_ID", 4).toString() + "]. ");
         TestReporter.assertTrue(!oldchargeItemAmount4.equals(rs5.getValue("CHRG_ITEM_AM", 4).toString()), "The charge Item amount [ " + oldchargeItemAmount4 + " ] has been updated to [" + rs5.getValue("CHRG_ITEM_AM", 4) + "].");
@@ -162,7 +146,7 @@ public class TestOverrideAccommodationRates_approvedCharges extends Accommodatio
 
         // sql2
         // captures the folio items, folio item ids, and folio item amount
-        // TestReporter.assertTrue(numberOfFolioItems == rs6.getRowCount(), "The number of folio items [" + numberOfFolioItems + "].");
+        TestReporter.assertTrue(numberOfFolioItems == rs6.getRowCount(), "The number of folio items before the request [" + numberOfFolioItems + "] and after the request is [" + rs6.getRowCount() + "].");
         TestReporter.assertTrue(!old_folioItemID.equals(rs6.getValue("FOLIO_ITEM_ID", 4).toString()), "The Folio item id [" + old_folioItemID + "] has been updated to [" + rs6.getValue("FOLIO_ITEM_ID", 4).toString() + "]. ");
         TestReporter.assertTrue(!old_folioItemAmount.equals(rs6.getValue("FOLIO_ITEM_AM", 4).toString()), "The Folio Item amount [" + old_folioItemAmount + "] has been updated to [" + rs6.getValue("FOLIO_ITEM_AM", 4).toString() + "].");
         TestReporter.assertAll();
@@ -185,6 +169,43 @@ public class TestOverrideAccommodationRates_approvedCharges extends Accommodatio
             if (rs8.getValue("RES_HIST_PROC_DS", i).equals("Rate Overridden")) {
                 TestReporter.assertTrue(rs8.getValue("RES_HIST_PROC_DS", i).equals("Rate Overridden"), "The reservation history record created is set to " + rs8.getValue("RES_HIST_PROC_DS", i));
             }
+
+        }
+        // old vs. new
+
+        if (Environment.isSpecialEnvironment(getEnvironment())) {
+
+            OverrideAccommodationRatesRequest clone = (OverrideAccommodationRatesRequest) oar.clone();
+            clone.setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+
+            int tries = 0;
+            int maxTries = 40;
+            boolean success = false;
+            tries = 0;
+            maxTries = 40;
+            success = false;
+            do {
+                Sleeper.sleep(500);
+                clone.sendRequest();
+                if (oar.getResponseStatusCode().equals("200")) {
+                    success = true;
+                } else {
+                    tries++;
+                }
+            } while (tries < maxTries && !success);
+            if (!clone.getResponseStatusCode().equals("200")) {
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"),
+                        "Error was returned: " + clone.getFaultString(), clone);
+            }
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+
+            clone.addExcludedXpathValidations("/Envelope/Body/overrideAccommodationRatesResponse/return/externalReferences");
+
+            clone.addExcludedXpathValidations("/Envelope/Body/overrideAccommodationRatesResponse/return/externalReferences/externalReferenceNumber");
+            clone.addExcludedXpathValidations("/Envelope/Body/overrideAccommodationRatesResponse/return/externalReferences/externalReferenceSource[text()='Accovia'");
+
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(oar, true), "Validating Response Comparison");
+            // }
 
         }
     }

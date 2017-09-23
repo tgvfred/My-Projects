@@ -61,7 +61,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         oar.setRateDetails(BaseSoapCommands.REMOVE_NODE.toString());
 
         oar.sendRequest();
-        // System.out.println(oar.getRequest());
+
         TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
         validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
     }
@@ -98,7 +98,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         oar.setExternalReferenceCode(BaseSoapCommands.BLANK.toString());
         oar.setExternalReferenceSource(BaseSoapCommands.BLANK.toString());
         oar.sendRequest();
-        System.out.println(oar.getRequest());
+
         TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
         validateApplicationError(oar, AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
     }
@@ -195,36 +195,24 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         isComo.set("false");
         bookReservation();
 
-        // String tcg_id = getBook().getTravelComponentGroupingId();
-
         // Upgrade reservation using AccommodationFulfillmentServicePort#upgradeResortRoomType
         UpgradeResortRoomType urrt = new UpgradeResortRoomType(environment, "upgradeResortRoomType");
         urrt.setTcg(getBook().getTravelComponentGroupingId());
         urrt.setTc(getBook().getTravelComponentId());
         urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("startDate"));
         urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail/startDate", "2018-09-09");
-
-        // urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("endDate"));
-        // urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail/endDate", getArrivalDate());
-        // urrt.setEndDate(getArrivalDate());
         urrt.setFacilityId(getFacilityId());
         urrt.setLocationIdString(BaseSoapCommands.REMOVE_NODE.toString());
         urrt.setRoomTypeCode(getRoomTypeCode());
-        System.out.print(urrt.getRequest());
+
         urrt.sendRequest();
-        System.out.println(urrt.getResponse());
+
         // Override the rate for the one night
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
         oar.setTcgId(getBook().getTravelComponentGroupingId());
 
-        // oar.setAdditionalCharge("100");
-        // oar.setBasePrice("12");
-        // oar.setRackRateRate("56");
-        // oar.setNetPrice("112");
-        // oar.setPointsValue("2");
-        // oar.setLocationId("48");
         oar.sendRequest();
-        System.out.println(oar.getRequest());
+
         TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
         validateApplicationError(oar, AccommodationErrorCode.RATE_OVERRIDE_FAILURE);
     }
@@ -264,7 +252,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         oar.setTcgId(getBook().getTravelComponentGroupingId());
 
         oar.setOverrideReason("INVALID");
-        System.out.println(oar.getRequest());
+
         oar.sendRequest();
 
         TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
@@ -306,11 +294,11 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        rs.print();
+
         oar.setTpsID(rs.getValue("tps_id"));
         oar.setTcgId(rs.getValue("tc_grp_nb"));
         oar.sendRequest();
-        System.out.println(oar.getRequest());
+
         TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
         validateApplicationError(oar, AccommodationErrorCode.CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS);
     }
