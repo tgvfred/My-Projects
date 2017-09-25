@@ -3,9 +3,8 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassReinstateTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageReinstateData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -15,7 +14,7 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends AccommodationBaseTest {
 
     private GetStagedRecordsForReinstate stageReinstate;
-    private StageMassReinstateTransactional stage;
+    private StageReinstateData stage;
     private String firstResTCG;
     private String firstResTP;
     private String firstResTPS;
@@ -47,7 +46,7 @@ public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends
         setupData(environment);
 
         // First invocation to stage reinstate transactions.
-        stage = new StageMassReinstateTransactional(Environment.getBaseEnvironmentName(environment), "Main_TwoReservations");
+        stage = new StageReinstateData(environment, "Main_TwoReservations");
         stage.setTcg(firstResTCG);
         stage.setTpId(firstResTP);
         stage.sendRequest();
