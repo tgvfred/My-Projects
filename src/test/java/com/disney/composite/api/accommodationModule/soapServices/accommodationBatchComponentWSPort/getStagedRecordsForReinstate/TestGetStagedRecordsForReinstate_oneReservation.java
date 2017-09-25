@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassReinstateTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageReinstateData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
@@ -14,13 +14,13 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class TestGetStagedRecordsForReinstate_oneReservation extends AccommodationBaseTest {
 
     private GetStagedRecordsForReinstate stageReinstate;
-    private StageMassReinstateTransactional stage;
+    private StageReinstateData stage;
 
     @Test(groups = { "api", "regression", "getStagedRecordsForReinstate", "accommodation" })
     public void Test_GetStagedRecordsForReinstate_oneReservation() {
 
         // stage reinstate transactions.
-        stage = new StageMassReinstateTransactional(Environment.getBaseEnvironmentName(environment), "Main");
+        stage = new StageReinstateData(Environment.getBaseEnvironmentName(environment), "Main");
         stage.setTcg(getBook().getTravelComponentGroupingId());
         stage.setTpId(getBook().getTravelPlanId());
         stage.sendRequest();
