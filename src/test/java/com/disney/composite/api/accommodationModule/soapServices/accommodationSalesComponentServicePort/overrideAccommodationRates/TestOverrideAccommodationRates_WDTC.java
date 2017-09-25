@@ -58,7 +58,7 @@ public class TestOverrideAccommodationRates_WDTC extends AccommodationBaseTest {
                 + " left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID"
                 + " left outer join folio.CHRG d on c.CHRG_GRP_ID = d.CHRG_GRP_ID"
                 + " left outer join folio.CHRG_ITEM e on d.CHRG_ID = e.CHRG_ID"
-                + " where a.EXTNL_REF_VAL in ("
+                + " where REV_CLS_NM ='Accommodation' AND a.EXTNL_REF_VAL in ("
                 + " (select to_char(b.tc_grp_nb)"
                 + " from res_mgmt.tps a"
                 + " join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
@@ -99,11 +99,11 @@ public class TestOverrideAccommodationRates_WDTC extends AccommodationBaseTest {
         int numberOfFolioItems = rs.getRowCount();
         int numberOfChargeItems = rs.getRowCount();
 
-        String old_chargeID = rs.getValue("CHRG_ID", 4);
-        String old_chargeAmount = rs.getValue("CHRG_AM", 4);
-        String old_chargeItemID4 = rs.getValue("CHRG_ITEM_ID", 4);
-        String oldchargeItemAmount4 = rs.getValue("CHRG_ITEM_AM", 4);
-        String basePriceSql = rs.getValue("CHRG_ITEM_AM", 4);
+        // String old_chargeID = rs.getValue("CHRG_ID", 4);
+        // String old_chargeAmount = rs.getValue("CHRG_AM", 4);
+        // String old_chargeItemID4 = rs.getValue("CHRG_ITEM_ID", 4);
+        // String oldchargeItemAmount4 = rs.getValue("CHRG_ITEM_AM", 4);
+        // String basePriceSql = rs.getValue("CHRG_ITEM_AM", 4);
         String locationId = rs.getValue("WRK_LOC_ID", 4);
         // SQL2
 
@@ -141,10 +141,10 @@ public class TestOverrideAccommodationRates_WDTC extends AccommodationBaseTest {
 
         // sql1
 
-        int column1Pos = rs.getColumnIndex("CHRG_ITEM_ID");
+        int column1Pos = rs.getColumnIndex("REV_TYP_NM");
         int column2Pos = rs.getColumnIndex("CHRG_ITEM_AM");
 
-        int column3Pos = rs5.getColumnIndex("CHRG_ITEM_ID");
+        int column3Pos = rs5.getColumnIndex("REV_TYP_NM");
         int column4Pos = rs5.getColumnIndex("CHRG_ITEM_AM");
 
         int column5Pos = rs.getColumnIndex("CHRG_ID");
@@ -159,8 +159,6 @@ public class TestOverrideAccommodationRates_WDTC extends AccommodationBaseTest {
         int column11Pos = rs6.getColumnIndex("FOLIO_ITEM_ID");
         int column12Pos = rs6.getColumnIndex("FOLIO_ITEM_AM");
 
-        System.out.println(rs.getRowCount());
-        System.out.println(rs5.getRowCount());
         for (int i = 1; i <= rs.getRowCount(); i++) {
 
             String value = rs.getValue(column1Pos, i);
@@ -199,8 +197,7 @@ public class TestOverrideAccommodationRates_WDTC extends AccommodationBaseTest {
             allPairs5.put(value9, value10);
 
         }
-        rs.print();
-        rs5.print();
+
         Object[][] objKeyValue = new Object[allPairs.size()][2];
         int p = 0;
         for (String key : allPairs.keySet()) {
@@ -258,24 +255,16 @@ public class TestOverrideAccommodationRates_WDTC extends AccommodationBaseTest {
 
         // sql1
         // captures number of charge items, charge amount, charge id and charge item amount
-        // System.out.println(l);
-        // System.out.println(allPairs);
+        l.remove(l.toArray()[0]);
 
-        // TestReporter.assertTrue(!l3.toArray()[0].equals(l4.toArray()[0]), "In all the rows the old charge amount is [" + l3.toArray()[0] + "] has been updated to [" + l4.toArray()[0] + "]. ");
-        // TestReporter.assertTrue(!allPairs3.keySet().toArray()[0].equals(allPairs4.keySet().toArray()[0]), "In all the rows the old charge id is [" + allPairs3.keySet().toArray()[0] + "] has been updated to [" + allPairs4.keySet().toArray()[0] + "]. ");
-        TestReporter.assertEquals(numberOfChargeItemsBR - 1, numberOfChargeItemsAR, "The number of charge items before the request is [" + numberOfChargeItemsBR + "] and after the request is [" + numberOfChargeItemsAR + "].");
+        for (int o = 0; o <= rs5.getRowCount() - 1; o++) {
 
-        // sql2
-        // captures the number of folio items, folio item id, and folio item amount
+            TestReporter.assertTrue(!l.toArray()[o].equals(l2.toArray()[o]), "In row [" + o + "] the  old charge item amount is [" + l.toArray()[o] + "] has been updated to [" + l2.toArray()[o] + "]. ");
 
-        TestReporter.assertEquals(numberOfFolioItemsBR, numberOfFolioItemsAR, "The number of folio items before the request is [" + numberOfFolioItemsBR + "]and after the request is [" + numberOfFolioItemsAR + "].");
-
-        // Captures charge items, charge Amounts, charge ids, and charge item amount
-        TestReporter.assertTrue(numberOfChargeItems - rs5.getRowCount() == 1, "The number of charge items [" + rs5.getRowCount() + "].");
-        TestReporter.assertTrue(!old_chargeAmount.equals(rs5.getValue("CHRG_AM", 4).toString()), "The old charge [" + old_chargeAmount + "] has been updated to [" + rs5.getValue("CHRG_AM", 4).toString() + "]. ");
-        TestReporter.assertTrue(!old_chargeID.equals(rs5.getValue("CHRG_ID", 4).toString()), "The old charge item [" + old_chargeID + " ] has been updated to [" + rs5.getValue("CHRG_ID", 4).toString() + "]. ");
-        TestReporter.assertTrue(!oldchargeItemAmount4.equals(rs5.getValue("CHRG_ITEM_AM", 4).toString()), "The charge Item amount [ " + oldchargeItemAmount4 + " ] has been updated to [" + rs5.getValue("CHRG_ITEM_AM", 4) + "].");
-        TestReporter.assertTrue(!old_chargeItemID4.equals(rs5.getValue("CHRG_ITEM_ID", 4).toString()), "The charge Item ID [ " + old_chargeItemID4 + " ] has been updated to [" + rs5.getValue("CHRG_ITEM_ID", 4) + "].");
+        }
+        TestReporter.assertTrue(!l3.toArray()[0].equals(l4.toArray()[0]), "All the old charge amounts [" + l3.toArray()[0] + " ] have been updated to [" + l4.toArray()[0] + "]. ");
+        TestReporter.assertTrue(!allPairs3.keySet().toArray()[0].equals(allPairs4.keySet().toArray()[0]), "In all the rows the old charge id is [" + allPairs3.keySet().toArray()[0] + "] has been updated to [" + allPairs4.keySet().toArray()[0] + "]. ");
+        TestReporter.assertEquals(numberOfChargeItemsBR - 1, numberOfChargeItemsAR, "The number of charge items before the request is [" + numberOfChargeItemsBR + "] and after the request is [" + numberOfChargeItemsAR + "] because the Discount was removed after the request.");
 
         // additional charge counted in sql1 and updated after request is deleted
         // discount is removed after request
@@ -297,8 +286,17 @@ public class TestOverrideAccommodationRates_WDTC extends AccommodationBaseTest {
         TestReporter.assertTrue(x - y == 1, "The Additional Charge item had [" + x + "] Additional types before the request and after the request, the Discount was removed and had [" + y + "] Additional types.");
 
         // sql2
-        // Captures folio items, folio item ids, and folio item amounts
-        TestReporter.assertTrue(numberOfFolioItems == rs6.getRowCount(), "The number of folio items [" + rs6.getRowCount() + "].");
+        // Captures number of folio items, folio item ids, and folio item amounts
+
+        l5.remove(l5.toArray()[0]);
+
+        for (int o = 0; o <= rs5.getRowCount() - 5; o++) {
+
+            TestReporter.assertTrue(!l5.toArray()[o].equals(l6.toArray()[o]), "In row [" + o + "] the  old folio item amount is [" + l5.toArray()[o] + "] has been updated to [" + l6.toArray()[o] + "]. ");
+
+        }
+
+        TestReporter.assertTrue(rs2.getRowCount() - 1 == rs6.getRowCount(), "The number of folio items [" + rs6.getRowCount() + "].");
         TestReporter.assertTrue(!old_folioItemID.equals(rs6.getValue("FOLIO_ITEM_ID", 4).toString()), "The Folio item id [" + old_folioItemID + "] has been updated to [" + rs6.getValue("FOLIO_ITEM_ID", 4).toString() + "]. ");
         TestReporter.assertTrue(!old_folioItemAmount.equals(rs6.getValue("FOLIO_ITEM_AM", 4).toString()), "The Folio Item amount [" + old_folioItemAmount + "] has been updated to [" + rs6.getValue("FOLIO_ITEM_AM", 4).toString() + "].");
         TestReporter.assertAll();
