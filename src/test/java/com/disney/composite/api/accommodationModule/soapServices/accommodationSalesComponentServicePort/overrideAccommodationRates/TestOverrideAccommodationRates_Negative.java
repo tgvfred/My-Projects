@@ -13,7 +13,6 @@ import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTest {
-    private String locEnv = null;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_nullRequest() {
@@ -23,8 +22,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
 
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment);
 
-        // validation
-        // of removing optionKeyValue
+        // validation of removing optionKeyValue
         oar.setRequest(BaseSoapCommands.REMOVE_NODE.toString());
 
         oar.sendRequest();
@@ -74,8 +72,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         TestReporter.logScenario("Test - Override Accommdation Rates - empty Rate Details");
 
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        // validation
-        // of removing AccommodationSalesOptionsEnum
+        // validation of removing AccommodationSalesOptionsEnum
         oar.setRateDetails(BaseSoapCommands.BLANK.toString());
 
         oar.sendRequest();
@@ -164,8 +161,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         TestReporter.logScenario("Test - Override Accommodation Rates - Invalid OverrideRate");
 
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        // validation
-        // of removing AccommodationSalesOptionsEnum
+        // validation of removing AccommodationSalesOptionsEnum
         oar.setOverridden("true");
         oar.setBasePrice("10.0");
         oar.setRackRateRate("1.0");
@@ -174,8 +170,6 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
         validateApplicationError(oar, AccommodationErrorCode.OVERRIDE_RATE_RACK_RATE_ERROR);
     }
-
-    // test TestOverrideAccommodationRates_dvcPoints in separate file
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_upgradeRes() {
@@ -201,11 +195,22 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         urrt.setTc(getBook().getTravelComponentId());
         urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("startDate"));
         urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail/startDate", "2018-09-09");
+
         urrt.setFacilityId(getFacilityId());
         urrt.setLocationIdString(BaseSoapCommands.REMOVE_NODE.toString());
         urrt.setRoomTypeCode(getRoomTypeCode());
 
         urrt.sendRequest();
+
+        // urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail",
+        // BaseSoapCommands.ADD_NODE.commandAppend("endDate"));
+        // urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail/endDate", getArrivalDate());
+        // urrt.setEndDate(getArrivalDate());
+        urrt.setFacilityId(getFacilityId());
+        urrt.setLocationIdString(BaseSoapCommands.REMOVE_NODE.toString());
+        urrt.setRoomTypeCode(getRoomTypeCode());
+        urrt.sendRequest();
+        TestReporter.logAPI(!urrt.getResponseStatusCode().equals("200"), "Verify that no error occurred upgrading a room: " + urrt.getFaultString(), urrt);
 
         // Override the rate for the one night
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
@@ -349,7 +354,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
      * // Cancel cancel = new Cancel(environment);
      * //
      * // cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-     * // System.out.println(cancel.getRequest());
+     * // //System.out.println(cancel.getRequest());
      * // cancel.sendRequest();
      *
      * OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
@@ -359,8 +364,9 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
      * oar.setLocationId("-1");
      *
      * oar.sendRequest();
-     * System.out.println(oar.getResponse());
-     * TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+     * //System.out.println(oar.getResponse());
+     * TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() +
+     * " ]", oar);
      * validateApplicationError(oar, AccommodationErrorCode.INVALID_FACILITY);
      * }
      */
