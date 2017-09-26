@@ -41,6 +41,7 @@ public class TestUpdateGuaranteedStatus_TC_true extends AccommodationBaseTest {
                 + " from res_mgmt.tps a"
                 + " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
                 + " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb"
+                // + " where a.tp_id = 472633125011"
                 + " where a.tp_id = '" + tp_id + "'"
                 + " and c.ASGN_OWN_ID is not null";
 
@@ -49,7 +50,8 @@ public class TestUpdateGuaranteedStatus_TC_true extends AccommodationBaseTest {
                 + " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
                 + " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb"
                 + " left outer join rsrc_inv.RSRC_ASGN_OWNR d on c.ASGN_OWN_ID = d.ASGN_OWNR_ID"
-                + " where a.tp_id =  '" + tp_id + "'"
+                // + " where a.tp_id = 472633125011"
+                + " where a.tp_id = '" + tp_id + "'"
                 + " and c.ASGN_OWN_ID is not null";
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
@@ -62,7 +64,7 @@ public class TestUpdateGuaranteedStatus_TC_true extends AccommodationBaseTest {
         UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
 
         ugs.setGuaranteedStatusFlag("true");
-        ugs.setOwnerReferenceNumber(tp_id);
+        ugs.setOwnerReferenceNumber("472633125011");
         ugs.setOwnerReferenceType("TC");
 
         ugs.sendRequest();

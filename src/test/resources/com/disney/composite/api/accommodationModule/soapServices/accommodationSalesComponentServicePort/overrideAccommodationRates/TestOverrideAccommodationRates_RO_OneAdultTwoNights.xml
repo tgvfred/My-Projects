@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="OverrideAccommodationRates_RO_OneAdultTwoNights" parallel="methods" thread-count="20">
+	<parameter name="environment" value="latest_cm" />
+	<test name="TestOverrideAccommodationRates_RO_OneAdultTwoNights">
+	
+		<classes>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.overrideAccommodationRates.TestOverrideAccommodationRates_RO_OneAdultTwoNights" />
+		</classes>
+	</test> <!-- Test -->
+</suite> 
