@@ -772,13 +772,79 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/rateDetails/pointsValue");
     }
 
-    // need to update xpaths from the response**************
     public String getShareChainUnSharedRoomDetailsStartDate() {
-        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/rateDetails/pointsValue");
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails/unSharedRoomDetail/resortPeriod/startDate");
     }
 
-    // same as above.
     public String getShareChainUnSharedRoomDetailsEndDate() {
-        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/rateDetails/pointsValue");
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails/unSharedRoomDetail/resortPeriod/endDate");
+    }
+
+    public String getShareChainUnSharedRoomDetailsStartDateNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/resortPeriod/startDate");
+    }
+
+    public String getShareChainUnSharedRoomDetailsEndDateNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/resortPeriod/endDate");
+    }
+
+    public String getShareChainUnSharedRoomDetailsTCId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails/unSharedRoomDetail/travelComponentId");
+    }
+
+    public String getShareChainUnSharedRoomDetailsTCGId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails/unSharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getShareChainUnSharedRoomDetailsTPSId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails/travelPlanSegmentId");
+    }
+
+    public String getShareChainUnSharedRoomDetailsTCIdNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/travelComponentId");
+    }
+
+    public String getShareChainUnSharedRoomDetailsTCGIdNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getShareChainUnSharedRoomDetailsTPSIdNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/travelPlanSegmentId");
+    }
+
+    public String getUnsharedRoomDetailsAdditionalChargeNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/rateDetails/additionalCharge");
+    }
+
+    public String getUnsharedRoomDetailsAdditionalChargeOveriddenNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/rateDetails/additionalChargeOverridden");
+    }
+
+    public String getUnsharedRoomDetailsBasePriceNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/rateDetails/basePrice");
+    }
+
+    public String getUnsharedRoomDetailsDateNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/rateDetails/date");
+    }
+
+    public String getUnsharedRoomDetailsDayCountNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/rateDetails/dayCount");
+    }
+
+    public String getUnsharedRoomDetailsOveriddenNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/rateDetails/overidden");
+    }
+
+    public String getUnsharedRoomDetailsSharedNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/rateDetails/shared");
+    }
+
+    public String getUnsharedRoomDetailsNetPriceNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/rateDetails/netPrice");
+    }
+
+    public String getUnsharedRoomDetailsPointsValueNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/rateDetails/pointsValue");
     }
 }
