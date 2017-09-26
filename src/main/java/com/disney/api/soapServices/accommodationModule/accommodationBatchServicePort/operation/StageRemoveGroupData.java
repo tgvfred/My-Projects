@@ -1,28 +1,28 @@
-package com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation;
+package com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation;
 
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.AccommodationBatchComponentWSPort;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.AccommodationBatchServicePort;
 import com.disney.utils.XMLTools;
 
-public class StageRemoveGroupTransactional extends AccommodationBatchComponentWSPort {
+public class StageRemoveGroupData extends AccommodationBatchServicePort {
     private String defaultProcessName = REMOVEGROUP;
     private String processName;
 
-    public StageRemoveGroupTransactional(String environment) {
+    public StageRemoveGroupData(String environment) {
         super(environment);
 
         // Generate a request from a project xml file
-        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("stageRemoveGroupTransactional")));
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("stageRemoveGroupData")));
         removeComments();
         removeWhiteSpace();
         generateServiceContext();
         setProcessName(getLocalDefaultProcessName());
     }
 
-    public StageRemoveGroupTransactional(String environment, String scenario) {
+    public StageRemoveGroupData(String environment, String scenario) {
         super(environment);
 
         // Generate a request from a project xml file
-        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("stageRemoveGroupTransactional")));
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("stageRemoveGroupData")));
         generateServiceContext();
         setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
         removeComments();
@@ -43,11 +43,11 @@ public class StageRemoveGroupTransactional extends AccommodationBatchComponentWS
     }
 
     public void setProcessName(String value) {
-        setRequestNodeValueByXPath("//processName", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupData/request/processName", value);
     }
 
     public void setTcg(String value) {
-        setRequestNodeValueByXPath("//travelComponentGroupNoList", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupData/request/travelComponentGroupNoList", value);
     }
 
     public String getResponseProcessId() {

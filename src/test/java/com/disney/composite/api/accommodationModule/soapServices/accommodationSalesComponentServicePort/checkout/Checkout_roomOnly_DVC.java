@@ -27,6 +27,8 @@ public class Checkout_roomOnly_DVC extends BookDVCCashHelper {
 
         setUseDvcResort(true);
         setCheckingIn(true);
+        
+  
         // setEnvironment("stage");
         setBook(bookDvcReservation("testBook_MCash", 1));
         if (getFirstBooking() == null) {

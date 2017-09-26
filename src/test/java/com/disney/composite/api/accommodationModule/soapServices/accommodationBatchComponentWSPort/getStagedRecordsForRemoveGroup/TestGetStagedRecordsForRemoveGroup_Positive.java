@@ -8,7 +8,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForRemoveGroup;
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageRemoveGroupTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageRemoveGroupData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
@@ -81,17 +81,17 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
     }
 
     private String getProcessDataID() {
-        StageRemoveGroupTransactional stageRemoveGroupTransactional = new StageRemoveGroupTransactional(environment);
-        stageRemoveGroupTransactional.setRequestNodeValueByXPath("//processId", BaseSoapCommands.REMOVE_NODE.toString());
-        stageRemoveGroupTransactional.setTcg(getBook().getTravelComponentGroupingId());
-        stageRemoveGroupTransactional.sendRequest();
+        StageRemoveGroupData stageRemoveGroupData = new StageRemoveGroupData(environment);
+        stageRemoveGroupData.setRequestNodeValueByXPath("//processId", BaseSoapCommands.REMOVE_NODE.toString());
+        stageRemoveGroupData.setTcg(getBook().getTravelComponentGroupingId());
+        stageRemoveGroupData.sendRequest();
 
-        TestReporter.assertEquals(stageRemoveGroupTransactional.getResponseStatusCode(), "200", "The stage remove group transaction precondition succeeded.");
+        TestReporter.assertEquals(stageRemoveGroupData.getResponseStatusCode(), "200", "The stage remove group transaction precondition succeeded.");
 
         String sql = "select b.GRP_RES_PROC_RUN_ID"
                 + " from res_mgmt.GRP_RES_PROC a"
                 + " join res_mgmt.GRP_RES_PROC_RUN b on a.GRP_RES_PROC_ID = b.GRP_RES_PROC_ID"
-                + " where a.GRP_RES_PROC_ID = " + stageRemoveGroupTransactional.getResponseProcessId();
+                + " where a.GRP_RES_PROC_ID = " + stageRemoveGroupData.getResponseProcessId();
 
         Recordset results = new Recordset(db.getResultSet(sql));
         TestReporter.assertGreaterThanZero(results.getRowCount());
@@ -100,19 +100,19 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
     }
 
     private LinkedHashMap<Integer, String> getProcessDataID(String firstTcg, String secondTcg) {
-        StageRemoveGroupTransactional stageRemoveGroupTransactional = new StageRemoveGroupTransactional(environment);
-        stageRemoveGroupTransactional.setRequestNodeValueByXPath("//processId", BaseSoapCommands.REMOVE_NODE.toString());
-        stageRemoveGroupTransactional.setTcg(firstTcg);
-        stageRemoveGroupTransactional.setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupTransactional/request", BaseSoapCommands.ADD_NODE.commandAppend("travelComponentGroupNoList"));
-        stageRemoveGroupTransactional.setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupTransactional/request/travelComponentGroupNoList[2]", secondTcg);
-        stageRemoveGroupTransactional.sendRequest();
+        StageRemoveGroupData stageRemoveGroupData = new StageRemoveGroupData(environment);
+        stageRemoveGroupData.setRequestNodeValueByXPath("//processId", BaseSoapCommands.REMOVE_NODE.toString());
+        stageRemoveGroupData.setTcg(firstTcg);
+        stageRemoveGroupData.setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupTransactional/request", BaseSoapCommands.ADD_NODE.commandAppend("travelComponentGroupNoList"));
+        stageRemoveGroupData.setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupTransactional/request/travelComponentGroupNoList[2]", secondTcg);
+        stageRemoveGroupData.sendRequest();
 
-        TestReporter.assertEquals(stageRemoveGroupTransactional.getResponseStatusCode(), "200", "The stage remove group transaction precondition succeeded.");
+        TestReporter.assertEquals(stageRemoveGroupData.getResponseStatusCode(), "200", "The stage remove group transaction precondition succeeded.");
 
         String sql = "select b.GRP_RES_PROC_RUN_ID"
                 + " from res_mgmt.GRP_RES_PROC a"
                 + " join res_mgmt.GRP_RES_PROC_RUN b on a.GRP_RES_PROC_ID = b.GRP_RES_PROC_ID"
-                + " where a.GRP_RES_PROC_ID = " + stageRemoveGroupTransactional.getResponseProcessId();
+                + " where a.GRP_RES_PROC_ID = " + stageRemoveGroupData.getResponseProcessId();
 
         Recordset results = new Recordset(db.getResultSet(sql));
         TestReporter.assertGreaterThanZero(results.getRowCount());

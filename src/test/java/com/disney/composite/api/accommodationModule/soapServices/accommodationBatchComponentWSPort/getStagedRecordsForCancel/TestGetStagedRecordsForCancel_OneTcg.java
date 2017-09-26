@@ -5,7 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForCancel;
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassCancelTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageCancelData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
@@ -40,7 +40,7 @@ public class TestGetStagedRecordsForCancel_OneTcg extends AccommodationBaseTest 
         setValues();
         bookReservation();
 
-        StageMassCancelTransactional stageMassCancel = new StageMassCancelTransactional(environment, "Main");
+        StageCancelData stageMassCancel = new StageCancelData(environment, "Main");
         stageMassCancel.setCancelContactName(contactName);
         stageMassCancel.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancel.setCancelReasonCode(reasonCode);

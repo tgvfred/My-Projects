@@ -2,8 +2,8 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageRemoveGroupTransactional;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.UpdateProcessStatusList;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageRemoveGroupData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
 import com.disney.utils.Environment;
@@ -17,7 +17,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_removeGroup extends 
 
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
-        StageRemoveGroupTransactional remove = new StageRemoveGroupTransactional(Environment.getBaseEnvironmentName(environment), "Main");
+        StageRemoveGroupData remove = new StageRemoveGroupData(Environment.getBaseEnvironmentName(environment), "Main");
 
         remove.setProcessName("REMOVEGROUP");
         remove.setTcg(getBook().getTravelComponentGroupingId());

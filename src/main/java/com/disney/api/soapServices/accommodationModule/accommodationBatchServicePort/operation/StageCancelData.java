@@ -1,17 +1,17 @@
-package com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation;
+package com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation;
 
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.AccommodationBatchComponentWSPort;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.AccommodationBatchServicePort;
 import com.disney.utils.XMLTools;
 
-public class StageMassCancelTransactional extends AccommodationBatchComponentWSPort {
+public class StageCancelData extends AccommodationBatchServicePort {
     private String defaultProcessName = MASS_CANCEL;
     private String processName;
 
-    public StageMassCancelTransactional(String environment, String scenario) {
+    public StageCancelData(String environment, String scenario) {
         super(environment);
 
         // Generate a request from a project xml file
-        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("stageMassCancelTransactional")));
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("stageCancelData")));
         generateServiceContext();
         setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
         removeComments();
@@ -36,31 +36,31 @@ public class StageMassCancelTransactional extends AccommodationBatchComponentWSP
     }
 
     public void setCancelDate(String value) {
-        setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails/cancelDate", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/cancelDate", value);
     }
 
     public void setCancelReasonCode(String value) {
-        setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails/cancelReasonCode", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/cancelReasonCode", value);
     }
 
     public void setIsOverridden(String value) {
-        setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails/isOverridden", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isOverridden", value);
     }
 
     public void setIsWaived(String value) {
-        setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails/isWaived", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isWaived", value);
     }
 
     public void setOVerridenCancelFEe(String value) {
-        setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails/overriddenCancelFee", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/overriddenCancelFee", value);
     }
 
     public void setTCg(String value) {
-        setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails/travelComponentGroupingId", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/travelComponentGroupingId", value);
     }
 
     public void setCancelContactName(String value) {
-        setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails/cancelContactName", value);
+        setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/cancelContactName", value);
     }
 
     public String getResponseProcessId() {

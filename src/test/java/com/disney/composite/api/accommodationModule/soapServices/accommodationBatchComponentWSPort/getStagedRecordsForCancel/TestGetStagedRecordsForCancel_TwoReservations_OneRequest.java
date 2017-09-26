@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForCancel;
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassCancelTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageCancelData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
@@ -35,7 +35,7 @@ public class TestGetStagedRecordsForCancel_TwoReservations_OneRequest extends Ac
         firstResTCG = getBook().getTravelComponentGroupingId();
         firstResTP = getBook().getTravelPlanId();
 
-        StageMassCancelTransactional stageMassCancel = new StageMassCancelTransactional(Environment.getBaseEnvironmentName(environment), "Main");
+        StageCancelData stageMassCancel = new StageCancelData(environment, "Main");
         stageMassCancel.setCancelContactName(contactName);
         stageMassCancel.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancel.setCancelReasonCode(reasonCode);
@@ -57,7 +57,7 @@ public class TestGetStagedRecordsForCancel_TwoReservations_OneRequest extends Ac
         setValues();
         bookReservation();
 
-        StageMassCancelTransactional stageMassCancelTwo = new StageMassCancelTransactional(Environment.getBaseEnvironmentName(environment), "Main");
+        StageCancelData stageMassCancelTwo = new StageCancelData(environment, "Main");
         stageMassCancelTwo.setCancelContactName(contactName);
         stageMassCancelTwo.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancelTwo.setCancelReasonCode(reasonCode);

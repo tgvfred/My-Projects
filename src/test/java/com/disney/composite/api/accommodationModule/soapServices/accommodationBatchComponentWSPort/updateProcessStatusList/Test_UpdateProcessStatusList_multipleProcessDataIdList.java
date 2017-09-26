@@ -4,8 +4,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassCancelTransactional;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.UpdateProcessStatusList;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageCancelData;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
@@ -46,7 +46,7 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList extends Acco
 
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
-        StageMassCancelTransactional cancel = new StageMassCancelTransactional(Environment.getBaseEnvironmentName(environment), "MainUpPrLst");
+        StageCancelData cancel = new StageCancelData(Environment.getBaseEnvironmentName(environment), "MainUpPrLst");
         cancel.setProcessName("MASS_CANCEL");
         cancel.setCancelContactName("Cancel Name");
         cancel.setCancelDate("2017-17-07");
