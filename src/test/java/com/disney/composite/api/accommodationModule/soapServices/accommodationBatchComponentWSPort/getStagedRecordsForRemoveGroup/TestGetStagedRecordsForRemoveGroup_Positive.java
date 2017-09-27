@@ -2,7 +2,6 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 
 import java.util.LinkedHashMap;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -48,12 +47,6 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup", "debug" })
     public void TestGetStagedRecordsForRemoveGroup_twoReservations() {
-
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("RS doesn't bring back multiple Records.");
-            }
-        }
         createGroupBooking();
         String firstTcg = getBook().getTravelComponentGroupingId();
         createGroupBooking();
@@ -86,7 +79,7 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
         stageRemoveGroupData.setTcg(getBook().getTravelComponentGroupingId());
         stageRemoveGroupData.sendRequest();
 
-        TestReporter.assertEquals(stageRemoveGroupData.getResponseStatusCode(), "200", "The stage remove group transaction precondition succeeded.");
+        TestReporter.assertEquals(stageRemoveGroupData.getResponseStatusCode(), "200", "The stage remove group transaction precondition succeeded: " + stageRemoveGroupData.getFaultString());
 
         String sql = "select b.GRP_RES_PROC_RUN_ID"
                 + " from res_mgmt.GRP_RES_PROC a"
@@ -103,11 +96,11 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
         StageRemoveGroupData stageRemoveGroupData = new StageRemoveGroupData(environment);
         stageRemoveGroupData.setRequestNodeValueByXPath("//processId", BaseSoapCommands.REMOVE_NODE.toString());
         stageRemoveGroupData.setTcg(firstTcg);
-        stageRemoveGroupData.setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupTransactional/request", BaseSoapCommands.ADD_NODE.commandAppend("travelComponentGroupNoList"));
-        stageRemoveGroupData.setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupTransactional/request/travelComponentGroupNoList[2]", secondTcg);
+        stageRemoveGroupData.setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupData/request", BaseSoapCommands.ADD_NODE.commandAppend("travelComponentGroupNoList"));
+        stageRemoveGroupData.setRequestNodeValueByXPath("/Envelope/Body/stageRemoveGroupData/request/travelComponentGroupNoList[2]", secondTcg);
         stageRemoveGroupData.sendRequest();
 
-        TestReporter.assertEquals(stageRemoveGroupData.getResponseStatusCode(), "200", "The stage remove group transaction precondition succeeded.");
+        TestReporter.assertEquals(stageRemoveGroupData.getResponseStatusCode(), "200", "The stage remove group transaction precondition succeeded: " + stageRemoveGroupData.getFaultString());
 
         String sql = "select b.GRP_RES_PROC_RUN_ID"
                 + " from res_mgmt.GRP_RES_PROC a"
@@ -132,7 +125,7 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
         getStagedRecordsForRemoveGroup.setProcessDataID(pdID);
         getStagedRecordsForRemoveGroup.sendRequest();
 
-        TestReporter.logAPI(!getStagedRecordsForRemoveGroup.getResponseStatusCode().equals("200"), "The request was not successful.", getStagedRecordsForRemoveGroup);
+        TestReporter.logAPI(!getStagedRecordsForRemoveGroup.getResponseStatusCode().equals("200"), "The request was not successful: " + getStagedRecordsForRemoveGroup.getFaultString(), getStagedRecordsForRemoveGroup);
         if (pdID.isEmpty()) {
             TestReporter.assertEquals(getStagedRecordsForRemoveGroup.getNumberOfResponseNodesByXPath("//return"), 0, "There was no information returned in the response.");
         } else {
@@ -165,7 +158,7 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
         getStagedRecordsForRemoveGroup.sendRequest();
 
         TestReporter.logAPI(!getStagedRecordsForRemoveGroup.getResponseStatusCode().equals("200"), "The request was not successful.", getStagedRecordsForRemoveGroup);
-        TestReporter.softAssertTrue(getStagedRecordsForRemoveGroup.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForRemoveGroupResponse/return") == 2, "Verify that 2 return nodes are returned.");
+        TestReporter.softAssertTrue(getStagedRecordsForRemoveGroup.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForRemoveGroupResponse/return") == 1, "Verify that 1 return node are returned.");
         try {
             Recordset results = new Recordset(recdb.getResultSet("select a.PLAN_TYPE from pma_wdw.pkg a"
                     + " where a.pkg_cd = '" + getStagedRecordsForRemoveGroup.getRoomPackageCode() + "'"));
