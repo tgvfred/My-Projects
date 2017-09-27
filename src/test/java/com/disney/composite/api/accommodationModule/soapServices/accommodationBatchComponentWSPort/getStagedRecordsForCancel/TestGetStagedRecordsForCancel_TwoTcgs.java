@@ -147,7 +147,7 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         buildSecondDetails(stageMassCancel);
 
         stageMassCancel.sendRequest();
-        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request.", stageMassCancel);
+        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request: " + stageMassCancel.getFaultString(), stageMassCancel);
 
         processId = stageMassCancel.getResponseProcessId();
 
