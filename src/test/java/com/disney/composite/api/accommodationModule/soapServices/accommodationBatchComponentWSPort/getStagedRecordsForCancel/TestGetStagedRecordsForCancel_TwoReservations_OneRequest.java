@@ -48,7 +48,7 @@ public class TestGetStagedRecordsForCancel_TwoReservations_OneRequest extends Ac
         stageMassCancel.setOVerridenCancelFEe(cancelFee);
         stageMassCancel.setTCg(firstResTCG);
         stageMassCancel.sendRequest();
-        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request.", stageMassCancel);
+        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request: " + stageMassCancel.getFaultString(), stageMassCancel);
 
         processIdOne = stageMassCancel.getResponseProcessId();
 

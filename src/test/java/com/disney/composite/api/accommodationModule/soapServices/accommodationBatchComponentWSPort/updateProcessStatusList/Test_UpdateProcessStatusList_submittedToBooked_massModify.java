@@ -2,8 +2,8 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassModifyTransactional;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.UpdateProcessStatusList;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageModifyData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
 import com.disney.utils.Environment;
@@ -17,7 +17,7 @@ public class Test_UpdateProcessStatusList_submittedToBooked_massModify extends A
 
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
-        StageMassModifyTransactional modify = new StageMassModifyTransactional(Environment.getBaseEnvironmentName(environment), "MainProcLst");
+        StageModifyData modify = new StageModifyData(Environment.getBaseEnvironmentName(environment), "MainProcLst");
 
         modify.setProcessName("MASS_MODIFY");
         modify.setMassModifyRoomDetailTcId(getBook().getTravelComponentId());

@@ -138,8 +138,8 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         stageMassCancel.setCancelContactName(contactName);
         stageMassCancel.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancel.setCancelReasonCode(reasonCode);
-        stageMassCancel.setIsOverridden(isOverridden);
-        stageMassCancel.setIsWaived(isWaived);
+        stageMassCancel.setIsOverridden(BaseSoapCommands.REMOVE_NODE.toString());
+        stageMassCancel.setIsWaived(BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancel.setOVerridenCancelFEe(cancelFee);
         stageMassCancel.setTCg(book.getTravelComponentGroupingId("1"));
 
@@ -147,7 +147,7 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         buildSecondDetails(stageMassCancel);
 
         stageMassCancel.sendRequest();
-        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request.", stageMassCancel);
+        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request: " + stageMassCancel.getFaultString(), stageMassCancel);
 
         processId = stageMassCancel.getResponseProcessId();
 
@@ -238,12 +238,12 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
                 BaseSoapCommands.ADD_NODE.commandAppend("cancelReasonCode"));
         stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/cancelReasonCode", reasonCode);
-        stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
-                BaseSoapCommands.ADD_NODE.commandAppend("isOverridden"));
-        stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/isOverridden", isOverridden);
-        stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
-                BaseSoapCommands.ADD_NODE.commandAppend("isWaived"));
-        stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/isWaived", isWaived);
+        // stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
+        // BaseSoapCommands.ADD_NODE.commandAppend("isOverridden"));
+        // stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/isOverridden", isOverridden);
+        // stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
+        // BaseSoapCommands.ADD_NODE.commandAppend("isWaived"));
+        // stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/isWaived", isWaived);
         stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
                 BaseSoapCommands.ADD_NODE.commandAppend("overriddenCancelFee"));
         stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/overriddenCancelFee", cancelFee);
