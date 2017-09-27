@@ -736,6 +736,22 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains/shareRoomDetails/sharedRoomDetail/rateDetails/pointsValue");
     }
 
+    public String getUnSharedAccommStartDate() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/resortPeriod/startDate");
+    }
+
+    public String getUnSharedAccommEndDate() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/resortPeriod/endDate");
+    }
+
+    public String getSharedAccommStartDate() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/sharedRoomDetail/resortPeriod/startDate");
+    }
+
+    public String getSharedAccommEndDate() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/sharedRoomDetail/resortPeriod/endDate");
+    }
+
     public String getUnSharedRoomDetailsAdditionalCharge() {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/rateDetails/additionalCharge");
     }
@@ -789,15 +805,35 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
     }
 
     public String getShareChainUnSharedRoomDetailsTCId() {
-        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails/unSharedRoomDetail/travelComponentId");
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/travelComponentId");
     }
 
     public String getShareChainUnSharedRoomDetailsTCGId() {
-        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails/unSharedRoomDetail/travelComponentGroupingId");
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/travelComponentGroupingId");
     }
 
     public String getShareChainUnSharedRoomDetailsTPSId() {
-        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails/travelPlanSegmentId");
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/travelPlanSegmentId");
+    }
+
+    public String getUnSharedAccommUnSharedRoomDetailsTCId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/travelComponentId");
+    }
+
+    public String getUnSharedAccommUnSharedRoomDetailsTCGId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getUnSharedAccommSharedRoomDetailsTCId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/sharedRoomDetail/travelComponentId");
+    }
+
+    public String getUnSharedAccommSharedRoomDetailsTCGId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/sharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getUnSharedAccommTPSId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/travelPlanSegmentId");
     }
 
     public String getShareChainUnSharedRoomDetailsTCIdNoOverlap() {

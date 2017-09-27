@@ -23,6 +23,7 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_NoOverlap extends A
         validateNumberShareRoomDetailsResponseNodes();
         validateFirstShareChain();
         validateUnsharedAccommodation();
+        validateUnsharedAccommodationSharedRoom();
 
         if (Environment.isSpecialEnvironment(environment)) {
             CalculateUnsharedRates clone = (CalculateUnsharedRates) calculate.clone();
@@ -88,12 +89,12 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_NoOverlap extends A
         TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsStartDateNoOverlap(), sharedRoomResortPeriodStartDate, "Verify that the response returns the start date [" + calculate.getShareChainUnSharedRoomDetailsStartDateNoOverlap() + "] that which is expected [" + sharedRoomResortPeriodStartDate + "].");
         TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsEndDateNoOverlap(), sharedRoomResortPeriodEndDate, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsEndDateNoOverlap() + "] that which is expected [" + sharedRoomResortPeriodEndDate + "].");
 
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCId(), TC1, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsTCId() + "] that which is expected [" + TC1 + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCIdNoOverlap(), TC2, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsTCIdNoOverlap() + "] that which is expected [" + TC2 + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCGId(), TCG1, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsTCGId() + "] that which is expected [" + TCG1 + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCGIdNoOverlap(), TCG2, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsTCGIdNoOverlap() + "] that which is expected [" + TCG2 + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTPSId(), TPS1, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsTPSId() + "] that which is expected [" + TPS1 + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTPSIdNoOverlap(), TPS2, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsTPSIdNoOverlap() + "] that which is expected [" + TPS2 + "].");
+        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCId(), TC1, "Verify that the response returns the TC id [" + calculate.getShareChainUnSharedRoomDetailsTCId() + "] that which is expected [" + TC1 + "].");
+        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCIdNoOverlap(), TC2, "Verify that the response returns the TC id [" + calculate.getShareChainUnSharedRoomDetailsTCIdNoOverlap() + "] that which is expected [" + TC2 + "].");
+        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCGId(), TCG1, "Verify that the response returns the TCG id [" + calculate.getShareChainUnSharedRoomDetailsTCGId() + "] that which is expected [" + TCG1 + "].");
+        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCGIdNoOverlap(), TCG2, "Verify that the response returns the TCG id [" + calculate.getShareChainUnSharedRoomDetailsTCGIdNoOverlap() + "] that which is expected [" + TCG2 + "].");
+        TestReporter.softAssertEquals(calculate.getUnSharedAccommTPSId(), TPS1, "Verify that the response returns the TPS id [" + calculate.getUnSharedAccommTPSId() + "] that which is expected [" + TPS1 + "].");
+        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTPSIdNoOverlap(), TPS2, "Verify that the response returns the TPS id [" + calculate.getShareChainUnSharedRoomDetailsTPSIdNoOverlap() + "] that which is expected [" + TPS2 + "].");
 
         TestReporter.softAssertEquals(calculate.getUnsharedRoomDetailsAdditionalCharge(), addtlCharge, "Verify that the response returns the additional charge [" + calculate.getUnsharedRoomDetailsAdditionalCharge() + "] that which is expected [" + addtlCharge + "].");
         TestReporter.softAssertEquals(calculate.getUnsharedRoomDetailsAdditionalChargeOveridden(), addtlChargeOver, "Verify that the response returns the additional charge overidden [" + calculate.getUnsharedRoomDetailsAdditionalChargeOveridden() + "] that which is expected [" + addtlChargeOver + "].");
@@ -117,39 +118,36 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_NoOverlap extends A
     }
 
     public void validateUnsharedAccommodation() {
-        TestReporter.logStep("Validate the unsharedAccommodation in the response node.");
+        TestReporter.logStep("Validate the unsharedAccommodation/unsharedRoom in the response node.");
 
         String resortPeriodStartDate = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/unSharedRoomDetail/resortPeriod/startDate");
         String resortPeriodEndDate = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/unSharedRoomDetail/resortPeriod/endDate");
         String TC1 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/unSharedRoomDetail/travelComponentId");
         String TCG1 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/unSharedRoomDetail/travelComponentGroupingId");
-        String TPS1 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[1]/travelPlanSegmentId");
-        String addtlCharge = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/rateDetails/additionalCharge");
-        String addtlChargeOver = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/rateDetails/additionalChargeOverridden");
-        String basePrice = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/rateDetails/basePrice");
-        String date = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/rateDetails/date");
-        String dayCount = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/rateDetails/dayCount");
-        String overidden = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/rateDetails/overidden");
-        String shared = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/rateDetails/shared");
-        String netPrice = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/rateDetails/netPrice");
-        String pointsValue = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/rateDetails/pointsValue");
+        String TPS1 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/travelPlanSegmentId");
 
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsStartDate(), resortPeriodStartDate, "Verify that the response returns the start date [" + calculate.getShareChainUnSharedRoomDetailsStartDate() + "] that which is expected [" + resortPeriodStartDate + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsEndDate(), resortPeriodEndDate, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsEndDate() + "] that which is expected [" + resortPeriodEndDate + "].");
+        TestReporter.softAssertEquals(calculate.getUnSharedAccommStartDate(), resortPeriodStartDate, "Verify that the response returns the start date [" + calculate.getUnSharedAccommStartDate() + "] that which is expected [" + resortPeriodStartDate + "].");
+        TestReporter.softAssertEquals(calculate.getUnSharedAccommEndDate(), resortPeriodEndDate, "Verify that the response returns the end date [" + calculate.getUnSharedAccommEndDate() + "] that which is expected [" + resortPeriodEndDate + "].");
+        TestReporter.softAssertEquals(calculate.getUnSharedAccommUnSharedRoomDetailsTCId(), TC1, "Verify that the response returns the TC id [" + calculate.getUnSharedAccommUnSharedRoomDetailsTCId() + "] that which is expected [" + TC1 + "].");
+        TestReporter.softAssertEquals(calculate.getUnSharedAccommUnSharedRoomDetailsTCGId(), TCG1, "Verify that the response returns the TCG id [" + calculate.getUnSharedAccommUnSharedRoomDetailsTCGId() + "] that which is expected [" + TCG1 + "].");
+        TestReporter.softAssertEquals(calculate.getUnSharedAccommTPSId(), TPS1, "Verify that the response returns the TPS id [" + calculate.getUnSharedAccommTPSId() + "] that which is expected [" + TPS1 + "].");
+        TestReporter.assertAll();
+    }
 
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCId(), TC1, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsTCId() + "] that which is expected [" + TC1 + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCGId(), TCG1, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsTCGId() + "] that which is expected [" + TCG1 + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTPSId(), TPS1, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsTPSId() + "] that which is expected [" + TPS1 + "].");
+    public void validateUnsharedAccommodationSharedRoom() {
+        TestReporter.logStep("Validate the unsharedAccommodation/sharedRoom in the response node.");
 
-        TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailsAdditionalCharge(), addtlCharge, "Verify that the response does not returns the additional charge [" + calculate.getUnsharedRoomDetailsAdditionalCharge() + "] that was passed into the request[" + addtlCharge + "].");
-        TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailsAdditionalChargeOveridden(), addtlChargeOver, "Verify that the response returns the additional charge overriden [" + calculate.getUnsharedRoomDetailsAdditionalChargeOveridden() + "] that which is expected [" + addtlChargeOver + "].");
-        TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailsBasePrice(), basePrice, "Verify that the response does not return the base price [" + calculate.getUnsharedRoomDetailsBasePrice() + "] that which was passed into the request [" + basePrice + "].");
-        TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailsDate(), date, "Verify that the response does not return the date [" + calculate.getUnsharedRoomDetailsDate() + "] that was passed into the request [" + date + "].");
-        TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailsDayCount(), dayCount, "Verify that the response does not returns the day count [" + calculate.getUnsharedRoomDetailsDayCount() + "] that was passed into the request [" + dayCount + "].");
-        TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailsOveridden(), overidden, "Verify that the response returns the overridden field [" + calculate.getUnsharedRoomDetailsOveridden() + "] that which is expected [" + overidden + "].");
-        TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailsShared(), shared, "Verify that the response returns the shared field [" + calculate.getUnsharedRoomDetailsShared() + "] that which is expected [" + shared + "].");
-        TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailsNetPrice(), netPrice, "Verify that the response does not return the net price [" + calculate.getUnsharedRoomDetailsNetPrice() + "] that was passed into the request [" + netPrice + "].");
-        TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailsPointsValue(), pointsValue, "Verify that the response does not return the points value [" + calculate.getUnSharedRoomDetailsPointsValue() + "] that was passed into the request [" + pointsValue + "].");
+        String resortPeriodStartDate = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/resortPeriod/startDate");
+        String resortPeriodEndDate = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/resortPeriod/endDate");
+        String TC1 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/travelComponentId");
+        String TCG1 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/travelComponentGroupingId");
+        String TPS1 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/travelPlanSegmentId");
+
+        TestReporter.softAssertEquals(calculate.getSharedAccommStartDate(), resortPeriodStartDate, "Verify that the response returns the start date [" + calculate.getUnSharedAccommStartDate() + "] that which is expected [" + resortPeriodStartDate + "].");
+        TestReporter.softAssertEquals(calculate.getSharedAccommEndDate(), resortPeriodEndDate, "Verify that the response returns the end date [" + calculate.getUnSharedAccommEndDate() + "] that which is expected [" + resortPeriodEndDate + "].");
+        TestReporter.softAssertEquals(calculate.getUnSharedAccommSharedRoomDetailsTCId(), TC1, "Verify that the response returns the TC id [" + calculate.getUnSharedAccommSharedRoomDetailsTCId() + "] that which is expected [" + TC1 + "].");
+        TestReporter.softAssertEquals(calculate.getUnSharedAccommSharedRoomDetailsTCGId(), TCG1, "Verify that the response returns the TCG id [" + calculate.getUnSharedAccommSharedRoomDetailsTCGId() + "] that which is expected [" + TCG1 + "].");
+        TestReporter.softAssertEquals(calculate.getUnSharedAccommTPSId(), TPS1, "Verify that the response returns the TPS id [" + calculate.getUnSharedAccommTPSId() + "] that which is expected [" + TPS1 + "].");
         TestReporter.assertAll();
     }
 }
