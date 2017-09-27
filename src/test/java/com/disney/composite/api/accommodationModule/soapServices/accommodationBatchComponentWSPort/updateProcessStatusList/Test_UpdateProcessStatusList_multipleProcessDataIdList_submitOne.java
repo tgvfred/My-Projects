@@ -4,8 +4,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassCancelTransactional;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.UpdateProcessStatusList;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageCancelData;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateProcessStatusListHelper;
@@ -44,7 +44,7 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList_submitOne ex
 
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
-        StageMassCancelTransactional cancel = new StageMassCancelTransactional(Environment.getBaseEnvironmentName(environment), "MainUpPrLst");
+        StageCancelData cancel = new StageCancelData(Environment.getBaseEnvironmentName(environment), "MainUpPrLst");
         cancel.setProcessName("MASS_CANCEL");
         cancel.setCancelContactName("Cancel Name");
         cancel.setCancelDate("2017-17-07");
@@ -81,6 +81,6 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList_submitOne ex
 
         TestReporter.logStep("Verify Proc Run ID that was not passed into the RQ [" + helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()) + "] doesn't have an updated status:");
         // Sleeper.sleep(10000);
-        helper.validationOverall(helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()), "SUBMITTED", Randomness.generateCurrentDatetime().substring(0, 10));
+        helper.validationOverall(helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
     }
 }
