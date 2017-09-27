@@ -81,6 +81,6 @@ public class Test_UpdateProcessStatusList_multipleProcessDataIdList_submitOne ex
 
         TestReporter.logStep("Verify Proc Run ID that was not passed into the RQ [" + helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()) + "] doesn't have an updated status:");
         // Sleeper.sleep(10000);
-        helper.validationOverall(helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()), "SUBMITTED", Randomness.generateCurrentDatetime().substring(0, 10));
+        helper.validationOverall(helper.retrieveProcRunIdMulti2(cancel.getResponseProcessId()), "BOOKED", Randomness.generateCurrentDatetime().substring(0, 10));
     }
 }
