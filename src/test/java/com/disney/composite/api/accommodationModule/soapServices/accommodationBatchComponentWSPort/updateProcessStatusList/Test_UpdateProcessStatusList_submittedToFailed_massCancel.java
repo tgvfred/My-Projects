@@ -25,7 +25,7 @@ public class Test_UpdateProcessStatusList_submittedToFailed_massCancel extends A
 
         UpdateProcessStatusListHelper helper = new UpdateProcessStatusListHelper(environment);
 
-        StageCancelData cancel = new StageCancelData(Environment.getBaseEnvironmentName(environment), "Main");
+        StageCancelData cancel = new StageCancelData(environment, "Main");
         cancel.setCancelContactName("Cancel Name");
         cancel.setCancelDate("2017-17-07");
         cancel.setCancelReasonCode("AIR");

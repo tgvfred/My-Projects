@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForCancel;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageCancelData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -39,12 +40,15 @@ public class TestGetStagedRecordsForCancel_TwoReservations_OneRequest extends Ac
         stageMassCancel.setCancelContactName(contactName);
         stageMassCancel.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancel.setCancelReasonCode(reasonCode);
-        stageMassCancel.setIsOverridden(isOverridden);
-        stageMassCancel.setIsWaived(isWaived);
+        // These nodes are not valid in the RQ when ran in _CM
+        // stageMassCancel.setIsOverridden(isOverridden);
+        // stageMassCancel.setIsWaived(isWaived);
+        stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isOverridden", BaseSoapCommands.REMOVE_NODE.toString());
+        stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isWaived", BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancel.setOVerridenCancelFEe(cancelFee);
         stageMassCancel.setTCg(firstResTCG);
         stageMassCancel.sendRequest();
-        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request.", stageMassCancel);
+        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request: " + stageMassCancel.getFaultString(), stageMassCancel);
 
         processIdOne = stageMassCancel.getResponseProcessId();
 
@@ -61,8 +65,11 @@ public class TestGetStagedRecordsForCancel_TwoReservations_OneRequest extends Ac
         stageMassCancelTwo.setCancelContactName(contactName);
         stageMassCancelTwo.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancelTwo.setCancelReasonCode(reasonCode);
-        stageMassCancelTwo.setIsOverridden(isOverridden);
-        stageMassCancelTwo.setIsWaived(isWaived);
+        // These nodes are not valid in the RQ when ran in _CM
+        // stageMassCancelTwo.setIsOverridden(isOverridden);
+        // stageMassCancelTwo.setIsWaived(isWaived);
+        stageMassCancelTwo.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isOverridden", BaseSoapCommands.REMOVE_NODE.toString());
+        stageMassCancelTwo.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isWaived", BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancelTwo.setOVerridenCancelFEe(cancelFee);
         stageMassCancelTwo.setTCg(getBook().getTravelComponentGroupingId());
         stageMassCancelTwo.sendRequest();

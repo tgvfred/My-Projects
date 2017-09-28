@@ -5,11 +5,11 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 
-public class StageMassModifyTransactional extends AccommodationBatchComponentWSPort {
+public class StageMassModifyTransactional2 extends AccommodationBatchComponentWSPort {
     private String defaultProcessName = MASS_MODIFY;
     private String processName;
 
-    public StageMassModifyTransactional(String environment, String scenario) {
+    public StageMassModifyTransactional2(String environment, String scenario) {
         super(environment);
 
         // Generate a request from a project xml file
