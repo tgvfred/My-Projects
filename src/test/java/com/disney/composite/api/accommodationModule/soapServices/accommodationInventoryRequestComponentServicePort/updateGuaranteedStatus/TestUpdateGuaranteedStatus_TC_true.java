@@ -32,6 +32,7 @@ public class TestUpdateGuaranteedStatus_TC_true extends AccommodationBaseTest {
 
     }
 
+    // global variables
     String tp_id = "";
     String tc_id = "";
 
