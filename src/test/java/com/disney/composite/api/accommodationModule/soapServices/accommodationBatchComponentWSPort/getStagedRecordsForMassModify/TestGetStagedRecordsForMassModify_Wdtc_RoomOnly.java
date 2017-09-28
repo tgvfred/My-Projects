@@ -5,7 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForMassModify;
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassModifyTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageModifyData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.GetStagedRecordsForMassModifyHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -70,7 +70,7 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         String inventoryContactName = "Inventory Contact";
 
         // WDTC to room only
-        StageMassModifyTransactional stage = new StageMassModifyTransactional(environment, "MainProcLst");
+        StageModifyData stage = new StageModifyData(environment, "MainProcLst");
         stage.setProcessName(processName);
         stage.setMassModifyRoomDetailTcId(tcId);
         stage.setMassModifyRoomDetailTpsId(tpsId);
@@ -91,7 +91,7 @@ public class TestGetStagedRecordsForMassModify_Wdtc_RoomOnly extends Accommodati
         stage.setMassModifyRoomDetailConfirmationIndicator(BaseSoapCommands.REMOVE_NODE.toString());
         stage.sendRequest();
 
-        TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Error sending request", stage);
+        TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Error sending request: " + stage.getFaultString(), stage);
 
         String sql = "select a.GRP_RES_PROC_RUN_ID " +
                 " from res_mgmt.GRP_RES_PROC_RUN a " +

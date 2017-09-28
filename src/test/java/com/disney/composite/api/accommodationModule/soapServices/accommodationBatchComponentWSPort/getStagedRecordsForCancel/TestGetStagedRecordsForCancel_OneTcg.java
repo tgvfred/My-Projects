@@ -53,7 +53,7 @@ public class TestGetStagedRecordsForCancel_OneTcg extends AccommodationBaseTest 
         stageMassCancel.setOVerridenCancelFEe(cancelFee);
         stageMassCancel.setTCg(getBook().getTravelComponentGroupingId());
         stageMassCancel.sendRequest();
-        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request.", stageMassCancel);
+        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request: " + stageMassCancel.getFaultString(), stageMassCancel);
 
         processId = stageMassCancel.getResponseProcessId();
 
