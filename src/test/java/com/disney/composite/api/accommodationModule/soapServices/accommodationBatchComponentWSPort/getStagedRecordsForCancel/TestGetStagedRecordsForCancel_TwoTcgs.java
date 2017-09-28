@@ -138,8 +138,10 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         stageMassCancel.setCancelContactName(contactName);
         stageMassCancel.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancel.setCancelReasonCode(reasonCode);
-        stageMassCancel.setIsOverridden(isOverridden);
-        stageMassCancel.setIsWaived(isWaived);
+        // stageMassCancel.setIsOverridden(isOverridden);
+        // stageMassCancel.setIsWaived(isWaived);
+        stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isOverridden", BaseSoapCommands.REMOVE_NODE.toString());
+        stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isWaived", BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancel.setOVerridenCancelFEe(cancelFee);
         stageMassCancel.setTCg(book.getTravelComponentGroupingId("1"));
 
