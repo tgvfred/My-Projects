@@ -34,11 +34,13 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationInventoryRequestComponentService", "updateGuaranteedStatus" })
     public void testUpdateGuaranteedStatus_TPS_true() {
 
+        String tp_id = getBook().getTravelPlanId();
+
         String sql1 = " select c.ASGN_OWN_ID"
                 + " from res_mgmt.tps a"
                 + " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
                 + " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb"
-                + " where a.tp_id =  472633125011"
+                + " where a.tp_id = '" + tp_id + "'"
                 + " and c.ASGN_OWN_ID is not null";
 
         String sql2 = " select d.GUAR_IN"
@@ -46,22 +48,24 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
                 + " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
                 + " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb"
                 + " left outer join rsrc_inv.RSRC_ASGN_OWNR d on c.ASGN_OWN_ID = d.ASGN_OWNR_ID"
-                + " where a.tp_id =  472633125051"
+                + " where a.tp_id =  '" + tp_id + "'"
                 + " and c.ASGN_OWN_ID is not null";
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql1));
-        Recordset rs2 = new Recordset(db.getResultSet(sql2));
-        TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
 
+        rs.print();
+        TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
+        String tps_id = getBook().getTravelPlanSegmentId();
         UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
 
         ugs.setGuaranteedStatusFlag("true");
-        ugs.setOwnerReferenceNumber("472633125051");
+        ugs.setOwnerReferenceNumber(tps_id);
         ugs.setOwnerReferenceType("TPS");
 
         ugs.sendRequest();
-
+        Recordset rs2 = new Recordset(db.getResultSet(sql2));
+        rs2.print();
         // validation
         TestReporter.logAPI(!ugs.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", ugs);
         TestReporter.assertTrue(ugs.getAssignmentOwnerId().equals(rs.getValue("ASGN_OWN_ID")), "The response Assignment Owner Id [" + ugs.getAssignmentOwnerId() + "] matches the database TC_RSN_NM [" + rs.getValue("ASGN_OWN_ID") + "].");
@@ -100,14 +104,16 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
         }
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationInventoryRequestComponentService", "updateGuaranteedStatus" }, dependsOnMethods = { "testUpdateGuaranteedStatus_TC_true" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationInventoryRequestComponentService", "updateGuaranteedStatus" }, dependsOnMethods = { "testUpdateGuaranteedStatus_TPS_true" })
     public void testUpdateGuaranteedStatus_TPS_trueToFalse() {
+
+        String tp_id = getBook().getTravelPlanId();
 
         String sql1 = " select c.ASGN_OWN_ID"
                 + " from res_mgmt.tps a"
                 + " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
                 + " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb"
-                + " where a.tp_id =  472633125011"
+                + " where a.tp_id = '" + tp_id + "'"
                 + " and c.ASGN_OWN_ID is not null";
 
         String sql2 = " select d.GUAR_IN"
@@ -115,22 +121,22 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
                 + " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
                 + " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb"
                 + " left outer join rsrc_inv.RSRC_ASGN_OWNR d on c.ASGN_OWN_ID = d.ASGN_OWNR_ID"
-                + " where a.tp_id =  472633125051"
+                + " where a.tp_id =  '" + tp_id + "'"
                 + " and c.ASGN_OWN_ID is not null";
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql1));
-        Recordset rs2 = new Recordset(db.getResultSet(sql2));
-        TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
 
+        TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
+        String tps_id = getBook().getTravelPlanSegmentId();
         UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
 
         ugs.setGuaranteedStatusFlag("false");
-        ugs.setOwnerReferenceNumber("472633125051");
+        ugs.setOwnerReferenceNumber(tps_id);
         ugs.setOwnerReferenceType("TPS");
 
         ugs.sendRequest();
-
+        Recordset rs2 = new Recordset(db.getResultSet(sql2));
         // validations
 
         TestReporter.logAPI(!ugs.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", ugs);
