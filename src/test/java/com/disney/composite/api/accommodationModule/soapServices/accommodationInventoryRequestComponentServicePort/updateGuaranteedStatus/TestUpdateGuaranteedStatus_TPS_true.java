@@ -31,10 +31,13 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
 
     }
 
+    String tp_id = "";
+    String tps_id = "";
+
     @Test(groups = { "api", "regression", "accommodation", "accommodationInventoryRequestComponentService", "updateGuaranteedStatus" })
     public void testUpdateGuaranteedStatus_TPS_true() {
 
-        String tp_id = getBook().getTravelPlanId();
+        tp_id = getBook().getTravelPlanId();
 
         String sql1 = " select c.ASGN_OWN_ID"
                 + " from res_mgmt.tps a"
@@ -54,18 +57,17 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql1));
 
-        rs.print();
         TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
-        String tps_id = getBook().getTravelPlanSegmentId();
-        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
+        tps_id = getBook().getTravelPlanSegmentId();
 
+        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
         ugs.setGuaranteedStatusFlag("true");
         ugs.setOwnerReferenceNumber(tps_id);
         ugs.setOwnerReferenceType("TPS");
-
         ugs.sendRequest();
+
         Recordset rs2 = new Recordset(db.getResultSet(sql2));
-        rs2.print();
+
         // validation
         TestReporter.logAPI(!ugs.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", ugs);
         TestReporter.assertTrue(ugs.getAssignmentOwnerId().equals(rs.getValue("ASGN_OWN_ID")), "The response Assignment Owner Id [" + ugs.getAssignmentOwnerId() + "] matches the database TC_RSN_NM [" + rs.getValue("ASGN_OWN_ID") + "].");
@@ -107,7 +109,7 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationInventoryRequestComponentService", "updateGuaranteedStatus" }, dependsOnMethods = { "testUpdateGuaranteedStatus_TPS_true" })
     public void testUpdateGuaranteedStatus_TPS_trueToFalse() {
 
-        String tp_id = getBook().getTravelPlanId();
+        // tp_id = getBook().getTravelPlanId();
 
         String sql1 = " select c.ASGN_OWN_ID"
                 + " from res_mgmt.tps a"
@@ -128,14 +130,14 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
         Recordset rs = new Recordset(db.getResultSet(sql1));
 
         TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
-        String tps_id = getBook().getTravelPlanSegmentId();
-        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
+        // tps_id = getBook().getTravelPlanSegmentId();
 
+        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
         ugs.setGuaranteedStatusFlag("false");
         ugs.setOwnerReferenceNumber(tps_id);
         ugs.setOwnerReferenceType("TPS");
-
         ugs.sendRequest();
+
         Recordset rs2 = new Recordset(db.getResultSet(sql2));
         // validations
 
