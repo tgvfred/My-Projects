@@ -59,7 +59,7 @@ public class TestGetStagedRecordsForMassModify_roomOnly_ModifyPrimaryGuest exten
         mod.setProcessDataId(rs.getValue("GRP_RES_PROC_RUN_ID"));
         mod.sendRequest();
 
-        TestReporter.logAPI(!mod.getResponseStatusCode().equals("200"), "Error sending request", mod);
+        TestReporter.logAPI(!mod.getResponseStatusCode().equals("200"), "Error sending request: " + mod.getFaultString(), mod);
 
         TestReporter.softAssertEquals(mod.getFirstName(), firstName, "Verify that the retrieved firstName [" + mod.getFirstName() + "] matches the expected [" + firstName + "]");
         TestReporter.softAssertEquals(mod.getLastName(), lastName, "Verify that the retrieved lastName [" + mod.getLastName() + "] matches the expected [" + lastName + "]");

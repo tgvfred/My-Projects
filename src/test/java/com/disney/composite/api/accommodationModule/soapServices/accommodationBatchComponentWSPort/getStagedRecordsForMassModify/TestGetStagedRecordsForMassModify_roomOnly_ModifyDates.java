@@ -61,7 +61,7 @@ public class TestGetStagedRecordsForMassModify_roomOnly_ModifyDates extends Acco
         mod.setProcessDataId(rs.getValue("GRP_RES_PROC_RUN_ID"));
         mod.sendRequest();
 
-        TestReporter.logAPI(!mod.getResponseStatusCode().equals("200"), "Error sending request", mod);
+        TestReporter.logAPI(!mod.getResponseStatusCode().equals("200"), "Error sending request: " + mod.getFaultString(), mod);
 
         TestReporter.softAssertEquals(mod.getTcgId(), tcgId, "Verify that the retrieved TCG ID [" + mod.getTcgId() + "] matches the expected [" + tcgId + "]");
         TestReporter.softAssertEquals(mod.getStartDate(), startDate + "T00:00:00", "Verify that the retrieved start date [" + mod.getStartDate() + "] matches the expected [" + startDate + "T00:00:00" + "]");

@@ -61,7 +61,7 @@ public class TestGetStagedRecordsForMassModify_roomOnly_ModifyResortAndRoomType 
         mod.setProcessDataId(rs.getValue("GRP_RES_PROC_RUN_ID"));
         mod.sendRequest();
 
-        TestReporter.logAPI(!mod.getResponseStatusCode().equals("200"), "Error sending request", mod);
+        TestReporter.logAPI(!mod.getResponseStatusCode().equals("200"), "Error sending request: " + mod.getFaultString(), mod);
 
         TestReporter.softAssertEquals(mod.getTcgId(), tcgId, "Verify that the retrieved TCG ID [" + mod.getTcgId() + "] matches the expected [" + tcgId + "]");
         TestReporter.softAssertEquals(mod.getResortCode(), resortCode, "Verify that the retrieved resort code [" + mod.getResortCode() + "] matches the expected [" + resortCode + "]");

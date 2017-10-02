@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForRemoveGroup;
 import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageRemoveGroupData;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationBatchErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
@@ -26,12 +27,17 @@ public class TestGetStagedRecordsForRemoveGroup_Positive extends AccommodationBa
         recdb = new OracleDatabase(environment, Database.RECOMMENDER);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup", "negative" })
     public void testGetStagedRecordsForRemoveGroup_nullProcessDataId() {
         TestReporter.logScenario("Test - Get Staged Records For Remove Group - Null Process Data ID");
 
-        GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = buildAndSendRequestAndValidateResponse("");
-        validateSpecialEnvironment(getStagedRecordsForRemoveGroup);
+        GetStagedRecordsForRemoveGroup getStagedRecordsForRemoveGroup = new GetStagedRecordsForRemoveGroup(environment);
+        getStagedRecordsForRemoveGroup.setProcessDataID("");
+        getStagedRecordsForRemoveGroup.sendRequest();
+        String faultString = "Invalid Request : Invalid Request";
+        TestReporter.assertEquals(getStagedRecordsForRemoveGroup.getFaultString(), faultString, "Verify that the fault string [" + getStagedRecordsForRemoveGroup.getFaultString() + "] is that which is expected [" + faultString + "].");
+
+        validateApplicationError(getStagedRecordsForRemoveGroup, AccommodationBatchErrorCode.INVALID_REQUEST);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getStagedRecordsForRemoveGroup" })
