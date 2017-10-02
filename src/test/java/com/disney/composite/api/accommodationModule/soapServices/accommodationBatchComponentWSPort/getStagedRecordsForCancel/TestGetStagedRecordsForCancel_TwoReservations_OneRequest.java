@@ -47,8 +47,9 @@ public class TestGetStagedRecordsForCancel_TwoReservations_OneRequest extends Ac
         stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isWaived", BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancel.setOVerridenCancelFEe(cancelFee);
         stageMassCancel.setTCg(firstResTCG);
+        stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancel.sendRequest();
-        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request: " + stageMassCancel.getFaultString(), stageMassCancel);
+        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageCancelData request: " + stageMassCancel.getFaultString(), stageMassCancel);
 
         processIdOne = stageMassCancel.getResponseProcessId();
 
@@ -72,8 +73,9 @@ public class TestGetStagedRecordsForCancel_TwoReservations_OneRequest extends Ac
         stageMassCancelTwo.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isWaived", BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancelTwo.setOVerridenCancelFEe(cancelFee);
         stageMassCancelTwo.setTCg(getBook().getTravelComponentGroupingId());
+        stageMassCancelTwo.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancelTwo.sendRequest();
-        TestReporter.logAPI(!stageMassCancelTwo.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request.", stageMassCancelTwo);
+        TestReporter.logAPI(!stageMassCancelTwo.getResponseStatusCode().equals("200"), "An error occurred with StageCancelData request: " + stageMassCancelTwo.getFaultString(), stageMassCancelTwo);
 
         processIdTwo = stageMassCancelTwo.getResponseProcessId();
 

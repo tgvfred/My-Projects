@@ -145,9 +145,10 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
 
         // uses bundle tcg to make second massCancelAccommodationRequestDetails
         buildSecondDetails(stageMassCancel);
+        stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
 
         stageMassCancel.sendRequest();
-        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request: " + stageMassCancel.getFaultString(), stageMassCancel);
+        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageCancelData request: " + stageMassCancel.getFaultString(), stageMassCancel);
 
         processId = stageMassCancel.getResponseProcessId();
 

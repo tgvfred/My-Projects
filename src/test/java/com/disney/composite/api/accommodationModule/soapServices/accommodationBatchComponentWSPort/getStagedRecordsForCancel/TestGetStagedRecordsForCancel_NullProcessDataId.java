@@ -18,7 +18,7 @@ public class TestGetStagedRecordsForCancel_NullProcessDataId {
         GetStagedRecordsForCancel getStaged = new GetStagedRecordsForCancel(environment, "Main");
         getStaged.setProcessDataId(BaseSoapCommands.REMOVE_NODE.toString());
         getStaged.sendRequest();
-        TestReporter.logAPI(!getStaged.getResponseStatusCode().equals("200"), "An error occurred getting staged records for cancel.", getStaged);
+        TestReporter.logAPI(!getStaged.getResponseStatusCode().equals("200"), "An error occurred getting staged records for cancel: " + getStaged.getFaultString(), getStaged);
 
         try {
             getStaged.getReturn();

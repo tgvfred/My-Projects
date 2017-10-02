@@ -52,8 +52,9 @@ public class TestGetStagedRecordsForCancel_OneTcg extends AccommodationBaseTest 
         stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/isWaived", BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancel.setOVerridenCancelFEe(cancelFee);
         stageMassCancel.setTCg(getBook().getTravelComponentGroupingId());
+        stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancel.sendRequest();
-        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request: " + stageMassCancel.getFaultString(), stageMassCancel);
+        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageCancelData request: " + stageMassCancel.getFaultString(), stageMassCancel);
 
         processId = stageMassCancel.getResponseProcessId();
 
