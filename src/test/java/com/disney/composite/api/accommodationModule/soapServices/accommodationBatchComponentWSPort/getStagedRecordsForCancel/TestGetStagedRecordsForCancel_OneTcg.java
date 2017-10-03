@@ -110,6 +110,7 @@ public class TestGetStagedRecordsForCancel_OneTcg extends AccommodationBaseTest 
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedBaselineAttributeValidations("/Envelope/Body/getStagedRecordsForCancelResponse/return/cancelDate");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(getStaged, true), "Validating Response Comparison");
         }
 
