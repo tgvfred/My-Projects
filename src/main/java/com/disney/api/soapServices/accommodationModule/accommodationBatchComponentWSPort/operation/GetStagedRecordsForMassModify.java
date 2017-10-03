@@ -1,5 +1,7 @@
 package com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation;
 
+import org.testng.SkipException;
+
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.AccommodationBatchComponentWSPort;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
@@ -8,6 +10,9 @@ public class GetStagedRecordsForMassModify extends AccommodationBatchComponentWS
 
     public GetStagedRecordsForMassModify(String environment) {
         super(environment);
+        if (true) {
+            throw new SkipException("This SOAP method is no longer supported. It is to be removed in a later iteration - WWA 10/03/17");
+        }
 
         // Generate a request from a project xml file
         setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("getStagedRecordsForMassModify")));
