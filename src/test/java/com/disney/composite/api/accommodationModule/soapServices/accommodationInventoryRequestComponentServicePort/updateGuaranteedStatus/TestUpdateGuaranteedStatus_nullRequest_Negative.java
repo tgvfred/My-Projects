@@ -6,7 +6,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationInventoryReq
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestUpdateGuaranteedStatus_nullRequest_Negative extends AccommodationBaseTest {
@@ -16,7 +15,7 @@ public class TestUpdateGuaranteedStatus_nullRequest_Negative extends Accommodati
 
         String fault = "Unexpected Error occurred : updateGuaranteedStatus : java.lang.NullPointerException";
         TestReporter.logScenario("Test - UpdateGuaranteedStatus - Null Request");
-        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
+        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(environment);
 
         ugs.setRequest(BaseSoapCommands.REMOVE_NODE.toString());
 

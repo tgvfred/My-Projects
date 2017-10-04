@@ -62,7 +62,7 @@ public class TestUpdateGuaranteedStatus_TC_true extends AccommodationBaseTest {
 
         tc_id = getBook().getTravelComponentId();
 
-        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
+        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(environment);
         ugs.setGuaranteedStatusFlag("true");
         ugs.setOwnerReferenceNumber(tc_id);
         ugs.setOwnerReferenceType("TC");
