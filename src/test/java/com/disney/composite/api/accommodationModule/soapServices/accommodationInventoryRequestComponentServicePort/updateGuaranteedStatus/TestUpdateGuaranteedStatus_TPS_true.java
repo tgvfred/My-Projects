@@ -60,7 +60,7 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
         TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
         tps_id = getBook().getTravelPlanSegmentId();
 
-        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(environment);
+        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
         ugs.setGuaranteedStatusFlag("true");
         ugs.setOwnerReferenceNumber(tps_id);
         ugs.setOwnerReferenceType("TPS");
