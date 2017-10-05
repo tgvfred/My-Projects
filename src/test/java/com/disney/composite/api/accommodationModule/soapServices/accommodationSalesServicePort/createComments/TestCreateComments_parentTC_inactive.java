@@ -11,6 +11,7 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCreateComments_parentTC_inactive extends AccommodationBaseTest {
@@ -80,6 +81,10 @@ public class TestCreateComments_parentTC_inactive extends AccommodationBaseTest 
         Database RES_MGMT_REQ_VALIDATE_db = new OracleDatabase(environment, Database.DREAMS);
         Recordset RES_MGMT_REQ_VALIDATE_rs = new Recordset(RES_MGMT_REQ_VALIDATE_db.getResultSet(RES_MGMT_REQ_VALIDATE_sql));
 
+        if (RES_MGMT_REQ_VALIDATE_rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found in recordset for tp ID [ " + getBook().getTravelPlanId() + " ]", RES_MGMT_REQ_VALIDATE_sql);
+        }
+
         TestReporter.logStep("Verify that the comment shows up in the RES_MGMT_REQ_VALIDATE database.");
         TestReporter.setAssertFailed(false);
         TestReporter.softAssertEquals(RES_MGMT_REQ_VALIDATE_rs.getValue("TC_ID"), parentId, "Verify that the RES_MGMT_VAIDATE data [ " + RES_MGMT_REQ_VALIDATE_rs.getValue("TC_ID") + "] matches the comment data [ " + parentId + "]");
@@ -108,6 +113,10 @@ public class TestCreateComments_parentTC_inactive extends AccommodationBaseTest 
 
         Database TPV3_db = new OracleDatabase(environment, Database.SALESTP);
         Recordset TPV3_rs = new Recordset(TPV3_db.getResultSet(TPV3_sql));
+
+        if (TPV3_rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found in recordset for tp ID [ " + getBook().getTravelPlanId() + " ]", TPV3_sql);
+        }
 
         TestReporter.logStep("Verify that the comment shows up in the TPV3 database.");
         TestReporter.setAssertFailed(false);

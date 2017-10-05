@@ -9,7 +9,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -19,13 +18,12 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class Checkout_WDTC extends AccommodationBaseTest {
     private CheckInHelper helper;
-    private String locVar;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
@@ -34,7 +32,6 @@ public class Checkout_WDTC extends AccommodationBaseTest {
         setValues(getEnvironment());
         setIsWdtcBooking(true);
         setAddNewGuest(true);
-        locVar = environment;
         bookReservation();
     }
 
@@ -46,7 +43,7 @@ public class Checkout_WDTC extends AccommodationBaseTest {
         // }
         // }
 
-        helper = new CheckInHelper(locVar, getBook());
+        helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         String tcgId = getBook().getTravelComponentGroupingId();

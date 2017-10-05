@@ -18,7 +18,7 @@ public class StageMassModifyTransactional2 extends AccommodationBatchComponentWS
         setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
         removeComments();
         removeWhiteSpace();
-        // setProcessName(getLocalDefaultProcessName());
+        setProcessName(getLocalDefaultProcessName());
     }
 
     public String getLocalProcessName() {

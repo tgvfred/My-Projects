@@ -4,7 +4,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.AutomationException;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -28,12 +27,7 @@ public class Checkout_roomOnly_DVC extends BookDVCCashHelper {
 
         setUseDvcResort(true);
         setCheckingIn(true);
-
-        // setEnvironment("stage");
         setBook(bookDvcReservation("testBook_MCash", 1));
-        if (getFirstBooking() == null) {
-            throw new AutomationException("The firstBooking object is null.  GetBook response: " + getBook().getFaultString());
-        }
         setTpId(getFirstBooking().getTravelPlanId());
     }
 
