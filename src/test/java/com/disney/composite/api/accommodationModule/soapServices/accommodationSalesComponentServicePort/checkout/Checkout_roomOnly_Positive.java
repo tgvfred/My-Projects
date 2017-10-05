@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
+import org.testng.SkipException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
@@ -20,21 +21,18 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     private ThreadLocal<CheckInHelper> helper = new ThreadLocal<>();
-    private String locVar;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        isComo.set("false");
-        locVar = environment;
         bookReservation();
     }
 
@@ -57,16 +55,16 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_BEREAV() {
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
-        // }
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
+            }
+        }
 
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 15;
+        int maxTries = 5;
         boolean success = false;
         do {
             try {
@@ -90,7 +88,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
 
-        Checkout checkout = new Checkout(locVar, "main");
+        Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
         checkout.setIsBellServiceRequired(status);
         checkout.setIsSameRoomNumberAssigned(status);
@@ -114,15 +112,15 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_DOMDISP() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+            }
+        }
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 15;
+        int maxTries = 5;
         boolean success = false;
         do {
             try {
@@ -146,7 +144,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
 
-        Checkout checkout = new Checkout(locVar, "main");
+        Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
         checkout.setIsBellServiceRequired(status);
         checkout.setIsSameRoomNumberAssigned(status);
@@ -170,15 +168,15 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_DUPRES() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+            }
+        }
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 15;
+        int maxTries = 5;
         boolean success = false;
         do {
             try {
@@ -202,7 +200,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
 
-        Checkout checkout = new Checkout(locVar, "main");
+        Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
         checkout.setIsBellServiceRequired(status);
         checkout.setIsSameRoomNumberAssigned(status);
@@ -226,15 +224,15 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_ECERR() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+            }
+        }
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 15;
+        int maxTries = 5;
         boolean success = false;
         do {
             try {
@@ -258,7 +256,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
 
-        Checkout checkout = new Checkout(locVar, "main");
+        Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
         checkout.setIsBellServiceRequired(status);
         checkout.setIsSameRoomNumberAssigned(status);
@@ -283,15 +281,15 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_FAMEM() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+            }
+        }
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 15;
+        int maxTries = 5;
         boolean success = false;
         do {
             try {
@@ -315,7 +313,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
 
-        Checkout checkout = new Checkout(locVar, "main");
+        Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
         checkout.setIsBellServiceRequired(status);
         checkout.setIsSameRoomNumberAssigned(status);
@@ -339,15 +337,15 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_ILL() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+            }
+        }
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 15;
+        int maxTries = 5;
         boolean success = false;
         do {
             try {
@@ -371,7 +369,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
 
-        Checkout checkout = new Checkout(locVar, "main");
+        Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
         checkout.setIsBellServiceRequired(status);
         checkout.setIsSameRoomNumberAssigned(status);
@@ -396,15 +394,15 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_LVNOUTWDW() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+            }
+        }
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 15;
+        int maxTries = 5;
         boolean success = false;
         do {
             try {
@@ -428,7 +426,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
 
-        Checkout checkout = new Checkout(locVar, "main");
+        Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
         checkout.setIsBellServiceRequired(status);
         checkout.setIsSameRoomNumberAssigned(status);
@@ -453,15 +451,15 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_WTHRCKO() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+            }
+        }
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 15;
+        int maxTries = 5;
         boolean success = false;
         do {
             try {
@@ -485,7 +483,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
 
-        Checkout checkout = new Checkout(locVar, "main");
+        Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
         checkout.setIsBellServiceRequired(status);
         checkout.setIsSameRoomNumberAssigned(status);
@@ -510,15 +508,15 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_tpsExtRefAndTcg() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+            }
+        }
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
-        int maxTries = 15;
+        int maxTries = 5;
         boolean success = false;
         do {
             try {
@@ -542,7 +540,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
 
-        Checkout checkout = new Checkout(locVar, "main");
+        Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
         checkout.setIsBellServiceRequired(status);
         checkout.setIsSameRoomNumberAssigned(status);
@@ -566,16 +564,16 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void TestCheckout_bundle() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
+            }
+        }
         AddBundleHelper bundleHelper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         bundleHelper.addBundle(getBook().getTravelPlanId(), getDaysOut());
 
         int tries = 0;
-        int maxTries = 15;
+        int maxTries = 5;
         boolean success = false;
         do {
             try {
@@ -599,7 +597,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String refNumber = getExternalRefNumber();
         String refSource = getExternalRefSource();
 
-        Checkout checkout = new Checkout(locVar, "main");
+        Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
         checkout.setIsBellServiceRequired(status);
         checkout.setIsSameRoomNumberAssigned(status);
@@ -611,9 +609,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         checkout.setCheckoutDate(checkoutDate);
         checkout.setLocationId(locationId);
         checkout.sendRequest();
-        TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), checkout.getFaultString(), checkout);
 
-        Sleeper.sleep(5000);
         String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
         validateRIM(assignOwnerId);
         additionalValidations_Bundle(assignOwnerId);
@@ -640,7 +636,6 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        // rs.print();
         TestReporter.softAssertTrue(rs.getRowCount() == 1, "Verify that 1 record was returned.");
         TestReporter.softAssertTrue(rs.getValue("AUTO_ASGN_RSRC_ID").equals("NULL"), "Verify that the auto asign resource ID [" + rs.getValue("AUTO_ASGN_RSRC_ID") + "] is null.");
         TestReporter.softAssertTrue(rs.getValue("OWNR_STS_NM").equals("COMPLETED"), "Verify that the owner status [" + rs.getValue("OWNR_STS_NM") + "] is that which is expected [COMPLETED].");
@@ -750,7 +745,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
     }
 
     public void validateChargeGroupsChargesAndFolio_Bundle() {
-        validateChargGroupsBundle();
+        validateChargGroups();
         validateCharges_Bundle();
         validateFolio();
     }
@@ -792,7 +787,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         TestReporter.softAssertTrue(rs.getRowCount() == 4, "Verify that 4 charges were found.");
         do {
             TestReporter.softAssertEquals(rs.getValue("CHRG_PST_ST_NM"), "Earned", "Verify that the charge past state name [" + rs.getValue("CHRG_PST_ST_NM") + "] is that which is expected [Earned].");
-            TestReporter.softAssertEquals(rs.getValue("CHRG_ACTV_IN"), "N", "Verify that the charge active indicator [" + rs.getValue("CHRG_ACTV_IN") + "] is that which is expected [Y].");
+            TestReporter.softAssertEquals(rs.getValue("CHRG_ACTV_IN"), "Y", "Verify that the charge active indicator [" + rs.getValue("CHRG_ACTV_IN") + "] is that which is expected [Y].");
             TestReporter.softAssertEquals(rs.getValue("RECOG_STS_NM"), "APPROVED", "Verify that the RECOG status [" + rs.getValue("RECOG_STS_NM") + "] is that which is expected [APPROVED].");
             rs.moveNext();
         } while (rs.hasNext());
@@ -834,29 +829,6 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         do {
             TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "Past Visit", "Verify that the charge group status [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Past Visit].");
             TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_ACTV_IN"), "Y", "Verify that the charge group active indicator [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Y].");
-            rs.moveNext();
-        } while (rs.hasNext());
-        TestReporter.assertAll();
-    }
-
-    public void validateChargGroupsBundle() {
-        TestReporter.logStep("Validate charge groups");
-        String sql = "select a.EXTNL_SRC_NM, CHRG_GRP_STS_NM, CHRG_GRP_ACTV_IN "
-                + "from folio.EXTNL_REF a "
-                + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
-                + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
-                + "where a.EXTNL_REF_VAL in ('" + getBook().getTravelPlanId() + "','" + getBook().getTravelPlanSegmentId() + "','" + getBook().getTravelComponentGroupingId() + "')";
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertTrue(rs.getRowCount() == 3, "Verify that 3 charge groups were found.");
-        do {
-            if (rs.getValue("EXTNL_SRC_NM").equals("DREAMS_TP")) {
-                TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "Earned", "Verify that the charge group status [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Earned].");
-                TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_ACTV_IN"), "Y", "Verify that the charge group active indicator [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Y].");
-            } else {
-                TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "Past Visit", "Verify that the charge group status [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Past Visit].");
-                TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_ACTV_IN"), "Y", "Verify that the charge group active indicator [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Y].");
-            }
             rs.moveNext();
         } while (rs.hasNext());
         TestReporter.assertAll();

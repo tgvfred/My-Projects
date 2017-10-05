@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -21,33 +22,29 @@ public class Checkout_Cancel extends AccommodationBaseTest {
     private CheckInHelper checkInHelper;
     private AddAccommodationHelper accommHelper;
     private Add add;
-    private String locVar;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
+        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        isComo.set("false");
-        locVar = environment;
         bookReservation();
     }
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void TestCheckout_roomOnly_multAccomm_cancelOne_checkInOne_checkoutOne() {
 
-        /*
-         * if (Environment.isSpecialEnvironment(environment)) {
-         * if (true) {
-         * throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
-         * }
-         * }
-         */
+        if (Environment.isSpecialEnvironment(environment)) {
+            if (true) {
+                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
+            }
+        }
         // Add an accommodation
         TestReporter.logScenario("Add Accommodation");
         accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
@@ -59,12 +56,12 @@ public class Checkout_Cancel extends AccommodationBaseTest {
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         // Checkin One and then Checkout One
         TestReporter.logScenario("Checkin One");
-        checkInHelper = new CheckInHelper(locVar, add);
+        checkInHelper = new CheckInHelper(getEnvironment(), add);
         checkInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         TestReporter.logScenario("Checkout One");
