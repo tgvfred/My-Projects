@@ -42,7 +42,7 @@ public class UpdateGuaranteeStatusHelper {
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         if (rs.getRowCount() == 0) {
-            throw new SQLValidationException("No charges found for tp ID [ " + tpid + " ]", sql);
+            throw new SQLValidationException("Nothing found for tp ID [ " + tpid + " ]", sql);
         }
 
         name1 = rs.getValue("GUAR_TYP_NM", 1);
