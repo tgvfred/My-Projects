@@ -46,6 +46,7 @@ public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         firstTCG = getBook().getTravelComponentGroupingId();
         captureFirstOwnerId();
+
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })

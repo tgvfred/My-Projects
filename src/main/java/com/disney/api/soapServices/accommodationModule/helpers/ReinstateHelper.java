@@ -1116,10 +1116,6 @@ public class ReinstateHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
-        if (rs.getRowCount() == 0) {
-            throw new SQLValidationException("No TC fee found for tp ID [ " + tpID + " ]", sql);
-        }
-
         if (feeExpected) {
             TestReporter.assertTrue(rs.getRowCount() == numFeesExpected, "Verify that the number of TC fees [" + rs.getRowCount() + "] is that which is expected [" + numFeesExpected + "].");
         } else {
