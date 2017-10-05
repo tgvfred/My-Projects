@@ -11,6 +11,7 @@ import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
@@ -57,52 +58,62 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql1));
 
-        TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
-        tps_id = getBook().getTravelPlanSegmentId();
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No records found for tp ID [ " + tpId + " ]", sql1);
 
-        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
-        ugs.setGuaranteedStatusFlag("true");
-        ugs.setOwnerReferenceNumber(tps_id);
-        ugs.setOwnerReferenceType("TPS");
-        ugs.sendRequest();
+        } else {
 
-        Recordset rs2 = new Recordset(db.getResultSet(sql2));
+            TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
+            tps_id = getBook().getTravelPlanSegmentId();
 
-        // validation
-        TestReporter.logAPI(!ugs.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", ugs);
-        TestReporter.assertTrue(ugs.getAssignmentOwnerId().equals(rs.getValue("ASGN_OWN_ID")), "The response Assignment Owner Id [" + ugs.getAssignmentOwnerId() + "] matches the database TC_RSN_NM [" + rs.getValue("ASGN_OWN_ID") + "].");
-        TestReporter.assertTrue("Y".equals(rs2.getValue("GUAR_IN")), "The Guarante Indicator is set to [" + rs2.getValue("GUAR_IN") + "].");
+            UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
+            ugs.setGuaranteedStatusFlag("true");
+            ugs.setOwnerReferenceNumber(tps_id);
+            ugs.setOwnerReferenceType("TPS");
+            ugs.sendRequest();
 
-        // old vs. new
+            Recordset rs2 = new Recordset(db.getResultSet(sql2));
+            if (rs2.getRowCount() == 0) {
+                throw new SQLValidationException("No records found for tp ID [ " + tpId + " ]", sql2);
 
-        if (Environment.isSpecialEnvironment(getEnvironment())) {
+            } else {
+                // validation
+                TestReporter.logAPI(!ugs.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", ugs);
+                TestReporter.assertTrue(ugs.getAssignmentOwnerId().equals(rs.getValue("ASGN_OWN_ID")), "The response Assignment Owner Id [" + ugs.getAssignmentOwnerId() + "] matches the database TC_RSN_NM [" + rs.getValue("ASGN_OWN_ID") + "].");
+                TestReporter.assertTrue("Y".equals(rs2.getValue("GUAR_IN")), "The Guarante Indicator is set to [" + rs2.getValue("GUAR_IN") + "].");
 
-            UpdateGuaranteedStatus clone = (UpdateGuaranteedStatus) ugs.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+                // old vs. new
 
-            int tries = 0;
-            int maxTries = 40;
-            boolean success = false;
-            tries = 0;
-            maxTries = 40;
-            success = false;
-            do {
-                Sleeper.sleep(500);
-                clone.sendRequest();
-                if (ugs.getResponseStatusCode().equals("200")) {
-                    success = true;
-                } else {
-                    tries++;
+                if (Environment.isSpecialEnvironment(getEnvironment())) {
+
+                    UpdateGuaranteedStatus clone = (UpdateGuaranteedStatus) ugs.clone();
+                    clone.setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+
+                    int tries = 0;
+                    int maxTries = 40;
+                    boolean success = false;
+                    tries = 0;
+                    maxTries = 40;
+                    success = false;
+                    do {
+                        Sleeper.sleep(500);
+                        clone.sendRequest();
+                        if (ugs.getResponseStatusCode().equals("200")) {
+                            success = true;
+                        } else {
+                            tries++;
+                        }
+                    } while (tries < maxTries && !success);
+                    if (!clone.getResponseStatusCode().equals("200")) {
+                        TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"),
+                                "Error was returned: " + clone.getFaultString(), clone);
+                    }
+                    clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+                    clone.addExcludedBaselineXpathValidations("/Envelope/Body/updatedGuaranteedStatusResponse/return/");
+                    TestReporter.assertTrue(clone.validateResponseNodeQuantity(ugs, true), "Validating Response Comparison");
+
                 }
-            } while (tries < maxTries && !success);
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"),
-                        "Error was returned: " + clone.getFaultString(), clone);
             }
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/updatedGuaranteedStatusResponse/return/");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(ugs, true), "Validating Response Comparison");
-
         }
     }
 
@@ -129,51 +140,60 @@ public class TestUpdateGuaranteedStatus_TPS_true extends AccommodationBaseTest {
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql1));
 
-        TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
-        // tps_id = getBook().getTravelPlanSegmentId();
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No records found for tp ID [ " + tpId + " ]", sql1);
 
-        UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
-        ugs.setGuaranteedStatusFlag("false");
-        ugs.setOwnerReferenceNumber(tps_id);
-        ugs.setOwnerReferenceType("TPS");
-        ugs.sendRequest();
+        } else {
+            TestReporter.assertNotNull(rs.getValue("ASGN_OWN_ID"), "The assignment owner id is " + rs.getValue("ASGN_OWN_ID") + "].");
+            // tps_id = getBook().getTravelPlanSegmentId();
 
-        Recordset rs2 = new Recordset(db.getResultSet(sql2));
-        // validations
+            UpdateGuaranteedStatus ugs = new UpdateGuaranteedStatus(Environment.getBaseEnvironmentName(getEnvironment()));
+            ugs.setGuaranteedStatusFlag("false");
+            ugs.setOwnerReferenceNumber(tps_id);
+            ugs.setOwnerReferenceType("TPS");
+            ugs.sendRequest();
 
-        TestReporter.logAPI(!ugs.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", ugs);
-        TestReporter.assertTrue(ugs.getAssignmentOwnerId().equals(rs.getValue("ASGN_OWN_ID")), "The response Assignment Owner Id [" + ugs.getAssignmentOwnerId() + "] matches the database TC_RSN_NM [" + rs.getValue("ASGN_OWN_ID") + "].");
-        TestReporter.assertTrue("N".equals(rs2.getValue("GUAR_IN")), "The Guarante Indicator is set to [" + rs2.getValue("GUAR_IN") + "].");
+            Recordset rs2 = new Recordset(db.getResultSet(sql2));
+            // validations
+            if (rs2.getRowCount() == 0) {
+                throw new SQLValidationException("No records found for tp ID [ " + tpId + " ]", sql2);
 
-        // old vs. new
-        if (Environment.isSpecialEnvironment(getEnvironment())) {
+            } else {
+                TestReporter.logAPI(!ugs.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", ugs);
+                TestReporter.assertTrue(ugs.getAssignmentOwnerId().equals(rs.getValue("ASGN_OWN_ID")), "The response Assignment Owner Id [" + ugs.getAssignmentOwnerId() + "] matches the database TC_RSN_NM [" + rs.getValue("ASGN_OWN_ID") + "].");
+                TestReporter.assertTrue("N".equals(rs2.getValue("GUAR_IN")), "The Guarante Indicator is set to [" + rs2.getValue("GUAR_IN") + "].");
 
-            UpdateGuaranteedStatus clone = (UpdateGuaranteedStatus) ugs.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+                // old vs. new
+                if (Environment.isSpecialEnvironment(getEnvironment())) {
 
-            int tries = 0;
-            int maxTries = 40;
-            boolean success = false;
-            tries = 0;
-            maxTries = 40;
-            success = false;
-            do {
-                Sleeper.sleep(500);
-                clone.sendRequest();
-                if (ugs.getResponseStatusCode().equals("200")) {
-                    success = true;
-                } else {
-                    tries++;
+                    UpdateGuaranteedStatus clone = (UpdateGuaranteedStatus) ugs.clone();
+                    clone.setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+
+                    int tries = 0;
+                    int maxTries = 40;
+                    boolean success = false;
+                    tries = 0;
+                    maxTries = 40;
+                    success = false;
+                    do {
+                        Sleeper.sleep(500);
+                        clone.sendRequest();
+                        if (ugs.getResponseStatusCode().equals("200")) {
+                            success = true;
+                        } else {
+                            tries++;
+                        }
+                    } while (tries < maxTries && !success);
+                    if (!clone.getResponseStatusCode().equals("200")) {
+                        TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"),
+                                "Error was returned: " + clone.getFaultString(), clone);
+                    }
+                    clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+                    clone.addExcludedBaselineXpathValidations("/Envelope/Body/updatedGuaranteedStatusResponse/return/");
+                    TestReporter.assertTrue(clone.validateResponseNodeQuantity(ugs, true), "Validating Response Comparison");
+
                 }
-            } while (tries < maxTries && !success);
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"),
-                        "Error was returned: " + clone.getFaultString(), clone);
             }
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/updatedGuaranteedStatusResponse/return/");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(ugs, true), "Validating Response Comparison");
-
         }
     }
 }
