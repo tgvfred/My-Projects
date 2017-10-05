@@ -65,12 +65,6 @@ public class TestRetrieveCancellationPolicy_libgo_30DaysOut_fullRequest extends 
             }
 
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            clone.addExcludedBaselineXpathValidations(
-                    "/Envelope/Body/retrieveCancellationPolicy/request/travelPlanSegmentId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/retrieveCancellationPolicy/request/travelComponentGroupingId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/retrieveCancellationPolicy/request/blockCode");
-            clone.addExcludedXpathValidations(
-                    "/Envelope/Body/retrieveCancellationPolicyResponse/cancellationPolicyResponse/cancelFee");
             TestReporter.assertTrue(retrieve.validateResponseNodeQuantity(clone, true),
                     "Validating Response Comparison");
         }
