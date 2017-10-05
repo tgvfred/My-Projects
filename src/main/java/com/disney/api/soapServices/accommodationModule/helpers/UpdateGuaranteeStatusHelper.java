@@ -4,6 +4,7 @@ import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class UpdateGuaranteeStatusHelper {
@@ -39,6 +40,10 @@ public class UpdateGuaranteeStatusHelper {
 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpid + " ]", sql);
+        }
 
         name1 = rs.getValue("GUAR_TYP_NM", 1);
         ind1 = rs.getValue("GUAR_IN", 1);
