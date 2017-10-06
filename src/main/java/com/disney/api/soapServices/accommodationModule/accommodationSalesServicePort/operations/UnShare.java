@@ -58,4 +58,24 @@ public class UnShare extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/locationId");
     }
 
+    public String getBookingDate_unSharedRoomDetail() {
+        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/bookingDate");
+    }
+
+    public String getTravelStatus_unSharedRoomDetail() {
+        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/travelStatus");
+
+    }
+
+    public String getLocationId_unSharedRoomDetail() {
+        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/locationId");
+    }
+
+    public String getTravelComponentGroupingId_unSharedRoomDetail() {
+        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getTravelComponentId_unSharedRoomDetail() {
+        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/travelComponentId");
+    }
 }
