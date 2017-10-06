@@ -52,8 +52,7 @@ public class TestGetOptionDetail_ALTERNATE_COUNTRY_CODE extends AccommodationBas
         GetOptions getOptions = new GetOptions(Environment.getBaseEnvironmentName(environment));
         getOptions.setOptionType("ALTERNATE_COUNTRY_CODE");
         getOptions.sendRequest();
-        System.out.println(getOptions.getResponse());
-        System.out.println(getOptions.getRequest());
+
         TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "Error in the Party Service request. Response status code not 200.", getOptions);
 
         String OptionKey = "";
@@ -61,7 +60,6 @@ public class TestGetOptionDetail_ALTERNATE_COUNTRY_CODE extends AccommodationBas
         int numberOfOptionKeys = 0;
 
         numberOfOptionKeys = getOptions.getNumberOfResponseNodesByXPath("/Envelope/Body/getOptionsResponse/return/optionKey");
-        System.out.println(numberOfOptionKeys);
 
         for (int index = 1; index <= numberOfOptionKeys; index++) {
 

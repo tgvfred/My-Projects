@@ -63,4 +63,40 @@ public class GetStagedRecordsForCancel extends AccommodationBatchComponentWSPort
         return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return/cancelTickets");
     }
 
+    public String getReturn(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return[" + index + "]");
+    }
+
+    public String getCancelContactName(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return[" + index + "]/cancelContactName");
+    }
+
+    public String getCancelDate(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return[" + index + "]/cancelDate");
+    }
+
+    public String getCancelReasonCode(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return[" + index + "]/cancelReasonCode");
+    }
+
+    public String getOverridden(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return[" + index + "]/overridden");
+    }
+
+    public String getWaived(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return[" + index + "]/waived");
+    }
+
+    public String getOverriddenCancelFee(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return[" + index + "]/overriddenCancelFee");
+    }
+
+    public String getTravelComponentGroupingId(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return[" + index + "]/travelComponentGroupingId");
+    }
+
+    public String getCancelTickets(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return[" + index + "]/cancelTickets");
+    }
+
 }

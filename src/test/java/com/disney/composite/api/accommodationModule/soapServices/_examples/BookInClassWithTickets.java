@@ -33,7 +33,6 @@ public class BookInClassWithTickets extends AccommodationBaseTest {
         setValues();
         setAddTickets("2 Day Base Ticket");
         setIsWdtcBooking(true);
-        isComo.set("false");
         bookReservation();
 
         gatherDataForValidations();

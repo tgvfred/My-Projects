@@ -7,6 +7,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -190,7 +191,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         bookReservation();
 
         // Upgrade reservation using AccommodationFulfillmentServicePort#upgradeResortRoomType
-        UpgradeResortRoomType urrt = new UpgradeResortRoomType(environment, "upgradeResortRoomType");
+        UpgradeResortRoomType urrt = new UpgradeResortRoomType(Environment.getBaseCICDEnvironmentName(environment), "upgradeResortRoomType");
         urrt.setTcg(getBook().getTravelComponentGroupingId());
         urrt.setTc(getBook().getTravelComponentId());
         urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("startDate"));
@@ -201,11 +202,6 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         urrt.setRoomTypeCode(getRoomTypeCode());
 
         urrt.sendRequest();
-
-        // urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail",
-        // BaseSoapCommands.ADD_NODE.commandAppend("endDate"));
-        // urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail/endDate", getArrivalDate());
-        // urrt.setEndDate(getArrivalDate());
 
         TestReporter.logAPI(!urrt.getResponseStatusCode().equals("200"), "Verify that no error occurred upgrading a room: " + urrt.getFaultString(), urrt);
 
