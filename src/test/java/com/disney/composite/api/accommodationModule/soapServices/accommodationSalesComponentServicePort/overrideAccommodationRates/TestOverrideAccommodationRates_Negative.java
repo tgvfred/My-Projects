@@ -206,10 +206,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         // BaseSoapCommands.ADD_NODE.commandAppend("endDate"));
         // urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail/endDate", getArrivalDate());
         // urrt.setEndDate(getArrivalDate());
-        urrt.setFacilityId(getFacilityId());
-        urrt.setLocationIdString(BaseSoapCommands.REMOVE_NODE.toString());
-        urrt.setRoomTypeCode(getRoomTypeCode());
-        urrt.sendRequest();
+
         TestReporter.logAPI(!urrt.getResponseStatusCode().equals("200"), "Verify that no error occurred upgrading a room: " + urrt.getFaultString(), urrt);
 
         // Override the rate for the one night
@@ -312,7 +309,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_cancelled() {
         String fault = "Cancelled accommodations cannot be overriden : null";
-
+        String fault2 = "Unexpected Error occurred";
         TestReporter.logScenario("Test - Override Accommodation Rates   - Cancelled");
 
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
@@ -331,8 +328,8 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         oar.setTcgId(rs.getValue("tc_grp_nb"));
         oar.sendRequest();
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS);
+        TestReporter.logAPI(!oar.getFaultString().contains(fault2), "Validate correct fault string [" + fault2 + "] exists. Found [ " + oar.getFaultString() + " ]", oar);
+        validateApplicationError(oar, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURED);
     }
 
     /*
