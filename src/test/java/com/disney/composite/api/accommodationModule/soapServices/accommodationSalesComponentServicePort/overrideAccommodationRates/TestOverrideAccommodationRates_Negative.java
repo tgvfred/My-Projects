@@ -325,7 +325,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         oar.sendRequest();
 
         TestReporter.logAPI(!oar.getFaultString().contains(fault2), "Validate correct fault string [" + fault2 + "] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURED);
+        validateApplicationError(oar, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
     }
 
     /*

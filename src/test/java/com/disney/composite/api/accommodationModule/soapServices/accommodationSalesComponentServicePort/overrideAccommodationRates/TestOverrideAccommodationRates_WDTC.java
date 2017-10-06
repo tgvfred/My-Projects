@@ -94,11 +94,8 @@ public class TestOverrideAccommodationRates_WDTC extends AccommodationBaseTest {
         Recordset rs2 = new Recordset(db.getResultSet(sql2));
         Recordset rs3 = new Recordset(db.getResultSet(sql3));
         Recordset rs4 = new Recordset(db.getResultSet(sql5));
-        if (rs.getRowCount() == 0 || rs2.getRowCount() == 0 || rs3.getRowCount() == 0 || rs4.getRowCount() == 0) {
-            rs.print();
-            rs2.print();
-            rs3.print();
-            rs4.print();
+        if (rs.getRowCount() == 0 || rs2.getRowCount() == 0 || rs4.getRowCount() == 0) {
+
             throw new SQLValidationException("No records found for tp ID [ " + tp_id1 + " ]");
 
         } else {
