@@ -20,8 +20,6 @@ public class TestReplaceAllForTravelPlanSegment_modifyToAddAccommToCancelledRes 
     private String tpId = null;
     private String tpsId = null;
     private String tcgId = null;
-    private String tcId = null;
-    private String extRefNum = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -38,8 +36,6 @@ public class TestReplaceAllForTravelPlanSegment_modifyToAddAccommToCancelledRes 
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
-        tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
         cancel();
     }
 

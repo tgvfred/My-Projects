@@ -23,8 +23,6 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
     private String tpsId = null;
     private String tcgId = null;
     private String tcgId2 = null;
-    private String tcId = null;
-    private String extRefNum = null;
     private Map<String, String> tcgs = new HashMap<>();
 
     @Override
@@ -42,8 +40,6 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
-        tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
         tcgs.put(tcgId, tcgId);
 
         getBook().setTravelPlanId(tpId);

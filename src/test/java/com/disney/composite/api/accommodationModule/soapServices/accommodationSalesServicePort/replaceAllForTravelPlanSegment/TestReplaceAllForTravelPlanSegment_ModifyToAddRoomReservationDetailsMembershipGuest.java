@@ -21,7 +21,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyToAddRoomReservationDetail
     private String tpsId = null;
     private String tcgId = null;
     private String tcId = null;
-    private String extRefNum = null;
     private String odsGuestId;
 
     @Override
@@ -40,7 +39,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyToAddRoomReservationDetail
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })

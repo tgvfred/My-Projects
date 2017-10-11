@@ -8,20 +8,17 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TCG extends AccommodationBaseTest {
-    private String tpPtyId = null;
     private String tpId = null;
     private String tpsId = null;
     private String tcgId = null;
-    private String tcgId2 = null;
     private String tcId = null;
-    private String extRefNum = null;
     private Map<String, String> tcgs = new HashMap<>();
 
     @Override
@@ -40,13 +37,11 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TCG extends Acco
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
         tcgs.put(tcgId, tcgId);
 
         setSendRequest(false);
         bookReservation();
         getBook().sendRequest();
-        tcgId2 = getBook().getTravelComponentGroupingId();
         tcgs.put(getBook().getTravelComponentGroupingId(), getBook().getTravelComponentGroupingId());
 
         Share share = new Share(Environment.getBaseEnvironmentName(getEnvironment()));
@@ -72,6 +67,6 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TCG extends Acco
         // getBook().setRoomDetailsShared("true");
         getBook().sendRequest();
         TestReporter.assertEquals(faultString, getBook().getFaultString(), "Verify that the fault string [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), AccommodationErrorCode.ACCOMMODATION_COMPONENT_NOT_FOUND);
+        validateApplicationError(getBook(), LiloResmErrorCode.ACCOMMODATION_COMPONENT_NOT_FOUND);
     }
 }

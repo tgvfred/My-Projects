@@ -22,7 +22,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddTravelAgency 
     private String tpsId = null;
     private String tcgId = null;
     private String tcId = null;
-    private String extRefNum = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -40,7 +39,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddTravelAgency 
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
         tpPtyId = getBook().getGuestId();
     }
 

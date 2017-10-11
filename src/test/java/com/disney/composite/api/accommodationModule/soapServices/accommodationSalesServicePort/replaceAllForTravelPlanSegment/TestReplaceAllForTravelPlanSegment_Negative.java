@@ -8,7 +8,6 @@ import com.disney.api.soapServices.accommodationModule.applicationError.Accommod
 import com.disney.api.soapServices.accommodationModule.applicationError.GroupsMgmtErrorCode;
 import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.Environment;
@@ -408,7 +407,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
             getBook().setTravelPlanId(rs.getValue("TP_ID"));
             getBook().setTravelPlanSegementId(rs.getValue("TPS_ID"));
             getBook().sendRequest();
-            faultString = "Invalid Modify Request : Tickets have already been picked up for reservation: "+rs.getValue("TPS_ID")+". Cannot modify this reservation";
+            faultString = "Invalid Modify Request : Tickets have already been picked up for reservation: " + rs.getValue("TPS_ID") + ". Cannot modify this reservation";
             TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
             validateApplicationError(getBook(), LiloResmErrorCode.INVALID_MODIFY_REQUEST);
         }

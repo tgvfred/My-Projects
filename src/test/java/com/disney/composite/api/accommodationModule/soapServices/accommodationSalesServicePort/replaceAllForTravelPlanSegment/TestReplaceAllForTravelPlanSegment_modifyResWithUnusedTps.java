@@ -22,7 +22,6 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithUnusedTps extends A
     private String tpId = null;
     private String tpsId = null;
     private String tcgId = null;
-    private String tcId = null;
     private String extRefNum = null;
 
     @Override
@@ -40,7 +39,6 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithUnusedTps extends A
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
-        tcId = getBook().getTravelComponentId();
         extRefNum = getExternalRefNumber();
     }
 
