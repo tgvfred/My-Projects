@@ -86,7 +86,7 @@ public class ValidationHelper {
     }
 
     public ValidationHelper(String environment) {
-        if (environment == null || StringUtils.isEmpty(environment)) {
+        if ((environment == null) || StringUtils.isEmpty(environment)) {
             throw new AutomationException("The environment field cannot be null or empty.");
         } else {
             setEnvironment(environment);
@@ -114,7 +114,7 @@ public class ValidationHelper {
 
         Map<String, String> tcgs = new HashMap<>();
         tcgs.put(tcgId, tcgId);
-        if (isValid(isDiningAddedOn()) && isDiningAddedOn() == true) {
+        if (isValid(isDiningAddedOn()) && (isDiningAddedOn() == true)) {
             String sql = "select b.tc_grp_nb "
                     + "from res_mgmt.tps a, res_mgmt.tc_grp b "
                     + "where a.tp_id = " + tpId + " "
@@ -122,7 +122,7 @@ public class ValidationHelper {
                     + "and b.tc_grp_typ_nm = 'ADD_ON_PACKAGE'";
             rs = new Recordset(db.getResultSet(sql));
             tcgs.put(rs.getValue("TC_GRP_NB", 1), rs.getValue("TC_GRP_NB", 1));
-        } else if (isValid(isBundleAdded()) && isBundleAdded() == true) {
+        } else if (isValid(isBundleAdded()) && (isBundleAdded() == true)) {
             String sql = "select b.tc_grp_nb "
                     + "from res_mgmt.tps a, res_mgmt.tc_grp b "
                     + "where a.tp_id = " + tpId + " "
@@ -595,7 +595,7 @@ public class ValidationHelper {
         Database db = new OracleDatabase(environment, Database.DREAMS);
 
         String sql = Dreams_AccommodationQueries.getTcStatusByTcg(tcg);
-        if (isDiningAddedOn() != null && isDiningAddedOn() == true) {
+        if ((isDiningAddedOn() != null) && (isDiningAddedOn() == true)) {
             sql += "and b.PROD_TYP_NM != 'RESERVABLE_RESOURCE_COMPONENT'";
         }
         if (status.equals("Checking In") || status.equals("Checked In")) {
@@ -817,7 +817,7 @@ public class ValidationHelper {
                 Sleeper.sleep(Randomness.randomNumberBetween(1, 3) * 1000);
                 rs = new Recordset(db.getResultSet(sql));
                 tries++;
-            } while (tries <= maxTries && rs.getRowCount() < 1);
+            } while ((tries <= maxTries) && (rs.getRowCount() < 1));
             // rs.print();
 
             if (rs.getRowCount() == 0) {
@@ -837,7 +837,7 @@ public class ValidationHelper {
                 Sleeper.sleep(Randomness.randomNumberBetween(1, 3) * 1000);
                 rs = new Recordset(db.getResultSet(sql));
                 tries++;
-            } while (rs.getRowCount() == 0 && tries < maxTries);
+            } while ((rs.getRowCount() == 0) && (tries < maxTries));
             if (getGuestIdExpected() == null) {
                 TestReporter.softAssertTrue(rs.getRowCount() == 1, "Verify that an ODS record was returned for ODS guest ID [" + odsGuestId + "] guest ID was returned for TP party ID [" + partyIds[i] + "].");
             } else {
@@ -1133,7 +1133,7 @@ public class ValidationHelper {
                     }
                 } while (rs.hasNext() && !success);
                 tries++;
-            } while (tries < maxTries && !success);
+            } while ((tries < maxTries) && !success);
             TestReporter.softAssertEquals(rs.getValue("ADLT_CN"), adultCount, "Verify that the adult count [" + rs.getValue("ADLT_CN") + "] is that which is expected [" + adultCount + "].");
             TestReporter.softAssertEquals(rs.getValue("CHLD_CN"), childCount, "Verify that the child count [" + rs.getValue("CHLD_CN") + "] is that which is expected [" + childCount + "].");
         } else {
@@ -1168,7 +1168,7 @@ public class ValidationHelper {
                     }
                 } while (rs.hasNext() && !success);
                 tries++;
-            } while (tries < maxTries && !success);
+            } while ((tries < maxTries) && !success);
             rs.moveFirst();
             do {
                 TestReporter.softAssertEquals(rs.getValue("ADLT_CN"), adultCount, "Verify that the adult count [" + rs.getValue("ADLT_CN") + "] is that which is expected [" + adultCount + "].");
@@ -1460,8 +1460,11 @@ public class ValidationHelper {
                 success = true;
             }
             tries++;
-        } while (tries < maxTries && !success);
+        } while ((tries < maxTries) && !success);
 
+        if (rs.getRowCount() == 0) {
+            throw new AutomationException("No TPV3 records were found for TP ID [" + tpId + "].");
+        }
         TestReporter.log("Validating TP table");
         TestReporter.softAssertEquals(rs.getValue("MKTG_TP_AGE_GRP_NM"), "FAMILY_BOTH", "Verify that the market TP age group name [" + rs.getValue("MKTG_TP_AGE_GRP_NM") + "] is that which is expected [FAMILY_BOTH].");
         TestReporter.softAssertEquals(rs.getValue("TP_STRT_DT").split(" ")[0], arrivalDate, "Verify that the start date [" + rs.getValue("TP_STRT_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
@@ -1535,7 +1538,7 @@ public class ValidationHelper {
                 success = true;
             }
             tries++;
-        } while (tries < maxTries && !success);
+        } while ((tries < maxTries) && !success);
 
         TestReporter.log("Validating TP table");
         TestReporter.softAssertEquals(rs.getValue("MKTG_TP_AGE_GRP_NM"), "FAMILY_BOTH", "Verify that the market TP age group name [" + rs.getValue("MKTG_TP_AGE_GRP_NM") + "] is that which is expected [FAMILY_BOTH].");
@@ -1611,7 +1614,7 @@ public class ValidationHelper {
                 success = true;
             }
             tries++;
-        } while (tries < maxTries && !success);
+        } while ((tries < maxTries) && !success);
 
         TestReporter.log("Validating TP table");
         TestReporter.softAssertEquals(rs.getValue("MKTG_TP_AGE_GRP_NM"), "FAMILY_BOTH", "Verify that the market TP age group name [" + rs.getValue("MKTG_TP_AGE_GRP_NM") + "] is that which is expected [FAMILY_BOTH].");
@@ -1692,7 +1695,11 @@ public class ValidationHelper {
                 success = true;
             }
             tries++;
-        } while (tries < maxTries && !success);
+        } while ((tries < maxTries) && !success);
+
+        if (rs.getRowCount() == 0) {
+            throw new AutomationException("No TPV3 records were found for TP ID [" + tpId + "].");
+        }
 
         TestReporter.log("Validating TP table");
         TestReporter.softAssertEquals(rs.getValue("MKTG_TP_AGE_GRP_NM"), "FAMILY_BOTH", "Verify that the market TP age group name [" + rs.getValue("MKTG_TP_AGE_GRP_NM") + "] is that which is expected [FAMILY_BOTH].");
@@ -1787,7 +1794,7 @@ public class ValidationHelper {
                 success = true;
             }
             tries++;
-        } while (tries < maxTries && !success);
+        } while ((tries < maxTries) && !success);
 
         TestReporter.log("Validating TP table");
         TestReporter.softAssertEquals(rs.getValue("MKTG_TP_AGE_GRP_NM"), "FAMILY_BOTH", "Verify that the market TP age group name [" + rs.getValue("MKTG_TP_AGE_GRP_NM") + "] is that which is expected [FAMILY_BOTH].");
@@ -2105,8 +2112,8 @@ public class ValidationHelper {
                 + "left outer join folio.ROOT_CHRG_GRP d on c.CHRG_GRP_ID = d.ROOT_CHRG_GRP_ID "
                 + "where a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
         rs = new Recordset(db.getResultSet(sql));
-        if (!(isValid(base.getIsLibgoBooking()) && base.getIsLibgoBooking() == true) &&
-                !(isValid(base.isWdtcBooking()) && base.isWdtcBooking() == true)) {
+        if (!(isValid(base.getIsLibgoBooking()) && (base.getIsLibgoBooking() == true)) &&
+                !(isValid(base.isWdtcBooking()) && (base.isWdtcBooking() == true))) {
             sql2 = "select * "
                     + "from guest.TXN_ORG_PTY a "
                     + "where a.TXN_ORG_PTY_ID = " + rs.getValue("TRVL_AGT_ID");
@@ -2130,8 +2137,8 @@ public class ValidationHelper {
                 + "WHERE a.EXTNL_SRC_NM = 'DREAMS_TP' "
                 + "AND a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
         rs = new Recordset(db.getResultSet(sql));
-        if (!(isValid(base.getIsLibgoBooking()) && base.getIsLibgoBooking() == true) &&
-                !(isValid(base.isWdtcBooking()) && base.isWdtcBooking() == true)) {
+        if (!(isValid(base.getIsLibgoBooking()) && (base.getIsLibgoBooking() == true)) &&
+                !(isValid(base.isWdtcBooking()) && (base.isWdtcBooking() == true))) {
             sql2 = "select * "
                     + "from guest.TXN_ORG_PTY a "
                     + "where a.TXN_ORG_PTY_ID = " + rs.getValue("TRVL_AGT_ID");

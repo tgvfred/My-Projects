@@ -1083,6 +1083,8 @@ public class AccommodationBaseTest extends BaseRestTest {
                 // }
                 if (!isValid(isComo) || !isValid(isComo.get()) || isComo.get().equals("false")) {
                     getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+                } else {
+                    getBook().setEnvironment(getEnvironment());
                 }
                 getBook().sendRequest();
                 TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
