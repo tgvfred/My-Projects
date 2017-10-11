@@ -238,7 +238,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         validateApplicationError(getBook(), LiloResmErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_CODE_REQUIRED);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
     public void TestReplaceAllForTravelPlanSegment_modifyDvcRes() {
         BookDVCCashHelper dvc = new BookDVCCashHelper();
         dvc.setEnvironment(Environment.getBaseEnvironmentName(environment));
@@ -248,11 +248,12 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         String tpId = dvc.getFirstBooking().getTravelPlanId();
         String tpsId = dvc.getFirstBooking().getTravelPlanSegmentId();
 
-        String faultString = "INVALID REQUEST! : Book or Modify of a DVC room reservation is not supported.";
+        String faultString = "INVALID REQUEST! : DVC Reservations not supported";
         bookReservation();
         getBook().setSecurityValue("DVC");
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
+        getBook().setRoomDetailsReservationType("Member Discounted Cash");
         getBook().sendRequest();
 
         try {
@@ -387,7 +388,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         validateApplicationError(getBook(), LiloResmErrorCode.TRAVEL_AGENCY_INVALID);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
     public void TestReplaceAllForTravelPlanSegment_ticketsPickedUp() {
         String faultString = "INVALID REQUEST! : Tickets have already been picked up for reservation.";
 

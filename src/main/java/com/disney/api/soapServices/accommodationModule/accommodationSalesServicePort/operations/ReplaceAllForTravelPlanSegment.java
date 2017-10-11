@@ -1063,7 +1063,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public void setRoomDetailsReservationType(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/reservationType", value);
+        try {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/reservationType", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("reservationType"));
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/reservationType", value);
+        }
     }
 
     public void setRoomDetailsLocationId(String value) {
