@@ -44,15 +44,6 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithUnusedTps extends A
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_modifyResWithUnusedTps() {
-
-        // setSendRequest(false);
-        // setSkipExternalRef(true);
-        // bookReservation();
-
-        // Database db = new OracleDatabase(environment, Database.DREAMS);
-        // Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getUnusedTpsId()));
-        // getBook().setTravelPlanSegementId(rs.getValue("ID"));
-
         GenerateId id = new GenerateId(Environment.getBaseEnvironmentName(getEnvironment()));
         id.sendRequest();
 

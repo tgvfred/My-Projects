@@ -96,7 +96,7 @@ public class TestReplaceAllForTravelPlanSegment_BookMYWPlusDine extends Accommod
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.sendRequest();
             if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");

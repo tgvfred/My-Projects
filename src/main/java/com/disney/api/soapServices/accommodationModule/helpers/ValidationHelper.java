@@ -139,7 +139,9 @@ public class ValidationHelper {
                 + "left outer join res_mgmt.tps_extnl_ref e on a. tps_id = e.tps_id "
                 + "where a.tp_id = " + tpId;
         rs = new Recordset(db.getResultSet(sql));
-        // rs.print();
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No records were found for TP ID [" + tpId + "].");
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
         for (int i = 1; i <= rs.getRowCount(); i++) {
@@ -1946,7 +1948,7 @@ public class ValidationHelper {
         TestReporter.softAssertEquals(rs.getValue("GTHR_TYP_NM"), gatheringData.get(GATHERING_TYPE), "Verify that the gathering type [" + rs.getValue("GTHR_TYP_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_TYPE) + "].");
         TestReporter.softAssertEquals(rs.getValue("GTHR_NM"), gatheringData.get(GATHERING_NAME), "Verify that the gathering name [" + rs.getValue("GTHR_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_NAME) + "].");
 
-        TestReporter.log("Validate gathering in Dreams DB");
+        TestReporter.log("Validate gathering in SALES_TP DB");
         sql = "select * "
                 + "from sales_tp.tp_gthr "
                 + "where tp_id = " + travelPlanId;
