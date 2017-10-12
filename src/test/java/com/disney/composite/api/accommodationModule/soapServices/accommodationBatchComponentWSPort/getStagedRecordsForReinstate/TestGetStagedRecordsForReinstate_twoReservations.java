@@ -40,7 +40,7 @@ public class TestGetStagedRecordsForReinstate_twoReservations extends Accommodat
         setValues(getEnvironment());
         isComo.set("true");
         setIsWdtcBooking(false);
-        setSendRequest(false);
+        setSendRequest(true);
         bookReservation();
     }
 

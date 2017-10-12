@@ -35,7 +35,7 @@ public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends
         setDepartureDate(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
         setValues(getEnvironment());
         isComo.set("true");
-        setSendRequest(false);
+        setSendRequest(true);
         bookReservation();
 
     }
