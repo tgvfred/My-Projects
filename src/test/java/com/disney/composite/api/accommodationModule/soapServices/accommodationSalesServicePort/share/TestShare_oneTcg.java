@@ -1,5 +1,7 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
@@ -16,6 +18,23 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
 
     private Share share;
     String assignOwnerId;
+
+    @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
+    public void setup(String environment) {
+        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
+        // to invoke lower levels of reporting
+        Environment.getBaseEnvironmentName(environment);
+        setEnvironment(environment);
+        isComo.set("false");
+        setDaysOut(0);
+        setArrivalDate(getDaysOut());
+        setNights(2);
+        setDepartureDate(getNights());
+        setValues();
+        bookReservation();
+
+    }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
     public void Test_Share_oneTcg() {

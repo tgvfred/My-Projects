@@ -7,8 +7,8 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -76,10 +76,10 @@ public class TestShare_twoTcg_checkInThenShare_Negative extends AccommodationBas
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
 
-        String faultString = "Unexpected Error occurred : share : java.lang.NullPointerException";
+        String faultString = " Accommodation should be in Booked status to be Shared : Accommodation not in Booked Status";
 
+        validateApplicationError(share, AccommodationErrorCode.ACCOMM_NOT_BOOKED_STATUS);
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(share, LiloSystemErrorCode.UNEXPECTED_ERROR);
 
     }
 }
