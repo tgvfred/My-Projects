@@ -11,7 +11,7 @@
 	      <name>WDPRO</name>
 	      <url>https://nexus.disney.com/nexus/content/repositories/WDPRO/</url>
 	    </repository>
-	  </distributionManagement>
+	  	</distributionManagement>
 	
 	<dependencies>
 		<dependency>

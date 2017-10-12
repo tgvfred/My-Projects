@@ -254,6 +254,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         getBook().setRoomDetailsReservationType("Member Discounted Cash");
+        getBook().setEnvironment(getEnvironment());
         getBook().sendRequest();
 
         try {
