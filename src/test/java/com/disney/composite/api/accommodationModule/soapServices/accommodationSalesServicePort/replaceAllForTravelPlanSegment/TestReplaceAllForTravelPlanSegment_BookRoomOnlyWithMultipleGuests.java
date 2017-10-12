@@ -39,6 +39,8 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithMultipleGuests e
     }
 
     private void validations() {
+        TestReporter.assertEquals(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId"), getLocationId(),
+                "Verify that the location ID in the respone [" + getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId") + "] is that which is expected [" + getLocationId() + "].");
         int numGuests = getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails");
         TestReporter.assertTrue(numGuests == 2, "Verify that two guests were returned in the response.");
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
@@ -89,12 +91,20 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithMultipleGuests e
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
-                    "Validating Response Comparison");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
+            boolean success = clone.validateResponseNodeQuantity(getBook(), true);
+            if (!success) {
+                TestReporter.logStep("Original Response");
+                TestReporter.logNoXmlTrim(getBook().getResponse());
+                TestReporter.logStep("Clone Response");
+                TestReporter.logNoXmlTrim(clone.getResponse());
+            }
+            TestReporter.assertTrue(success, "Validating Response Comparison");
 
             try {
                 Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
