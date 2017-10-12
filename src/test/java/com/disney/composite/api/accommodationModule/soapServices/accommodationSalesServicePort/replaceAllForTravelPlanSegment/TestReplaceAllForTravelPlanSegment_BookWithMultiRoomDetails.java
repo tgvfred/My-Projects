@@ -16,7 +16,6 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails extends AccommodationBaseTest {
-    private String tpPtyId = null;
     String tcg1 = null;
     String tcg2 = null;
 
@@ -37,7 +36,6 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails extends
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
     public void testReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails() {
         bookReservation();
-        tpPtyId = getBook().getGuestId();
         tcg1 = getBook().getTravelComponentGroupingId();
         tcg2 = getBook().getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails[2]/travelComponentGroupingId");
 

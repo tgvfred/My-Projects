@@ -18,13 +18,11 @@ import com.disney.utils.dataFactory.ResortInfo;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 
 public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails_ModifyOne extends AccommodationBaseTest {
-    private String tpPtyId = null;
     private String tcg2 = null;
     private String tpId = null;
     private String tpsId = null;
     private String tcgId = null;
     private String tcId = null;
-    private String extRefNum = null;
     private String resortCode1 = null;
     private String resortCode2 = null;
 
@@ -46,7 +44,6 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails_ModifyO
         tcgId = getBook().getTravelComponentGroupingId();
         tcg2 = getBook().getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails[2]/travelComponentGroupingId");
         tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
         resortCode1 = getResortCode();
     }
 
@@ -67,7 +64,6 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails_ModifyO
         getBook().setReplaceAll("true");
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
-        tpPtyId = getBook().getGuestId();
         resortCode2 = getResortCode();
 
         validations();
