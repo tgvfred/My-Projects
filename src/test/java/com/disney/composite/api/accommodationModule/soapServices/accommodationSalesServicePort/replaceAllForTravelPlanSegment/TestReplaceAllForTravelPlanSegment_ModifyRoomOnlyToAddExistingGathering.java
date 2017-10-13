@@ -22,7 +22,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddExistingGathe
     private String tpsId = null;
     private String tcgId = null;
     private String tcId = null;
-    private String extRefNum = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -44,7 +43,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddExistingGathe
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
         tpPtyId = getBook().getGuestId();
 
         GatheringHelper helper = new GatheringHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));

@@ -40,7 +40,6 @@ public class TestGetOptionDetail_LOCATOR_TYPE extends AccommodationBaseTest {
 
         getOptionDetail.sendRequest();
 
-        System.out.println(getOptionDetail.getRequest());
         // System.out.println(getOptionDetail.getResponse());
         TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "An error occurred getting option details: " + getOptionDetail.getFaultString(), getOptionDetail);
         TestReporter.assertTrue(getOptionDetail.getOptionKey().equals(key.split(",")[0]), "The response Option KEY [" + getOptionDetail.getOptionKey() + "] matches the PartyService getOptions key [" + key.split(",")[0] + "].");
@@ -55,8 +54,7 @@ public class TestGetOptionDetail_LOCATOR_TYPE extends AccommodationBaseTest {
         GetOptions getOptions = new GetOptions(Environment.getBaseEnvironmentName(environment));
         getOptions.setOptionType("LOCATOR_TYPE");
         getOptions.sendRequest();
-        System.out.println(getOptions.getResponse());
-        System.out.println(getOptions.getRequest());
+
         TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "Error in the Party Service request. Response status code not 200.", getOptions);
 
         String OptionKey = "";
@@ -64,7 +62,6 @@ public class TestGetOptionDetail_LOCATOR_TYPE extends AccommodationBaseTest {
         int numberOfOptionKeys = 0;
 
         numberOfOptionKeys = getOptions.getNumberOfResponseNodesByXPath("/Envelope/Body/getOptionsResponse/return/optionKey");
-        System.out.println(numberOfOptionKeys);
 
         for (int index = 1; index <= numberOfOptionKeys; index++) {
 
@@ -73,8 +70,6 @@ public class TestGetOptionDetail_LOCATOR_TYPE extends AccommodationBaseTest {
 
             allPairs.put(OptionKey, OptionV);
         }
-
-        System.out.println(allPairs.values());
 
         Object[][] objKeyValue = new Object[allPairs.size()][2];
         int i = 0;

@@ -3,9 +3,8 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassReinstateTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageReinstateData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -14,13 +13,13 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class TestGetStagedRecordsForReinstate_oneReservation extends AccommodationBaseTest {
 
     private GetStagedRecordsForReinstate stageReinstate;
-    private StageMassReinstateTransactional stage;
+    private StageReinstateData stage;
 
     @Test(groups = { "api", "regression", "getStagedRecordsForReinstate", "accommodation" })
     public void Test_GetStagedRecordsForReinstate_oneReservation() {
 
         // stage reinstate transactions.
-        stage = new StageMassReinstateTransactional(Environment.getBaseEnvironmentName(environment), "Main");
+        stage = new StageReinstateData(environment, "Main");
         stage.setTcg(getBook().getTravelComponentGroupingId());
         stage.setTpId(getBook().getTravelPlanId());
         stage.sendRequest();
@@ -82,7 +81,7 @@ public class TestGetStagedRecordsForReinstate_oneReservation extends Accommodati
         TestReporter.softAssertEquals(shared, "false", "Verify that the response returns the shared status [" + shared + "] that is expected [false].");
         TestReporter.softAssertEquals(salesChannel, "Consumer Direct", "Verify that the response returns the sales channel [" + salesChannel + "] that is expected [Consumer Direct].");
         TestReporter.softAssertEquals(tpsId, getBook().getTravelPlanSegmentId(), "Verify that the response returns the tpsId [" + tpsId + "] that is expected [" + getBook().getTravelPlanSegmentId() + "].");
-        TestReporter.softAssertEquals(reinstateReasonCode, "Reinstate Contact", "Verify that the response returns the reinstate reason code [" + reinstateReasonCode + "] that is expected [Reinstate Contact].");
+        TestReporter.softAssertEquals(reinstateReasonCode, "RIN8", "Verify that the response returns the reinstate reason code [" + reinstateReasonCode + "] that is expected [RIN8].");
         TestReporter.softAssertEquals(isCancelFeeWaived, "false", "Verify that the response returns the cancel fee waived status [" + isCancelFeeWaived + "] that is expected [false].");
         TestReporter.softAssertEquals(contactName, "Reinstate Contact", "Verify that the response returns the contact name [" + contactName + "] that is expected [Reinstate Contact].");
 

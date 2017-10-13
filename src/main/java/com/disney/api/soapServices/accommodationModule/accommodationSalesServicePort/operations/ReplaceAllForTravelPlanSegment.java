@@ -246,6 +246,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setGuest(baseXpath, guest);
     }
 
+    public void setTravelPlanGuestPartyAndGuestIds(String partyId, String guestId) {
+        String baseXpath = "//replaceAllForTravelPlanSegment/request/travelPlanGuest";
+        setRequestNodeValueByXPath(baseXpath + "/partyId", partyId);
+        setRequestNodeValueByXPath(baseXpath + "/guestId", guestId);
+    }
+
     public void setRoomDetails_SourceExtRef(String code, String number, String source, String type) {
         String baseXpath = "//replaceAllForTravelPlanSegment/request/roomDetails/sourceExternalReference/";
         int numNodes = getNumberOfRequestNodesByXPath(baseXpath.substring(0, baseXpath.lastIndexOf("/")));
@@ -539,7 +545,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("primary"));
         setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("address"));
 
-        if (isValid(addMembership) && addMembership == true) {
+        if (isValid(addMembership) && (addMembership == true)) {
             baseXpath = xPath + "/" + guestNodeName;
             setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("membershipDetail"));
             baseXpath = xPath + "/" + guestNodeName + "/membershipDetail";
@@ -551,7 +557,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
             setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestMembershipId"));
         }
 
-        if (isValid(addGuestIdReferences) && addGuestIdReferences == true) {
+        if (isValid(addGuestIdReferences) && (addGuestIdReferences == true)) {
             baseXpath = xPath + "/" + guestNodeName;
             setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestIdReferences"));
             baseXpath = xPath + "/" + guestNodeName + "/guestIdReferences";
@@ -1057,7 +1063,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public void setRoomDetailsReservationType(String value) {
-        setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/reservationType", value);
+        try {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/reservationType", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("reservationType"));
+            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/reservationType", value);
+        }
     }
 
     public void setRoomDetailsLocationId(String value) {

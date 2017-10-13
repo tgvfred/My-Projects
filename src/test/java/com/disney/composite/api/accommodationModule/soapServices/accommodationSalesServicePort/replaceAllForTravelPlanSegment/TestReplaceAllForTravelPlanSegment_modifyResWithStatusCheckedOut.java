@@ -22,8 +22,6 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
     private String tpId = null;
     private String tpsId = null;
     private String tcgId = null;
-    private String tcId = null;
-    private String extRefNum = null;
     private CheckInHelper helper;
 
     @Override
@@ -41,8 +39,6 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
-        tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
     }
 
     @Override

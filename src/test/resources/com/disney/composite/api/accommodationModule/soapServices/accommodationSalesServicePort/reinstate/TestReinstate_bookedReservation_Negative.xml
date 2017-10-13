@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestReinstate_bookedReservation_Negative" parallel="methods" thread-count="20">
+	<parameter name="environment" value="Latest_cm" />
+	<test name="TestReinstate_bookedReservation_Negative">
+		<classes>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.reinstate.TestReinstate_bookedReservation_Negative"/>
+		</classes>
+	</test> 
+</suite>

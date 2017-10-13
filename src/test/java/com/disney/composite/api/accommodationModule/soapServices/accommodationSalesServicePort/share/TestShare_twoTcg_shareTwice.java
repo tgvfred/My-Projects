@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -53,11 +52,11 @@ public class TestShare_twoTcg_shareTwice extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
     public void Test_Share_twoTcg_shareTwice() {
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-            }
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // if (true) {
+        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
+        // }
+        // }
         captureSecondOwnerId();
 
         // verify that the owner id's for the first and second tcg do not match.
@@ -89,6 +88,38 @@ public class TestShare_twoTcg_shareTwice extends AccommodationBaseTest {
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/guestId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/active");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/firstName");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/lastName");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/middleName");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/title");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/firstName");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/lastName");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/middleName");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/preferredLanguage");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/guestId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/active");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/guestId");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/guestId");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/active");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/firstName");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/lastName");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/middleName");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/title");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/firstName");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/lastName");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/middleName");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/preferredLanguage");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/guestId");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/active");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/guestId");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/phoneDetails");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/phoneDetails/locatorId");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/phoneDetails/guestLocatorId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/phoneDetails");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/phoneDetails/locatorId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/phoneDetails/guestLocatorId");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(share, true), "Validating Response Comparison");
 
         }

@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationB
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForMassModify;
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassModifyTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageModifyData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.GetStagedRecordsForMassModifyHelper;
 import com.disney.utils.Environment;
@@ -63,7 +63,7 @@ public class TestGetStagedRecordsForMassModify_roomOnly_ModifyToAddTickets exten
         String ticketDetailGuestLastName = getHouseHold().primaryGuest().getLastName();
         String partofPackage = "false";
 
-        StageMassModifyTransactional stage = new StageMassModifyTransactional(environment, "MainProcLst");
+        StageModifyData stage = new StageModifyData(environment, "MainProcLst");
         stage.setProcessName(processName);
         stage.setMassModifyRoomDetailTcId(tcId);
         stage.setMassModifyRoomDetailTpsId(tpsId);
@@ -99,7 +99,7 @@ public class TestGetStagedRecordsForMassModify_roomOnly_ModifyToAddTickets exten
         stage.setPartOfPackage(partofPackage);
         stage.sendRequest();
 
-        TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Error sending request", stage);
+        TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Error sending request: " + stage.getFaultString(), stage);
 
         sql = "select a.GRP_RES_PROC_RUN_ID " +
                 " from res_mgmt.GRP_RES_PROC_RUN a " +
@@ -113,7 +113,7 @@ public class TestGetStagedRecordsForMassModify_roomOnly_ModifyToAddTickets exten
         mod.setProcessDataId(rs.getValue("GRP_RES_PROC_RUN_ID"));
         mod.sendRequest();
 
-        TestReporter.logAPI(!mod.getResponseStatusCode().equals("200"), "Error sending request", mod);
+        TestReporter.logAPI(!mod.getResponseStatusCode().equals("200"), "Error sending request: " + mod.getFaultString(), mod);
 
         TestReporter.softAssertEquals(mod.getFirstName(), firstName, "Verify that the retrieved first name [" + mod.getFirstName() + "] matches the expected [" + firstName + "]");
         TestReporter.softAssertEquals(mod.getLastName(), lastName, "Verify that the retrieved last name [" + mod.getLastName() + "] matches the expected [" + lastName + "]");

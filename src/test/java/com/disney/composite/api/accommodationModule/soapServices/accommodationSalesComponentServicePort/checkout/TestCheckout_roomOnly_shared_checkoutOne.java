@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -13,39 +12,44 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseTest {
     private CheckInHelper helper;
+    private String locVar;
     // private Book book;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
+        locVar = environment;
         bookReservation();
     }
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void testCheckout_roomOnly_shared_checkoutOne() {
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
-            }
-        }
+        /*
+         * if (Environment.isSpecialEnvironment(environment)) {
+         * if (true) {
+         * throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
+         * }
+         * }
+         */
         Share share = new Share(getEnvironment(), "oneTcgOnly");
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing TCG ID [" + getBook().getTravelComponentGroupingId() + "]: " + share.getFaultString());
 
-        helper = new CheckInHelper(getEnvironment(), getBook());
+        helper = new CheckInHelper(locVar, getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
         helper.checkOut(getLocationId());
 
@@ -87,13 +91,17 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        do {
-            TestReporter.softAssertEquals(rs.getValue("TC_RSN_TYP_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_TYP_NM") + "] is that which is expected [NULL].");
-            TestReporter.softAssertEquals(rs.getValue("LGCY_RSN_CD"), "NULL", "Verify that the TC reason type [" + rs.getValue("LGCY_RSN_CD") + "] is that which is expected [NULL].");
-            TestReporter.softAssertEquals(rs.getValue("TC_RSN_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_NM") + "] is that which is expected [NULL].");
-            rs.moveNext();
-        } while (rs.hasNext());
-        TestReporter.assertAll();
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tc_grp_nb [ " + getBook().getTravelComponentGroupingId() + " ]", sql);
+        } else {
+            do {
+                TestReporter.softAssertEquals(rs.getValue("TC_RSN_TYP_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_TYP_NM") + "] is that which is expected [NULL].");
+                TestReporter.softAssertEquals(rs.getValue("LGCY_RSN_CD"), "NULL", "Verify that the TC reason type [" + rs.getValue("LGCY_RSN_CD") + "] is that which is expected [NULL].");
+                TestReporter.softAssertEquals(rs.getValue("TC_RSN_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_NM") + "] is that which is expected [NULL].");
+                rs.moveNext();
+            } while (rs.hasNext());
+            TestReporter.assertAll();
+        }
     }
 
     public String validateResMgmt(String TcId) {
@@ -106,37 +114,40 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
                 + getBook().getTravelComponentId();
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tc_id [ " + getBook().getTravelComponentId() + " ]", sql);
+        } else {
+            // rs.print();
+            String assignOwnerId = null;
+            for (int i = 1; i <= rs.getRowCount(); i++) {
+                if (rs.getValue("TC_ID", i).equals(TcId)) {
+                    assignOwnerId = rs.getValue("ASGN_OWN_ID");
 
-        // rs.print();
-        String assignOwnerId = null;
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            if (rs.getValue("TC_ID", i).equals(TcId)) {
-                assignOwnerId = rs.getValue("ASGN_OWN_ID");
+                    TestReporter.softAssertTrue(rs.getValue("TC_ID").equals(tcId), "Verify TcId is set");
+                }
 
-                TestReporter.softAssertTrue(rs.getValue("TC_ID").equals(tcId), "Verify TcId is set");
             }
+            sql = "select a.trvl_sts_nm TPS_STS, TC_CHKOT_DTS, TC_CHKIN_DTS, c.TRVL_STS_NM TC_STS, c.TC_ID "
+                    + "from res_mgmt.tps a "
+                    + "left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                    + "left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                    + "where a.tp_id = '" + getBook().getTravelPlanId() + "' "
+                    + "and c.tc_typ_nm = 'AccommodationComponent'";
+
+            db = new OracleDatabase(environment, Database.DREAMS);
+            rs = new Recordset(db.getResultSet(sql));
+            do {
+                if (rs.getValue("TC_ID").equals(TcId)) {
+                    TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Past Visit", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Past Visit].");
+                    TestReporter.softAssertEquals(rs.getValue("TC_CHKOT_DTS").split(" ")[0], Randomness.generateCurrentXMLDate(), "Verify that the checkout date [" + rs.getValue("TC_CHKOT_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate() + "].");
+                    TestReporter.softAssertEquals(rs.getValue("TC_STS"), "Past Visit", "Verify that the TC status [" + rs.getValue("TC_STS") + "] is that which is expected [Past Visit].");
+                }
+                rs.moveNext();
+            } while (rs.hasNext());
+
+            TestReporter.assertAll();
+            return assignOwnerId;
         }
-
-        sql = "select a.trvl_sts_nm TPS_STS, TC_CHKOT_DTS, TC_CHKIN_DTS, c.TRVL_STS_NM TC_STS, c.TC_ID "
-                + "from res_mgmt.tps a "
-                + "left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "where a.tp_id = '" + getBook().getTravelPlanId() + "' "
-                + "and c.tc_typ_nm = 'AccommodationComponent'";
-
-        db = new OracleDatabase(environment, Database.DREAMS);
-        rs = new Recordset(db.getResultSet(sql));
-        do {
-            if (rs.getValue("TC_ID").equals(TcId)) {
-                TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Past Visit", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Past Visit].");
-                TestReporter.softAssertEquals(rs.getValue("TC_CHKOT_DTS").split(" ")[0], Randomness.generateCurrentXMLDate(), "Verify that the checkout date [" + rs.getValue("TC_CHKOT_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate() + "].");
-                TestReporter.softAssertEquals(rs.getValue("TC_STS"), "Past Visit", "Verify that the TC status [" + rs.getValue("TC_STS") + "] is that which is expected [Past Visit].");
-            }
-            rs.moveNext();
-        } while (rs.hasNext());
-
-        TestReporter.assertAll();
-        return assignOwnerId;
     }
 
     public void validateRIM(String assignOwnerId) {

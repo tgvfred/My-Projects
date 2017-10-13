@@ -13,6 +13,7 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class Checkout_roomOnly_DVC extends BookDVCCashHelper {
@@ -106,13 +107,17 @@ public class Checkout_roomOnly_DVC extends BookDVCCashHelper {
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        do {
-            TestReporter.softAssertEquals(rs.getValue("TC_RSN_TYP_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_TYP_NM") + "] is that which is expected [NULL].");
-            TestReporter.softAssertEquals(rs.getValue("LGCY_RSN_CD"), "NULL", "Verify that the TC reason type [" + rs.getValue("LGCY_RSN_CD") + "] is that which is expected [NULL].");
-            TestReporter.softAssertEquals(rs.getValue("TC_RSN_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_NM") + "] is that which is expected [NULL].");
-            rs.moveNext();
-        } while (rs.hasNext());
-        TestReporter.assertAll();
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + getFirstBooking().getTravelComponentGroupingId() + " ]", sql);
+        } else {
+            do {
+                TestReporter.softAssertEquals(rs.getValue("TC_RSN_TYP_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_TYP_NM") + "] is that which is expected [NULL].");
+                TestReporter.softAssertEquals(rs.getValue("LGCY_RSN_CD"), "NULL", "Verify that the TC reason type [" + rs.getValue("LGCY_RSN_CD") + "] is that which is expected [NULL].");
+                TestReporter.softAssertEquals(rs.getValue("TC_RSN_NM"), "NULL", "Verify that the TC reason type [" + rs.getValue("TC_RSN_NM") + "] is that which is expected [NULL].");
+                rs.moveNext();
+            } while (rs.hasNext());
+            TestReporter.assertAll();
+        }
     }
 
     public String validateResMgmt(String TcId) {
@@ -128,14 +133,17 @@ public class Checkout_roomOnly_DVC extends BookDVCCashHelper {
 
         // rs.print();
         String assignOwnerId = null;
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            if (rs.getValue("TC_ID", i).equals(TcId)) {
-                assignOwnerId = rs.getValue("ASGN_OWN_ID");
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + getFirstBooking().getTravelComponentGroupingId() + " ]", sql);
+        } else {
+            for (int i = 1; i <= rs.getRowCount(); i++) {
+                if (rs.getValue("TC_ID", i).equals(TcId)) {
+                    assignOwnerId = rs.getValue("ASGN_OWN_ID");
 
-                TestReporter.softAssertTrue(rs.getValue("TC_ID").equals(tcId), "Verify TcId is set");
+                    TestReporter.softAssertTrue(rs.getValue("TC_ID").equals(tcId), "Verify TcId is set");
+                }
             }
         }
-
         sql = "select a.trvl_sts_nm TPS_STS, TC_CHKOT_DTS, TC_CHKIN_DTS, c.TRVL_STS_NM TC_STS, c.TC_ID "
                 + "from res_mgmt.tps a "
                 + "left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
@@ -145,17 +153,21 @@ public class Checkout_roomOnly_DVC extends BookDVCCashHelper {
 
         db = new OracleDatabase(environment, Database.DREAMS);
         rs = new Recordset(db.getResultSet(sql));
-        do {
-            if (rs.getValue("TC_ID").equals(TcId)) {
-                TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Past Visit", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Past Visit].");
-                TestReporter.softAssertEquals(rs.getValue("TC_CHKOT_DTS").split(" ")[0], Randomness.generateCurrentXMLDate(), "Verify that the checkout date [" + rs.getValue("TC_CHKOT_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate() + "].");
-                TestReporter.softAssertEquals(rs.getValue("TC_STS"), "Past Visit", "Verify that the TC status [" + rs.getValue("TC_STS") + "] is that which is expected [Past Visit].");
-            }
-            rs.moveNext();
-        } while (rs.hasNext());
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + getFirstBooking().getTravelComponentGroupingId() + " ]", sql);
+        } else {
+            do {
+                if (rs.getValue("TC_ID").equals(TcId)) {
+                    TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Past Visit", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Past Visit].");
+                    TestReporter.softAssertEquals(rs.getValue("TC_CHKOT_DTS").split(" ")[0], Randomness.generateCurrentXMLDate(), "Verify that the checkout date [" + rs.getValue("TC_CHKOT_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate() + "].");
+                    TestReporter.softAssertEquals(rs.getValue("TC_STS"), "Past Visit", "Verify that the TC status [" + rs.getValue("TC_STS") + "] is that which is expected [Past Visit].");
+                }
+                rs.moveNext();
+            } while (rs.hasNext());
 
-        TestReporter.assertAll();
-        return assignOwnerId;
+            TestReporter.assertAll();
+            return assignOwnerId;
+        }
     }
 
     public void validateRIM(String assignOwnerId) {

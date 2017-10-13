@@ -742,7 +742,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         isComo.set(new String());
         this.isComo.set(System.getenv("isComo") == null ? "false" : System.getenv("isComo"));
         setEnvironment(environment);
-        // System.out.println();
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts()));
         for (int i = 0; i < roomTypeAndFacInfo.length; i++) {
@@ -792,7 +791,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     @AfterMethod(alwaysRun = true)
     public void teardown() {
         try {
-            if (skipCancel == null || skipCancel.get() == null || skipCancel.get() != true) {
+            if ((skipCancel == null) || (skipCancel.get() == null) || (skipCancel.get() != true)) {
                 cancel();
             }
         } catch (Exception e) {
@@ -800,7 +799,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void cancel() {
-        Cancel cancel = new Cancel(getEnvironment(), "Main");
+        Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(getEnvironment()), "Main");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         if (getBook() != null) {
             if (getBook().getTravelComponentGroupingId() != null) {
@@ -809,6 +808,9 @@ public class AccommodationBaseTest extends BaseRestTest {
         } else {
             cancel.setTravelComponentGroupingId(tcgId.get());
         }
+        cancel.setExternalReferenceType("RESERVATION");
+        cancel.setExternalReferenceNumber(getExternalRefNumber());
+        cancel.setExternalReferenceSource(externalRefSource);
         cancel.sendRequest();
     }
 
@@ -839,7 +841,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
         book.set(new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "roomOnlyWithoutTickets"));
 
-        if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
+        if ((skipExternalRef.get() == null) || (skipExternalRef.get() == false)) {
             externalRefNumber.set(Randomness.randomNumber(12));
             getBook().setExternalReference(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), getExternalRefSource(), "RESERVATION");
             getBook().setRoomDetails_ExternalRefs(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), getExternalRefSource(), "RESERVATION");
@@ -853,7 +855,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setRoomDetails_ResortPeriod(Randomness.generateCurrentXMLDate(getDaysOut()), Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
             getBook().setRoomDetailsBookingDate(Randomness.generateCurrentXMLDate());
 
-            if (isWdtcBooking() != null && isWdtcBooking() == true) {
+            if ((isWdtcBooking() != null) && (isWdtcBooking() == true)) {
                 setPackageBillCode("*WDTC");
                 if (isValid(getMywPackageCode()) && getMywPackageCode()) {
                     setPackageDescription("R MYW Pkg");
@@ -869,11 +871,11 @@ public class AccommodationBaseTest extends BaseRestTest {
                     getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
                     getBook().setRoomDetailsBlockCode("01825");
                 }
-                if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
+                if ((skipExternalRef.get() == null) || (skipExternalRef.get() == false)) {
                     getBook().setExternalReference("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                     getBook().setRoomDetails_ExternalRefs("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                 }
-            } else if (isValid(getIsLibgoBooking()) && getIsLibgoBooking() == true) {
+            } else if (isValid(getIsLibgoBooking()) && (getIsLibgoBooking() == true)) {
                 setPackageBillCode("*DWSL");
                 setPackageDescription("ANN MYW Pkg + Dining");
                 setPackageType("WHOLESALE");
@@ -883,7 +885,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                     getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
                     getBook().setRoomDetailsBlockCode("01905");
                 }
-                if (skipExternalRef.get() == null || skipExternalRef.get() == false) {
+                if ((skipExternalRef.get() == null) || (skipExternalRef.get() == false)) {
                     getBook().setExternalReference("01905", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                     getBook().setRoomDetails_ExternalRefs("01905", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                 }
@@ -906,7 +908,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                     pkg.setUseBookingDates(false);
                 }
                 pkgTries++;
-            } while (!success && pkgTries < pkgMaxTries);
+            } while (!success && (pkgTries < pkgMaxTries));
             getBook().setRoomDetailsPackageCode(getPackageCode());
             getBook().setRoomDetailsResortCode(getResortCode());
             getBook().setRoomDetailsRoomTypeCode(getRoomTypeCode());
@@ -915,24 +917,24 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
             // getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
 
-            if (isADA() != null && isADA() == true) {
+            if ((isADA() != null) && (isADA() == true)) {
                 getBook().setRoomDetailsSpecialNeedsRequested("true");
             }
 
-            if (isRSR() != null && isRSR() == true) {
+            if ((isRSR() != null) && (isRSR() == true)) {
                 getBook().setRoomDetailsRsrReservation("true");
             }
 
-            if (isShared() != null && isShared() == true) {
+            if ((isShared() != null) && (isShared() == true)) {
                 getBook().setRoomDetailsShared("true");
             }
 
-            if (getAddGuest() != null && getAddGuest() == true) {
+            if ((getAddGuest() != null) && (getAddGuest() == true)) {
                 addGuest();
             }
 
-            if (isValid(getSetTickets()) && getSetTickets() == true) {
-                if ((isValid(isWdtcBooking()) && isWdtcBooking() == true) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
+            if (isValid(getSetTickets()) && (getSetTickets() == true)) {
+                if ((isValid(isWdtcBooking()) && (isWdtcBooking() == true)) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
                     ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook(), getPackageCode()));
                 } else {
                     ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook()));
@@ -945,8 +947,8 @@ public class AccommodationBaseTest extends BaseRestTest {
                 }
             }
 
-            if (isValid(getAddTickets()) && getAddTickets() == true) {
-                if ((isValid(isWdtcBooking()) && isWdtcBooking() == true) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
+            if (isValid(getAddTickets()) && (getAddTickets() == true)) {
+                if ((isValid(isWdtcBooking()) && (isWdtcBooking() == true)) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
                     ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook(), getPackageCode()));
                 } else {
                     ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook()));
@@ -959,7 +961,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                 }
             }
 
-            if (isValid(getBypassFreeze()) && getBypassFreeze() == true) {
+            if (isValid(getBypassFreeze()) && (getBypassFreeze() == true)) {
                 try {
                     getBook().setByPassFreeze("true");
                 } catch (XPathNotFoundException e) {
@@ -968,23 +970,23 @@ public class AccommodationBaseTest extends BaseRestTest {
                 }
             }
 
-            if (isValid(getAddConfirmationDetails()) && getAddConfirmationDetails() == true) {
+            if (isValid(getAddConfirmationDetails()) && (getAddConfirmationDetails() == true)) {
                 getBook().setConfirmationDetails("0", "true", "Email", "true", "true", "1", "0", "0", getHouseHold().primaryGuest());
             }
 
-            if (isValid(getAddGathering()) && getAddGathering() == true) {
+            if (isValid(getAddGathering()) && (getAddGathering() == true)) {
                 addGathering();
             }
 
             if (isValid(getAddComments())) {
-                if (isValid(getAddInternalComments()) && getAddInternalComments() == true) {
+                if (isValid(getAddInternalComments()) && (getAddInternalComments() == true)) {
                     setCommentsData(new HashMap<String, String>());
                     getCommentsData().put(COMMENT_TEXT, Randomness.randomString(20));
                     getCommentsData().put(COMMENT_TYPE, Randomness.randomString(20));
 
                     getBook().setInternalComments(getCommentsData().get(COMMENT_TEXT), getCommentsData().get(COMMENT_TYPE), BaseSoapCommands.REMOVE_NODE.toString());
                 }
-                if (isValid(getAddRoomResDetailsComments()) && getAddRoomResDetailsComments() == true) {
+                if (isValid(getAddRoomResDetailsComments()) && (getAddRoomResDetailsComments() == true)) {
                     setCommentsData(new HashMap<String, String>());
                     getCommentsData().put(COMMENT_TEXT, Randomness.randomString(20));
                     getCommentsData().put(COMMENT_FROM, Randomness.randomString(20));
@@ -1019,7 +1021,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                 getBook().setVipLevel(getVipLevel());
             }
 
-            if (isValid(getAddPrimaryGuestMembership()) && getAddPrimaryGuestMembership() == true) {
+            if (isValid(getAddPrimaryGuestMembership()) && (getAddPrimaryGuestMembership() == true)) {
                 setMembershipData(new HashMap<String, String>());
                 if (!isValid(getMembershipData())) {
                     getMembershipData().put(MEMBERSHIP_EXP_DATE, Randomness.generateCurrentXMLDate());
@@ -1040,7 +1042,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                         getMembershipData().get(MEMBERSHIP_PROD_CHANNEL_ID), getMembershipData().get(MEMBERSHIP_GUEST_MEMBERSHIP_ID));
             }
 
-            if (isValid(getAddPrimaryGuestODS()) && getAddPrimaryGuestODS() == true) {
+            if (isValid(getAddPrimaryGuestODS()) && (getAddPrimaryGuestODS() == true)) {
                 if (getHouseHold().primaryGuest().getOdsId().equals("0")) {
                     getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
                 }
@@ -1048,11 +1050,11 @@ public class AccommodationBaseTest extends BaseRestTest {
                 getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails_GuestIdRefs("ODS", getHouseHold().primaryGuest().getOdsId());
             }
 
-            if (isValid(getAddTravelAgency()) && getAddTravelAgency() == true) {
+            if (isValid(getAddTravelAgency()) && (getAddTravelAgency() == true)) {
                 getBook().setTravelAgency("99999998");
             }
 
-            if (isValid(getAddProfile()) && getAddProfile() == true) {
+            if (isValid(getAddProfile()) && (getAddProfile() == true)) {
                 if (!isValid(getProfileData())) {
                     setProfileData(new HashMap<String, String>());
                     getProfileData().put(PROFILE_ID, "600");
@@ -1079,12 +1081,14 @@ public class AccommodationBaseTest extends BaseRestTest {
                 getBook().addRoom(this);
             }
 
-            if (getSendRequest() == null || getSendRequest() == true) {
-                if (!isValid(isComo.get())) {
-                    throw new AutomationException("The 'isComo' field cannot be null or empty.");
-                }
-                if (isComo.get().equals("false")) {
+            if ((getSendRequest() == null) || (getSendRequest() == true)) {
+                // if (!isValid(isComo.get())) {
+                // throw new AutomationException("The 'isComo' field cannot be null or empty.");
+                // }
+                if (!isValid(isComo) || !isValid(isComo.get()) || isComo.get().equals("false")) {
                     getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+                } else {
+                    getBook().setEnvironment(getEnvironment());
                 }
                 getBook().sendRequest();
                 TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
@@ -1092,16 +1096,16 @@ public class AccommodationBaseTest extends BaseRestTest {
             } else {
                 tries = maxTries;
             }
-        } while ((getSendRequest() == null ? !getBook().getResponseStatusCode().equals("200") : false) && tries < maxTries);
+        } while ((getSendRequest() == null ? !getBook().getResponseStatusCode().equals("200") : false) && (tries < maxTries));
 
-        if (getSendRequest() == null || getSendRequest() == true) {
+        if ((getSendRequest() == null) || (getSendRequest() == true)) {
             retrieveReservation();
         }
 
-        if (isBundle() != null && isBundle() == true) {
+        if ((isBundle() != null) && (isBundle() == true)) {
             addBundle();
         }
-        if (isDining() != null && isDining() == true) {
+        if ((isDining() != null) && (isDining() == true)) {
             addDining();
         }
     }
@@ -1161,11 +1165,10 @@ public class AccommodationBaseTest extends BaseRestTest {
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
 
         retrieveReservation();
-        if (getSkipDeposit() != null && getSkipDeposit() == false) {
+        if ((getSkipDeposit() != null) && (getSkipDeposit() == false)) {
             makeFirstNightDeposit();
         }
         retrieveReservation();
-
     }
 
     private void addGuest() {
@@ -1173,7 +1176,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         if (additionalGuests.get() == null) {
             setAdditionalGuests(new HashMap<Integer, Guest>());
         }
-        if (getAddNewGuest() != null && getAddNewGuest() == true) {
+        if ((getAddNewGuest() != null) && (getAddNewGuest() == true)) {
             guest = new HouseHold(1).primaryGuest();
             getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
         } else {
@@ -1181,7 +1184,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             getAdditionalGuests().put(additionalGuests.get().size() + 1, guest);
         }
 
-        if (isValid(getAddChildGuest()) && getAddChildGuest() == true) {
+        if (isValid(getAddChildGuest()) && (getAddChildGuest() == true)) {
             guest.setAge("3");
         }
         guest.primaryAddress().setCity("Winston Salem");
@@ -1375,7 +1378,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public void makeFirstNightDeposit() {
         RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
-        if (getBook() != null && getBook().getTravelPlanId() != null) {
+        if ((getBook() != null) && (getBook().getTravelPlanId() != null)) {
             retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getBook().getTravelPlanId());
         } else {
             retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, tpId.get());
@@ -1383,7 +1386,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
         retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
         String sqlTpId;
-        if (getBook() != null && getBook().getTravelPlanId() != null) {
+        if ((getBook() != null) && (getBook().getTravelPlanId() != null)) {
             sqlTpId = getBook().getTravelPlanId();
         } else {
             sqlTpId = tpId.get();
@@ -1411,7 +1414,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         if (!retrieveBalance.getResponseStatusCode().equals("200")) {
             if (getBook() != null) {
                 TestReporter.log("\n\nAn error occurred retrieving the balance for the TP ID [" + getBook().getTravelPlanId() + "],");
-            } else if (tpId != null && tpId.get() != null) {
+            } else if ((tpId != null) && (tpId.get() != null)) {
                 TestReporter.log("\n\nAn error occurred retrieving the balance for the TP ID [" + tpId.get() + "],");
             } else {
                 TestReporter.log("\n\nAn error occurred retrieving the balance");
@@ -1426,12 +1429,12 @@ public class AccommodationBaseTest extends BaseRestTest {
         PostCardPayment postPayment = new PostCardPayment(environment, "Visa-CreditCard");
         postPayment.setAmount(retrieveBalance.getDepositRequired());
         postPayment.setFolioId(retrieveBalance.getFolioId());
-        if (getBook() != null && getBook().getTravelPlanId() != null) {
+        if ((getBook() != null) && (getBook().getTravelPlanId() != null)) {
             postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, getBook().getTravelPlanId());
         } else {
             postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, tpId.get());
         }
-        if (getBook() != null && getBook().getTravelPlanId() != null) {
+        if ((getBook() != null) && (getBook().getTravelPlanId() != null)) {
             postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, getBook().getTravelComponentId());
         } else {
             postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, tcId.get());
@@ -1443,12 +1446,12 @@ public class AccommodationBaseTest extends BaseRestTest {
         } catch (NullPointerException | AutomationException e) {
             postPayment.setPrimaryLastname(getHouseHold().primaryGuest().getLastName());
         }
-        if (getBook() != null && getBook().getTravelPlanId() != null) {
+        if ((getBook() != null) && (getBook().getTravelPlanId() != null)) {
             postPayment.setTravelPlanId(getBook().getTravelPlanId());
         } else {
             postPayment.setTravelPlanId(tpId.get());
         }
-        if (getBook() != null && getBook().getTravelPlanSegmentId() != null) {
+        if ((getBook() != null) && (getBook().getTravelPlanSegmentId() != null)) {
             postPayment.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         } else {
             postPayment.setTravelPlanSegmentId(tpsId.get());
@@ -1461,7 +1464,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public void makeFirstNightDeposit(ReplaceAllForTravelPlanSegment book) {
         RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
-        if (book != null && book.getTravelPlanId() != null) {
+        if ((book != null) && (book.getTravelPlanId() != null)) {
             retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, book.getTravelPlanId());
         } else {
             retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, tpId.get());
@@ -1469,7 +1472,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
         retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
         String sqlTpId;
-        if (book != null && book.getTravelPlanId() != null) {
+        if ((book != null) && (book.getTravelPlanId() != null)) {
             sqlTpId = book.getTravelPlanId();
         } else {
             sqlTpId = tpId.get();
@@ -1497,7 +1500,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         if (!retrieveBalance.getResponseStatusCode().equals("200")) {
             if (book != null) {
                 TestReporter.log("\n\nAn error occurred retrieving the balance for the TP ID [" + book.getTravelPlanId() + "],");
-            } else if (tpId != null && tpId.get() != null) {
+            } else if ((tpId != null) && (tpId.get() != null)) {
                 TestReporter.log("\n\nAn error occurred retrieving the balance for the TP ID [" + tpId.get() + "],");
             } else {
                 TestReporter.log("\n\nAn error occurred retrieving the balance");
@@ -1512,12 +1515,12 @@ public class AccommodationBaseTest extends BaseRestTest {
         PostCardPayment postPayment = new PostCardPayment(environment, "Visa-CreditCard");
         postPayment.setAmount(retrieveBalance.getDepositRequired());
         postPayment.setFolioId(retrieveBalance.getFolioId());
-        if (book != null && book.getTravelPlanId() != null) {
+        if ((book != null) && (book.getTravelPlanId() != null)) {
             postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, book.getTravelPlanId());
         } else {
             postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, tpId.get());
         }
-        if (book != null && book.getTravelPlanId() != null) {
+        if ((book != null) && (book.getTravelPlanId() != null)) {
             postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, book.getTravelComponentId());
         } else {
             postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, tcId.get());
@@ -1529,12 +1532,12 @@ public class AccommodationBaseTest extends BaseRestTest {
         } catch (NullPointerException | AutomationException e) {
             postPayment.setPrimaryLastname(getHouseHold().primaryGuest().getLastName());
         }
-        if (book != null && book.getTravelPlanId() != null) {
+        if ((book != null) && (book.getTravelPlanId() != null)) {
             postPayment.setTravelPlanId(book.getTravelPlanId());
         } else {
             postPayment.setTravelPlanId(tpId.get());
         }
-        if (book != null && book.getTravelPlanSegmentId() != null) {
+        if ((book != null) && (book.getTravelPlanSegmentId() != null)) {
             postPayment.setTravelPlanSegmentId(book.getTravelPlanSegmentId());
         } else {
             postPayment.setTravelPlanSegmentId(tpsId.get());
