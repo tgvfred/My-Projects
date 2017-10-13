@@ -158,6 +158,10 @@ public class AccommodationBaseTest extends BaseRestTest {
         environment = env;
     }
 
+    public static void setTempEnv(String env) {
+        tempEnv = env;
+    }
+
     public void setFacilityId(String facilityId) {
         this.facilityId.set(facilityId);
     }
