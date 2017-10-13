@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.gqe.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.0.24</version>
+	<version>1.0.27</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -11,7 +11,7 @@
 	      <name>WDPRO</name>
 	      <url>https://nexus.disney.com/nexus/content/repositories/WDPRO/</url>
 	    </repository>
-	  </distributionManagement>
+	  	</distributionManagement>
 	
 	<dependencies>
 		<dependency>

@@ -7,6 +7,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.AutomationException;
 import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
@@ -48,6 +49,9 @@ public class TestReplaceAllForTravelPlanSegment_BookMYWPlusDine extends Accommod
                 + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+        if (rs.getRowCount() == 0) {
+            throw new AutomationException("No TXN_PTY_EXTNL_REF_VAL was found in GUEST.TXN_PTY_EXTNL_REF table for TP ID [" + getBook().getTravelPlanId() + "].");
+        }
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
@@ -92,7 +96,7 @@ public class TestReplaceAllForTravelPlanSegment_BookMYWPlusDine extends Accommod
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.sendRequest();
             if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");

@@ -274,7 +274,7 @@ public class AccommodationErrorCode {
             "Record Not Found");
 
     public static final ApplicationErrorCode ACCOMMODATION_COMPONENT_NOT_FOUND = new ApplicationErrorCode(APP_NAME,
-            9128, "Accommodation Component Not Found");
+            9128, "Accommodation Component not found");
 
     public static final ApplicationErrorCode ROOM_READY_MESSAGE_INVALID = new ApplicationErrorCode(APP_NAME, 9129,
             "Room Ready Message Invalid");

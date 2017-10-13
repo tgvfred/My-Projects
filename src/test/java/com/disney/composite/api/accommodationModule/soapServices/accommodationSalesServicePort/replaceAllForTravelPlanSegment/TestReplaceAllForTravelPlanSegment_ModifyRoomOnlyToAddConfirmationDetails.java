@@ -11,19 +11,14 @@ import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.Database;
-import com.disney.utils.dataFactory.database.Recordset;
-import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddConfirmationDetails extends AccommodationBaseTest {
 
     private String tpPtyId;
-    private String odsGuestId;
     private String tpId = null;
     private String tpsId = null;
     private String tcgId = null;
     private String tcId = null;
-    private String extRefNum = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -41,7 +36,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddConfirmationD
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
         tpPtyId = getBook().getGuestId();
     }
 
@@ -63,13 +57,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddConfirmationD
 
     private void validations() {
         tpPtyId = getBook().getGuestId();
-        String sql = "select b.TXN_PTY_EXTNL_REF_VAL "
-                + "from res_mgmt.tp_pty a "
-                + "join guest.TXN_PTY_EXTNL_REF b on a.TXN_PTY_ID = b.TXN_PTY_ID "
-                + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
-        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-        // odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
