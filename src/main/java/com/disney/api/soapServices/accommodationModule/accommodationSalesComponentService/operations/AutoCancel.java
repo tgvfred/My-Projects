@@ -16,6 +16,16 @@ public class AutoCancel extends AccommodationSalesComponentService {
         removeWhiteSpace();
     }
 
+    public AutoCancel(String environment) {
+        super(environment);
+
+        // Generate a request from a project xml file
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("autoCancel")));
+
+        removeComments();
+        removeWhiteSpace();
+    }
+
     public void setTravelComponentGroupingId(String value) {
         setRequestNodeValueByXPath("/Envelope/Body/autoCancel/travelComponentGroupingId", value);
     }
