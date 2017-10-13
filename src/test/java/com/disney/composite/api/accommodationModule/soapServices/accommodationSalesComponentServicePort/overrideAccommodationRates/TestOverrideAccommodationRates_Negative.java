@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.UpgradeResortRoomType;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.OverrideAccommodationRatesRequest;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
@@ -325,7 +326,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         oar.sendRequest();
 
         TestReporter.logAPI(!oar.getFaultString().contains(fault2), "Validate correct fault string [" + fault2 + "] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(oar, LiloSystemErrorCode.UNEXPECTED_ERROR_OCCURRED);
     }
 
     /*

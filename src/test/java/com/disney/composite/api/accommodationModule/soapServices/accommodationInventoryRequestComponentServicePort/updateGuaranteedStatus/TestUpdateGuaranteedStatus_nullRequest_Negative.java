@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationI
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationInventoryRequestComponentServicePort.operations.UpdateGuaranteedStatus;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
@@ -23,7 +23,7 @@ public class TestUpdateGuaranteedStatus_nullRequest_Negative extends Accommodati
         ugs.sendRequest();
 
         TestReporter.logAPI(!ugs.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + ugs.getFaultString() + " ]", ugs);
-        validateApplicationError(ugs, AccommodationErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(ugs, LiloSystemErrorCode.UNEXPECTED_ERROR_OCCURRED);
 
     }
 }
