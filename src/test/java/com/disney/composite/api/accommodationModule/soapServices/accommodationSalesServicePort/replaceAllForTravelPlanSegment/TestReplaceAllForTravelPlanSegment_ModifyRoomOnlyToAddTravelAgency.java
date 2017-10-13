@@ -4,6 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.AutomationException;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -22,7 +23,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddTravelAgency 
     private String tpsId = null;
     private String tcgId = null;
     private String tcId = null;
-    private String extRefNum = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -40,7 +40,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddTravelAgency 
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
         tpPtyId = getBook().getGuestId();
     }
 
@@ -63,6 +62,9 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddTravelAgency 
                 + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+        if (rs.getRowCount() == 0) {
+            throw new AutomationException("No TXN_PTY_EXTNL_REF_VAL was found in GUEST.TXN_PTY_EXTNL_REF table for TP ID [" + getBook().getTravelPlanId() + "].");
+        }
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));

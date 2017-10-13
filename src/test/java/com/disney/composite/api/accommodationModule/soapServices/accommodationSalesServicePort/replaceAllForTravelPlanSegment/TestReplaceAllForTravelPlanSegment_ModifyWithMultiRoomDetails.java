@@ -16,14 +16,12 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails extends AccommodationBaseTest {
-    private String tpPtyId = null;
     String tcg1 = null;
     String tcg2 = null;
     private String tpId = null;
     private String tpsId = null;
     private String tcgId = null;
     private String tcId = null;
-    private String extRefNum = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -41,7 +39,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails exten
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
@@ -56,7 +53,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails exten
         getBook().setReplaceAll("true");
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
-        tpPtyId = getBook().getGuestId();
         tcg1 = getBook().getTravelComponentGroupingId();
         tcg2 = getBook().getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails[2]/travelComponentGroupingId");
 

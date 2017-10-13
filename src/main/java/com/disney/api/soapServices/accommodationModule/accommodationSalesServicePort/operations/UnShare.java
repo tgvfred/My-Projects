@@ -9,11 +9,11 @@ public class UnShare extends AccommodationSalesServicePort {
         super(environment);
         // Generate a request from a project xml file
         setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("unShare")));
+        generateServiceContext();
         // setRequestNodeValueByXPath(getTestScenario("/services/accommodationSalesServicePort/UnShare/UnShareInputs.xls", scenario));
         setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
         removeComments();
         removeWhiteSpace();
-        generateServiceContext();
     }
 
     public UnShare(String environment) {
@@ -39,31 +39,23 @@ public class UnShare extends AccommodationSalesServicePort {
     }
 
     public String getTravelComponentId() {
-        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentId");
-    }
-
-    public String getTravelComponentGroupingId() {
-        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentGroupingId");
-    }
-
-    public String getTravelComponentId_unSharedRoomDetail() {
         return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/travelComponentId");
     }
 
-    public String getTravelComponentGroupingId_unSharedRoomDetail() {
+    public String getTravelComponentGroupingId() {
         return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/travelComponentGroupingId");
     }
 
     public String getBookingDate() {
-        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/bookingDate");
+        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/bookingDate");
     }
 
     public String getTravelStatus() {
-        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelStatus");
+        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/travelStatus");
     }
 
     public String getLocationId() {
-        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/locationId");
+        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/locationId");
     }
 
     public String getBookingDate_unSharedRoomDetail() {
@@ -72,9 +64,18 @@ public class UnShare extends AccommodationSalesServicePort {
 
     public String getTravelStatus_unSharedRoomDetail() {
         return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/travelStatus");
+
     }
 
     public String getLocationId_unSharedRoomDetail() {
         return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/locationId");
+    }
+
+    public String getTravelComponentGroupingId_unSharedRoomDetail() {
+        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getTravelComponentId_unSharedRoomDetail() {
+        return getResponseNodeValueByXPath("/Envelope/Body/unShareResponse/shareChainDetails/shareRoomDetails/unSharedRoomDetail/travelComponentId");
     }
 }

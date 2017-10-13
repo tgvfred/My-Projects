@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 import org.w3c.dom.NodeList;
 
@@ -28,8 +29,13 @@ public class TestRetrieveAvailableFields extends AccommodationBaseTest {
 
         String sql = "select a.FLD_ID, a.FLD_DATA_TYP_NM, a.FLD_NM, a.REPEAT_FLD_IN, a.DFLT_FLD_IN " +
                 " from res_mgmt.data_entry_fld a";
+
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SkipException("No approved records found in recordset ");
+        }
 
         String xpath = "/Envelope/Body/retrieveAvaillableFieldsResponse/fieldTOs";
         int numOfFieldTOs = retrieve.getNumberOfResponseNodesByXPath(xpath);
@@ -88,14 +94,6 @@ public class TestRetrieveAvailableFields extends AccommodationBaseTest {
         TestReporter.assertTrue(tempApi.isEmpty(), "Verify that the API does not have any extraneous fields.");
         tempApi.putAll(api);
 
-        // System.out.println(childNodes);
-
-        // TestReporter.logStep("Verify that there are no extra nodes in the response that are not in the database");
-        // compare(numOfChildNodes, expectedNumofItems);
-        //
-        // // Verify that there are no extra records in the database that are not in the response
-        // TestReporter.logStep("Verify that there are no extra records in the database that are not in the response");
-        // compare(rs.getColumnCount(), expectedNumofItems);
     }
 
     public NodeList childNodes(String xpath, RetrieveAvailableFields retrieve) {

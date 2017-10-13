@@ -138,16 +138,17 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         stageMassCancel.setCancelContactName(contactName);
         stageMassCancel.setCancelDate(Randomness.generateCurrentXMLDate());
         stageMassCancel.setCancelReasonCode(reasonCode);
-        stageMassCancel.setIsOverridden(isOverridden);
-        stageMassCancel.setIsWaived(isWaived);
+        stageMassCancel.setIsOverridden(BaseSoapCommands.REMOVE_NODE.toString());
+        stageMassCancel.setIsWaived(BaseSoapCommands.REMOVE_NODE.toString());
         stageMassCancel.setOVerridenCancelFEe(cancelFee);
         stageMassCancel.setTCg(book.getTravelComponentGroupingId("1"));
 
         // uses bundle tcg to make second massCancelAccommodationRequestDetails
         buildSecondDetails(stageMassCancel);
+        stageMassCancel.setRequestNodeValueByXPath("/Envelope/Body/stageCancelData/request/massCancelAccommodationRequestDetails/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
 
         stageMassCancel.sendRequest();
-        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageMassCancelTransactional request.", stageMassCancel);
+        TestReporter.logAPI(!stageMassCancel.getResponseStatusCode().equals("200"), "An error occurred with StageCancelData request: " + stageMassCancel.getFaultString(), stageMassCancel);
 
         processId = stageMassCancel.getResponseProcessId();
 
@@ -174,21 +175,22 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         getStaged.sendRequest();
         TestReporter.logAPI(!getStaged.getResponseStatusCode().equals("200"), "An error occurred getting staged records for cancel.", getStaged);
 
-        TestReporter.softAssertTrue(getStaged.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return") == 1, "Verify that one return node was returned.");
-        TestReporter.softAssertEquals(getStaged.getCancelContactName(), contactName, "Verify the cancel contact name [" + getStaged.getCancelContactName() + "] "
-                + "brought back in the GetStagedRecordsForCancel response matches the value [" + contactName + "] used in the StageMassCancelTransactional request");
-        TestReporter.softAssertEquals(getStaged.getCancelDate().substring(0, 10), Randomness.generateCurrentXMLDate(), "Verify the cancel date [" + getStaged.getCancelDate() + "] "
-                + "brought back in the GetStagedRecordsForCancel response matches the value [" + Randomness.generateCurrentXMLDate() + "] used in the StageMassCancelTransactional request");
-        TestReporter.softAssertEquals(getStaged.getCancelReasonCode(), reasonCode, "Verify the cancel reason code [" + getStaged.getCancelReasonCode() + "] "
-                + "brought back in the GetStagedRecordsForCancel response matches the value [" + reasonCode + "] used in the StageMassCancelTransactional request");
-        TestReporter.softAssertEquals(getStaged.getOverridden(), isOverridden, "Verify the isOverridden value [" + getStaged.getOverridden() + "] "
-                + "brought back in the GetStagedRecordsForCancel response matches the value [" + isOverridden + "] used in the StageMassCancelTransactional request");
-        TestReporter.softAssertEquals(getStaged.getWaived(), isWaived, "Verify the isWaived value [" + getStaged.getWaived() + "] "
-                + "brought back in the GetStagedRecordsForCancel response matches the value [" + isWaived + "] used in the StageMassCancelTransactional request");
-        TestReporter.softAssertEquals(getStaged.getOverriddenCancelFee().substring(0, 1), cancelFee, "Verify the overriddenCancelFee [" + getStaged.getOverriddenCancelFee() + "] "
-                + "brought back in the GetStagedRecordsForCancel response matches the value [" + cancelFee + "] used in the StageMassCancelTransactional request");
-        TestReporter.softAssertEquals(getStaged.getTravelComponentGroupingId(), book.getTravelComponentGroupingId("2"), "Verify the TcgId [" + getStaged.getTravelComponentGroupingId() + "] "
-                + "brought back in the GetStagedRecordsForCancel response matches the value [" + book.getTravelComponentGroupingId("2") + "] used in the StageMassCancelTransactional request");
+        TestReporter.softAssertTrue(getStaged.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return") == 2, "Verify that one return node was returned.");
+
+        for (int i = 1; i <= getStaged.getNumberOfResponseNodesByXPath("/Envelope/Body/getStagedRecordsForCancelResponse/return"); i++) {
+            TestReporter.softAssertEquals(getStaged.getCancelContactName(String.valueOf(i)), contactName, "Verify the cancel contact name [" + getStaged.getCancelContactName(String.valueOf(i)) + "] "
+                    + "brought back in the GetStagedRecordsForCancel response matches the value [" + contactName + "] used in the StageMassCancelTransactional request");
+            TestReporter.softAssertEquals(getStaged.getCancelReasonCode(String.valueOf(i)), reasonCode, "Verify the cancel reason code [" + getStaged.getCancelReasonCode(String.valueOf(i)) + "] "
+                    + "brought back in the GetStagedRecordsForCancel response matches the value [" + reasonCode + "] used in the StageMassCancelTransactional request");
+            TestReporter.softAssertEquals(getStaged.getOverridden(String.valueOf(i)), isOverridden, "Verify the isOverridden value [" + getStaged.getOverridden(String.valueOf(i)) + "] "
+                    + "brought back in the GetStagedRecordsForCancel response matches the value [" + isOverridden + "] used in the StageMassCancelTransactional request");
+            TestReporter.softAssertEquals(getStaged.getWaived(String.valueOf(i)), isWaived, "Verify the isWaived value [" + getStaged.getWaived(String.valueOf(i)) + "] "
+                    + "brought back in the GetStagedRecordsForCancel response matches the value [" + isWaived + "] used in the StageMassCancelTransactional request");
+            TestReporter.softAssertEquals(getStaged.getOverriddenCancelFee(String.valueOf(i)).substring(0, 1), cancelFee, "Verify the overriddenCancelFee [" + getStaged.getOverriddenCancelFee(String.valueOf(i)) + "] "
+                    + "brought back in the GetStagedRecordsForCancel response matches the value [" + cancelFee + "] used in the StageMassCancelTransactional request");
+            TestReporter.softAssertEquals(getStaged.getTravelComponentGroupingId(String.valueOf(i)), book.getTravelComponentGroupingId(String.valueOf(i)), "Verify the TcgId [" + getStaged.getTravelComponentGroupingId(String.valueOf(i)) + "] "
+                    + "brought back in the GetStagedRecordsForCancel response matches the value [" + book.getTravelComponentGroupingId(String.valueOf(i)) + "] used in the StageMassCancelTransactional request");
+        }
 
         TestReporter.assertAll();
         validateDBProcessData(processId);
@@ -203,6 +205,11 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedXpathValidations("/Envelope/Body/getStagedRecordsForCancelResponse/return");
+            clone.addExcludedXpathValidations("/Envelope/Body/getStagedRecordsForCancelResponse/return/travelComponentGroupingId");
+            clone.addExcludedXpathValidations("/Envelope/Body/getStagedRecordsForCancelResponse/return/cancelDate");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/getStagedRecordsForCancelResponse/return");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/getStagedRecordsForCancelResponse/return/travelComponentGroupingId");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(getStaged, true), "Validating Response Comparison");
         }
 
@@ -238,12 +245,12 @@ public class TestGetStagedRecordsForCancel_TwoTcgs extends AccommodationBaseTest
         stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
                 BaseSoapCommands.ADD_NODE.commandAppend("cancelReasonCode"));
         stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/cancelReasonCode", reasonCode);
-        stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
-                BaseSoapCommands.ADD_NODE.commandAppend("isOverridden"));
-        stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/isOverridden", isOverridden);
-        stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
-                BaseSoapCommands.ADD_NODE.commandAppend("isWaived"));
-        stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/isWaived", isWaived);
+        // stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
+        // BaseSoapCommands.ADD_NODE.commandAppend("isOverridden"));
+        // stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/isOverridden", isOverridden);
+        // stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
+        // BaseSoapCommands.ADD_NODE.commandAppend("isWaived"));
+        // stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/isWaived", isWaived);
         stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]",
                 BaseSoapCommands.ADD_NODE.commandAppend("overriddenCancelFee"));
         stageMassCancel.setRequestNodeValueByXPath("//massCancelAccommodationRequestDetails[2]/overriddenCancelFee", cancelFee);

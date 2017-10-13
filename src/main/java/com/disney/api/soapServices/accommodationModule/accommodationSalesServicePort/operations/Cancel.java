@@ -75,14 +75,4 @@ public class Cancel extends AccommodationSalesServicePort {
         }
     }
 
-    public void setTravelPlanSegmentId(String value) {
-        try {
-            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/travelPlanSegmentId", value);
-        } catch (XPathNotFoundException e) {
-            setRequestNodeValueByXPath("/Envelope/Body/cancel/request", BaseSoapCommands.ADD_NODE.commandAppend("travelPlanSegmentId"));
-            setRequestNodeValueByXPath("/Envelope/Body/cancel/request/travelPlanSegmentId", value);
-        }
-
-    }
-
 }

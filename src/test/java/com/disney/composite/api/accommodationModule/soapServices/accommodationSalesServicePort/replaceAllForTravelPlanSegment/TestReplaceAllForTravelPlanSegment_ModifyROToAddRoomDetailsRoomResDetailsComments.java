@@ -18,7 +18,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyROToAddRoomDetailsRoomResD
     private String tpsId = null;
     private String tcgId = null;
     private String tcId = null;
-    private String extRefNum = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -36,7 +35,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyROToAddRoomDetailsRoomResD
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })

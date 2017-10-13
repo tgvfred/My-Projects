@@ -17,8 +17,6 @@ import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child extends AccommodationBaseTest {
 
-    private String tpPtyId;
-
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -43,8 +41,6 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_1adult1child extend
     }
 
     private void validations() {
-        tpPtyId = getBook().getGuestId();
-
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation

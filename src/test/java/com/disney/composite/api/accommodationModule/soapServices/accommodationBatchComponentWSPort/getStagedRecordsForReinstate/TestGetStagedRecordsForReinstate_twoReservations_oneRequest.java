@@ -132,7 +132,7 @@ public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends
             }
             TestReporter.softAssertEquals(shared, "false", "Verify that the response returns the shared status [" + shared + "] that is expected [false].");
             TestReporter.softAssertEquals(salesChannel, "Consumer Direct", "Verify that the response returns the sales channel [" + salesChannel + "] that is expected [Consumer Direct].");
-            TestReporter.softAssertEquals(reinstateReasonCode, "Reinstate Contact", "Verify that the response returns the reinstate reason code [" + reinstateReasonCode + "] that is expected [Reinstate Contact].");
+            TestReporter.softAssertEquals(reinstateReasonCode, "RIN8", "Verify that the response returns the reinstate reason code [" + reinstateReasonCode + "] that is expected [RIN8].");
             TestReporter.softAssertEquals(isCancelFeeWaived, "false", "Verify that the response returns the cancel fee waived status [" + isCancelFeeWaived + "] that is expected [false].");
             TestReporter.softAssertEquals(contactName, "Reinstate Contact", "Verify that the response returns the contact name [" + contactName + "] that is expected [Reinstate Contact].");
         }

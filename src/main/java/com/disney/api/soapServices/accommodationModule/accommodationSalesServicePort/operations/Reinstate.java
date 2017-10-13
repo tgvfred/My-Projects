@@ -65,5 +65,4 @@ public class Reinstate extends AccommodationSalesServicePort {
     public void setInventoryOverrideContactName(String value) {
         setRequestNodeValueByXPath("/Envelope/Body/reinstate/request/roomdetails/inventoryOverrideContactName", value);
     }
-
 }

@@ -53,8 +53,7 @@ public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
         GetOptions getOptions = new GetOptions(Environment.getBaseEnvironmentName(environment));
         getOptions.setOptionType("ROLE");
         getOptions.sendRequest();
-        System.out.println(getOptions.getResponse());
-        System.out.println(getOptions.getRequest());
+
         TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "Error in the Party Service request. Response status code not 200.", getOptions);
 
         String OptionKey = "";
@@ -62,7 +61,6 @@ public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
         int numberOfOptionKeys = 0;
 
         numberOfOptionKeys = getOptions.getNumberOfResponseNodesByXPath("/Envelope/Body/getOptionsResponse/return/optionKey");
-        System.out.println(numberOfOptionKeys);
 
         for (int index = 1; index <= numberOfOptionKeys; index++) {
 
@@ -71,8 +69,6 @@ public class TestGetOptionDetail_ROLE extends AccommodationBaseTest {
 
             allPairs.put(OptionKey, OptionV);
         }
-
-        System.out.println(allPairs.values());
 
         Object[][] objKeyValue = new Object[allPairs.size()][2];
         int i = 0;
