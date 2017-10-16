@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.applicationError.Accommod
 import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.travelPlanModule.travelPlanService.operations.GenerateTravelPlan;
 import com.disney.utils.TestReporter;
 
 public class TestProcessContainerModifyBusinessEvent_Negative extends AccommodationBaseTest {
@@ -32,9 +33,9 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
 
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "processContainerModifyBusinessEvent", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent", "negative" })
     public void TestProcessContainerModifyBusinessEvent_guarAccomm() {
-        String fault = "INVALID REQUEST ! : ExternalReferenceDetail cannot be null";
+        String fault = "INVALID REQUEST! : Missing Parameters or ExternalReferenceDetail cannot be null";
 
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent - guarAccomm");
 
@@ -45,21 +46,19 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(getBook().getTravelPlanSegmentId());
         process.setByPassFreeze("true");
-        process.setExternalReferenceType("RESERVATION");
-        process.setExternalReferenceCode("");
 
-        process.setExternalReferenceNumber(getBook().getTravelComponentGroupingId());
-        process.setExternalReferenceSource("DREAMS_TP");
+        process.setExternalReferenceDetail(BaseSoapCommands.REMOVE_NODE.toString());
+
         process.setAttemptAutoReinstate("false");
         process.sendRequest();
 
         TestReporter.logAPI(!process.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + process.getFaultString() + " ]", process);
-        validateApplicationError(process, LiloResmErrorCode.INVALID_REQUEST);
+        validateApplicationError(process, AccommodationErrorCode.INVALID_REQUEST);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "processContainerModifyBusinessEvent", "negative" })
-    public void TestProcessContainerModifyBusinessEvent_guarAccomm_invalidTPl() {
-        String fault = "INVALID REQUEST! : Option key value not provided";
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent", "negative" })
+    public void TestProcessContainerModifyBusinessEvent_guarAccomm_invalidTP() {
+        String fault = "TRAVEL_PLAN_NOT_FOUND : No Travel Plan found for Travel Plan Id ";
 
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent  - guarAccomm_invalidTP");
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
@@ -72,25 +71,30 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         process.setExternalReferenceSource("DREAMS_TP");
         process.sendRequest();
         TestReporter.logAPI(!process.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + process.getFaultString() + " ]", process);
-        validateApplicationError(process, AccommodationErrorCode.INVALID_REQUEST);
+        validateApplicationError(process, AccommodationErrorCode.TRAVEL_PLAN_NOT_FOUND);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "processContainerModifyBusinessEvent", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent", "negative" })
     public void TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithoutTps() {
-        String fault = "INVALID REQUEST! : Option key value not provided";
+        String fault = "TRAVEL_PLAN_SEGMENT_NOT_FOUND : No Travel Plan Segments found for Travel Plan Id :";
 
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent  - guarAccomm_tpWithoutTps");
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
-        // process.setTravelPlanSegmentID(value);
-        // process.setByPassFreeze(value);
-        // process.setExternalReferenceType(value);
-        // process.setExternalReferenceCode(value);
-        // process.setExternalReferenceNumber(value);
-        // process.setExternalReferenceSource("DREAMS_TP");
-        // process.sendRequest();
+        GenerateTravelPlan gtp = new GenerateTravelPlan(environment, "Main");
+        gtp.sendRequest();
 
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
+        process.setTravelPlanSegmentID(BaseSoapCommands.REMOVE_NODE.toString());
+        process.setByPassFreeze("true");
+        process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
+        process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
+        process.setExternalReferenceNumber(gtp.getTravelPlanID());
+        process.setExternalReferenceSource("DREAMS_TP");
+        process.setAttemptAutoReinstate("false");
+        process.sendRequest();
+        System.out.println(process.getRequest());
+        System.out.println(process.getResponse());
         TestReporter.logAPI(!process.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + process.getFaultString() + " ]", process);
-        validateApplicationError(process, AccommodationErrorCode.INVALID_REQUEST);
+        validateApplicationError(process, LiloResmErrorCode.TRAVEL_PLAN_SEGMENT_NOT_FOUND);
     }
 }

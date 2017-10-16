@@ -1,9 +1,9 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.AccommodationSalesComponentService;
 import com.disney.utils.XMLTools;
 
-public class ProcessContainerModifyBusinessEvent extends AccommodationSalesServicePort {
+public class ProcessContainerModifyBusinessEvent extends AccommodationSalesComponentService {
     public ProcessContainerModifyBusinessEvent(String environment, String scenario) {
         super(environment);
 
@@ -33,6 +33,11 @@ public class ProcessContainerModifyBusinessEvent extends AccommodationSalesServi
 
     public void setByPassFreeze(String value) {
         setRequestNodeValueByXPath("/Envelope/Body/processContainerModifyBusinessEvent/request/byPassFreeze", value);
+
+    }
+
+    public void setExternalReferenceDetail(String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/processContainerModifyBusinessEvent/request/externalReferenceDetail", value);
 
     }
 
