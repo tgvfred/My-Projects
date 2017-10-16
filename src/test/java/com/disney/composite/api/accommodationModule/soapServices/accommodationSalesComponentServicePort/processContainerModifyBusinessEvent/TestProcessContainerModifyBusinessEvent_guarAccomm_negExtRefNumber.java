@@ -91,7 +91,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_negExtRefNumber 
                 + " from folio.EXTNL_REF a"
                 + " left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID"
                 + " left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID"
-                + " where a.EXTNL_REF_VAL in ('" + tps + "','" + tp + "', '-472121562656')";
+                + " where a.EXTNL_REF_VAL in ('" + tps + "','" + tp + "', '" + getBook().getTravelComponentGroupingId() + "')";
 
         String rimSql = "select *"
                 + " from res_mgmt.tc a"
@@ -105,11 +105,15 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_negExtRefNumber 
         Recordset rs = new Recordset(db.getResultSet(sql));
         // Recordset rs2 = new Recordset(db2.getResultSet(tpv3Status));
         Recordset rs3 = new Recordset(db.getResultSet(rsHistorysql));
-        // Recordset rs4 = new Recordset(db.getResultSet(chargeGroupStatusSql));
-        // Recordset rs5 = new Recordset(db.getResultSet(folioItemsSql));
-        // Recordset rs6 = new Recordset(db.getResultSet(rimSql));
+        Recordset rs4 = new Recordset(db.getResultSet(chargeGroupStatusSql));
+        Recordset rs5 = new Recordset(db.getResultSet(folioItemsSql));
+        Recordset rs6 = new Recordset(db.getResultSet(rimSql));
         rs.print();
+        // rs2.print();
         rs3.print();
+        rs4.print();
+        rs5.print();
+        rs6.print();
         TestReporter.assertTrue(rs.getValue("TRVL_STS_NM TP_STATUS", 1) != "REINSTATE", "The reservation is [" + rs.getValue("TRVL_STS_NM TP_STATUS", 1) + "]");
 
         // TestReporter.assertTrue(rs2.getValue("SLS_ORD_ITEM_STS_NM TPV3_STATUS") != "", "The TPV3 status is [" + rs.getValue("SLS_ORD_ITEM_STS_NM TPV3_STATUS") + "]");
@@ -117,7 +121,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_negExtRefNumber 
         for (int i = 0; i <= rs3.getRowCount(); i++) {
             if (rs3.getValue("TPS_CNCL_NB CANCEL_NUMBER", i) == "Auto Cancelled") {
 
-                TestReporter.assertTrue(rs3.getValue("TPS_CNCL_NB CANCEL_NUMBER", i) != "0", "The cancellation number is [" + rs.getValue("TPS_CNCL_NB CANCEL_NUMBER", i) + "]");
+                TestReporter.assertTrue(rs3.getValue("TPS_CNCL_NB CANCEL_NUMBER", i) == "Auto Cancelled", "The cancellation number is [" + rs.getValue("TPS_CNCL_NB CANCEL_NUMBER", i) + "]");
 
             }
 
@@ -125,8 +129,8 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_negExtRefNumber 
 
         TestReporter.assertTrue(rs3.getValue("TPS_CNCL_NB CANCEL_NUMBER", 1) != "0", "The cancellation number is [" + rs.getValue("TPS_CNCL_NB CANCEL_NUMBER", 1) + "]");
 
-        // TestReporter.assertTrue(rs3.getValue("RES_HIST_PROC_DS EVENT") != "REINSTATE", "The reservation history is [" + rs.getValue("RES_HIST_PROC_DS EVENT") + "]");
-        // TestReporter.assertTrue(rs4.getValue("CHRG_GRP_STS_NM") != "CANCELLED", "The charge group is [" + rs.getValue("RES_HIST_PROC_DS EVENT") + "]");
+        TestReporter.assertTrue(rs3.getValue("RES_HIST_PROC_DS EVENT") != "REINSTATE", "The reservation history is [" + rs.getValue("RES_HIST_PROC_DS EVENT") + "]");
+        TestReporter.assertTrue(rs4.getValue("CHRG_GRP_STS_NM") != "CANCELLED", "The charge group is [" + rs.getValue("RES_HIST_PROC_DS EVENT") + "]");
 
     }
 }
