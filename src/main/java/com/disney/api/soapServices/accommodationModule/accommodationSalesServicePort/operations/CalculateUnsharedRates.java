@@ -816,6 +816,10 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/travelComponentId");
     }
 
+    public String getShareChainUnSharedRoomDetailsTCIdThreeSharedRoom() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails[2]/unSharedRoomDetail/travelComponentId");
+    }
+
     public String getShareChainUnSharedRoomDetailsTCGId() {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/travelComponentGroupingId");
     }
@@ -853,6 +857,10 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
     }
 
     public String getShareChainUnSharedRoomDetailsTPSIdNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/travelPlanSegmentId");
+    }
+
+    public String getShareChainUnSharedRoomDetailsTPSIdThreeSharedChains() {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/travelPlanSegmentId");
     }
 
