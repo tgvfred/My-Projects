@@ -800,6 +800,10 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/resortPeriod/startDate");
     }
 
+    public String getShareChainUnSharedRoomDetailsStartDateThreeNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains/shareRoomDetails[2]/SharedRoomDetail/resortPeriod/startDate");
+    }
+
     public String getShareChainUnSharedRoomDetailsEndDateNoOverlap() {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/resortPeriod/endDate");
     }

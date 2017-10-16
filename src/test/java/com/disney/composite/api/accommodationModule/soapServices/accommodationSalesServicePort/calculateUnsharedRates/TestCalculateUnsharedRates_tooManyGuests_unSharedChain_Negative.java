@@ -35,6 +35,12 @@ public class TestCalculateUnsharedRates_tooManyGuests_unSharedChain_Negative ext
         calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
         calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
         calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
         calculate.sendRequest();
 
         String faultString = "Error Invoking Packaging Service  : Party size of 6 exceeds maximum occupancy of 5 for the room type of CA.";

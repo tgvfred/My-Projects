@@ -7,13 +7,13 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
-public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap extends AccommodationBaseTest {
+public class TestCalculateUnsharedRates_threeSharedRoomDetails_twoOverlap extends AccommodationBaseTest {
     CalculateUnsharedRates calculate;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates" })
-    public void Test_CalculateUnsharedRates_twoSharedRoomDetails_twoOverlap() {
+    public void Test_CalculateUnsharedRates_threeSharedRoomDetails_twoOverlap() {
 
-        calculate = new CalculateUnsharedRates(environment, "TwoOverlap");
+        calculate = new CalculateUnsharedRates(environment, "ThreeOverlap");
         calculate.sendRequest();
         System.out.print(calculate.getRequest());
         System.out.print(calculate.getResponse());
@@ -42,13 +42,14 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap extends 
 
     public void validateNumberShareChainsResponseNodes() {
         TestReporter.logStep("Validate the number of shareChains response nodes");
-        TestReporter.softAssertEquals(calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains"), 1, "Verify that there were two response nodes returned for the ShareChain node.");
+        TestReporter.softAssertEquals(calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains"), 2, "Verify that there were two response nodes returned for the ShareChain node.");
         TestReporter.assertAll();
     }
 
     public void validateNumberShareRoomDetailsResponseNodes() {
         TestReporter.logStep("Validate the number of shareRoomDetails response nodes");
-        TestReporter.softAssertEquals(calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains/shareRoomDetails"), 2, "Verify that there was one response node returned for the shareRoomDetails node.");
+        TestReporter.softAssertEquals(calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails"), 2, "Verify that there was two response node returned for the shareRoomDetails node");
+        TestReporter.softAssertEquals(calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails"), 1, "Verify that there was one response node returned for the shareRoomDetails node.");
         TestReporter.assertAll();
     }
 
@@ -85,8 +86,8 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap extends 
 
         TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsStartDate(), resortPeriodStartDate, "Verify that the response returns the start date [" + calculate.getShareChainUnSharedRoomDetailsStartDate() + "] that which is expected [" + resortPeriodStartDate + "].");
         TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsEndDate(), resortPeriodEndDate, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsEndDate() + "] that which is expected [" + resortPeriodEndDate + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsStartDateNoOverlap(), sharedRoomResortPeriodStartDate, "Verify that the response returns the start date [" + calculate.getShareChainUnSharedRoomDetailsStartDateNoOverlap() + "] that which is expected [" + sharedRoomResortPeriodStartDate + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsEndDateNoOverlap(), sharedRoomResortPeriodEndDate, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsEndDateNoOverlap() + "] that which is expected [" + sharedRoomResortPeriodEndDate + "].");
+        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsStartDateThreeNoOverlap(), sharedRoomResortPeriodStartDate, "Verify that the response returns the shared room resort period start date [" + calculate.getShareChainUnSharedRoomDetailsStartDateThreeNoOverlap() + "] that which is expected [" + sharedRoomResortPeriodStartDate + "].");
+        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsEndDateNoOverlap(), sharedRoomResortPeriodEndDate, "Verify that the response returns the shared room resort period end date [" + calculate.getShareChainUnSharedRoomDetailsEndDateNoOverlap() + "] that which is expected [" + sharedRoomResortPeriodEndDate + "].");
 
         TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCId(), TC1, "Verify that the response returns the TC id [" + calculate.getShareChainUnSharedRoomDetailsTCId() + "] that which is expected [" + TC1 + "].");
         TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCIdNoOverlap(), TC2, "Verify that the response returns the TC id no overlap [" + calculate.getShareChainUnSharedRoomDetailsTCIdNoOverlap() + "] that which is expected [" + TC2 + "].");
