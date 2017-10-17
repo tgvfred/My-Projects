@@ -29,13 +29,13 @@ public class TestGetStagedRecordsForReinstate_twoReservations_oneRequest extends
         firstResTP = getBook().getTravelPlanSegmentId();
         firstResTPS = getBook().getTravelPlanSegmentId();
 
-        daysOut.set(Randomness.randomNumberBetween(1, 12));
-        nights.set(Randomness.randomNumberBetween(1, 3));
-        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
-        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
-
-        setIsWdtcBooking(false);
-        setValues();
+        setDaysOut(Randomness.randomNumberBetween(1, 12));
+        setNights(Randomness.randomNumberBetween(1, 3));
+        setArrivalDate(Randomness.generateCurrentXMLDate(getDaysOut()));
+        setDepartureDate(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+        setValues(getEnvironment());
+        isComo.set("true");
+        setSendRequest(true);
         bookReservation();
 
     }
