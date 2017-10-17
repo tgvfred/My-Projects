@@ -16,7 +16,6 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails extends AccommodationBaseTest {
-    private String tpPtyId = null;
     String tcg1 = null;
     String tcg2 = null;
 
@@ -37,7 +36,6 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails extends
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
     public void testReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails() {
         bookReservation();
-        tpPtyId = getBook().getGuestId();
         tcg1 = getBook().getTravelComponentGroupingId();
         tcg2 = getBook().getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails[2]/travelComponentGroupingId");
 
@@ -62,6 +60,8 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails extends
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
                     "Validating Response Comparison");
 

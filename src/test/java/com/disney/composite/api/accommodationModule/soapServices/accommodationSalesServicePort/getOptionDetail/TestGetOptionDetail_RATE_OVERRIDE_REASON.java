@@ -16,6 +16,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestGetOptionDetail_RATE_OVERRIDE_REASON extends AccommodationBaseTest {
@@ -41,12 +42,18 @@ public class TestGetOptionDetail_RATE_OVERRIDE_REASON extends AccommodationBaseT
         getOptionDetail.setAccommodationSalesOptionsEnum("RATE_OVERRIDE_REASON");
 
         getOptionDetail.setOptionKeyVal(LGCY_RSN_CD);
-        getOptionDetail.sendRequest();
-        // System.out.println(getOptionDetail.getResponse());
-        // System.out.println(getOptionDetail.getRequest());
-        TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", getOptionDetail);
-        TestReporter.assertTrue(getOptionDetail.getOptionValue().equals(TC_RSN_NM), "The response Option Value [" + getOptionDetail.getOptionValue() + "] matches the database TC_RSN_NM [" + TC_RSN_NM + "].");
 
+        if (LGCY_RSN_CD.equals(null)) {
+            throw new SQLValidationException("No records found for tp ID [ " + tpId + " ]");
+
+        } else {
+
+            getOptionDetail.sendRequest();
+            // System.out.println(getOptionDetail.getResponse());
+            // System.out.println(getOptionDetail.getRequest());
+            TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", getOptionDetail);
+            TestReporter.assertTrue(getOptionDetail.getOptionValue().equals(TC_RSN_NM), "The response Option Value [" + getOptionDetail.getOptionValue() + "] matches the database TC_RSN_NM [" + TC_RSN_NM + "].");
+        }
     }
 
     // grabs the GetOptions operation from the databse and sends a key and value pair
@@ -61,11 +68,16 @@ public class TestGetOptionDetail_RATE_OVERRIDE_REASON extends AccommodationBaseT
         // Recordset rs;
         Object[][] rs = db.getResultSet(sql);
 
-        List<Object[]> l = new ArrayList<Object[]>(Arrays.asList(rs));
-        l.remove(0);
+        try {
+            List<Object[]> l = new ArrayList<Object[]>(Arrays.asList(rs));
+            l.remove(0);
 
-        return l.toArray(new Object[][] {});
+            return l.toArray(new Object[][] {});
+        } catch (Exception e) {
 
+            throw new SQLValidationException("No records found for tp ID [ " + tpId + " ]");
+
+        }
     }
 
 }

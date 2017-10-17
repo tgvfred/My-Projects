@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CalculateUnsharedRates;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Regex;
 import com.disney.utils.TestReporter;
 
 public class TestCalculateUnsharedRates_tooManyGuests_unSharedChain_Negative extends AccommodationBaseTest {
@@ -25,23 +26,30 @@ public class TestCalculateUnsharedRates_tooManyGuests_unSharedChain_Negative ext
         calculate.setUnsharedAccommodationUnSharedRoomDetailsTCId("0");
         calculate.setUnsharedAccommodationTPSId("0");
 
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.addUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
-        calculate.setUnsharedChainUnsharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.addUnsharedChainSharedRoomDetailGuestReferenceDetails();
+        calculate.setUnsharedChainSharedRoomDetailGuestReferenceDetails();
         calculate.sendRequest();
 
-        String faultString = "Error Invoking Packaging Service  : Party size of 6 exceeds maximum occupancy of 5 for the room type of CA.";
+        String faultString = "Error Invoking Packaging Service  : Party size of [0-9]+ exceeds maximum occupancy.*";
+        boolean contains = Regex.match(faultString, calculate.getFaultString());
 
         validateApplicationError(calculate, AccommodationErrorCode.PACKAGING_SERVICE_FAILURE);
 
-        TestReporter.assertEquals(calculate.getFaultString(), faultString, "Verify that the fault string [" + calculate.getFaultString() + "] is that which is expected [" + faultString + "].");
+        TestReporter.assertTrue(contains, "Verify that the fault string [" + calculate.getFaultString() + "] contains that which is expected [" + faultString + "].");
 
     }
 }

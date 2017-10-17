@@ -23,8 +23,6 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
     private String tpsId = null;
     private String tcgId = null;
     private String tcgId2 = null;
-    private String tcId = null;
-    private String extRefNum = null;
     private Map<String, String> tcgs = new HashMap<>();
 
     @Override
@@ -42,20 +40,21 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
-        tcId = getBook().getTravelComponentId();
-        extRefNum = getExternalRefNumber();
         tcgs.put(tcgId, tcgId);
+        tpPtyId = getBook().getGuestId();
 
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         // getBook().setTravelComponentGroupingId(tcgId);
         // getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
+        getBook().setTravelPlanGuestPartyAndGuestIds(tpPtyId, tpPtyId);
         getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         tcgId2 = getBook().getTravelComponentGroupingId();
         tcgs.put(getBook().getTravelComponentGroupingId(), getBook().getTravelComponentGroupingId());
 
-        Share share = new Share(Environment.getBaseEnvironmentName(getEnvironment()));
+        Share share = new Share(getEnvironment());
         share.setTravelComponentGroupingId(tcgId);
         share.addSharedComponent();
         share.setLocationId(getLocationId());

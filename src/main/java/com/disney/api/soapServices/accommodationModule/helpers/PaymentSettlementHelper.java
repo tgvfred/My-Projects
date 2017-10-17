@@ -176,7 +176,7 @@ public class PaymentSettlementHelper {
                     + "\nStacktrace: " + e.getMessage());
         }
         String cardPaymentMethod = datatable.getDataParameter("PaymentMethod");
-        String cardNumber = cardInfo.get("AccountNumber").replace("-", "");
+        String cardNumber = cardInfo.get("AccountNumber").replace("", "");
         String cardExpirationMonth = cardInfo.get("ExpMonth");
         String cardExpirationYear = cardInfo.get("ExpYear");
         String cardHolderName = cardInfo.get("NameOnCard");
@@ -223,6 +223,58 @@ public class PaymentSettlementHelper {
     }
 
     /**
+     * * This method retrieves folio information for a reservation and the makes a
+     * * payment that satisfies the deposit requirement.
+     *
+     */
+
+    public void makeFullPayment() {
+        RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(getEnvironment(), "UI booking");
+        retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getTpId());
+
+        retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
+        String sqlTpId;
+        sqlTpId = getTpId();
+        String sql = "select d.WRK_LOC_ID "
+                + "from rsrc_inv.wrk_loc d "
+                + "where d.HM_RSRT_FAC_ID in (select c.fac_id FAC_ID "
+                + "from res_mgmt.tps a, res_mgmt.tc_grp b, res_mgmt.tc c "
+                + "where a.tp_id = '" + sqlTpId + "' "
+                + "and a.tps_id = b.tps_id "
+                + "and b.tc_grp_nb = c.tc_grp_nb "
+                + "and c.fac_id is not null )";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            setLocationId(rs.getValue("WRK_LOC_ID", i));
+
+            retrieveBalance.setLocationId(getLocationId());
+            retrieveBalance.sendRequest();
+            if (retrieveBalance.getResponseStatusCode().equals("200")) {
+                break;
+            }
+        }
+        TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200", "Verify that no error occurred retrieving the balance for the reservation: " + retrieveBalance.getFaultString());
+
+        PostCardPayment postPayment = new PostCardPayment(getEnvironment(), "VisaCreditCard");
+        setPaymentAmount(retrieveBalance.getPaymentRequired());
+        postPayment.setAmount(getPaymentAmount());
+        postPayment.setFolioId(retrieveBalance.getFolioId());
+        postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, getTpId());
+        postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, getTcId());
+        postPayment.setLocationId(getLocationId());
+        postPayment.setPartyId(getPrimaryPartyId());
+        postPayment.setPrimaryLastname(getHh().primaryGuest().getFirstName());
+        postPayment.setTravelPlanId(getTpId());
+        postPayment.setTravelPlanSegmentId(getTpsId());
+        postPayment.setRetreivalReferenceNumber();
+        postPayment.sendRequest();
+        TestReporter.assertEquals(postPayment.getResponseStatusCode(), "200", "Response was not 200");
+        TestReporter.log("Payment ID: " + postPayment.getPaymentId());
+    }
+
+    /**
      * This method retrieves folio information for a reservation and the makes a
      * payment that satisfies the deposit requirement.
      */
@@ -255,58 +307,8 @@ public class PaymentSettlementHelper {
         }
         TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200", "Verify that no error occurred retrieving the balance for the reservation: " + retrieveBalance.getFaultString());
 
-        PostCardPayment postPayment = new PostCardPayment(getEnvironment(), "Visa-CreditCard");
+        PostCardPayment postPayment = new PostCardPayment(getEnvironment(), "VisaCreditCard");
         setPaymentAmount(retrieveBalance.getDepositRequired());
-        postPayment.setAmount(getPaymentAmount());
-        postPayment.setFolioId(retrieveBalance.getFolioId());
-        postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, getTpId());
-        postPayment.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TC, getTcId());
-        postPayment.setLocationId(getLocationId());
-        postPayment.setPartyId(getPrimaryPartyId());
-        postPayment.setPrimaryLastname(getHh().primaryGuest().getFirstName());
-        postPayment.setTravelPlanId(getTpId());
-        postPayment.setTravelPlanSegmentId(getTpsId());
-        postPayment.setRetreivalReferenceNumber();
-        postPayment.sendRequest();
-        TestReporter.assertEquals(postPayment.getResponseStatusCode(), "200", "Response was not 200");
-        TestReporter.log("Payment ID: " + postPayment.getPaymentId());
-    }
-
-    /**
-     * This method retrieves folio information for a reservation and the makes a
-     * payment that satisfies the deposit requirement.
-     */
-    public void makeFullPayment() {
-        RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(getEnvironment(), "UI booking");
-        retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getTpId());
-
-        retrieveBalance.setFolioType(ServiceConstants.FolioType.INDIVIDUAL);
-        String sqlTpId;
-        sqlTpId = getTpId();
-        String sql = "select d.WRK_LOC_ID "
-                + "from rsrc_inv.wrk_loc d "
-                + "where d.HM_RSRT_FAC_ID in (select c.fac_id FAC_ID "
-                + "from res_mgmt.tps a, res_mgmt.tc_grp b, res_mgmt.tc c "
-                + "where a.tp_id = '" + sqlTpId + "' "
-                + "and a.tps_id = b.tps_id "
-                + "and b.tc_grp_nb = c.tc_grp_nb "
-                + "and c.fac_id is not null )";
-        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            setLocationId(rs.getValue("WRK_LOC_ID", i));
-
-            retrieveBalance.setLocationId(getLocationId());
-            retrieveBalance.sendRequest();
-            if (retrieveBalance.getResponseStatusCode().equals("200")) {
-                break;
-            }
-        }
-        TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200", "Verify that no error occurred retrieving the balance for the reservation: " + retrieveBalance.getFaultString());
-
-        PostCardPayment postPayment = new PostCardPayment(getEnvironment(), "Visa-CreditCard");
-        setPaymentAmount(retrieveBalance.getPaymentRequired());
         postPayment.setAmount(getPaymentAmount());
         postPayment.setFolioId(retrieveBalance.getFolioId());
         postPayment.setBookingReference(ServiceConstants.BookingSource.DREAMS_TP, getTpId());
