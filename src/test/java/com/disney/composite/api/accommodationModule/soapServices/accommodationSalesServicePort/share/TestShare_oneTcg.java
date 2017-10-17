@@ -15,15 +15,12 @@ import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestShare_oneTcg extends AccommodationBaseTest {
-
     private Share share;
-    String assignOwnerId;
+    private String assignOwnerId;
 
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
-        // to invoke lower levels of reporting
         Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
         isComo.set("false");
@@ -33,17 +30,10 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
         setDepartureDate(getNights());
         setValues();
         bookReservation();
-
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
-    public void Test_Share_oneTcg() {
-
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-        // }
-        // }
+    public void testShare_oneTcg() {
         captureOwnerId();
         share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -62,8 +52,16 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(share, true), "Validating Response Comparison");
 
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/shared");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/shared");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/doNotMailIndicator");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/doNotMailIndicator");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/doNotPhoneIndicator");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/doNotPhoneIndicator");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/preferredLanguage");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/preferredLanguage");
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(share, true), "Validating Response Comparison");
         }
     }
 
@@ -81,7 +79,6 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
         TestReporter.softAssertEquals(Randomness.generateCurrentXMLDate(), bookingDate.substring(0, 10), "Verify that the booking date [" + Randomness.generateCurrentXMLDate() + "] that which is expected [" + bookingDate.substring(0, 10) + "].");
         TestReporter.softAssertEquals(travelStatus, "Booked", "Verify that the response returns the travel status [" + travelStatus + "] that which is expected [Booked].");
         TestReporter.assertAll();
-
     }
 
     public void validations() {
@@ -101,12 +98,10 @@ public class TestShare_oneTcg extends AccommodationBaseTest {
     }
 
     public void captureOwnerId() {
-
         String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getBook().getTravelComponentGroupingId() + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         assignOwnerId = rs.getValue("ASGN_OWN_ID");
-
     }
 }

@@ -16,21 +16,16 @@ import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestShare_twoTcg extends AccommodationBaseTest {
-
     private Share share;
-    String firstOwnerId;
-    String secondOwnerId;
-    String firstTCG;
-    String ownerIdOne;
-    String ownerIdTwo;
-    String firstTC;
-    String firstTPS;
+    private String firstOwnerId;
+    private String secondOwnerId;
+    private String firstTCG;
+    private String firstTC;
+    private String firstTPS;
 
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
-        // to invoke lower levels of reporting
         Environment.getBaseEnvironmentName(environment);
         setEnvironment(environment);
         isComo.set("false");
@@ -48,16 +43,10 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
 
         bookReservation();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
-
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })
-    public void Test_Share_twoTcg() {
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-        // }
-        // }
+    public void testShare_twoTcg() {
         captureSecondOwnerId();
 
         // verify that the owner id's for the first and second tcg do not match.
@@ -82,8 +71,16 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(share, true), "Validating Response Comparison");
 
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/shared");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/sharedRoomDetail/shared");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/doNotMailIndicator");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/doNotMailIndicator");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/doNotPhoneIndicator");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/doNotPhoneIndicator");
+            clone.addExcludedXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/preferredLanguage");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/shareResponse/shareChainDetails/shareRoomDetails/guestDetail/preferredLanguage");
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(share, true), "Validating Response Comparison");
         }
     }
 
@@ -110,7 +107,6 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
         TestReporter.softAssertEquals(Randomness.generateCurrentXMLDate(), bookingDate.substring(0, 10), "Verify that the booking date [" + Randomness.generateCurrentXMLDate() + "] that which is expected [" + bookingDate.substring(0, 10) + "].");
         TestReporter.softAssertEquals(travelStatus, "Booked", "Verify that the response returns the travel status [" + travelStatus + "] that which is expected [Booked].");
         TestReporter.assertAll();
-
     }
 
     public void validations() {
@@ -123,11 +119,9 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
         helper.validateShareInFlag(numExpectedRecords2, getBook().getTravelComponentGroupingId());
 
         helper.validateMultipleOwnerIds(firstTCG, getBook().getTravelComponentGroupingId());
-
     }
 
     public void captureFirstOwnerId() {
-
         String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + firstTCG + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
@@ -137,11 +131,9 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
         }
 
         firstOwnerId = rs.getValue("ASGN_OWN_ID");
-
     }
 
     public void captureSecondOwnerId() {
-
         String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getBook().getTravelComponentGroupingId() + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
@@ -151,7 +143,5 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
         }
 
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
-
     }
-
 }
