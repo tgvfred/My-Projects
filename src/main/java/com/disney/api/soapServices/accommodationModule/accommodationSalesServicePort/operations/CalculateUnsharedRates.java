@@ -4,6 +4,7 @@ import static com.disney.api.soapServices.accommodationModule.helpers.Accommodat
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.XMLTools;
 
 public class CalculateUnsharedRates extends AccommodationSalesServicePort {
@@ -1074,5 +1075,55 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
 
     public String getUnsharedAccommodationTPS() {
         return getResponseNodeValueByXPath("//unsharedAccommodation/travelPlanSegmentId");
+    }
+
+    public void setBlockCode(String blockCode) {
+        setUnSharedRoomDetailBlockCode(blockCode);
+        setSharedRoomDetailBlockCode(blockCode);
+    }
+
+    public void setUnSharedRoomDetailBlockCode(String value) {
+
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/unSharedRoomDetail/blockCode", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/unSharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/unSharedRoomDetail/blockCode", value);
+        }
+    }
+
+    public void setSharedRoomDetailBlockCode(String value) {
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/sharedRoomDetail/blockCode", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/sharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/sharedRoomDetail/blockCode", value);
+        }
+    }
+
+    public boolean unSharedRoomDetailBlockCodePresent(String index) {
+        try {
+            getUnSharedRoomDetailBlockCode(index);
+            return true;
+        } catch (XPathNotFoundException e) {
+            return false;
+        }
+    }
+
+    public boolean sharedRoomDetailBlockCodePresent(String index) {
+        try {
+            getSharedRoomDetailBlockCode(index);
+            return true;
+        } catch (XPathNotFoundException e) {
+            return false;
+        }
+    }
+
+    public String getUnSharedRoomDetailBlockCode(String index) {
+        return getResponseNodeValueByXPath("//shareRoomDetails[" + index + "]/unSharedRoomDetail/blockCode");
+    }
+
+    public String getSharedRoomDetailBlockCode(String index) {
+        return getResponseNodeValueByXPath("//shareRoomDetails[" + index + "]/sharedRoomDetail/blockCode");
     }
 }
