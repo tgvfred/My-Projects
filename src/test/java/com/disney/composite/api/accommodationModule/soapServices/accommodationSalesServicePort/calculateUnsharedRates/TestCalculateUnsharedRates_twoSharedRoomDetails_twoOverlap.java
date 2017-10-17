@@ -9,15 +9,12 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap extends AccommodationBaseTest {
-    CalculateUnsharedRates calculate;
+    private CalculateUnsharedRates calculate;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates" })
     public void Test_CalculateUnsharedRates_twoSharedRoomDetails_twoOverlap() {
-
         calculate = new CalculateUnsharedRates(environment, "TwoOverlap");
         calculate.sendRequest();
-        System.out.print(calculate.getRequest());
-        System.out.print(calculate.getResponse());
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 
         validateNumberShareChainsResponseNodes();
@@ -36,9 +33,7 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap extends 
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(calculate, true), "Validating Response Comparison");
-
         }
-
     }
 
     public void validateNumberShareChainsResponseNodes() {
@@ -197,5 +192,4 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap extends 
         TestReporter.softAssertEquals(responseTPS, TPS1, "Verify that the unshared accommodation TPS ID [" + responseTPS + "] is that which is expected [" + TPS1 + "].");
         TestReporter.assertAll();
     }
-
 }

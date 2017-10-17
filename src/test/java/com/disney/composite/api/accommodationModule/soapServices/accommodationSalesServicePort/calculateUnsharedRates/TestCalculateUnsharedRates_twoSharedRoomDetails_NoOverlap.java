@@ -12,7 +12,7 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_NoOverlap extends A
     CalculateUnsharedRates calculate;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates" })
-    public void Test_CalculateUnsharedRates_twoSharedRoomDetails_noOverlap() {
+    public void testCalculateUnsharedRates_twoSharedRoomDetails_NoOverlap() {
 
         calculate = new CalculateUnsharedRates(environment, "NoOverlap");
         calculate.sendRequest();
@@ -90,9 +90,9 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_NoOverlap extends A
         TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsEndDateNoOverlap(), sharedRoomResortPeriodEndDate, "Verify that the response returns the end date [" + calculate.getShareChainUnSharedRoomDetailsEndDateNoOverlap() + "] that which is expected [" + sharedRoomResortPeriodEndDate + "].");
 
         TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCId(), TC1, "Verify that the response returns the TC id [" + calculate.getShareChainUnSharedRoomDetailsTCId() + "] that which is expected [" + TC1 + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCIdNoOverlap(), TC2, "Verify that the response returns the TC id [" + calculate.getShareChainUnSharedRoomDetailsTCIdNoOverlap() + "] that which is expected [" + TC2 + "].");
+        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCId("2", "1"), TC2, "Verify that the response returns the TC id [" + calculate.getShareChainUnSharedRoomDetailsTCId("2", "1") + "] that which is expected [" + TC2 + "].");
         TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCGId(), TCG1, "Verify that the response returns the TCG id [" + calculate.getShareChainUnSharedRoomDetailsTCGId() + "] that which is expected [" + TCG1 + "].");
-        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCGIdNoOverlap(), TCG2, "Verify that the response returns the TCG id [" + calculate.getShareChainUnSharedRoomDetailsTCGIdNoOverlap() + "] that which is expected [" + TCG2 + "].");
+        TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTCGId("2", "1"), TCG2, "Verify that the response returns the TCG id [" + calculate.getShareChainUnSharedRoomDetailsTCGId("2", "1") + "] that which is expected [" + TCG2 + "].");
         TestReporter.softAssertEquals(calculate.getUnSharedAccommTPSId(), TPS1, "Verify that the response returns the TPS id [" + calculate.getUnSharedAccommTPSId() + "] that which is expected [" + TPS1 + "].");
         TestReporter.softAssertEquals(calculate.getShareChainUnSharedRoomDetailsTPSIdNoOverlap(), TPS2, "Verify that the response returns the TPS id [" + calculate.getShareChainUnSharedRoomDetailsTPSIdNoOverlap() + "] that which is expected [" + TPS2 + "].");
 
