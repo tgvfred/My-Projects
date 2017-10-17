@@ -1077,27 +1077,27 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("//unsharedAccommodation/travelPlanSegmentId");
     }
 
-    public void setBlockCode(String blockCode) {
-        setUnSharedRoomDetailBlockCode(blockCode);
-        setSharedRoomDetailBlockCode(blockCode);
+    public void setBlockCode(String blockCode, String index) {
+        setUnSharedRoomDetailBlockCode(blockCode, index);
+        setSharedRoomDetailBlockCode(blockCode, index);
     }
 
-    public void setUnSharedRoomDetailBlockCode(String value) {
+    public void setUnSharedRoomDetailBlockCode(String value, String index) {
 
         try {
-            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/unSharedRoomDetail/blockCode", value);
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/unSharedRoomDetail/blockCode", value);
         } catch (XPathNotFoundException e) {
-            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/unSharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
-            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/unSharedRoomDetail/blockCode", value);
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/unSharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/unSharedRoomDetail/blockCode", value);
         }
     }
 
-    public void setSharedRoomDetailBlockCode(String value) {
+    public void setSharedRoomDetailBlockCode(String value, String index) {
         try {
-            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/sharedRoomDetail/blockCode", value);
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/sharedRoomDetail/blockCode", value);
         } catch (XPathNotFoundException e) {
-            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/sharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
-            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails/sharedRoomDetail/blockCode", value);
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/sharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/sharedRoomDetail/blockCode", value);
         }
     }
 

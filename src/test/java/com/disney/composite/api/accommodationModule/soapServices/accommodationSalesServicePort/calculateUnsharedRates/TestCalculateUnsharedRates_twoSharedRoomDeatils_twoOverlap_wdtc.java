@@ -8,13 +8,14 @@ import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestCalculateUnsharedRates_twoSharedRoomDeatils_twoOverlap_wdtcAndRoomOnly extends AccommodationBaseTest {
+public class TestCalculateUnsharedRates_twoSharedRoomDeatils_twoOverlap_wdtc extends AccommodationBaseTest {
     private CalculateUnsharedRates calculate;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates" })
-    public void testCalculateUnsharedRates_twoSharedRoomDeatils_twoOverlap_wdtcAndRoomOnly() {
+    public void testCalculateUnsharedRates_twoSharedRoomDeatils_twoOverlap_wdtc() {
         calculate = new CalculateUnsharedRates(environment, "TwoOverlap");
         calculate.setBlockCode("01825", "1");
+        calculate.setBlockCode("01825", "2");
         calculate.sendRequest();
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 
@@ -198,10 +199,17 @@ public class TestCalculateUnsharedRates_twoSharedRoomDeatils_twoOverlap_wdtcAndR
     private void validateBlockCode() {
         TestReporter.logStep("Validate the block code in the response");
         String blockCode = "01825";
+        TestReporter.log("Validate the first block code");
         TestReporter.softAssertTrue(calculate.sharedRoomDetailBlockCodePresent("1"), "Verify that the shared room detail node contains a block code node.");
         TestReporter.softAssertTrue(calculate.unSharedRoomDetailBlockCodePresent("1"), "Verify that the unshared room detail node contains a block code node.");
         TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailBlockCode("1"), blockCode, "Verify that the unshared room detail block code [" + calculate.getUnSharedRoomDetailBlockCode("1") + "] is that which is expected [" + blockCode + "]");
         TestReporter.softAssertEquals(calculate.getSharedRoomDetailBlockCode("1"), blockCode, "Verify that the shared room detail block code [" + calculate.getSharedRoomDetailBlockCode("1") + "] is that which is expected [" + blockCode + "]");
+
+        TestReporter.log("Validate the second block code");
+        TestReporter.softAssertTrue(calculate.sharedRoomDetailBlockCodePresent("2"), "Verify that the shared room detail node contains a block code node.");
+        TestReporter.softAssertTrue(calculate.unSharedRoomDetailBlockCodePresent("2"), "Verify that the unshared room detail node contains a block code node.");
+        TestReporter.softAssertEquals(calculate.getUnSharedRoomDetailBlockCode("2"), blockCode, "Verify that the unshared room detail block code [" + calculate.getUnSharedRoomDetailBlockCode("2") + "] is that which is expected [" + blockCode + "]");
+        TestReporter.softAssertEquals(calculate.getSharedRoomDetailBlockCode("2"), blockCode, "Verify that the shared room detail block code [" + calculate.getSharedRoomDetailBlockCode("2") + "] is that which is expected [" + blockCode + "]");
         TestReporter.assertAll();
     }
 }
