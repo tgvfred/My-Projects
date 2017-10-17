@@ -814,9 +814,9 @@ public class ValidationHelper {
             Recordset rs;
 
             int tries = 0;
-            int maxTries = 5;
+            int maxTries = 60;
             do {
-                Sleeper.sleep(Randomness.randomNumberBetween(1, 3) * 1000);
+                Sleeper.sleep(1000);
                 rs = new Recordset(db.getResultSet(sql));
                 tries++;
             } while ((tries <= maxTries) && (rs.getRowCount() < 1));
@@ -1457,6 +1457,7 @@ public class ValidationHelper {
         int maxTries = 20;
         boolean success = false;
         do {
+            Sleeper.sleep(1000);
             rs = new Recordset(db.getResultSet(sql));
             if (rs.getRowCount() > 0) {
                 success = true;
@@ -2160,9 +2161,12 @@ public class ValidationHelper {
         String sql = "select a.RES_MGMT_REQ_ID, RES_MGMT_REQ_TYP_NM PROFILE_TYPE, CMT_REQ_TYP_NM, RES_MGMT_PRFL_ID PROFILE_ID, RES_MGMT_REQ_TX PROFILE_DESCRIPTION, CFDNTL_IN, GSR_IN, REQ_INACTV_DTS, RES_MGMT_RTE_NM "
                 + "from res_mgmt_req a "
                 + "left outer join res_mgmt.RES_MGMT_REQ_RTE b on a.RES_MGMT_REQ_ID = b.RES_MGMT_REQ_ID "
-                + "where a.tp_id = 472292078811";
+                + "where a.tp_id = " + book.getTravelPlanId();
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No profil records were returned for TP ID [" + book.getTravelPlanId() + "].");
+        }
         String commentId = null;
         TestReporter.logStep("Validate profile data for comment ID [" + commentId + "]");
         do {

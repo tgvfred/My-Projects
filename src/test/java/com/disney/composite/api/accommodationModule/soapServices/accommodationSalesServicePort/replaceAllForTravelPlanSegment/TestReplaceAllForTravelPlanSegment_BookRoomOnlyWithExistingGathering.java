@@ -41,7 +41,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGatherin
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering() {
+    public void TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering() {
         bookReservation();
         tpPtyId = getBook().getGuestId();
 
@@ -91,6 +91,8 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGatherin
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
                     "Validating Response Comparison");
 

@@ -11,6 +11,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -82,6 +83,19 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithTravelAgency ext
             ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.sendRequest();
+
+            int tries = 0;
+            int maxTries = 20;
+            boolean success = false;
+            do {
+                Sleeper.sleep(1000);
+                clone.sendRequest();
+                tries++;
+                if (clone.getResponseStatusCode().equals("200")) {
+                    success = true;
+                }
+            } while ((tries < maxTries) && !success);
+
             if (!clone.getResponseStatusCode().equals("200")) {
                 TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
             }
@@ -96,6 +110,8 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithTravelAgency ext
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
                     "Validating Response Comparison");
 
