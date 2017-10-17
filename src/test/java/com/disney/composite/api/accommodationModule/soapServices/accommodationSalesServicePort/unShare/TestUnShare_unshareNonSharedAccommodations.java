@@ -12,6 +12,7 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBaseTest {
@@ -115,6 +116,10 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No owner id found for tcg ID [ " + firstTCG + " ]", sql);
+        }
+
         firstOwnerId = rs.getValue("ASGN_OWN_ID");
 
     }
@@ -124,6 +129,10 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getBook().getTravelComponentGroupingId() + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No owner id found for tcg ID [ " + getBook().getTravelComponentGroupingId() + " ]", sql);
+        }
 
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
 
