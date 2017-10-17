@@ -8,15 +8,16 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
 
-public class TestRetrievePostedCancellationFee_nullIdentityDetails extends AccommodationBaseTest {
+public class TestRetrievePostedCancellationFee_nullIdentityLevel extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
-    public void testRetrievePostedCancellationFee_nullIdentityDetails() {
+    public void testRetrievePostedCancellationFee_nullIdentityLevel() {
 
         String faultString = "Travel Plan Segment Not Found : Travel Plan Segment Should not be NULL";
 
         RetrievePostedCancellationFee retrieve = new RetrievePostedCancellationFee(environment, "Main");
-        retrieve.setIdentityDetails(BaseSoapCommands.REMOVE_ATTRIBUTE.toString());
+        retrieve.setid(getBook().getTravelPlanSegmentId());
+        retrieve.setIdentityLevel(BaseSoapCommands.REMOVE_NODE.toString());
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().contains(faultString), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");

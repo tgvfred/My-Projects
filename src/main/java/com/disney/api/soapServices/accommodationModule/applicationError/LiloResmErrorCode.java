@@ -84,4 +84,8 @@ public class LiloResmErrorCode {
             "Travel Agency is invalid");
     public static final ApplicationErrorCode TRVL_PLAN_COMPONENT_ID_REQ = new ApplicationErrorCode(APP_NAME, 7037,
             "Travel Component Id is required");
+    public static final ApplicationErrorCode TRVL_PLAN_SEG_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7008,
+            "Travel Plan Segment Not Found");
+    public static final ApplicationErrorCode CANT_CALCULATE_CNCL_FEE = new ApplicationErrorCode(APP_NAME, 7080,
+            "cannot calculate Cancel fee");
 }
