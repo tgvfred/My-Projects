@@ -15,8 +15,6 @@ public class TestCalculateUnsharedRates_threeSharedRoomDetails_threeOverlap exte
 
         calculate = new CalculateUnsharedRates(environment, "ThreeOverlap");
         calculate.sendRequest();
-        System.out.print(calculate.getRequest());
-        System.out.print(calculate.getResponse());
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 
         validateNumberShareChainsResponseNodes();
