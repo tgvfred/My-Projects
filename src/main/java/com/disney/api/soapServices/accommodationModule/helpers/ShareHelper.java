@@ -3,6 +3,7 @@ package com.disney.api.soapServices.accommodationModule.helpers;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class ShareHelper {
@@ -63,6 +64,10 @@ public class ShareHelper {
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No reservation found for tps ID [ " + TpsId + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords + "].");
 
         for (int i = 1; i <= rs.getRowCount(); i++) {
@@ -79,6 +84,10 @@ public class ShareHelper {
         String sql = "select c.* from res_mgmt.tc_grp a join res_mgmt.tc b on a.tc_grp_nb = b.tc_grp_nb join res_mgmt.acm_cmpnt c on b.tc_id = c.acm_tc_id where a.tc_grp_nb = '" + TcgId + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No share flag found for tcg ID [ " + TcgId + " ]", sql);
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords2, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords2 + "].");
 
@@ -97,6 +106,10 @@ public class ShareHelper {
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No assignment owner id found for tcg ID [ " + TcgId + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords3, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords3 + "].");
 
         do {
@@ -111,6 +124,10 @@ public class ShareHelper {
         String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + firstTcgId + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No assignment owner id found for tcg ID [ " + firstTcgId + " ]", sql);
+        }
 
         String assignFirstOwnerId = rs.getValue("ASGN_OWN_ID");
 
@@ -133,6 +150,10 @@ public class ShareHelper {
         String sql = "select i.GUAR_TYP_NM from folio.EXTNL_REF a left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID left outer join folio.CHRG d on c.CHRG_GRP_ID = d.CHRG_GRP_ID left outer join folio.CHRG_ITEM e on d.CHRG_ID = e.CHRG_ID left outer join folio.CHRG_GRP_FOLIO f on c.CHRG_GRP_ID = f.ROOT_CHRG_GRP_ID left outer join folio.FOLIO g on f.CHRG_GRP_FOLIO_ID = g.FOLIO_ID left outer join folio.FOLIO_ITEM h on g.FOLIO_ID = h.FOLIO_ID left outer join folio.node_chrg_grp i on c.CHRG_GRP_ID = i.NODE_CHRG_GRP_ID where a.EXTNL_REF_VAL in ('" + TcgId + "')";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No assignment owner id found for tcg ID [ " + TcgId + " ]", sql);
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords4, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords4 + "].");
 
