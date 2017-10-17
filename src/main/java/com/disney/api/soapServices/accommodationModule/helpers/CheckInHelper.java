@@ -130,7 +130,7 @@ public class CheckInHelper {
     }
 
     public CheckInHelper(String environment, WebService ws) {
-        if (environment == null || StringUtils.isEmpty(environment)) {
+        if ((environment == null) || StringUtils.isEmpty(environment)) {
             throw new AutomationException("The environment field cannot be null or empty.");
         } else {
             setEnvironment(environment);
@@ -197,7 +197,7 @@ public class CheckInHelper {
                     Sleeper.sleep(Randomness.randomNumberBetween(3, 7) * 1000);
                 }
                 tries++;
-            } while (tries < maxTries && !assignRoom.getResponseStatusCode().equals("200"));
+            } while ((tries < maxTries) && !assignRoom.getResponseStatusCode().equals("200"));
             if (assignRoom.getResponseStatusCode().equals("200")) {
                 roomAdded = true;
             }
@@ -243,6 +243,9 @@ public class CheckInHelper {
         checkingIn(locationId, daysOut, nights, facilityId);
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getLocationIdByTpId(getTpId())));
+
+        pollForTPV3(getTpId());
+
         CheckIn checkIn = new CheckIn(environment, "UI_Booking");
         checkIn.setGuestId(getPrimaryGuestId());
         checkIn.setLocationId(rs.getValue("WRK_LOC_ID", 1));
@@ -256,8 +259,28 @@ public class CheckInHelper {
                 Sleeper.sleep(Randomness.randomNumberBetween(3, 7) * 1000);
             }
             tries++;
-        } while (!checkIn.getResponseStatusCode().equals("200") && tries < maxTries);
+        } while (!checkIn.getResponseStatusCode().equals("200") && (tries < maxTries));
         TestReporter.assertTrue(checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getTpId() + "]: " + checkIn.getFaultString());
+    }
+
+    private void pollForTPV3(String tpId) {
+        String sql = "select * "
+                + "from sales_tp.tp "
+                + "join sales_tp.sls_ord on tp.tp_id = sls_ord.tp_id "
+                + "where tp.tp_id = '" + tpId + "'";
+        Database db = new OracleDatabase(getEnvironment(), Database.SALESTP);
+        Recordset rs = null;
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            rs = new Recordset(db.getResultSet(sql));
+            tries++;
+            if (rs.getRowCount() > 0) {
+                success = true;
+            }
+        } while ((tries < maxTries) & !success);
     }
 
     public void checkOut(String locationId) {
