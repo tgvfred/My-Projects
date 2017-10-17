@@ -12,7 +12,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
-public class TestProcessContainerModifyBusinessEvent_guarAccomm extends AccommodationBaseTest {
+public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTcgs extends AccommodationBaseTest {
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -33,7 +33,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm extends Accommod
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
-    public void testProcessContainerModifyBusinessEvent_guarAccomm() {
+    public void testProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTcgs() {
 
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
@@ -59,16 +59,9 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm extends Accommod
         System.out.println(process.getResponse());
         TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
         // validations
-        String status = "UnEarned";
-        ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
-        helper.statusTP_TC(tps, environment);
-        // helper.tpv3Status(environment);
-        helper.reservationHistory(tps, environment);
-        helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
-        helper.rimRecordConsumed(getBook().getTravelComponentGroupingId(), environment);
-        helper.chargeItemsActive(getBook().getTravelComponentGroupingId(), environment);
-        helper.folioItems(tp, environment);
 
+        ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
+        String status = "UnEarned";
     }
 
 }
