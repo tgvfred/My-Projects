@@ -947,4 +947,112 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
     public String getUnsharedRoomDetailsPointsValue(String shareChainIndex, String shareRoomIndex) {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[" + shareChainIndex + "]/shareRoomDetails[" + shareRoomIndex + "]/unSharedRoomDetail/rateDetails/pointsValue");
     }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailAdditionalCharge(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/additionalCharge");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailAdditionalChargeOverridden(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/additionalChargeOverridden");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailBasePrice(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/basePrice");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailDate(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/date");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailDayCount(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/dayCount");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailOveridden(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/overidden");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailShared(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/shared");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailNetPrice(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/netPrice");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailPointsValue(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/pointsValue");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailEndDate() {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/resortPeriod/endDate");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailStartDate() {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/resortPeriod/startDate");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailTCG() {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getUnsharedAccommodationUnsharedRoomDetailTC() {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/unSharedRoomDetail/travelComponentId");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailAdditionalCharge(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/additionalCharge");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailAdditionalChargeOverridden(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/additionalChargeOverridden");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailBasePrice(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/basePrice");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailDate(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/date");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailDayCount(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/dayCount");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailOveridden(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/overidden");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailShared(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/shared");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailNetPrice(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/netPrice");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailPointsValue(String rateDetailsIndex) {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/rateDetails[" + rateDetailsIndex + "]/pointsValue");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailEndDate() {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/resortPeriod/endDate");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailStartDate() {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/resortPeriod/startDate");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailTCG() {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getUnsharedAccommodationSharedRoomDetailTC() {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/sharedRoomDetail/travelComponentId");
+    }
+
+    public String getUnsharedAccommodationTPS() {
+        return getResponseNodeValueByXPath("//unsharedAccommodation/travelPlanSegmentId");
+    }
 }
