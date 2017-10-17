@@ -809,15 +809,23 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
     }
 
     public String getShareChainUnSharedRoomDetailsStartDateThreeNoOverlap() {
-        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains/shareRoomDetails[2]/SharedRoomDetail/resortPeriod/startDate");
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails[1]/unSharedRoomDetail/resortPeriod/startDate");
     }
 
     public String getShareChainUnSharedRoomDetailsEndDateNoOverlap() {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/unSharedRoomDetail/resortPeriod/endDate");
     }
 
+    public String getShareChainUnSharedRoomDetailsEndDateThreeNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails[1]/unSharedRoomDetail/resortPeriod/endDate");
+    }
+
     public String getShareChainUnSharedRoomDetailsTCId() {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/unsharedAccommodation/unSharedRoomDetail/travelComponentId");
+    }
+
+    public String getShareChainUnSharedRoomDetailsTCIdThreeSharedRoom() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[1]/shareRoomDetails[2]/unSharedRoomDetail/travelComponentId");
     }
 
     public String getShareChainUnSharedRoomDetailsTCGId() {
@@ -861,6 +869,10 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
     }
 
     public String getShareChainUnSharedRoomDetailsTPSIdNoOverlap() {
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/travelPlanSegmentId");
+    }
+
+    public String getShareChainUnSharedRoomDetailsTPSIdThreeSharedChains() {
         return getResponseNodeValueByXPath("/Envelope/Body/calculateUnsharedRatesResponse/splitRateWithTotalTO/shareChains[2]/shareRoomDetails/travelPlanSegmentId");
     }
 
