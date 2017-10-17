@@ -76,6 +76,7 @@ public class ProcessContainerModifyBusinessEventHelper {
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+        rs.print();
         TestReporter.assertTrue(rs.getRowCount() >= 1, "The Rim Inventory was consumed since the row count is [" + rs.getRowCount() + "].");
 
     }
@@ -97,9 +98,13 @@ public class ProcessContainerModifyBusinessEventHelper {
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+        rs.print();
+        for (int i = 1; i < rs.getRowCount(); i++) {
 
-        TestReporter.assertTrue(rs.getValue("CHRG_GRP_STS_NM", 1) == status, "The charge group status is [" + rs.getValue("CHRG_GRP_STS_NM", 1) + "].");
-
+            if ((rs.getValue("CHRG_GRP_STS_NM", i) == status)) {
+                TestReporter.assertTrue(rs.getValue("CHRG_GRP_STS_NM", i) == status, "The charge group status is [" + rs.getValue("CHRG_GRP_STS_NM", i) + "].");
+            }
+        }
     }
 
     public void chargeItemsNotActive(String tcg, String env) {
