@@ -62,7 +62,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_negExtRefNumber 
         String status = "Cancelled";
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         helper.statusTP_TC(tps, environment);
-        helper.tpv3Status(environment);
+        helper.tpv3Status(environment, tp);
         helper.reservationHistory(tps, environment);
         helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
         helper.rimRecordNotConsumed(getBook().getTravelComponentGroupingId(), environment);

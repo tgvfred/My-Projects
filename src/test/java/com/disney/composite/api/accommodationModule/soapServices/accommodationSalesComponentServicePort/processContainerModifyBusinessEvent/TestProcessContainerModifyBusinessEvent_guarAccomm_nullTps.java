@@ -46,7 +46,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_nullTps extends 
         System.out.println(ac.getResponse());
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
         // process.setTravelPlanSegmentID("472121534976");
-        process.setTravelPlanSegmentID(tps);
+        process.setTravelPlanSegmentID(BaseSoapCommands.REMOVE_NODE.toString());
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceNumber(getBook().getTravelComponentGroupingId());
@@ -62,6 +62,15 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_nullTps extends 
 
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         String status = "UnEarned";
+
+        helper.statusTP_TCNoCanc(tps, environment);
+        helper.tpv3Status(environment, tp);
+        helper.reservationHistory(tp, environment);
+        helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
+        helper.rimRecordConsumed(getBook().getTravelComponentGroupingId(), environment);
+        helper.chargeItemsActive(getBook().getTravelComponentGroupingId(), environment);
+        helper.folioItems(tp, environment);
+
     }
 
 }

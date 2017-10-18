@@ -4,11 +4,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoCancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ProcessContainerModifyBusinessEvent;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ProcessContainerModifyBusinessEventHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.folioModule.paymentService.operations.PostCardPayment;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
@@ -25,7 +25,7 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        setIsWdtcBooking(true);
+        getAddTravelAgency();
         setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
@@ -38,29 +38,49 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
 
-        AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
-        ac.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-
-        ac.sendRequest();
-        System.out.println(ac.getRequest());
-        System.out.println(ac.getResponse());
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
         // process.setTravelPlanSegmentID("472121534976");
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceNumber(getBook().getTravelComponentGroupingId());
-        process.setExternalReferenceSource("DREAMS_TP");
+        process.setExternalReferenceSource(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
 
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
+
         System.out.println(process.getRequest());
         System.out.println(process.getResponse());
         TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
         // validations
 
+        PostCardPayment pcp = new PostCardPayment(Environment.getBaseEnvironmentName(environment), "Visa-CreditCard");
+        pcp.setTravelPlanSegmentId(tps);
+        pcp.setTravelPlanId(tp);
+        pcp.setAmount("60");
+        pcp.setFolioId("138020006");
+        pcp.setBookingReference("DREAMS_TP", tp);
+        pcp.setExternalReference("DREAMS_TC", getBook().getTravelComponentId());
+        pcp.setRequestNodeValueByXPath("/Envelope/Body/postCardPayment/pmtInfo/cardAuthorizationInfoTO/retrievalReferenceNumber", "1234423434");
+        pcp.setLocationId(getLocationId());
+        pcp.setPartyId(getBook().getPartyId("1"));
+        pcp.sendRequest();
+
+        // System.out.println(pcp.getRequest());
+        // System.out.println(pcp.getResponse());
+        // TestReporter.logAPI(!pcp.getResponseStatusCode().equals("200"), "An error occurred post card payment.", pcp);
+
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         String status = "UnEarned";
+        helper.statusTP_TCNoCanc(tps, environment);
+        helper.tpv3Status(environment, tp);
+        helper.reservationHistory(tp, environment);
+        helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
+        helper.rimRecordConsumed(getBook().getTravelComponentGroupingId(), environment);
+        helper.chargeItemsActive(getBook().getTravelComponentGroupingId(), environment);
+        helper.folioItems(tp, environment);
+        helper.rimGuaranteeStatus(environment, getBook().getTravelComponentId());
+        helper.folioNodeChargeGroupST(environment, tps, getBook().getTravelComponentGroupingId());
     }
 }
