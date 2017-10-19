@@ -5,6 +5,7 @@ import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class UpdateProcessStatusListHelper {
@@ -59,6 +60,10 @@ public class UpdateProcessStatusListHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No multiple IDs found", sql);
+        }
+
         multID = rs.getValue("GRP_RES_PROC_ID");
         this.mult = multID;
 
@@ -84,6 +89,10 @@ public class UpdateProcessStatusListHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No room list ID found", sql);
+        }
+
         rlID = rs.getValue("GRP_RES_PROC_ID");
         this.rl = rlID;
 
@@ -101,6 +110,10 @@ public class UpdateProcessStatusListHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Nothing found for process ID [ " + processId + " ]", sql);
+        }
+
         runID = rs.getValue("GRP_RES_PROC_RUN_ID");
         this.id = runID;
 
@@ -116,6 +129,10 @@ public class UpdateProcessStatusListHelper {
 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Nothing found for process ID [ " + processId + " ]", sql);
+        }
 
         runID1 = rs.getValue("GRP_RES_PROC_RUN_ID", 1);
         this.id = runID1;
@@ -133,6 +150,10 @@ public class UpdateProcessStatusListHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Nothing found for process ID [ " + processId + " ]", sql);
+        }
+
         runID2 = rs.getValue("GRP_RES_PROC_RUN_ID", 2);
         this.id = runID2;
 
@@ -149,6 +170,10 @@ public class UpdateProcessStatusListHelper {
 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Nothing found for proc run ID [ " + procRunId + " ]", sql);
+        }
 
         stsNM = rs.getValue("GRP_RES_PROC_RUN_STS_NM");
         idCD = rs.getValue("UPDT_USR_ID_CD");
@@ -173,6 +198,10 @@ public class UpdateProcessStatusListHelper {
 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Nothing found for proc run ID [ " + procRunId + " ]", sql);
+        }
 
         cnclID = rs.getValue("ACM_CNCL_PROC_RUN_ID");
         tpID = rs.getValue("TP_ID");
@@ -204,6 +233,10 @@ public class UpdateProcessStatusListHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Nothing found for proc run ID [ " + procRunId + " ]", sql);
+        }
+
         cnclID = rs.getValue("GRP_RES_MOD_RUN_ID");
         tpsID = rs.getValue("TPS_ID");
         tcgID = rs.getValue("TC_GRP_NB");
@@ -230,6 +263,10 @@ public class UpdateProcessStatusListHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Nothing found for proc run ID [ " + procRunId + " ]", sql);
+        }
+
         grpID = rs.getValue("RMVE_GRP_PROC_RUN_ID");
         tcgID = rs.getValue("TC_GRP_NB");
 
@@ -248,6 +285,10 @@ public class UpdateProcessStatusListHelper {
 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Nothing found for proc run ID [ " + procRunId + " ]", sql);
+        }
 
         grpID = rs.getValue("GRP_RES_PROC_RUN_ID");
         resID = rs.getValue("RES_ID");

@@ -53,8 +53,7 @@ public class TestGetOptionDetail_COUNTRY extends AccommodationBaseTest {
         GetOptions getOptions = new GetOptions(Environment.getBaseEnvironmentName(environment));
         getOptions.setOptionType("COUNTRY");
         getOptions.sendRequest();
-        System.out.println(getOptions.getResponse());
-        System.out.println(getOptions.getRequest());
+
         TestReporter.logAPI(!getOptions.getResponseStatusCode().equals("200"), "Error in the Party Service request. Response status code not 200.", getOptions);
 
         String OptionKey = "";
