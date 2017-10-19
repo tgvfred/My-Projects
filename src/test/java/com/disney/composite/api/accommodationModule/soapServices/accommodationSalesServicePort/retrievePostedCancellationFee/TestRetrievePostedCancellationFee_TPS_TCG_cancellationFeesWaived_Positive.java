@@ -4,12 +4,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.TestReporter;
-import com.disney.utils.date.DateTimeConversion;
 
 public class TestRetrievePostedCancellationFee_TPS_TCG_cancellationFeesWaived_Positive extends AccommodationBaseTest {
 
@@ -31,12 +29,6 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_cancellationFeesWaived_Po
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
     public void testRetrievePostedCancellationFee_TPS_TCG_cancellationFeesWaived_Positive() {
-
-        Cancel cancel = new Cancel(environment, "Main_WithFeeWaived");
-        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
-        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred canceling a reservation", cancel);
 
         RetrievePostedCancellationFee retrieve = new RetrievePostedCancellationFee(environment, "TpsANDTcg");
         retrieve.setid(getBook().getTravelPlanSegmentId());

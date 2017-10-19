@@ -6,12 +6,9 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.TestReporter;
 
 public class TestRetrievePostedCancellationFee_TPS_CancellationFees_Positive extends AccommodationBaseTest {
-
-    private CheckInHelper helper;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -30,12 +27,13 @@ public class TestRetrievePostedCancellationFee_TPS_CancellationFees_Positive ext
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
     public void testRetrievePostedCancellationFee_TPS_CancellationFees_Positive() {
 
-        cancel();
-
         RetrievePostedCancellationFee retrieve = new RetrievePostedCancellationFee(environment, "Main");
         retrieve.setid(getBook().getTravelPlanSegmentId());
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving posted cancellation fee", retrieve);
 
+        TestReporter.softAssertEquals(retrieve.getWaived(), "false", "Verify the waived value is false as expected: [" + retrieve.getWaived() + "]");
+        TestReporter.softAssertEquals(retrieve.getOverridden(), "false", "Verify the overridden value is false as expected: [" + retrieve.getOverridden() + "]");
+        TestReporter.assertAll();
     }
 }

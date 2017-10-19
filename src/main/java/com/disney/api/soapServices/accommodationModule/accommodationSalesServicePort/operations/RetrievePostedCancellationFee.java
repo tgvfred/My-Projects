@@ -20,6 +20,11 @@ public class RetrievePostedCancellationFee extends AccommodationSalesServicePort
 
     // Request
 
+    public void setCancelDate(String Value) {
+        setRequestNodeValueByXPath("/Envelope/Body/retrievePostedCancellationFee/request/cancelDate", Value);
+
+    }
+
     public void setid(String Value) {
         setRequestNodeValueByXPath("/Envelope/Body/retrievePostedCancellationFee/request/identityDetails/id", Value);
 
@@ -48,5 +53,17 @@ public class RetrievePostedCancellationFee extends AccommodationSalesServicePort
 
     public String getOverridden() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrievePostedCancellationFeeResponse/response/overridden");
+    }
+
+    public String getOverridePrice() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrievePostedCancellationFeeResponse/response/cancelChargeDetail/overridePrice");
+    }
+
+    public String getProductPrice() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrievePostedCancellationFeeResponse/response/cancelChargeDetail/productPrice");
+    }
+
+    public String getSellingPrice() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrievePostedCancellationFeeResponse/response/cancelChargeDetail/sellingPrice");
     }
 }
