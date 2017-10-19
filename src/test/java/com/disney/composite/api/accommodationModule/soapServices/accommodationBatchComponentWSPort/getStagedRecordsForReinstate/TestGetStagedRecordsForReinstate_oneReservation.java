@@ -21,7 +21,7 @@ public class TestGetStagedRecordsForReinstate_oneReservation extends Accommodati
         // stage reinstate transactions.
         stage = new StageReinstateData(environment, "Main");
         stage.setTcg(getBook().getTravelComponentGroupingId());
-        stage.setTpId(getBook().getTravelPlanId());
+        // stage.setTpId(getBook().getTravelPlanId());
         stage.sendRequest();
         TestReporter.logAPI(!stage.getResponseStatusCode().equals("200"), "Verify that no error occurred staging records for reinstate: " + stage.getFaultString(), stage);
 
