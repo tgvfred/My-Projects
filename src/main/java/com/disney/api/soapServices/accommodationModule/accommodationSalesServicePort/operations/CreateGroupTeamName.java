@@ -67,4 +67,7 @@ public class CreateGroupTeamName extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/createGroupTeamNameResponse/response/groupTeamName");
     }
 
+    public String getSelected() {
+        return getResponseNodeValueByXPath("/Envelope/Body/createGroupTeamNameResponse/response/selected");
+    }
 }
