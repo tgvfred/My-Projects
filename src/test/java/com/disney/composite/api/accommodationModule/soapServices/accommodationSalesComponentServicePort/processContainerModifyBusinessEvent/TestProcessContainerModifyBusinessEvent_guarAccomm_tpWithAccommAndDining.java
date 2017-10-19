@@ -26,6 +26,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithAccommAndD
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         setIsWdtcBooking(true);
+        setIsDining(true);
         setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
@@ -34,6 +35,12 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithAccommAndD
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
     public void testProcessContainerModifyBusinessEvent_guarAccomm_tpWithAccommAndDining() {
+
+        /*
+         * ScheduledEventReservation dining = new ShowDiningReservation(getEnvironment().toLowerCase().replace("_cm", ""));
+         * dining.setTravelPlanId(getBook().getTravelPlanId());
+         * dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+         */
 
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();

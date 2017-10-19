@@ -26,7 +26,7 @@ public class ProcessContainerModifyBusinessEventHelper {
         // tpStatus = rs.getValue("TRVL_STS_NM TP_STATUS");
 
         // TestReporter.assertTrue(rs.getValue("TP_STATUS", 2) != "REINSTATE", "The reservation is [" + rs.getValue("TP_STATUS", 2) + "] and is not reinstated");
-        TestReporter.assertTrue(rs.getValue("CANCEL_NUMBER", 1) != "0", "The cancellation number is [" + rs.getValue("CANCEL_NUMBER", 1) + "]");
+        TestReporter.assertTrue(rs.getValue("CANCEL_NUMBER", 1) != "0", "The Travel Plan Segment [" + tps + "] has a cancellation number of [" + rs.getValue("CANCEL_NUMBER", 1) + "] and a reservation status of [" + rs.getValue("TP_STATUS", 1) + "]");
         TestReporter.assertTrue(rs.getValue("TP_STATUS", 1) != "REINSTATE", "The reservation is [" + rs.getValue("TP_STATUS", 1) + "].");
 
         // for (int i = 1; i < rs.getRowCount(); i++) {
@@ -52,15 +52,41 @@ public class ProcessContainerModifyBusinessEventHelper {
         // tpStatus = rs.getValue("TRVL_STS_NM TP_STATUS");
 
         // TestReporter.assertTrue(rs.getValue("TP_STATUS", 2) != "REINSTATE", "The reservation is [" + rs.getValue("TP_STATUS", 2) + "] and is not reinstated");
+        TestReporter.assertTrue(rs.getValue("TP_STATUS", 1) != "REINSTATE", "The reservation is [" + rs.getValue("TP_STATUS", 1) + "].");
 
-        for (int i = 1; i < rs.getRowCount(); i++) {
-            if (rs.getValue("TPS_CNCL_NB CANCEL_NUMBER", i) != "0") {
+        // for (int i = 1; i < rs.getRowCount(); i++) {
+        // if (rs.getValue("TPS_CNCL_NB CANCEL_NUMBER", i) != "0") {
+        //
+        // // TestReporter.assertTrue(rs.getValue("CANCEL_NUMBER", i) != "0", "The cancellation number is [" + rs.getValue("CANCEL_NUMBER", i) + "]");
+        // TestReporter.assertTrue(rs.getValue("TP_STATUS", i) != "REINSTATE", "The reservation is [" + rs.getValue("TP_STATUS", i) + "].");
+        // }
+        //
+        // }
+    }
 
-                // TestReporter.assertTrue(rs.getValue("CANCEL_NUMBER", i) != "0", "The cancellation number is [" + rs.getValue("CANCEL_NUMBER", i) + "]");
-                TestReporter.assertTrue(rs.getValue("TP_STATUS", i) != "REINSTATE", "The reservation is [" + rs.getValue("TP_STATUS", i) + "].");
-            }
+    public void statusTP_TCWithZeroCanc(String tps, String env) {
 
-        }
+        String sql = "select a.TRVL_STS_NM TP_STATUS, a.TPS_CNCL_NB CANCEL_NUMBER, c.TRVL_STS_NM TC_STATUS"
+                + " from res_mgmt.tps a"
+                + " join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
+                + " join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb"
+                + " where a.tps_id ='" + tps + "'";
+        Database db = new OracleDatabase(env, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        // tpStatus = rs.getValue("TRVL_STS_NM TP_STATUS");
+
+        // TestReporter.assertTrue(rs.getValue("TP_STATUS", 2) != "REINSTATE", "The reservation is [" + rs.getValue("TP_STATUS", 2) + "] and is not reinstated");
+        TestReporter.assertTrue(rs.getValue("CANCEL_NUMBER", 1) == "0", "The Travel Plan Segment [" + tps + "] has a cancellation number of [" + rs.getValue("CANCEL_NUMBER", 1) + "] and a reservation status of [" + rs.getValue("TP_STATUS", 1) + "]");
+
+        // for (int i = 1; i < rs.getRowCount(); i++) {
+        // if (rs.getValue("CANCEL_NUMBER", i) == "0") {
+        //
+        // TestReporter.assertTrue(rs.getValue("CANCEL_NUMBER", i) == "0", "The cancellation number is [" + rs.getValue("CANCEL_NUMBER", i) + "] and the reservation is [" + rs.getValue("TP_STATUS", i) + "]");
+        // TestReporter.assertTrue(rs.getValue("TP_STATUS", i) != "0", "The reservation is [" + rs.getValue("TP_STATUS", i) + "].");
+        // }
+        //
+        // }
     }
 
     public void reservationHistory(String tp, String env) {
@@ -69,14 +95,14 @@ public class ProcessContainerModifyBusinessEventHelper {
                 + " where a.tp_id='" + tp + "'";
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        rs.print();
+
         for (int j = 1; j <= rs.getRowCount(); j++) {
             if (rs.getValue("EVENT", j) == "Auto Cancelled") {
-                TestReporter.assertTrue(rs.getValue("EVENT", j) == "Auto Cancelled", "The reservation history is [" + rs.getValue("EVENT", j) + "]");
+                TestReporter.assertTrue(rs.getValue("EVENT", j) == "Auto Cancelled", "The travel plan id [" + tp + "] has a reservation history of [" + rs.getValue("EVENT", j) + "]");
 
             }
             if (rs.getValue("EVENT", j) == "Reinstated") {
-                TestReporter.assertTrue(rs.getValue("EVENT", j) == "Reinstated", "The reservation history is [" + rs.getValue("EVENT", j) + "]");
+                TestReporter.assertTrue(rs.getValue("EVENT", j) == "Reinstated", "The  travel plan id [" + tp + "] has reservation history of [" + rs.getValue("EVENT", j) + "]");
             }
 
         }
@@ -92,7 +118,8 @@ public class ProcessContainerModifyBusinessEventHelper {
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.assertTrue(rs.getRowCount() == 0, "The Rim Inventory was not consumed since the row count is [" + rs.getRowCount() + "].");
+        rs.print();
+        TestReporter.assertTrue(rs.getRowCount() == 0, "The travel component grouping id [" + tcg + "] has a Rim Inventory that was not consumed since the row count is [" + rs.getRowCount() + "].");
 
     }
 
@@ -106,8 +133,8 @@ public class ProcessContainerModifyBusinessEventHelper {
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        // rs.print();
-        TestReporter.assertTrue(rs.getRowCount() >= 1, "The Rim Inventory was consumed since the row count is [" + rs.getRowCount() + "].");
+        rs.print();
+        TestReporter.assertTrue(rs.getRowCount() >= 1, "The travel component grouping id [" + tcg + "] has a Rim Inventory that was consumed since the row count is [" + rs.getRowCount() + "].");
 
     }
 
@@ -132,7 +159,7 @@ public class ProcessContainerModifyBusinessEventHelper {
         for (int i = 1; i < rs.getRowCount(); i++) {
 
             if ((rs.getValue("CHRG_GRP_STS_NM", i) == status)) {
-                TestReporter.assertTrue(rs.getValue("CHRG_GRP_STS_NM", i) == status, "The charge group status is [" + rs.getValue("CHRG_GRP_STS_NM", i) + "].");
+                TestReporter.assertTrue(rs.getValue("CHRG_GRP_STS_NM", i) == status, "The travel plan segment id [" + tps + "] has a charge group status of [" + rs.getValue("CHRG_GRP_STS_NM", i) + "].");
             }
         }
     }
@@ -148,9 +175,10 @@ public class ProcessContainerModifyBusinessEventHelper {
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+        rs.print();
         for (int i = 1; i < rs.getRowCount(); i++) {
 
-            TestReporter.assertTrue(rs.getValue("CHRG_ACTV_IN", i) == "N", "The charge groups are not active and set to [" + rs.getValue("CHRG_ACTV_IN", i) + "]");
+            TestReporter.assertTrue(rs.getValue("CHRG_ACTV_IN", i) == "N", "The Travel Component Grouping id [" + tcg + "] charge groups are not active and set to [" + rs.getValue("CHRG_ACTV_IN", i) + "]");
 
         }
     }
@@ -166,9 +194,10 @@ public class ProcessContainerModifyBusinessEventHelper {
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+        rs.print();
         for (int i = 1; i < rs.getRowCount(); i++) {
 
-            TestReporter.assertTrue(rs.getValue("CHRG_ACTV_IN", i) == "Y", "The charge groups are active and set to [" + rs.getValue("CHRG_ACTV_IN", i) + "]");
+            TestReporter.assertTrue(rs.getValue("CHRG_ACTV_IN", i) == "Y", "The Travel Component grouping id [" + tcg + "] charge groups are active and set to [" + rs.getValue("CHRG_ACTV_IN", i) + "]");
 
         }
     }

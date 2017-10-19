@@ -6,13 +6,18 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoCancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ProcessContainerModifyBusinessEvent;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.ProcessContainerModifyBusinessEventHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTcgs extends AccommodationBaseTest {
+
+    private AddAccommodationHelper accommHelper;
+    private Add add;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -27,17 +32,27 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
         setValues(getEnvironment());
         setIsWdtcBooking(true);
         setAddNewGuest(true);
+        // setAddRoom(true);
         isComo.set("false");
         bookReservation();
+
+        String tpId = getBook().getTravelPlanId();
+        String tpsId = getBook().getTravelPlanSegmentId();
+        setSendRequest(false);
+        bookReservation();
+        getBook().setTravelPlanId(tpId);
+        getBook().setTravelPlanSegementId(tpsId);
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
     public void testProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTcgs() {
 
-        String tps = getBook().getTravelPlanSegmentId();
-        String tp = getBook().getTravelPlanId();
+        // Add a second accommodation
 
+        // String tps = getBook().getTravelPlanSegmentId();
+        // String tp = getBook().getTravelPlanId();
+        //
         AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
         ac.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
 
