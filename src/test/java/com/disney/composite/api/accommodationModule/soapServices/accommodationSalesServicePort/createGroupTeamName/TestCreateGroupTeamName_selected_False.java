@@ -54,7 +54,6 @@ public class TestCreateGroupTeamName_selected_False extends AccommodationBaseTes
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
-        TestReporter.assertEquals(rs.getValue("GRP_TM_ID"), create.getGroupTeamId(), "Validate that the group team Id returned in the response [" + create.getGroupTeamId() + "] is that which is expected [" + rs.getValue("GRP_TM_ID") + "].");
         TestReporter.assertEquals(rs.getValue("GRP_TM_NM"), create.getGroupTeamName(), "Validate that the group team name returned in the response [" + create.getGroupTeamName() + "] is that which is expected [" + rs.getValue("GRP_TM_NM") + "].");
         TestReporter.assertEquals(rs.getValue("GRP_CD"), create.getGroupCode(), "Validate that the group code returned in the response [" + create.getGroupCode() + "] is that which is expected [" + rs.getValue("GRP_CD") + "].");
 
