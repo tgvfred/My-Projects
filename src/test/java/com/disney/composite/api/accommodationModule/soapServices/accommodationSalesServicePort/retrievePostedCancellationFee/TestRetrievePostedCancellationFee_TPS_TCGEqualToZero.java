@@ -4,11 +4,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.TestReporter;
+import com.disney.utils.date.DateTimeConversion;
 
 public class TestRetrievePostedCancellationFee_TPS_TCGEqualToZero extends AccommodationBaseTest {
 
@@ -44,6 +46,16 @@ public class TestRetrievePostedCancellationFee_TPS_TCGEqualToZero extends Accomm
         getBook().setTravelPlanSegementId(tpsId);
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+
+        Cancel cancel = new Cancel(environment, "Main_WithFeeWaived");
+        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
+        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.sendRequest();
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
+
+        cancel.setTravelComponentGroupingId(tcgId);
+        cancel.sendRequest();
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
 
         String faultString = "Accommodations not found : TravelComponentGrouping Should not be NULL";
 
