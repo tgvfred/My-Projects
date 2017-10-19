@@ -51,23 +51,25 @@ public class RetrieveCancellationFee extends AccommodationSalesServicePort {
     }
 
     public void setReferenceType(String value) {
-        setRequestNodeValueByXPath(" /Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail/externalReferenceType", value);
+        setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail/externalReferenceType", value);
     }
 
     public void setReferenceCode(String value) {
-        setRequestNodeValueByXPath(" /Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail/externalReferenceCode", value);
+        setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail/externalReferenceCode", value);
     }
 
     public void setReferenceNumber(String value) {
-        setRequestNodeValueByXPath(" /Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail/externalReferenceNumber", value);
+        setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail/externalReferenceNumber", value);
     }
 
     public void setReferenceSource(String value) {
-        setRequestNodeValueByXPath(" /Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail/externalReferenceSource", value);
+        setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail/externalReferenceSource", value);
     }
 
     public void setIdentityLevel(String value) {
         setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/identityLevel", value);
     }
+
+    // New Getters
 
 }
