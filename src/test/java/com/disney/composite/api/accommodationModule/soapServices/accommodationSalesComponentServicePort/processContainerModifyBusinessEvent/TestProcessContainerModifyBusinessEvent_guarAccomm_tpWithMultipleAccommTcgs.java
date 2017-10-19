@@ -18,6 +18,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
 
     private AddAccommodationHelper accommHelper;
     private Add add;
+    String tcg;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -38,6 +39,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
 
         String tpId = getBook().getTravelPlanId();
         String tpsId = getBook().getTravelPlanSegmentId();
+        tcg = getBook().getTravelComponentGroupingId();
         setSendRequest(false);
         bookReservation();
         getBook().setTravelPlanId(tpId);
@@ -50,22 +52,23 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
 
         // Add a second accommodation
 
-        // String tps = getBook().getTravelPlanSegmentId();
+        String tps = getBook().getTravelPlanSegmentId();
         // String tp = getBook().getTravelPlanId();
         //
         AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
-        ac.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-
+        ac.setTravelComponentGroupingId(tcg);
         ac.sendRequest();
+
         System.out.println(ac.getRequest());
         System.out.println(ac.getResponse());
+
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
         // process.setTravelPlanSegmentID("472121534976");
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
-        process.setExternalReferenceNumber(getBook().getTravelComponentGroupingId());
-        process.setExternalReferenceSource("DREAMS_TP");
+        process.setExternalReferenceNumber(tcg);
+        process.setExternalReferenceSource("DREAMS_TCG");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
 
         process.setAttemptAutoReinstate("true");
@@ -77,6 +80,23 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
 
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         String status = "UnEarned";
+        // helper.statusTP_TC(tpsNum1, environment);
+        /*
+         * helper.statusTP_TCWithZeroCanc(tpsNum1, environment);
+         * helper.statusTP_TC(tpsNum2, environment);
+         * helper.statusTP_TCNoCanc(tpsNum1, environment);
+         * helper.statusTP_TCNoCanc(tpsNum2, environment);
+         * helper.tpv3Status(environment, tp);
+         * helper.reservationHistory(tp, environment);
+         * helper.chargeGroupStatus(tp, tpsNum1, tcg, environment, status);
+         * helper.chargeGroupStatus(tp, tpsNum2, tcgNum2, environment, status);
+         * helper.rimRecordConsumed(tcg, environment);
+         * 
+         * helper.rimRecordConsumed(tcgNum2, environment);
+         * helper.chargeItemsActive(tcg, environment);
+         * helper.chargeItemsActive(tcgNum2, environment);
+         * helper.folioItems(tp, environment);
+         */
     }
 
 }
