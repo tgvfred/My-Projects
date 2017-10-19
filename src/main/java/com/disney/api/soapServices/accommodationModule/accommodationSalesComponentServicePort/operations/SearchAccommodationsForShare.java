@@ -16,4 +16,6 @@ public class SearchAccommodationsForShare extends AccommodationSalesComponentSer
         removeWhiteSpace();
     }
 
+    /Envelope/Body/searchAccommodationsForShare/request/travelPlanViewTO/arrivalDate
+
 }
