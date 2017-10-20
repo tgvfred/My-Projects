@@ -11,11 +11,11 @@ import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest {
     private CheckInHelper checkedInHelper;
-    private String tpId;
-    private String tcgId;
     private String locVar;
 
     @Override
@@ -63,7 +63,7 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
     public void TestRetrieveCancellationFee_NullIdentifyDetailsIdAndExtRef() {
         String date = Randomness.generateCurrentXMLDate();
         String idLevel = "TravelPlanSegment";
-        String faultString = "Missing Required Parameters TPS Identity Level";
+        String faultString = "Travel Plan Segment Should not be NULL";
 
         RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
         fee.setCancelDate(date);
@@ -73,17 +73,17 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
+        validateApplicationError(fee, AccommodationErrorCode.TRAVEL_PLAN_SEGMENT_NOT_FOUND);
     }
 
-    // @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
     public void TestRetrieveCancellationFee_NullIdentifyDetailsIdentityLevel() { // NPE ISSUE ON BOARD TK-670903
         String date = Randomness.generateCurrentXMLDate();
         String id = "472911928036";
         String refType = "RESERVATION";
         String refNum = "875hhg03hg30hg";
         String refSource = "DPMSProperty";
-        String faultString = "null";
+        String faultString = "Travel Plan Segment Should not be NULL";
 
         RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
         fee.setCancelDate(date);
@@ -96,17 +96,17 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
+        validateApplicationError(fee, AccommodationErrorCode.TRAVEL_PLAN_SEGMENT_NOT_FOUND);
     }
 
-    // @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
     public void TestRetrieveCancellationFee_NullIdentiyDetailsExtRef() { // NPE ISSUE ON BOARD Task TK-670913
         String date = Randomness.generateCurrentXMLDate();
         String refType = "RESERVATION";
         String refNum = "875hhg03hg30hg";
         String refSource = "DPMSProperty";
         String idLevel = "TravelPlanSegment";
-        String faultString = "null";
+        String faultString = "Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
         RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
         fee.setCancelDate(date);
@@ -119,17 +119,17 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
+        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
     }
 
-    // @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
     public void TestRetrieveCancellationFee_InvalidTpsAndExtRefNumber() { // NPE ISSUE ON BOARD Task TK-671458
         String date = Randomness.generateCurrentXMLDate();
         String id = "-1";
         String refType = "RESERVATION";
         String refNum = "-1";
         String refSource = "DPMSProperty";
-        String faultString = "null";
+        String faultString = "Travel Plan Segment Should not be NULL";
 
         RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
         fee.setCancelDate(date);
@@ -142,7 +142,7 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
+        validateApplicationError(fee, AccommodationErrorCode.TRAVEL_PLAN_SEGMENT_NOT_FOUND);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative", "debug" })
@@ -150,7 +150,6 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         String date = Randomness.generateCurrentXMLDate();
         String id = "472911928036";
         String idLevel = "TravelPlanSegment";
-        tcgId = getBook().getTravelComponentGroupingId();
         String faultString = "Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
         RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
@@ -161,9 +160,6 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
         fee.sendRequest();
 
-        // System.out.println(fee.getRequest());
-        System.out.println(fee.getResponse());
-
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
     }
@@ -173,7 +169,7 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         String date = Randomness.generateCurrentXMLDate();
         String id = "472911928036";
         String idLevel = "TravelPlanSegment";
-        tpId = getBook().getTravelPlanId();
+
         String faultString = "Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
         RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
         checkedInHelper = new CheckInHelper(locVar, getBook());
@@ -185,7 +181,50 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
+        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
+    public void TestRetrieveCancellationFee_CheckedOut() {
+        String date = Randomness.generateCurrentXMLDate();
+        String id = "472911928036";
+        String idLevel = "TravelPlanSegment";
+        String faultString = "Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
+        RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
+        checkedInHelper = new CheckInHelper(locVar, getBook());
+        checkedInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        checkedInHelper.checkOut(getLocationId());
+        fee.setCancelDate(date);
+        fee.setID(id);
+        fee.setIdentityLevel(idLevel);
+        fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
+        fee.sendRequest();
+
+        TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
+    public void TestRetrieveCancellationFee_DiningOnly() {
+        String date = Randomness.generateCurrentXMLDate();
+        String id = "472911928036";
+        String idLevel = "TravelPlanSegment";
+        String faultString = "Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
+
+        ScheduledEventReservation res = new ShowDiningReservation("Latest");
+        res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+        // res.folio().settlement().createSettlementMethod(FolioInterfaceSettlement.defaultSettlementScenario); // Omit this line to get one without a CC
+        // String tpsID = res.getConfirmationNumber();
+
+        RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
+        fee.setCancelDate(date);
+        fee.setID(id);
+        fee.setIdentityLevel(idLevel);
+        fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
+        fee.sendRequest();
+
+        TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
     }
 
 }
