@@ -4,7 +4,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateGroupTeamName;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -29,19 +28,6 @@ public class TestCreateGroupTeamName_selected_False extends AccommodationBaseTes
         // validate that the selected field is "false".
         TestReporter.assertEquals(create.getSelected(), "false", "Validate that the selected field returned in the response [" + create.getSelected() + "] is that which is expected [false].");
         validateResponse();
-
-        // Validate the Old to the New
-        if (Environment.isSpecialEnvironment(environment)) {
-            CreateGroupTeamName clone = (CreateGroupTeamName) create.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(create, true), "Validating Response Comparison");
-        }
 
     }
 
