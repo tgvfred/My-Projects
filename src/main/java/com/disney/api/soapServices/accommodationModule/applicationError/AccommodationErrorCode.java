@@ -5,6 +5,15 @@ import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 public class AccommodationErrorCode {
     private static final String APP_NAME = "Accommodation Sales";
 
+    public static final ApplicationErrorCode ACCOMM_NOT_BOOKED_STATUS_SHARED = new ApplicationErrorCode(APP_NAME, 17192,
+            " Accommodation should be in Booked status to be Shared");
+
+    public static final ApplicationErrorCode GROUP_TEAM_NOT_CREATED = new ApplicationErrorCode(APP_NAME, 7179,
+            "Group Team Can not be Created");
+
+    public static final ApplicationErrorCode ACCOMM_NOT_BOOKED_STATUS_UNSHARED = new ApplicationErrorCode(APP_NAME, 27192,
+            " Accommodation should be in Booked status to be UnShared");
+
     public static final ApplicationErrorCode APPLICATION_EXCEPTION = new ApplicationErrorCode(APP_NAME, 7063,
             "GENERAL ERROR");
 
@@ -274,7 +283,7 @@ public class AccommodationErrorCode {
             "Record Not Found");
 
     public static final ApplicationErrorCode ACCOMMODATION_COMPONENT_NOT_FOUND = new ApplicationErrorCode(APP_NAME,
-            9128, "Accommodation Component Not Found");
+            9128, "Accommodation Component not found");
 
     public static final ApplicationErrorCode ROOM_READY_MESSAGE_INVALID = new ApplicationErrorCode(APP_NAME, 9129,
             "Room Ready Message Invalid");
@@ -358,6 +367,15 @@ public class AccommodationErrorCode {
 
     public static final ApplicationErrorCode INVALID_RQ = new ApplicationErrorCode(MODULE_NAME, 9020,
             "INVALID REQUEST !");
+
+    private static final String APPLICATION = "LILO System";
+
+    public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode(APPLICATION, 1001,
+            "Unexpected Error occurred");
+
+    public static final ApplicationErrorCode INVALID_UPDATE_PROCESS_STATUS_RQ = new ApplicationErrorCode(MODULE_NAME, 9015,
+            "Invalid UpdateProcessStatus Request");
+
     /*
      * private static final String APP_NAME = "LILO FOLIO";
      *

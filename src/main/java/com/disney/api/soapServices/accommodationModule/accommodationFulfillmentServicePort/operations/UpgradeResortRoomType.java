@@ -125,4 +125,11 @@ public class UpgradeResortRoomType extends AccommodationFulfillmentServicePort {
     public void setLocationId(String value) {
         setRequestNodeValueByXPath("//request/locationId", value);
     }
+
+    public void setLocationIdString(String value) {
+
+        setRequestNodeValueByXPath("//upgradeRoomDetail/locationId", value);
+
+    }
+
 }

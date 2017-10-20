@@ -1,10 +1,9 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UnShare;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
@@ -22,13 +21,13 @@ public class TestUnShare_nonAccommodationReseravtion_Negative extends Accommodat
     String tcgId;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
-    public void Test_unShare_nonAccommodationReseravtion_Negative() {
+    public void Test_unShare_nonAccommodationReservation_Negative() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-            }
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // if (true) {
+        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
+        // }
+        // }
         ScheduledEventReservation dining = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
         tpId = dining.getTravelPlanId();
@@ -41,9 +40,9 @@ public class TestUnShare_nonAccommodationReseravtion_Negative extends Accommodat
         unshare.setLocationId("51");
         unshare.sendRequest();
 
-        String faultString = "Travel Component Id is required : InventoryService::getShareChain:No AccommodationComponent object found for TravelComponentGrouping ID: " + tcgId + "";
+        String faultString = "Accommodations not found : No TravelComponentGrouping found";
 
-        validateApplicationError(unshare, LiloResmErrorCode.TRVL_PLAN_COMPONENT_ID_REQ);
+        validateApplicationError(unshare, AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND);
 
         TestReporter.assertEquals(unshare.getFaultString(), faultString, "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
 

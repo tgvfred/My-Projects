@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -9,7 +8,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
@@ -36,24 +34,26 @@ public class TestShare_oneTcg_cancelThenShare_Negative extends AccommodationBase
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share", "negative" })
     public void Test_Share_oneTcg_cancelThenShare_Negative() {
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-            }
-        }
-        Cancel cancel = new Cancel(environment, "Main");
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // if (true) {
+        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
+        // }
+        // }
+        Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + cancel.getFaultString(), cancel);
 
         share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
 
-        String faultString = "Travel Status is invalid for Share : Travel Status should be Booked, Checking In or Checked In.";
+        String faultString = " Accommodation should be in Booked status to be Shared : Accommodation not in Booked Status";
 
+        validateApplicationError(share, AccommodationErrorCode.ACCOMM_NOT_BOOKED_STATUS_SHARED);
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(share, AccommodationErrorCode.INVALID_TRAVEL_STATUS_FOR_SHARE);
+
     }
 
 }

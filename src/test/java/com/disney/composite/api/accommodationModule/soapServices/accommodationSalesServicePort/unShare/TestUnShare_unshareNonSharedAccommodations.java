@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -13,6 +12,7 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBaseTest {
@@ -62,12 +62,6 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
     public void Test_unShare_unshareNonSharedAccommodations() {
-
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-            }
-        }
         // unshare the first reservation.
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(firstTCG);
@@ -84,30 +78,15 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
         validateResponse();
         validations();
-
-        if (Environment.isSpecialEnvironment(environment)) {
-            UnShare clone = (UnShare) unshare.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(unshare, true), "Validating Response Comparison");
-
-        }
-
     }
 
     public void validateResponse() {
         TestReporter.logStep("Validate data in the response node.");
         String tpsId = unshare.getTravelPlanSegmentId();
-        String tcgId = unshare.getTravelComponentGroupingId();
-        String tcId = unshare.getTravelComponentId();
-        String bookingDate = unshare.getBookingDate();
-        String travelStatus = unshare.getTravelStatus();
+        String tcgId = unshare.getTravelComponentGroupingId_unSharedRoomDetail();
+        String tcId = unshare.getTravelComponentId_unSharedRoomDetail();
+        String bookingDate = unshare.getBookingDate_unSharedRoomDetail();
+        String travelStatus = unshare.getTravelStatus_unSharedRoomDetail();
 
         TestReporter.softAssertEquals(getBook().getTravelPlanSegmentId(), tpsId, "Verify that the response returns the tpsID [" + getBook().getTravelPlanSegmentId() + "] that which is expected [" + tpsId + "].");
         TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), tcgId, "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "] that which is expected [" + tcgId + "].");
@@ -121,7 +100,7 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
     public void validations() {
         UnShareHelper helper = new UnShareHelper(getEnvironment());
 
-        int numExpectedRecords = 2;
+        int numExpectedRecords = 1;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;
@@ -137,6 +116,10 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No owner id found for tcg ID [ " + firstTCG + " ]", sql);
+        }
+
         firstOwnerId = rs.getValue("ASGN_OWN_ID");
 
     }
@@ -146,6 +129,10 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         String sql = "select a.* from res_mgmt.tc a join rsrc_inv.RSRC_ASGN_OWNR b on a.ASGN_OWN_ID = b.ASGN_OWNR_ID join rsrc_inv.RSRC_ASGN_REQ c on b.ASGN_OWNR_ID = c.ASGN_OWNR_ID where a.tc_grp_nb = '" + getBook().getTravelComponentGroupingId() + "'";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No owner id found for tcg ID [ " + getBook().getTravelComponentGroupingId() + " ]", sql);
+        }
 
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
 

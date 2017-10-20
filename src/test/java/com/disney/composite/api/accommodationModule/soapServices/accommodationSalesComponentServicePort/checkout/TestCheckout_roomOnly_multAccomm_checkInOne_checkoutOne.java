@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
-import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -18,36 +17,41 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne extends AccommodationBaseTest {
     private CheckInHelper helper;
     private AddAccommodationHelper accommHelper;
+    private String locVar;
     // private Book book;
 
     @Override
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
+        locVar = environment; // cm
         bookReservation();
     }
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void testCheckout_roomOnly_multAccomm_checkInOne_checkoutOne() {
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
-            }
-        }
+
+        /*
+         * if (Environment.isSpecialEnvironment(environment)) {
+         * if (true) {
+         * throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
+         * }
+         * }
+         */
         // Add a second accommodation
         accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
         accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
                 getLocationId());
 
         // Checkin the first accommodation
-        helper = new CheckInHelper(getEnvironment(), getBook());
+        helper = new CheckInHelper(locVar, getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
         helper.checkOut(getLocationId());
 

@@ -5,9 +5,8 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.GetStagedRecordsForReinstate;
-import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.StageMassReinstateTransactional;
+import com.disney.api.soapServices.accommodationModule.accommodationBatchServicePort.operation.StageReinstateData;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -17,7 +16,7 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class TestGetStagedRecordsForReinstate_twoReservations extends AccommodationBaseTest {
 
     private GetStagedRecordsForReinstate stageReinstate;
-    private StageMassReinstateTransactional stage;
+    private StageReinstateData stage;
     private String firstResTCG;
     private String firstResTP;
     private String firstResTPS;
@@ -34,13 +33,14 @@ public class TestGetStagedRecordsForReinstate_twoReservations extends Accommodat
         firstResTP = getBook().getTravelPlanSegmentId();
         firstResTPS = getBook().getTravelPlanSegmentId();
 
-        daysOut.set(Randomness.randomNumberBetween(1, 12));
-        nights.set(Randomness.randomNumberBetween(1, 3));
-        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
-        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
-
+        setDaysOut(Randomness.randomNumberBetween(1, 12));
+        setNights(Randomness.randomNumberBetween(1, 3));
+        setArrivalDate(Randomness.generateCurrentXMLDate(getDaysOut()));
+        setDepartureDate(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+        setValues(getEnvironment());
+        isComo.set("true");
         setIsWdtcBooking(false);
-        setValues();
+        setSendRequest(true);
         bookReservation();
     }
 
@@ -48,7 +48,7 @@ public class TestGetStagedRecordsForReinstate_twoReservations extends Accommodat
     public void Test_GetStagedRecordsForReinstate_twoReservations() {
         setupData(environment);
         // First invocation to stage reinstate transactions.
-        stage = new StageMassReinstateTransactional(Environment.getBaseEnvironmentName(environment), "Main_TwoReservations");
+        stage = new StageReinstateData(environment, "Main_TwoReservations");
         stage.setTcg(firstResTCG);
         stage.setTpId(firstResTP);
         stage.sendRequest();
@@ -137,7 +137,7 @@ public class TestGetStagedRecordsForReinstate_twoReservations extends Accommodat
         }
         TestReporter.softAssertEquals(shared, "false", "Verify that the response returns the shared status [" + shared + "] that is expected [false].");
         TestReporter.softAssertEquals(salesChannel, "Consumer Direct", "Verify that the response returns the sales channel [" + salesChannel + "] that is expected [Consumer Direct].");
-        TestReporter.softAssertEquals(reinstateReasonCode, "Reinstate Contact", "Verify that the response returns the reinstate reason code [" + reinstateReasonCode + "] that is expected [Reinstate Contact].");
+        TestReporter.softAssertEquals(reinstateReasonCode, "RIN8", "Verify that the response returns the reinstate reason code [" + reinstateReasonCode + "] that is expected [RIN8].");
         TestReporter.softAssertEquals(isCancelFeeWaived, "false", "Verify that the response returns the cancel fee waived status [" + isCancelFeeWaived + "] that is expected [false].");
         TestReporter.softAssertEquals(contactName, "Reinstate Contact", "Verify that the response returns the contact name [" + contactName + "] that is expected [Reinstate Contact].");
 
