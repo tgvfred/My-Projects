@@ -7,4 +7,4 @@
 			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.processContainerModifyBusinessEvent.TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymentAfterAutoCancel'></class>
 		</classes>
 	</test> <!-- Test -->
-</suite> <!-- Suite -->
+</suite> 

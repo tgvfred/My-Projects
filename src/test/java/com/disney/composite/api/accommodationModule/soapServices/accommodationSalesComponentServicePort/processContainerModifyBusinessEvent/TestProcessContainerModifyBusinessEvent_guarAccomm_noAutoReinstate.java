@@ -38,41 +38,37 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_noAutoReinstate 
 
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
+        String tcg = getBook().getTravelComponentGroupingId();
 
         AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
-        ac.setTravelComponentGroupingId(tps);
-
+        ac.setTravelComponentGroupingId(tcg);
         ac.sendRequest();
         TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in auto cancel request.", ac);
 
-        System.out.println(ac.getRequest());
-        System.out.println(ac.getResponse());
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
 
         // process.setTravelPlanSegmentID("472121534976");
         process.setTravelPlanSegmentID(BaseSoapCommands.REMOVE_NODE.toString());
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
-        process.setExternalReferenceNumber("472121589516");
+        process.setExternalReferenceNumber(tp);
         process.setExternalReferenceSource("DREAMS_TP");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
 
         process.setAttemptAutoReinstate("false");
         process.sendRequest();
 
-        System.out.println(process.getRequest());
-        System.out.println(process.getResponse());
-
         TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
+
         // validations
         String status = "Cancelled";
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         helper.statusTP_TC(tps, environment);
         helper.tpv3Status(environment, tp);
         helper.reservationHistory(tp, environment);
-        helper.chargeGroupStatus(tp, tps, "472121589516", environment, status);
-        helper.rimRecordNotConsumed("472121589516", environment);
-        helper.chargeItemsNotActive("472121589516", environment);
+        helper.chargeGroupStatus(tp, tps, tcg, environment, status);
+        helper.rimRecordNotConsumed(tcg, environment);
+        helper.chargeItemsNotActive(tcg, environment);
         helper.folioItems(tp, environment);
 
     }

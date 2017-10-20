@@ -94,8 +94,7 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         process.setExternalReferenceSource("DREAMS_TP");
         process.setAttemptAutoReinstate("false");
         process.sendRequest();
-        System.out.println(process.getRequest());
-        System.out.println(process.getResponse());
+
         TestReporter.logAPI(!process.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + process.getFaultString() + " ]", process);
         validateApplicationError(process, LiloResmErrorCode.TRAVEL_PLAN_NOT_FOUND);
     }

@@ -20,9 +20,10 @@ public class ProcessContainerModifyBusinessEventHelper {
                 + " join res_mgmt.tc_grp b on a.tps_id = b.tps_id"
                 + " join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb"
                 + " where a.tps_id ='" + tps + "'";
+
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-
+        rs.print();
         // tpStatus = rs.getValue("TRVL_STS_NM TP_STATUS");
 
         // TestReporter.assertTrue(rs.getValue("TP_STATUS", 2) != "REINSTATE", "The reservation is [" + rs.getValue("TP_STATUS", 2) + "] and is not reinstated");
@@ -52,7 +53,7 @@ public class ProcessContainerModifyBusinessEventHelper {
         // tpStatus = rs.getValue("TRVL_STS_NM TP_STATUS");
 
         // TestReporter.assertTrue(rs.getValue("TP_STATUS", 2) != "REINSTATE", "The reservation is [" + rs.getValue("TP_STATUS", 2) + "] and is not reinstated");
-        TestReporter.assertTrue(rs.getValue("TP_STATUS", 1) != "REINSTATE", "The reservation is [" + rs.getValue("TP_STATUS", 1) + "].");
+        TestReporter.assertTrue(rs.getValue("TP_STATUS", 1) != "REINSTATE", "The Travel Plan Segment[ " + tps + "] has a reservation of [" + rs.getValue("TP_STATUS", 1) + "].");
 
         // for (int i = 1; i < rs.getRowCount(); i++) {
         // if (rs.getValue("TPS_CNCL_NB CANCEL_NUMBER", i) != "0") {
@@ -119,7 +120,7 @@ public class ProcessContainerModifyBusinessEventHelper {
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         rs.print();
-        TestReporter.assertTrue(rs.getRowCount() == 0, "The travel component grouping id [" + tcg + "] has a Rim Inventory that was not consumed since the row count is [" + rs.getRowCount() + "].");
+        TestReporter.assertTrue(rs.getRowCount() == 0, "The travel component grouping id [" + tcg + "] has a Rim Inventory that was not consumed since the row count is [" + rs.getRowCount() + "]");
 
     }
 
@@ -134,7 +135,8 @@ public class ProcessContainerModifyBusinessEventHelper {
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         rs.print();
-        TestReporter.assertTrue(rs.getRowCount() >= 1, "The travel component grouping id [" + tcg + "] has a Rim Inventory that was consumed since the row count is [" + rs.getRowCount() + "].");
+        TestReporter.assertTrue(rs.getRowCount() >= 1, "The travel component grouping id [" + tcg + "] has a Rim Inventory that was consumed since the row count is [" + rs.getRowCount() + "]. And"
+                + "has a Owner Assignment Id of [" + rs.getValue("ASGN_OWNR_ID") + "].");
 
     }
 

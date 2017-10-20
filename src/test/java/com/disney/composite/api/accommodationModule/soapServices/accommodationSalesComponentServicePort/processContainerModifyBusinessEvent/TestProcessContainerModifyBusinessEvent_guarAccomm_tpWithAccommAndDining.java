@@ -44,30 +44,37 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithAccommAndD
 
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
+        String tcg = getBook().getTravelComponentGroupingId();
 
         AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
-        ac.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-
+        ac.setTravelComponentGroupingId(tcg);
         ac.sendRequest();
-        System.out.println(ac.getRequest());
-        System.out.println(ac.getResponse());
+        TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel request.", ac);
+
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
-        // process.setTravelPlanSegmentID("472121534976");
+
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
-        process.setExternalReferenceNumber(getBook().getTravelComponentGroupingId());
+        process.setExternalReferenceNumber(tp);
         process.setExternalReferenceSource("DREAMS_TP");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
 
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
-        System.out.println(process.getRequest());
-        System.out.println(process.getResponse());
+
         TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
         // validations
 
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         String status = "UnEarned";
+        helper.statusTP_TCWithZeroCanc(tps, environment);
+        helper.statusTP_TCNoCanc(tps, environment);
+        helper.tpv3Status(environment, tp);
+        helper.reservationHistory(tp, environment);
+        helper.chargeGroupStatus(tp, tps, tcg, environment, status);
+        helper.rimRecordConsumed(tcg, environment);
+        helper.chargeItemsActive(tcg, environment);
+        helper.folioItems(tp, environment);
     }
 }

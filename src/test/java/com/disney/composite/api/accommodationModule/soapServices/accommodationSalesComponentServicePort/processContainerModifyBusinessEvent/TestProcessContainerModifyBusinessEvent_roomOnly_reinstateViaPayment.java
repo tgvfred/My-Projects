@@ -37,21 +37,19 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
 
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
-
+        String tcg = getBook().getTravelComponentGroupingId();
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
         // process.setTravelPlanSegmentID("472121534976");
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
-        process.setExternalReferenceNumber(getBook().getTravelComponentGroupingId());
-        process.setExternalReferenceSource(BaseSoapCommands.REMOVE_NODE.toString());
+        process.setExternalReferenceNumber(tp);
+        process.setExternalReferenceSource("DREAMS_TP");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
 
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
 
-        System.out.println(process.getRequest());
-        System.out.println(process.getResponse());
         TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
         // validations
 
@@ -59,7 +57,8 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         pcp.setTravelPlanSegmentId(tps);
         pcp.setTravelPlanId(tp);
         pcp.setAmount("60");
-        pcp.setFolioId("138020006");
+        pcp.setFolioId("138020007");
+
         pcp.setBookingReference("DREAMS_TP", tp);
         pcp.setExternalReference("DREAMS_TC", getBook().getTravelComponentId());
         pcp.setRequestNodeValueByXPath("/Envelope/Body/postCardPayment/pmtInfo/cardAuthorizationInfoTO/retrievalReferenceNumber", "1234423434");
@@ -76,11 +75,11 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         helper.statusTP_TCNoCanc(tps, environment);
         helper.tpv3Status(environment, tp);
         helper.reservationHistory(tp, environment);
-        helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
-        helper.rimRecordConsumed(getBook().getTravelComponentGroupingId(), environment);
-        helper.chargeItemsActive(getBook().getTravelComponentGroupingId(), environment);
+        helper.chargeGroupStatus(tp, tps, tcg, environment, status);
+        helper.rimRecordConsumed(tcg, environment);
+        helper.chargeItemsActive(tcg, environment);
         helper.folioItems(tp, environment);
         helper.rimGuaranteeStatus(environment, getBook().getTravelComponentId());
-        helper.folioNodeChargeGroupST(environment, tps, getBook().getTravelComponentGroupingId());
+        helper.folioNodeChargeGroupST(environment, tps, tcg);
     }
 }
