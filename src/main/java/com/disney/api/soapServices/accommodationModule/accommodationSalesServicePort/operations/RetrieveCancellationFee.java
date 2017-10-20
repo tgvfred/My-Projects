@@ -32,9 +32,11 @@ public class RetrieveCancellationFee extends AccommodationSalesServicePort {
         setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/id", TPS_ID);
     }
 
-    public String getName() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/cancelChargeDetail/revenueType/name");
-    }
+    /*
+     * public String getName() {
+     * return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/cancelChargeDetail/revenueType/name");
+     * }
+     */
 
     public String getRevenueID() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/revenueClassification/id");
@@ -71,5 +73,39 @@ public class RetrieveCancellationFee extends AccommodationSalesServicePort {
     }
 
     // New Getters
+    public String getOverridePrice() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/cancelChargeDetail/overridePrice");
+    }
 
+    public String getProductPrice() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/cancelChargeDetail/productPrice");
+    }
+
+    public String getLevel() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/cancelChargeDetail/revenueType/level");
+    }
+
+    public String getName() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/cancelChargeDetail/revenueType/name");
+    }
+
+    public String getSellingPrice() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/cancelChargeDetail/sellingPrice");
+    }
+
+    public String getFeeName() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/feeName");
+    }
+
+    public String getWaived() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/waived");
+    }
+
+    public String getOverridden() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/overridden");
+    }
+
+    public String getClassName() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/revenueClassification/name");
+    }
 }
