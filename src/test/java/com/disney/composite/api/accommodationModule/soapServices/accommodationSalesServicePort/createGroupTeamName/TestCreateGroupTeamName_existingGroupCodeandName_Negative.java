@@ -22,9 +22,9 @@ public class TestCreateGroupTeamName_existingGroupCodeandName_Negative extends A
         create.setSelected("true");
         create.sendRequest();
 
-        String faultstring = "Error while trying create GroupTeam : Invalid request. Group Code is null !";
+        String faultstring = "Group Team Can not be Created : GropuTeam already exists with groupcode 01825and TeamName Marbles2";
 
-        validateApplicationError(create, AccommodationErrorCode.CREATE_GROUP_TEAM);
+        validateApplicationError(create, AccommodationErrorCode.GROUP_TEAM_NOT_CREATED);
 
         TestReporter.assertEquals(faultstring, create.getFaultString(), "Verify that the fault string [" + create.getFaultString() + "] is that which is expected.[" + faultstring + "]");
 
