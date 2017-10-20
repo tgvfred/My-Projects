@@ -4,19 +4,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveCancellationFee;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
-import com.disney.utils.date.DateTimeConversion;
 
 public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest {
-    private CancelHelper cancelHelper;
     private CheckInHelper checkedInHelper;
     private String tpId;
     private String tcgId;
@@ -155,32 +151,21 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         String id = "472911928036";
         String idLevel = "TravelPlanSegment";
         tcgId = getBook().getTravelComponentGroupingId();
-        String faultString = "Missing Required Parameters TPS Identity Level";
+        String faultString = "Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
         RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
-
-        TestReporter.logScenario("Cancel");
-        Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
-        cancel.setTravelComponentGroupingId(tcgId);
-        cancel.sendRequest();
-
-        System.out.println(cancel.getRequest());
-        System.out.println(cancel.getResponse());
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
-        TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
-
+        cancel();
         fee.setCancelDate(date);
         fee.setID(id);
         fee.setIdentityLevel(idLevel);
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
         fee.sendRequest();
 
-        System.out.println(fee.getRequest());
+        // System.out.println(fee.getRequest());
         System.out.println(fee.getResponse());
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
+        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
@@ -202,4 +187,5 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
     }
+
 }
