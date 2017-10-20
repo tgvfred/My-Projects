@@ -8,19 +8,19 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
 
-public class TestDeleteGroupTeamName_nullRequest_Negative extends AccommodationBaseTest {
+public class TestDeleteGroupTeamName_emptyGroupCode_Negative extends AccommodationBaseTest {
 
     DeleteGroupTeamName delete;
 
     @Test(groups = { "api", "regression", "deleteGroupTeamName", "accommodation", "accommodatoinsales", "negative" })
-    public void Test_DeleteGroupTeamName_nullRequest_Negative() {
+    public void Test_DeleteGroupTeamName_emptyGroupCode_Negative() {
 
         delete = new DeleteGroupTeamName(environment, "_Main");
-        delete.setgroupCode(BaseSoapCommands.REMOVE_NODE.toString());
-        delete.setGroupName(BaseSoapCommands.REMOVE_NODE.toString());
+        delete.setgroupCode(" ");
+        delete.setGroupName("Marbles3");
         delete.setGroupTeamId(BaseSoapCommands.REMOVE_NODE.toString());
-        delete.setgroupTeamName(BaseSoapCommands.REMOVE_NODE.toString());
-        delete.setSelected(BaseSoapCommands.REMOVE_NODE.toString());
+        delete.setgroupTeamName("Marbles3");
+        delete.setSelected("true");
         delete.sendRequest();
 
         String faultstring = "Invalid Delete Team Name Request : Invalid request. Mandatory fields not keyed in!";

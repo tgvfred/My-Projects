@@ -21,7 +21,6 @@ public class TestDeleteGroupTeamName_nullGroupTeamViewTO_Negative extends Accomm
         delete.setGroupTeamId(BaseSoapCommands.REMOVE_NODE.toString());
         delete.setgroupTeamName(BaseSoapCommands.REMOVE_NODE.toString());
         delete.setSelected(BaseSoapCommands.REMOVE_NODE.toString());
-        delete.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
         delete.sendRequest();
 
         String faultstring = "Invalid Delete Team Name Request : Invalid request. Mandatory fields not keyed in!";
