@@ -34,7 +34,7 @@ public class TestRetrievePackageAndRackRates_RoomOnly extends AccommodationBaseT
     public void testRetrievePackageAndRackRates_RoomOnly() {
 
         RetrievePackageAndRackRates retrievePackage = new RetrievePackageAndRackRates(environment, "Main");
-        retrievePackage.setaccomComponentId("1239200667");
+        retrievePackage.setaccomComponentId(getBook().getTravelComponentId());
         retrievePackage.setPackageCode(getPackageCode());
         retrievePackage.setTravelPlanSegementId(getBook().getTravelPlanSegmentId());
         retrievePackage.sendRequest();

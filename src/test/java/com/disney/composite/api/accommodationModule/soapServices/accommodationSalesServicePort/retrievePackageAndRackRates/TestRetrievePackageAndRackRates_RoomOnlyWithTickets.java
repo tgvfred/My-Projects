@@ -32,7 +32,7 @@ public class TestRetrievePackageAndRackRates_RoomOnlyWithTickets extends Accommo
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePackageAndRackRates" })
     public void testRetrievePackageAndRackRates_RoomOnlyWithTickets() {
         RetrievePackageAndRackRates retrievePackage = new RetrievePackageAndRackRates(environment, "Main");
-        retrievePackage.setaccomComponentId("1239200667");
+        retrievePackage.setaccomComponentId(getBook().getTravelComponentId());
         retrievePackage.setPackageCode(getPackageCode());
         retrievePackage.setTravelPlanSegementId(getBook().getTravelPlanSegmentId());
         retrievePackage.sendRequest();

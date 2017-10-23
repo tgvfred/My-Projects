@@ -34,7 +34,7 @@ public class TestRetrievePackageAndRackRates_wdtc extends AccommodationBaseTest 
     public void testRetrievePackageAndRackRates_wdtc() {
 
         RetrievePackageAndRackRates retrievePackage = new RetrievePackageAndRackRates(environment, "Main");
-        retrievePackage.setaccomComponentId("1239200667");
+        retrievePackage.setaccomComponentId(getBook().getTravelComponentId());
         retrievePackage.setPackageCode(getPackageCode());
         retrievePackage.setTravelPlanSegementId(getBook().getTravelPlanSegmentId());
         retrievePackage.sendRequest();

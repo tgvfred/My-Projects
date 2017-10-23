@@ -35,7 +35,7 @@ public class TestRetrievePackageAndRackRates_wdtcWithTickets extends Accommodati
     public void testRetrievePackageAndRackRates_wdtcWithTickets() {
 
         RetrievePackageAndRackRates retrievePackage = new RetrievePackageAndRackRates(environment, "Main");
-        retrievePackage.setaccomComponentId("1239200667");
+        retrievePackage.setaccomComponentId(getBook().getTravelComponentId());
         retrievePackage.setPackageCode(getPackageCode());
         retrievePackage.setTravelPlanSegementId(getBook().getTravelPlanSegmentId());
         retrievePackage.sendRequest();

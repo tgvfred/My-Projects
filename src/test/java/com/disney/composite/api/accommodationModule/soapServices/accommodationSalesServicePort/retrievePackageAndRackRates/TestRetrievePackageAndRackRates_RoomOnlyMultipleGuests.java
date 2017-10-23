@@ -33,7 +33,7 @@ public class TestRetrievePackageAndRackRates_RoomOnlyMultipleGuests extends Acco
     public void testRetrievePackageAndRackRates_RoomOnlyMultipleGuests() {
 
         RetrievePackageAndRackRates retrievePackage = new RetrievePackageAndRackRates(environment, "Main");
-        retrievePackage.setaccomComponentId("1239200667");
+        retrievePackage.setaccomComponentId(getBook().getTravelComponentId());
         retrievePackage.setPackageCode(getPackageCode());
         retrievePackage.setTravelPlanSegementId(getBook().getTravelPlanSegmentId());
         retrievePackage.sendRequest();

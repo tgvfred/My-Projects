@@ -33,7 +33,7 @@ public class TestRetrievePackageAndRackRates_wholesaler extends AccommodationBas
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePackageAndRackRates" })
     public void testRetrievePackageAndRackRates_wholesaler() {
         RetrievePackageAndRackRates retrievePackage = new RetrievePackageAndRackRates(environment, "Main");
-        retrievePackage.setaccomComponentId("1239200667");
+        retrievePackage.setaccomComponentId(getBook().getTravelComponentId());
         retrievePackage.setPackageCode(getPackageCode());
         retrievePackage.setTravelPlanSegementId(getBook().getTravelPlanSegmentId());
         retrievePackage.sendRequest();
