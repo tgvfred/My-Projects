@@ -13,6 +13,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.ResortInfo;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
@@ -62,7 +63,20 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails_ModifyO
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
-        getBook().sendRequest();
+        // getBook().sendRequest();
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            getBook().sendRequest();
+            tries++;
+            if (getBook().getResponseStatusCode().equals("200")) {
+                success = true;
+            }
+        } while ((tries < maxTries) && !success);
+
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         resortCode2 = getResortCode();
 

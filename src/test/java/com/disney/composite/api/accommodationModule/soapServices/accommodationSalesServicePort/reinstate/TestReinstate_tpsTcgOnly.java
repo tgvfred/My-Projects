@@ -14,6 +14,7 @@ import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
@@ -103,6 +104,10 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
                 + "where a.tc_grp_nb = " + tcg;
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No components found for tcg ID [ " + tcg + " ]", sql);
+        }
 
         int numBookedComponents = 0;
         do {

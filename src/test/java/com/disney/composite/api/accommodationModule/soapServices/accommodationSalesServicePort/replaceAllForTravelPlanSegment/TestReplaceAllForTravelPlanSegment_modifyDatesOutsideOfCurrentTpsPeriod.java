@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_modifyDatesOutsideOfCurrentTpsPeriod extends AccommodationBaseTest {
@@ -45,20 +46,33 @@ public class TestReplaceAllForTravelPlanSegment_modifyDatesOutsideOfCurrentTpsPe
     public void testReplaceAllForTravelPlanSegment_modifyDatesOutsideOfCurrentTpsPeriod() {
         setSendRequest(false);
         bookReservation();
-        getBook().setRoomDetails_ResortPeriod(Randomness.generateCurrentXMLDate(roomModDaysOut), Randomness.generateCurrentXMLDate(roomModDaysOut+roomModNights));
+        getBook().setRoomDetails_ResortPeriod(Randomness.generateCurrentXMLDate(roomModDaysOut), Randomness.generateCurrentXMLDate(roomModDaysOut + roomModNights));
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
-        getBook().sendRequest();
+        // getBook().sendRequest();
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            getBook().sendRequest();
+            tries++;
+            if (getBook().getResponseStatusCode().equals("200")) {
+                success = true;
+            }
+        } while ((tries < maxTries) && !success);
+
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
         tcId = getBook().getTravelComponentId();
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
-        validations.validateModificationBackend(2, "Booked", "", Randomness.generateCurrentXMLDate(roomModDaysOut), Randomness.generateCurrentXMLDate(roomModDaysOut+roomModNights), "RESERVATION", getExternalRefNumber(),
+        validations.validateModificationBackend(2, "Booked", "", Randomness.generateCurrentXMLDate(roomModDaysOut), Randomness.generateCurrentXMLDate(roomModDaysOut + roomModNights), "RESERVATION", getExternalRefNumber(),
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyModificationIsFoundInResHistory(getBook().getTravelPlanId());
@@ -82,7 +96,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyDatesOutsideOfCurrentTpsPe
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
         validations.validateResortAndRoomType(getBook().getTravelPlanId(), getFacilityId(), getRoomTypeCode());
-        validations.validateAreaPeriod(getBook().getTravelPlanId(), getArrivalDate(), Randomness.generateCurrentXMLDate(roomModDaysOut+roomModNights));
+        validations.validateAreaPeriod(getBook().getTravelPlanId(), getArrivalDate(), Randomness.generateCurrentXMLDate(roomModDaysOut + roomModNights));
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {

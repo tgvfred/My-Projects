@@ -15,6 +15,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -48,7 +49,20 @@ public class TestReplaceAllForTravelPlanSegment_BookMYW extends AccommodationBas
                 + "join guest.TXN_PTY_EXTNL_REF b on a.TXN_PTY_ID = b.TXN_PTY_ID "
                 + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
+        Recordset rs = null;
+
+        int tries = 0;
+        int maxTries = 60;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            rs = new Recordset(db.getResultSet(sql));
+            tries++;
+            if (rs.getRowCount() > 0) {
+                success = true;
+            }
+        } while ((tries < maxTries) && !success);
+
         if (rs.getRowCount() == 0) {
             throw new AutomationException("No TXN_PTY_EXTNL_REF_VAL was found in GUEST.TXN_PTY_EXTNL_REF table for TP ID [" + getBook().getTravelPlanId() + "].");
         }
@@ -94,7 +108,19 @@ public class TestReplaceAllForTravelPlanSegment_BookMYW extends AccommodationBas
         if (Environment.isSpecialEnvironment(environment)) {
             ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
+
+            tries = 0;
+            maxTries = 20;
+            success = false;
+            do {
+                Sleeper.sleep(1000);
+                clone.sendRequest();
+                tries++;
+                if (clone.getResponseStatusCode().equals("200")) {
+                    success = true;
+                }
+            } while ((tries < maxTries) && !success);
+
             if (!clone.getResponseStatusCode().equals("200")) {
                 TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
             }
@@ -109,6 +135,8 @@ public class TestReplaceAllForTravelPlanSegment_BookMYW extends AccommodationBas
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
                     "Validating Response Comparison");
 
