@@ -73,6 +73,10 @@ public class RetrieveCancellationFee extends AccommodationSalesServicePort {
     }
 
     // New Getters
+    public String getFeeId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/feeId");
+    }
+
     public String getOverridePrice() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveCancellationFeeResponse/response/cancelChargeDetail/overridePrice");
     }

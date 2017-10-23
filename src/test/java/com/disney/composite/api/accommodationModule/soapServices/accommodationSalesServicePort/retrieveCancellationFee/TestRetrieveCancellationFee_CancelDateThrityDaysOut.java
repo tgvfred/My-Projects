@@ -10,7 +10,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestRetrieveCancellationFee_TPS extends AccommodationBaseTest {
+public class TestRetrieveCancellationFee_CancelDateThrityDaysOut extends AccommodationBaseTest {
 
     @Override
     @Parameters("environment")
@@ -27,8 +27,8 @@ public class TestRetrieveCancellationFee_TPS extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee" })
-    public void testRetrieveCancellationFee_TPS() {
-        String date = Randomness.generateCurrentXMLDate();
+    public void testRetrieveCancellationFee_CancelDateThrityDaysOut() {
+        String date = Randomness.generateCurrentXMLDatetime(30);
         String id = getBook().getTravelPlanSegmentId();
         String idLevel = "TravelPlanSegment";
 
@@ -43,14 +43,15 @@ public class TestRetrieveCancellationFee_TPS extends AccommodationBaseTest {
         // Validations
         TestReporter.logStep("Validate response");
         String status = "false";
-        String type = "Cancellation Fee";
-        double productPrice = Double.parseDouble(fee.getProductPrice());
+        String price = "0.0";
+        String feeId = "0";
 
-        TestReporter.assertGreaterThanZero(productPrice);
-        TestReporter.assertEquals(fee.getFeeName(), type, "Validate the fee name returned in the response [" + fee.getFeeName() + "] matches the expected response [" + type + "]");
-        TestReporter.assertEquals(fee.getWaived(), status, "Validate the waived status returned in the response [" + fee.getWaived() + "] matches the expected response [" + type + "]");
-        TestReporter.assertEquals(fee.getOverridden(), status, "Validate the fee name returned in the response [" + fee.getOverridden() + "] matches the expected response [" + type + "]");
-        TestReporter.assertEquals(fee.getClassName(), type, "Validate the class name returned in the response [" + fee.getClassName() + "] matches the expected response [" + type + "]");
-
+        TestReporter.assertEquals(fee.getFeeId(), feeId, "Validate the fee id returned in the response [" + fee.getFeeId() + "] matches the expected response [" + feeId + "]");
+        TestReporter.assertEquals(fee.getOverridePrice(), price, "Validate the overridden price returned in the response [" + fee.getOverridePrice() + "] matches the expected response [" + price + "]");
+        TestReporter.assertEquals(fee.getProductPrice(), price, "Validate the product price returned in the response [" + fee.getProductPrice() + "] matches the expected response [" + price + "]");
+        TestReporter.assertEquals(fee.getSellingPrice(), price, "Validate the class name returned in the response [" + fee.getSellingPrice() + "] matches the expected response [" + price + "]");
+        TestReporter.assertEquals(fee.getWaived(), status, "Validate the status of the waived node returned in the response [" + fee.getWaived() + "] matches the expected response [" + status + "]");
+        TestReporter.assertEquals(fee.getOverridden(), status, "Validate the status of the overridden node returned in the response [" + fee.getOverridden() + "] matches the expected response [" + status + "]");
     }
+
 }
