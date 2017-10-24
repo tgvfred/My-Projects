@@ -45,9 +45,7 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
         process.setTravelPlanSegmentID(getBook().getTravelPlanSegmentId());
         process.setByPassFreeze("true");
-
         process.setExternalReferenceDetail(BaseSoapCommands.REMOVE_NODE.toString());
-
         process.setAttemptAutoReinstate("false");
         process.sendRequest();
 
@@ -60,8 +58,8 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         String fault = "TRAVEL_PLAN_NOT_FOUND : No Travel Plan found for Travel Plan Id ";
 
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent  - guarAccomm_invalidTP");
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
 
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
         process.setTravelPlanSegmentID(getBook().getTravelPlanSegmentId());
         process.setByPassFreeze("true");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
@@ -69,6 +67,7 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         process.setExternalReferenceNumber("123");
         process.setExternalReferenceSource("DREAMS_TP");
         process.sendRequest();
+
         TestReporter.logAPI(!process.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + process.getFaultString() + " ]", process);
         validateApplicationError(process, LiloResmErrorCode.TRAVEL_PLAN_NOT_FOUND);
     }
@@ -80,7 +79,6 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent  - guarAccomm_tpWithoutTps");
 
         GenerateTravelPlan gtp = new GenerateTravelPlan(environment, "Main");
-
         gtp.sendRequest();
 
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
@@ -89,7 +87,6 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceNumber(gtp.getTravelPlanID());
-        // process.setExternalReferenceSource(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceSource("DREAMS_TP");
         process.setAttemptAutoReinstate("false");
         process.sendRequest();

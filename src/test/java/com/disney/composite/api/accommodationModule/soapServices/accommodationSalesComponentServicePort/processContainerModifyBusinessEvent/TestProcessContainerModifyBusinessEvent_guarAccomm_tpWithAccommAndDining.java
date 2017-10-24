@@ -36,12 +36,6 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithAccommAndD
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
     public void testProcessContainerModifyBusinessEvent_guarAccomm_tpWithAccommAndDining() {
 
-        /*
-         * ScheduledEventReservation dining = new ShowDiningReservation(getEnvironment().toLowerCase().replace("_cm", ""));
-         * dining.setTravelPlanId(getBook().getTravelPlanId());
-         * dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-         */
-
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
         String tcg = getBook().getTravelComponentGroupingId();

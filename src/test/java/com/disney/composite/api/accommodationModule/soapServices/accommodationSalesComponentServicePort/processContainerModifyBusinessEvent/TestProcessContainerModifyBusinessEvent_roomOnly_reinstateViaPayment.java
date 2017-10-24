@@ -38,19 +38,19 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
         String tcg = getBook().getTravelComponentGroupingId();
+
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
-        // process.setTravelPlanSegmentID("472121534976");
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceNumber(tp);
         process.setExternalReferenceSource("DREAMS_TP");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
-
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
 
         TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
+
         // validations
 
         PostCardPayment pcp = new PostCardPayment(Environment.getBaseEnvironmentName(environment), "Visa-CreditCard");
@@ -65,10 +65,6 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         pcp.setLocationId(getLocationId());
         pcp.setPartyId(getBook().getPartyId("1"));
         pcp.sendRequest();
-
-        // System.out.println(pcp.getRequest());
-        // System.out.println(pcp.getResponse());
-        // TestReporter.logAPI(!pcp.getResponseStatusCode().equals("200"), "An error occurred post card payment.", pcp);
 
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         String status = "UnEarned";

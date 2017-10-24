@@ -37,20 +37,18 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
         setValues(getEnvironment());
         setIsWdtcBooking(true);
         setAddNewGuest(true);
-        // setAddRoom(true);
         isComo.set("false");
         bookReservation();
 
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
-
         tcg = getBook().getTravelComponentGroupingId();
         setSendRequest(false);
         bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         getBook().sendRequest();
-        // tpsNum2 = getBook().getTravelPlanSegmentId();
+
         tcgNum2 = getBook().getTravelComponentGroupingId();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second TPS: " + getBook().getFaultString(), getBook());
 
@@ -59,18 +57,12 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
     public void testProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTcgs() {
 
-        // Add a second accommodation
-
-        String tps = getBook().getTravelPlanSegmentId();
-        // String tp = getBook().getTravelPlanId();
-        //
         AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
         ac.setTravelComponentGroupingId(tcg);
         ac.sendRequest();
         TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel.", ac);
 
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
-        // process.setTravelPlanSegmentID("472121534976");
         process.setTravelPlanSegmentID(tpsId);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
@@ -86,7 +78,6 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
 
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         String status = "UnEarned";
-
         helper.statusTP_TC(tpsId, environment);
         helper.statusTP_TCNoCanc(tpsId, environment);
 
