@@ -1,4 +1,4 @@
-package com.disney.composite.api.accommodationModule.restServices.accommodation.accmmodationSales.updateComments;
+package com.disney.composite.api.accommodationModule.restServices.accommodation.accommodationSales.updateComments;
 
 import java.io.IOException;
 import java.util.ArrayList;
