@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>EAI</artifactId>
-			<version>1.0.12</version>
+			<version>1.0.16</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
