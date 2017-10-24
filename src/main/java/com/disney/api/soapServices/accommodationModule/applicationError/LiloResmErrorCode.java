@@ -62,6 +62,8 @@ public class LiloResmErrorCode {
             "Resort Code is invalid");
     public static final ApplicationErrorCode TRAVEL_PLAN_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7007,
             "TRAVEL_PLAN_NOT_FOUND");
+    public static final ApplicationErrorCode TRAVEL_PLAN_SEGMENT_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7008,
+            "TRAVEL_PLAN_SEGMENT_NOT_FOUND");
     public static final ApplicationErrorCode ROOM_DETAIL_MISSING = new ApplicationErrorCode(APP_NAME, 7228,
             "There should be at least one Room Detail");
     public static final ApplicationErrorCode GUEST_REQUIRED = new ApplicationErrorCode(APP_NAME, 7027,
