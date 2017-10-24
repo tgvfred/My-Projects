@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrievePostedCancellationFeeHelper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
@@ -45,5 +46,8 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_wdtc_Positive extends Acc
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving posted cancellation fee", retrieve);
 
+        RetrievePostedCancellationFeeHelper helper = new RetrievePostedCancellationFeeHelper(environment);
+        helper.getTcIdWithTcg(getBook().getTravelComponentGroupingId());
+        helper.getChargeTypeAndAmount(retrieve, false);
     }
 }

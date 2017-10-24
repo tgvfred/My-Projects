@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrievePostedCancellationFeeHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
@@ -48,12 +49,11 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_noCancellationFees_Positi
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving posted cancellation fee", retrieve);
 
-        TestReporter.softAssertEquals(retrieve.getWaived(), "false", "Verify the waived value is false as expected: [" + retrieve.getWaived() + "]");
-        TestReporter.softAssertEquals(retrieve.getOverridden(), "false", "Verify the overridden value is false as expected: [" + retrieve.getOverridden() + "]");
-        TestReporter.softAssertEquals(retrieve.getOverridePrice(), "0.0", "Verify the OverridePrice value is 0.0 as expected: [" + retrieve.getOverridePrice() + "]");
-        TestReporter.softAssertEquals(retrieve.getProductPrice(), "0.0", "Verify the ProductPrice value is 0.0 as expected: [" + retrieve.getProductPrice() + "]");
-        TestReporter.softAssertEquals(retrieve.getSellingPrice(), "0.0", "Verify the SellingPrice value is 0.0 as expected: [" + retrieve.getSellingPrice() + "]");
+        TestReporter.assertEquals(retrieve.getWaived(), "false", "Verify the waived value is false as expected: [" + retrieve.getWaived() + "]");
+        TestReporter.assertEquals(retrieve.getOverridden(), "false", "Verify the overridden value is false as expected: [" + retrieve.getOverridden() + "]");
 
-        TestReporter.assertAll();
+        RetrievePostedCancellationFeeHelper helper = new RetrievePostedCancellationFeeHelper(environment);
+        helper.getTcIdWithTcg(getBook().getTravelComponentGroupingId());
+        helper.getChargeTypeAndAmount(retrieve, false);
     }
 }

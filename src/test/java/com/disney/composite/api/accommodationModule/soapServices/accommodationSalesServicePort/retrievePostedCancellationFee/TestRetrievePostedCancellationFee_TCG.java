@@ -5,7 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -32,7 +32,7 @@ public class TestRetrievePostedCancellationFee_TCG extends AccommodationBaseTest
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
     public void testRetrievePostedCancellationFee_TCG() {
 
-        String faultString = "Travel Plan Segment Not Found : Travel Plan Segment Should not be NULL";
+        String faultString = "TRAVEL_PLAN_SEGMENT_NOT_FOUND : Travel Plan Segment Should not be NULL";
 
         RetrievePostedCancellationFee retrieve = new RetrievePostedCancellationFee(environment, "Main");
         retrieve.setid(getBook().getTravelComponentGroupingId());
@@ -40,6 +40,6 @@ public class TestRetrievePostedCancellationFee_TCG extends AccommodationBaseTest
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().contains(faultString), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, LiloResmErrorCode.TRVL_PLAN_SEG_NOT_FOUND);
+        validateApplicationError(retrieve, AccommodationErrorCode.TRAVEL_PLAN_SEGMENT_NOT_FOUND);
     }
 }

@@ -36,7 +36,7 @@ public class TestRetrievePostedCancellationFee_TPS_checkedOut extends Accommodat
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
         helper.checkOut(getLocationId());
 
-        String faultString = "cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
+        String faultString = "Cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for checked in or checked out reservation";
 
         RetrievePostedCancellationFee retrieve = new RetrievePostedCancellationFee(environment, "Main");
         retrieve.setid(getBook().getTravelPlanSegmentId());
