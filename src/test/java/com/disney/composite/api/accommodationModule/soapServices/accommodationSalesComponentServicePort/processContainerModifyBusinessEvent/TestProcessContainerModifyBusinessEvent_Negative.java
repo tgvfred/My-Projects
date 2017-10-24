@@ -90,7 +90,7 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceNumber(gtp.getTravelPlanID());
-        // process.setExternalReferenceSource(BaseSoapCommands.REMOVE_NODE.toString());
+
         process.setExternalReferenceSource("DREAMS_TP");
         process.setAttemptAutoReinstate("false");
         process.sendRequest();

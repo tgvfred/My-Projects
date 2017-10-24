@@ -42,12 +42,11 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
 
         AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
         ac.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-
         ac.sendRequest();
         TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel request.", ac);
 
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
-        // process.setTravelPlanSegmentID("472121534976");
+
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());

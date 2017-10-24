@@ -54,7 +54,6 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
     public void testProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTps() {
 
-        // String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
 
         AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
@@ -79,7 +78,6 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         String status = "UnEarned";
 
-        // helper.statusTP_TC(tpsNum1, environment);
         helper.statusTP_TCWithZeroCanc(tpsNum1, environment);
         helper.statusTP_TC(tpsNum2, environment);
         helper.statusTP_TCNoCanc(tpsNum1, environment);
