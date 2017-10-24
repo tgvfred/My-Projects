@@ -75,7 +75,7 @@ public class RetrievePostedCancellationFeeHelper {
             TestReporter.softAssertEquals("0.0", ret.getProductPrice(), "Verify the product price [0.0] "
                     + "matches the value from the response: [" + ret.getProductPrice() + "] ");
         }
-
+        TestReporter.assertAll();
     }
 
 }

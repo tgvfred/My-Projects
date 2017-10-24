@@ -8,14 +8,11 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
 public class TestRetrievePostedCancellationFee_TPS_TCGEqualToZero extends AccommodationBaseTest {
-
-    private CheckInHelper helper;
     private String tpId;
     private String tpsId;
     private String tcgId;
@@ -40,7 +37,6 @@ public class TestRetrievePostedCancellationFee_TPS_TCGEqualToZero extends Accomm
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
     public void testRetrievePostedCancellationFee_TPS_TCGEqualToZero() {
-
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 
         setSendRequest(false);
@@ -73,6 +69,5 @@ public class TestRetrievePostedCancellationFee_TPS_TCGEqualToZero extends Accomm
 
         TestReporter.assertTrue(retrieve.getFaultString().contains(faultString), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(retrieve, AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND);
-
     }
 }

@@ -7,14 +7,11 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.RetrievePostedCancellationFeeHelper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
 public class TestRetrievePostedCancellationFee_TPS_multiTCG_cancellationFees_Positive extends AccommodationBaseTest {
-
-    private CheckInHelper helper;
     private String tpId;
     private String tpsId;
     private String tcgId;
@@ -39,7 +36,6 @@ public class TestRetrievePostedCancellationFee_TPS_multiTCG_cancellationFees_Pos
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
     public void testRetrievePostedCancellationFee_TPS_multiTCG_cancellationFees_Positive() {
-
         setSendRequest(false);
         bookReservation();
         getBook().setTravelPlanId(tpId);
@@ -50,6 +46,15 @@ public class TestRetrievePostedCancellationFee_TPS_multiTCG_cancellationFees_Pos
         Cancel cancel = new Cancel(environment, "Main_WithFeeWaived");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        // int tries = 0;
+        // int maxTries = 20;
+        // boolean success = false;
+        // do {
+        // Sleeper.sleep(1000);
+        // cancel.sendRequest();
+        // tries++;
+        //
+        // } while (tries < maxTries && !success);
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
 
