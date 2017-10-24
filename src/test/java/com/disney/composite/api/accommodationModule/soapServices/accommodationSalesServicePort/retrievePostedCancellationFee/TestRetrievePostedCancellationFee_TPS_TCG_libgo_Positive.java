@@ -7,15 +7,11 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.RetrievePostedCancellationFeeHelper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
 public class TestRetrievePostedCancellationFee_TPS_TCG_libgo_Positive extends AccommodationBaseTest {
-
-    private CheckInHelper helper;
-
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -33,7 +29,6 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_libgo_Positive extends Ac
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
     public void testRetrievePostedCancellationFee_TPS_TCG_libgo_Positive() {
-
         Cancel cancel = new Cancel(environment, "Main_WithFeeWaived");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -48,6 +43,5 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_libgo_Positive extends Ac
         RetrievePostedCancellationFeeHelper helper = new RetrievePostedCancellationFeeHelper(environment);
         helper.getTcIdWithTcg(getBook().getTravelComponentGroupingId());
         helper.getChargeTypeAndAmount(retrieve, false);
-
     }
 }
