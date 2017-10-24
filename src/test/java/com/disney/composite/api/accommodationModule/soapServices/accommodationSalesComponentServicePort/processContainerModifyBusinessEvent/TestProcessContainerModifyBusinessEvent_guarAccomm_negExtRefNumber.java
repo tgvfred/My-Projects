@@ -60,7 +60,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_negExtRefNumber 
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         helper.statusTP_TC(tps, environment);
         helper.tpv3Status(environment, tp);
-        helper.reservationHistory(tps, environment);
+        helper.noReservationHistory(tps, environment);
         helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
         helper.rimRecordNotConsumed(getBook().getTravelComponentGroupingId(), environment);
         helper.chargeItemsNotActive(getBook().getTravelComponentGroupingId(), environment);

@@ -6,17 +6,13 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoCancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ProcessContainerModifyBusinessEvent;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.ProcessContainerModifyBusinessEventHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTps extends AccommodationBaseTest {
-    private AddAccommodationHelper accommHelper;
-    private Add add;
     String tcg;
     String tpsNum1;
     String tpsNum2;
@@ -78,8 +74,6 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         String status = "UnEarned";
 
-        helper.statusTP_TCWithZeroCanc(tpsNum1, environment);
-        helper.statusTP_TC(tpsNum2, environment);
         helper.statusTP_TCNoCanc(tpsNum1, environment);
         helper.statusTP_TCNoCanc(tpsNum2, environment);
         helper.tpv3Status(environment, tp);
