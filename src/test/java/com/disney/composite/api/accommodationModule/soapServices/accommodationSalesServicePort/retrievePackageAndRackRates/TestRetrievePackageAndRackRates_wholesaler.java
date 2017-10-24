@@ -22,7 +22,7 @@ public class TestRetrievePackageAndRackRates_wholesaler extends AccommodationBas
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-
+        setIsLibgoBooking(true);
         setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
