@@ -4,6 +4,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.SearchPackage;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -23,6 +24,9 @@ public class Test_SearchPackage_descriptionAndResortArrivalDate extends Accommod
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setPackageDescription("Basic Package");
         search.setResortArrivalDate(Randomness.generateCurrentXMLDate());
+        search.setBookingDate(BaseSoapCommands.REMOVE_NODE.toString());
+        search.setPackageCode(BaseSoapCommands.REMOVE_NODE.toString());
+        search.setSalesChannelIDs(BaseSoapCommands.REMOVE_NODE.toString());
         search.sendRequest();
         TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + search.getFaultString(), search);
 
