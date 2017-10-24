@@ -45,7 +45,6 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm extends Accommod
 
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
         process.setTravelPlanSegmentID(tps);
-
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceNumber(tp);

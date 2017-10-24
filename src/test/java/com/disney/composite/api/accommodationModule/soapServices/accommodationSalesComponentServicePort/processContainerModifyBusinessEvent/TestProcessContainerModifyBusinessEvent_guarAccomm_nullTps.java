@@ -51,7 +51,6 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_nullTps extends 
         process.setExternalReferenceNumber(tp);
         process.setExternalReferenceSource("DREAMS_TP");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
-
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
 

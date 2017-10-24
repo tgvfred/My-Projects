@@ -37,13 +37,11 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
         setValues(getEnvironment());
         setIsWdtcBooking(true);
         setAddNewGuest(true);
-        // setAddRoom(true);
         isComo.set("false");
         bookReservation();
 
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
-
         tcg = getBook().getTravelComponentGroupingId();
         setSendRequest(false);
         bookReservation();
@@ -58,8 +56,6 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
     public void testProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTcgs() {
-
-        String tps = getBook().getTravelPlanSegmentId();
 
         AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
         ac.setTravelComponentGroupingId(tcg);

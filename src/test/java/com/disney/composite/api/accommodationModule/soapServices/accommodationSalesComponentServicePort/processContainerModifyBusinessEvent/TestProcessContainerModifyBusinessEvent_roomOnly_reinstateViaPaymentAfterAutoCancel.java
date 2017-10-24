@@ -53,7 +53,6 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         process.setExternalReferenceNumber(tp);
         process.setExternalReferenceSource("DREAMS_TP");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
-
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
 

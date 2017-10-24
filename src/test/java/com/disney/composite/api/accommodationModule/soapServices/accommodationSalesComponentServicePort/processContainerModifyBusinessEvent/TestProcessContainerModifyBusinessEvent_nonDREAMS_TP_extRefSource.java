@@ -34,14 +34,14 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
     public void testProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource() {
+
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent - nonDREAMS_TP_extRefSource");
 
         AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
-        ac.setTravelComponentGroupingId("2357625723562356");
+        ac.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         ac.sendRequest();
-
         TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel.", ac);
 
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
@@ -51,9 +51,7 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         process.setExternalReferenceSource("DPMSProperty");
         process.setExternalReferenceType("RESERVATION");
-
         process.setExternalReferenceNumber("2357625723562356");
-
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
 
@@ -65,10 +63,9 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
         helper.statusTP_TC(tps, environment);
         helper.tpv3Status(environment, tp);
         helper.reservationHistory(tp, environment);
-        helper.chargeGroupStatus(tp, tps, "2357625723562356", environment, status);
-        helper.rimRecordNotConsumed("2357625723562356", environment);
-        helper.chargeItemsNotActive("2357625723562356", environment);
-
+        helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
+        helper.rimRecordNotConsumed(getBook().getTravelComponentGroupingId(), environment);
+        helper.chargeItemsNotActive(getBook().getTravelComponentGroupingId(), environment);
         helper.folioItems(tp, environment);
 
     }
