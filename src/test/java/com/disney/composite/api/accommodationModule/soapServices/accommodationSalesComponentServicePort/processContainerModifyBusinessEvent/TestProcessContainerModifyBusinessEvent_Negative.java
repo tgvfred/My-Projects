@@ -30,7 +30,6 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
-
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent", "negative" })
