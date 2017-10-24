@@ -41,7 +41,9 @@ public class TestRetrievePackageAndRackRates_RoomOnlyMultipleGuests extends Acco
         TestReporter.logAPI(!retrievePackage.getResponseStatusCode().equals("200"), "An error occurred retrieving the package and rack rates [" + getBook().getTravelComponentGroupingId() + "]", retrievePackage);
 
         // validations
+        retrievePackage.validateResponseNodeQuantity("retrievePackageAndRackRatesResponse", true);
 
+        // clone validation
         if (Environment.isSpecialEnvironment(getEnvironment())) {
 
             RetrievePackageAndRackRates clone = (RetrievePackageAndRackRates) retrievePackage.clone();

@@ -27,7 +27,7 @@ public class TestRetrievePackageAndRackRates_RoomOnly extends AccommodationBaseT
         isComo.set("false");
         bookReservation();
 
-    }
+    }//
 
     // test
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePackageAndRackRates" })
@@ -40,9 +40,10 @@ public class TestRetrievePackageAndRackRates_RoomOnly extends AccommodationBaseT
         retrievePackage.sendRequest();
 
         TestReporter.logAPI(!retrievePackage.getResponseStatusCode().equals("200"), "An error occurred retrieving the package and rack rates [" + getBook().getTravelComponentGroupingId() + "]", retrievePackage);
-
         // validations
+        retrievePackage.validateResponseNodeQuantity("retrievePackageAndRackRatesResponse", true);
 
+        // clone validations
         if (Environment.isSpecialEnvironment(getEnvironment())) {
 
             RetrievePackageAndRackRates clone = (RetrievePackageAndRackRates) retrievePackage.clone();
