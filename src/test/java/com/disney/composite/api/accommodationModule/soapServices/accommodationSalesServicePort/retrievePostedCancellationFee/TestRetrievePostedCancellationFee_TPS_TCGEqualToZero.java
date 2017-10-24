@@ -69,7 +69,7 @@ public class TestRetrievePostedCancellationFee_TPS_TCGEqualToZero extends Accomm
         retrieve.setid(getBook().getTravelPlanSegmentId());
         retrieve.setid("0", "2");
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieveing posted cancellation fee: " + retrieve.getFaultString(), retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.assertTrue(retrieve.getFaultString().contains(faultString), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(retrieve, AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND);
