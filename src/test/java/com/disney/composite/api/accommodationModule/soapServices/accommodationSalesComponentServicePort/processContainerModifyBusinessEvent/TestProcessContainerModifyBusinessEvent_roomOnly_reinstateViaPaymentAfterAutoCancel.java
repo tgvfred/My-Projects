@@ -66,10 +66,9 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         helper.tpv3Status(environment, tp);
         helper.reservationHistory(tp, environment);
         helper.chargeGroupStatus(tp, tps, tcg, environment, status);
-        helper.rimRecordConsumed(tcg, environment);
-        helper.chargeItemsActive(tcg, environment);
+        helper.rimRecordNotConsumed(tcg, environment);
+        helper.chargeItemsNotActive(tcg, environment);
         helper.folioItems(tp, environment);
-        helper.rimGuaranteeStatus(environment, getBook().getTravelComponentId());
         helper.folioNodeChargeGroupST(environment, tps, tcg);
     }
 }
