@@ -5,30 +5,21 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateGroupTeamName;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.DeleteGroupTeamName;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestDeleteGroupTeamName_withGroupTeamID extends AccommodationBaseTest {
+public class TestDeleteGroupTeamName_alreadyDeletedTeamName extends AccommodationBaseTest {
 
     CreateGroupTeamName create;
     DeleteGroupTeamName delete;
-    String name = Randomness.randomString(6);
+    String name = "Purple3";
 
     @Test(groups = { "api", "regression", "deleteGroupTeamName", "accommodation", "accommodatoinsales" })
-    public void Test_DeleteGroupTeamName_withGroupTeamID() {
-        create = new CreateGroupTeamName(environment, "Main");
-        create.setGroupCode("01825");
-        create.setGroupName(name);
-        create.setGroupTeamName(name);
-        create.setSelected("false");
-        create.sendRequest();
-        TestReporter.logAPI(!create.getResponseStatusCode().equals("200"), "An error occurred while creating a group team name: " + create.getFaultString(), create);
+    public void Test_DeleteGroupTeamName_alreadyDeletedTeamName() {
 
         delete = new DeleteGroupTeamName(environment, "_Main");
-        delete.setgroupCode("01825");
         delete.setGroupName(name);
         delete.setgroupTeamName(name);
         delete.setSelected("false");
@@ -36,7 +27,7 @@ public class TestDeleteGroupTeamName_withGroupTeamID extends AccommodationBaseTe
         TestReporter.logAPI(!delete.getResponseStatusCode().equals("200"), "An error occurred while creating a group team name: " + delete.getFaultString(), delete);
 
         // validate that the teamNameDeleted field is "true".
-        TestReporter.assertEquals(delete.getTeamNameDeleted(), "true", "Validate that the team name deleted field returned in the response [" + delete.getTeamNameDeleted() + "] is that which is expected [true].");
+        TestReporter.assertEquals(delete.getTeamNameDeleted(), "false", "Validate that the team name deleted field returned in the response [" + delete.getTeamNameDeleted() + "] is that which is expected [false].");
         validateResponse();
     }
 
@@ -50,14 +41,8 @@ public class TestDeleteGroupTeamName_withGroupTeamID extends AccommodationBaseTe
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
-        boolean deleteFlag = false;
-
-        if (rs.getRowCount() == 0) {
-            TestReporter.assertTrue(rs.getRowCount() == 0, "Validate that the group team name was deleted out of the DB.");
-            deleteFlag = true;
-        } else {
-            TestReporter.assertFalse(deleteFlag, "Error: the group team name was not deleted out of the DB.");
-        }
+        TestReporter.assertTrue(rs.getRowCount() == 0, "Validate that the group team name was already deleted out of the DB.");
 
     }
+
 }

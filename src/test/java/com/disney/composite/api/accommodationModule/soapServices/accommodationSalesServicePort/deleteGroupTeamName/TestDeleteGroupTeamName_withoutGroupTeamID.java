@@ -5,20 +5,20 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateGroupTeamName;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.DeleteGroupTeamName;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestDeleteGroupTeamName_withGroupTeamID extends AccommodationBaseTest {
-
+public class TestDeleteGroupTeamName_withoutGroupTeamID extends AccommodationBaseTest {
     CreateGroupTeamName create;
     DeleteGroupTeamName delete;
     String name = Randomness.randomString(6);
 
     @Test(groups = { "api", "regression", "deleteGroupTeamName", "accommodation", "accommodatoinsales" })
-    public void Test_DeleteGroupTeamName_withGroupTeamID() {
+    public void Test_DeleteGroupTeamName_withoutGroupTeamID() {
         create = new CreateGroupTeamName(environment, "Main");
         create.setGroupCode("01825");
         create.setGroupName(name);
@@ -29,6 +29,7 @@ public class TestDeleteGroupTeamName_withGroupTeamID extends AccommodationBaseTe
 
         delete = new DeleteGroupTeamName(environment, "_Main");
         delete.setgroupCode("01825");
+        delete.setGroupTeamId(BaseSoapCommands.REMOVE_NODE.toString());
         delete.setGroupName(name);
         delete.setgroupTeamName(name);
         delete.setSelected("false");
@@ -60,4 +61,5 @@ public class TestDeleteGroupTeamName_withGroupTeamID extends AccommodationBaseTe
         }
 
     }
+
 }
