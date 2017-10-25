@@ -33,7 +33,7 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_diningOnly_Positive exten
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
-    public void testRetrievePostedCancellationFee_TPS_CancellationFees_Positive() {
+    public void testRetrievePostedCancellationFee_TPS_TCG_diningOnly_Positive() {
         diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         diningRes.setTravelPlanId(getBook().getTravelPlanId());
         diningRes.setFacilityName("Pioneer Hall");
