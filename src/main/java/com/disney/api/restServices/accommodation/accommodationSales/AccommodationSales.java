@@ -1,17 +1,18 @@
 package com.disney.api.restServices.accommodation.accommodationSales;
 
-import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.accommodation.accommodationSales.updateComments.updateComments;
+import com.disney.api.restServices.core.RestService;
 
 public class AccommodationSales {
-	private RestService restService;
-	private String resource = "/v1/accommodation";
-	public AccommodationSales(RestService restService){
-		this.restService = restService;
-	}
+    private RestService restService;
+    private String resource = "/v1";
 
+    public AccommodationSales(RestService restService) {
+        this.restService.setMainResource("REST_AccommodationSalesService");
+        this.restService = restService;
+    }
 
-	public updateComments updateComments(){
-		return new updateComments(restService, resource);
-	}
+    public updateComments updateComments() {
+        return new updateComments(restService, resource);
+    }
 }

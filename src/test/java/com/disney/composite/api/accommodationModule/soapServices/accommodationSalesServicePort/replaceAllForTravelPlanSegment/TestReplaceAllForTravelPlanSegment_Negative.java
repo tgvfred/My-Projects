@@ -5,11 +5,11 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
-import com.disney.api.soapServices.accommodationModule.applicationError.GroupsMgmtErrorCode;
 import com.disney.api.soapServices.accommodationModule.applicationError.LiloResmErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
+import com.disney.api.soapServices.groupsModule.applicationError.GroupsErrorCodes;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -285,7 +285,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertEquals(getBook().getFaultString(), faultString, "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), GroupsMgmtErrorCode.GROUP_PROFILE_DOESNT_EXIST);
+        validateApplicationError(getBook(), GroupsErrorCodes.GROUP_CODE_DOES_NOT_EXIST);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
