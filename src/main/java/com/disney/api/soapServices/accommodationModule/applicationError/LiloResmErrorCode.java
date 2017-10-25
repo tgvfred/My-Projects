@@ -20,6 +20,9 @@ public class LiloResmErrorCode {
             APP_NAME, 9042, "INVALID REQUEST");
     public static final ApplicationErrorCode SEARCH_CRITERIA_INVALID = new ApplicationErrorCode(APP_NAME, 7124,
             "Search Criteria is Invalid");
+    public static final ApplicationErrorCode INVALID_DELETE_TEAM_REQUEST = new ApplicationErrorCode(APP_NAME, 8081,
+            "Invalid Delete Team Name Request");
+
     public static final ApplicationErrorCode NO_TRAVEL_PLAN_DATA_FOUND = new ApplicationErrorCode(APP_NAME, 7183,
             "No travel plan data found.");
     public static final ApplicationErrorCode RESULT_SIZE_TOO_LARGE_EXCEPTION = new ApplicationErrorCode(APP_NAME, 91443,
