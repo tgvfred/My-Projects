@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="RetrieveCancellationFee_TPS" parallel="methods" thread-count="10">
+	<parameter name="environment" value="latest_cm" />
+	<test name="RetrieveCancellationFee_TPS">
+	<!-- <groups>
+            <run>
+                <include name="debug"></include>
+            </run>
+        </groups> -->
+		<classes>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveCancellationFee.TestRetrieveCancellationFee_TPS"></class>
+		</classes>
+	</test>
+</suite> 

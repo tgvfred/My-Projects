@@ -40,6 +40,7 @@
 				<exclude name="dev"/>
 				<!-- <exclude name="debug"/> -->
 				<exclude name="checkout"></exclude>
+				<exclude name="reinstate"></exclude>
 				<exclude name="example"></exclude>
 			</run>
 		</groups>
