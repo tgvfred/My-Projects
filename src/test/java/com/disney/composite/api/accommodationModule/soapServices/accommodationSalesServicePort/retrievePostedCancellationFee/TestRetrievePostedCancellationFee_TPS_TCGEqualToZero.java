@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
@@ -43,7 +44,19 @@ public class TestRetrievePostedCancellationFee_TPS_TCGEqualToZero extends Accomm
         bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
-        getBook().sendRequest();
+
+        int tries = 0;
+        int maxTries = 30;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            getBook().sendRequest();
+            tries++;
+            if (getBook().getResponseStatusCode().equals("200")) {
+                success = true;
+            }
+        } while (tries < maxTries && !success);
+
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 
         Cancel cancel = new Cancel(environment, "Main_WithFee");
@@ -59,13 +72,12 @@ public class TestRetrievePostedCancellationFee_TPS_TCGEqualToZero extends Accomm
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
 
-        String faultString = "Accommodations not found : TravelComponentGrouping Should not be NULL";
+        String faultString = "Accommodations not found : Accommodation not found";
 
         RetrievePostedCancellationFee retrieve = new RetrievePostedCancellationFee(environment, "TpsANDTcg");
         retrieve.setid(getBook().getTravelPlanSegmentId());
         retrieve.setid("0", "2");
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.assertTrue(retrieve.getFaultString().contains(faultString), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(retrieve, AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND);

@@ -62,6 +62,6 @@ public class TestRetrievePostedCancellationFee_TPS_checkedIn extends Accommodati
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().contains(faultString), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
+        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
     }
 }

@@ -41,8 +41,18 @@ public class TestRetrievePostedCancellationFee_TPS_multiTCG_cancellationFees_Pos
         bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
-        Sleeper.sleep(1000);
-        getBook().sendRequest();
+
+        int tries = 0;
+        int maxTries = 30;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            getBook().sendRequest();
+            tries++;
+            if (getBook().getResponseStatusCode().equals("200")) {
+                success = true;
+            }
+        } while (tries < maxTries && !success);
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 
         Cancel cancel = new Cancel(environment, "Main_WithFeeWaived");
