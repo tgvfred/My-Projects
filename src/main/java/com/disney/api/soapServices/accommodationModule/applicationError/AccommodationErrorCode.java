@@ -269,6 +269,8 @@ public class AccommodationErrorCode {
 
     public static final ApplicationErrorCode CANNOT_CALCULATE_CANCEL_FEE = new ApplicationErrorCode(APP_NAME, 7080,
             "cannot calculate Cancel fee");
+    public static final ApplicationErrorCode CANNOT_CALCULATE_CANCEL_FEE_CAPS = new ApplicationErrorCode(APP_NAME, 7080,
+            "Cannot calculate Cancel fee");
 
     public static final ApplicationErrorCode PACKAGE_RATE_CATEGORY_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7173,
             " Package Rate Category not found");

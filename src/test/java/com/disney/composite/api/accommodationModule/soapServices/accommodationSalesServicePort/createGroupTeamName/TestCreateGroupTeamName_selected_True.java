@@ -8,6 +8,7 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCreateGroupTeamName_selected_True extends AccommodationBaseTest {
@@ -39,6 +40,10 @@ public class TestCreateGroupTeamName_selected_True extends AccommodationBaseTest
                 + "where a.GRP_TM_NM = '" + name + "'";
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No results returned for groupName [" + name + "]", sql);
+        }
 
         TestReporter.assertEquals(rs.getValue("GRP_TM_NM"), create.getGroupTeamName(), "Validate that the group team name returned in the response [" + create.getGroupTeamName() + "] is that which is expected [" + rs.getValue("GRP_TM_NM") + "].");
         TestReporter.assertEquals(rs.getValue("GRP_CD"), create.getGroupCode(), "Validate that the group code returned in the response [" + create.getGroupCode() + "] is that which is expected [" + rs.getValue("GRP_CD") + "].");

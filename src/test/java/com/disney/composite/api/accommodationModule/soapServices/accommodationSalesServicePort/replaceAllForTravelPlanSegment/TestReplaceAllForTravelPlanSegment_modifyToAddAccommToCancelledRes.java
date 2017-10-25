@@ -47,10 +47,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyToAddAccommToCancelledRes 
         bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
-        // getBook().setTravelComponentGroupingId(tcgId);
-        // getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
-        // getBook().sendRequest();
 
         int tries = 0;
         int maxTries = 20;
