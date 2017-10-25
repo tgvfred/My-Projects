@@ -2,6 +2,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddRoomDetailsRoomReservationDetailsMultipleGuests" parallel="methods" thread-count="20">
 	<parameter name="environment" value="latest_cm" />
+	<parameter name="localHostList" value="AccommodationSalesServicePort" />
+	<parameter name="localHostUrlList" value="http://w7-2ua32215qz.wdw.disney.com:8081/Accommodation/AccommodationSalesServicePort" />
 	<test name="TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddRoomDetailsRoomReservationDetailsMultipleGuests">
 		<!-- <groups>
 			<run>
