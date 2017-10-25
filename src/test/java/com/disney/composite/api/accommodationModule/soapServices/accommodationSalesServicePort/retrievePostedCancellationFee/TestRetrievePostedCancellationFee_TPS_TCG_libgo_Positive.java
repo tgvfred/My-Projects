@@ -41,7 +41,7 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_libgo_Positive extends Ac
         retrieve.sendRequest();
 
         RetrievePostedCancellationFeeHelper helper = new RetrievePostedCancellationFeeHelper(environment);
-        helper.getTcIdWithTcg(getBook().getTravelComponentGroupingId());
-        helper.getChargeTypeAndAmount(retrieve, false);
+        helper.setOnlyTps(false);
+        helper.checkFeeOrNoFee(retrieve, getBook().getTravelComponentGroupingId(), false);
     }
 }

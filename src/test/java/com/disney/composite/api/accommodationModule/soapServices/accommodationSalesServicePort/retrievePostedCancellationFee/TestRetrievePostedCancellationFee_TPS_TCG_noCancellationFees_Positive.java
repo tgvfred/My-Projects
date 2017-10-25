@@ -48,7 +48,7 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_noCancellationFees_Positi
         TestReporter.assertEquals(retrieve.getOverridden(), "false", "Verify the overridden value is false as expected: [" + retrieve.getOverridden() + "]");
 
         RetrievePostedCancellationFeeHelper helper = new RetrievePostedCancellationFeeHelper(environment);
-        helper.getTcIdWithTcg(getBook().getTravelComponentGroupingId());
-        helper.getChargeTypeAndAmount(retrieve, false);
+        helper.setOnlyTps(false);
+        helper.checkFeeOrNoFee(retrieve, getBook().getTravelComponentGroupingId(), false);
     }
 }

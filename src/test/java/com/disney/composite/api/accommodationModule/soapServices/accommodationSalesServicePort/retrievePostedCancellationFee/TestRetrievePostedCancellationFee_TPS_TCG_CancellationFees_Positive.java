@@ -45,7 +45,7 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_CancellationFees_Positive
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieve posted cancellation fee", retrieve);
 
         RetrievePostedCancellationFeeHelper helper = new RetrievePostedCancellationFeeHelper(environment);
-        helper.getTcIdWithTcg(getBook().getTravelComponentGroupingId());
-        helper.getChargeTypeAndAmount(retrieve, true);
+        helper.setOnlyTps(false);
+        helper.checkFeeOrNoFee(retrieve, getBook().getTravelComponentGroupingId(), true);
     }
 }

@@ -17,7 +17,7 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_wdtc_Positive extends Acc
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(30);
+        setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -42,7 +42,7 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_wdtc_Positive extends Acc
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving posted cancellation fee", retrieve);
 
         RetrievePostedCancellationFeeHelper helper = new RetrievePostedCancellationFeeHelper(environment);
-        helper.getTcIdWithTcg(getBook().getTravelComponentGroupingId());
-        helper.getChargeTypeAndAmount(retrieve, false);
+        helper.setOnlyTps(false);
+        helper.checkFeeOrNoFee(retrieve, getBook().getTravelComponentGroupingId(), false);
     }
 }

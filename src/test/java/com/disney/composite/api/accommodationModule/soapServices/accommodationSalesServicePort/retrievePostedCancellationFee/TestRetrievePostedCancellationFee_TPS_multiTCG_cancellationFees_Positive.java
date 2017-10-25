@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.RetrievePostedCancellationFeeHelper;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
@@ -40,21 +41,13 @@ public class TestRetrievePostedCancellationFee_TPS_multiTCG_cancellationFees_Pos
         bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
+        Sleeper.sleep(1000);
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 
         Cancel cancel = new Cancel(environment, "Main_WithFeeWaived");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        // int tries = 0;
-        // int maxTries = 20;
-        // boolean success = false;
-        // do {
-        // Sleeper.sleep(1000);
-        // cancel.sendRequest();
-        // tries++;
-        //
-        // } while (tries < maxTries && !success);
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
 
@@ -71,7 +64,7 @@ public class TestRetrievePostedCancellationFee_TPS_multiTCG_cancellationFees_Pos
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving posted cancellation fee", retrieve);
 
         RetrievePostedCancellationFeeHelper helper = new RetrievePostedCancellationFeeHelper(environment);
-        helper.getTcIdWithTcg(getBook().getTravelComponentGroupingId());
-        helper.getChargeTypeAndAmount(retrieve, true);
+        helper.setOnlyTps(false);
+        helper.checkFeeOrNoFee(retrieve, tcgId, false);
     }
 }

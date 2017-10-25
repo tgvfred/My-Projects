@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrievePostedCancellationFee;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrievePostedCancellationFeeHelper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
@@ -41,5 +42,9 @@ public class TestRetrievePostedCancellationFee_TPS_noCancellationFees_Positive e
 
         TestReporter.assertEquals(retrieve.getWaived(), "false", "Verify the waived value is false as expected: [" + retrieve.getWaived() + "]");
         TestReporter.assertEquals(retrieve.getOverridden(), "false", "Verify the overridden value is false as expected: [" + retrieve.getOverridden() + "]");
+
+        RetrievePostedCancellationFeeHelper helper = new RetrievePostedCancellationFeeHelper(environment);
+        helper.setOnlyTps(true);
+        helper.checkFeeOrNoFee(retrieve, getBook().getTravelComponentGroupingId(), false);
     }
 }
