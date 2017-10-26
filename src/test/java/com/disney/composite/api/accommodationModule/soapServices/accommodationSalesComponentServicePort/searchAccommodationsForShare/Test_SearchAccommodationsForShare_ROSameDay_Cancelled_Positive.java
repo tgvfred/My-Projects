@@ -6,16 +6,14 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.TestReporter;
 
-public class Test_SearchAccommodationsForShare_ROSameDay_Positive extends AccommodationBaseTest {
+public class Test_SearchAccommodationsForShare_ROSameDay_Cancelled_Positive extends AccommodationBaseTest {
 
     @Test
-    public void test_SearchAccommodationsForShare_ROSameDay_Positive() {
+    public void test_SearchAccommodationsForShare_ROSameDay_Cancelled_Positive() {
 
         SearchAccommodationsForShare search = new SearchAccommodationsForShare(environment, "Main");
         search.setGuestFirstName(getHouseHold().primaryGuest().getFirstName());
         search.setGuestLastName(getHouseHold().primaryGuest().getLastName());
-        search.setTravelPlanId(getBook().getTravelPlanId());
-        search.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         search.setAccomFacTOResortCode(getResortCode());
         search.setResortCode(getResortCode());
         search.setRoomTypeCode(getRoomTypeCode());
