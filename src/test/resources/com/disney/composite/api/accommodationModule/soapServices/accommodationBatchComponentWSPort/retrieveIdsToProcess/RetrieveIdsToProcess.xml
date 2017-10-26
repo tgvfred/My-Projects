@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestRetreiveIdsToProcess" parallel="methods" thread-count="5" configfailurepolicy="continue" data-provider-thread-count="5">
-	<parameter name="environment" value="latest" />
+	<parameter name="environment" value="latest_cm" />
 	<test name="TestRetreiveIdsToProcess">
 		<packages>
 			<package name="com.disney.composite.api.accommodationModule.soapServices.accommodationBatchComponentWSPort.retrieveIdsToProcess.*"></package>
