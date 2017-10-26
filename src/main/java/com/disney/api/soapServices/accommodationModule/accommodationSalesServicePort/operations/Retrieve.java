@@ -35,6 +35,7 @@ public class Retrieve extends AccommodationSalesServicePort {
         removeWhiteSpace();
     }
 
+    // getters
     public String getPartyId() {
         return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest[1]/partyId");
     }
@@ -113,6 +114,7 @@ public class Retrieve extends AccommodationSalesServicePort {
         return "";
     }
 
+    // setters
     public void setTravelPlanId(String TP_ID) {
         setRequestNodeValueByXPath("//request/travelPlanId", TP_ID);
     }
@@ -162,5 +164,7 @@ public class Retrieve extends AccommodationSalesServicePort {
             setRequestNodeValueByXPath("/Envelope/Body/retrieve/request/travelPlanSegmentId", value);
         }
     }
+
+    // base validation getters
 
 }
