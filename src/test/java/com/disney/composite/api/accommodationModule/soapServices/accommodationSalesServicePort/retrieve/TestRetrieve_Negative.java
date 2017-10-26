@@ -37,7 +37,7 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
         retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setSiebelTravelPlanId("0");
-        retrieve.setLocationId("51");
+        retrieve.setLocationId(getLocationId());
         TestReporter.logAPI(!retrieve.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + retrieve.getFaultString() + " ]", retrieve);
         validateApplicationError(retrieve, AccommodationErrorCode.LOCATION_ID_MANDATORY);
 
@@ -48,10 +48,10 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
 
         String fault = "Required parameters are missing : Missing Required Parameters";
         Retrieve retrieve = new Retrieve(environment);
-        retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
-        retrieve.setTravelPlanId(getBook().getTravelPlanId());
+        retrieve.setTravelPlanSegmentId("0");
+        retrieve.setTravelPlanId("0");
         retrieve.setSiebelTravelPlanId("0");
-        retrieve.setLocationId("51");
+        retrieve.setLocationId(getLocationId());
         TestReporter.logAPI(!retrieve.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + retrieve.getFaultString() + " ]", retrieve);
         validateApplicationError(retrieve, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
@@ -62,10 +62,10 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
 
         String fault = "Record Not Found : No TravelPlanSegment Found !";
         Retrieve retrieve = new Retrieve(environment);
-        retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        retrieve.setTravelPlanSegmentId("18384489184");
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setSiebelTravelPlanId("0");
-        retrieve.setLocationId("51");
+        retrieve.setLocationId(getLocationId());
         TestReporter.logAPI(!retrieve.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + retrieve.getFaultString() + " ]", retrieve);
         validateApplicationError(retrieve, AccommodationErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 
@@ -77,9 +77,9 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
         String fault = "Record Not Found : No TravelPlan Found !";
         Retrieve retrieve = new Retrieve(environment);
         retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
-        retrieve.setTravelPlanId(getBook().getTravelPlanId());
+        retrieve.setTravelPlanId("294852986666");
         retrieve.setSiebelTravelPlanId("0");
-        retrieve.setLocationId("51");
+        retrieve.setLocationId(getLocationId());
         TestReporter.logAPI(!retrieve.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + retrieve.getFaultString() + " ]", retrieve);
         validateApplicationError(retrieve, AccommodationErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 
