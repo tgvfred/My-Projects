@@ -8,6 +8,9 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode ACCOMM_NOT_BOOKED_STATUS_SHARED = new ApplicationErrorCode(APP_NAME, 17192,
             " Accommodation should be in Booked status to be Shared");
 
+    public static final ApplicationErrorCode GROUP_TEAM_NOT_CREATED = new ApplicationErrorCode(APP_NAME, 7179,
+            "Group Team Can not be Created");
+
     public static final ApplicationErrorCode ACCOMM_NOT_BOOKED_STATUS_UNSHARED = new ApplicationErrorCode(APP_NAME, 27192,
             " Accommodation should be in Booked status to be UnShared");
 
@@ -266,6 +269,8 @@ public class AccommodationErrorCode {
 
     public static final ApplicationErrorCode CANNOT_CALCULATE_CANCEL_FEE = new ApplicationErrorCode(APP_NAME, 7080,
             "cannot calculate Cancel fee");
+    public static final ApplicationErrorCode CANNOT_CALCULATE_CANCEL_FEE_CAPS = new ApplicationErrorCode(APP_NAME, 7080,
+            "Cannot calculate Cancel fee");
 
     public static final ApplicationErrorCode PACKAGE_RATE_CATEGORY_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7173,
             " Package Rate Category not found");

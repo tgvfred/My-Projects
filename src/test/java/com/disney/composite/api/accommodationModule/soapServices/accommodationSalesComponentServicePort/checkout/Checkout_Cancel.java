@@ -5,10 +5,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
@@ -21,8 +19,7 @@ import com.disney.utils.date.DateTimeConversion;
 
 public class Checkout_Cancel extends AccommodationBaseTest {
     private CheckInHelper checkInHelper;
-    private AddAccommodationHelper accommHelper;
-    private Add add;
+    private String firstTcg;
 
     @Override
     @Parameters("environment")
@@ -35,40 +32,42 @@ public class Checkout_Cancel extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
+        setSendRequest(false);
         bookReservation();
+        getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second accommodation: " + getBook().getFaultString(), getBook());
+        firstTcg = getBook().getTravelComponentGroupingId();
+
+        getBook().setTravelPlanId(getBook().getTravelPlanId());
+        getBook().setTravelPlanSegementId(getBook().getTravelPlanSegmentId());
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second accommodation: " + getBook().getFaultString(), getBook());
     }
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void TestCheckout_roomOnly_multAccomm_cancelOne_checkInOne_checkoutOne() {
-
-        if (Environment.isSpecialEnvironment(environment)) {
-            if (true) {
-                throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
-            }
-        }
-        // Add an accommodation
-        TestReporter.logScenario("Add Accommodation");
-        accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
-        add = accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
-
         // Cancel One
         TestReporter.logScenario("Cancel");
         Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
-        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setTravelComponentGroupingId(firstTcg);
+        cancel.setExternalReferenceType("RESERVATION");
+        cancel.setExternalReferenceNumber(getExternalRefNumber());
+        cancel.setExternalReferenceSource(externalRefSource);
         cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         // Checkin One and then Checkout One
         TestReporter.logScenario("Checkin One");
-        checkInHelper = new CheckInHelper(getEnvironment(), add);
+        checkInHelper = new CheckInHelper(getEnvironment(), getBook());
         checkInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         TestReporter.logScenario("Checkout One");
         checkInHelper.checkOut(getLocationId());
 
-        String assignOwnerId = validateResMgmt(add.getTravelComponentId());
+        String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
         validateRIM(assignOwnerId);
         additionalValidations(assignOwnerId);
         validateChargeGroupsChargesAndFolio();
@@ -106,12 +105,12 @@ public class Checkout_Cancel extends AccommodationBaseTest {
                 + "from res_mgmt.tc a "
                 + "left outer join res_mgmt.tc_rsn b on a.tc_id = b.tc_id "
                 + "left outer join res_mgmt.prdf_tc_rsn c on b.PRDF_TC_RSN_ID = c.PRDF_TC_RSN_ID "
-                + "where a.tc_grp_nb = '" + add.getTravelComponentGroupingId() + "'";
+                + "where a.tc_grp_nb = '" + getBook().getTravelComponentGroupingId() + "'";
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         if (rs.getRowCount() == 0) {
-            throw new SQLValidationException("No charges found for tp ID [ " + add.getTravelComponentGroupingId() + " ]", sql);
+            throw new SQLValidationException("No charges found for tp ID [ " + getBook().getTravelComponentGroupingId() + " ]", sql);
         } else {
             TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that TC reason records were generated");
             do {
@@ -125,19 +124,19 @@ public class Checkout_Cancel extends AccommodationBaseTest {
     }
 
     public String validateResMgmt(String TcId) {
-        String tcId = add.getTravelComponentId();
+        String tcId = getBook().getTravelComponentId();
 
         TestReporter.logStep("Verify Res Mgmt");
         String sql = "select c.* " + " from res_mgmt.tps a "
                 + " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb " + " where tc_id = "
-                + add.getTravelComponentId();
+                + getBook().getTravelComponentId();
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         String assignOwnerId = null;
         if (rs.getRowCount() == 0) {
-            throw new SQLValidationException("No charges found for tp ID [ " + add.getTravelComponentGroupingId() + " ]", sql);
+            throw new SQLValidationException("No charges found for tp ID [ " + getBook().getTravelComponentGroupingId() + " ]", sql);
         } else {
             for (int i = 1; i <= rs.getRowCount(); i++) {
                 if (rs.getValue("TC_ID", i).equals(TcId)) {
@@ -151,7 +150,7 @@ public class Checkout_Cancel extends AccommodationBaseTest {
                 + "from res_mgmt.tps a "
                 + "left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "where a.tp_id = '" + add.getTravelPlanId() + "' "
+                + "where a.tp_id = '" + getBook().getTravelPlanId() + "' "
                 + "and c.tc_typ_nm = 'AccommodationComponent'";
 
         db = new OracleDatabase(environment, Database.DREAMS);
@@ -176,13 +175,11 @@ public class Checkout_Cancel extends AccommodationBaseTest {
     }
 
     public void validateRIM(String assignOwnerId) {
-        // String assignOwnerIdValue = assignOwnerId;
         TestReporter.logStep("Validate RIM");
         String sql = " Select RSRC_INVTRY_TYP_ID, AUTO_ASGN_RSRC_ID, OWNR_STS_NM, ASGN_OWNR_ID "
                 + " From rsrc_inv.RSRC_ASGN_OWNR " + " Where ASGN_OWNR_ID = " + assignOwnerId;
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        // rs.print();
 
         TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that RIM records were found.");
         for (int i = 1; i <= rs.getRowCount(); i++) {
@@ -211,7 +208,7 @@ public class Checkout_Cancel extends AccommodationBaseTest {
                 + "left outer join folio.CHRG_ITEM e on d.CHRG_ID = e.CHRG_ID "
                 + "left outer join folio.CHRG_GRP_FOLIO f on c.CHRG_GRP_ID = f.ROOT_CHRG_GRP_ID "
                 + "left outer join folio.FOLIO g on f.CHRG_GRP_FOLIO_ID = g.FOLIO_ID "
-                + "where a.EXTNL_REF_VAL in ('" + add.getTravelPlanId() + "','" + add.getTravelPlanSegmentId() + "','" + add.getTravelComponentGroupingId() + "') "
+                + "where a.EXTNL_REF_VAL in ('" + getBook().getTravelPlanId() + "','" + getBook().getTravelPlanSegmentId() + "','" + getBook().getTravelComponentGroupingId() + "') "
                 + "and folio_sts_nm is not null";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
@@ -231,7 +228,7 @@ public class Checkout_Cancel extends AccommodationBaseTest {
                 + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
                 + "left outer join folio.CHRG d on c.CHRG_GRP_ID = d.CHRG_GRP_ID "
                 + "left outer join folio.CHRG_ITEM e on d.CHRG_ID = e.CHRG_ID "
-                + "where a.EXTNL_REF_VAL in ('" + add.getTravelPlanId() + "','" + add.getTravelPlanSegmentId() + "','" + add.getTravelComponentGroupingId() + "') "
+                + "where a.EXTNL_REF_VAL in ('" + getBook().getTravelPlanId() + "','" + getBook().getTravelPlanSegmentId() + "','" + getBook().getTravelComponentGroupingId() + "') "
                 + "and CHRG_ACTV_IN is not null";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
@@ -251,7 +248,7 @@ public class Checkout_Cancel extends AccommodationBaseTest {
                 + "from folio.EXTNL_REF a "
                 + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
                 + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
-                + "where a.EXTNL_REF_VAL in ('" + add.getTravelPlanId() + "','" + add.getTravelPlanSegmentId() + "','" + add.getTravelComponentGroupingId() + "')";
+                + "where a.EXTNL_REF_VAL in ('" + getBook().getTravelPlanId() + "','" + getBook().getTravelPlanSegmentId() + "','" + getBook().getTravelComponentGroupingId() + "')";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         TestReporter.softAssertTrue(rs.getRowCount() == 3, "Verify that 3 charge groups were found.");
@@ -262,5 +259,4 @@ public class Checkout_Cancel extends AccommodationBaseTest {
         } while (rs.hasNext());
         TestReporter.assertAll();
     }
-
 }

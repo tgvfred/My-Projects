@@ -20,6 +20,9 @@ public class LiloResmErrorCode {
             APP_NAME, 9042, "INVALID REQUEST");
     public static final ApplicationErrorCode SEARCH_CRITERIA_INVALID = new ApplicationErrorCode(APP_NAME, 7124,
             "Search Criteria is Invalid");
+    public static final ApplicationErrorCode INVALID_DELETE_TEAM_REQUEST = new ApplicationErrorCode(APP_NAME, 8081,
+            "Invalid Delete Team Name Request");
+
     public static final ApplicationErrorCode NO_TRAVEL_PLAN_DATA_FOUND = new ApplicationErrorCode(APP_NAME, 7183,
             "No travel plan data found.");
     public static final ApplicationErrorCode RESULT_SIZE_TOO_LARGE_EXCEPTION = new ApplicationErrorCode(APP_NAME, 91443,
@@ -62,6 +65,8 @@ public class LiloResmErrorCode {
             "Resort Code is invalid");
     public static final ApplicationErrorCode TRAVEL_PLAN_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7007,
             "TRAVEL_PLAN_NOT_FOUND");
+    public static final ApplicationErrorCode TRAVEL_PLAN_SEGMENT_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7008,
+            "TRAVEL_PLAN_SEGMENT_NOT_FOUND");
     public static final ApplicationErrorCode ROOM_DETAIL_MISSING = new ApplicationErrorCode(APP_NAME, 7228,
             "There should be at least one Room Detail");
     public static final ApplicationErrorCode GUEST_REQUIRED = new ApplicationErrorCode(APP_NAME, 7027,
@@ -84,4 +89,10 @@ public class LiloResmErrorCode {
             "Travel Agency is invalid");
     public static final ApplicationErrorCode TRVL_PLAN_COMPONENT_ID_REQ = new ApplicationErrorCode(APP_NAME, 7037,
             "Travel Component Id is required");
+    public static final ApplicationErrorCode TRVL_PLAN_SEG_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7008,
+            "Travel Plan Segment Not Found");
+    public static final ApplicationErrorCode TRVL_PLAN_SGMT_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7008,
+            "TRAVEL_PLAN_SEGMENT_NOT_FOUND");
+    public static final ApplicationErrorCode CANT_CALCULATE_CNCL_FEE = new ApplicationErrorCode(APP_NAME, 7080,
+            "cannot calculate Cancel fee");
 }

@@ -43,8 +43,7 @@ public class TestRetrieveCancellationPolicy_autoCancelled extends AccommodationB
         retrieve.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         retrieve.sendRequest();
 
-        TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
-
+        TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").toLowerCase().contains(faultString.replaceAll("\\s", "").toLowerCase()), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
     }
 }

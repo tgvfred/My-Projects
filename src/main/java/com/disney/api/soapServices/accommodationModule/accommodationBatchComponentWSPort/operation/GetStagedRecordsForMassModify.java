@@ -12,14 +12,14 @@ public class GetStagedRecordsForMassModify extends AccommodationBatchComponentWS
         super(environment);
         if (true) {
             throw new SkipException("This SOAP method is no longer supported. It is to be removed in a later iteration - WWA 10/03/17");
+        } else {
+            // Generate a request from a project xml file
+            setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("getStagedRecordsForMassModify")));
+            generateServiceContext();
+
+            removeComments();
+            removeWhiteSpace();
         }
-
-        // Generate a request from a project xml file
-        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("getStagedRecordsForMassModify")));
-        generateServiceContext();
-
-        removeComments();
-        removeWhiteSpace();
     }
 
     // Setter
