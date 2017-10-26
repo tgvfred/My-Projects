@@ -57,7 +57,7 @@ public class TestRetreiveIdsToProcess_BOOKED extends AccommodationBaseTest {
             // validateProcessType(processType, retreiveIds);
             validateProcessType(processType, processId, retreiveIds);
             TestReporter.logStep("Verify number of nodes being returned");
-            TestReporter.assertTrue(retreiveIds.getRetreiveIdsToProcessResponse("1") != null, "One retreiveIdsToProcessResponse node is present");
+            // TestReporter.assertTrue(retreiveIds.getRetreiveIdsToProcessResponse("1") != null, "One retreiveIdsToProcessResponse node is present");
 
             if (retreiveIds.getRetreiveIdsToProcessResponse("1") != null) {
                 TestReporter.log("One retreiveIdsToProcessResponse node is present");
