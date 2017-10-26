@@ -48,6 +48,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyToAddAccommToCancelledRes 
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         getBook().setReplaceAll("true");
+        getBook().setRoomDetailsSpecialNeedsRequested("false");
 
         int tries = 0;
         int maxTries = 20;
@@ -136,9 +137,8 @@ public class TestReplaceAllForTravelPlanSegment_modifyToAddAccommToCancelledRes 
         validations.verifyInventoryAssigned(tcgId, 0, getBook().getTravelPlanId());
         validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
         Map<String, String> status = new HashMap<>();
-        status.put("1", "NULL");
-        status.put("2", "false");
-        validations.validateSpecialNeeds(getBook().getTravelPlanId(), status);
+        status.put("1", "false");
+        validations.validateSpecialNeeds_Cancelled(getBook().getTravelPlanId(), status);
         validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true, 1);
 
         // Validate guest
