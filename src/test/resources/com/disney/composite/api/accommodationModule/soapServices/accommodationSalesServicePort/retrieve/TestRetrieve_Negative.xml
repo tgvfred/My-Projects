@@ -4,7 +4,7 @@
 	<parameter name="environment" value="latest_cm" />
 	<test name="Retrieve_Negative">
 		<classes>
-			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.getOptionDetail.TestRetrieve_Negative" />
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieve.TestRetrieve_Negative" />
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

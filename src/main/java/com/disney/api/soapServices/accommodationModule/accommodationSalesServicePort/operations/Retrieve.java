@@ -123,7 +123,7 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     public void setSiebelTravelPlanId(String value) {
 
-        setRequestNodeValueByXPath("//request/seibelTravelPlanId", value);
+        setRequestNodeValueByXPath("Envelope/Body/retrieve/request/siebelTravelPlanId", value);
     }
 
     public String[] getGuestIds(int numberOfGuests) {

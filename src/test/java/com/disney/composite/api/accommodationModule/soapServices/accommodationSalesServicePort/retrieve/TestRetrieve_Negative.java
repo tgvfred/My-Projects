@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieve_Negative extends AccommodationBaseTest {
@@ -37,7 +38,8 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
         retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setSiebelTravelPlanId("0");
-        retrieve.setLocationId(getLocationId());
+        retrieve.setLocationId("0");
+        retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + retrieve.getFaultString() + " ]", retrieve);
         validateApplicationError(retrieve, AccommodationErrorCode.LOCATION_ID_MANDATORY);
 
@@ -52,6 +54,7 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
         retrieve.setTravelPlanId("0");
         retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());
+        retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + retrieve.getFaultString() + " ]", retrieve);
         validateApplicationError(retrieve, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
 
@@ -66,6 +69,7 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());
+        retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + retrieve.getFaultString() + " ]", retrieve);
         validateApplicationError(retrieve, AccommodationErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 
@@ -76,10 +80,11 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
 
         String fault = "Record Not Found : No TravelPlan Found !";
         Retrieve retrieve = new Retrieve(environment);
-        retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
-        retrieve.setTravelPlanId("294852986666");
+        retrieve.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
+        retrieve.setTravelPlanId("46476544747");
         retrieve.setSiebelTravelPlanId("0");
-        retrieve.setLocationId(getLocationId());
+        retrieve.setLocationId("51");
+        retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + retrieve.getFaultString() + " ]", retrieve);
         validateApplicationError(retrieve, AccommodationErrorCode.RECORD_NOT_FOUND_EXCEPTION);
 
