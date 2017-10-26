@@ -2046,7 +2046,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         firstDiningTcg.set(findDiningResTcg(diningRes.getConfirmationNumber()));
     }
 
-    private String findDiningResTcg(String confirmationNumber) {
+    public String findDiningResTcg(String confirmationNumber) {
         Database db = new OracleDatabase(environment.toLowerCase().replace("_cm", ""), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(DVCSalesDreams.getReservationInfoByTpsId(confirmationNumber)));
         return rs.getValue("TC_GRP_NB", 1);
