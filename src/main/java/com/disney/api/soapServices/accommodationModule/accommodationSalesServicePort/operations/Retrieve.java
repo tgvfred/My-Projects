@@ -24,6 +24,17 @@ public class Retrieve extends AccommodationSalesServicePort {
         removeWhiteSpace();
     }
 
+    public Retrieve(String environment) {
+        super(environment);
+
+        // Generate a request from a project xml file
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("retrieve")));
+
+        generateServiceContext();
+        removeComments();
+        removeWhiteSpace();
+    }
+
     public String getPartyId() {
         return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest[1]/partyId");
     }
@@ -34,6 +45,7 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     public String getTravelPlanSegmentId() {
         return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/travelPlanSegmentId");
+
     }
 
     public String getTravelComponentGroupingId() {
@@ -107,6 +119,11 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     public void setLocationId(String locationId) {
         setRequestNodeValueByXPath("//request/locationId", locationId);
+    }
+
+    public void setSiebelTravelPlanId(String value) {
+
+        setRequestNodeValueByXPath("//request/seibelTravelPlanId", value);
     }
 
     public String[] getGuestIds(int numberOfGuests) {
