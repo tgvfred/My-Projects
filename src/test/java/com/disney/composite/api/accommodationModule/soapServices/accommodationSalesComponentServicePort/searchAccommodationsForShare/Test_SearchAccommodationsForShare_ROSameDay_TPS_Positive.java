@@ -30,7 +30,7 @@ public class Test_SearchAccommodationsForShare_ROSameDay_TPS_Positive extends Ac
         book = getBook();
     }
 
-    @Test
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "searchAccommodationsForShare" })
     public void test_SearchAccommodationsForShare_ROSameDay_TPS_Positive() {
 
         SearchAccommodationsForShare search = new SearchAccommodationsForShare(environment, "Main");
@@ -45,9 +45,11 @@ public class Test_SearchAccommodationsForShare_ROSameDay_TPS_Positive extends Ac
 
         TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred searching accommodation for share", search);
 
+        int count = search.getNumberOfResponseNodesByXPath("/Envelope/Body/searchAccommodationsForShareResponse/return");
+
         SearchAccommodationsForShareHelper helper = new SearchAccommodationsForShareHelper(environment);
-        helper.matchReservationInfoWithResponseInfo(search, book, 1);
-        helper.validateReturnNodeCount(search, 1);
+        helper.matchReservationInfoWithResponseInfo(search, book, count);
+        helper.validateReturnNodeCount(search, count);
 
     }
 }

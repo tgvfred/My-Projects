@@ -12,28 +12,77 @@ public class SearchAccommodationsForShareHelper {
         this.environment = environment;
     }
 
+    public void matchReservationInfoWithResponseInfo(SearchAccommodationsForShare search, ReplaceAllForTravelPlanSegment book, int count, String tcgId, String tcId) {
+
+        for (int i = 1; i <= count; i++) {
+            TestReporter.softAssertEquals(search.getResortCode(String.valueOf(i)), book.getResortCode(), "Validate resort code from the reservartion: [" + book.getResortCode() + "] matches the "
+                    + "resort code from the SearchAccommodationsForShare response: [" + search.getResortCode(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getRoomTypeCode(String.valueOf(i)), book.getRoomTypeCode(), "Validate room type code from the reservartion: [" + book.getRoomTypeCode() + "] matches the "
+                    + "room type code from the SearchAccommodationsForShare response: [" + search.getRoomTypeCode(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getTravelPlanSegmentId(String.valueOf(i)), book.getTravelPlanSegmentId(), "Validate TpsID from the reservartion: [" + book.getTravelPlanSegmentId() + "] matches the "
+                    + "TpsID from the SearchAccommodationsForShare response: [" + search.getTravelPlanSegmentId(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getFirstName(String.valueOf(i)), book.getFirstName(), "Validate guest first name from the reservartion: [" + book.getFirstName() + "] matches the "
+                    + "guest first name from the SearchAccommodationsForShare response: [" + search.getFirstName(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getLastName(String.valueOf(i)), book.getLastName(), "Validate guest last name from the reservartion: [" + book.getLastName() + "] matches the "
+                    + "guest last name from the SearchAccommodationsForShare response: [" + search.getLastName(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getTravelStatus(String.valueOf(i)), book.getTravelStatus(), "Validate travel status from the reservartion: [" + book.getTravelStatus() + "] matches the "
+                    + "travel status from the SearchAccommodationsForShare response: [" + search.getTravelStatus(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getEndDate(String.valueOf(i)), book.getEndDate(), "Validate end date from the reservartion: [" + book.getEndDate() + "] matches the "
+                    + "end date from the SearchAccommodationsForShare response: [" + search.getEndDate(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getStartDate(String.valueOf(i)), book.getStartDate(), "Validate start date from the reservartion: [" + book.getStartDate() + "] matches the "
+                    + "start date from the SearchAccommodationsForShare response: [" + search.getStartDate(String.valueOf(i)) + "]");
+            TestReporter.assertAll();
+        }
+
+        if (search.getTravelComponentGroupingId(String.valueOf(2)).equals(book.getTravelComponentGroupingId())) {
+            TestReporter.softAssertEquals(search.getTravelComponentGroupingId(String.valueOf(2)), book.getTravelComponentGroupingId(), "Validate TcgID from the reservartion: [" + book.getTravelComponentGroupingId() + "] matches the "
+                    + "TcgID from the SearchAccommodationsForShare response: [" + search.getTravelComponentGroupingId(String.valueOf(2)) + "]");
+            TestReporter.softAssertEquals(search.getTravelComponentId(String.valueOf(2)), book.getTravelComponentId(), "Validate TcID from the reservartion: [" + book.getTravelComponentId() + "] matches the "
+                    + "TcID from the SearchAccommodationsForShare response: [" + search.getTravelComponentId(String.valueOf(2)) + "]");
+            TestReporter.softAssertEquals(search.getTravelComponentGroupingId(String.valueOf(1)), tcgId, "Validate TcgID from the reservartion: [" + tcgId + "] matches the "
+                    + "TcgID from the SearchAccommodationsForShare response: [" + search.getTravelComponentGroupingId(String.valueOf(1)) + "]");
+            TestReporter.softAssertEquals(search.getTravelComponentId(String.valueOf(1)), tcId, "Validate TcID from the reservartion: [" + tcId + "] matches the "
+                    + "TcID from the SearchAccommodationsForShare response: [" + search.getTravelComponentId(String.valueOf(1)) + "]");
+            TestReporter.assertAll();
+        } else {
+            TestReporter.softAssertEquals(search.getTravelComponentGroupingId(String.valueOf(1)), book.getTravelComponentGroupingId(), "Validate TcgID from the reservartion: [" + book.getTravelComponentGroupingId() + "] matches the "
+                    + "TcgID from the SearchAccommodationsForShare response: [" + search.getTravelComponentGroupingId(String.valueOf(1)) + "]");
+            TestReporter.softAssertEquals(search.getTravelComponentId(String.valueOf(1)), book.getTravelComponentId(), "Validate TcID from the reservartion: [" + book.getTravelComponentId() + "] matches the "
+                    + "TcID from the SearchAccommodationsForShare response: [" + search.getTravelComponentId(String.valueOf(1)) + "]");
+            TestReporter.softAssertEquals(search.getTravelComponentGroupingId(String.valueOf(2)), tcgId, "Validate TcgID from the reservartion: [" + tcgId + "] matches the "
+                    + "TcgID from the SearchAccommodationsForShare response: [" + search.getTravelComponentGroupingId(String.valueOf(2)) + "]");
+            TestReporter.softAssertEquals(search.getTravelComponentId(String.valueOf(2)), tcId, "Validate TcID from the reservartion: [" + tcId + "] matches the "
+                    + "TcID from the SearchAccommodationsForShare response: [" + search.getTravelComponentId(String.valueOf(2)) + "]");
+            TestReporter.assertAll();
+        }
+
+    }
+
     public void matchReservationInfoWithResponseInfo(SearchAccommodationsForShare search, ReplaceAllForTravelPlanSegment book, int count) {
 
-        TestReporter.softAssertEquals(search.getResortCode(), book.getResortCode(), "Validate resort code from the reservartion: [" + book.getResortCode() + "] matches the "
-                + "resort code from the SearchAccommodationsForShare response: [" + search.getResortCode() + "]");
-        TestReporter.softAssertEquals(search.getRoomTypeCode(), book.getRoomTypeCode(), "Validate room type code from the reservartion: [" + book.getRoomTypeCode() + "] matches the "
-                + "room type code from the SearchAccommodationsForShare response: [" + search.getRoomTypeCode() + "]");
-        TestReporter.softAssertEquals(search.getTravelComponentGroupingId(), book.getTravelComponentGroupingId(), "Validate TcgID from the reservartion: [" + book.getTravelComponentGroupingId() + "] matches the "
-                + "TcgID from the SearchAccommodationsForShare response: [" + search.getTravelComponentGroupingId() + "]");
-        TestReporter.softAssertEquals(search.getTravelComponentId(), book.getTravelComponentId(), "Validate TcID from the reservartion: [" + book.getTravelComponentId() + "] matches the "
-                + "TcID from the SearchAccommodationsForShare response: [" + search.getTravelComponentId() + "]");
-        TestReporter.softAssertEquals(search.getTravelPlanSegmentId(), book.getTravelPlanSegmentId(), "Validate TpsID from the reservartion: [" + book.getTravelPlanSegmentId() + "] matches the "
-                + "TpsID from the SearchAccommodationsForShare response: [" + search.getTravelPlanSegmentId() + "]");
-        TestReporter.softAssertEquals(search.getFirstName(), book.getFirstName(), "Validate guest first name from the reservartion: [" + book.getFirstName() + "] matches the "
-                + "guest first name from the SearchAccommodationsForShare response: [" + search.getFirstName() + "]");
-        TestReporter.softAssertEquals(search.getLastName(), book.getLastName(), "Validate guest last name from the reservartion: [" + book.getLastName() + "] matches the "
-                + "guest last name from the SearchAccommodationsForShare response: [" + search.getLastName() + "]");
-        TestReporter.softAssertEquals(search.getTravelStatus(), book.getTravelStatus(), "Validate travel status from the reservartion: [" + book.getTravelStatus() + "] matches the "
-                + "travel status from the SearchAccommodationsForShare response: [" + search.getTravelStatus() + "]");
-        TestReporter.softAssertEquals(search.getEndDate(), book.getEndDate(), "Validate end date from the reservartion: [" + book.getEndDate() + "] matches the "
-                + "end date from the SearchAccommodationsForShare response: [" + search.getEndDate() + "]");
-        TestReporter.softAssertEquals(search.getStartDate(), book.getStartDate(), "Validate start date from the reservartion: [" + book.getStartDate() + "] matches the "
-                + "start date from the SearchAccommodationsForShare response: [" + search.getStartDate() + "]");
+        for (int i = 1; i <= count; i++) {
+            TestReporter.softAssertEquals(search.getResortCode(String.valueOf(i)), book.getResortCode(), "Validate resort code from the reservartion: [" + book.getResortCode() + "] matches the "
+                    + "resort code from the SearchAccommodationsForShare response: [" + search.getResortCode(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getRoomTypeCode(String.valueOf(i)), book.getRoomTypeCode(), "Validate room type code from the reservartion: [" + book.getRoomTypeCode() + "] matches the "
+                    + "room type code from the SearchAccommodationsForShare response: [" + search.getRoomTypeCode(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getTravelPlanSegmentId(String.valueOf(i)), book.getTravelPlanSegmentId(), "Validate TpsID from the reservartion: [" + book.getTravelPlanSegmentId() + "] matches the "
+                    + "TpsID from the SearchAccommodationsForShare response: [" + search.getTravelPlanSegmentId(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getFirstName(String.valueOf(i)), book.getFirstName(), "Validate guest first name from the reservartion: [" + book.getFirstName() + "] matches the "
+                    + "guest first name from the SearchAccommodationsForShare response: [" + search.getFirstName(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getLastName(String.valueOf(i)), book.getLastName(), "Validate guest last name from the reservartion: [" + book.getLastName() + "] matches the "
+                    + "guest last name from the SearchAccommodationsForShare response: [" + search.getLastName(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getTravelStatus(String.valueOf(i)), book.getTravelStatus(), "Validate travel status from the reservartion: [" + book.getTravelStatus() + "] matches the "
+                    + "travel status from the SearchAccommodationsForShare response: [" + search.getTravelStatus(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getEndDate(String.valueOf(i)), book.getEndDate(), "Validate end date from the reservartion: [" + book.getEndDate() + "] matches the "
+                    + "end date from the SearchAccommodationsForShare response: [" + search.getEndDate(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getStartDate(String.valueOf(i)), book.getStartDate(), "Validate start date from the reservartion: [" + book.getStartDate() + "] matches the "
+                    + "start date from the SearchAccommodationsForShare response: [" + search.getStartDate(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getTravelComponentGroupingId(String.valueOf(i)), book.getTravelComponentGroupingId(), "Validate TcgID from the reservartion: [" + book.getTravelComponentGroupingId() + "] matches the "
+                    + "TcgID from the SearchAccommodationsForShare response: [" + search.getTravelComponentGroupingId(String.valueOf(i)) + "]");
+            TestReporter.softAssertEquals(search.getTravelComponentId(String.valueOf(i)), book.getTravelComponentId(), "Validate TcID from the reservartion: [" + book.getTravelComponentId() + "] matches the "
+                    + "TcID from the SearchAccommodationsForShare response: [" + search.getTravelComponentId(String.valueOf(i)) + "]");
+            TestReporter.assertAll();
+        }
 
     }
 
@@ -46,6 +95,14 @@ public class SearchAccommodationsForShareHelper {
         } else {
             TestReporter.assertTrue(count == expectedCount, "Return node count: [" + count + "] differs from expected count: [" + expectedCount + "]");
         }
+    }
+
+    public void validateReturnNodeCountOneOrGreater(SearchAccommodationsForShare search) {
+
+        int count = search.getNumberOfResponseNodesByXPath("/Envelope/Body/searchAccommodationsForShareResponse/return");
+
+        TestReporter.assertTrue(count >= 1, "Return node count: [" + count + "] is greater than or equal to 1");
+
     }
 
 }

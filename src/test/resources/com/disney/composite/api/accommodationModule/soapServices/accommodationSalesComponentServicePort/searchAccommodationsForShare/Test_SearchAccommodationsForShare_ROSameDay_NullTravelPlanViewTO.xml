@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Test_SearchAccommodationsForShare_ROSameDay_NullTravelPlanViewTO" parallel="methods" thread-count="20" configfailurepolicy="continue" data-provider-thread-count="5">
+	<parameter name="environment" value="latest_cm" />
+	<test name="Test_SearchAccommodationsForShare_ROSameDay_NullTravelPlanViewTO">
+		<classes>
+			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.searchAccommodationsForShare.Test_SearchAccommodationsForShare_ROSameDay_NullTravelPlanViewTO'></class>
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
