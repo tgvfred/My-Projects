@@ -2,7 +2,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.GetAccommodationExternalReferences;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.GetAccommodationExternalReferences;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;

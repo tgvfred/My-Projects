@@ -1,0 +1,34 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:acc="http://accommodation.services.fulfillment.lodging.wdw.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <acc:fulfillServiceRequest>
+         <!--Optional:-->
+         <fulfillServiceRequestInput>
+            <!--Optional:-->
+            <ownerId>?</ownerId>
+            <!--Optional:-->
+            <serviceRequestType>?</serviceRequestType>
+         </fulfillServiceRequestInput>
+         <!--Optional:-->
+         <serviceContext>
+            <addressRole>?</addressRole>
+            <conversationId>?</conversationId>
+            <messageId>?</messageId>
+            <party1Id>?</party1Id>
+            <party1Type>?</party1Type>
+            <party2Id>?</party2Id>
+            <party2Type>?</party2Type>
+            <pathHostName>?</pathHostName>
+            <pathId>?</pathId>
+            <principalId>?</principalId>
+            <principalMethod>?</principalMethod>
+            <principalRole>?</principalRole>
+            <principalUri>?</principalUri>
+            <principalValue>?</principalValue>
+            <requestTimeStamp>?</requestTimeStamp>
+            <toAddressRole>?</toAddressRole>
+            <userName>?</userName>
+         </serviceContext>
+      </acc:fulfillServiceRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
