@@ -17,7 +17,6 @@ import com.disney.utils.TestReporter;
 public class TestRetrieveShareChain_SharedTcgsMultipleGuests extends AccommodationBaseTest {
     private ReplaceAllForTravelPlanSegment firstBooking;
     private ReplaceAllForTravelPlanSegment secondBooking;
-    private String firstOwnerId;
 
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -125,6 +124,6 @@ public class TestRetrieveShareChain_SharedTcgsMultipleGuests extends Accommodati
         TestReporter.logStep("Base validations");
         helper.validateBaseNodes(firstBooking, retrieve);
         helper.validateGuestDetails(firstBooking, retrieve);
-        helper.validateRateDetails(environment, retrieve);
+        helper.validateMultipleRateDetails(environment, retrieve);
     }
 }
