@@ -8,8 +8,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.SearchAccommodationsForShareHelper;
-import com.disney.utils.Environment;
-import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class Test_SearchAccommodationsForShare_ROSameDay_TPS_Positive extends AccommodationBaseTest {
@@ -52,30 +50,5 @@ public class Test_SearchAccommodationsForShare_ROSameDay_TPS_Positive extends Ac
         SearchAccommodationsForShareHelper helper = new SearchAccommodationsForShareHelper(environment);
         helper.matchReservationInfoWithResponseInfo(search, book, count);
         helper.validateReturnNodeCount(search, count);
-
-        if (Environment.isSpecialEnvironment(environment)) {
-            SearchAccommodationsForShare clone = (SearchAccommodationsForShare) search.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-
-            int tries = 0;
-            int maxTries = 10;
-            boolean success = false;
-            do {
-                Sleeper.sleep(1000);
-                try {
-                    clone.sendRequest();
-                    success = true;
-                } catch (Exception e) {
-
-                }
-                tries++;
-            } while (tries < maxTries && !success);
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(search, true), "Validating Response Comparison");
-        }
-
     }
 }
