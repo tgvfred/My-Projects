@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -42,6 +43,9 @@ public class TestRetrieve_roomOnly extends AccommodationBaseTest {
 
         System.out.println(retrieve.getResponse());
 
+        RetrieveHelper helper = new RetrieveHelper();
+        helper.baseValidation(getBook(), retrieve);
+
         // clone validations
         if (Environment.isSpecialEnvironment(getEnvironment())) {
 
@@ -71,9 +75,9 @@ public class TestRetrieve_roomOnly extends AccommodationBaseTest {
 
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/retrieveResponse/response/partyRoles/role");
 
-            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/response/couponProducts[text()='2789372']");
-            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/response/couponProducts[text()='2789375']");
-            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/response/couponProducts[text()='2789376']");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/exchangeFee");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/bypassResortDesk[text()='false']");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/dmeAccommodation[text()='false']");
 
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
 

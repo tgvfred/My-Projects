@@ -68,59 +68,59 @@ public class Retrieve extends AccommodationSalesServicePort {
      */
 
     public String getFirstName() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest[1]/firstName");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/firstName");
     }
 
     public String getLastName() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest[1]/lastName/");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/lastName");
     }
 
     public String getPhone() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest[1]/phoneDetails/number");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/phoneDetails/number");
     }
 
     public String getAddress() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest[1]/addressDetails/addressLine1");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails/addressLine1");
     }
 
     public String getEmail() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest[1]/emailDetails/address");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/emailDetails/address");
     }
 
     public String getPPFirstName() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/primaryParty/guest[1]/firstName");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/firstName");
     }
 
     public String getPPLastName() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/primaryParty/guest[1]/lastName/");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/lastName");
     }
 
     public String getPPPhone() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/primaryParty/guest[1]/phoneDetails/number");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/phoneDetails/number");
     }
 
     public String getPPAddress() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/primaryParty/guest[1]/addressDetails/addressLine1");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails/addressLine1");
     }
 
     public String getPPEmail() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/primaryParty/guest[1]/emailDetails/address");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/emailDetails/address");
     }
 
     public String getTravelPlanId() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanId");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanId");
     }
 
     public String getTravelStatus() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelStatus");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelStatus");
     }
 
     public String getRoomReadyNotificationInfoTP() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/roomReadyNotificationInformation/travelPlanId");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/roomReadyNotificationInformation/travelPlanId");
     }
 
     public String getRoomReadyNotificationInfoRequired() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/roomReadyNotificationInformation/required");
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/roomReadyNotificationInformation/required");
     }
 
     /*
@@ -459,7 +459,7 @@ public class Retrieve extends AccommodationSalesServicePort {
     }
 
     public void setLocationId(String locationId) {
-        setRequestNodeValueByXPath("//request/locationId", locationId);
+        setRequestNodeValueByXPath("Envelope/Body/retrieve/request/locationId", locationId);
     }
 
     public void setSiebelTravelPlanId(String value) {
