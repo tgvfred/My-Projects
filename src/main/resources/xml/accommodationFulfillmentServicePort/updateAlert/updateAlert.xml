@@ -1,0 +1,38 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:acc="http://accommodation.transferobject.fulfillment.lodging.wdw.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <acc:updateAlert>
+         <request>
+            <!--Optional:-->
+            <parentId>?</parentId>
+            <!--Zero or more repetitions:-->
+            <alertInfos>
+               <alertId>?</alertId>
+               <travelComponentId>?</travelComponentId>
+               <alertText>?</alertText>
+               <validated>?</validated>
+               <validationComment>?</validationComment>
+            </alertInfos>
+         </request>
+         <serviceContext>
+            <addressRole>?</addressRole>
+            <conversationId>?</conversationId>
+            <messageId>?</messageId>
+            <party1Id>?</party1Id>
+            <party1Type>?</party1Type>
+            <party2Id>?</party2Id>
+            <party2Type>?</party2Type>
+            <pathHostName>?</pathHostName>
+            <pathId>?</pathId>
+            <principalId>?</principalId>
+            <principalMethod>?</principalMethod>
+            <principalRole>?</principalRole>
+            <principalUri>?</principalUri>
+            <principalValue>?</principalValue>
+            <requestTimeStamp>?</requestTimeStamp>
+            <toAddressRole>?</toAddressRole>
+            <userName>?</userName>
+         </serviceContext>
+      </acc:updateAlert>
+   </soapenv:Body>
+</soapenv:Envelope>

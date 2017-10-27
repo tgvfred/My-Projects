@@ -2,7 +2,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Cancel;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveCancellationPolicy;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
