@@ -1,9 +1,9 @@
-package com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations;
+package com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.AccommodationSalesComponentServicePort;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.AccommodationSalesComponentService;
 import com.disney.utils.XMLTools;
 
-public class SearchAccommodationsForShare extends AccommodationSalesComponentServicePort {
+public class SearchAccommodationsForShare extends AccommodationSalesComponentService {
 
     public SearchAccommodationsForShare(String environment, String scenario) {
         super(environment);
