@@ -9,7 +9,7 @@ import org.testng.annotations.Parameters;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.GetOptionDetail;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.partyServicePort.operations.GetOptions;
+import com.disney.api.soapServices.partyModule.partyService.operations.GetOptions;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
