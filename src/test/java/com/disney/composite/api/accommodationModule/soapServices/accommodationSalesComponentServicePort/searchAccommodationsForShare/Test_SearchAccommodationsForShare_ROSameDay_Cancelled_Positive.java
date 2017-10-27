@@ -6,6 +6,8 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.SearchAccommodationsForShare;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class Test_SearchAccommodationsForShare_ROSameDay_Cancelled_Positive extends AccommodationBaseTest {
@@ -42,5 +44,29 @@ public class Test_SearchAccommodationsForShare_ROSameDay_Cancelled_Positive exte
         int count = search.getNumberOfResponseNodesByXPath("/Envelope/Body/searchAccommodationsForShareResponse/return");
 
         TestReporter.assertTrue(count == 0, "Verify no return nodes are brought back");
+
+        if (Environment.isSpecialEnvironment(environment)) {
+            SearchAccommodationsForShare clone = (SearchAccommodationsForShare) search.clone();
+            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+
+            int tries = 0;
+            int maxTries = 10;
+            boolean success = false;
+            do {
+                Sleeper.sleep(1000);
+                try {
+                    clone.sendRequest();
+                    success = true;
+                } catch (Exception e) {
+
+                }
+                tries++;
+            } while (tries < maxTries && !success);
+            if (!clone.getResponseStatusCode().equals("200")) {
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+            }
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(search, true), "Validating Response Comparison");
+        }
     }
 }
