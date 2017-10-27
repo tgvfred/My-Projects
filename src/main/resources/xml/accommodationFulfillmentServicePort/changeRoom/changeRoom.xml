@@ -1,0 +1,64 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:acc="http://accommodation.transferobject.fulfillment.lodging.wdw.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <acc:changeRoom>
+         <request>
+            <newRoomNumber>?</newRoomNumber>
+            <roomReadyStatus>?</roomReadyStatus>
+            <travelComponentId>?</travelComponentId>
+            <locationId>?</locationId>
+            <comment>?</comment>
+            <!--Zero or more repetitions:-->
+            <physicalRoomDetails>
+               <!--1 or more repetitions:-->
+               <assignmentOwnerIds>?</assignmentOwnerIds>
+               <resourceId>?</resourceId>
+               <roomNumber>?</roomNumber>
+               <!--Optional:-->
+               <unlockReason>?</unlockReason>
+               <!--Optional:-->
+               <facilityId>?</facilityId>
+               <!--Optional:-->
+               <lockAssignment>?</lockAssignment>
+            </physicalRoomDetails>
+            <!--Optional:-->
+            <lockAssignment>?</lockAssignment>
+            <!--Optional:-->
+            <override>?</override>
+            <!--Optional:-->
+            <holdDone>?</holdDone>
+            <!--Zero or more repetitions:-->
+            <overriddenErrors>
+               <code>?</code>
+               <!--Optional:-->
+               <message>?</message>
+               <overridable>?</overridable>
+               <retriable>?</retriable>
+               <!--Optional:-->
+               <moduleName>?</moduleName>
+               <!--Optional:-->
+               <severity>?</severity>
+            </overriddenErrors>
+         </request>
+         <serviceContext>
+            <addressRole>?</addressRole>
+            <conversationId>?</conversationId>
+            <messageId>?</messageId>
+            <party1Id>?</party1Id>
+            <party1Type>?</party1Type>
+            <party2Id>?</party2Id>
+            <party2Type>?</party2Type>
+            <pathHostName>?</pathHostName>
+            <pathId>?</pathId>
+            <principalId>?</principalId>
+            <principalMethod>?</principalMethod>
+            <principalRole>?</principalRole>
+            <principalUri>?</principalUri>
+            <principalValue>?</principalValue>
+            <requestTimeStamp>?</requestTimeStamp>
+            <toAddressRole>?</toAddressRole>
+            <userName>?</userName>
+         </serviceContext>
+      </acc:changeRoom>
+   </soapenv:Body>
+</soapenv:Envelope>

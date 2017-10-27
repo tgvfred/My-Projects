@@ -16,7 +16,6 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_NoOverlap extends A
 
         calculate = new CalculateUnsharedRates(environment, "NoOverlap");
         calculate.sendRequest();
-        System.out.print(calculate.getRequest());
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 
         validateNumberShareChainsResponseNodes();

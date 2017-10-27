@@ -8,8 +8,8 @@ public class AccommodationSales {
     private String resource = "/v1";
 
     public AccommodationSales(RestService restService) {
-        this.restService.setMainResource("REST_AccommodationSalesService");
         this.restService = restService;
+        this.restService.setMainResource("REST_AccommodationSalesService");
     }
 
     public updateComments updateComments() {
