@@ -33,7 +33,6 @@ public class TestCalculateUnsharedRates_oneSharedRoomDetails_shared extends Acco
 
         // calculate.setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/exchangeFee", BaseSoapCommands.REMOVE_NODE.toString());
         calculate.sendRequest();
-        System.out.print(calculate.getRequest());
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 
         validateUnsharedRoomRateDetailsResponse();
