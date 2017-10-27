@@ -10,8 +10,6 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 public class RetrievePostedCancellationFeeHelper {
 
     private String environment;
-    private String tcID;
-    private String chargeTypeName;
     private String chargeAmount;
     private Boolean onlyTps;
 
@@ -40,8 +38,8 @@ public class RetrievePostedCancellationFeeHelper {
 
             TestReporter.assertTrue(rs.getRowCount() > 0, "Validate a fee charge row is returned in the charge db as expected");
             if (!onlyTps) {
-                TestReporter.assertEquals(chargeAmount, ret.getProductPrice(), "Verify the product price in the DB: [" + chargeAmount + "] "
-                        + "matches the value from the response: [" + ret.getProductPrice() + "] ");
+                TestReporter.assertEquals(Double.parseDouble(chargeAmount), Double.parseDouble(ret.getProductPrice()), "Verify the product price in the DB: [" + Double.parseDouble(chargeAmount) + "] "
+                        + "matches the value from the response: [" + Double.parseDouble(ret.getProductPrice()) + "] ");
             }
         } else {
 
