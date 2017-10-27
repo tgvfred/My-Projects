@@ -2,12 +2,13 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="AccommodationModule_Suite" parallel="methods" thread-count="20" configfailurepolicy="continue">
 	<parameter name="environment" value="latest_cm" />
-	<test name="AccommodationModule_checkout" parallel="methods" thread-count="5">
+	<!-- <test name="AccommodationModule_checkout" parallel="methods" thread-count="5">
 		<groups>
 			<run>
 				<exclude name="presmoke"/>
 				<exclude name="smoke"/>					
 				<exclude name="dev"/>
+				<exclude name="debug"/>
 				<include name="checkout"></include>
 				<exclude name="example"></exclude>
 			</run>
@@ -15,13 +16,14 @@
 		<packages>
 			<package name="com.disney.composite.api.accommodationModule.*"></package>
 		</packages>
-	</test>
+	</test> -->
 	<test name="AccommodationModule_reinstate" parallel="methods" thread-count="5">
 		<groups>
 			<run>
 				<exclude name="presmoke"/>
 				<exclude name="smoke"/>					
 				<exclude name="dev"/>
+				<!-- <exclude name="debug"/> -->
 				<include name="reinstate"></include>
 				<exclude name="example"></exclude>
 			</run>
@@ -36,6 +38,7 @@
 				<exclude name="presmoke"/>
 				<exclude name="smoke"/>					
 				<exclude name="dev"/>
+				<!-- <exclude name="debug"/> -->
 				<exclude name="checkout"></exclude>
 				<exclude name="reinstate"></exclude>
 				<exclude name="example"></exclude>

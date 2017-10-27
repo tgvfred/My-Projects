@@ -1246,9 +1246,26 @@ public class AccommodationBaseTest extends BaseRestTest {
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues();
         setSendRequest(true);
-        bookReservation();
+        // Hotfix to help avoid error with Pop Century - 10/27/17 - WWA
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            setValues();
+            try {
+                bookReservation();
+                success = true;
+            } catch (Exception e) {
+                if (!getBook().getFaultString().contains("No default TransactionAccountingCenter found for TransactionFacilityID")) {
+                    throw new SoapException(e.getMessage(), e.fillInStackTrace());
+                }
+            }
+            tries++;
+        } while (tries < maxTries && !success);
+        // setValues();
+        // setSendRequest(true);
+        // bookReservation();
     }
 
     @AfterMethod(alwaysRun = true)
