@@ -40,17 +40,6 @@ public class TestRetrieve_roomOnly extends AccommodationBaseTest {
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting option details: " + retrieve.getFaultString(), retrieve);
 
-        // base validation
-        /*
-         * Validate travelPlanInfo.travelPlanGuests name, phone, address, email, party ID, guest ID
-         * Validate travelPlanInfo.period
-         * Validate travelPlanInfo.primaryParty name, phone, address, email, party ID, guest ID
-         * Validate travelPlanInfo.travelPlanId
-         * TPS Validation
-         * Validate travelPlanInfo.travelStatus
-         * Validate travelPlanInfo.roomReadyNotificationInformation
-         */
-
         System.out.println(retrieve.getResponse());
 
         // clone validations
