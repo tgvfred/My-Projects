@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -37,7 +38,13 @@ public class TestRetrieve_cancelled extends AccommodationBaseTest {
         String tcg = getBook().getTravelComponentGroupingId();
 
         Cancel cancel = new Cancel(environment, "Main");
-        // cancel.set
+        cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
+        cancel.setTravelComponentGroupingId(tcg);
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
+        cancel.sendRequest();
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
 
         Retrieve retrieve = new Retrieve(environment);
         retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
@@ -51,8 +58,13 @@ public class TestRetrieve_cancelled extends AccommodationBaseTest {
 
         RetrieveHelper helper = new RetrieveHelper();
         helper.baseValidation(getBook(), retrieve);
-        helper.sqlTPSDetails(environment, getBook().getTravelPlanSegmentId());
+        helper.sqlTPSDetails(environment, getBook().getTravelPlanSegmentId(), retrieve);
+        int NumberOfStatus = retrieve.getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/auditDetails/status");
 
+        for (int i = 1; i <= NumberOfStatus; i++) {
+            TestReporter.assertTrue(("Cancelled").equals(retrieve.getAuditDetailsStatus(i)), "The audit status has been set to [" + retrieve.getAuditDetailsStatus(i) + "]");
+
+        }
         // clone validations
         if (Environment.isSpecialEnvironment(getEnvironment())) {
 
