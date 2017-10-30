@@ -39,7 +39,7 @@ public class TestRetrieve_roomOnly extends AccommodationBaseTest {
         retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting option details: " + retrieve.getFaultString(), retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retriveve details: " + retrieve.getFaultString(), retrieve);
 
         System.out.println(retrieve.getResponse());
 
