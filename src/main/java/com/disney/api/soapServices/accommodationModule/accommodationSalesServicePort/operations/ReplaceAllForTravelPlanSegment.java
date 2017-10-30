@@ -2002,6 +2002,34 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails[" + index + "]/guest/partyId");
     }
 
+    public String getResortCode() {
+        return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortCode");
+    }
+
+    public String getEndDate() {
+        return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortPeriod/endDate");
+    }
+
+    public String getStartDate() {
+        return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortPeriod/startDate");
+    }
+
+    public String getFirstName() {
+        return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/firstName");
+    }
+
+    public String getLastName() {
+        return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/lastName");
+    }
+
+    public String getRoomTypeCode() {
+        return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomTypeCode");
+    }
+
+    public String getTravelStatus() {
+        return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelStatus");
+    }
+
     public void addRoom(AccommodationBaseTest base) {
         String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails";
         int numRooms = getNumberOfRequestNodesByXPath(baseXpath);
