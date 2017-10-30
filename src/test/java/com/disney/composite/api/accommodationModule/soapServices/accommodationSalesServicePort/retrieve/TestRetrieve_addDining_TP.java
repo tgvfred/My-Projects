@@ -31,8 +31,8 @@ public class TestRetrieve_addDining_TP extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_addDining_TP() {
 
-        Retrieve retrieve = new Retrieve(environment, "ByTPS_ID");
-        retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
+        retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
 

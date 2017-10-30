@@ -11,8 +11,7 @@
 	      <name>WDPRO</name>
 	      <url>https://nexus.disney.com/nexus/content/repositories/WDPRO/</url>
 	    </repository>
-	  	</distributionManagement>
-	
+	  	</distributionManagement>	
 	<dependencies>
 		<dependency>
 			<groupId>com.disney.gqe</groupId>
@@ -98,6 +97,12 @@
 			<version>1.0.3</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Admission</artifactId>
+			<version>1.0.1</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>	
 	<properties>
 		<additionalparam>-Xdoclint:none</additionalparam>
@@ -174,15 +179,12 @@
 						</execution>
 					</executions>
 					<configuration>
-		 				<testFailureIgnore>false</testFailureIgnore>
-		               
+		 				<testFailureIgnore>false</testFailureIgnore>		               
 		               <!--  <skipTests>true</skipTests>  -->
 		              	<suiteXmlFiles>
 							<suiteXmlFile>${testNGSourceDirectory}/${suiteXmlFile}</suiteXmlFile>
 						</suiteXmlFiles>
-
-					</configuration>
-					
+					</configuration>				
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>

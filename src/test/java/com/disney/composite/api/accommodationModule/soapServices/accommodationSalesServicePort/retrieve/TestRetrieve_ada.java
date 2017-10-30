@@ -25,14 +25,13 @@ public class TestRetrieve_ada extends AccommodationBaseTest {
         setIsADA(true);
         isComo.set("true");
         bookReservation();
-
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_ada() {
 
-        Retrieve retrieve = new Retrieve(environment, "ByTPS_ID");
-        retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
+        retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
 
