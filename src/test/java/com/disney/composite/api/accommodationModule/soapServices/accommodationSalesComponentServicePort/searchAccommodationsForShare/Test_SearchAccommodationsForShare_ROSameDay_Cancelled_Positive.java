@@ -26,7 +26,6 @@ public class Test_SearchAccommodationsForShare_ROSameDay_Cancelled_Positive exte
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "searchAccommodationsForShare" })
     public void test_SearchAccommodationsForShare_ROSameDay_Cancelled_Positive() {
-
         SearchAccommodationsForShare search = new SearchAccommodationsForShare(environment, "Main");
         search.setGuestFirstName(getHouseHold().primaryGuest().getFirstName());
         search.setGuestLastName(getHouseHold().primaryGuest().getLastName());

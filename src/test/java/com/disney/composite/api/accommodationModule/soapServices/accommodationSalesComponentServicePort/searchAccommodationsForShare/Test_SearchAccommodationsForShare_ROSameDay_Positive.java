@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.SearchAccommodationsForShare;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.SearchAccommodationsForShareHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_SearchAccommodationsForShare_ROSameDay_Positive extends AccommodationBaseTest {
@@ -43,5 +44,13 @@ public class Test_SearchAccommodationsForShare_ROSameDay_Positive extends Accomm
         SearchAccommodationsForShareHelper helper = new SearchAccommodationsForShareHelper(environment);
         helper.validateReturnNodeCountOneOrGreater(search, getBook());
         helper.matchReservationInfoWithResponseInfo(search, getBook(), count);
+
+        if (Environment.isSpecialEnvironment(getEnvironment())) {
+            SearchAccommodationsForShare clone = search;
+            clone.setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+            clone.sendRequest();
+            TestReporter.assertTrue(clone.getResponseStatusCode().equals("200"), "Verify that no issue occurred cloning: " + clone.getFaultString());
+            clone.validateResponseNodeQuantity(search, true);
+        }
     }
 }

@@ -10,7 +10,7 @@ import com.disney.utils.TestReporter;
 
 public class Test_SearchAccommodationsForShare_ROSameDay_NullTravelPlanViewTO extends AccommodationBaseTest {
 
-    @Test
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "searchAccommodationsForShare", "negative" })
     public void test_SearchAccommodationsForShare_ROSameDay_NullTravelPlanViewTO() {
 
         String faultString = "Invalid Search Criteria  : Search Request Not Valid !";

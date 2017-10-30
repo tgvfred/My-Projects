@@ -5,8 +5,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.utils.TestReporter;
 
 public class SearchAccommodationsForShareHelper {
-
-    private String environment;
+    String environment;
     private int flag;
 
     public SearchAccommodationsForShareHelper(String environment) {

@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.SearchAccommodationsForShareHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_SearchAccommodationsForShare_ROSameDay_ExtRef_Positive extends AccommodationBaseTest {
@@ -31,7 +32,7 @@ public class Test_SearchAccommodationsForShare_ROSameDay_ExtRef_Positive extends
         book = getBook();
     }
 
-    @Test
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "searchAccommodationsForShare" })
     public void test_SearchAccommodationsForShare_ROSameDay_ExtRef_Positive() {
 
         SearchAccommodationsForShare search = new SearchAccommodationsForShare(environment, "MainWithExtRef");
@@ -50,5 +51,13 @@ public class Test_SearchAccommodationsForShare_ROSameDay_ExtRef_Positive extends
         SearchAccommodationsForShareHelper helper = new SearchAccommodationsForShareHelper(environment);
         helper.matchReservationInfoWithResponseInfo(search, book, 1);
         helper.validateReturnNodeCount(search, 1);
+
+        if (Environment.isSpecialEnvironment(getEnvironment())) {
+            SearchAccommodationsForShare clone = search;
+            clone.setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+            clone.sendRequest();
+            TestReporter.assertTrue(clone.getResponseStatusCode().equals("200"), "Verify that no issue occurred cloning: " + clone.getFaultString());
+            clone.validateResponseNodeQuantity(search, true);
+        }
     }
 }
