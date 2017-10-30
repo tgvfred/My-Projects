@@ -33,6 +33,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
         setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
+
         String tpId = getBook().getTravelPlanId();
         tcg = getBook().getTravelComponentGroupingId();
         tpsNum1 = getBook().getTravelPlanSegmentId();

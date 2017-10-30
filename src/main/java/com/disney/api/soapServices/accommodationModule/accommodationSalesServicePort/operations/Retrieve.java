@@ -56,6 +56,36 @@ public class Retrieve extends AccommodationSalesServicePort {
     public String getTravelComponentId() {
         return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/componentId");
     }
+
+    public String getBlockCode() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/blockCode");
+
+    }
+
+    public String getTicketGroup() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/ticketGroup");
+
+    }
+
+    public String getExternalRefNum() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/externalReferenceDetails/externalReferenceNumber");
+
+    }
+
+    public String getExternalRefSource() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/externalReferenceDetails/externalReferenceSource");
+
+    }
+
+    public String getSecurityLevel() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/securityLevel");
+
+    }
     // base validation
     /*
      * Validate travelPlanInfo.travelPlanGuests name, phone, address, email, party ID, guest ID
@@ -142,83 +172,83 @@ public class Retrieve extends AccommodationSalesServicePort {
      */
 
     public String getAreadPeriodSD() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/areaPeriod/startDate");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/areaPeriod/startDate");
     }
 
     public String getAreadPeriodED() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/areaPeriod/endDate");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/areaPeriod/endDate");
     }
 
     public String getCancellationNumber() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/cancellationNumber");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/cancellationNumber");
     }
 
     public String getCelebrationCount() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/celebrationCount");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/celebrationCount");
     }
 
     public String getGuaranteed() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/guaranteed");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/guaranteed");
     }
 
     public String getPeriodSD() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/period/startDate");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/period/startDate");
     }
 
     public String getPeriodED() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/period/endDate");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/period/endDate");
     }
 
     public String getStatus() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/status");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/status");
     }
 
     public String getTPSfirstName() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/primaryGuest/firstName");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/primaryGuest/firstName");
     }
 
     public String getTPSLasttName() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/primaryGuest/lastName");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/primaryGuest/lastName");
     }
 
     public String getTPSphone() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/primaryGuest/phoneDetails/number");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/primaryGuest/phoneDetails/number");
     }
 
     public String getTPSaddress() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/primaryGuest/addressDetails/address");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/primaryGuest/addressDetails/addressLine1");
     }
 
     public String getTPSemail() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/primaryGuest/emailDetails/address");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/primaryGuest/emailDetails/address");
     }
 
     public String getTPSPartyId() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/primaryGuest/partyId");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/primaryGuest/partyId");
     }
 
     public String getTPSGuestId() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/primaryGuest/guestId");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/primaryGuest/guestId");
     }
 
     public String getTravelPlanIdTPS() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/travelPlanId");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/travelPlanId");
     }
 
     public String getTravelPlanSegmentIdTPS() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/travelPlanSegmentId");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/travelPlanSegmentId");
     }
 
     public String getOnsiteMessagingEnabled() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/onsiteMessagingEnabled");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/onsiteMessagingEnabled");
     }
 
     public String getBundleDetailPresent() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/bundleDetailPresent");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/bundleDetailPresent");
     }
 
     public String getVipLevel() {
-        return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/vipLevel");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel");
     }
     /*
      * Tcg validation
@@ -394,6 +424,47 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     public String getTicketCode() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/ticketDetails/code");
+    }
+
+    public String getAuditDetailsStatus(int i) {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/auditDetails[" + i + "]/status");
+
+    }
+
+    public String getRoomNumber() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/roomNumber");
+
+    }
+
+    public String getProfileCodeBooking() {
+        return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/code");
+
+    }
+
+    public String getProfileCodeRetrieveRQ(int i) {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/profiles[" + i + "]/code");
+
+    }
+
+    public String getProfileIDRetrieveRQ(int i) {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/profiles[" + i + "]/id");
+
+    }
+
+    public String getProfileTypeRetrieveRQ(int i) {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/profiles[" + i + "]/profileType");
+
+    }
+
+    public String getProfileRoutingNameRetrieveRQ(int i) {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/profiles[" + i + "]/routings/name");
+
     }
 
     public String[] getTravelComponentIDs(int numberOfTcIds) {

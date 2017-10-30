@@ -68,7 +68,42 @@ public class RetrieveHelper {
 
         TestReporter.assertEquals(guestGuestId, retrieve.getGuestId(), "Verify the guest id [" + retrieve.getGuestId() + "] matches the expected [" + guestGuestId + "]");
 
-        TestReporter.assertEquals(travelStatus, retrieve.getTravelStatus(), "Verify the travel status [" + retrieve.getTravelStatus() + "] matches the expected [" + travelStatus + "]");
+        TestReporter.assertNotNull(retrieve.getTravelStatus(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
+
+    }
+
+    public void TpsValidation(Retrieve retrieve) {
+
+        TestReporter.assertTrue(!retrieve.getAreadPeriodSD().equals(""), "Verify the area period start date is in response [" + retrieve.getAreadPeriodSD() + "].");
+
+        TestReporter.assertTrue(!retrieve.getAreadPeriodED().equals(""), "Verify the area period end date is in response [" + retrieve.getAreadPeriodED() + "].");
+
+        TestReporter.assertTrue(!retrieve.getCancellationNumber().equals(""), "Verify the cancellation number in the response [" + retrieve.getCancellationNumber() + "].");
+
+        TestReporter.assertTrue(!retrieve.getCelebrationCount().equals(""), "Verify the celebration count is in the response[" + retrieve.getCelebrationCount() + "].");
+
+        TestReporter.assertTrue(!retrieve.getGuaranteed().equals(""), "Verify the Guaranteed is in the response [" + retrieve.getGuaranteed() + "].");
+
+        TestReporter.assertTrue(!retrieve.getPeriodSD().equals(""), "Verify the period start date is in response [" + retrieve.getPeriodSD() + "].");
+
+        TestReporter.assertTrue(!retrieve.getPeriodED().equals(""), "Verify the period end date is in response [" + retrieve.getPeriodED() + "].");
+
+        TestReporter.assertTrue(!retrieve.getStatus().equals(""), "Verify the status is in the response [" + retrieve.getStatus() + "].");
+
+        TestReporter.assertTrue(!retrieve.getTPSfirstName().equals(""), "Verify the primary guest first name is in the response [" + retrieve.getTPSfirstName() + "].");
+        TestReporter.assertTrue(!retrieve.getTPSLasttName().equals(""), "Verify the primary guest last name is in the response [" + retrieve.getTPSLasttName() + "].");
+        TestReporter.assertTrue(!retrieve.getTPSaddress().equals(""), "Verify the primary guest address is in the response [" + retrieve.getTPSaddress() + "].");
+        TestReporter.assertTrue(!retrieve.getTPSemail().equals(""), "Verify the primary guest email is in the response [" + retrieve.getTPSemail() + "].");
+        TestReporter.assertTrue(!retrieve.getTPSPartyId().equals(""), "Verify the primary guest party id is in the response [" + retrieve.getTPSPartyId() + "].");
+        TestReporter.assertTrue(!retrieve.getTPSGuestId().equals(""), "Verify the primary guest guest id is in the response [" + retrieve.getTPSGuestId() + "].");
+
+        TestReporter.assertTrue(!retrieve.getTravelPlanId().equals(""), "Verify the travel Plan id is in the response[" + retrieve.getTravelPlanId() + "].");
+
+        TestReporter.assertTrue(!retrieve.getTravelPlanSegmentId().equals(""), "Verify the travel Plan segement id in the response [" + retrieve.getTravelPlanSegmentId() + "].");
+
+        TestReporter.assertTrue(!retrieve.getBundleDetailPresent().equals(""), "Verify the bundle detail present is in the response[" + retrieve.getBundleDetailPresent() + "].");
+
+        TestReporter.assertTrue(!retrieve.getOnsiteMessagingEnabled().equals(""), "Verify the onsite messaging enabled is in the response [" + retrieve.getOnsiteMessagingEnabled() + "].");
 
     }
 
@@ -105,7 +140,7 @@ public class RetrieveHelper {
         TestReporter.assertTrue(!rs.getValue("PARTY_ID", 1).equals(""), "The party id  is [" + rs.getValue("PARTY_ID", 1) + "]");
     }
 
-    public void sqlConfirmationDetails(String env, String tps) {
+    public void sqlConfirmationDetails(String env, String tps, Retrieve retrieve) {
         String sql = "select *"
                 + " from res_mgmt.tps_cnfirm_rcpnt a"
                 + " where a.tps_id = '" + tps + "'";
@@ -117,9 +152,6 @@ public class RetrieveHelper {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }
 
-        TestReporter.assertTrue(!rs.getValue("GUEST_ID", 1).equals(""), "The guest id  is [" + rs.getValue("GUEST_ID", 1) + "]");
-
-        TestReporter.assertTrue(!rs.getValue("PARTY_ID", 1).equals(""), "The party id  is [" + rs.getValue("PARTY_ID", 1) + "]");
     }
 
     public void sqlAdmissionComponentDetails(String env, String tcg) {
@@ -141,24 +173,27 @@ public class RetrieveHelper {
         TestReporter.assertTrue(!rs.getValue("ATS_TKT_CD", 1).equals(""), "The ticket cd  is [" + rs.getValue("ATS_TKT_CD", 1) + "]");
     }
 
-    public void sqlTPSDetails(String env, String tps) {
+    public void sqlTPSDetails(String env, String tps, Retrieve retrieve) {
         String sql = "select *"
                 + " from res_mgmt.tps a"
                 + " where a.tps_id ='" + tps + "'";
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        rs.print();
+        // rs.print();
         if (rs.getRowCount() == 0) {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }
 
-        TestReporter.assertTrue(!rs.getValue("GUEST_ID", 1).equals(""), "The guest id  is [" + rs.getValue("GUEST_ID", 1) + "]");
+        TestReporter.assertTrue(rs.getValue("TPS_ID", 1).equals(retrieve.getTravelPlanSegmentId()), "The travel plan segment id  matches [" + rs.getValue("TPS_ID", 1) + "] the response [" + retrieve.getTravelPlanSegmentId() + "].");
 
-        TestReporter.assertTrue(!rs.getValue("PARTY_ID", 1).equals(""), "The party id  is [" + rs.getValue("PARTY_ID", 1) + "]");
+        TestReporter.assertTrue(rs.getValue("TP_ID", 1).equals(retrieve.getTravelPlanId()), "The travel Plan id  matches [" + rs.getValue("TP_ID", 1) + "] the response [" + retrieve.getTravelPlanId() + "].");
+
+        TestReporter.assertTrue(!rs.getValue("TRVL_STS_NM", 1).equals(""), "The travel status name is [" + rs.getValue("TRVL_STS_NM", 1) + "].");
+
     }
 
-    public void sqlTPSConfirmationDetails(String env, String tps) {
+    public void sqlTPSConfirmationDetails(String env, String tps, Retrieve retrieve) {
         String sql = "SELECT *"
                 + " FROM RES_MGMT.TPS_CNFIRM_RCPNT a"
                 + " LEFT OUTER JOIN GUEST.TXN_PTY_EML_LCTR c ON a.LCTR_ID = c.TXN_PTY_EML_LCTR_ID"
@@ -171,12 +206,12 @@ public class RetrieveHelper {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }
 
-        TestReporter.assertTrue(!rs.getValue("GUEST_ID", 1).equals(""), "The guest id  is [" + rs.getValue("GUEST_ID", 1) + "]");
+        TestReporter.assertTrue(!rs.getValue("TPS_ID", 1).equals(""), "The travel plan segment id is [" + rs.getValue("TPS_ID", 1) + "]");
+        TestReporter.assertTrue(!rs.getValue("TPS_CNFIRM_RCPNT_ID", 1).equals(""), "The tps confirmation rcpnt id is [" + rs.getValue("TPS_CNFIRM_RCPNT_ID", 1) + "]");
 
-        TestReporter.assertTrue(!rs.getValue("PARTY_ID", 1).equals(""), "The party id  is [" + rs.getValue("PARTY_ID", 1) + "]");
     }
 
-    public void sqlPrimaryTPLinkedDVCReservation(String env, String tp) {
+    public void sqlPrimaryTPLinkedDVCReservation(String env, String tp, Retrieve retrieve) {
         String sql = "select *"
                 + " from res_mgmt.tp a"
                 + " join res_mgmt.tps b on a.tp_id = b.tp_id"
@@ -184,14 +219,13 @@ public class RetrieveHelper {
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        rs.print();
+        // rs.print();
         if (rs.getRowCount() == 0) {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }
 
-        TestReporter.assertTrue(!rs.getValue("GUEST_ID", 1).equals(""), "The guest id  is [" + rs.getValue("GUEST_ID", 1) + "]");
-
-        TestReporter.assertTrue(!rs.getValue("PARTY_ID", 1).equals(""), "The party id  is [" + rs.getValue("PARTY_ID", 1) + "]");
+        TestReporter.assertTrue(!rs.getValue("TPS_CNFIRM_RCPNT_ID", 1).equals(""), "The tps confirmation rcpnt id is [" + rs.getValue("TPS_CNFIRM_RCPNT_ID", 1) + "]");
+        TestReporter.assertTrue(!rs.getValue("TPS_ID", 1).equals(""), "The travel plan segment id is [" + rs.getValue("TPS_ID", 1) + "]");
     }
 
 }
