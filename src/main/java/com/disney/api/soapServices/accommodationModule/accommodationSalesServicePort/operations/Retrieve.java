@@ -439,31 +439,31 @@ public class Retrieve extends AccommodationSalesServicePort {
     }
 
     public String getProfileCodeBooking() {
-        return getResponseNodeValueByXPath("/Envelope/Body/eplaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/code");
+        return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/code");
 
     }
 
     public String getProfileCodeRetrieveRQ(int i) {
 
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/profiles[" + i + "]/code");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/profiles[" + i + "]/code");
 
     }
 
     public String getProfileIDRetrieveRQ(int i) {
 
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/profiles[" + i + "]/id");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/profiles[" + i + "]/id");
 
     }
 
     public String getProfileTypeRetrieveRQ(int i) {
 
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/profiles[" + i + "]/profileType");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/profiles[" + i + "]/profileType");
 
     }
 
     public String getProfileRoutingNameRetrieveRQ(int i) {
 
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/profiles[" + i + "]/routings/name");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/profiles[" + i + "]/routings/name");
 
     }
 

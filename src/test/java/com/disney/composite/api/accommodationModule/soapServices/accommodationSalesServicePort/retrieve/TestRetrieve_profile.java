@@ -47,10 +47,13 @@ public class TestRetrieve_profile extends AccommodationBaseTest {
         RetrieveHelper helper = new RetrieveHelper();
         helper.baseValidation(getBook(), retrieve);
         helper.sqlTPSConfirmationDetails(environment, getBook().getTravelPlanSegmentId(), retrieve);
-        int NumberOfProfiles = retrieve.getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/profiles");
+        int NumberOfProfiles = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/profiles");
 
-        for (int i = 1; i <= NumberOfProfiles; i++) {
-            TestReporter.assertTrue(retrieve.getProfileCodeBooking().equals(retrieve.getProfileCodeRetrieveRQ(i)), "The profile code in the booking request [" + retrieve.getProfileCodeBooking() + "]  matches the retrieve response [" + retrieve.getProfileCodeRetrieveRQ(i) + "]");
+        for (int i = 2; i <= NumberOfProfiles; i++) {
+            TestReporter.assertTrue(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/code").equals(retrieve.getProfileCodeRetrieveRQ(i)), "The profile code in the booking request [" + getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/code") + "]  matches the retrieve response [" + retrieve.getProfileCodeRetrieveRQ(i) + "]");
+            TestReporter.assertTrue(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/id").equals(retrieve.getProfileIDRetrieveRQ(i)), "The profile code in the booking request [" + getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/id") + "]  matches the retrieve response [" + retrieve.getProfileIDRetrieveRQ(i) + "]");
+            TestReporter.assertTrue(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/profileType").equals(retrieve.getProfileTypeRetrieveRQ(i)), "The profile code in the booking request [" + getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/profileType") + "]  matches the retrieve response [" + retrieve.getProfileTypeRetrieveRQ(i) + "]");
+            TestReporter.assertTrue(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/routings/name").equals(retrieve.getProfileRoutingNameRetrieveRQ(i)), "The profile code in the booking request [" + getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/profiles/routings/name") + "]  matches the retrieve response [" + retrieve.getProfileRoutingNameRetrieveRQ(i) + "]");
 
         }
 
