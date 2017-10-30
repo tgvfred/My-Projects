@@ -68,7 +68,9 @@ public class TestRetrieve_checkedOut extends AccommodationBaseTest {
 
         int NumberOfStatus = retrieve.getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/auditDetails/status");
         for (int i = 1; i <= NumberOfStatus; i++) {
-            TestReporter.assertTrue(("Checked Out").equals(retrieve.getAuditDetailsStatus(i)), "The audit status has been set to [" + retrieve.getAuditDetailsStatus(i) + "]");
+            if (retrieve.getAuditDetailsStatus(i).equals("Checked Out")) {
+                TestReporter.assertTrue(("Checked Out").equals(retrieve.getAuditDetailsStatus(i)), "The audit status has been set to [" + retrieve.getAuditDetailsStatus(i) + "]");
+            }
 
         }
         // clone validations
