@@ -34,8 +34,8 @@ public class TestRetrieve_wdtc extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_wdtc() {
 
-        Retrieve retrieve = new Retrieve(environment);
-        retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
+
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());

@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.admissionModule.admissionSalesServicePort.operations.BookPackageSelectableTickets;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.FindTicketPriceGridByPackage;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.GetTicketProducts;
 import com.disney.utils.Environment;
@@ -25,7 +24,6 @@ public class TestRetrieve_bookPackageSelectableTickets extends AccommodationBase
     public void setup(String environment) {
         setEnvironment(Environment.getBaseEnvironmentName(environment));
         locEnv = environment;
-
         daysOut.set(1);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));

@@ -56,8 +56,8 @@ public class TestRetrieve_shared extends AccommodationBaseTest {
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second TPS: " + share.getFaultString(), share);
 
-        Retrieve retrieve = new Retrieve(environment);
-        retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
+
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());

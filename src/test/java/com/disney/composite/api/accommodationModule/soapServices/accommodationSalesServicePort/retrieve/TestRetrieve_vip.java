@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -25,7 +24,7 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         setVipLevel("1");
-        setAddNewGuest(true);
+
         isComo.set("false");
         bookReservation();
 
@@ -34,8 +33,8 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_vip() {
 
-        Retrieve retrieve = new Retrieve(environment);
-        retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
+
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());
@@ -44,7 +43,7 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
 
         System.out.println(retrieve.getResponse());
 
-      TestReporter.assertTrue(("1").equals(retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests))), description);
+        TestReporter.assertTrue(("1").equals(retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel")), "The Vip level is [" + retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel") + "]");
 
         // clone validations
         if (Environment.isSpecialEnvironment(getEnvironment())) {

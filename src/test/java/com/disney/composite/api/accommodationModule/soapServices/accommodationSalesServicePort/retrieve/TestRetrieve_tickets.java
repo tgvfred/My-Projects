@@ -35,8 +35,8 @@ public class TestRetrieve_tickets extends AccommodationBaseTest {
     public void testRetrieve_tickets() {
         String tcg = getBook().getTravelComponentGroupingId();
 
-        Retrieve retrieve = new Retrieve(environment);
-        retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
+
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());
