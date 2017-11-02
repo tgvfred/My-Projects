@@ -13,7 +13,6 @@ import com.disney.utils.TestReporter;
 
 public class TestRetrieve_wdtc extends AccommodationBaseTest {
 
-    @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
@@ -37,7 +36,8 @@ public class TestRetrieve_wdtc extends AccommodationBaseTest {
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
 
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
-        retrieve.setSiebelTravelPlanId("0");
+        // retrieve.setSiebelTravelPlanId("0");
+
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);

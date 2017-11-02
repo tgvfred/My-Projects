@@ -466,6 +466,52 @@ public class Retrieve extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/profiles[" + i + "]/routings/name");
 
     }
+    // travel agency getters
+
+    public String getAgencyName() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/travelAgency/agencyName");
+
+    }
+
+    public String getAgencyOdsId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/travelAgency/agencyOdsId");
+
+    }
+
+    public String getGuestTravelAgencyId() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/travelAgency/guestTravelAgencyId");
+
+    }
+
+    public String getAgentId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/travelAgency/agentId");
+
+    }
+
+    public String getGuestAgentId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/travelAgency/guestAgentId");
+
+    }
+
+    public String getConfirmationLocatorValue() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/travelAgency/confirmationLocatorValue");
+
+    }
+
+    public String getGuestConfirmationLocationId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/travelAgency/guestConfirmationLocationId");
+
+    }
+
+    // olci getters
+
+    public String getOnlineCheckInIndicator() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/onLineCheckInIndicator");
+
+    }
 
     public String[] getTravelComponentIDs(int numberOfTcIds) {
         String[] TC_IDs = new String[numberOfTcIds];

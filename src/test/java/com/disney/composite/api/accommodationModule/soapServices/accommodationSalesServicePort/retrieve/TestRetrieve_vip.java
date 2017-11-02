@@ -11,23 +11,24 @@ import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieve_vip extends AccommodationBaseTest {
-
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
         isComo.set("false");
+
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
+
         setValues(getEnvironment());
-        setVipLevel("1");
-
         isComo.set("false");
-        bookReservation();
 
+        setVipLevel("1");
+        bookReservation();
+        System.out.println(getBook().getRequest());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
@@ -36,11 +37,13 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
 
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
-        retrieve.setSiebelTravelPlanId("0");
+        // retrieve.setSiebelTravelPlanId("0");
+
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
+        System.out.println(getBook().getRequest());
         System.out.println(retrieve.getResponse());
 
         TestReporter.assertTrue(("1").equals(retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel")), "The Vip level is [" + retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel") + "]");
@@ -89,5 +92,4 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
 
         }
     }
-
 }
