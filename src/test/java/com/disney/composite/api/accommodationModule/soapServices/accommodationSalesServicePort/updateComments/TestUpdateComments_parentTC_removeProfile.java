@@ -15,7 +15,7 @@ import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestUpdateComments_parentTC_removeProfile extends AccommodationBaseTest {
-    String profileId = Randomness.randomNumber(3);
+    String profileId = "579";
     String commentText = "This is test comment " + Randomness.randomAlphaNumeric(4);
     String parentId = "";
 
