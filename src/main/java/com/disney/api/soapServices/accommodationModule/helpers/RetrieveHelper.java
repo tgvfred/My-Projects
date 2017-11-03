@@ -107,17 +107,41 @@ public class RetrieveHelper {
 
     }
 
+    public void tcgValidation(Retrieve retrieve) {
+
+        int NumberOfGuestReferences = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences");
+
+        TestReporter.assertTrue(NumberOfGuestReferences >= 2, "The number of guest references nodes are [" + NumberOfGuestReferences + "]");
+
+        for (int i = 1; i <= NumberOfGuestReferences; i++) {
+
+            TestReporter.assertTrue(!retrieve.getGuestReferencesfirstName(i).equals(""), "Verify the guest references at node [" + i + "] first name    is in response [" + retrieve.getGuestReferencesfirstName(i) + "].");
+
+            TestReporter.assertTrue(!retrieve.getGuestReferencesLastName(i).equals(""), "Verify the guest references last name at node [" + i + "] is in response [" + retrieve.getGuestReferencesLastName(i) + "].");
+
+            TestReporter.assertTrue(!retrieve.getGuestReferencesphone(i).equals(""), "Verify the guest references  phone at node  [" + i + "] is in the response [" + retrieve.getGuestReferencesphone(i) + "].");
+
+            TestReporter.assertTrue(!retrieve.getGuestReferencesaddress(i).equals(""), "Verify the guest references address at node [" + i + "] is in the response[" + retrieve.getGuestReferencesaddress(i) + "].");
+
+            TestReporter.assertTrue(!retrieve.getGuestReferencesemail(i).equals(""), "Verify the  guest references  email  at node [" + i + "] is  in the response [" + retrieve.getGuestReferencesemail(i) + "].");
+
+            TestReporter.assertTrue(!retrieve.getGuestReferencesPartyId(i).equals(""), "Verify the guest references  party id at node [" + i + "] is in the response[" + retrieve.getGuestReferencesPartyId(i) + "].");
+
+            TestReporter.assertTrue(!retrieve.getGuestReferencesGuestId(i).equals(""), "Verify the  guest references guest id at node [" + i + "] is in the response [" + retrieve.getGuestReferencesGuestId(i) + "].");
+        }
+    }
+
     public void ticketValidation(Retrieve retrieve) {
 
-        TestReporter.assertNotNull(retrieve.getTicketStatus(), "Verify the ticket details status is in response [" + retrieve.getTicketStatus() + "].");
+        TestReporter.assertTrue(!retrieve.getTicketStatus().equals(""), "Verify the ticket details status is in response [" + retrieve.getTicketStatus() + "].");
 
-        TestReporter.assertNotNull(retrieve.getTicketGuestId(), "Verify the ticket details guest id is in response [" + retrieve.getTicketGuestId() + "].");
+        TestReporter.assertTrue(!retrieve.getTicketGuestId().equals(""), "Verify the ticket details guest id is in response [" + retrieve.getTicketGuestId() + "].");
 
-        TestReporter.assertNotNull(retrieve.getTicketAgeType(), "Verify the ticket details age type is in the response [" + retrieve.getTicketAgeType() + "].");
+        TestReporter.assertTrue(!retrieve.getTicketAgeType().equals(""), "Verify the ticket details age type is in the response [" + retrieve.getTicketAgeType() + "].");
 
-        TestReporter.assertNotNull(retrieve.getTicketComponentId(), "Verify the ticket details component id is in the response[" + retrieve.getTicketComponentId() + "].");
+        TestReporter.assertTrue(!retrieve.getTicketComponentId().equals(""), "Verify the ticket details component id is in the response[" + retrieve.getTicketComponentId() + "].");
 
-        TestReporter.assertNotNull(retrieve.getTicketCode(), "Verify the ticket details ticket code is in the response [" + retrieve.getTicketCode() + "].");
+        TestReporter.assertTrue(!retrieve.getTicketCode().equals(""), "Verify the ticket details ticket code is in the response [" + retrieve.getTicketCode() + "].");
 
     }
 

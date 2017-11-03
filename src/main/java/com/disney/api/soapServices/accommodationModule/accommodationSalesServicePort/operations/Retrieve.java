@@ -293,32 +293,32 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     }
 
-    public String getGuestReferencesfirstName() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences/guest/firstName");
+    public String getGuestReferencesfirstName(int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/firstName");
     }
 
-    public String getGuestReferencesLastName() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences/guest/lastName");
+    public String getGuestReferencesLastName(int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/lastName");
     }
 
-    public String getGuestReferencesphone() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences/guest/phoneDetails/number");
+    public String getGuestReferencesphone(int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/phoneDetails/number");
     }
 
-    public String getGuestReferencesaddress() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences/guest/addressDetails/address");
+    public String getGuestReferencesaddress(int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/addressDetails/addressLine1");
     }
 
-    public String getGuestReferencesemail() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences/guest/emailDetails/address");
+    public String getGuestReferencesemail(int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/emailDetails/address");
     }
 
-    public String getGuestReferencesPartyId() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences/guest/partyId");
+    public String getGuestReferencesPartyId(int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/partyId");
     }
 
-    public String getGuestReferencesGuestId() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences/guest/guestId");
+    public String getGuestReferencesGuestId(int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/guestId");
     }
 
     public String getAccommPackageCode() {
