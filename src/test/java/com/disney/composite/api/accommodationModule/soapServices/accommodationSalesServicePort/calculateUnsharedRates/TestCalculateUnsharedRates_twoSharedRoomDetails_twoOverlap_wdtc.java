@@ -35,8 +35,6 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap_wdtc ext
 
         calculate = new CalculateUnsharedRates(environment, "TwoOverlap");
         calculate.sendRequest();
-        System.out.print(calculate.getRequest());
-        System.out.print(calculate.getResponse());
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 
         validateNumberShareChainsResponseNodes();

@@ -1208,24 +1208,28 @@ public class AccommodationBaseTest extends BaseRestTest {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts()));
         for (int i = 0; i < roomTypeAndFacInfo.length; i++) {
-            roomTypeAndFacInfo[i][0] = rs.getValue("NUMROOMS", i + 1);
-            roomTypeAndFacInfo[i][1] = rs.getValue("ROOM_TYPE", i + 1);
-            roomTypeAndFacInfo[i][2] = rs.getValue("RESORT", i + 1);
-            roomTypeAndFacInfo[i][3] = rs.getValue("ROOM_DESC", i + 1);
-            roomTypeAndFacInfo[i][4] = rs.getValue("RSRT_FAC_ID", i + 1);
-            roomTypeAndFacInfo[i][5] = rs.getValue("LOC_ID", i + 1);
-            TestReporter.logStep("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
-                    " **ROOM TYPE: " + roomTypeAndFacInfo[i][1] +
-                    " **RESORT: " + roomTypeAndFacInfo[i][2] +
-                    " **ROOM DESCRIPTION: " + roomTypeAndFacInfo[i][3] +
-                    " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
-                    " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
-            System.out.println("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
-                    " **ROOM TYPE: " + roomTypeAndFacInfo[i][1] +
-                    " **RESORT: " + roomTypeAndFacInfo[i][2] +
-                    " **ROOM DESCRIPTION: " + roomTypeAndFacInfo[i][3] +
-                    " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
-                    " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
+
+            // Removing Pop Century from the config list until after 7.23 release - WWA 11/3/2017
+            if (!rs.getValue("RSRT_FAC_ID", i + 1).equals("80010403")) {
+                roomTypeAndFacInfo[i][0] = rs.getValue("NUMROOMS", i + 1);
+                roomTypeAndFacInfo[i][1] = rs.getValue("ROOM_TYPE", i + 1);
+                roomTypeAndFacInfo[i][2] = rs.getValue("RESORT", i + 1);
+                roomTypeAndFacInfo[i][3] = rs.getValue("ROOM_DESC", i + 1);
+                roomTypeAndFacInfo[i][4] = rs.getValue("RSRT_FAC_ID", i + 1);
+                roomTypeAndFacInfo[i][5] = rs.getValue("LOC_ID", i + 1);
+                TestReporter.logStep("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
+                        " **ROOM TYPE: " + roomTypeAndFacInfo[i][1] +
+                        " **RESORT: " + roomTypeAndFacInfo[i][2] +
+                        " **ROOM DESCRIPTION: " + roomTypeAndFacInfo[i][3] +
+                        " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
+                        " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
+                // System.out.println("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
+                // " **ROOM TYPE: " + roomTypeAndFacInfo[i][1] +
+                // " **RESORT: " + roomTypeAndFacInfo[i][2] +
+                // " **ROOM DESCRIPTION: " + roomTypeAndFacInfo[i][3] +
+                // " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
+                // " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
+            }
         }
         setSendRequest(true);
     }
@@ -1246,9 +1250,26 @@ public class AccommodationBaseTest extends BaseRestTest {
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setValues();
         setSendRequest(true);
-        bookReservation();
+        // Hotfix to help avoid error with Pop Century - 10/27/17 - WWA
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            setValues();
+            try {
+                bookReservation();
+                success = true;
+            } catch (Exception e) {
+                if (!getBook().getFaultString().contains("No default TransactionAccountingCenter found for TransactionFacilityID")) {
+                    throw new SoapException(e.getMessage(), e.fillInStackTrace());
+                }
+            }
+            tries++;
+        } while (tries < maxTries && !success);
+        // setValues();
+        // setSendRequest(true);
+        // bookReservation();
     }
 
     @AfterMethod(alwaysRun = true)

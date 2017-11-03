@@ -64,7 +64,7 @@ public class TestRetreiveIdsToProcess_FAILED extends AccommodationBaseTest {
                 TestReporter.assertTrue(true,
                         "Validating no ProcessDataIdList returned in the reponse for getRetreiveIdsToProcessResponse");
             }
-            if (Environment.isSpecialEnvironment(environment)) {
+            if (Environment.isSpecialEnvironment(environment) && retreiveIds.getRetreiveIdsToProcessResponse("1") != null) {
                 RetreiveIdsToProcess clone = (RetreiveIdsToProcess) retreiveIds.clone();
                 clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
                 clone.sendRequest();

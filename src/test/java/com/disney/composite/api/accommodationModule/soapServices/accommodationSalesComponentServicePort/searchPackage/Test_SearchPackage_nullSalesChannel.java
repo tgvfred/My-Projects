@@ -2,7 +2,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.SearchPackage;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.SearchPackage;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;

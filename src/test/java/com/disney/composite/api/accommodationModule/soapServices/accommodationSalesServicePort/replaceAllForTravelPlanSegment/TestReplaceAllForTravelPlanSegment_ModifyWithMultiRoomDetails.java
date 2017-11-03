@@ -35,6 +35,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails exten
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setSendRequest(true);
         bookReservation();
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();

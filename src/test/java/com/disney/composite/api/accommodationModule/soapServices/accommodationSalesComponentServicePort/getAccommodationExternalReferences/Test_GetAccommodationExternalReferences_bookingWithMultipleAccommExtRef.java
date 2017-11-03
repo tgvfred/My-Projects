@@ -4,7 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.GetAccommodationExternalReferences;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.GetAccommodationExternalReferences;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
@@ -52,7 +52,7 @@ public class Test_GetAccommodationExternalReferences_bookingWithMultipleAccommEx
         get.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         get.sendRequest();
         TestReporter.logAPI(!get.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", get);
-        get.validateResponseNodeQuantity("", true);
+
         // Compares the response values to the DB values for both response
         validation(get.getExternalReferenceNumberByIndex("1"), get.getExternalReferenceSourceByIndex("1"));
         validation(get.getExternalReferenceNumberByIndex("2"), get.getExternalReferenceSourceByIndex("2"));

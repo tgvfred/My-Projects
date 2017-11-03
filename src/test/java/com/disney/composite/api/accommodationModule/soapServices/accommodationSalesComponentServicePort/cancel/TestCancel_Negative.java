@@ -7,7 +7,7 @@ import static com.disney.api.soapServices.accommodationModule.applicationError.A
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Cancel;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.Environment;
