@@ -1565,6 +1565,8 @@ public class AccommodationBaseTest extends BaseRestTest {
                 getBook().addRoom(this);
             }
 
+            getBook().setLocationIds(getLocationId());
+
             if ((getSendRequest() == null) || (getSendRequest() == true)) {
                 // if (!isValid(isComo.get())) {
                 // throw new AutomationException("The 'isComo' field cannot be null or empty.");
