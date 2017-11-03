@@ -25,8 +25,8 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
 
         setValues(getEnvironment());
         isComo.set("false");
-
-        setVipLevel("1");
+        setNonZeroVip(true);
+        setVipLevel("ONE");
         bookReservation();
         System.out.println(getBook().getRequest());
     }
@@ -46,7 +46,7 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
         System.out.println(getBook().getRequest());
         System.out.println(retrieve.getResponse());
 
-        TestReporter.assertTrue(("1").equals(retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel")), "The Vip level is [" + retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel") + "]");
+        TestReporter.assertTrue(!("ZERO").equals(retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel")), "The Vip level is [" + retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel") + "]");
 
         // clone validations
         if (Environment.isSpecialEnvironment(getEnvironment())) {
