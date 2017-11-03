@@ -109,25 +109,27 @@ public class RetrieveHelper {
 
     public void tcgValidation(Retrieve retrieve) {
 
-        int NumberOfGuestReferences = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences");
-
+        int NumberOfGuestReferences = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[1]/accommodation/guestReferences");
+        int NumberOfComponentGroupings = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings");
         TestReporter.assertTrue(NumberOfGuestReferences >= 2, "The number of guest references nodes are [" + NumberOfGuestReferences + "]");
 
-        for (int i = 1; i <= NumberOfGuestReferences; i++) {
+        for (int j = 1; j <= NumberOfComponentGroupings; j++) {
+            for (int i = 1; i <= NumberOfGuestReferences; i++) {
 
-            TestReporter.assertTrue(!retrieve.getGuestReferencesfirstName(i).equals(""), "Verify the guest references at node [" + i + "] first name    is in response [" + retrieve.getGuestReferencesfirstName(i) + "].");
+                TestReporter.assertTrue(!retrieve.getGuestReferencesfirstName(j, i).equals(""), "Verify the guest references at node [" + i + "] first name    is in response [" + retrieve.getGuestReferencesfirstName(j, i) + "].");
 
-            TestReporter.assertTrue(!retrieve.getGuestReferencesLastName(i).equals(""), "Verify the guest references last name at node [" + i + "] is in response [" + retrieve.getGuestReferencesLastName(i) + "].");
+                TestReporter.assertTrue(!retrieve.getGuestReferencesLastName(j, i).equals(""), "Verify the guest references last name at node [" + i + "] is in response [" + retrieve.getGuestReferencesLastName(j, i) + "].");
 
-            TestReporter.assertTrue(!retrieve.getGuestReferencesphone(i).equals(""), "Verify the guest references  phone at node  [" + i + "] is in the response [" + retrieve.getGuestReferencesphone(i) + "].");
+                TestReporter.assertTrue(!retrieve.getGuestReferencesphone(j, i).equals(""), "Verify the guest references  phone at node  [" + i + "] is in the response [" + retrieve.getGuestReferencesphone(j, i) + "].");
 
-            TestReporter.assertTrue(!retrieve.getGuestReferencesaddress(i).equals(""), "Verify the guest references address at node [" + i + "] is in the response[" + retrieve.getGuestReferencesaddress(i) + "].");
+                TestReporter.assertTrue(!retrieve.getGuestReferencesaddress(j, i).equals(""), "Verify the guest references address at node [" + i + "] is in the response[" + retrieve.getGuestReferencesaddress(j, i) + "].");
 
-            TestReporter.assertTrue(!retrieve.getGuestReferencesemail(i).equals(""), "Verify the  guest references  email  at node [" + i + "] is  in the response [" + retrieve.getGuestReferencesemail(i) + "].");
+                TestReporter.assertTrue(!retrieve.getGuestReferencesemail(j, i).equals(""), "Verify the  guest references  email  at node [" + i + "] is  in the response [" + retrieve.getGuestReferencesemail(j, i) + "].");
 
-            TestReporter.assertTrue(!retrieve.getGuestReferencesPartyId(i).equals(""), "Verify the guest references  party id at node [" + i + "] is in the response[" + retrieve.getGuestReferencesPartyId(i) + "].");
+                TestReporter.assertTrue(!retrieve.getGuestReferencesPartyId(j, i).equals(""), "Verify the guest references  party id at node [" + i + "] is in the response[" + retrieve.getGuestReferencesPartyId(j, i) + "].");
 
-            TestReporter.assertTrue(!retrieve.getGuestReferencesGuestId(i).equals(""), "Verify the  guest references guest id at node [" + i + "] is in the response [" + retrieve.getGuestReferencesGuestId(i) + "].");
+                TestReporter.assertTrue(!retrieve.getGuestReferencesGuestId(j, i).equals(""), "Verify the  guest references guest id at node [" + i + "] is in the response [" + retrieve.getGuestReferencesGuestId(j, i) + "].");
+            }
         }
     }
 

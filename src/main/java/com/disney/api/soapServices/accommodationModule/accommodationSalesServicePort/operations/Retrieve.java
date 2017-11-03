@@ -293,32 +293,32 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     }
 
-    public String getGuestReferencesfirstName(int i) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/firstName");
+    public String getGuestReferencesfirstName(int j, int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[" + j + "]/accommodation/guestReferences[" + i + "]/guest/firstName");
     }
 
-    public String getGuestReferencesLastName(int i) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/lastName");
+    public String getGuestReferencesLastName(int j, int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[" + j + "]/accommodation/guestReferences[" + i + "]/guest/lastName");
     }
 
-    public String getGuestReferencesphone(int i) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/phoneDetails/number");
+    public String getGuestReferencesphone(int j, int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[" + j + "]/accommodation/guestReferences[" + i + "]/guest/phoneDetails/number");
     }
 
-    public String getGuestReferencesaddress(int i) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/addressDetails/addressLine1");
+    public String getGuestReferencesaddress(int j, int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[" + j + "]/accommodation/guestReferences[" + i + "]/guest/addressDetails/addressLine1");
     }
 
-    public String getGuestReferencesemail(int i) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/emailDetails/address");
+    public String getGuestReferencesemail(int j, int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[" + j + "]/accommodation/guestReferences[" + i + "]/guest/emailDetails/address");
     }
 
-    public String getGuestReferencesPartyId(int i) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/partyId");
+    public String getGuestReferencesPartyId(int j, int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[" + j + "]/accommodation/guestReferences[" + i + "]/guest/partyId");
     }
 
-    public String getGuestReferencesGuestId(int i) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences[" + i + "]/guest/guestId");
+    public String getGuestReferencesGuestId(int j, int i) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[" + j + "]/accommodation/guestReferences[" + i + "]/guest/guestId");
     }
 
     public String getAccommPackageCode() {
