@@ -2,6 +2,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -42,6 +43,12 @@ public class TestGetOptionsByFilter_Positive extends BaseTest {
             ls.add(rs[i]);
         }
         return ls.toArray(new Object[ls.size()][]);
+    }
+
+    @DataProvider(name = "reasons")
+    public static Object[][] dpReasons() {
+        Object[][] rs = db.getResultSet("SELECT TC_RSN_TYP_NM FROM RES_MGMT.TC_RSN_TYP");
+        return Arrays.copyOfRange(rs, 1, rs.length);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionsByFilter" })
@@ -114,7 +121,7 @@ public class TestGetOptionsByFilter_Positive extends BaseTest {
         validateSpecialEnvironment(getOptionsByFilter);
     }
 
-    @Test(enabled = false, dataProvider = "countryCodes", groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionsByFilter" })
+    @Test(dataProvider = "countryCodes", groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionsByFilter" })
     public void testGetOptionsByFilter_REGION(String countryCode) {
         TestReporter.logScenario("Test - Get Options By Filter - REGION");
 
@@ -124,10 +131,104 @@ public class TestGetOptionsByFilter_Positive extends BaseTest {
         getOptionsByFilter.sendRequest();
 
         TestReporter.logAPI(!getOptionsByFilter.getResponseStatusCode().equals("200"), getOptionsByFilter.getFaultString(), getOptionsByFilter);
-
         String sql = "SELECT RGN_CD, PRMY_SUB_DIV_NM FROM GUEST.RGN WHERE CNTRY_CD = '" + countryCode + "'";
         setComparisonValidation(getOptionsByFilter.getResponseOptionKeyValuePairs(), getDatabaseKeyValuePairs(sql));
         validateSpecialEnvironment(getOptionsByFilter);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionsByFilter" })
+    public void testGetOptionsByFilter_COMMUNICATIONCHANNELS() {
+        TestReporter.logScenario("Test - Get Options By Filter - COMMUNICATIONCHANNELS");
+        GetOptionsByFilter getOptionsByFilter = createAndSendFilterlessRequestAndValidateResponse("COMMUNICATIONCHANNELS");
+
+        String sql = "SELECT COMNCTN_CHAN_ID, COMNCTN_CHAN_NM FROM RES_MGMT.COMNCTN_CHAN";
+        setComparisonValidation(getOptionsByFilter.getResponseOptionKeyValuePairs(), getDatabaseKeyValuePairs(sql));
+        // Only exists in Latest, so Response Node Validation is skipped
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionsByFilter" })
+    public void testGetOptionsByFilter_SALESCHANNELS() {
+        TestReporter.logScenario("Test - Get Options By Filter - SALESCHANNELS");
+        GetOptionsByFilter getOptionsByFilter = createAndSendFilterlessRequestAndValidateResponse("SALESCHANNELS");
+
+        String sql = "SELECT SLS_CHAN_ID, SLS_CHAN_NM FROM RES_MGMT.SLS_CHAN";
+        setComparisonValidation(getOptionsByFilter.getResponseOptionKeyValuePairs(), getDatabaseKeyValuePairs(sql));
+        // Only exists in Latest, so Response Node Validation is skipped
+    }
+
+    @Test(dataProvider = "reasons", groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionsByFilter" })
+    public void testGetOptionsByFilter_CANCEL_REASON(String reason) {
+        TestReporter.logScenario("Test - Get Options By Filter - CANCEL_REASON");
+
+        GetOptionsByFilter getOptionsByFilter = new GetOptionsByFilter(environment);
+        getOptionsByFilter.setAccommodationSalesOptionsEnum("CANCEL_REASON");
+        getOptionsByFilter.addOptionFilters(null, reason);
+        getOptionsByFilter.sendRequest();
+
+        TestReporter.logAPI(!getOptionsByFilter.getResponseStatusCode().equals("200"), getOptionsByFilter.getFaultString(), getOptionsByFilter);
+        String sql = "SELECT LGCY_RSN_CD, TC_RSN_NM FROM RES_MGMT.PRDF_TC_RSN WHERE TC_RSN_TYP_NM = '" + reason + "'";
+        setComparisonValidation(getOptionsByFilter.getResponseOptionKeyValuePairs(), getDatabaseKeyValuePairs(sql));
+        // Only exists in Latest, so Response Node Validation is skipped
+    }
+
+    @Test(dataProvider = "reasons", groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionsByFilter" })
+    public void testGetOptionsByFilter_REINSTATE_REASON(String reason) {
+        TestReporter.logScenario("Test - Get Options By Filter - REINSTATE_REASON");
+
+        GetOptionsByFilter getOptionsByFilter = new GetOptionsByFilter(environment);
+        getOptionsByFilter.setAccommodationSalesOptionsEnum("REINSTATE_REASON");
+        getOptionsByFilter.addOptionFilters(null, reason);
+        getOptionsByFilter.sendRequest();
+
+        TestReporter.logAPI(!getOptionsByFilter.getResponseStatusCode().equals("200"), getOptionsByFilter.getFaultString(), getOptionsByFilter);
+        String sql = "SELECT LGCY_RSN_CD, TC_RSN_NM FROM RES_MGMT.PRDF_TC_RSN WHERE TC_RSN_TYP_NM = '" + reason + "'";
+        setComparisonValidation(getOptionsByFilter.getResponseOptionKeyValuePairs(), getDatabaseKeyValuePairs(sql));
+        // Only exists in Latest, so Response Node Validation is skipped
+    }
+
+    @Test(dataProvider = "reasons", groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionsByFilter" })
+    public void testGetOptionsByFilter_RATE_OVERRIDE_REASON(String reason) {
+        TestReporter.logScenario("Test - Get Options By Filter - RATE_OVERRIDE_REASON");
+
+        GetOptionsByFilter getOptionsByFilter = new GetOptionsByFilter(environment);
+        getOptionsByFilter.setAccommodationSalesOptionsEnum("RATE_OVERRIDE_REASON");
+        getOptionsByFilter.addOptionFilters(null, reason);
+        getOptionsByFilter.sendRequest();
+
+        TestReporter.logAPI(!getOptionsByFilter.getResponseStatusCode().equals("200"), getOptionsByFilter.getFaultString(), getOptionsByFilter);
+        String sql = "SELECT LGCY_RSN_CD, TC_RSN_NM FROM RES_MGMT.PRDF_TC_RSN WHERE TC_RSN_TYP_NM = '" + reason + "'";
+        setComparisonValidation(getOptionsByFilter.getResponseOptionKeyValuePairs(), getDatabaseKeyValuePairs(sql));
+        // Only exists in Latest, so Response Node Validation is skipped
+    }
+
+    @Test(dataProvider = "reasons", groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionsByFilter" })
+    public void testGetOptionsByFilter_INVENTORY_OVERRIDE_OVERRIDE_REASON(String reason) {
+        TestReporter.logScenario("Test - Get Options By Filter - INVENTORY_OVERRIDE_OVERRIDE_REASON");
+
+        GetOptionsByFilter getOptionsByFilter = new GetOptionsByFilter(environment);
+        getOptionsByFilter.setAccommodationSalesOptionsEnum("INVENTORY_OVERRIDE_OVERRIDE_REASON");
+        getOptionsByFilter.addOptionFilters(null, reason);
+        getOptionsByFilter.sendRequest();
+
+        TestReporter.logAPI(!getOptionsByFilter.getResponseStatusCode().equals("200"), getOptionsByFilter.getFaultString(), getOptionsByFilter);
+        String sql = "SELECT LGCY_RSN_CD, TC_RSN_NM FROM RES_MGMT.PRDF_TC_RSN WHERE TC_RSN_TYP_NM = '" + reason + "'";
+        setComparisonValidation(getOptionsByFilter.getResponseOptionKeyValuePairs(), getDatabaseKeyValuePairs(sql));
+        // Only exists in Latest, so Response Node Validation is skipped
+    }
+
+    @Test(dataProvider = "reasons", groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionsByFilter" })
+    public void testGetOptionsByFilter_RESMANAGEMENT_REASON(String reason) {
+        TestReporter.logScenario("Test - Get Options By Filter - RESMANAGEMENT_REASON");
+
+        GetOptionsByFilter getOptionsByFilter = new GetOptionsByFilter(environment);
+        getOptionsByFilter.setAccommodationSalesOptionsEnum("RESMANAGEMENT_REASON");
+        getOptionsByFilter.addOptionFilters(null, reason);
+        getOptionsByFilter.sendRequest();
+
+        TestReporter.logAPI(!getOptionsByFilter.getResponseStatusCode().equals("200"), getOptionsByFilter.getFaultString(), getOptionsByFilter);
+        String sql = "SELECT LGCY_RSN_CD, TC_RSN_NM FROM RES_MGMT.PRDF_TC_RSN WHERE TC_RSN_TYP_NM = '" + reason + "'";
+        setComparisonValidation(getOptionsByFilter.getResponseOptionKeyValuePairs(), getDatabaseKeyValuePairs(sql));
+        // Only exists in Latest, so Response Node Validation is skipped
     }
 
     /*
