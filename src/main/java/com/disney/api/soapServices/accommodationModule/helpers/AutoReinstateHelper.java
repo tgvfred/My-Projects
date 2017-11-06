@@ -1,6 +1,7 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
 
 import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -221,7 +222,19 @@ public class AutoReinstateHelper {
                 + "where a.tp_id = " + tpID;
 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.SALESTP);
-        Recordset rs = new Recordset(db.getResultSet(sql));
+        Recordset rs = null;
+
+        int tries = 0;
+        int maxTries = 30;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            rs = new Recordset(db.getResultSet(sql));
+            tries++;
+            if (rs.getRowCount() > 0 && rs.getValue("TPV3_STATUS").equalsIgnoreCase("Booked")) {
+                success = true;
+            }
+        } while (tries < maxTries && success);
 
         if (rs.getRowCount() == 0) {
             throw new SQLValidationException("No charges found for tp ID [ " + tcgID + " ]", sql);
@@ -229,7 +242,6 @@ public class AutoReinstateHelper {
 
         do {
             TestReporter.softAssertEquals(rs.getValue("TPV3_STATUS"), "Booked", "Verify the status  [" + rs.getValue("TPV3_STATUS") + "] matches in the DB [Booked].");
-
             rs.moveNext();
         } while (rs.hasNext());
         TestReporter.assertAll();
