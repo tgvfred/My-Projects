@@ -51,8 +51,8 @@ public class TestRetrieve_checkedOut extends AccommodationBaseTest {
         System.out.println(checkout.getResponse());
         TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "An error occurred getting checkout: " + checkout.getFaultString(), checkout);
 
-        Retrieve retrieve = new Retrieve(environment);
-        retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
+        Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
+
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());

@@ -25,7 +25,6 @@ public class TestRetrieve_bookPackageSelectableTickets extends AccommodationBase
     public void setup(String environment) {
         setEnvironment(Environment.getBaseEnvironmentName(environment));
         locEnv = environment;
-
         daysOut.set(1);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
