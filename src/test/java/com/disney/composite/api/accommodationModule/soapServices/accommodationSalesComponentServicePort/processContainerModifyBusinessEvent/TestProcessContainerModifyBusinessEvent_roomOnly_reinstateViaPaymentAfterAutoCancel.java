@@ -49,7 +49,7 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
 
         pay.makeFullPayment();
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
