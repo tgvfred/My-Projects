@@ -35,10 +35,7 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
     public void testRetrieve_vip() {
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
-
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
-        // retrieve.setSiebelTravelPlanId("0");
-
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);

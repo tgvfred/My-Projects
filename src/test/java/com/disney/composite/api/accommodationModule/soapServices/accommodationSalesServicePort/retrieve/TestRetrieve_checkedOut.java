@@ -4,16 +4,19 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
-import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckOut;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
+import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieve_checkedOut extends AccommodationBaseTest {
+    private CheckInHelper helper;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -37,24 +40,46 @@ public class TestRetrieve_checkedOut extends AccommodationBaseTest {
     public void testRetrieve_checkedOut() {
         String tcg = getBook().getTravelComponentGroupingId();
 
-        CheckIn checkin = new CheckIn(environment, "Main");
-        checkin.setTravelComponentGroupingId(tcg);
-        checkin.setGuestId(getGuestId());
-        checkin.setLocationId(getLocationId());
-        checkin.sendRequest();
-        TestReporter.logAPI(!checkin.getResponseStatusCode().equals("200"), "An error occurred getting checkin : " + checkin.getFaultString(), checkin);
+        /*
+         * CheckIn checkin = new CheckIn(environment, "Main");
+         * checkin.setTravelComponentGroupingId(tcg);
+         * checkin.setGuestId(getGuestId());
+         * checkin.setLocationId(getLocationId());
+         * checkin.sendRequest();
+         * TestReporter.logAPI(!checkin.getResponseStatusCode().equals("200"), "An error occurred getting checkin : " + checkin.getFaultString(), checkin);
+         *
+         * CheckOut checkout = new CheckOut(environment, "Check Out");
+         * checkout.setTravelComponentGroupingId(tcg);
+         * checkout.setLocationId(getLocationId());
+         * checkout.sendRequest();
+         * System.out.println(checkout.getResponse());
+         * TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "An error occurred getting checkout: " + checkout.getFaultString(), checkout);
+         */
 
-        CheckOut checkout = new CheckOut(environment, "Check Out");
+        helper = new CheckInHelper(getEnvironment(), getBook());
+        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+
+        // String tcgId = getBook().getTravelComponentGroupingId();
+        String checkoutDate = Randomness.generateCurrentXMLDate();
+        String refNumber = getExternalRefNumber();
+        String refSource = getExternalRefSource();
+
+        Checkout checkout = new Checkout(getEnvironment(), "main");
+        checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setIsBellServiceRequired(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setIsSameRoomNumberAssigned(BaseSoapCommands.REMOVE_NODE.toString());
         checkout.setTravelComponentGroupingId(tcg);
-        checkout.setLocationId(getLocationId());
+        checkout.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setExternalReferenceNumber(refNumber);
+        checkout.setExternalReferenceSource(refSource);
+        checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setCheckoutDate(checkoutDate);
+        checkout.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
         checkout.sendRequest();
-        System.out.println(checkout.getResponse());
-        TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "An error occurred getting checkout: " + checkout.getFaultString(), checkout);
+        TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "An error occurred getting checkout details: " + checkout.getFaultString(), checkout);
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
-
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
-        retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);

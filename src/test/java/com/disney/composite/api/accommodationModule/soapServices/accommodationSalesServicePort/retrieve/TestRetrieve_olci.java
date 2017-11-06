@@ -37,19 +37,14 @@ public class TestRetrieve_olci extends AccommodationBaseTest {
         UpdatePreArrivalInformation upai = new UpdatePreArrivalInformation(environment, "Main");
         upai.setTravelPlanSegment(getBook().getTravelPlanSegmentId());
         upai.sendRequest();
-
         TestReporter.logAPI(!upai.getResponseStatusCode().equals("200"), "An error occurred getting update pre arrival information details: " + upai.getFaultString(), upai);
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
-
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
-        // retrieve.setSiebelTravelPlanId("0");
-
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
-        System.out.println(retrieve.getResponse());
         int NumberOfStatus = retrieve.getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/auditDetails/status");
         for (int i = 1; i <= NumberOfStatus; i++) {
             if (retrieve.getAuditDetailsStatus(i).equals("On Line Check In")) {

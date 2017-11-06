@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -37,14 +36,9 @@ public class TestRetrieve_rsr extends AccommodationBaseTest {
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
 
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
-        retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
-
-        System.out.println(retrieve.getResponse());
-
-        RetrieveHelper helper = new RetrieveHelper();
 
         TestReporter.assertTrue(!retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/RSR").equals(""), "The rsr reservation is [" + retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/RSR") + "]");
 

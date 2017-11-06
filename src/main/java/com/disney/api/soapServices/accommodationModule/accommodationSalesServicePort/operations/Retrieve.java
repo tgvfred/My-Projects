@@ -69,6 +69,30 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     }
 
+    public String getRoomReadyNotificationInformationTPID() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/roomReadyNotificationInformation/travelPlanId");
+
+    }
+
+    public String getRoomReadyNotificationInformationRequired() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/roomReadyNotificationInformation/required");
+
+    }
+
+    public String getDeliveryMethodValue() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/roomReadyNotificationInformation/deliveryMethodValue");
+
+    }
+
+    public String getDeliveryMethod() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/roomReadyNotificationInformation/deliveryMethod");
+
+    }
+
     public String getExternalRefNum() {
 
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/externalReferenceDetails/externalReferenceNumber");

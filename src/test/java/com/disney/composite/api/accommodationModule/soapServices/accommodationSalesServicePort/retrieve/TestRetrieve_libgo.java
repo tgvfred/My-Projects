@@ -42,8 +42,6 @@ public class TestRetrieve_libgo extends AccommodationBaseTest {
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
-        System.out.println(retrieve.getResponse());
-
         RetrieveHelper helper = new RetrieveHelper();
         helper.baseValidation(getBook(), retrieve);
         helper.TpsValidation(retrieve);

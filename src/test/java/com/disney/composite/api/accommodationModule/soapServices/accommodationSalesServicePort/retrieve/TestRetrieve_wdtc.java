@@ -36,17 +36,14 @@ public class TestRetrieve_wdtc extends AccommodationBaseTest {
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
 
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
-        // retrieve.setSiebelTravelPlanId("0");
-
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
-        System.out.println(retrieve.getResponse());
-
         RetrieveHelper helper = new RetrieveHelper();
         helper.baseValidation(getBook(), retrieve);
         helper.TpsValidation(retrieve);
+
         TestReporter.assertTrue(!retrieve.getBlockCode().equals(""), "The block code in the response is [" + retrieve.getBlockCode() + "].");
         TestReporter.assertTrue(!retrieve.getTicketGroup().equals(""), "The ticket group in the response is [" + retrieve.getTicketGroup() + "].");
         TestReporter.assertTrue(!retrieve.getExternalRefNum().equals(""), "The External Reference Number in the response is [" + retrieve.getExternalRefNum() + "].");

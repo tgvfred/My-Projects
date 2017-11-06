@@ -79,10 +79,9 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
     public void testRetrieve_invalidTp() {
 
         String fault = "Record Not Found : No TravelPlan Found !";
-        Retrieve retrieve = new Retrieve(environment);
+        Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
         retrieve.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
         retrieve.setTravelPlanId("46476544747");
-        retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId("51");
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + retrieve.getFaultString() + " ]", retrieve);
