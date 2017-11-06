@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestRetrieveShareChain_Dining" parallel="false" thread-count="20">
+	<parameter name="environment" value="latest_cm" />
+	<test name="TestRetrieveShareChain_Dining">
+		<classes>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveShareChain.TestRetrieveShareChain_Dining" />
+		</classes>
+	</test> 
+</suite> 

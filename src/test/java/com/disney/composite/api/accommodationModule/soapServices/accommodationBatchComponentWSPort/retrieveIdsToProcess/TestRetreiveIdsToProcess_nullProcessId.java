@@ -5,8 +5,8 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationBatchComponentWSPort.operation.RetreiveIdsToProcess;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationBatchErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.TestReporter;
@@ -22,14 +22,14 @@ public class TestRetreiveIdsToProcess_nullProcessId extends AccommodationBaseTes
 
     @Test(groups = { "api", "regression", "retreiveIdsToProcess", "accommodation", "accommodationBatchComponentWSPort" })
     public void Test_RetreiveIdsToProcess_nullProcessId() {
-        String faultString = "Unexpected Error occurred : retreiveIdsToProcess : The given id must not be null! : The given id must not be null!; nested exception is java.lang.IllegalArgumentException: The given id must not be null!";
+        String faultString = "Invalid Request : Process Data Id Required";
 
         RetreiveIdsToProcess retreiveIds = new RetreiveIdsToProcess(environment, "Main");
         retreiveIds.setProcessId(BaseSoapCommands.REMOVE_NODE.toString());
         retreiveIds.sendRequest();
 
         TestReporter.assertTrue(retreiveIds.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retreiveIds.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retreiveIds, LiloSystemErrorCode.UNEXPECTED_ERROR);
+        validateApplicationError(retreiveIds, AccommodationBatchErrorCode.INVALID_REQUEST);
 
         TestReporter.logStep("Response node return validation count.");
         try {

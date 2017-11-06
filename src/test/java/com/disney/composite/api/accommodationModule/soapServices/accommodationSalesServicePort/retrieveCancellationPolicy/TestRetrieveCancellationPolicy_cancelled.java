@@ -2,7 +2,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.Cancel;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveCancellationPolicy;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -27,8 +27,8 @@ public class TestRetrieveCancellationPolicy_cancelled extends AccommodationBaseT
         retrieve.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         retrieve.sendRequest();
 
-        TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
+        TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").toLowerCase().contains(faultString.replaceAll("\\s", "").toLowerCase()), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
+        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
 
     }
 }

@@ -14,7 +14,11 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
     @Override
     @AfterMethod(alwaysRun = true)
     public void teardown() {
-        cancel();
+        try {
+            cancel();
+        } catch (Exception e) {
+
+        }
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
@@ -95,7 +99,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_cancelled() {
 
-        String faultString = " Guarantee status can not be changed  : Guarantee status can not be changed";
+        String faultString = " Guarantee status can not be changed  : Guarantee status can not be changed on shared room ";
 
         cancel();
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);

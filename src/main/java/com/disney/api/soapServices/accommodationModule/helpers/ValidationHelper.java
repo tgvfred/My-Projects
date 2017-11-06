@@ -1330,6 +1330,31 @@ public class ValidationHelper {
         TestReporter.assertAll();
     }
 
+    public void validateSpecialNeeds_Cancelled(String tpId, Map<String, String> flags) {
+        for (int i = 1; i <= flags.size(); i++) {
+            if (flags.get(String.valueOf(i)).equals("true")) {
+                flags.put(String.valueOf(i), "Y");
+            } else if (flags.get(String.valueOf(i)).equals("false")) {
+                flags.put(String.valueOf(i), "N");
+            }
+        }
+        TestReporter.logStep("Validate Special Needs in RIM");
+        String sql = "select d.SPCL_NEED_REQ_IN "
+                + "from res_mgmt.tps a "
+                + "left join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "left join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "left join rsrc_inv.RSRC_ASGN_OWNR d on c.ASGN_OWN_ID = d.ASGN_OWNR_ID "
+                + "where a.tp_id = '" + tpId + "' "
+                + "and c.PROD_TYP_NM = 'AccommodationProduct' "
+                + "and d.SPCL_NEED_REQ_IN is not null";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            TestReporter.softAssertEquals(rs.getValue("SPCL_NEED_REQ_IN", i), flags.get(String.valueOf(i)), "Verify that the RIM special needs flag [" + rs.getValue("SPCL_NEED_REQ_IN", i) + "] is that which is expected [" + flags.get(String.valueOf(i)) + "]");
+        }
+        TestReporter.assertAll();
+    }
+
     public void validatePayment(String tpId, int numExpectedPayments, String paymentAmount) {
         String sql = "select f.* "
                 + "from folio.extnl_ref a "
