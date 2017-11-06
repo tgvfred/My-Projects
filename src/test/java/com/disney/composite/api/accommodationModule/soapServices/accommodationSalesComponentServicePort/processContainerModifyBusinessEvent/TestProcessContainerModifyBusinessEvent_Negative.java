@@ -10,7 +10,6 @@ import com.disney.api.soapServices.accommodationModule.applicationError.LiloResm
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.travelPlanModule.travelPlanService.operations.GenerateTravelPlan;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestProcessContainerModifyBusinessEvent_Negative extends AccommodationBaseTest {
@@ -42,7 +41,7 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         ac.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         ac.sendRequest();
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(getBook().getTravelPlanSegmentId());
         process.setByPassFreeze("true");
         process.setExternalReferenceDetail(BaseSoapCommands.REMOVE_NODE.toString());
@@ -59,7 +58,7 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
 
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent  - guarAccomm_invalidTP");
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(getBook().getTravelPlanSegmentId());
         process.setByPassFreeze("true");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
@@ -81,7 +80,7 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
         GenerateTravelPlan gtp = new GenerateTravelPlan(environment, "Main");
         gtp.sendRequest();
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(BaseSoapCommands.REMOVE_NODE.toString());
         process.setByPassFreeze("true");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());

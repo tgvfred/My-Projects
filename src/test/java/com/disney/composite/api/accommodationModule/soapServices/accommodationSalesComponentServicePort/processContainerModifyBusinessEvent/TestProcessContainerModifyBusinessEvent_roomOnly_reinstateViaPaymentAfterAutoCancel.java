@@ -48,7 +48,7 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         PaymentSettlementHelper pay = new PaymentSettlementHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook(), getHouseHold());
         pay.makeFullPayment();
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());

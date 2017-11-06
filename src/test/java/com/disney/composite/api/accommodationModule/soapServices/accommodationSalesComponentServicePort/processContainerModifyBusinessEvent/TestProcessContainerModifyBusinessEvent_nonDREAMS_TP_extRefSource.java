@@ -44,7 +44,7 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
         ac.sendRequest();
         TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel.", ac);
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
 
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
