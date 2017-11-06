@@ -25,10 +25,10 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
 
         setValues(getEnvironment());
         isComo.set("false");
-        setVipLevel("ONE");
+        setNonZeroVip(true);
 
         bookReservation();
-        System.out.println(getBook().getRequest());
+
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
@@ -40,10 +40,8 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
-        System.out.println(getBook().getRequest());
-        System.out.println(retrieve.getResponse());
-
-        TestReporter.assertTrue(("ONE").equals(retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel")), "The Vip level is [" + retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel") + "]");
+        String bookingVipLevel = getBook().getRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/vipLevel");
+        TestReporter.assertTrue((bookingVipLevel).equals(retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel")), "The Vip level is [" + retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/vipLevel") + "]");
 
         // clone validations
         if (Environment.isSpecialEnvironment(getEnvironment())) {
