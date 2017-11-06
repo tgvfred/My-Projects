@@ -217,7 +217,8 @@ public class AutoReinstateHelper {
         TestReporter.logStep("Verify folio items");
         String sql = "select b.SLS_ORD_ITEM_STS_NM TPV3_STATUS "
                 + "from sales_tp.sls_ord a "
-                + "join sales_tp.sls_ord_item b on a.sls_ord = b.sls_ord";
+                + "join sales_tp.sls_ord_item b on a.sls_ord = b.sls_ord "
+                + "where a.tp_id = " + tpID;
 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.SALESTP);
         Recordset rs = new Recordset(db.getResultSet(sql));
@@ -227,7 +228,7 @@ public class AutoReinstateHelper {
         }
 
         do {
-            TestReporter.softAssertEquals(rs.getValue("TPV3_STATUS"), "Cancelled", "Verify the status  [" + rs.getValue("TPV3_STATUS") + "] matches in the DB [UnEarned].");
+            TestReporter.softAssertEquals(rs.getValue("TPV3_STATUS"), "Booked", "Verify the status  [" + rs.getValue("TPV3_STATUS") + "] matches in the DB [Booked].");
 
             rs.moveNext();
         } while (rs.hasNext());
