@@ -1314,12 +1314,16 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void bookReservation() {
+        bookReservation("roomOnlyWithoutTickets");
+    }
+
+    public void bookReservation(String scenario) {
         if (getHouseHold() == null) {
             createHouseHold();
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
-        book.set(new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "roomOnlyWithoutTickets"));
+        book.set(new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), scenario));
 
         if ((skipExternalRef.get() == null) || (skipExternalRef.get() == false)) {
             externalRefNumber.set(Randomness.randomNumber(12));
