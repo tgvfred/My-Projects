@@ -9,9 +9,9 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.restServices.AccommodationSalesRest;
 import com.disney.api.restServices.BaseRestTest;
-import com.disney.api.restServices.Rest;
-import com.disney.api.restServices.accommodation.accommodationSales.updateComments.request.UpdateCommentsRequest;
+import com.disney.api.restServices.accommodationSales.updateComments.request.UpdateCommentsRequest;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.utils.TestReporter;
@@ -68,7 +68,7 @@ public class TestUpdateComments_Negative extends BaseRestTest {
         request.getCommentsInfo().get(0).setProfileCode("FL02");
         request.getCommentsInfo().get(0).setCommentLevel("TC");
         request.getCommentsInfo().get(0).setCommentText("eServiceTestComment");
-        RestResponse response = Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequestWithMissingAuthToken(request);
+        RestResponse response = AccommodationSalesRest.accommodationSales(environment).updateComments().sendPutRequestWithMissingAuthToken(request);
         validateResponse(response, "401");
     }
 
@@ -85,7 +85,7 @@ public class TestUpdateComments_Negative extends BaseRestTest {
         request.getCommentsInfo().get(0).setProfileCode("FL02");
         request.getCommentsInfo().get(0).setCommentLevel("TC");
         request.getCommentsInfo().get(0).setCommentText("eServiceTestComment");
-        RestResponse response = Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
+        RestResponse response = AccommodationSalesRest.accommodationSales(environment).updateComments().sendPutRequest(request);
         validateResponse(response, "500");
         TestReporter.assertTrue(response.getResponse().contains("The given id must not be null!"), "The response received the proper error of The given id must not be null!");
     }
@@ -103,7 +103,7 @@ public class TestUpdateComments_Negative extends BaseRestTest {
         request.getCommentsInfo().get(0).setProfileCode("FL02");
         request.getCommentsInfo().get(0).setCommentLevel(" ");
         request.getCommentsInfo().get(0).setCommentText("eServiceTestComment");
-        RestResponse response = Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
+        RestResponse response = AccommodationSalesRest.accommodationSales(environment).updateComments().sendPutRequest(request);
         validateResponse(response, "500");
         TestReporter.assertTrue(response.getResponse().contains("Can not construct instance of com.wdw.dreams.booking.transferobject.enums.CommentLevelEnum"), "The response received the proper error of Can not construct instance of com.wdw.dreams.booking.transferobject.enums.CommentLevelEnum");
     }

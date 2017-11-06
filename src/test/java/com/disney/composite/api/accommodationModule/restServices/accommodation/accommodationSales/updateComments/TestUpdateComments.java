@@ -9,9 +9,9 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.restServices.AccommodationSalesRest;
 import com.disney.api.restServices.BaseRestTest;
-import com.disney.api.restServices.Rest;
-import com.disney.api.restServices.accommodation.accommodationSales.updateComments.request.UpdateCommentsRequest;
+import com.disney.api.restServices.accommodationSales.updateComments.request.UpdateCommentsRequest;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Book;
 import com.disney.utils.TestReporter;
@@ -26,7 +26,7 @@ public class TestUpdateComments extends BaseRestTest {
 
     /**
      * This will always be used as is. TestNG will pass in the Environment used
-     * 
+     *
      * @param environment
      *            - Valid environments for active testing are bashful, sleepy and grumpy
      */
@@ -70,7 +70,7 @@ public class TestUpdateComments extends BaseRestTest {
         request.getCommentsInfo().get(0).setProfileCode("FL02");
         request.getCommentsInfo().get(0).setCommentLevel("TC");
         request.getCommentsInfo().get(0).setCommentText("eServiceTestComment");
-        RestResponse response = Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
+        RestResponse response = AccommodationSalesRest.accommodationSales(environment).updateComments().sendPutRequest(request);
         validateResponse(response);
         TestReporter.assertTrue(response.getResponse().contains("eServiceTestComment"), "The response created the comment and it is present: eServiceTestComment");
     }
@@ -95,7 +95,7 @@ public class TestUpdateComments extends BaseRestTest {
         request.getCommentsInfo().get(1).setProfileCode("CRNRM");
         request.getCommentsInfo().get(1).setCommentLevel("TC");
         request.getCommentsInfo().get(1).setCommentText("eServiceTestComment2");
-        RestResponse response = Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
+        RestResponse response = AccommodationSalesRest.accommodationSales(environment).updateComments().sendPutRequest(request);
         validateResponse(response);
         TestReporter.assertTrue(response.getResponse().contains("eServiceTestComment2"), "The response created the comment and it is present: eServiceTestComment");
     }
@@ -125,7 +125,7 @@ public class TestUpdateComments extends BaseRestTest {
         request.getCommentsInfo().get(1).setProfileCode("CRNRM");
         request.getCommentsInfo().get(1).setCommentLevel("TC");
         request.getCommentsInfo().get(1).setCommentText("eServiceTestComment2");
-        RestResponse response = Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
+        RestResponse response = AccommodationSalesRest.accommodationSales(environment).updateComments().sendPutRequest(request);
         validateResponse(response);
         TestReporter.assertTrue(response.getResponse().contains("eServiceTestComment2"), "The response created the comment and it is present: eServiceTestComment");
     }
@@ -152,7 +152,7 @@ public class TestUpdateComments extends BaseRestTest {
         request.getCommentsInfo().get(0).setCommentLevel("TC");
         request.getCommentsInfo().get(0).setCommentText("eServiceTestComment");
 
-        RestResponse response = Rest.accommodation(environment).accoomodationSales().updateComments().sendPutRequest(request);
+        RestResponse response = AccommodationSalesRest.accommodationSales(environment).updateComments().sendPutRequest(request);
         validateResponse(response);
         TestReporter.assertTrue(response.getResponse().contains("eServiceTestComment"), "The response created the comment and it is present: eServiceTestComment");
     }
