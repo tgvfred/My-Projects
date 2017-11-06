@@ -9,10 +9,9 @@ import com.disney.api.soapServices.accommodationModule.applicationError.Accommod
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.Cancel;
-import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestAutoReinstate_nullSalesChannel_negative extends AccommodationBaseTest {
+public class TestAutoReinstate_roomOnly_booked_negative extends AccommodationBaseTest {
 
     AutoReinstate auto;
     Cancel cancel;
@@ -32,23 +31,16 @@ public class TestAutoReinstate_nullSalesChannel_negative extends AccommodationBa
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate", "negative" })
-    public void Test_AutoReinstate_nullSalesChannel_negative() {
-
-        cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
-        cancel.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
-        cancel.sendRequest();
-        TestReporter.assertTrue(cancel.getResponseStatusCode().equals("200"), "Verify that no error occurred cancelling a reservation: " + cancel.getFaultString());
+    public void Test_AutoReinstate_roomOnly_booked_negative() {
 
         auto = new AutoReinstate(environment, "Main");
-        auto.setSalesChannel(BaseSoapCommands.REMOVE_NODE.toString());
         auto.setFreezeId(BaseSoapCommands.REMOVE_NODE.toString());
         auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         auto.sendRequest();
 
-        String faultString = "Sales Channel is required : null";
+        String faultString = "This reservation is not eligible to be Re-instated. Please contact the appropriate Reservation Office, Operations Support or Manager for assistance : Reservation is Not in Cancelled or AutoCancelled Status";
 
-        validateApplicationError(auto, AccommodationErrorCode.SALES_CHANNEL_REQUIRED);
+        validateApplicationError(auto, AccommodationErrorCode.REINSTATE_NOT_ALLOWED);
         TestReporter.assertEquals(faultString, auto.getFaultString(), "Verify that the fault string [" + auto.getFaultString() + "] is that which is expected.[" + faultString + "]");
     }
 
