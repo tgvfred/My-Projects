@@ -45,11 +45,8 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         ac.sendRequest();
         TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel request.", ac);
 
-<<<<<<< HEAD
-        PaymentSettlementHelper pay = new PaymentSettlementHelper(Environment.getBaseEnvironmentName(environment), getBook(), getHouseHold());
-=======
         PaymentSettlementHelper pay = new PaymentSettlementHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook(), getHouseHold());
->>>>>>> 43c8ffaa508f42422eb1f9bcb7cbff270e031ab5
+
         pay.makeFullPayment();
 
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
