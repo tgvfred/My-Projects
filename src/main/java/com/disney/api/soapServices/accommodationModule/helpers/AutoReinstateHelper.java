@@ -215,7 +215,7 @@ public class AutoReinstateHelper {
     }
 
     public void validateTPV3Data() {
-        TestReporter.logStep("Verify folio items");
+        TestReporter.logStep("Verify TPV3 is in Booked status");
         String sql = "select b.SLS_ORD_ITEM_STS_NM TPV3_STATUS "
                 + "from sales_tp.sls_ord a "
                 + "join sales_tp.sls_ord_item b on a.sls_ord = b.sls_ord "
@@ -225,7 +225,7 @@ public class AutoReinstateHelper {
         Recordset rs = null;
 
         int tries = 0;
-        int maxTries = 30;
+        int maxTries = 35;
         boolean success = false;
         do {
             Sleeper.sleep(1000);

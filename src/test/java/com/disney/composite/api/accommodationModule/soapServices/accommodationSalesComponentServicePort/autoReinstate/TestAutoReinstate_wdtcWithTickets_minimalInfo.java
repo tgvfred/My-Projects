@@ -5,14 +5,14 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoReinstate;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AutoReinstateHelper;
+import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.Cancel;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTest {
+public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends AccommodationBaseTest {
 
     AutoReinstate auto;
     Cancel cancel;
@@ -27,16 +27,18 @@ public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTes
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
+        setIsWdtcBooking(true);
+        setAddTickets(true);
         isComo.set("false");
         bookReservation();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate" })
-    public void Test_AutoReinstate_roomOnly_minimalInfo() {
+    public void Test_AutoReinstate_wdtcWithTickets_minimalInfo() {
 
         Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
-        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
         cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.sendRequest();
@@ -60,10 +62,8 @@ public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTes
         helper.validateChargeGroups();
         helper.validateChargeItems();
 
-        int numExpectedRecords = 5;
+        int numExpectedRecords = 14;
         helper.validateFolioItems(numExpectedRecords);
-
-        helper.validateTPV3Data();
 
     }
 
