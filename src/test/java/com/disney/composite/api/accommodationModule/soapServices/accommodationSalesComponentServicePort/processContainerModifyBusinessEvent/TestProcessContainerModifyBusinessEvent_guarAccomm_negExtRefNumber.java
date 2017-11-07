@@ -51,6 +51,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_negExtRefNumber 
         process.setExternalReferenceSource("DREAMS_TP");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
         process.setAttemptAutoReinstate("true");
+
         process.sendRequest();
 
         TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
