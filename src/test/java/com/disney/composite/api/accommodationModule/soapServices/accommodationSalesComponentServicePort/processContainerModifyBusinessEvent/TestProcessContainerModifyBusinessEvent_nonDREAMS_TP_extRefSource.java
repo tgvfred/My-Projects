@@ -56,7 +56,7 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
         TestReporter.logAPI(!process.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + process.getFaultString() + " ]", process);
-        validateApplicationError(process, AccommodationErrorCode.INVALID_REQUEST);
+        validateApplicationError(process, AccommodationErrorCode.TRAVEL_PLAN_NOT_FOUND);
 
         // // validations
         // String status = "Cancelled";
