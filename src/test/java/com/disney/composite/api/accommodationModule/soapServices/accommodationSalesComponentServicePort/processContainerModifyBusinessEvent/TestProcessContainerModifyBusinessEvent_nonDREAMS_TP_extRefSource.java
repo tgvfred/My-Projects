@@ -6,8 +6,8 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoCancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ProcessContainerModifyBusinessEvent;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.ProcessContainerModifyBusinessEventHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
@@ -32,9 +32,9 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
 
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent", "negative" })
     public void testProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource() {
-
+        String fault = "No Travel Plan found for Travel Plan Id :";
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent - nonDREAMS_TP_extRefSource");
@@ -52,21 +52,23 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
         process.setExternalReferenceSource("DPMSProperty");
         process.setExternalReferenceType("RESERVATION");
         process.setExternalReferenceNumber("2357625723562356");
+
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
+        TestReporter.logAPI(!process.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + process.getFaultString() + " ]", process);
+        validateApplicationError(process, AccommodationErrorCode.INVALID_REQUEST);
 
-        TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
-
-        // validations
-        String status = "Cancelled";
-        ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
-        helper.statusTP_TC(tps, environment);
-        helper.tpv3Status(environment, tp);
-        helper.reservationHistory(tp, environment);
-        helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
-        helper.rimRecordNotConsumed(getBook().getTravelComponentGroupingId(), environment);
-        helper.chargeItemsNotActive(getBook().getTravelComponentGroupingId(), environment);
-        helper.folioItems(tp, environment);
-
+        // // validations
+        // String status = "Cancelled";
+        // ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
+        // helper.statusTP_TC(tps, environment);
+        // helper.tpv3Status(environment, tp);
+        // helper.reservationHistory(tp, environment);
+        // helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
+        // helper.rimRecordNotConsumed(getBook().getTravelComponentGroupingId(), environment);
+        // helper.chargeItemsNotActive(getBook().getTravelComponentGroupingId(), environment);
+        // helper.folioItems(tp, environment);
+        //
+        // }
     }
 }
