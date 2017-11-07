@@ -247,4 +247,59 @@ public class AutoReinstateHelper {
         TestReporter.assertAll();
     }
 
+    public void validateComponentsBooked() {
+        TestReporter.logStep("Verify all components are booked");
+        String sql = "select a.TRVL_STS_NM TP_STATUS, a.TPS_CNCL_NB CANCEL_NUMBER, c.TRVL_STS_NM TC_STATUS "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "where a.tps_id = '" + tpsID + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tcgID + " ]", sql);
+        }
+
+        do {
+            TestReporter.softAssertEquals(rs.getValue("TP_STATUS"), "Booked", "Verify TP status [" + rs.getValue("TP_STATUS") + "] matches in the DB [Booked].");
+            TestReporter.softAssertEquals(rs.getValue("TC_STATUS"), "Booked", "Verify TC status [" + rs.getValue("TC_STATUS") + "] matches in the DB [Booked].");
+            rs.moveNext();
+        } while (rs.hasNext());
+        TestReporter.assertAll();
+    }
+
+    public void validateAdmissionComponent() {
+        TestReporter.logStep("Verify admissionComponent is booked");
+        String sql = "select a.TRVL_STS_NM TP_STATUS, a.TPS_CNCL_NB CANCEL_NUMBER, c.TRVL_STS_NM TC_STATUS, c.TC_TYP_NM "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "where a.tps_id = '" + tpsID + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpsID + " ]", sql);
+        }
+
+        boolean found = false;
+
+        do {
+
+            if (rs.getValue("TC_TYP_NM").equalsIgnoreCase("admissionComponent")) {
+                TestReporter.softAssertEquals(rs.getValue("TP_STATUS"), "Booked", "Verify TP status [" + rs.getValue("TP_STATUS") + "] matches in the DB [Booked].");
+                TestReporter.softAssertEquals(rs.getValue("TC_STATUS"), "Booked", "Verify TC status [" + rs.getValue("TC_STATUS") + "] matches in the DB [Booked].");
+                found = true;
+            } else {
+                TestReporter.softAssertTrue(found, "No admission component found for tps id [ " + tpsID + " ]");
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+        TestReporter.assertAll();
+
+    }
+
 }

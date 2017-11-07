@@ -39,8 +39,6 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
         Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
 
@@ -56,6 +54,8 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
         AutoReinstateHelper helper = new AutoReinstateHelper(environment, getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
 
         helper.validateReservationBookedStatus();
+        helper.validateComponentsBooked();
+        helper.validateAdmissionComponent();
         helper.validateCancellationNumber();
         helper.validateReinstateRecord();
         helper.validateRIMInventory();

@@ -12,7 +12,7 @@ import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestAutoReinstate_wdtc_minimalInfo extends AccommodationBaseTest {
+public class TestAutoReinstate_roomOnly_cancelFeeWaived extends AccommodationBaseTest {
 
     AutoReinstate auto;
     Cancel cancel;
@@ -27,15 +27,14 @@ public class TestAutoReinstate_wdtc_minimalInfo extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        setIsWdtcBooking(true);
         isComo.set("false");
         bookReservation();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate" })
-    public void Test_AutoReinstate_wdtc_minimalInfo() {
+    public void Test_AutoReinstate_roomOnly_cancelFeeWaived() {
 
-        Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main");
+        Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main_WithFeeWaived");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
@@ -55,7 +54,6 @@ public class TestAutoReinstate_wdtc_minimalInfo extends AccommodationBaseTest {
         AutoReinstateHelper helper = new AutoReinstateHelper(environment, getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
 
         helper.validateReservationBookedStatus();
-        helper.validateComponentsBooked();
         helper.validateCancellationNumber();
         helper.validateReinstateRecord();
         helper.validateRIMInventory();
