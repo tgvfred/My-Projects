@@ -133,7 +133,7 @@ public class RetrieveHelper {
 
     public void baseValidationShowDining(com.disney.api.soapServices.diningModule.showDiningService.operations.Book book, Retrieve retrieve) {
 
-        String guestfirstName = book.get;
+        String guestfirstName = book.getPrimaryGuestFirstName();
 
         String guestlastName = book.getPrimaryGuestLastName();
 
