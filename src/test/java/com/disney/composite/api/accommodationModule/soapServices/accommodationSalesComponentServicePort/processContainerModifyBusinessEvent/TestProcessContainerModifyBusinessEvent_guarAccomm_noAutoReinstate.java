@@ -45,7 +45,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_noAutoReinstate 
         ac.sendRequest();
         TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in auto cancel request.", ac);
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(BaseSoapCommands.REMOVE_NODE.toString());
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());

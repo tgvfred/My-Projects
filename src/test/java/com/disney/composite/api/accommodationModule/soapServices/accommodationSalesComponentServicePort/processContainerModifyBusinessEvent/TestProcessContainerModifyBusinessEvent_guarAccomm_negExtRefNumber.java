@@ -43,7 +43,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_negExtRefNumber 
         ac.sendRequest();
         TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel request.", ac);
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
@@ -51,6 +51,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_negExtRefNumber 
         process.setExternalReferenceSource("DREAMS_TP");
         process.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
         process.setAttemptAutoReinstate("true");
+
         process.sendRequest();
 
         TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
