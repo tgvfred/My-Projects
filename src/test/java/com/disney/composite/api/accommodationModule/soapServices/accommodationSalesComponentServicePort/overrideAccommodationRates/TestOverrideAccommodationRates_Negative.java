@@ -202,6 +202,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         urrt.setRoomTypeCode(getRoomTypeCode());
 
         urrt.sendRequest();
+
         TestReporter.logAPI(!urrt.getResponseStatusCode().equals("200"), "Verify that no error occurred upgrading a room: " + urrt.getFaultString(), urrt);
 
         // Override the rate for the one night
@@ -303,6 +304,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
     // giving java null pointer exception -works in database
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
     public void TestOverrideAccommodationRates_cancelled() {
+
         cancel();
         String fault = "Cancelled accommodations cannot be overriden : null";
 
@@ -313,7 +315,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         oar.setTcgId(getBook().getTravelComponentGroupingId());
         oar.sendRequest();
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [" + fault + "] exists. Found [ " + oar.getFaultString() + " ]", oar);
         validateApplicationError(oar, AccommodationErrorCode.CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS);
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Test_ProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource" parallel="methods" thread-count="20" configfailurepolicy="continue" data-provider-thread-count="5">
-	<parameter name="environment" value="latest" />
+	<parameter name="environment" value="latest_cm" />
 	<test name="Test_ProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource">
 		<classes>
 			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.processContainerModifyBusinessEvent.TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource'></class>

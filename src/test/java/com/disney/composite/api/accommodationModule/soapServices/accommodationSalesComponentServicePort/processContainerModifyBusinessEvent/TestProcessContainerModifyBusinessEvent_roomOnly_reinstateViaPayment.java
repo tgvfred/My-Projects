@@ -39,7 +39,7 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         String tp = getBook().getTravelPlanId();
         String tcg = getBook().getTravelComponentGroupingId();
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
         process.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());

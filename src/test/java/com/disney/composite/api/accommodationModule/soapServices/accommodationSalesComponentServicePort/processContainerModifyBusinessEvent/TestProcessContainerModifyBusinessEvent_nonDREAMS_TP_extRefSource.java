@@ -32,9 +32,9 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
 
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent", "negative" })
     public void testProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource() {
-
+        String fault = "No Travel Plan found for Travel Plan Id :";
         String tps = getBook().getTravelPlanSegmentId();
         String tp = getBook().getTravelPlanId();
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent - nonDREAMS_TP_extRefSource");
@@ -44,7 +44,7 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
         ac.sendRequest();
         TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel.", ac);
 
-        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(Environment.getBaseEnvironmentName(environment));
+        ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
 
         process.setTravelPlanSegmentID(tps);
         process.setByPassFreeze("true");
@@ -52,10 +52,10 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
         process.setExternalReferenceSource("DPMSProperty");
         process.setExternalReferenceType("RESERVATION");
         process.setExternalReferenceNumber("2357625723562356");
+
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
-
-        TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
+        TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred in the Process Container Modify Business Event.", process);
 
         // validations
         String status = "Cancelled";
