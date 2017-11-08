@@ -25,9 +25,8 @@ public class TestRemoveRateOverride_RoomOnlyMultipleGuests extends Accommodation
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodationsales" })
+    @Test(groups = { "api", "regression", "removeRateOverride", "accommodation", "accommodationsales" })
     public void testRemoveRateOverride_RoomOnlyMultipleGuests() {
-
         RemoveRateOverrideHelper helper = new RemoveRateOverrideHelper();
         helper.validateCharge(environment, getBook());
     }

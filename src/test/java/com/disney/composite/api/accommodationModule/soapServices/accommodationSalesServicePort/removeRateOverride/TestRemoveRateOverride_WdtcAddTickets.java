@@ -26,9 +26,8 @@ public class TestRemoveRateOverride_WdtcAddTickets extends AccommodationBaseTest
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodationsales" })
+    @Test(groups = { "api", "regression", "removeRateOverride", "accommodation", "accommodationsales" })
     public void testRemoveRateOverride_WdtcAddTickets() {
-
         RemoveRateOverrideHelper helper = new RemoveRateOverrideHelper();
         helper.validateCharge(environment, getBook());
     }

@@ -12,7 +12,6 @@ public class TestRemoveRateOverride_InvalidAccommComponentId extends Accommodati
 
     @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodationsales", "negative" })
     public void testRemoveRateOverride_InvalidAccommComponentId() {
-
         String faultString = "Required parameters are missing";
 
         RemoveRateOverride remove = new RemoveRateOverride(environment, "removeRateOverride");
@@ -24,5 +23,4 @@ public class TestRemoveRateOverride_InvalidAccommComponentId extends Accommodati
         TestReporter.logAPI(!remove.getFaultString().contains(faultString), "Validate correct fault string [ " + faultString + " ] exists. Found [ " + remove.getFaultString() + " ]", remove);
         validateApplicationError(remove, AccommodationErrorCode.MISSING_REQUIRED_PARAM);
     }
-
 }
