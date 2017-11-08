@@ -6,8 +6,8 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoCancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ProcessContainerModifyBusinessEvent;
-import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.ProcessContainerModifyBusinessEventHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
@@ -55,20 +55,18 @@ public class TestProcessContainerModifyBusinessEvent_nonDREAMS_TP_extRefSource e
 
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
-        TestReporter.logAPI(!process.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + process.getFaultString() + " ]", process);
-        validateApplicationError(process, AccommodationErrorCode.TRAVEL_PLAN_NOT_FOUND);
+        TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred in the Process Container Modify Business Event.", process);
 
-        // // validations
-        // String status = "Cancelled";
-        // ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
-        // helper.statusTP_TC(tps, environment);
-        // helper.tpv3Status(environment, tp);
-        // helper.reservationHistory(tp, environment);
-        // helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
-        // helper.rimRecordNotConsumed(getBook().getTravelComponentGroupingId(), environment);
-        // helper.chargeItemsNotActive(getBook().getTravelComponentGroupingId(), environment);
-        // helper.folioItems(tp, environment);
-        //
-        // }
+        // validations
+        String status = "Cancelled";
+        ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
+        helper.statusTP_TC(tps, environment);
+        helper.tpv3Status(environment, tp);
+        helper.reservationHistory(tp, environment);
+        helper.chargeGroupStatus(tp, tps, getBook().getTravelComponentGroupingId(), environment, status);
+        helper.rimRecordNotConsumed(getBook().getTravelComponentGroupingId(), environment);
+        helper.chargeItemsNotActive(getBook().getTravelComponentGroupingId(), environment);
+        helper.folioItems(tp, environment);
+
     }
 }
