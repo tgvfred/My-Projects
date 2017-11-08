@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="OverrideAccommodationRates_approvedCharges" parallel="methods" thread-count="20">
+<suite name="OverrideAccommodationRates_" parallel="methods" thread-count="20">
 	<parameter name="environment" value="latest_cm" />
-	<test name="TestOverrideAccommodationRates_approvedCharges">
+	<test name="TestOverrideAccommodationRates_">
 	
 		<packages>
 			<package name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.overrideAccommodationRates.*" />

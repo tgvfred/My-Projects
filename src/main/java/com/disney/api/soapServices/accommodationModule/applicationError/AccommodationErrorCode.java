@@ -4,6 +4,7 @@ import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 
 public class AccommodationErrorCode {
     private static final String APP_NAME = "Accommodation Sales";
+    private static final String MOD_NAME = "LILO_RESM";
 
     public static final ApplicationErrorCode ACCOMM_NOT_BOOKED_STATUS_SHARED = new ApplicationErrorCode(APP_NAME, 17192,
             " Accommodation should be in Booked status to be Shared");
@@ -215,6 +216,8 @@ public class AccommodationErrorCode {
             " Charge Items are not found");
     public static final ApplicationErrorCode MISSING_REQUIRED_PARAM_EXCEPTION = new ApplicationErrorCode(APP_NAME, 7064,
             "Required parameters are missing");
+    public static final ApplicationErrorCode MISSING_REQUIRED_PARAM = new ApplicationErrorCode(MOD_NAME, 7064,
+            "Required parameters are missing");
 
     public static final ApplicationErrorCode ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_CANCELLED = new ApplicationErrorCode(
             APP_NAME, 7192, " Accommodation should be in Booked status to be cancelled");
@@ -369,11 +372,6 @@ public class AccommodationErrorCode {
 
     public static final ApplicationErrorCode INVALID_RQ = new ApplicationErrorCode(MODULE_NAME, 9020,
             "INVALID REQUEST !");
-
-    private static final String APPLICATION = "LILO System";
-
-    public static final ApplicationErrorCode UNEXPECTED_ERROR_OCCURRED = new ApplicationErrorCode(APPLICATION, 1001,
-            "Unexpected Error occurred");
 
     public static final ApplicationErrorCode INVALID_UPDATE_PROCESS_STATUS_RQ = new ApplicationErrorCode(MODULE_NAME, 9015,
             "Invalid UpdateProcessStatus Request");
