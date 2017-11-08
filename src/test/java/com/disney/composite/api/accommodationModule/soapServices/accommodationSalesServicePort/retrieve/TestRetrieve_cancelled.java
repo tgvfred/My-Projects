@@ -4,11 +4,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
-import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -37,14 +35,16 @@ public class TestRetrieve_cancelled extends AccommodationBaseTest {
     public void testRetrieve_cancelled() {
         String tcg = getBook().getTravelComponentGroupingId();
 
-        Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
-        cancel.setTravelComponentGroupingId(tcg);
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+        // Cancel cancel = new Cancel(environment, "Main");
+        // cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
+        // cancel.setTravelComponentGroupingId(tcg);
+        // cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        // cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+        //
+        // cancel.sendRequest();
 
-        cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
+        cancel();
+        // TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
         retrieve.setTravelPlanId(getBook().getTravelPlanId());

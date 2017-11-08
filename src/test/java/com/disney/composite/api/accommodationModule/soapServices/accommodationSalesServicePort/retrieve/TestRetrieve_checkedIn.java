@@ -45,9 +45,7 @@ public class TestRetrieve_checkedIn extends AccommodationBaseTest {
         TestReporter.logAPI(!checkin.getResponseStatusCode().equals("200"), "An error occurred getting checkin : " + checkin.getFaultString(), checkin);
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
-
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
-        retrieve.setSiebelTravelPlanId("0");
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
