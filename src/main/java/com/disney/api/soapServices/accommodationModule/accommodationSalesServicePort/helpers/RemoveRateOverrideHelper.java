@@ -33,19 +33,27 @@ public class RemoveRateOverrideHelper {
 
     private String runValidationSql(String env, String tcId) {
 
-        String sql = "select b.CHRG_AM"
+        String sql = "select * "
                 + " from folio.chrg_extnl_ref a"
                 + " join folio.chrg b on a.chrg_id = b.chrg_id"
+                + " join folio.chrg_item c on b.chrg_id = c.chrg_id"
                 + " where a.CHRG_EXTNL_REF_VL = '" + tcId + "'";
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        rs.print();
+
         if (rs.getRowCount() == 0) {
             throw new SQLValidationException("No charges found in recordset for sql", sql);
         }
 
-        return rs.getValue("CHRG_AM");
+        for (rs.moveFirst(); rs.hasNext(); rs.moveNext()) {
+            if (rs.getValue("REV_TYP_NM").equals("Base")) {
+                chargeAmount = rs.getValue("CHRG_ITEM_AM");
+                break;
+            }
+        }
+
+        return chargeAmount;
     }
 
     private void callOverrideRate(String env, ReplaceAllForTravelPlanSegment book) {
