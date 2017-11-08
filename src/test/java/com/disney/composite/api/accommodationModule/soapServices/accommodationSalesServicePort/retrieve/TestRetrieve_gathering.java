@@ -31,12 +31,23 @@ public class TestRetrieve_gathering extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_gathering() {
 
+        String id = getGatheringData().get(GATHERING_ID);
+        String name = getGatheringData().get(GATHERING_NAME);
+        String type = getGatheringData().get(GATHERING_TYPE);
+
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
+
+        TestReporter.softAssertEquals(id, retrieve.getGatheringId(), "Verfiy the gather id from the response: [" + retrieve.getGatheringId() + "] "
+                + "matches the gathering data from the request: [" + id + "]");
+        TestReporter.softAssertEquals(name, retrieve.getGatheringName(), "Verfiy the gather name from the response: [" + retrieve.getGatheringName() + "] "
+                + "matches the gathering data from the request: [" + name + "]");
+        TestReporter.softAssertEquals(type, retrieve.getGatheringType(), "Verfiy the gather type from the response: [" + retrieve.getGatheringType() + "] "
+                + "matches the gathering data from the request: [" + type + "]");
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {
@@ -64,6 +75,10 @@ public class TestRetrieve_gathering extends AccommodationBaseTest {
                         "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/exchangeFee");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/bypassResortDesk[text()='false']");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/dmeAccommodation[text()='false']");
+
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
         }
     }

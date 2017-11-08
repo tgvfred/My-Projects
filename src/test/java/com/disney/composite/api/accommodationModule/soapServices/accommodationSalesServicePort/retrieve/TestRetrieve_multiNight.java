@@ -6,7 +6,9 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.utils.Environment;
+import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
@@ -35,6 +37,18 @@ public class TestRetrieve_multiNight extends AccommodationBaseTest {
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
+        String dateOne = retrieve.getAccommRatesDate("1").substring(0, 10);
+        String dateTwo = retrieve.getAccommRatesDate("2").substring(0, 10);
+
+        RetrieveHelper helper = new RetrieveHelper();
+        helper.baseValidation(getBook(), retrieve);
+
+        TestReporter.softAssertTrue(retrieve.getAccommRatesCount() == 2, "Verify there are two Accomodation rates");
+        TestReporter.softAssertTrue(dateOne.contains(getArrivalDate().substring(0, 10)), "Verify the first rate date [" + dateOne + "] matches the arrival date "
+                + "[" + getArrivalDate().substring(0, 10) + "]");
+        TestReporter.softAssertTrue(dateTwo.contains(Randomness.generateCurrentXMLDate(1)), "Verify the second rate date [" + dateTwo + "] is after the arrival date "
+                + "[" + Randomness.generateCurrentXMLDate(1) + "]");
+        TestReporter.assertAll();
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {
@@ -62,6 +76,10 @@ public class TestRetrieve_multiNight extends AccommodationBaseTest {
                         "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/exchangeFee");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/bypassResortDesk[text()='false']");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/dmeAccommodation[text()='false']");
+
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
         }
     }

@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.UpdateItineraryConfirmationHelper;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.ManageConfirmationRecipient;
 import com.disney.utils.Environment;
@@ -31,13 +32,6 @@ public class TestRetrieve_addConfirmation extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_addConfirmation() {
 
-        Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
-        retrieve.setTravelPlanId(getBook().getTravelPlanId());
-        retrieve.setLocationId(getLocationId());
-        retrieve.sendRequest();
-
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
-
         ManageConfirmationRecipient manage = new ManageConfirmationRecipient(getEnvironment(), "PhoneAndEmail");
         manage.setTpsId(getBook().getTravelPlanSegmentId());
         manage.setConfirmationType(UpdateItineraryConfirmationHelper.EMAIL);
@@ -49,6 +43,16 @@ public class TestRetrieve_addConfirmation extends AccommodationBaseTest {
         manage.setEmailAddress(getHouseHold().primaryGuest().primaryEmail().getEmail());
         manage.sendRequest();
         TestReporter.assertTrue(manage.getResponseStatusCode().equals("200"), "Verify that no error occurred managing confirmation recipient: " + manage.getFaultString());
+
+        Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
+        retrieve.setTravelPlanId(getBook().getTravelPlanId());
+        retrieve.setLocationId(getLocationId());
+        retrieve.sendRequest();
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
+
+        RetrieveHelper helper = new RetrieveHelper();
+        helper.baseValidation(getBook(), retrieve);
+        helper.sqlTPSConfirmationDetails(Environment.getBaseEnvironmentName(getEnvironment()), getBook().getTravelPlanSegmentId(), retrieve);
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {
@@ -76,6 +80,9 @@ public class TestRetrieve_addConfirmation extends AccommodationBaseTest {
                         "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/exchangeFee");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/bypassResortDesk[text()='false']");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/dmeAccommodation[text()='false']");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
         }
     }
