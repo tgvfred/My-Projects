@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
@@ -23,7 +24,7 @@ public class TestRetrieve_showDining extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
 
-        book = new Book(environment, ScheduledEventReservation.ONECOMPONENTSNOADDONS);
+        book = new Book(Environment.getBaseEnvironmentName(environment), ScheduledEventReservation.ONECOMPONENTSNOADDONS);
         book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(15, 45)));
         book.setParty(new HouseHold(1));
         book.sendRequest();
@@ -39,6 +40,9 @@ public class TestRetrieve_showDining extends AccommodationBaseTest {
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
+
+        RetrieveHelper helper = new RetrieveHelper();
+        helper.baseValidationShowDining(book, retrieve);
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {

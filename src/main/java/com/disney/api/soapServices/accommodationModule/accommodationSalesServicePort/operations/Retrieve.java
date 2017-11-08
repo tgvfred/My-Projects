@@ -55,7 +55,6 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     public String getTravelPlanSegmentId() {
         return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/travelPlanSegmentId");
-
     }
 
     public String getTravelComponentGroupingId() {
@@ -75,27 +74,19 @@ public class Retrieve extends AccommodationSalesServicePort {
     }
 
     public String getRoomReadyNotificationInformationTPID() {
-
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/roomReadyNotificationInformation/travelPlanId");
-
     }
 
     public String getRoomReadyNotificationInformationRequired() {
-
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/roomReadyNotificationInformation/required");
-
     }
 
     public String getDeliveryMethodValue() {
-
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/roomReadyNotificationInformation/deliveryMethodValue");
-
     }
 
     public String getDeliveryMethod() {
-
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/roomReadyNotificationInformation/deliveryMethod");
-
     }
 
     public String getExternalRefNum() {
@@ -104,6 +95,62 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     public String getExternalRefSource() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/externalReferenceDetails/externalReferenceSource");
+    }
+
+    public String getMembershipId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/membershipDetail/membershipId");
+    }
+
+    public String getGuestMembershipId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/membershipDetail/guestMembershipId");
+    }
+
+    public String getPPMembershipId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/membershipDetail/membershipId");
+    }
+
+    public String getPPGuestMembershipId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/membershipDetail/guestMembershipId");
+    }
+
+    public String getTCGMembershipId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences/guest/membershipDetail/membershipId");
+    }
+
+    public String getTCGGuestMembershipId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/guestReferences/guest/membershipDetail/guestMembershipId");
+    }
+
+    public String getMembExternalReferenceType() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/membershipExternalReference/externalReferenceType");
+    }
+
+    public String getMembExternalReferenceCode() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/membershipExternalReference/externalReferenceCode");
+    }
+
+    public String getMembExternalReferenceSource() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/membershipExternalReference/externalReferenceSource");
+    }
+
+    public String getMembExternalReferenceNumber() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/membershipExternalReference/externalReferenceNumber");
+    }
+
+    public String getPGMembershipId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/primaryGuest/membershipDetail/membershipId");
+    }
+
+    public String getPGGuestMembershipId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/primaryGuest/membershipDetail/guestMembershipId");
+    }
+
+    public String getPointsValue() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/rates/pointsValue");
+    }
+
+    public String getExchangeFee() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/exchangeFee");
     }
 
     // Ext ref info ------------------------------

@@ -21,6 +21,7 @@ import com.disney.utils.dataFactory.guestFactory.DVCMember;
 
 public class TestRetrieve_dvc_points extends BookDVCPointsHelper {
     private Map<Integer, Integer> adjustedPointSummaries = new HashMap<>();
+    private DVCMember member;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -29,7 +30,7 @@ public class TestRetrieve_dvc_points extends BookDVCPointsHelper {
         setEnvironment(removeCM(environment));
         setUseNonZeroPoints(true);
         setUseDvcResort(true);
-        DVCMember member = new DVCMember("testBookWithPay_MP", removeCM(environment));
+        member = new DVCMember("testBookWithPay_MP", removeCM(environment));
         RetrievePointBalanceSummary retrievePointBalanceSummary = new RetrievePointBalanceSummary(removeCM(environment), "MinimalInfo");
         retrievePointBalanceSummary.setMembershipId(member.getMemberNumber());
         retrievePointBalanceSummary.sendRequest();
@@ -63,12 +64,14 @@ public class TestRetrieve_dvc_points extends BookDVCPointsHelper {
         retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
 
-        System.out.println(retrieve.getResponse());
-
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
-        helper.baseValidationNotReplaceAll(getFirstBooking(), retrieve);
+        helper.baseValidationDVC(getFirstBooking(), retrieve);
+        helper.dvcMembershipValidations(retrieve, member);
+
+        TestReporter.assertEquals(retrieve.getPointsValue(), "1", "Verify the points value from the retrieve [" + retrieve.getPointsValue() + "] is as expected "
+                + "[1]");
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {
