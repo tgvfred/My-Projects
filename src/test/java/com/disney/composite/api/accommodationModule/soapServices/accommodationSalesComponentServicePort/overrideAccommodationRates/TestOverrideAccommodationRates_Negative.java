@@ -5,7 +5,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.UpgradeResortRoomType;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.OverrideAccommodationRatesRequest;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
@@ -305,8 +304,8 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
     // giving java null pointer exception -works in database
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_cancelled() {
-        String fault = "Cancelled accommodations cannot be overriden : null";
-        String fault2 = "Unexpected Error occurred";
+        String fault = "Cancelled accommodations cannot be overriden ";
+
         TestReporter.logScenario("Test - Override Accommodation Rates   - Cancelled");
 
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
@@ -325,8 +324,8 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         oar.setTcgId(rs.getValue("tc_grp_nb"));
         oar.sendRequest();
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault2), "Validate correct fault string [" + fault2 + "] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, LiloSystemErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [" + fault + "] exists. Found [ " + oar.getFaultString() + " ]", oar);
+        validateApplicationError(oar, AccommodationErrorCode.CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS);
     }
 
     /*
