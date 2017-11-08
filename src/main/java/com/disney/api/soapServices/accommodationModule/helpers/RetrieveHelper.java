@@ -3,12 +3,20 @@ package com.disney.api.soapServices.accommodationModule.helpers;
 import com.disney.AutomationException;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Book;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class RetrieveHelper {
+
+    public boolean sbc;
+
+    public void setFlag(Boolean boo) {
+        this.sbc = boo;
+    }
 
     public void baseValidation(ReplaceAllForTravelPlanSegment book, Retrieve retrieve) {
 
@@ -30,46 +38,96 @@ public class RetrieveHelper {
 
         String guestGuestId = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
 
-        // String pfirstName = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
-        //
-        // String plastName = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
-        //
-        // String pAddress = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
-        //
-        // String pEmail = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
-        //
-        // String pPartyId = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
-        //
-        // String pGuestId = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
-        //
-        // String roomReadyNotificationInformation = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelStatus");
-
         String travelStatus = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelStatus");
 
-        TestReporter.assertEquals(guestfirstName, retrieve.getFirstName(), "Verify the first name [" + retrieve.getFirstName() + "] matches the expected [" + guestfirstName + "]");
-        TestReporter.assertEquals(guestlastName, retrieve.getLastName(), "Verify the last name [" + retrieve.getLastName() + "] matches the expected [" + guestlastName + "]");
-        TestReporter.assertEquals(guestPhone, retrieve.getPhone(), "Verify the guest phone [" + retrieve.getPhone() + "] matches the expected [" + guestPhone + "]");
-        TestReporter.assertEquals(guestAddress, retrieve.getAddress(), "Verify the guest address [" + retrieve.getAddress() + "] matches the expected [" + guestAddress + "]");
-        TestReporter.assertEquals(guestEmail, retrieve.getEmail(), "Verify the email [" + retrieve.getEmail() + "] matches the expected [" + guestEmail + "]");
+        if (sbc) {
+            TestReporter.softAssertNotNull(retrieve.getPartyId(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
 
-        TestReporter.assertEquals(startPeriod, retrieve.getPeriodSD(), "Verify the period start date [" + retrieve.getPeriodSD() + "] matches the expected [" + startPeriod + "]");
-        TestReporter.assertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
-        TestReporter.assertNotNull(retrieve.getPartyId(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertNotNull(retrieve.getPPFirstName(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
+            TestReporter.softAssertNotNull(retrieve.getPPLastName(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
+            TestReporter.softAssertNotNull(retrieve.getPPPhone(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
+            TestReporter.softAssertNotNull(retrieve.getPPAddress(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
+            TestReporter.softAssertNotNull(retrieve.getPPEmail(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
 
-        TestReporter.assertNotNull(retrieve.getPPFirstName(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
-        TestReporter.assertNotNull(retrieve.getPPLastName(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
-        TestReporter.assertNotNull(retrieve.getPPPhone(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
-        TestReporter.assertNotNull(retrieve.getPPAddress(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
-        TestReporter.assertNotNull(retrieve.getPPEmail(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
+            TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoTP(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
 
-        TestReporter.assertNotNull(retrieve.getRoomReadyNotificationInfoTP(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoRequired(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
 
-        TestReporter.assertNotNull(retrieve.getRoomReadyNotificationInfoRequired(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertNotNull(retrieve.getTravelStatus(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
+            TestReporter.assertAll();
+        } else {
 
-        TestReporter.assertEquals(guestGuestId, retrieve.getGuestId(), "Verify the guest id [" + retrieve.getGuestId() + "] matches the expected [" + guestGuestId + "]");
+            TestReporter.softAssertEquals(guestfirstName, retrieve.getFirstName(), "Verify the first name [" + retrieve.getFirstName() + "] matches the expected [" + guestfirstName + "]");
+            TestReporter.softAssertEquals(guestlastName, retrieve.getLastName(), "Verify the last name [" + retrieve.getLastName() + "] matches the expected [" + guestlastName + "]");
+            TestReporter.softAssertEquals(guestPhone, retrieve.getPhone(), "Verify the guest phone [" + retrieve.getPhone() + "] matches the expected [" + guestPhone + "]");
+            TestReporter.softAssertEquals(guestAddress, retrieve.getAddress(), "Verify the guest address [" + retrieve.getAddress() + "] matches the expected [" + guestAddress + "]");
+            TestReporter.softAssertEquals(guestEmail, retrieve.getEmail(), "Verify the email [" + retrieve.getEmail() + "] matches the expected [" + guestEmail + "]");
 
-        TestReporter.assertNotNull(retrieve.getTravelStatus(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
+            TestReporter.softAssertEquals(startPeriod, retrieve.getPeriodSD(), "Verify the period start date [" + retrieve.getPeriodSD() + "] matches the expected [" + startPeriod + "]");
+            TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
+            TestReporter.softAssertNotNull(retrieve.getPartyId(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
 
+            TestReporter.softAssertNotNull(retrieve.getPPFirstName(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
+            TestReporter.softAssertNotNull(retrieve.getPPLastName(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
+            TestReporter.softAssertNotNull(retrieve.getPPPhone(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
+            TestReporter.softAssertNotNull(retrieve.getPPAddress(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
+            TestReporter.softAssertNotNull(retrieve.getPPEmail(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
+
+            TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoTP(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
+
+            TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoRequired(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
+
+            try {
+                TestReporter.assertEquals(guestGuestId, retrieve.getGuestId("1"), "Verify the guest id [" + retrieve.getGuestId("1") + "] matches the expected [" + guestGuestId + "]");
+            } catch (AssertionError e) {
+                TestReporter.assertEquals(guestGuestId, retrieve.getGuestId("2"), "Verify the guest id [" + retrieve.getGuestId("2") + "] matches the expected [" + guestGuestId + "]");
+            }
+
+            TestReporter.softAssertNotNull(retrieve.getTravelStatus(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
+            TestReporter.assertAll();
+        }
+    }
+
+    public void baseValidationNotReplaceAll(Book book, Retrieve retrieve) {
+
+        String guestfirstName = book.getPrimaryGuestFirstName();
+
+        String guestlastName = book.getPrimaryGuestLastName();
+
+        String guestPhone = book.getPrimaryPhoneNumber();
+
+        String guestAddress = book.getResponseRoomDetailsGuestRefDtlsAddressLine1("1");
+
+        String guestEmail = book.getResponseRoomDetailsGuestRefDtlsEmailAddress("1");
+
+        String startPeriod = book.getResponseRoomDetailsResortPeriodStartDate("1");
+
+        String endPeriod = book.getResponseRoomDetailsResortPeriodEndDate("1");
+
+        String guestPartyId = book.getPartyId();
+
+        String guestGuestId = book.getGuestId();
+
+        TestReporter.softAssertEquals(guestfirstName, retrieve.getFirstName(), "Verify the first name [" + retrieve.getFirstName() + "] matches the expected [" + guestfirstName + "]");
+        TestReporter.softAssertEquals(guestlastName, retrieve.getLastName(), "Verify the last name [" + retrieve.getLastName() + "] matches the expected [" + guestlastName + "]");
+        TestReporter.softAssertEquals(guestPhone, retrieve.getPhone(), "Verify the guest phone [" + retrieve.getPhone() + "] matches the expected [" + guestPhone + "]");
+        TestReporter.softAssertEquals(guestAddress, retrieve.getAddress(), "Verify the guest address [" + retrieve.getAddress() + "] matches the expected [" + guestAddress + "]");
+        TestReporter.softAssertEquals(guestEmail, retrieve.getEmail(), "Verify the email [" + retrieve.getEmail() + "] matches the expected [" + guestEmail + "]");
+
+        TestReporter.softAssertEquals(startPeriod, retrieve.getPeriodSD(), "Verify the period start date [" + retrieve.getPeriodSD() + "] matches the expected [" + startPeriod + "]");
+        TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
+        TestReporter.softAssertNotNull(retrieve.getPartyId(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
+
+        TestReporter.softAssertNotNull(retrieve.getPPFirstName(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
+        TestReporter.softAssertNotNull(retrieve.getPPLastName(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
+        TestReporter.softAssertNotNull(retrieve.getPPPhone(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
+        TestReporter.softAssertNotNull(retrieve.getPPAddress(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
+        TestReporter.softAssertNotNull(retrieve.getPPEmail(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
+        TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoTP(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
+        TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoRequired(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
+        TestReporter.softAssertEquals(guestGuestId, retrieve.getGuestId("1"), "Verify the guest id [" + retrieve.getGuestId("1") + "] matches the expected [" + guestGuestId + "]");
+        TestReporter.softAssertNotNull(retrieve.getTravelStatus(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
+        TestReporter.assertAll();
     }
 
     public void TpsValidation(Retrieve retrieve) {
@@ -254,4 +312,272 @@ public class RetrieveHelper {
         TestReporter.assertTrue(!rs.getValue("TPS_ID", 1).equals(""), "The travel plan segment id is [" + rs.getValue("TPS_ID", 1) + "]");
     }
 
+    public void multiAddressCheck(ReplaceAllForTravelPlanSegment book, Retrieve retrieve, HouseHold hh) {
+
+        TestReporter.softAssertTrue(retrieve.getTPAddressDetailsCount() == 2, "Verify two TP Address Detail blocks are returned.  Count: [" + retrieve.getTPAddressDetailsCount() + "]");
+        TestReporter.softAssertTrue(retrieve.getPrimaryPtyAddressDetailsCount() == 2, "Verify two primary party Address Detail blocks are returned.  Count: [" + retrieve.getPrimaryPtyAddressDetailsCount() + "]");
+        TestReporter.softAssertTrue(retrieve.getCompGroupingsAddressDetailsCount() == 2, "Verify two Component Groupings Address Detail blocks are returned.  Count: [" + retrieve.getCompGroupingsAddressDetailsCount() + "]");
+        TestReporter.softAssertTrue(retrieve.getTPSAddressDetailsCount() == 2, "Verify two TPS Address Detail blocks are returned.  Count: [" + retrieve.getTPSAddressDetailsCount() + "]");
+
+        String firstAddressLine1 = hh.getAllGuests().get(0).primaryAddress().getAddress1();
+        String secondAddressLine1 = "5633 Siracusa Ln";
+        String firstAddressCity = hh.getAllGuests().get(0).primaryAddress().getCity();
+        String secondAddressCity = "Sanford";
+        String firstAddressCountry = "USA";
+        String secondAddressCountry = "USA";
+        String firstAddressPostalCode = hh.getAllGuests().get(0).primaryAddress().getZipCode();
+        String secondAddressPostalCode = "32771-5462";
+        String firstAddressState = hh.getAllGuests().get(0).primaryAddress().getStateAbbv();
+        String secondAddressState = "FL";
+        String firstAddressRegionName = hh.getAllGuests().get(0).primaryAddress().getState();
+        String secondAddressRegionName = "Florida";
+
+        // For Tp Address Details Blocks
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsPrimary("1"), "true", "Verify the first TP primary returned [" + retrieve.getTPAddressDetailsPrimary("1") + "] is as expected "
+                + "[true]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsPrimary("2"), "true", "Verify the second TP primary returned [" + retrieve.getTPAddressDetailsPrimary("2") + "] is as expected "
+                + "[true]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsAddressLine1("1"), firstAddressLine1, "Verify the first TP address1 returned [" + retrieve.getTPAddressDetailsAddressLine1("1") + "] is as expected "
+                + "[" + firstAddressLine1 + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsAddressLine1("2"), secondAddressLine1, "Verify the second TP address1 returned [" + retrieve.getTPAddressDetailsAddressLine1("2") + "] is as expected "
+                + "[" + secondAddressLine1 + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsCity("1"), firstAddressCity, "Verify the first TP address city returned [" + retrieve.getTPAddressDetailsCity("1") + "] is as expected "
+                + "[" + firstAddressCity + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsCity("2"), secondAddressCity, "Verify the second TP address city returned [" + retrieve.getTPAddressDetailsCity("2") + "] is as expected "
+                + "[" + secondAddressCity + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsCountry("1"), firstAddressCountry, "Verify the first TP address country returned [" + retrieve.getTPAddressDetailsCountry("1") + "] is as expected "
+                + "[" + firstAddressCountry + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsCountry("2"), secondAddressCountry, "Verify the second TP address country returned [" + retrieve.getTPAddressDetailsCountry("2") + "] is as expected "
+                + "[" + secondAddressCountry + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsPostalCode("1"), firstAddressPostalCode, "Verify the first TP address postal code returned [" + retrieve.getTPAddressDetailsPostalCode("1") + "] is as expected "
+                + "[" + firstAddressPostalCode + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsPostalCode("2"), secondAddressPostalCode, "Verify the second TP address postal code returned [" + retrieve.getTPAddressDetailsPostalCode("2") + "] is as expected "
+                + "[" + secondAddressPostalCode + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsState("1"), firstAddressState, "Verify the first TP address state returned [" + retrieve.getTPAddressDetailsState("1") + "] is as expected "
+                + "[" + firstAddressState + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsState("2"), secondAddressState, "Verify the second TP address state returned [" + retrieve.getTPAddressDetailsState("2") + "] is as expected "
+                + "[" + secondAddressState + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsRegion("1"), firstAddressRegionName, "Verify the first TP address region returned [" + retrieve.getTPAddressDetailsRegion("1") + "] is as expected "
+                + "[" + firstAddressRegionName + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsRegion("2"), secondAddressRegionName, "Verify the second TP address region returned [" + retrieve.getTPAddressDetailsRegion("2") + "] is as expected "
+                + "[" + secondAddressRegionName + "]");
+
+        // For Primary Party Address Details Blocks
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsPrimary("1"), "true", "Verify the first PP primary returned [" + retrieve.getPPAddressDetailsPrimary("1") + "] is as expected "
+                + "[true]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsPrimary("2"), "true", "Verify the second PP primary returned [" + retrieve.getPPAddressDetailsPrimary("2") + "] is as expected "
+                + "[true]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsAddressLine1("1"), firstAddressLine1, "Verify the first PP address1 returned [" + retrieve.getPPAddressDetailsAddressLine1("1") + "] is as expected "
+                + "[" + firstAddressLine1 + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsAddressLine1("2"), secondAddressLine1, "Verify the second PP address1 returned [" + retrieve.getPPAddressDetailsAddressLine1("2") + "] is as expected "
+                + "[" + secondAddressLine1 + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsCity("1"), firstAddressCity, "Verify the first PP address city returned [" + retrieve.getPPAddressDetailsCity("1") + "] is as expected "
+                + "[" + firstAddressCity + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsCity("2"), secondAddressCity, "Verify the second PP address city returned [" + retrieve.getPPAddressDetailsCity("2") + "] is as expected "
+                + "[" + secondAddressCity + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsCountry("1"), firstAddressCountry, "Verify the first PP address country returned [" + retrieve.getPPAddressDetailsCountry("1") + "] is as expected "
+                + "[" + firstAddressCountry + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsCountry("2"), secondAddressCountry, "Verify the second PP address country returned [" + retrieve.getPPAddressDetailsCountry("2") + "] is as expected "
+                + "[" + secondAddressCountry + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsPostalCode("1"), firstAddressPostalCode, "Verify the first PP address postal code returned [" + retrieve.getPPAddressDetailsPostalCode("1") + "] is as expected "
+                + "[" + firstAddressPostalCode + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsPostalCode("2"), secondAddressPostalCode, "Verify the second PP address postal code returned [" + retrieve.getPPAddressDetailsPostalCode("2") + "] is as expected "
+                + "[" + secondAddressPostalCode + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsState("1"), firstAddressState, "Verify the first PP address state returned [" + retrieve.getPPAddressDetailsState("1") + "] is as expected "
+                + "[" + firstAddressState + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsState("2"), secondAddressState, "Verify the second PP address state returned [" + retrieve.getPPAddressDetailsState("2") + "] is as expected "
+                + "[" + secondAddressState + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsRegion("1"), firstAddressRegionName, "Verify the first PP address region returned [" + retrieve.getPPAddressDetailsRegion("1") + "] is as expected "
+                + "[" + firstAddressRegionName + "]");
+        TestReporter.softAssertEquals(retrieve.getPPAddressDetailsRegion("2"), secondAddressRegionName, "Verify the second PP address region returned [" + retrieve.getPPAddressDetailsRegion("2") + "] is as expected "
+                + "[" + secondAddressRegionName + "]");
+
+        // For Component Groupings Address Details Blocks
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsPrimary("1"), "true", "Verify the first TCG primary returned [" + retrieve.getTCGAddressDetailsPrimary("1") + "] is as expected "
+                + "[true]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsPrimary("2"), "true", "Verify the second TCG primary returned [" + retrieve.getTCGAddressDetailsPrimary("2") + "] is as expected "
+                + "[true]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsAddressLine1("1"), firstAddressLine1, "Verify the first TCG address1 returned [" + retrieve.getTCGAddressDetailsAddressLine1("1") + "] is as expected "
+                + "[" + firstAddressLine1 + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsAddressLine1("2"), secondAddressLine1, "Verify the second TCG address1 returned [" + retrieve.getTCGAddressDetailsAddressLine1("2") + "] is as expected "
+                + "[" + secondAddressLine1 + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsCity("1"), firstAddressCity, "Verify the first TCG address city returned [" + retrieve.getTCGAddressDetailsCity("1") + "] is as expected "
+                + "[" + firstAddressCity + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsCity("2"), secondAddressCity, "Verify the second TCG address city returned [" + retrieve.getTCGAddressDetailsCity("2") + "] is as expected "
+                + "[" + secondAddressCity + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsCountry("1"), firstAddressCountry, "Verify the first TCG address country returned [" + retrieve.getTCGAddressDetailsCountry("1") + "] is as expected "
+                + "[" + firstAddressCountry + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsCountry("2"), secondAddressCountry, "Verify the second TCG address country returned [" + retrieve.getTCGAddressDetailsCountry("2") + "] is as expected "
+                + "[" + secondAddressCountry + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsPostalCode("1"), firstAddressPostalCode, "Verify the first TCG address postal code returned [" + retrieve.getTCGAddressDetailsPostalCode("1") + "] is as expected "
+                + "[" + firstAddressPostalCode + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsPostalCode("2"), secondAddressPostalCode, "Verify the second TCG address postal code returned [" + retrieve.getTCGAddressDetailsPostalCode("2") + "] is as expected "
+                + "[" + secondAddressPostalCode + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsState("1"), firstAddressState, "Verify the first TCG address state returned [" + retrieve.getTCGAddressDetailsState("1") + "] is as expected "
+                + "[" + firstAddressState + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsState("2"), secondAddressState, "Verify the second TCG address state returned [" + retrieve.getTCGAddressDetailsState("2") + "] is as expected "
+                + "[" + secondAddressState + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsRegion("1"), firstAddressRegionName, "Verify the first TCG address region returned [" + retrieve.getTCGAddressDetailsRegion("1") + "] is as expected "
+                + "[" + firstAddressRegionName + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGAddressDetailsRegion("2"), secondAddressRegionName, "Verify the second TCG address region returned [" + retrieve.getTCGAddressDetailsRegion("2") + "] is as expected "
+                + "[" + secondAddressRegionName + "]");
+
+        // For TPS Address Details Blocks
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsPrimary("1"), "true", "Verify the first TPS primary returned [" + retrieve.getTPSAddressDetailsPrimary("1") + "] is as expected "
+                + "[true]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsPrimary("2"), "true", "Verify the second TPS primary returned [" + retrieve.getTPSAddressDetailsPrimary("2") + "] is as expected "
+                + "[true]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsAddressLine1("1"), firstAddressLine1, "Verify the first TPS address1 returned [" + retrieve.getTPSAddressDetailsAddressLine1("1") + "] is as expected "
+                + "[" + firstAddressLine1 + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsAddressLine1("2"), secondAddressLine1, "Verify the second TPS address1 returned [" + retrieve.getTPSAddressDetailsAddressLine1("2") + "] is as expected "
+                + "[" + secondAddressLine1 + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsCity("1"), firstAddressCity, "Verify the first TPS address city returned [" + retrieve.getTPSAddressDetailsCity("1") + "] is as expected "
+                + "[" + firstAddressCity + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsCity("2"), secondAddressCity, "Verify the second TPS address city returned [" + retrieve.getTPSAddressDetailsCity("2") + "] is as expected "
+                + "[" + secondAddressCity + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsCountry("1"), firstAddressCountry, "Verify the first TPS address country returned [" + retrieve.getTPSAddressDetailsCountry("1") + "] is as expected "
+                + "[" + firstAddressCountry + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsCountry("2"), secondAddressCountry, "Verify the second TPS address country returned [" + retrieve.getTPSAddressDetailsCountry("2") + "] is as expected "
+                + "[" + secondAddressCountry + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsPostalCode("1"), firstAddressPostalCode, "Verify the first TPS address postal code returned [" + retrieve.getTPSAddressDetailsPostalCode("1") + "] is as expected "
+                + "[" + firstAddressPostalCode + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsPostalCode("2"), secondAddressPostalCode, "Verify the second TPS address postal code returned [" + retrieve.getTPSAddressDetailsPostalCode("2") + "] is as expected "
+                + "[" + secondAddressPostalCode + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsState("1"), firstAddressState, "Verify the first TPS address state returned [" + retrieve.getTPSAddressDetailsState("1") + "] is as expected "
+                + "[" + firstAddressState + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsState("2"), secondAddressState, "Verify the second TPS address state returned [" + retrieve.getTPSAddressDetailsState("2") + "] is as expected "
+                + "[" + secondAddressState + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsRegion("1"), firstAddressRegionName, "Verify the first TPS address region returned [" + retrieve.getTPSAddressDetailsRegion("1") + "] is as expected "
+                + "[" + firstAddressRegionName + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSAddressDetailsRegion("2"), secondAddressRegionName, "Verify the second TPS address region returned [" + retrieve.getTPSAddressDetailsRegion("2") + "] is as expected "
+                + "[" + secondAddressRegionName + "]");
+
+        TestReporter.assertAll();
+
+    }
+
+    public void multiEmailCheck(ReplaceAllForTravelPlanSegment book, Retrieve retrieve, HouseHold hh) {
+
+        TestReporter.softAssertTrue(retrieve.getTPEmailDetailsCount() == 2, "Verify two TP Email Detail blocks are returned.  Count: [" + retrieve.getTPEmailDetailsCount() + "]");
+        TestReporter.softAssertTrue(retrieve.getPPEmailDetailsCount() == 2, "Verify two primary party Email Detail blocks are returned.  Count: [" + retrieve.getPPEmailDetailsCount() + "]");
+        TestReporter.softAssertTrue(retrieve.getTCGEmailDetailsCount() == 2, "Verify two Component Groupings Email Detail blocks are returned.  Count: [" + retrieve.getTCGEmailDetailsCount() + "]");
+        TestReporter.softAssertTrue(retrieve.getTPSEmailDetailsCount() == 2, "Verify two TPS Email Detail blocks are returned.  Count: [" + retrieve.getTPSEmailDetailsCount() + "]");
+
+        String firstEmail = hh.getAllGuests().get(0).primaryEmail().getEmail();
+        String secondEmail = "test@testemail.com";
+        String firstEmailIsPrimary = String.valueOf(hh.getAllGuests().get(0).primaryEmail().isPrimary());
+        String secondEmailIsPrimary = "true";
+
+        // For Tp Email Details Blocks
+        TestReporter.softAssertEquals(retrieve.getTPEmailDetailsPrimary("1"), firstEmailIsPrimary, "Verify the first TP email primary returned [" + retrieve.getTPEmailDetailsPrimary("1") + "] is as expected "
+                + "[" + firstEmailIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTPEmailDetailsPrimary("2"), secondEmailIsPrimary, "Verify the second TP email primary returned [" + retrieve.getTPEmailDetailsPrimary("2") + "] is as expected "
+                + "[" + secondEmailIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTPEmailDetailsAddress("1"), firstEmail, "Verify the first TP email address returned [" + retrieve.getTPEmailDetailsAddress("1") + "] is as expected "
+                + "[" + firstEmail + "]");
+        TestReporter.softAssertEquals(retrieve.getTPEmailDetailsAddress("2"), secondEmail, "Verify the second TP email address returned [" + retrieve.getTPEmailDetailsAddress("2") + "] is as expected "
+                + "[" + secondEmail + "]");
+
+        // For PP Email Details Blocks
+        TestReporter.softAssertEquals(retrieve.getPPEmailDetailsPrimary("1"), firstEmailIsPrimary, "Verify the first PP email primary returned [" + retrieve.getPPEmailDetailsPrimary("1") + "] is as expected "
+                + "[" + firstEmailIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getPPEmailDetailsPrimary("2"), secondEmailIsPrimary, "Verify the second PP email primary returned [" + retrieve.getPPEmailDetailsPrimary("2") + "] is as expected "
+                + "[" + secondEmailIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getPPEmailDetailsAddress("1"), firstEmail, "Verify the first PP email address returned [" + retrieve.getPPEmailDetailsAddress("1") + "] is as expected "
+                + "[" + firstEmail + "]");
+        TestReporter.softAssertEquals(retrieve.getPPEmailDetailsAddress("2"), secondEmail, "Verify the second PP email address returned [" + retrieve.getPPEmailDetailsAddress("2") + "] is as expected "
+                + "[" + secondEmail + "]");
+
+        // For TCG Email Details Blocks
+        TestReporter.softAssertEquals(retrieve.getTCGEmailDetailsPrimary("1"), firstEmailIsPrimary, "Verify the first TCG email primary returned [" + retrieve.getTCGEmailDetailsPrimary("1") + "] is as expected "
+                + "[" + firstEmailIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGEmailDetailsPrimary("2"), secondEmailIsPrimary, "Verify the second TCG email primary returned [" + retrieve.getTCGEmailDetailsPrimary("2") + "] is as expected "
+                + "[" + secondEmailIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGEmailDetailsAddress("1"), firstEmail, "Verify the first TCG email address returned [" + retrieve.getTCGEmailDetailsAddress("1") + "] is as expected "
+                + "[" + firstEmail + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGEmailDetailsAddress("2"), secondEmail, "Verify the second TCG email address returned [" + retrieve.getTCGEmailDetailsAddress("2") + "] is as expected "
+                + "[" + secondEmail + "]");
+
+        // For TPS Email Details Blocks
+        TestReporter.softAssertEquals(retrieve.getTPSEmailDetailsPrimary("1"), firstEmailIsPrimary, "Verify the first TPS email primary returned [" + retrieve.getTPSEmailDetailsPrimary("1") + "] is as expected "
+                + "[" + firstEmailIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSEmailDetailsPrimary("2"), secondEmailIsPrimary, "Verify the second TPS email primary returned [" + retrieve.getTPSEmailDetailsPrimary("2") + "] is as expected "
+                + "[" + secondEmailIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSEmailDetailsAddress("1"), firstEmail, "Verify the first TPS email address returned [" + retrieve.getTPSEmailDetailsAddress("1") + "] is as expected "
+                + "[" + firstEmail + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSEmailDetailsAddress("2"), secondEmail, "Verify the second TPS email address returned [" + retrieve.getTPSEmailDetailsAddress("2") + "] is as expected "
+                + "[" + secondEmail + "]");
+
+        TestReporter.assertAll();
+
+    }
+
+    public void multiPhoneCheck(ReplaceAllForTravelPlanSegment book, Retrieve retrieve, HouseHold hh) {
+
+        TestReporter.softAssertTrue(retrieve.getTPPhoneDetailsCount() == 2, "Verify two TP Phone Detail blocks are returned.  Count: [" + retrieve.getTPPhoneDetailsCount() + "]");
+        TestReporter.softAssertTrue(retrieve.getPPPhoneDetailsCount() == 2, "Verify two primary party Phone Detail blocks are returned.  Count: [" + retrieve.getPPPhoneDetailsCount() + "]");
+        TestReporter.softAssertTrue(retrieve.getTCGPhoneDetailsCount() == 2, "Verify two Component Groupings Phone Detail blocks are returned.  Count: [" + retrieve.getTCGPhoneDetailsCount() + "]");
+        TestReporter.softAssertTrue(retrieve.getTPSPhoneDetailsCount() == 2, "Verify two TPS Phone Detail blocks are returned.  Count: [" + retrieve.getTPSPhoneDetailsCount() + "]");
+
+        String firstNumber = hh.getAllGuests().get(0).primaryPhone().getNumber();
+        String secondNumber = "9089091111";
+        String firstPhoneIsPrimary = String.valueOf(hh.getAllGuests().get(0).primaryPhone().isPrimary());
+        String secondPhoneIsPrimary = "false";
+
+        // For Tp Phone Details Blocks
+        TestReporter.softAssertEquals(retrieve.getTPPhoneDetailsPrimary("1"), firstPhoneIsPrimary, "Verify the first TP phone primary returned [" + retrieve.getTPPhoneDetailsPrimary("1") + "] is as expected "
+                + "[" + firstPhoneIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTPPhoneDetailsPrimary("2"), secondPhoneIsPrimary, "Verify the second TP phone primary returned [" + retrieve.getTPPhoneDetailsPrimary("2") + "] is as expected "
+                + "[" + secondPhoneIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTPPhoneDetailsNumber("1"), firstNumber, "Verify the first TP phone number returned [" + retrieve.getTPPhoneDetailsNumber("1") + "] is as expected "
+                + "[" + firstNumber + "]");
+        TestReporter.softAssertEquals(retrieve.getTPPhoneDetailsNumber("2"), secondNumber, "Verify the second TP phone number returned [" + retrieve.getTPPhoneDetailsNumber("2") + "] is as expected "
+                + "[" + secondNumber + "]");
+
+        // For Primary Party Phone Details Blocks
+        TestReporter.softAssertEquals(retrieve.getPPPhoneDetailsPrimary("1"), firstPhoneIsPrimary, "Verify the first PP phone primary returned [" + retrieve.getPPPhoneDetailsPrimary("1") + "] is as expected "
+                + "[" + firstPhoneIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getPPPhoneDetailsPrimary("2"), secondPhoneIsPrimary, "Verify the second PP phone primary returned [" + retrieve.getPPPhoneDetailsPrimary("2") + "] is as expected "
+                + "[" + secondPhoneIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getPPPhoneDetailsNumber("1"), firstNumber, "Verify the first PP phone number returned [" + retrieve.getPPPhoneDetailsNumber("1") + "] is as expected "
+                + "[" + firstNumber + "]");
+        TestReporter.softAssertEquals(retrieve.getPPPhoneDetailsNumber("2"), secondNumber, "Verify the second PP phone number returned [" + retrieve.getPPPhoneDetailsNumber("2") + "] is as expected "
+                + "[" + secondNumber + "]");
+
+        // For TCG Phone Details Blocks
+        TestReporter.softAssertEquals(retrieve.getTCGPhoneDetailsPrimary("1"), firstPhoneIsPrimary, "Verify the first TCG phone primary returned [" + retrieve.getTCGPhoneDetailsPrimary("1") + "] is as expected "
+                + "[" + firstPhoneIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGPhoneDetailsPrimary("2"), secondPhoneIsPrimary, "Verify the second TCG phone primary returned [" + retrieve.getTCGPhoneDetailsPrimary("2") + "] is as expected "
+                + "[" + secondPhoneIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGPhoneDetailsNumber("1"), firstNumber, "Verify the first TCG phone number returned [" + retrieve.getTCGPhoneDetailsNumber("1") + "] is as expected "
+                + "[" + firstNumber + "]");
+        TestReporter.softAssertEquals(retrieve.getTCGPhoneDetailsNumber("2"), secondNumber, "Verify the second TCG phone number returned [" + retrieve.getTCGPhoneDetailsNumber("2") + "] is as expected "
+                + "[" + secondNumber + "]");
+
+        // For TPS Phone Details Blocks
+        TestReporter.softAssertEquals(retrieve.getTPSPhoneDetailsPrimary("1"), firstPhoneIsPrimary, "Verify the first TPS phone primary returned [" + retrieve.getTPSPhoneDetailsPrimary("1") + "] is as expected "
+                + "[" + firstPhoneIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSPhoneDetailsPrimary("2"), secondPhoneIsPrimary, "Verify the second TPS phone primary returned [" + retrieve.getTPSPhoneDetailsPrimary("2") + "] is as expected "
+                + "[" + secondPhoneIsPrimary + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSPhoneDetailsNumber("1"), firstNumber, "Verify the first TPS phone number returned [" + retrieve.getTPSPhoneDetailsNumber("1") + "] is as expected "
+                + "[" + firstNumber + "]");
+        TestReporter.softAssertEquals(retrieve.getTPSPhoneDetailsNumber("2"), secondNumber, "Verify the second TPS phone number returned [" + retrieve.getTPSPhoneDetailsNumber("2") + "] is as expected "
+                + "[" + secondNumber + "]");
+
+        TestReporter.assertAll();
+    }
+
+    public String findTicketComponentId(String tcg, String env) {
+
+        String sql = "SELECT TC_ID "
+                + "FROM RES_MGMT.TC "
+                + "WHERE TC_GRP_NB = '" + tcg + "' "
+                + "and TC.TC_TYP_NM = 'AdmissionComponent'";
+
+        Database db = new OracleDatabase(env, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        return rs.getValue("TC_ID");
+
+    }
 }

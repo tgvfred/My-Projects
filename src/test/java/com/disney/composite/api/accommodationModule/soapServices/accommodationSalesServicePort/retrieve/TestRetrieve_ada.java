@@ -37,6 +37,9 @@ public class TestRetrieve_ada extends AccommodationBaseTest {
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
 
+        TestReporter.assertEquals(retrieve.getAccommSpecialNeedsRequested(), "true", "Verify the special needs response node value: [" + retrieve.getAccommSpecialNeedsRequested() + "]"
+                + " comes back as expected: [true]");
+
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {
 
@@ -63,6 +66,10 @@ public class TestRetrieve_ada extends AccommodationBaseTest {
                         "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/exchangeFee");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/bypassResortDesk[text()='false']");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/dmeAccommodation[text()='false']");
+
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
         }
     }

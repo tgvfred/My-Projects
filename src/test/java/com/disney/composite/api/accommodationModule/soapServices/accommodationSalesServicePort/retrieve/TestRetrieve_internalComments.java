@@ -24,11 +24,14 @@ public class TestRetrieve_internalComments extends AccommodationBaseTest {
         setValues(getEnvironment());
         setAddInternalComments(true);
         isComo.set("true");
+        bookReservation();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_internalComments() {
-        bookReservation();
+
+        String text = getCommentsData().get(COMMENT_TEXT);
+        String type = "Internal";
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
@@ -36,6 +39,11 @@ public class TestRetrieve_internalComments extends AccommodationBaseTest {
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
+
+        TestReporter.softAssertEquals(text, retrieve.getCommentText(), "Verfiy the comment text from the response: [" + retrieve.getCommentText() + "] "
+                + "matches the comment data from the request: [" + text + "]");
+        TestReporter.softAssertEquals(type, retrieve.getCommentType(), "Verfiy the comment type from the response: [" + retrieve.getCommentType() + "] "
+                + "matches the comment data from the request: [" + type + "]");
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {
@@ -63,6 +71,13 @@ public class TestRetrieve_internalComments extends AccommodationBaseTest {
                         "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/exchangeFee");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/bypassResortDesk[text()='false']");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/dmeAccommodation[text()='false']");
+
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/comments/auditDetail/createdDate");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/comments/auditDetail/createdDate");
+
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
         }
     }

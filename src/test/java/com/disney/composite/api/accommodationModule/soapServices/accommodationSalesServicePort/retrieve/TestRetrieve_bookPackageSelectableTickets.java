@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.api.soapServices.admissionModule.admissionSalesServicePort.operations.BookPackageSelectableTickets;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.FindTicketPriceGridByPackage;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.GetTicketProducts;
@@ -33,7 +34,6 @@ public class TestRetrieve_bookPackageSelectableTickets extends AccommodationBase
         setIsWdtcBooking(true);
         setMywPackageCode(true);
         setValues();
-        // isComo.set("true");
         bookReservation();
     }
 
@@ -48,6 +48,22 @@ public class TestRetrieve_bookPackageSelectableTickets extends AccommodationBase
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
+
+        RetrieveHelper helper = new RetrieveHelper();
+        helper.baseValidation(getBook(), retrieve);
+        helper.sqlAdmissionComponentDetails(environment, getBook().getTravelComponentGroupingId());
+
+        String ticketComponentIdString = helper.findTicketComponentId(getBook().getTravelComponentGroupingId(), Environment.getBaseEnvironmentName(environment));
+
+        TestReporter.softAssertEquals(retrieve.getTicketStatus(), "Booked", "Verify the ticket status is Booked as expected: [" + retrieve.getTicketStatus() + "]");
+        TestReporter.softAssertEquals(retrieve.getTicketGuestId(), getBook().getGuestId(), "Verify the ticket guest id in the response: [" + retrieve.getTicketGuestId() + "] "
+                + "matches the guest id from the reservation: [" + getBook().getGuestId() + "]");
+        TestReporter.softAssertEquals(retrieve.getTicketAgeType(), "ADULT", "Verify the ticket age type is ADULT as expected: [" + retrieve.getTicketAgeType() + "]");
+        TestReporter.softAssertEquals(retrieve.getTicketComponentId(), ticketComponentIdString, "Verify the ticket component id in the response: [" + retrieve.getTicketComponentId() + "] "
+                + "matches the component id from the reservation: [" + ticketComponentIdString + "]");
+        TestReporter.softAssertEquals(retrieve.getTicketCode(), code, "Verify the ticket code in the response: [" + retrieve.getTicketCode() + "] "
+                + "matches the code created from get ticket products: [" + code + "]");
+        TestReporter.assertAll();
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {
@@ -75,6 +91,10 @@ public class TestRetrieve_bookPackageSelectableTickets extends AccommodationBase
                         "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/exchangeFee");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/bypassResortDesk[text()='false']");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/dmeAccommodation[text()='false']");
+
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
         }
     }

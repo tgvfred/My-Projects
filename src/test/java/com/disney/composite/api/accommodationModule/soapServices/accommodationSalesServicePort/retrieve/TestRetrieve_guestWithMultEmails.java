@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -22,6 +23,7 @@ public class TestRetrieve_guestWithMultEmails extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         isComo.set("true");
+        setValues(environment);
         bookReservation("ROTwoEmailDetails");
 
     }
@@ -37,6 +39,10 @@ public class TestRetrieve_guestWithMultEmails extends AccommodationBaseTest {
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
+
+        RetrieveHelper helper = new RetrieveHelper();
+        helper.multiEmailCheck(getBook(), retrieve, getHouseHold());
+        helper.baseValidation(getBook(), retrieve);
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {
@@ -64,6 +70,10 @@ public class TestRetrieve_guestWithMultEmails extends AccommodationBaseTest {
                         "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/exchangeFee");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/bypassResortDesk[text()='false']");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/dmeAccommodation[text()='false']");
+
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
         }
     }
