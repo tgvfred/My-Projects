@@ -13,10 +13,13 @@ import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
-public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTest {
-
+public class TestAutoReinstate_roomOnly_multTps_cancelBoth_reinstateOne extends AccommodationBaseTest {
     AutoReinstate auto;
     Cancel cancel;
+    String firstTCG;
+    String firstTPS;
+    String firstTC;
+    String firstTP;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -30,12 +33,32 @@ public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTes
         setValues(getEnvironment());
         isComo.set("false");
         bookReservation();
+        firstTCG = getBook().getTravelComponentGroupingId();
+        firstTPS = getBook().getTravelPlanSegmentId();
+        firstTC = getBook().getTravelComponentId();
+        firstTP = getBook().getTravelPlanId();
+
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(getEnvironment());
+        isComo.set("false");
+        bookReservation();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate" })
-    public void Test_AutoReinstate_roomOnly_minimalInfo() {
+    public void Test_AutoReinstate_roomOnly_multTps_cancelBoth_reinstateOne() {
 
-        Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main");
+        cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main");
+        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
+        cancel.setTravelComponentGroupingId(firstTCG);
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+        cancel.sendRequest();
+        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
+
+        cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
@@ -44,22 +67,27 @@ public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTes
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
 
         auto = new AutoReinstate(environment, "Main");
-        auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        auto.setTravelComponentGroupingId(firstTCG);
         auto.sendRequest();
         TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + auto.getFaultString(), auto);
 
         validations();
 
-        // cancel and reinstate in order to clone on the old service.
+        // cancel the reinstated booking in order to clone
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
-        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setTravelComponentGroupingId(firstTCG);
+        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
+        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
 
-        auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        // auto.sendRequest();
-        TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while creating a comment: " + auto.getFaultString(), auto);
+        auto.setTravelComponentGroupingId(firstTCG);
+        auto.sendRequest();
+        TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while auto reinstating: " + auto.getFaultString(), auto);
         if (Environment.isSpecialEnvironment(environment)) {
+            cancel.sendRequest();
+            TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
+
             AutoReinstate clone = (AutoReinstate) auto.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
 
@@ -77,7 +105,7 @@ public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTes
                 tries++;
             } while (tries < maxTries && !success);
             if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(auto, true), "Validating Response Comparison");
@@ -88,16 +116,16 @@ public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTes
         AutoReinstateHelper helper = new AutoReinstateHelper(environment, getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
 
         helper.validateReservationBookedStatus();
-        helper.validateCancellationNumber();
-        helper.validateReinstateRecord();
-        helper.validateRIMInventory();
-        helper.validateChargeGroups();
-        helper.validateChargeItems();
+        helper.validateReinstatedTravelComponent(firstTPS);
+        helper.validateCancelledTravelComponent();
+        helper.validateCancellationNumberFirstTPS(firstTPS);
+        helper.validateBookedRecord();
+        helper.validateRIMInventoryReinstatedTCG(firstTCG, firstTC);
+        helper.validateTwoBookedChargeGroups(firstTP, firstTCG, firstTC);
+        helper.validateChargeItemsTwoTCG(firstTCG);
 
         int numExpectedRecords = 5;
         helper.validateFolioItems(numExpectedRecords);
-
-        helper.validateTPV3Data();
 
     }
 

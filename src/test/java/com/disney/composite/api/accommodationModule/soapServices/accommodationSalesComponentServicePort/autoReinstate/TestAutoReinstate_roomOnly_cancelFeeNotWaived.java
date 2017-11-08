@@ -8,12 +8,13 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AutoReinstateHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
-public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTest {
+public class TestAutoReinstate_roomOnly_cancelFeeNotWaived extends AccommodationBaseTest {
 
     AutoReinstate auto;
     Cancel cancel;
@@ -33,13 +34,14 @@ public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTes
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate" })
-    public void Test_AutoReinstate_roomOnly_minimalInfo() {
+    public void Test_AutoReinstate_roomOnly_cancelFeeNotWaived() {
 
-        Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main");
+        Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main_WithFee");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+        cancel.setRequestNodeValueByXPath("/Envelope/Body/cancel/request/overridden", BaseSoapCommands.REMOVE_NODE.toString());
+        cancel.setRequestNodeValueByXPath("/Envelope/Body/cancel/request/waived", BaseSoapCommands.REMOVE_NODE.toString());
+        cancel.setRequestNodeValueByXPath("/Envelope/Body/cancel/request/overriddenCancelFee", BaseSoapCommands.REMOVE_NODE.toString());
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
 
@@ -88,6 +90,7 @@ public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTes
         AutoReinstateHelper helper = new AutoReinstateHelper(environment, getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
 
         helper.validateReservationBookedStatus();
+        helper.validateCancelFeeNotWaived();
         helper.validateCancellationNumber();
         helper.validateReinstateRecord();
         helper.validateRIMInventory();
@@ -96,8 +99,6 @@ public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTes
 
         int numExpectedRecords = 5;
         helper.validateFolioItems(numExpectedRecords);
-
-        helper.validateTPV3Data();
 
     }
 
