@@ -27,7 +27,11 @@ public class Test_UpdateGuaranteeStatus_wdtc_GROUP extends AccommodationBaseTest
     @Override
     @AfterMethod(alwaysRun = true)
     public void teardown() {
-        cancel();
+        try {
+            cancel();
+        } catch (Exception e) {
+
+        }
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus" })

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestReplaceAllForTravelPlanSegment_modifyResWithUnusedTps" parallel="methods" thread-count="20">
-	<parameter name="environment" value="latest" />
-	<parameter name="localHostList" value="AccommodationSalesServicePort" />
-	<parameter name="localHostUrlList" value="http://W7-2UA32215QZ.wdw.disney.com:8081/Accommodation/AccommodationSalesServicePort" />
+	<parameter name="environment" value="latest_cm" />
 	<test name="TestReplaceAllForTravelPlanSegment_modifyResWithUnusedTps">
 		<classes>
 			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.replaceAllForTravelPlanSegment.TestReplaceAllForTravelPlanSegment_modifyResWithUnusedTps" />

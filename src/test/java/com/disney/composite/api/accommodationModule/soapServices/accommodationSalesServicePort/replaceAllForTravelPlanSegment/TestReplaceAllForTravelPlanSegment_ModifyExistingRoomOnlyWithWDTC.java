@@ -14,6 +14,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -57,7 +58,20 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
-        getBook().sendRequest();
+        // getBook().sendRequest();
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            getBook().sendRequest();
+            tries++;
+            if (getBook().getResponseStatusCode().equals("200")) {
+                success = true;
+            }
+        } while ((tries < maxTries) && !success);
+
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
 
         tpPtyId = getBook().getGuestId();
@@ -66,7 +80,20 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
                 + "join guest.TXN_PTY_EXTNL_REF b on a.TXN_PTY_ID = b.TXN_PTY_ID "
                 + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
+        Recordset rs = null;
+
+        tries = 0;
+        maxTries = 60;
+        success = false;
+        do {
+            Sleeper.sleep(1000);
+            rs = new Recordset(db.getResultSet(sql));
+            tries++;
+            if (rs.getRowCount() > 0) {
+                success = true;
+            }
+        } while ((tries < maxTries) && !success);
+
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
         ValidationHelper validations = new ValidationHelper(getEnvironment());

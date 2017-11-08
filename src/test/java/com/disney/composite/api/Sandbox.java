@@ -1,50 +1,40 @@
 package com.disney.composite.api;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.BookReservations;
-import com.disney.utils.PackageCodes;
+import org.testng.annotations.Test;
+
+import com.disney.api.mq.sbc.RoomInventoryDecrement;
 import com.disney.utils.Randomness;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.TestReporter;
 
 public class Sandbox {
+    private String environment = "Latest";
 
     // @Test
-    public void test() {
-        HouseHold hh = new HouseHold(1);
-        BookReservations book = new BookReservations("Latest", "RoomOnly_1Adult_TA");
-        String startDate = Randomness.generateCurrentXMLDate(-31);
-        String endDate = Randomness.generateCurrentXMLDate(-30);
+    // public void packageBooking() {
+    // OfferQueryHelper offer = new OfferQueryHelper(environment, "WDW", "Package", true);
+    // RoomResHelper res = new RoomResHelper(environment, "WDW", "Main", "1 Adult", offer.resortCode, offer.roomType, offer.packageCode);
+    // System.out.println(res.getRoomRes().getItineraryId());
+    // }
+    //
+    // @Test
+    // public void roomOnlyBooking() {
+    // OfferQueryHelper offer = new OfferQueryHelper(environment, "WDW", "RoomOnly", false);
+    // RoomResHelper res = new RoomResHelper(environment, "WDW", "Main", "1 Adult", offer.resortCode, offer.roomType, offer.packageCode);
+    // System.out.println(res.getRoomRes().getItineraryId());
+    // }
 
-        book.setAreaPeriodStartDate(startDate);
-        book.setAreaPeriodEndDate(endDate);
-        book.setResortAreaStartDate(startDate);
-        book.setResortAreaEndDate(endDate);
-
-        PackageCodes pkg = new PackageCodes();
-        String packageCode = "B325A";
-        book.setPackageCode(packageCode);
-        book.setResortCode("1C");
-        book.setRoomTypeCode("CA");
-
-        System.out.println(book.getRequest());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/firstName", hh.primaryGuest().getFirstName());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/lastName", hh.primaryGuest().getLastName());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/addressLine1", hh.primaryGuest().primaryAddress().getAddress1());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/city", hh.primaryGuest().primaryAddress().getCity());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/country", hh.primaryGuest().getAllAddresses().get(0).getCountry());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/postalCode", hh.primaryGuest().primaryAddress().getZipCode());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/state", hh.primaryGuest().primaryAddress().getState());
-
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/firstName", hh.primaryGuest().getFirstName());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/lastName", hh.primaryGuest().getLastName());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/addressDetails/addressLine1", hh.primaryGuest().primaryAddress().getAddress1());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/addressDetails/city", hh.primaryGuest().primaryAddress().getCity());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/addressDetails/country", hh.primaryGuest().getAllAddresses().get(0).getCountry());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/addressDetails/postalCode", hh.primaryGuest().primaryAddress().getZipCode());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/addressDetails/state", hh.primaryGuest().primaryAddress().getState());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/phoneDetails/number", hh.primaryGuest().primaryPhone().getNumber());
-        book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/emailDetails/address", hh.primaryGuest().primaryEmail().getEmail());
-
-        book.sendRequest();
-        System.out.println(book.getResponse());
+    @Test
+    public void roomOnlyBooking() {
+        // OfferQueryHelper offer = new OfferQueryHelper(environment, "WDW", "Package", true);
+        RoomInventoryDecrement avail = new RoomInventoryDecrement(environment, "WDW");
+        avail.setLOS("1");
+        avail.setStartDate(Randomness.generateCurrentXMLDate(0));
+        avail.setEndDate(Randomness.generateCurrentXMLDate(1));
+        avail.setPackageCode("A0X1J");
+        avail.setResortCode("1E");
+        avail.setRoomType("EA");
+        avail.sendRequest();
+        TestReporter.logAPI(!avail.isSuccess(), "Failed to get Freeze Room", avail);
+        System.out.println(avail.getFreezeID());
     }
 }

@@ -7,6 +7,7 @@ import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class ReinstateHelper {
@@ -31,6 +32,10 @@ public class ReinstateHelper {
 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpID + " ]", sql);
+        }
 
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords + "].");
@@ -57,6 +62,10 @@ public class ReinstateHelper {
         int numInActiveCharge = numActiveCharge;
         int activeCounter = 0;
         int inActiveCounter = 0;
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpID + " ]", sql);
+        }
 
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords2, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords2 + "].");
@@ -94,6 +103,10 @@ public class ReinstateHelper {
 
         int activeCounter = 0;
         int inActiveCounter = 0;
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpID + " ]", sql);
+        }
 
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords2, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords2 + "].");
@@ -135,6 +148,10 @@ public class ReinstateHelper {
         int activeCounter = 0;
         int inActiveCounter = 0;
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges items found for tp ID [ " + tpID + " ]", sql);
+        }
+
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords3, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords3 + "].");
         // Iterate over all records and verify the charge group status and
@@ -162,6 +179,10 @@ public class ReinstateHelper {
         int activeCounter = 0;
         int inActiveCounter = 0;
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges items found for tp ID [ " + tpID + " ]", sql);
+        }
+
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords3, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords3 + "].");
         // Iterate over all records and verify the charge group status and
@@ -186,10 +207,18 @@ public class ReinstateHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No folio status found for tp ID [ " + tpID + " ]", sql);
+        }
+
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords4, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords4 + "].");
         // Iterate over all records and verify the charge group status and
         // charge group active indicator
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No folio status found for tp ID [ " + tpID + " ]", sql);
+        }
         do {
             TestReporter.assertEquals(rs.getValue("FOLIO_ACTV_IN"), "Y", "Verify the charge folio active indicator [" + rs.getValue("FOLIO_ACTV_IN") + "] matches the charge group status in the DB [Y]");
             TestReporter.assertEquals(rs.getValue("FOLIO_STS_NM"), "UnEarned", "Verify the folio status status [" + rs.getValue("FOLIO_STS_NM") + "] matches the folio status" + " in the DB [UnEarned]");
@@ -228,6 +257,10 @@ public class ReinstateHelper {
         Recordset rs = new Recordset(db.getResultSet(sql));
         boolean reasonFound = false;
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reasons found for tp ID [ " + tpID + " ]", sql);
+        }
+
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords7, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords7 + "].");
         do {
@@ -251,6 +284,10 @@ public class ReinstateHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reasons found for tp ID [ " + tpID + " ]", sql);
+        }
+
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords7, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords7 + "].");
         do {
@@ -271,6 +308,10 @@ public class ReinstateHelper {
         String sql = "select * from res_mgmt.res_hist a where a.tp_id = '" + tpID + "'";
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No reservation found for found for tp ID [ " + tpID + " ]", sql);
+        }
 
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords8, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords8 + "].");
@@ -314,6 +355,10 @@ public class ReinstateHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No reservation history found for tp ID [ " + tpID + " ]", sql);
+        }
+
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords8, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords8 + "].");
 
@@ -348,6 +393,10 @@ public class ReinstateHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No reservation history found for tp ID [ " + tpID + " ]", sql);
+        }
+
         // Verify that the actual number of records is that which is expected
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords8, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords8 + "].");
 
@@ -380,6 +429,10 @@ public class ReinstateHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No RIM results found for tp ID [ " + tpID + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords9, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords9 + "].");
 
         do {
@@ -409,6 +462,11 @@ public class ReinstateHelper {
             }
             tries++;
         } while (tries < maxTries && !success);
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TPV3 records found for tp ID [ " + tpID + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords10, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords10 + "].");
 
         do {
@@ -440,6 +498,11 @@ public class ReinstateHelper {
             }
             tries++;
         } while (tries < maxTries && !success);
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TPV3 records found for tp ID [ " + tpID + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords10, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords10 + "].");
 
         do {
@@ -471,6 +534,10 @@ public class ReinstateHelper {
             }
             tries++;
         } while (tries < maxTries && !success);
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TPV3 sales order found for tp ID [ " + tpID + " ]", sql);
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords11, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords11 + "].");
 
@@ -507,6 +574,10 @@ public class ReinstateHelper {
             tries++;
         } while (tries < maxTries && !success);
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TPV3 sales order found for tp ID [ " + tpID + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords11, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords11 + "].");
 
         do {
@@ -527,7 +598,12 @@ public class ReinstateHelper {
         TestReporter.logStep("Verify the TPS reservation status");
         String sql = "select a.* from res_mgmt.tps a where a.tp_id = '" + tpID + "'";
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TPS found for tp ID [ " + tpID + " ]", sql);
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords12, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords12 + "].");
 
@@ -551,6 +627,10 @@ public class ReinstateHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TCG reservation found for tp ID [ " + tpID + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords13, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords13 + "].");
 
         do {
@@ -567,6 +647,10 @@ public class ReinstateHelper {
         String sql = "select b.* from res_mgmt.tps a left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id where a.tp_id = '" + tpID + "'";
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TCG reservation found for tp ID [ " + tpID + " ]", sql);
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords13, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords13 + "].");
 
@@ -601,6 +685,10 @@ public class ReinstateHelper {
                 rs.moveNext();
             } while (rs.hasNext());
         } while (tries < maxTries && !success);
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reservation found for tp ID [ " + tpID + " ]", sql);
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
 
@@ -649,6 +737,10 @@ public class ReinstateHelper {
             } while (rs.hasNext());
         } while (tries < maxTries && !success);
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reservation found for tp ID [ " + tpID + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
 
         rs.moveFirst();
@@ -696,6 +788,10 @@ public class ReinstateHelper {
                 rs.moveNext();
             } while (rs.hasNext());
         } while (tries < maxTries && !success);
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reservation found for tp ID [ " + tpID + " ]", sql);
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
 
@@ -749,6 +845,10 @@ public class ReinstateHelper {
                 rs.moveNext();
             } while (rs.hasNext());
         } while (tries < maxTries && !success);
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reservation found for tp ID [ " + tpID + " ]", sql);
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
 
@@ -806,6 +906,10 @@ public class ReinstateHelper {
             } while (rs.hasNext());
         } while (tries < maxTries && !success);
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reservation status found for tp ID [ " + tpID + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
 
         rs.moveFirst();
@@ -859,6 +963,10 @@ public class ReinstateHelper {
                 rs.moveNext();
             } while (rs.hasNext());
         } while (tries < maxTries && !success);
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reservation found for tp ID [ " + tpID + " ]", sql);
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
 
@@ -914,6 +1022,10 @@ public class ReinstateHelper {
             } while (rs.hasNext());
         } while (tries < maxTries && !success);
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reservation found for tp ID [ " + tpID + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
 
         rs.moveFirst();
@@ -944,6 +1056,10 @@ public class ReinstateHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reservation found for tp ID [ " + tpID + " ]", sql);
+        }
+
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
 
         do {
@@ -966,6 +1082,10 @@ public class ReinstateHelper {
         String sql = "select c.* from res_mgmt.tps a left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb where a.tp_id = '" + tpID + "'";
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No TC reservation found for tp ID [ " + tpID + " ]", sql);
+        }
 
         TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords14, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords14 + "].");
 

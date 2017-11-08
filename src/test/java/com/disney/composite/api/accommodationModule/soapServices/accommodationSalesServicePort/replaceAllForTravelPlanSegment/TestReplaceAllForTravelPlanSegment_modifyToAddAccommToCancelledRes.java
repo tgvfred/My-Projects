@@ -13,6 +13,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_modifyToAddAccommToCancelledRes extends AccommodationBaseTest {
@@ -46,10 +47,21 @@ public class TestReplaceAllForTravelPlanSegment_modifyToAddAccommToCancelledRes 
         bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
-        // getBook().setTravelComponentGroupingId(tcgId);
-        // getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
-        getBook().sendRequest();
+        getBook().setRoomDetailsSpecialNeedsRequested("false");
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            getBook().sendRequest();
+            tries++;
+            if (getBook().getResponseStatusCode().equals("200")) {
+                success = true;
+            }
+        } while ((tries < maxTries) && !success);
+
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
 
@@ -125,9 +137,8 @@ public class TestReplaceAllForTravelPlanSegment_modifyToAddAccommToCancelledRes 
         validations.verifyInventoryAssigned(tcgId, 0, getBook().getTravelPlanId());
         validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
         Map<String, String> status = new HashMap<>();
-        status.put("1", "NULL");
-        status.put("2", "false");
-        validations.validateSpecialNeeds(getBook().getTravelPlanId(), status);
+        status.put("1", "false");
+        validations.validateSpecialNeeds_Cancelled(getBook().getTravelPlanId(), status);
         validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true, 1);
 
         // Validate guest

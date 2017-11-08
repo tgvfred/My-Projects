@@ -814,9 +814,9 @@ public class ValidationHelper {
             Recordset rs;
 
             int tries = 0;
-            int maxTries = 5;
+            int maxTries = 60;
             do {
-                Sleeper.sleep(Randomness.randomNumberBetween(1, 3) * 1000);
+                Sleeper.sleep(1000);
                 rs = new Recordset(db.getResultSet(sql));
                 tries++;
             } while ((tries <= maxTries) && (rs.getRowCount() < 1));
@@ -1330,6 +1330,31 @@ public class ValidationHelper {
         TestReporter.assertAll();
     }
 
+    public void validateSpecialNeeds_Cancelled(String tpId, Map<String, String> flags) {
+        for (int i = 1; i <= flags.size(); i++) {
+            if (flags.get(String.valueOf(i)).equals("true")) {
+                flags.put(String.valueOf(i), "Y");
+            } else if (flags.get(String.valueOf(i)).equals("false")) {
+                flags.put(String.valueOf(i), "N");
+            }
+        }
+        TestReporter.logStep("Validate Special Needs in RIM");
+        String sql = "select d.SPCL_NEED_REQ_IN "
+                + "from res_mgmt.tps a "
+                + "left join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "left join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "left join rsrc_inv.RSRC_ASGN_OWNR d on c.ASGN_OWN_ID = d.ASGN_OWNR_ID "
+                + "where a.tp_id = '" + tpId + "' "
+                + "and c.PROD_TYP_NM = 'AccommodationProduct' "
+                + "and d.SPCL_NEED_REQ_IN is not null";
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            TestReporter.softAssertEquals(rs.getValue("SPCL_NEED_REQ_IN", i), flags.get(String.valueOf(i)), "Verify that the RIM special needs flag [" + rs.getValue("SPCL_NEED_REQ_IN", i) + "] is that which is expected [" + flags.get(String.valueOf(i)) + "]");
+        }
+        TestReporter.assertAll();
+    }
+
     public void validatePayment(String tpId, int numExpectedPayments, String paymentAmount) {
         String sql = "select f.* "
                 + "from folio.extnl_ref a "
@@ -1457,6 +1482,7 @@ public class ValidationHelper {
         int maxTries = 20;
         boolean success = false;
         do {
+            Sleeper.sleep(1000);
             rs = new Recordset(db.getResultSet(sql));
             if (rs.getRowCount() > 0) {
                 success = true;
@@ -2160,9 +2186,12 @@ public class ValidationHelper {
         String sql = "select a.RES_MGMT_REQ_ID, RES_MGMT_REQ_TYP_NM PROFILE_TYPE, CMT_REQ_TYP_NM, RES_MGMT_PRFL_ID PROFILE_ID, RES_MGMT_REQ_TX PROFILE_DESCRIPTION, CFDNTL_IN, GSR_IN, REQ_INACTV_DTS, RES_MGMT_RTE_NM "
                 + "from res_mgmt_req a "
                 + "left outer join res_mgmt.RES_MGMT_REQ_RTE b on a.RES_MGMT_REQ_ID = b.RES_MGMT_REQ_ID "
-                + "where a.tp_id = 472292078811";
+                + "where a.tp_id = " + book.getTravelPlanId();
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No profil records were returned for TP ID [" + book.getTravelPlanId() + "].");
+        }
         String commentId = null;
         TestReporter.logStep("Validate profile data for comment ID [" + commentId + "]");
         do {

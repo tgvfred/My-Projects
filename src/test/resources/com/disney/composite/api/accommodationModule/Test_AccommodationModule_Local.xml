@@ -17,6 +17,21 @@
 			<package name="com.disney.composite.api.accommodationModule.*"></package>
 		</packages>
 	</test>
+	<test name="AccommodationModule_reinstate" parallel="methods" thread-count="5">
+		<groups>
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
+				<exclude name="dev"/>
+				<!-- <exclude name="debug"/> -->
+				<include name="reinstate"></include>
+				<exclude name="example"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.*"></package>
+		</packages>
+	</test>
 	<test name="AccommodationModule">
 		<groups>
 			<run>
@@ -25,6 +40,7 @@
 				<exclude name="dev"/>
 				<!-- <exclude name="debug"/> -->
 				<exclude name="checkout"></exclude>
+				<exclude name="reinstate"></exclude>
 				<exclude name="example"></exclude>
 			</run>
 		</groups>

@@ -13,6 +13,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails extends AccommodationBaseTest {
@@ -34,6 +35,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails exten
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setSendRequest(true);
         bookReservation();
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
@@ -51,7 +53,20 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails exten
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
-        getBook().sendRequest();
+        // getBook().sendRequest();
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            getBook().sendRequest();
+            tries++;
+            if (getBook().getResponseStatusCode().equals("200")) {
+                success = true;
+            }
+        } while ((tries < maxTries) && !success);
+
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         tcg1 = getBook().getTravelComponentGroupingId();
         tcg2 = getBook().getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails[2]/travelComponentGroupingId");

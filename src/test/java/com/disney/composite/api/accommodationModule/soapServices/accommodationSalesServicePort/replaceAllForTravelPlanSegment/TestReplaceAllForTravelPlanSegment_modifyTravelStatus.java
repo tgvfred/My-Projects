@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_modifyTravelStatus extends AccommodationBaseTest {
@@ -45,7 +46,20 @@ public class TestReplaceAllForTravelPlanSegment_modifyTravelStatus extends Accom
         getBook().setTravelComponentId(tcId);
         getBook().setRoomDetailsTravelStatus("Checked In");
         getBook().setReplaceAll("true");
-        getBook().sendRequest();
+        // getBook().sendRequest();
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            getBook().sendRequest();
+            tries++;
+            if (getBook().getResponseStatusCode().equals("200")) {
+                success = true;
+            }
+        } while ((tries < maxTries) && !success);
+
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
 

@@ -31,7 +31,7 @@ public class TestRetrieveCancellationPolicy_checkIn extends AccommodationBaseTes
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_checkIn() {
 
-        String faultString = "cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
+        String faultString = "Cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
@@ -42,7 +42,7 @@ public class TestRetrieveCancellationPolicy_checkIn extends AccommodationBaseTes
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
+        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
 
     }
 }

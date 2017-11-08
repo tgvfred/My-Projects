@@ -302,26 +302,17 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
     }
 
     // giving java null pointer exception -works in database
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
     public void TestOverrideAccommodationRates_cancelled() {
-        String fault = "Cancelled accommodations cannot be overriden ";
+
+        cancel();
+        String fault = "Cancelled accommodations cannot be overriden : null";
 
         TestReporter.logScenario("Test - Override Accommodation Rates   - Cancelled");
 
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-
-        String sql = " select a.tps_id, c.tc_grp_nb, a.TPS_ARVL_DT" +
-                " from res_mgmt.tps a" +
-                " join res_mgmt.tc_grp c on a.tps_id = c.tps_id" +
-                " where a.create_usr_id_cd = 'AutoJUnit.us'" +
-                " and a.trvl_sts_nm = 'Cancelled'" +
-                " and a.TPS_ARVL_DT > sysdate";
-
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-        // rs.print();
-        oar.setTpsID(rs.getValue("tps_id"));
-        oar.setTcgId(rs.getValue("tc_grp_nb"));
+        oar.setTpsID(getBook().getTravelPlanSegmentId());
+        oar.setTcgId(getBook().getTravelComponentGroupingId());
         oar.sendRequest();
 
         TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [" + fault + "] exists. Found [ " + oar.getFaultString() + " ]", oar);
