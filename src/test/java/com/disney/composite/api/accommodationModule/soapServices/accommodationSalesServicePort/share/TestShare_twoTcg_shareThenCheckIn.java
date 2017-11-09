@@ -9,7 +9,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ShareHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -28,7 +27,7 @@ public class TestShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        Environment.getBaseEnvironmentName(environment);
+
         setEnvironment(environment);
         isComo.set("false");
         daysOut.set(0);

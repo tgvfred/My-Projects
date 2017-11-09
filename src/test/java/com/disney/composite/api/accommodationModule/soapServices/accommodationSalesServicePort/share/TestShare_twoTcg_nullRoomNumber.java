@@ -26,7 +26,7 @@ public class TestShare_twoTcg_nullRoomNumber extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        Environment.getBaseEnvironmentName(environment);
+
         setEnvironment(environment);
         isComo.set("false");
         setDaysOut(0);

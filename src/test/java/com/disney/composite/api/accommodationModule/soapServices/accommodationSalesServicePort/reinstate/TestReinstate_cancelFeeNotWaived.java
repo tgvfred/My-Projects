@@ -32,7 +32,7 @@ public class TestReinstate_cancelFeeNotWaived extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());

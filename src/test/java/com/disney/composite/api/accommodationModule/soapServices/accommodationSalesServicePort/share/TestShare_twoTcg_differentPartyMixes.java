@@ -27,7 +27,7 @@ public class TestShare_twoTcg_differentPartyMixes extends AccommodationBaseTest 
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        Environment.getBaseEnvironmentName(environment);
+
         setEnvironment(environment);
         isComo.set("false");
         daysOut.set(0);
