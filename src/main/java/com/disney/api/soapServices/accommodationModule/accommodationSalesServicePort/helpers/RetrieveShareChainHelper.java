@@ -86,7 +86,6 @@ public class RetrieveShareChainHelper {
         String tcgId = book.getTravelComponentGroupingId();
         String tcId = book.getTravelComponentId();
         String travelStatus = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelStatus");
-        String locationId = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
         String resortPeriodEndDate = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortPeriod/endDate");
         String resortPeriodStartDate = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortPeriod/startDate");
         String phoneNumber = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/phoneDetails/number");
@@ -106,82 +105,28 @@ public class RetrieveShareChainHelper {
         String splitResortEndDate[] = resortPeriodEndDate.split("T");
         String splitResortStartDate[] = resortPeriodStartDate.split("T");
 
-        TestReporter.assertEquals(splitBookingDate[0], splitRetrieveBookingDate[0], "Verify the booking date [" + splitRetrieveBookingDate[0] + "] matches the expected [" + splitBookingDate[0] + "]");
-        TestReporter.assertEquals(packageCode, retrieve.getPackageCode(), "Verify the package code [" + retrieve.getPackageCode() + "] matches the expected [" + packageCode + "]");
-        TestReporter.assertEquals(roomTypeCode, retrieve.roomTypeCode(), "Verify the room type code [" + retrieve.roomTypeCode() + "] matches the expected [" + roomTypeCode + "]");
-        TestReporter.assertEquals(tcgId, retrieve.getTravelComponentGroupingId(), "Verify the tcg Id [" + retrieve.getTravelComponentGroupingId() + "] matches the expected [" + tcgId + "]");
-        TestReporter.assertEquals(tcId, retrieve.getTravelComponentId(), "Verify the tc Id [" + retrieve.getTravelComponentId() + "] matches the expected [" + tcId + "]");
-        TestReporter.assertEquals(travelStatus, retrieve.getTravelStatus(), "Verify the tcg Id [" + retrieve.getTravelStatus() + "] matches the expected [" + travelStatus + "]");
-        TestReporter.assertEquals(locationId, retrieve.getLocationId(), "Verify the location Id [" + retrieve.getLocationId() + "] matches the expected [" + locationId + "]");
-        TestReporter.assertEquals(splitResortEndDate[0], splitRetrieveResortEndDate[0], "Verify the resort period end date [" + splitRetrieveResortEndDate[0] + "] matches the expected [" + splitResortEndDate[0] + "]");
-        TestReporter.assertEquals(splitResortStartDate[0], splitRetrieveResortStartDate[0], "Verify the resort period start date [" + splitRetrieveResortStartDate[0] + "] matches the expected [" + splitResortStartDate[0] + "]");
-        TestReporter.assertEquals(phoneNumber, retrieve.getPhoneNumber(), "Verify the phone number [" + retrieve.getPhoneNumber() + "] matches the expected [" + phoneNumber + "]");
-        TestReporter.assertEquals(addressLine1, retrieve.getAddressLine1(), "Verify the address line 1 [" + retrieve.getAddressLine1() + "] matches the expected [" + addressLine1 + "]");
-        TestReporter.assertEquals(city, retrieve.getCity(), "Verify the city [" + retrieve.getCity() + "] matches the expected [" + city + "]");
+        TestReporter.softAssertEquals(splitBookingDate[0], splitRetrieveBookingDate[0], "Verify the booking date [" + splitRetrieveBookingDate[0] + "] matches the expected [" + splitBookingDate[0] + "]");
+        TestReporter.softAssertEquals(packageCode, retrieve.getPackageCode(), "Verify the package code [" + retrieve.getPackageCode() + "] matches the expected [" + packageCode + "]");
+        TestReporter.softAssertEquals(roomTypeCode, retrieve.roomTypeCode(), "Verify the room type code [" + retrieve.roomTypeCode() + "] matches the expected [" + roomTypeCode + "]");
+        TestReporter.softAssertEquals(tcgId, retrieve.getTravelComponentGroupingId(), "Verify the tcg Id [" + retrieve.getTravelComponentGroupingId() + "] matches the expected [" + tcgId + "]");
+        TestReporter.softAssertEquals(tcId, retrieve.getTravelComponentId(), "Verify the tc Id [" + retrieve.getTravelComponentId() + "] matches the expected [" + tcId + "]");
+        TestReporter.softAssertEquals(travelStatus, retrieve.getTravelStatus(), "Verify the tcg Id [" + retrieve.getTravelStatus() + "] matches the expected [" + travelStatus + "]");
+        TestReporter.softAssertEquals(splitResortEndDate[0], splitRetrieveResortEndDate[0], "Verify the resort period end date [" + splitRetrieveResortEndDate[0] + "] matches the expected [" + splitResortEndDate[0] + "]");
+        TestReporter.softAssertEquals(splitResortStartDate[0], splitRetrieveResortStartDate[0], "Verify the resort period start date [" + splitRetrieveResortStartDate[0] + "] matches the expected [" + splitResortStartDate[0] + "]");
+        TestReporter.softAssertEquals(phoneNumber, retrieve.getPhoneNumber(), "Verify the phone number [" + retrieve.getPhoneNumber() + "] matches the expected [" + phoneNumber + "]");
+        TestReporter.softAssertEquals(addressLine1, retrieve.getAddressLine1(), "Verify the address line 1 [" + retrieve.getAddressLine1() + "] matches the expected [" + addressLine1 + "]");
+        TestReporter.softAssertEquals(city, retrieve.getCity(), "Verify the city [" + retrieve.getCity() + "] matches the expected [" + city + "]");
         country = country.equals("United States") ? "USA" : country;
-        TestReporter.assertEquals(country, retrieve.getCountry(), "Verify the country [" + retrieve.getCountry() + "] matches the expected [" + country + "]");
-        TestReporter.assertEquals(postalCode, retrieve.getPostalCode(), "Verify the postal code [" + retrieve.getPostalCode() + "] matches the expected [" + postalCode + "]");
+        TestReporter.softAssertEquals(country, retrieve.getCountry(), "Verify the country [" + retrieve.getCountry() + "] matches the expected [" + country + "]");
+        TestReporter.softAssertEquals(postalCode, retrieve.getPostalCode(), "Verify the postal code [" + retrieve.getPostalCode() + "] matches the expected [" + postalCode + "]");
         state = abbreviateState(state);
-        TestReporter.assertEquals(state, retrieve.getState(), "Verify the state[" + retrieve.getState() + "] matches the expected [" + state + "]");
+        TestReporter.softAssertEquals(state, retrieve.getState(), "Verify the state[" + retrieve.getState() + "] matches the expected [" + state + "]");
         String abbreviateRegionName = abbreviateState(retrieve.getRegionName());
-        TestReporter.assertEquals(regionName, abbreviateRegionName, "Verify the region name [" + abbreviateRegionName + "] matches the expected [" + regionName + "]");
-        TestReporter.assertEquals(emailAddress, retrieve.getEmailAddress(), "Verify the email address [" + retrieve.getEmailAddress() + "] matches the expected [" + emailAddress + "]");
+        TestReporter.softAssertEquals(regionName, abbreviateRegionName, "Verify the region name [" + abbreviateRegionName + "] matches the expected [" + regionName + "]");
+        TestReporter.softAssertEquals(emailAddress, retrieve.getEmailAddress(), "Verify the email address [" + retrieve.getEmailAddress() + "] matches the expected [" + emailAddress + "]");
         preferredLanguage = preferredLanguage.equals("English") ? "eng" : preferredLanguage;
-        TestReporter.assertEquals(preferredLanguage, retrieve.getPrefferedLanguage(), "Verify the preferred language [" + retrieve.getPrefferedLanguage() + "] matches the expected [" + preferredLanguage + "]");
-
-    }
-
-    public void validateBaseNodes_multi(ReplaceAllForTravelPlanSegment book, RetrieveShareChain retrieve) {
-
-        String bookingDate = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/bookingDate");
-        String packageCode = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/packageCode");
-        String roomTypeCode = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomTypeCode");
-        String tcgId = book.getTravelComponentGroupingId();
-        String tcId = book.getTravelComponentId();
-        String travelStatus = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelStatus");
-        String locationId = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/locationId");
-        String resortPeriodEndDate = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortPeriod/endDate");
-        String resortPeriodStartDate = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortPeriod/startDate");
-        String phoneNumber = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/phoneDetails/number");
-        String addressLine1 = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/addressLine1");
-        String city = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/city");
-        String country = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/country");
-        String postalCode = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/postalCode");
-        String state = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/state");
-        String regionName = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/regionName");
-        String emailAddress = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/emailDetails/address");
-        String preferredLanguage = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/preferredLanguage");
-
-        String splitRetrieveBookingDate[] = retrieve.getBookingDate().split("T");
-        String splitRetrieveResortEndDate[] = retrieve.getResortPeriodEndDate().split("T");
-        String splitRetrieveResortStartDate[] = retrieve.getResortPeriodStartDate().split("T");
-        String splitBookingDate[] = bookingDate.split("T");
-        String splitResortEndDate[] = resortPeriodEndDate.split("T");
-        String splitResortStartDate[] = resortPeriodStartDate.split("T");
-
-        TestReporter.assertEquals(splitBookingDate[0], splitRetrieveBookingDate[0], "Verify the booking date [" + splitRetrieveBookingDate[0] + "] matches the expected [" + splitBookingDate[0] + "]");
-        TestReporter.assertEquals(packageCode, retrieve.getPackageCode(), "Verify the package code [" + retrieve.getPackageCode() + "] matches the expected [" + packageCode + "]");
-        TestReporter.assertEquals(roomTypeCode, retrieve.roomTypeCode(), "Verify the room type code [" + retrieve.roomTypeCode() + "] matches the expected [" + roomTypeCode + "]");
-        TestReporter.assertEquals(tcgId, retrieve.getTravelComponentGroupingId(), "Verify the tcg Id [" + retrieve.getTravelComponentGroupingId() + "] matches the expected [" + tcgId + "]");
-        TestReporter.assertEquals(tcId, retrieve.getTravelComponentId(), "Verify the tc Id [" + retrieve.getTravelComponentId() + "] matches the expected [" + tcId + "]");
-        TestReporter.assertEquals(travelStatus, retrieve.getTravelStatus(), "Verify the tcg Id [" + retrieve.getTravelStatus() + "] matches the expected [" + travelStatus + "]");
-        TestReporter.assertEquals(locationId, retrieve.getLocationId(), "Verify the location Id [" + retrieve.getLocationId() + "] matches the expected [" + locationId + "]");
-        TestReporter.assertEquals(splitResortEndDate[0], splitRetrieveResortEndDate[0], "Verify the resort period end date [" + splitRetrieveResortEndDate[0] + "] matches the expected [" + splitResortEndDate[0] + "]");
-        TestReporter.assertEquals(splitResortStartDate[0], splitRetrieveResortStartDate[0], "Verify the resort period start date [" + splitRetrieveResortStartDate[0] + "] matches the expected [" + splitResortStartDate[0] + "]");
-        TestReporter.assertEquals(phoneNumber, retrieve.getPhoneNumber(), "Verify the phone number [" + retrieve.getPhoneNumber() + "] matches the expected [" + phoneNumber + "]");
-        TestReporter.assertEquals(addressLine1, retrieve.getAddressLine1(), "Verify the address line 1 [" + retrieve.getAddressLine1() + "] matches the expected [" + addressLine1 + "]");
-        TestReporter.assertEquals(city, retrieve.getCity(), "Verify the city [" + retrieve.getCity() + "] matches the expected [" + city + "]");
-        country = country.equals("United States") ? "USA" : country;
-        TestReporter.assertEquals(country, retrieve.getCountry(), "Verify the country [" + retrieve.getCountry() + "] matches the expected [" + country + "]");
-        TestReporter.assertEquals(postalCode, retrieve.getPostalCode(), "Verify the postal code [" + retrieve.getPostalCode() + "] matches the expected [" + postalCode + "]");
-        state = abbreviateState(state);
-        TestReporter.assertEquals(state, retrieve.getState(), "Verify the state[" + retrieve.getState() + "] matches the expected [" + state + "]");
-        String abbreviateRegionName = abbreviateState(retrieve.getRegionName());
-        TestReporter.assertEquals(regionName, abbreviateRegionName, "Verify the region name [" + abbreviateRegionName + "] matches the expected [" + regionName + "]");
-        TestReporter.assertEquals(emailAddress, retrieve.getEmailAddress(), "Verify the email address [" + retrieve.getEmailAddress() + "] matches the expected [" + emailAddress + "]");
-        preferredLanguage = preferredLanguage.equals("English") ? "eng" : preferredLanguage;
-        TestReporter.assertEquals(preferredLanguage, retrieve.getPrefferedLanguage(), "Verify the preferred language [" + retrieve.getPrefferedLanguage() + "] matches the expected [" + preferredLanguage + "]");
-
+        TestReporter.softAssertEquals(preferredLanguage, retrieve.getPrefferedLanguage(), "Verify the preferred language [" + retrieve.getPrefferedLanguage() + "] matches the expected [" + preferredLanguage + "]");
+        TestReporter.assertAll();
     }
 
     public void validateGuestDetails(ReplaceAllForTravelPlanSegment book, RetrieveShareChain retrieve) {
@@ -194,9 +139,10 @@ public class RetrieveShareChainHelper {
                 String guestFirstName = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails" + guestIndex + "/guest/firstName");
                 String guestLastName = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails" + guestIndex + "/guest/lastName");
                 String guestMiddleName = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails" + guestIndex + "/guest/middleName");
-                TestReporter.assertEquals(guestFirstName, retrieve.getGuestFirstName(), "Verify the guest first name [" + retrieve.getGuestFirstName() + "] matches the expected [" + guestFirstName + "]");
-                TestReporter.assertEquals(guestLastName, retrieve.getGuestLastName(), "Verify the guest last name [" + retrieve.getGuestLastName() + "] matches the expected [" + guestLastName + "]");
-                TestReporter.assertEquals(guestMiddleName, retrieve.getGuestMiddleName(), "Verify the guest middle name [" + retrieve.getGuestMiddleName() + "] matches the expected [" + guestMiddleName + "]");
+                TestReporter.softAssertEquals(guestFirstName, retrieve.getGuestFirstName(), "Verify the guest first name [" + retrieve.getGuestFirstName() + "] matches the expected [" + guestFirstName + "]");
+                TestReporter.softAssertEquals(guestLastName, retrieve.getGuestLastName(), "Verify the guest last name [" + retrieve.getGuestLastName() + "] matches the expected [" + guestLastName + "]");
+                TestReporter.softAssertEquals(guestMiddleName, retrieve.getGuestMiddleName(), "Verify the guest middle name [" + retrieve.getGuestMiddleName() + "] matches the expected [" + guestMiddleName + "]");
+                TestReporter.assertAll();
                 break;
 
             case 2:
@@ -205,9 +151,10 @@ public class RetrieveShareChainHelper {
                     String twoGuestsFirstName = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails" + guestIndex + "/guest/firstName");
                     String twoGuestsLastName = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails" + guestIndex + "/guest/lastName");
                     String twoGuestsMiddleName = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails" + guestIndex + "/guest/middleName");
-                    TestReporter.assertEquals(twoGuestsFirstName, retrieve.getMultipleGuestFirstName(1, i), "Verify the guest first name [" + retrieve.getMultipleGuestFirstName(1, i) + "] matches the expected [" + twoGuestsFirstName + "]");
-                    TestReporter.assertEquals(twoGuestsLastName, retrieve.getMultipleGuestLastName(1, i), "Verify the guest last name [" + retrieve.getMultipleGuestLastName(1, i) + "] matches the expected [" + twoGuestsLastName + "]");
-                    TestReporter.assertEquals(twoGuestsMiddleName, retrieve.getMultipleGuestMiddleName(1, i), "Verify the guest middle name [" + retrieve.getMultipleGuestMiddleName(1, i) + "] matches the expected [" + twoGuestsMiddleName + "]");
+                    TestReporter.softAssertEquals(twoGuestsFirstName, retrieve.getMultipleGuestFirstName(1, i), "Verify the guest first name [" + retrieve.getMultipleGuestFirstName(1, i) + "] matches the expected [" + twoGuestsFirstName + "]");
+                    TestReporter.softAssertEquals(twoGuestsLastName, retrieve.getMultipleGuestLastName(1, i), "Verify the guest last name [" + retrieve.getMultipleGuestLastName(1, i) + "] matches the expected [" + twoGuestsLastName + "]");
+                    TestReporter.softAssertEquals(twoGuestsMiddleName, retrieve.getMultipleGuestMiddleName(1, i), "Verify the guest middle name [" + retrieve.getMultipleGuestMiddleName(1, i) + "] matches the expected [" + twoGuestsMiddleName + "]");
+                    TestReporter.assertAll();
                 }
                 break;
         }
@@ -265,7 +212,6 @@ public class RetrieveShareChainHelper {
         }
 
         String date = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveShareChainResponse/shareRoomDetails/sharedRoomDetail/rateDetails/date");
-        // String netPrice = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveShareChainResponse/shareRoomDetails/sharedRoomDetail/rateDetails/netPrice");
         String pointsValue = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveShareChainResponse/shareRoomDetails/sharedRoomDetail/rateDetails/pointsValue");
 
         Database db = new OracleDatabase(env, Database.DREAMS);
@@ -307,16 +253,10 @@ public class RetrieveShareChainHelper {
             dbVAlue = String.valueOf(tot);
         }
         rs.moveFirst();
-        // String splitBasePrice[] = basePrice.split("\\.");
-        // TestReporter.assertEquals(splitBasePrice[0], rs.getValue("CHRG_ITEM_AM"), "Verify the base price [" + splitBasePrice[0] + "] matches the expected [" + rs.getValue("CHRG_ITEM_AM") + "]");
         TestReporter.assertEquals(Double.parseDouble(basePrice), Double.parseDouble(dbVAlue), "Verify the base price [" + Double.parseDouble(basePrice) + "] matches the expected [" + Double.parseDouble(dbVAlue) + "]");
         String retrieveDate[] = date.split("T");
         String databaseDate[] = rs.getValue("CHRG_FFL_DTS").split(" ");
-        // TestReporter.assertEquals(retrieveDate[0], databaseDate[0], "Verify the date [" + retrieveDate[0] + "] matches the expected [" + databaseDate[0] + "]");
         TestReporter.assertTrue(dates.containsValue(databaseDate[0]), "Verify the date [" + retrieveDate[0] + "] is contained in a map of expected values [" + dates + "]");
-        // String splitNetPrice[] = netPrice.split("\\.0");
-        // TestReporter.assertEquals(splitNetPrice[0], rs.getValue("CHRG_AM"), "Verify the net price [" + splitNetPrice[0] + "] matches the expected [" + rs.getValue("CHRG_AM") + "]");
-        // TestReporter.assertEquals(netPrice, dbNetPrice, "Verify the net price [" + netPrice + "] matches the expected [" + dbNetPrice + "]");
         pointsValue = pointsValue.equals("0") ? "NULL" : pointsValue;
         TestReporter.assertEquals(pointsValue, rs.getValue("DVC_PTS_VL"), "Verify the points value [" + pointsValue + "] matches the expected [" + rs.getValue("DVC_PTS_VL") + "]");
     }
