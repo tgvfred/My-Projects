@@ -61,6 +61,10 @@ public class Retrieve extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/componentGroupings/travelComponentGroupingId");
     }
 
+    public int getComponentGroupingsCount() {
+        return getNumberOfResponseNodesByXPath("//travelPlanInfo/travelPlanSegments/componentGroupings");
+    }
+
     public String getTravelComponentId() {
         return getResponseNodeValueByXPath("//travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/componentId");
     }
@@ -552,8 +556,16 @@ public class Retrieve extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/period/startDate");
     }
 
+    public String getPeriodSD(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[" + index + "]/period/startDate");
+    }
+
     public String getPeriodED() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/period/endDate");
+    }
+
+    public String getPeriodED(String index) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[" + index + "]/period/endDate");
     }
 
     public String getStatus() {

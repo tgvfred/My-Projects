@@ -5,6 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
@@ -16,7 +17,7 @@ public class TestRetrieve_dvc_MCash extends BookDVCCashHelper {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(removeCM(environment));
         setUseDvcResort(true);
         setCheckingIn(true);
         setBook(bookDvcReservation("testBook_MCash", 1));
@@ -32,6 +33,10 @@ public class TestRetrieve_dvc_MCash extends BookDVCCashHelper {
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
+
+        RetrieveHelper helper = new RetrieveHelper();
+        helper.baseValidationDVC(getFirstBooking(), retrieve);
+        helper.dvcMembershipValidations(retrieve, getFirstMember());
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {

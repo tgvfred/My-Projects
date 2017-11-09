@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCPointsHelper;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.travelPlanSegment.MergeToTravelPlanHelper;
 import com.disney.utils.Environment;
@@ -26,11 +27,11 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
     @BeforeMethod(alwaysRun = true)
     @Parameters({ "environment" })
     public void setup(String environment) {
-        DVCSalesBaseTest.environment = environment;
+        DVCSalesBaseTest.environment = removeCM(environment);
         setUseDvcResort(true);
         setUseNonZeroPoints(true);
         bookDvcReservation("TestMergeToTravelPlan_MCash", 1);
-        makeCCPayment(environment);
+        makeCCPayment(removeCM(environment));
         setUseExistingValues(true);
         bookDvcReservation("TestMergeToTravelPlan_MCash", 2);
     }
@@ -43,7 +44,7 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_dvc_linked() {
 
-        merge = new MergeToTravelPlanHelper(getFirstBooking(), getSecondBooking(), environment);
+        merge = new MergeToTravelPlanHelper(getFirstBooking(), getSecondBooking(), removeCM(environment));
         merge.merge();
 
         findPrimary(getFirstBooking().getTravelPlanId());
@@ -54,6 +55,13 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
+
+        RetrieveHelper helper = new RetrieveHelper();
+        helper.setSecond(true);
+        helper.baseValidationDVC(getFirstBooking(), retrieve);
+        helper.baseValidationDVC(getSecondBooking(), retrieve);
+        helper.dvcMembershipValidations(retrieve, getFirstMember());
+        helper.dvcMembershipValidations(retrieve, getSecondMember());
 
     }
 

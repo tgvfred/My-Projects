@@ -13,10 +13,20 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class RetrieveHelper {
 
-    public boolean sbc;
+    public boolean sbc = false;
+    public boolean first = false;
+    public boolean second = false;
 
     public void setFlag(Boolean boo) {
         this.sbc = boo;
+    }
+
+    public void setFirst(Boolean boo) {
+        this.first = boo;
+    }
+
+    public void setSecond(Boolean boo) {
+        this.second = boo;
     }
 
     public void baseValidation(ReplaceAllForTravelPlanSegment book, Retrieve retrieve) {
@@ -109,14 +119,29 @@ public class RetrieveHelper {
 
         String guestGuestId = book.getGuestId();
 
+        if (second) {
+            TestReporter.softAssertEquals(guestGuestId, retrieve.getGuestId("1"), "Verify the guest id [" + retrieve.getGuestId("1") + "] matches the expected [" + guestGuestId + "]");
+            TestReporter.softAssertEquals(startPeriod, retrieve.getPeriodSD("2"), "Verify the period start date [" + retrieve.getPeriodSD("2") + "] matches the expected [" + startPeriod + "]");
+            TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED("2"), "Verify the period end date [" + retrieve.getPeriodED("2") + "] matches the expected [" + endPeriod + "]");
+        }
+        if (first) {
+            TestReporter.softAssertEquals(guestGuestId, retrieve.getGuestIdReferencesValue(), "Verify the guest id [" + retrieve.getGuestIdReferencesValue() + "] matches the expected [" + guestGuestId + "]");
+            TestReporter.softAssertEquals(startPeriod, retrieve.getPeriodSD(), "Verify the period start date [" + retrieve.getPeriodSD() + "] matches the expected [" + startPeriod + "]");
+            TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
+            setFirst(false);
+            setSecond(true);
+        }
+        if (!first && !second) {
+            TestReporter.softAssertEquals(startPeriod, retrieve.getPeriodSD(), "Verify the period start date [" + retrieve.getPeriodSD() + "] matches the expected [" + startPeriod + "]");
+            TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
+        }
+
         TestReporter.softAssertEquals(guestfirstName, retrieve.getFirstName(), "Verify the first name [" + retrieve.getFirstName() + "] matches the expected [" + guestfirstName + "]");
         TestReporter.softAssertEquals(guestlastName, retrieve.getLastName(), "Verify the last name [" + retrieve.getLastName() + "] matches the expected [" + guestlastName + "]");
         TestReporter.softAssertEquals(guestPhone, retrieve.getPhone(), "Verify the guest phone [" + retrieve.getPhone() + "] matches the expected [" + guestPhone + "]");
         TestReporter.softAssertEquals(guestAddress, retrieve.getAddress(), "Verify the guest address [" + retrieve.getAddress() + "] matches the expected [" + guestAddress + "]");
         TestReporter.softAssertEquals(guestEmail, retrieve.getEmail(), "Verify the email [" + retrieve.getEmail() + "] matches the expected [" + guestEmail + "]");
 
-        TestReporter.softAssertEquals(startPeriod, retrieve.getPeriodSD(), "Verify the period start date [" + retrieve.getPeriodSD() + "] matches the expected [" + startPeriod + "]");
-        TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
         TestReporter.softAssertNotNull(retrieve.getPartyId(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
 
         TestReporter.softAssertNotNull(retrieve.getPPFirstName(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
@@ -126,30 +151,29 @@ public class RetrieveHelper {
         TestReporter.softAssertNotNull(retrieve.getPPEmail(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
         TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoTP(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
         TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoRequired(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
-        TestReporter.softAssertEquals(guestGuestId, retrieve.getGuestId("1"), "Verify the guest id [" + retrieve.getGuestId("1") + "] matches the expected [" + guestGuestId + "]");
         TestReporter.softAssertNotNull(retrieve.getTravelStatus(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
         TestReporter.assertAll();
     }
 
-    public void baseValidationShowDining(com.disney.api.soapServices.diningModule.showDiningService.operations.Book book, Retrieve retrieve) {
+    public void baseValidationShowDining(com.disney.api.soapServices.diningModule.showDiningService.operations.Book book, HouseHold hh, Retrieve retrieve) {
 
-        String guestfirstName = book.getPrimaryGuestFirstName();
+        String guestfirstName = hh.primaryGuest().getFirstName();
 
-        String guestlastName = book.getPrimaryGuestLastName();
+        String guestlastName = hh.primaryGuest().getLastName();
 
-        String guestPhone = book.getPrimaryPhoneNumber();
+        String guestPhone = hh.primaryGuest().getAllPhones().get(0).getNumber();
 
-        String guestAddress = book.getResponseRoomDetailsGuestRefDtlsAddressLine1("1");
+        String guestAddress = hh.primaryGuest().getAllAddresses().get(0).getAddress1();
 
-        String guestEmail = book.getResponseRoomDetailsGuestRefDtlsEmailAddress("1");
+        String guestEmail = hh.primaryGuest().getAllEmails().get(0).getEmail();
 
-        String startPeriod = book.getResponseRoomDetailsResortPeriodStartDate("1");
+        String startPeriod = book.getStartDate();
 
-        String endPeriod = book.getResponseRoomDetailsResortPeriodEndDate("1");
+        // String endPeriod = book.getResponseRoomDetailsResortPeriodEndDate("1");
 
-        String guestPartyId = book.getPartyId();
+        String guestPartyId = hh.primaryGuest().getPartyId();
 
-        String guestGuestId = book.getGuestId();
+        String guestGuestId = hh.primaryGuest().getGuestId();
 
         TestReporter.softAssertEquals(guestfirstName, retrieve.getFirstName(), "Verify the first name [" + retrieve.getFirstName() + "] matches the expected [" + guestfirstName + "]");
         TestReporter.softAssertEquals(guestlastName, retrieve.getLastName(), "Verify the last name [" + retrieve.getLastName() + "] matches the expected [" + guestlastName + "]");
@@ -158,7 +182,7 @@ public class RetrieveHelper {
         TestReporter.softAssertEquals(guestEmail, retrieve.getEmail(), "Verify the email [" + retrieve.getEmail() + "] matches the expected [" + guestEmail + "]");
 
         TestReporter.softAssertEquals(startPeriod, retrieve.getPeriodSD(), "Verify the period start date [" + retrieve.getPeriodSD() + "] matches the expected [" + startPeriod + "]");
-        TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
+        // TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
         TestReporter.softAssertNotNull(retrieve.getPartyId(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
 
         TestReporter.softAssertNotNull(retrieve.getPPFirstName(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
