@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.helpers.RemoveRateOverrideHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 
 public class TestRemoveRateOverride_RoomOnlyMultipleGuests extends AccommodationBaseTest {
 
@@ -14,7 +13,7 @@ public class TestRemoveRateOverride_RoomOnlyMultipleGuests extends Accommodation
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
