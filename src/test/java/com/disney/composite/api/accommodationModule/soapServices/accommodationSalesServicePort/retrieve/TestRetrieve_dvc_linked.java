@@ -22,6 +22,7 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
     private MergeToTravelPlanHelper merge;
     private String primary;
     private String secondary;
+    private RetrieveHelper helper;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -46,7 +47,7 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
 
         merge = new MergeToTravelPlanHelper(getFirstBooking(), getSecondBooking(), removeCM(environment));
         merge.merge();
-
+        helper = new RetrieveHelper();
         findPrimary(getFirstBooking().getTravelPlanId());
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
@@ -56,8 +57,6 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
 
-        RetrieveHelper helper = new RetrieveHelper();
-        helper.setSecond(true);
         helper.baseValidationDVC(getFirstBooking(), retrieve);
         helper.baseValidationDVC(getSecondBooking(), retrieve);
         helper.dvcMembershipValidations(retrieve, getFirstMember());
@@ -75,9 +74,11 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
         if (rs.getRowCount() > 0) {
             primary = getFirstBooking().getTravelPlanId();
             secondary = getSecondBooking().getTravelPlanId();
+            helper.setSecond(true);
         } else {
             primary = getSecondBooking().getTravelPlanId();
             secondary = getFirstBooking().getTravelPlanId();
+            helper.setFirst(true);
         }
 
     }
