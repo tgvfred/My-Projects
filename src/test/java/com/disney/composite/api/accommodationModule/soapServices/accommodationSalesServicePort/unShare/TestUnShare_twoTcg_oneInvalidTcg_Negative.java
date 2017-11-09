@@ -8,7 +8,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UnShare;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestUnShare_twoTcg_oneInvalidTcg_Negative extends AccommodationBaseTest {
@@ -29,7 +28,6 @@ public class TestUnShare_twoTcg_oneInvalidTcg_Negative extends AccommodationBase
         isComo.set("true");
         setSendRequest(false);
         bookReservation();
-        getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
     }
