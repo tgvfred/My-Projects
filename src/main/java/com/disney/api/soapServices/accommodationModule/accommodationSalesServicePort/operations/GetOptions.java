@@ -1,7 +1,11 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
@@ -15,6 +19,17 @@ public class GetOptions extends AccommodationSalesServicePort {
         setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("getOptions")));
         generateServiceContext();
         setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
+        removeComments();
+        removeWhiteSpace();
+
+    }
+
+    public GetOptions(String environment) {
+        super(environment);
+
+        // Generate a request from a project xml file
+        setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("getOptions")));
+        generateServiceContext();
         removeComments();
         removeWhiteSpace();
 
@@ -45,6 +60,16 @@ public class GetOptions extends AccommodationSalesServicePort {
         }
 
         return keyValuePairs;
+    }
+
+    public Set<Entry<String, String>> getResponseOptionKeyValuePairs() {
+        Set<Entry<String, String>> toreturn = new HashSet<>();
+        for (int i = getNumberOfResponseNodesByXPath("/Envelope/Body/getOptionsByFilterResponse/response"); i > 0; i--) {
+            toreturn.add(new SimpleImmutableEntry<String, String>(
+                    getResponseNodeValueByXPath("/Envelope/Body/getOptionsByFilterResponse/response[" + i + "]/optionKey"),
+                    getResponseNodeValueByXPath("/Envelope/Body/getOptionsByFilterResponse/response[" + i + "]/optionValue")));
+        }
+        return toreturn;
     }
 
     public int getNumberOfKeyValuePairs() {
