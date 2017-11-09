@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UnShare;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UnShareHelper;
-import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -39,7 +38,6 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         isComo.set("true");
         setSendRequest(false);
         bookReservation();
-        getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         firstTCG = getBook().getTravelComponentGroupingId();
@@ -53,7 +51,6 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         isComo.set("true");
         setSendRequest(false);
         bookReservation();
-        getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         captureSecondOwnerId();

@@ -23,7 +23,7 @@ public class TestShare_twoTcg_differentPackageCodes_Negative extends Accommodati
     public void setup(String environment) {
         // TestReporter.setDebugLevel(TestReporter.INFO); //Uncomment this line
         // to invoke lower levels of reporting
-        Environment.getBaseEnvironmentName(environment);
+
         setEnvironment(environment);
         isComo.set("false");
         daysOut.set(0);
