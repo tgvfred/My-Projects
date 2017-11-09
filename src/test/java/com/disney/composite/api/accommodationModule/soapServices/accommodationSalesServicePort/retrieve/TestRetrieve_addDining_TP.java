@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -16,7 +17,7 @@ public class TestRetrieve_addDining_TP extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         isComo.set("true");
         setDaysOut(0);
         setNights(1);
@@ -37,6 +38,12 @@ public class TestRetrieve_addDining_TP extends AccommodationBaseTest {
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
+
+        RetrieveHelper helper = new RetrieveHelper();
+        helper.baseValidation(getBook(), retrieve);
+
+        TestReporter.assertTrue(retrieve.getComponentGroupingsCount() == 1, "Verify only one component groupings block is returned. Count: "
+                + "[" + retrieve.getComponentGroupingsCount() + "]");
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {

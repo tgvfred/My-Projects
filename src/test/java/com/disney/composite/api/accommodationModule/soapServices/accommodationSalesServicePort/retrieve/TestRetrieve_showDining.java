@@ -18,6 +18,7 @@ import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventRese
 public class TestRetrieve_showDining extends AccommodationBaseTest {
 
     private Book book;
+    private HouseHold hh = new HouseHold(1);
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -26,7 +27,7 @@ public class TestRetrieve_showDining extends AccommodationBaseTest {
 
         book = new Book(Environment.getBaseEnvironmentName(environment), ScheduledEventReservation.ONECOMPONENTSNOADDONS);
         book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(15, 45)));
-        book.setParty(new HouseHold(1));
+        book.setParty(hh);
         book.sendRequest();
 
         TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
@@ -38,13 +39,13 @@ public class TestRetrieve_showDining extends AccommodationBaseTest {
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
         retrieve.setTravelPlanId(book.getTravelPlanId());
-        retrieve.setLocationId(book.getFacilityId());
+        retrieve.setLocationId("1284");
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
-        helper.baseValidationShowDining(book, retrieve);
+        helper.baseValidationShowDining(book, hh, retrieve);
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {
