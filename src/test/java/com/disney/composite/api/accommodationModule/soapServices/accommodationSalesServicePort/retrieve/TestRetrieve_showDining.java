@@ -28,7 +28,9 @@ public class TestRetrieve_showDining extends AccommodationBaseTest {
         book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(15, 45)));
         book.setParty(new HouseHold(1));
         book.sendRequest();
+
         TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
+        System.out.println(book.getRequest());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
