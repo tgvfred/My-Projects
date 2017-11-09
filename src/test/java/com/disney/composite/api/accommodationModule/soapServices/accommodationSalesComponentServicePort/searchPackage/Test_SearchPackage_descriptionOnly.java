@@ -32,16 +32,16 @@ public class Test_SearchPackage_descriptionOnly extends AccommodationBaseTest {
         packageCheck(search.getPackageDescriptionByPackageCode(pkgCode), pkgCode);
 
         // Old vs New Validation
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // SearchPackage clone = (SearchPackage) search.clone();
-        // clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-        // clone.sendRequest();
-        // if (!clone.getResponseStatusCode().equals("200")) {
-        // TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-        // }
-        // clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-        // TestReporter.assertTrue(clone.validateResponseNodeQuantity(search, true), "Validating Response Comparison");
-        // }
+        if (Environment.isSpecialEnvironment(environment)) {
+            SearchPackage clone = (SearchPackage) search.clone();
+            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+            clone.sendRequest();
+            if (!clone.getResponseStatusCode().equals("200")) {
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+            }
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(search, true), "Validating Response Comparison");
+        }
     }
 
     public void packageCheck(String pkgDesc, String pkgCde) {

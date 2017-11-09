@@ -10,7 +10,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
@@ -31,7 +30,7 @@ public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
         isComo.set("true");
         setSendRequest(false);
         bookReservation();
-        getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
+
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         firstTCG = getBook().getTravelComponentGroupingId();
