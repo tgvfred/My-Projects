@@ -96,7 +96,7 @@ public class TestAutoReinstate_roomOnlyWithDining_minimalInfo extends Accommodat
         helper.validateChargeGroups();
         helper.validateChargeItems();
 
-        int numExpectedRecords = 6;
+        int numExpectedRecords = 14;
         helper.validateFolioItems(numExpectedRecords);
 
     }
