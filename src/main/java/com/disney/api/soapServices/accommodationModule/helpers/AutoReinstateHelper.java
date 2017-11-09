@@ -61,6 +61,76 @@ public class AutoReinstateHelper {
 
     }
 
+    public void validateReservationBookedBundleStatus() {
+        TestReporter.logStep("Verify reservation status is 'Booked'");
+        String sql = "select * from res_mgmt.res_hist a where a.tp_id = '" + tpID + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpID + " ]", sql);
+        }
+
+        boolean bookFound = false;
+        boolean cancelFound = false;
+        boolean reinstateFound = false;
+        boolean autoCancelFound = false;
+        do {
+            if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Booked")) {
+                bookFound = true;
+                TestReporter.softAssertTrue(bookFound, "Verify that a book record was found for TP ID [" + tpID + "].");
+            } else if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Cancelled")) {
+                cancelFound = true;
+                TestReporter.softAssertTrue(cancelFound, "Verify that a cancel record was found for TP ID [" + tpID + "].");
+            } else if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Auto Cancelled")) {
+                autoCancelFound = true;
+                TestReporter.softAssertTrue(autoCancelFound, "Verify that an auto cancel record was found for TP ID [" + tpID + "].");
+            } else if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Reinstated")) {
+                reinstateFound = true;
+                TestReporter.softAssertTrue(reinstateFound, "Verify that an reinstate record was found for TP ID [" + tpID + "].");
+
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+
+    }
+
+    public void validateReservationBookedStatusTwoBookings(String firstTP, String firstTC, String firstTPS, String firstTCG) {
+        TestReporter.logStep("Verify the first reservation status is 'Booked' and the second is 'Cancelled'");
+        String sql = "select * from res_mgmt.res_hist a where a.tp_id = '" + firstTP + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + firstTP + " ]", sql);
+        }
+
+        boolean bookFound = false;
+        boolean cancelFound = false;
+        boolean reinstateFound = false;
+
+        do {
+            if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Booked")) {
+                bookFound = true;
+                TestReporter.softAssertTrue(bookFound, "Verify that a book record was found for TP ID [" + firstTP + "].");
+                TestReporter.softAssertTrue(bookFound, "Verify that a book record was found for TP ID [" + tpID + "].");
+
+            } else if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Cancelled")) {
+                cancelFound = true;
+                TestReporter.softAssertTrue(cancelFound, "Verify that a cancel record was found for TP ID [" + firstTP + "].");
+                TestReporter.softAssertTrue(cancelFound, "Verify that a cancel record was found for TP ID [" + tpID + "].");
+
+            } else if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Reinstated")) {
+                reinstateFound = true;
+                TestReporter.softAssertTrue(reinstateFound, "Verify that a reinstate record was found for TP ID [" + firstTP + "].");
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+
+    }
+
     public void validateCancellationNumber() {
         TestReporter.logStep("Verify cancellation number is 0");
         String sql = "select a.TRVL_STS_NM TP_STATUS, a.TPS_CNCL_NB CANCEL_NUMBER, c.TRVL_STS_NM TC_STATUS "
@@ -149,6 +219,50 @@ public class AutoReinstateHelper {
             if (rs2.getValue("CANCEL_NUMBER").equals("0")) {
                 TestReporter.softAssertEquals(rs2.getValue("CANCEL_NUMBER"), "0", "Verify the cancel number [" + rs2.getValue("CANCEL_NUMBER") + "] matches the cancel number in the DB [0].");
 
+            }
+            rs2.moveNext();
+        } while (rs2.hasNext());
+    }
+
+    public void validateCancellationNumberTwoTpsBooking(String firstTPS) {
+        TestReporter.logStep("Verify cancellation number is 0 for first booking, and a number is populated for the second booking");
+        String sql = "select a.TRVL_STS_NM TP_STATUS, a.TPS_CNCL_NB CANCEL_NUMBER, c.TRVL_STS_NM TC_STATUS "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "where a.tps_id = '" + firstTPS + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpsID + " ]", sql);
+        }
+
+        do {
+            if (rs.getValue("CANCEL_NUMBER").equals("0")) {
+                TestReporter.softAssertEquals(rs.getValue("CANCEL_NUMBER"), "0", "Verify the cancel number [" + rs.getValue("CANCEL_NUMBER") + "] matches the cancel number in the DB [0].");
+
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+
+        String sql2 = "select a.TRVL_STS_NM TP_STATUS, a.TPS_CNCL_NB CANCEL_NUMBER, c.TRVL_STS_NM TC_STATUS "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "where a.tps_id = '" + tpsID + "'";
+
+        Database db2 = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs2 = new Recordset(db2.getResultSet(sql2));
+
+        if (rs2.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpsID + " ]", sql2);
+        }
+
+        do {
+            if (!rs2.getValue("CANCEL_NUMBER").equals("0")) {
+                TestReporter.softAssertTrue(rs2.getValue("CANCEL_NUMBER") != "0", "Verify the cancel number [" + rs2.getValue("CANCEL_NUMBER") + "] is not 0.");
             }
             rs2.moveNext();
         } while (rs2.hasNext());
@@ -391,10 +505,56 @@ public class AutoReinstateHelper {
         }
 
         do {
+
             TestReporter.softAssertEquals(rs2.getValue("CHRG_GRP_STS_NM"), "Cancelled", "Verify the status  [" + rs2.getValue("CHRG_GRP_STS_NM") + "] matches in the DB [Cancelled].");
 
             rs2.moveNext();
         } while (rs2.hasNext());
+        TestReporter.assertAll();
+    }
+
+    public void validateTwoBookedChargeGroupsSameTPS(String firstTP, String firstTPS, String firstTCG) {
+        TestReporter.logStep("Verify charge groups are active for the reinstated TCG and cancelled for the cancelled TCG");
+        String sql = "select c.CHRG_GRP_STS_NM "
+                + "from folio.EXTNL_REF a "
+                + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
+                + "where a.EXTNL_REF_VAL in ('" + firstTP + "', '" + firstTPS + "', '" + firstTCG + "')";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + firstTCG + " ]", sql);
+        }
+
+        do {
+            TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "UnEarned", "Verify the status  [" + rs.getValue("CHRG_GRP_STS_NM") + "] matches in the DB [UnEarned].");
+
+            rs.moveNext();
+        } while (rs.hasNext());
+        TestReporter.assertAll();
+
+        String sql2 = "select c.CHRG_GRP_STS_NM "
+                + "from folio.EXTNL_REF a "
+                + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
+                + "where a.EXTNL_REF_VAL in ('" + tpID + "', '" + tpsID + "', '" + tcgID + "')";
+
+        Database db2 = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs2 = new Recordset(db2.getResultSet(sql2));
+
+        if (rs2.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tcgID + " ]", sql2);
+        }
+
+        do {
+            if (rs2.getValue("CHRG_GRP_STS_NM").equalsIgnoreCase("Cancelled")) {
+                TestReporter.softAssertEquals(rs2.getValue("CHRG_GRP_STS_NM"), "Cancelled", "Verify the status  [" + rs2.getValue("CHRG_GRP_STS_NM") + "] matches in the DB [Cancelled].");
+            }
+            rs2.moveNext();
+        } while (rs2.hasNext());
+
         TestReporter.assertAll();
     }
 
@@ -872,6 +1032,44 @@ public class AutoReinstateHelper {
         } while (rs.hasNext());
         TestReporter.assertAll();
 
+    }
+
+    public void validateTCReasons() {
+        TestReporter.logStep("Verify TC reason.");
+        String sql = "select b.TC_RSN_TYP_NM, b.TC_RSN_TX, b.TC_RSN_CNTCT_NM "
+                + "from res_mgmt.tc a "
+                + "join res_mgmt.tc_rsn b on a.tc_id = b.tc_id "
+                + "where a.tc_grp_nb = '" + tcgID + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpsID + " ]", sql);
+        }
+
+        TestReporter.softAssertEquals(rs.getValue("TC_RSN_TYP_NM"), "Inventory Override", "Verify TP status [" + rs.getValue("TC_RSN_TYP_NM") + "] matches in the DB [Inventory Override].");
+        TestReporter.softAssertEquals(rs.getValue("TC_RSN_TX"), "RIN8", "Verify TP status [" + rs.getValue("TC_RSN_TX") + "] matches in the DB [RIN8].");
+        TestReporter.softAssertEquals(rs.getValue("TC_RSN_CNTCT_NM"), "Reinstate Contact", "Verify TP status [" + rs.getValue("TC_RSN_CNTCT_NM") + "] matches in the DB [Inventory Override].");
+
+    }
+
+    public void validateADA() {
+        TestReporter.logStep("Verify that specialNeedsRequested is set to Y.");
+        String sql = "select b.* "
+                + "from res_mgmt.tc a "
+                + "join res_mgmt.acm_cmpnt b on a.tc_id = ACM_TC_ID "
+                + "where a.tc_grp_nb = '" + tcgID + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpsID + " ]", sql);
+        }
+
+        TestReporter.softAssertEquals(rs.getValue("SPCL_NEED_REQ_IN"), "Y", "Verify special needs requested [" + rs.getValue("SPCL_NEED_REQ_IN") + "] matches in the DB [Y].");
+        TestReporter.assertAll();
     }
 
 }
