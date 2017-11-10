@@ -871,7 +871,7 @@ public class AutoReinstateHelper {
         Recordset rs = null;
 
         int tries = 0;
-        int maxTries = 35;
+        int maxTries = 60;
         boolean success = false;
         do {
             Sleeper.sleep(1000);
