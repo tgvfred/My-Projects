@@ -115,20 +115,20 @@ public class AutoReinstateHelper {
         do {
             if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Booked")) {
                 bookFound = true;
-                TestReporter.softAssertTrue(bookFound, "Verify that a book record was found for TP ID [" + firstTP + "].");
-                TestReporter.softAssertTrue(bookFound, "Verify that a book record was found for TP ID [" + tpID + "].");
 
             } else if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Cancelled")) {
                 cancelFound = true;
-                TestReporter.softAssertTrue(cancelFound, "Verify that a cancel record was found for TP ID [" + firstTP + "].");
-                TestReporter.softAssertTrue(cancelFound, "Verify that a cancel record was found for TP ID [" + tpID + "].");
 
             } else if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Reinstated")) {
                 reinstateFound = true;
-                TestReporter.softAssertTrue(reinstateFound, "Verify that a reinstate record was found for TP ID [" + firstTP + "].");
             }
             rs.moveNext();
         } while (rs.hasNext());
+        TestReporter.softAssertTrue(bookFound, "Verify that a book record was found for TP ID [" + firstTP + "].");
+        TestReporter.softAssertTrue(bookFound, "Verify that a book record was found for TP ID [" + tpID + "].");
+        TestReporter.softAssertTrue(cancelFound, "Verify that a cancel record was found for TP ID [" + firstTP + "].");
+        TestReporter.softAssertTrue(cancelFound, "Verify that a cancel record was found for TP ID [" + tpID + "].");
+        TestReporter.softAssertTrue(reinstateFound, "Verify that a reinstate record was found for TP ID [" + firstTP + "].");
         TestReporter.assertAll();
     }
 
@@ -804,7 +804,15 @@ public class AutoReinstateHelper {
                 + "where a.EXTNL_REF_VAL in '" + tpID + "'";
 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
+        Recordset rs = null;
+
+        int tries = 0;
+        int maxTries = 20;
+        do {
+            Sleeper.sleep(1000);
+            rs = new Recordset(db.getResultSet(sql));
+            tries++;
+        } while (tries < maxTries && rs.getRowCount() != numExpectedRecords);
 
         if (rs.getRowCount() == 0) {
             throw new SQLValidationException("No charges found for tp ID [ " + tcgID + " ]", sql);
@@ -1071,7 +1079,7 @@ public class AutoReinstateHelper {
         TestReporter.softAssertEquals(rs.getValue("TC_RSN_TYP_NM"), "Inventory Override", "Verify TP status [" + rs.getValue("TC_RSN_TYP_NM") + "] matches in the DB [Inventory Override].");
         TestReporter.softAssertEquals(rs.getValue("TC_RSN_TX"), "RIN8", "Verify TP status [" + rs.getValue("TC_RSN_TX") + "] matches in the DB [RIN8].");
         TestReporter.softAssertEquals(rs.getValue("TC_RSN_CNTCT_NM"), "Reinstate Contact", "Verify TP status [" + rs.getValue("TC_RSN_CNTCT_NM") + "] matches in the DB [Inventory Override].");
-
+        TestReporter.assertAll();
     }
 
     public void validateADA() {
