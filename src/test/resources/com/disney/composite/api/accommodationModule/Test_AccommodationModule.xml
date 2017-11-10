@@ -17,6 +17,21 @@
 			<package name="com.disney.composite.api.accommodationModule.*"></package>
 		</packages>
 	</test>
+	<test name="AccommodationModule_replaceALl" parallel="methods" thread-count="5">
+		<groups>
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
+				<exclude name="dev"/>
+				<!-- <exclude name="debug"/> -->
+				<include name="replaceAllForTravelPlanSegment"></include>
+				<exclude name="example"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.*"></package>
+		</packages>
+	</test>
 	<test name="AccommodationModule_reinstate" parallel="methods" thread-count="5">
 		<groups>
 			<run>
@@ -25,6 +40,81 @@
 				<exclude name="dev"/>
 				<!-- <exclude name="debug"/> -->
 				<include name="reinstate"></include>
+				<exclude name="example"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.*"></package>
+		</packages>
+	</test>
+	<test name="AccommodationModule_cancel" parallel="methods" thread-count="5">
+		<groups>
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
+				<exclude name="dev"/>
+				<!-- <exclude name="debug"/> -->
+				<include name="cancel"></include>
+				<exclude name="example"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.*"></package>
+		</packages>
+	</test>
+	<test name="AccommodationModule_Cancel" parallel="methods" thread-count="5">
+		<groups>
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
+				<exclude name="dev"/>
+				<!-- <exclude name="debug"/> -->
+				<include name="Cancel"></include>
+				<exclude name="example"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.*"></package>
+		</packages>
+	</test>
+	<test name="AccommodationModule_UpdateGuaranteeStatus" parallel="methods" thread-count="5">
+		<groups>
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
+				<exclude name="dev"/>
+				<!-- <exclude name="debug"/> -->
+				<include name="UpdateGuaranteeStatus"></include>
+				<exclude name="example"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.*"></package>
+		</packages>
+	</test>
+	<test name="AccommodationModule_RetrieveSummary" parallel="methods" thread-count="5">
+		<groups>
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
+				<exclude name="dev"/>
+				<!-- <exclude name="debug"/> -->
+				<include name="RetrieveSummary"></include>
+				<exclude name="example"></exclude>
+			</run>
+		</groups>
+		<packages>
+			<package name="com.disney.composite.api.accommodationModule.*"></package>
+		</packages>
+	</test>
+	<test name="AccommodationModule_RetrieveSummary" parallel="methods" thread-count="5">
+		<groups>
+			<run>
+				<exclude name="presmoke"/>
+				<exclude name="smoke"/>					
+				<exclude name="dev"/>
+				<!-- <exclude name="debug"/> -->
+				<include name="checkout"></include>
 				<exclude name="example"></exclude>
 			</run>
 		</groups>
@@ -41,6 +131,12 @@
 				<!-- <exclude name="debug"/> -->
 				<exclude name="checkout"></exclude>
 				<exclude name="reinstate"></exclude>
+				<exclude name="replaceAllForTravelPlanSegment"></exclude>
+				<exclude name="UpdateGuaranteeStatus"></exclude>
+				<exclude name="cancel"></exclude>
+				<exclude name="Cancel"></exclude>
+				<exclude name="RetrieveSummary"></exclude>
+				<exclude name="checkout"></exclude>
 				<exclude name="example"></exclude>
 			</run>
 		</groups>
