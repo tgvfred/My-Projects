@@ -85,7 +85,7 @@ public class TestAutoReinstate_roomOnly_minimalInfo extends AccommodationBaseTes
     }
 
     public void validations() {
-        AutoReinstateHelper helper = new AutoReinstateHelper(environment, getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
+        AutoReinstateHelper helper = new AutoReinstateHelper(Environment.getBaseEnvironmentName(environment), getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
 
         helper.validateReservationBookedStatus();
         helper.validateCancellationNumber();

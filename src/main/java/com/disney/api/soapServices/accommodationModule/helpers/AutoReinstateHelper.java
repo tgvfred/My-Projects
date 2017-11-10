@@ -58,6 +58,7 @@ public class AutoReinstateHelper {
             rs.moveNext();
         } while (rs.hasNext());
         TestReporter.softAssertTrue(bookFound, "Verify that a book record was found for TP ID [" + tpID + "].");
+        TestReporter.assertAll();
 
     }
 
@@ -93,7 +94,7 @@ public class AutoReinstateHelper {
             }
             rs.moveNext();
         } while (rs.hasNext());
-
+        TestReporter.assertAll();
     }
 
     public void validateReservationBookedStatusTwoBookings(String firstTP, String firstTC, String firstTPS, String firstTCG) {
@@ -128,7 +129,7 @@ public class AutoReinstateHelper {
             }
             rs.moveNext();
         } while (rs.hasNext());
-
+        TestReporter.assertAll();
     }
 
     public void validateCancellationNumber() {
@@ -153,6 +154,7 @@ public class AutoReinstateHelper {
             }
             rs.moveNext();
         } while (rs.hasNext());
+        TestReporter.assertAll();
     }
 
     public void validateCancellationNumberFirstTPS(String firstTPS) {
@@ -177,6 +179,7 @@ public class AutoReinstateHelper {
             }
             rs.moveNext();
         } while (rs.hasNext());
+        TestReporter.assertAll();
     }
 
     public void validateCancellationNumberTwoTPS(String firstTPS) {
@@ -222,6 +225,7 @@ public class AutoReinstateHelper {
             }
             rs2.moveNext();
         } while (rs2.hasNext());
+        TestReporter.assertAll();
     }
 
     public void validateCancellationNumberTwoTpsBooking(String firstTPS) {
@@ -266,6 +270,7 @@ public class AutoReinstateHelper {
             }
             rs2.moveNext();
         } while (rs2.hasNext());
+        TestReporter.assertAll();
     }
 
     public void validateReinstateRecord() {
@@ -275,12 +280,14 @@ public class AutoReinstateHelper {
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
+        boolean reinstateFound = false;
         if (rs.getRowCount() == 0) {
             throw new SQLValidationException("No charges found for tp ID [ " + tpID + " ]", sql);
         }
 
         do {
             if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Reinstated")) {
+                reinstateFound = true;
                 TestReporter.softAssertEquals(rs.getValue("RES_HIST_PROC_DS"), "Reinstated", "Verify the status  [" + rs.getValue("RES_HIST_PROC_DS") + "] matches in the DB [Reinstated].");
                 TestReporter.softAssertEquals(rs.getValue("TC_ID"), tcID, "Verify the TC id [" + rs.getValue("TC_ID") + "] matches the TC id in the DB [" + tcID + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_ID"), tpsID, "Verify the TPS id [" + rs.getValue("TPS_ID") + "] matches the TPS id in the DB [" + tpsID + "].");
@@ -289,6 +296,8 @@ public class AutoReinstateHelper {
             }
             rs.moveNext();
         } while (rs.hasNext());
+        TestReporter.softAssertTrue(reinstateFound, "Verify that a reinstate record was found.");
+        TestReporter.assertAll();
     }
 
     public void validateBookedRecord() {
@@ -302,8 +311,10 @@ public class AutoReinstateHelper {
             throw new SQLValidationException("No charges found for tp ID [ " + tpID + " ]", sql);
         }
 
+        boolean bookFound = false;
         do {
             if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Booked")) {
+                bookFound = true;
                 TestReporter.softAssertEquals(rs.getValue("RES_HIST_PROC_DS"), "Booked", "Verify the status  [" + rs.getValue("RES_HIST_PROC_DS") + "] matches in the DB [Booked].");
                 TestReporter.softAssertEquals(rs.getValue("TC_ID"), tcID, "Verify the TC id [" + rs.getValue("TC_ID") + "] matches the TC id in the DB [" + tcID + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_ID"), tpsID, "Verify the TPS id [" + rs.getValue("TPS_ID") + "] matches the TPS id in the DB [" + tpsID + "].");
@@ -312,6 +323,8 @@ public class AutoReinstateHelper {
             }
             rs.moveNext();
         } while (rs.hasNext());
+        TestReporter.softAssertTrue(bookFound, "Verify that a book record was found.");
+        TestReporter.assertAll();
     }
 
     public void validateBookedRecords(String firstTP, String firstTC, String firstTPS, String firstTCG) {
@@ -325,8 +338,10 @@ public class AutoReinstateHelper {
             throw new SQLValidationException("No charges found for tp ID [ " + tpID + " ]", sql);
         }
 
+        boolean bookFound = false;
         do {
             if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Booked")) {
+                bookFound = true;
                 TestReporter.softAssertEquals(rs.getValue("RES_HIST_PROC_DS"), "Booked", "Verify the status  [" + rs.getValue("RES_HIST_PROC_DS") + "] matches in the DB [Booked].");
                 TestReporter.softAssertEquals(rs.getValue("TC_ID"), firstTC, "Verify the TC id [" + rs.getValue("TC_ID") + "] matches the TC id in the DB [" + firstTC + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_ID"), firstTPS, "Verify the TPS id [" + rs.getValue("TPS_ID") + "] matches the TPS id in the DB [" + firstTPS + "].");
@@ -335,6 +350,8 @@ public class AutoReinstateHelper {
             }
             rs.moveNext();
         } while (rs.hasNext());
+        TestReporter.softAssertTrue(bookFound, "Verify that a book record was found.");
+        bookFound = false;
 
         String sql2 = "select * from res_mgmt.res_hist a where a.tp_id = '" + tpID + "'";
 
@@ -347,6 +364,7 @@ public class AutoReinstateHelper {
 
         do {
             if (rs2.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Booked")) {
+                bookFound = true;
                 TestReporter.softAssertEquals(rs2.getValue("RES_HIST_PROC_DS"), "Booked", "Verify the status  [" + rs2.getValue("RES_HIST_PROC_DS") + "] matches in the DB [Booked].");
                 TestReporter.softAssertEquals(rs2.getValue("TC_ID"), tcID, "Verify the TC id [" + rs2.getValue("TC_ID") + "] matches the TC id in the DB [" + tcID + "].");
                 TestReporter.softAssertEquals(rs2.getValue("TPS_ID"), tpsID, "Verify the TPS id [" + rs2.getValue("TPS_ID") + "] matches the TPS id in the DB [" + tpsID + "].");
@@ -355,6 +373,8 @@ public class AutoReinstateHelper {
             }
             rs.moveNext();
         } while (rs.hasNext());
+        TestReporter.softAssertTrue(bookFound, "Verify that a book record was found.");
+        TestReporter.assertAll();
     }
 
     public void validateRIMInventory() {
@@ -369,7 +389,7 @@ public class AutoReinstateHelper {
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         if (rs.getRowCount() == 0) {
-            throw new SQLValidationException("No charges found for tp ID [ " + tcgID + " ]", sql);
+            throw new SQLValidationException("A RIM resource was not consumed for tp ID [ " + tcgID + " ]", sql);
         }
 
         TestReporter.softAssertEquals(rs.getValue("TC_ID"), tcID, "Verify the TC id [" + rs.getValue("TC_ID") + "] matches the TC id in the DB [" + tcID + "].");
