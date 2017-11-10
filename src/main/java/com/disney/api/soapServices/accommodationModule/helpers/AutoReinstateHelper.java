@@ -327,6 +327,42 @@ public class AutoReinstateHelper {
         TestReporter.assertAll();
     }
 
+    public void validateBookedRecordTwoTCG(String firstTCG, String firstTP) {
+        TestReporter.logStep("Verify one booked record");
+        String sql = "select * from res_mgmt.res_hist a where a.tp_id = '" + tpID + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpID + " ]", sql);
+        }
+
+        boolean bookFound = false;
+        do {
+            if (rs.getValue("RES_HIST_PROC_DS").equalsIgnoreCase("Booked")) {
+                bookFound = true;
+                if (rs.getValue("TC_GRP_NM").equalsIgnoreCase(firstTCG)) {
+                    TestReporter.softAssertEquals(rs.getValue("RES_HIST_PROC_DS"), "Booked", "Verify the status  [" + rs.getValue("RES_HIST_PROC_DS") + "] matches in the DB [Booked].");
+                    TestReporter.softAssertEquals(rs.getValue("TPS_ID"), tpsID, "Verify the TPS id [" + rs.getValue("TPS_ID") + "] matches the TPS id in the DB [" + tpsID + "].");
+                    TestReporter.softAssertEquals(rs.getValue("TP_ID"), firstTP, "Verify the TP id [" + rs.getValue("TP_ID") + "] matches the TP id in the DB [" + firstTP + "].");
+                    TestReporter.softAssertEquals(rs.getValue("TC_GRP_NM"), firstTCG, "Verify the TCG id [" + rs.getValue("TC_GRP_NM") + "] matches the TCG in the DB [" + firstTCG + "].");
+
+                } else if (rs.getValue("TC_GRP_NM").equalsIgnoreCase(tcgID)) {
+                    TestReporter.softAssertEquals(rs.getValue("RES_HIST_PROC_DS"), "Booked", "Verify the status  [" + rs.getValue("RES_HIST_PROC_DS") + "] matches in the DB [Booked].");
+                    TestReporter.softAssertEquals(rs.getValue("TC_ID"), tcID, "Verify the TC id [" + rs.getValue("TC_ID") + "] matches the TC id in the DB [" + tcID + "].");
+                    TestReporter.softAssertEquals(rs.getValue("TPS_ID"), tpsID, "Verify the TPS id [" + rs.getValue("TPS_ID") + "] matches the TPS id in the DB [" + tpsID + "].");
+                    TestReporter.softAssertEquals(rs.getValue("TP_ID"), tpID, "Verify the TP id [" + rs.getValue("TP_ID") + "] matches the TP id in the DB [" + tpID + "].");
+                    TestReporter.softAssertEquals(rs.getValue("TC_GRP_NM"), tcgID, "Verify the TCG id [" + rs.getValue("TC_GRP_NM") + "] matches the TCG in the DB [" + tcgID + "].");
+                }
+            }
+            rs.moveNext();
+        } while (rs.hasNext());
+        TestReporter.softAssertTrue(bookFound, "Verify that a book record was found.");
+        TestReporter.assertAll();
+
+    }
+
     public void validateBookedRecords(String firstTP, String firstTC, String firstTPS, String firstTCG) {
         TestReporter.logStep("Verify two booked record");
         String sql = "select * from res_mgmt.res_hist a where a.tp_id = '" + firstTP + "'";
@@ -525,12 +561,13 @@ public class AutoReinstateHelper {
         }
 
         do {
-
-            TestReporter.softAssertEquals(rs2.getValue("CHRG_GRP_STS_NM"), "Cancelled", "Verify the status  [" + rs2.getValue("CHRG_GRP_STS_NM") + "] matches in the DB [Cancelled].");
-
+            if (rs2.getValue("CHRG_GRP_STS_NM").equalsIgnoreCase("Cancelled")) {
+                TestReporter.softAssertEquals(rs2.getValue("CHRG_GRP_STS_NM"), "Cancelled", "Verify the status  [" + rs2.getValue("CHRG_GRP_STS_NM") + "] matches in the DB [Cancelled].");
+            }
             rs2.moveNext();
         } while (rs2.hasNext());
         TestReporter.assertAll();
+
     }
 
     public void validateTwoBookedChargeGroupsSameTPS(String firstTP, String firstTPS, String firstTCG) {
@@ -807,7 +844,7 @@ public class AutoReinstateHelper {
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         if (rs.getRowCount() == 0) {
-            throw new SQLValidationException("No charges found for tp ID [ " + tcgID + " ]", sql);
+            throw new SQLValidationException("No charges found for tp ID [ " + tpID + " ]", sql);
         }
 
         // Verify that the actual number of records is that which is expected
@@ -1048,6 +1085,36 @@ public class AutoReinstateHelper {
         do {
             TestReporter.softAssertEquals(rs.getValue("TP_STATUS"), "Cancelled", "Verify TP status [" + rs.getValue("TP_STATUS") + "] matches in the DB [Cancelled].");
             TestReporter.softAssertEquals(rs.getValue("TC_STATUS"), "Cancelled", "Verify TC status [" + rs.getValue("TC_STATUS") + "] matches in the DB [Cancelled].");
+            rs.moveNext();
+        } while (rs.hasNext());
+        TestReporter.assertAll();
+
+    }
+
+    public void validateTravelComponent() {
+        TestReporter.logStep("Verify that there is a booked and cancelled TC.");
+        String sql = "select a.TRVL_STS_NM TP_STATUS, a.TPS_CNCL_NB CANCEL_NUMBER, c.TRVL_STS_NM TC_STATUS, c.TC_TYP_NM "
+                + "from res_mgmt.tps a "
+                + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
+                + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "where a.tps_id = '" + tpsID + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No charges found for tp ID [ " + tpsID + " ]", sql);
+        }
+
+        do {
+            if (rs.getValue("TC_STATUS").equalsIgnoreCase("Booked")) {
+                TestReporter.softAssertEquals(rs.getValue("TC_STATUS"), "Booked", "Verify TC status [" + rs.getValue("TC_STATUS") + "] matches in the DB [Booked].");
+                TestReporter.softAssertEquals(rs.getValue("TC_STATUS"), "Booked", "Verify TC status [" + rs.getValue("TC_STATUS") + "] matches in the DB [Booked].");
+
+            } else if (rs.getValue("TC_STATUS").equalsIgnoreCase("Cancelled")) {
+                TestReporter.softAssertEquals(rs.getValue("TC_STATUS"), "Cancelled", "Verify TC status [" + rs.getValue("TC_STATUS") + "] matches in the DB [Cancelled].");
+                TestReporter.softAssertEquals(rs.getValue("TC_STATUS"), "Cancelled", "Verify TC status [" + rs.getValue("TC_STATUS") + "] matches in the DB [Cancelled].");
+            }
             rs.moveNext();
         } while (rs.hasNext());
         TestReporter.assertAll();

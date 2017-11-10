@@ -1,7 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.autoReinstate;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoReinstate;
@@ -22,34 +20,19 @@ public class TestAutoReinstate_roomOnly_multAccomm_cancelBoth_reinstateBoth exte
     String firstTC;
     String firstTP;
 
-    @Override
-    @BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void setup(String environment) {
-        setEnvironment(environment);
-        setDaysOut(0);
-        setNights(1);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getDaysOut() + getNights());
-        setValues(getEnvironment());
-        isComo.set("false");
-        bookReservation();
+    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate" })
+    public void Test_AutoReinstate_roomOnly_multAccomm_cancelBoth_reinstateBoth() {
         firstTCG = getBook().getTravelComponentGroupingId();
         firstTPS = getBook().getTravelPlanSegmentId();
         firstTC = getBook().getTravelComponentId();
         firstTP = getBook().getTravelPlanId();
 
-        setDaysOut(0);
-        setNights(1);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getDaysOut() + getNights());
-        setValues(getEnvironment());
-        isComo.set("false");
+        setSendRequest(false);
         bookReservation();
-    }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate" })
-    public void Test_AutoReinstate_roomOnly_multAccomm_cancelBoth_reinstateBoth() {
+        getBook().setTravelPlanId(firstTP);
+        getBook().setTravelPlanSegementId(firstTPS);
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a new TPS with an existing TP: " + getBook().getFaultString(), getBook());
 
         cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
@@ -133,7 +116,7 @@ public class TestAutoReinstate_roomOnly_multAccomm_cancelBoth_reinstateBoth exte
     public void validations() {
         AutoReinstateHelper helper = new AutoReinstateHelper(environment, getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
 
-        helper.validateReservationBookedStatus();
+        helper.validateReservationBookedBundleStatus();
         helper.validateAllReinstatedTravelComponents(firstTPS);
         helper.validateCancellationNumberTwoTPS(firstTPS);
         helper.validateBookedRecords(firstTP, firstTC, firstTPS, firstTCG);
