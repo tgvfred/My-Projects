@@ -1,7 +1,7 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ful="http://fulfillment.accommodation.services.booking.dreams.wdw.com/">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:acc="http://accommodation.services.fulfillment.lodging.wdw.com/">
    <soapenv:Header/>
    <soapenv:Body>
-      <ful:processAutoCheckout>
+      <acc:processAutoCheckout>
          <!--Optional:-->
          <request>
             <batchContextId>?</batchContextId>
@@ -32,6 +32,6 @@
             <toAddressRole>?</toAddressRole>
             <userName>?</userName>
          </serviceContext>
-      </ful:processAutoCheckout>
+      </acc:processAutoCheckout>
    </soapenv:Body>
 </soapenv:Envelope>

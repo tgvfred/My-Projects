@@ -18,7 +18,7 @@ public class BookByExtendingBaseTestAndAddSettlement extends AccommodationBaseTe
     private String assignmentOwnerId;
     private PaymentSettlementHelper helper;
 
-    @Test(groups = { "api", "regression", "accommodation" })
+    @Test(groups = { "api", "regression", "accommodation", "example" })
     public void bookByExtendingBaseTestAndAddSettlement() {
         helper = new PaymentSettlementHelper(getEnvironment(), getBook(), getHouseHold());
         helper.createSettlementMethod("Pay total amount due with valid visa with incidentals");
@@ -167,7 +167,7 @@ public class BookByExtendingBaseTestAndAddSettlement extends AccommodationBaseTe
         TestReporter.logStep("Validate reservation details: TP_PTY");
         sql = sql.replace("d.*", "e.*");
         Recordset tcPtyRs = new Recordset(db.getResultSet(sql));
-        tcPtyRs.print();
+        // tcPtyRs.print();
         i = 0;
         do {
             i++;

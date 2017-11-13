@@ -1,11 +1,13 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ful="http://fulfillment.accommodation.transferobject.booking.dreams.wdw.com">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:acc="http://accommodation.transferobject.fulfillment.lodging.wdw.com">
    <soapenv:Header/>
    <soapenv:Body>
-      <ful:publishRoomReadyStatusEvent>
+      <acc:publishRoomReadyStatusEvent>
          <request>
             <roomReadyStatusChangeRequest>
                <messageType>?</messageType>
                <accommodationId>?</accommodationId>
+               <!--Optional:-->
+               <tpsId>?</tpsId>
                <partyMixCount>?</partyMixCount>
                <!--Optional:-->
                <checkinDate>?</checkinDate>
@@ -16,6 +18,8 @@
                   <email>?</email>
                   <!--Optional:-->
                   <phone>?</phone>
+                  <!--Optional:-->
+                  <mobilePushId>?</mobilePushId>
                   <guestFirstName>?</guestFirstName>
                   <guestLastName>?</guestLastName>
                   <transactionGuestId>?</transactionGuestId>
@@ -42,6 +46,6 @@
             <toAddressRole>?</toAddressRole>
             <userName>?</userName>
          </serviceContext>
-      </ful:publishRoomReadyStatusEvent>
+      </acc:publishRoomReadyStatusEvent>
    </soapenv:Body>
 </soapenv:Envelope>

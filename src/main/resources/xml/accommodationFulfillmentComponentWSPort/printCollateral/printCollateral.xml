@@ -1,7 +1,7 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ful="http://fulfillment.accommodation.transferobject.booking.dreams.wdw.com">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:acc="http://accommodation.transferobject.fulfillment.lodging.wdw.com">
    <soapenv:Header/>
    <soapenv:Body>
-      <ful:printCollateral>
+      <acc:printCollateral>
          <request>
             <!--Optional:-->
             <travelPlanId>?</travelPlanId>
@@ -34,6 +34,6 @@
             <toAddressRole>?</toAddressRole>
             <userName>?</userName>
          </context>
-      </ful:printCollateral>
+      </acc:printCollateral>
    </soapenv:Body>
 </soapenv:Envelope>

@@ -1,7 +1,7 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ful="http://fulfillment.accommodation.services.booking.dreams.wdw.com/">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:acc="http://accommodation.services.fulfillment.lodging.wdw.com/">
    <soapenv:Header/>
    <soapenv:Body>
-      <ful:publishEvent>
+      <acc:publishEvent>
          <!--Optional:-->
          <resChangeEventObject>
             <accommodationComponentId>?</accommodationComponentId>
@@ -349,6 +349,6 @@
             <toAddressRole>?</toAddressRole>
             <userName>?</userName>
          </serviceContext>
-      </ful:publishEvent>
+      </acc:publishEvent>
    </soapenv:Body>
 </soapenv:Envelope>

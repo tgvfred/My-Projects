@@ -1,7 +1,7 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ful="http://fulfillment.accommodation.services.booking.dreams.wdw.com/">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:acc="http://accommodation.services.fulfillment.lodging.wdw.com/">
    <soapenv:Header/>
    <soapenv:Body>
-      <ful:getComponentsForGiftCardFullfillment>
+      <acc:getComponentsForGiftCardFullfillment>
          <!--Optional:-->
          <travelComponentGroupingIdentity>
             <travelComponenentGroupingId>?</travelComponenentGroupingId>
@@ -29,6 +29,6 @@
             <toAddressRole>?</toAddressRole>
             <userName>?</userName>
          </serviceContext>
-      </ful:getComponentsForGiftCardFullfillment>
+      </acc:getComponentsForGiftCardFullfillment>
    </soapenv:Body>
 </soapenv:Envelope>

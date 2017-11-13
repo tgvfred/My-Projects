@@ -19,13 +19,11 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestRetrieveResortReservations_Positive extends AccommodationBaseTest {
     private static OracleDatabase db;
-    private static OracleDatabase recdb;
 
     @BeforeClass
     @Parameters("environment")
     public void beforeClass(String environment) {
         db = new OracleDatabase(environment, Database.DREAMS);
-        recdb = new OracleDatabase(environment, Database.RECOMMENDER);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "smoke" })
@@ -34,12 +32,12 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
         String tpsID = getTPSIdForQuery("select b.tps_id from res_mgmt.tps a "
                 + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "join res_mgmt.acm_cmpnt d on c.tc_id = d.acm_tc_id "
                 + "and a.TRVL_STS_NM not in ('Auto Cancelled','Cancelled','Past Visit', 'No Show') "
                 + "and c.TRVL_STS_NM not in ('Auto Cancelled','Cancelled','Past Visit', 'No Show', 'DF Checked Out', 'Not Arrived') "
                 + "and c.TC_TYP_NM = 'AccommodationComponent' "
                 + "and c.blk_cd is null "
-                + "and a.tps_secur_vl != 'DVC' "
-                + "where rownum < 100 "
+                + "where rownum <= 100 "
                 + "order by dbms_random.value");
 
         RetrieveResortReservations retrieveResortReservations = buildAndSendRequestAndValidateSoapResponse(tpsID);
@@ -89,11 +87,12 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
         String tpsID = getTPSIdForQuery("select b.tps_id from res_mgmt.tps a "
                 + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "join res_mgmt.acm_cmpnt d on c.tc_id = d.acm_tc_id "
                 + "and a.TRVL_STS_NM not in ('Auto Cancelled','Cancelled','Past Visit', 'No Show') "
                 + "and c.TRVL_STS_NM not in ('Auto Cancelled','Cancelled','Past Visit', 'No Show', 'DF Checked Out', 'Not Arrived') "
                 + "and c.TC_TYP_NM = 'AccommodationComponent' "
                 + "and VIP_LVL_NM != '0' "
-                + "where rownum < 100 "
+                + "where rownum <= 100 "
                 + "order by dbms_random.value");
 
         RetrieveResortReservations retrieveResortReservations = buildAndSendRequestAndValidateSoapResponse(tpsID);
@@ -107,6 +106,7 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
         String tpsID = getTPSIdForQuery("select b.tps_id from res_mgmt.tps a "
                 + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "join res_mgmt.acm_cmpnt d on c.tc_id = d.acm_tc_id "
                 + "and a.TRVL_STS_NM = 'Checked In' "
                 + "and c.TRVL_STS_NM not in ('Auto Cancelled','Cancelled','Past Visit', 'No Show', 'DF Checked Out', 'Not Arrived') "
                 + "and c.tc_typ_nm = 'AccommodationComponent' "
@@ -118,6 +118,7 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
         Recordset results = new Recordset(db.getResultSet("SELECT TRVL_STS_NM FROM RES_MGMT.TC "
                 + "WHERE TC_TYP_NM = 'AccommodationComponent' "
                 + "AND TC_GRP_NB = " + retrieveResortReservations.getTravelComponentGroupingId()));
+
         String expectedStatus = "Checked In";
         for (results.moveFirst(); results.hasNext(); results.moveNext()) {
             if (results.getValue("TRVL_STS_NM") != "Checked In") {
@@ -136,6 +137,7 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
         String tpsID = getTPSIdForQuery("select b.tps_id from res_mgmt.tps a "
                 + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
+                + "join res_mgmt.acm_cmpnt d on c.tc_id = d.acm_tc_id "
                 + "and a.TRVL_STS_NM = 'Booked' "
                 + "and c.tc_typ_nm = 'AccommodationComponent' "
                 + "where rownum < 100 "
@@ -162,7 +164,7 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
         retrieveResortReservations.sendRequest();
 
         // Response validation
-        TestReporter.logAPI(!retrieveResortReservations.getResponseStatusCode().equals("200"), "The response was not successful.", retrieveResortReservations);
+        TestReporter.logAPI(!retrieveResortReservations.getResponseStatusCode().equals("200"), "The response was not successful: " + retrieveResortReservations.getFaultString(), retrieveResortReservations);
         TestReporter.assertEquals(tpsID, retrieveResortReservations.getTravelPlanSegmentId(), "The response contains the correct TPS ID.");
 
         // Database validation
@@ -203,29 +205,9 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
                 + "where a.tc_grp_nb = " + retrieveResortReservations.getTravelComponentGroupingId()));
         TestReporter.assertTrue(results.getRowCount() > 0 && retrieveResortReservations.getRoomTypeCode().equals(results.getValue("RSRC_INVTRY_TYP_CD")), "The room type code in the response matched the one in the database.");
 
-        // Package Code validation
-        results = new Recordset(db.getResultSet("select c.tc_id, d.prod_id, d.prod_cls_id, d.ACCT_REV_CLS_ID, d.PROD_YR_NB, d.PROD_TYP_NM, d.PROD_INTRNL_NM, d.PROD_BKNG_STRT_DTS, d.PROD_BKNG_END_DTS, d.PROD_USG_STRT_DTS, d.PROD_USG_END_DTS "
-                + "from res_mgmt.tps a "
-                + "left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
-                + "left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "left outer join pricing.prod d on c.prod_id = d.prod_id "
-                + "where a.tps_id = " + tpsID + " "
-                + "and c.tc_typ_nm = 'PackageTravelComponent'"));
-
-        boolean found = false;
-        outer: for (results.moveFirst(); results.hasNext(); results.moveNext()) {
-            Recordset recresults = new Recordset(recdb.getResultSet("select a.PKG_CD from pma_wdw.pkg a "
-                    + "where a.PKG_DESC = '" + results.getValue("PROD_INTRNL_NM") + "' "
-                    + "and a.PRODUCT_YR = " + results.getValue("PROD_YR_NB")));
-
-            for (recresults.moveFirst(); recresults.hasNext(); recresults.moveNext()) {
-                if (retrieveResortReservations.getPackageCode().equals(recresults.getValue("PKG_CD"))) {
-                    found = true;
-                    break outer;
-                }
-            }
-        }
-        TestReporter.assertTrue(found, "The package code in the response matched the one in the database.");
+        // Package Product ID validation
+        results = new Recordset(db.getResultSet("select plan_typ_nm from pricing.pkg where pkg_id = " + retrieveResortReservations.getPackageProductId()));
+        TestReporter.assertEquals(results.getValue("plan_typ_nm"), retrieveResortReservations.getPackagePlanType(), "The Package Product ID in the response matched the one in the database.");
 
         return retrieveResortReservations;
     }
@@ -235,6 +217,8 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
             RetrieveResortReservations retrieveResortReservationsBaseLine = (RetrieveResortReservations) retrieveResortReservations.clone();
             retrieveResortReservationsBaseLine.setEnvironment(Environment.getBaseEnvironmentName(environment));
             retrieveResortReservationsBaseLine.sendRequest();
+
+            retrieveResortReservations.addExcludedXpathValidations("/Envelope/Body/retrieveResortReservationsResponse/resortReservations/partyRoles/role");
             TestReporter.assertTrue(retrieveResortReservations.validateResponseNodeQuantity(retrieveResortReservationsBaseLine, true), "Response Node Validation Result");
         }
     }

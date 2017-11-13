@@ -2,8 +2,9 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentServicePort.operations.SearchPackage;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.SearchPackage;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -21,6 +22,13 @@ public class Test_SearchPackage_packageCodeOnly extends AccommodationBaseTest {
 
         SearchPackage search = new SearchPackage(environment, "Main");
         search.setPackageCode("H333E");
+        if (Environment.isSpecialEnvironment(environment)) {
+            search.setSalesChannelIDs("40748164");
+        }
+        search.setPackageDescription(BaseSoapCommands.REMOVE_NODE.toString());
+        search.setBookingDate(BaseSoapCommands.REMOVE_NODE.toString());
+        search.setSalesChannelIDs(BaseSoapCommands.REMOVE_NODE.toString());
+        search.setResortArrivalDate(BaseSoapCommands.REMOVE_NODE.toString());
         search.sendRequest();
         TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", search);
 
@@ -36,8 +44,6 @@ public class Test_SearchPackage_packageCodeOnly extends AccommodationBaseTest {
             }
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
-            clone.addExcludedXpathValidations("/Envelope/Body/getFacilitiesByEnterpriseIDsResponse/result/effectiveFrom");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(search, true), "Validating Response Comparison");
         }

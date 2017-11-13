@@ -1,7 +1,7 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ful="http://fulfillment.accommodation.transferobject.booking.dreams.wdw.com">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:acc="http://accommodation.transferobject.fulfillment.lodging.wdw.com">
    <soapenv:Header/>
    <soapenv:Body>
-      <ful:upgradePackage>
+      <acc:upgradePackage>
          <request>
             <!--Optional:-->
             <upgradeRoomDetail>
@@ -68,6 +68,6 @@
             <toAddressRole>?</toAddressRole>
             <userName>?</userName>
          </serviceContext>
-      </ful:upgradePackage>
+      </acc:upgradePackage>
    </soapenv:Body>
 </soapenv:Envelope>

@@ -1,5 +1,8 @@
 package com.disney.composite.api.accommodationModule.soapServices._examples;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -18,12 +21,19 @@ public class BookByExtendingBaseTestAndMakeFirstNightDeposit extends Accommodati
     private String assignmentOwnerId;
     private PaymentSettlementHelper helper;
 
-    @Test(groups = { "api", "regression", "accommodation" })
+    @Test(groups = { "api", "regression", "accommodation", "example" })
     public void bookByExtendingBaseTestAndMakeFirstNightDeposit() {
         helper = new PaymentSettlementHelper(getEnvironment(), getBook(), getHouseHold());
         helper.makeFirstNightDeposit();
         gatherDataForValidations();
         validations();
+
+        Map<String, String> map1 = new HashMap<>();
+        map1.put("one", "one");
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("one", "one");
+        System.out.println(map1.equals(map2));
+        System.out.println();
     }
 
     private void gatherDataForValidations() {

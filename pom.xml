@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.gqe.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.0.18</version>
+	<version>1.0.31</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -12,18 +11,24 @@
 	      <name>WDPRO</name>
 	      <url>https://nexus.disney.com/nexus/content/repositories/WDPRO/</url>
 	    </repository>
-	  </distributionManagement>
+	  	</distributionManagement>
 	
 	<dependencies>
 		<dependency>
 			<groupId>com.disney.gqe</groupId>
 			<artifactId>APIUtilsSoap</artifactId>
-			<version>1.0.59</version>
+			<version>1.0.69</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Party</artifactId>
+			<version>1.0.10</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Pricing</artifactId>
 			<version>1.0.9</version>
 			<scope>provided</scope>
 		</dependency>
@@ -31,21 +36,80 @@
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Folio</artifactId>
 			<version>1.0.8</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>EAI</artifactId>
+			<version>1.0.16</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>TravelPlanSegment</artifactId>
+			<version>1.0.01</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Resource</artifactId>
-			<version>1.0.8</version>
+			<version>1.0.11</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>Dining</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Activity</artifactId>
+			<version>1.0.2</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>TravelPlan</artifactId>
+			<version>1.0.11</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>DVCSales</artifactId>
-			<version>1.0.13</version>
+			<version>1.0.14</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>DVCPoints</artifactId>
+			<version>1.0.00</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>DVCCorp</artifactId>
+			<version>1.0.00</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Facility</artifactId>
+			<version>1.0.3</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Groups</artifactId>
+			<version>1.0.3</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>Admission</artifactId>
+			<version>1.0.2</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>	
 	<properties>
