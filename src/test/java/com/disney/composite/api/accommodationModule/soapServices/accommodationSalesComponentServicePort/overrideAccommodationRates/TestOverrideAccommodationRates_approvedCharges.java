@@ -122,7 +122,8 @@ public class TestOverrideAccommodationRates_approvedCharges extends Accommodatio
         Recordset rs6 = new Recordset(db.getResultSet(sql2));
         Recordset rs7 = new Recordset(db.getResultSet(sql3));
         Recordset rs8 = new Recordset(db.getResultSet(sql5));
-
+        rs.print();
+        rs5.print();
         TestReporter.logAPI(!oar.getResponseStatusCode().equals("200"), "An error occurred getting override Accomodation Rates: " + oar.getFaultString(), oar);
         TestReporter.assertEquals(oar.getTcgID(), getBook().getTravelComponentGroupingId(), "The response Travel Component Grouping id [" + oar.getTcgID() + "] matches Travel Component Grouping id in the request [" + getBook().getTravelComponentGroupingId() + "].");
         TestReporter.assertEquals(oar.getTcID(), getBook().getTravelComponentId(), "The response Travel Plan Segment id [" + oar.getTcID() + "] matches Travel Plan Segment id in the request [" + getBook().getTravelComponentId() + "].");
@@ -130,7 +131,8 @@ public class TestOverrideAccommodationRates_approvedCharges extends Accommodatio
         // validates the different table values have changed
         TestReporter.assertTrue(rs5.getValue("RECOG_STS_NM", 1).equals("APPROVED"), "The column RECOG_STS_NM went from [" + rs.getValue("RECOG_STS_NM", 1).toString() + "] to [" + rs5.getValue("RECOG_STS_NM", 1).toString() + "].");
         TestReporter.assertTrue(rs.getValue("CHRG_ACTV_IN", 1).toString().equals("Y"), "The CHRG_ACTV_IN column BEFORE the override request is [" + rs.getValue("CHRG_ACTV_IN", 1).toString() + "].");
-        // TestReporter.assertTrue(rs5.getValue("CHRG_ACTV_IN", 1).toString().equals("N"), "The CHRG_ACTV_IN column AFTER the override request is [" + rs5.getValue("CHRG_ACTV_IN", 1).toString() + "].");
+        TestReporter.assertTrue(rs.getRowCount() == rs5.getRowCount(), "The old charges row count is [" + rs.getRowCount() + "] is the same as the new charges that are displaying [" + rs5.getRowCount() + "]. Old charges were deleted.");
+
         TestReporter.assertTrue(rs5.getValue("CHRG_PST_ST_NM", 1).toString().equals("Earned"), "The CHRG_PST_ST_NM column after the override request is [" + rs5.getValue("CHRG_PST_ST_NM", 1).toString() + "].");
         TestReporter.assertTrue(rs5.getValue("FOLIO_TXN_TYP_CD", 1).toString().equals("SALE"), "The FOLIO_TXN_TYP_CD column after the override request is [" + rs5.getValue("FOLIO_TXN_TYP_CD", 1).toString() + "].");
         TestReporter.assertAll();
