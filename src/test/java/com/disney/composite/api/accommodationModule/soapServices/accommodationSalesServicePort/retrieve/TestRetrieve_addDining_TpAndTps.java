@@ -70,6 +70,9 @@ public class TestRetrieve_addDining_TpAndTps extends AccommodationBaseTest {
                         "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/exchangeFee");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/bypassResortDesk");
+            clone.addExcludedXpathValidations("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/dmeAccommodation");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(retrieve, true), "Validating Response Comparison");
         }
     }
