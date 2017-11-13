@@ -7,7 +7,9 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_twoTcg_roomOnly extends AccommodationBaseTest {
@@ -48,7 +50,21 @@ public class Test_RetrieveSummary_twoTcg_roomOnly extends AccommodationBaseTest 
             retrieve.setRequestTravelComponentGroupingIdIndex("1", book.getTravelPlanSegmentId());
             retrieve.setRequestTravelComponentGroupingIdIndex("2", book1.getTravelPlanSegmentId());
         }
-        retrieve.sendRequest();
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            try {
+                retrieve.sendRequest();
+                tries++;
+                retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails[1]/travelPlanSegmentId");
+                success = true;
+            } catch (XPathNotFoundException e) {
+            }
+        } while (tries < maxTries && !success);
+
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]", retrieve);
 
         TestReporter.logStep("Verify two AccommodationsSummaryDetails node is found & that two different TPS IDs are found.");

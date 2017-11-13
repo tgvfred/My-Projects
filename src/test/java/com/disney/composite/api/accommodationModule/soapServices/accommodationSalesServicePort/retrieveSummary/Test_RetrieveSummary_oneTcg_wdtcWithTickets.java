@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.FindTicketPriceGridByPackage;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.GetTicketProducts;
 import com.disney.utils.Environment;
@@ -100,6 +101,7 @@ public class Test_RetrieveSummary_oneTcg_wdtcWithTickets extends AccommodationBa
         book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/phoneDetails/number", getHouseHold().primaryGuest().primaryPhone().getNumber());
         book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/emailDetails/address", getHouseHold().primaryGuest().primaryEmail().getEmail());
 
+        book.setRequestNodeValueByXPath("//travelAgent", BaseSoapCommands.REMOVE_NODE.toString());
         book.sendRequest();
         if (book.getResponse().contains("Error Invoking Pricing Service")) {
             // System.out.println();
