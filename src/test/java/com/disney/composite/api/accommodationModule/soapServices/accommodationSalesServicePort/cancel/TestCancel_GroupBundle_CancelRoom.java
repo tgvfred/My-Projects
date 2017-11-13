@@ -38,14 +38,7 @@ public class TestCancel_GroupBundle_CancelRoom extends AccommodationBaseTest {
     @Parameters({ "environment" })
     public void setup(String environment) {
 
-        String locEnv;
-        if (environment.toLowerCase().contains("_cm")) {
-            locEnv = environment.toLowerCase().replace("_cm", "");
-        } else {
-            locEnv = environment;
-        }
-
-        setEnvironment(locEnv);
+        setEnvironment(environment);
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -56,12 +49,12 @@ public class TestCancel_GroupBundle_CancelRoom extends AccommodationBaseTest {
         // retrieveReservation();
         bookReservation();
 
-        details = new RetrieveDetailsByTravelPlanId(locEnv, "Main");
+        details = new RetrieveDetailsByTravelPlanId(Environment.getBaseEnvironmentName(environment), "Main");
         details.setTravelPlanId(getBook().getTravelPlanId());
         details.sendRequest();
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
 
-        add = new AddBundle(locEnv, "Main");
+        add = new AddBundle(Environment.getBaseEnvironmentName(environment), "Main");
         add.setGuestsGuestNameFirstName(getHouseHold().primaryGuest().getFirstName());
         add.setGuestsGuestNameLastName(getHouseHold().primaryGuest().getLastName());
         add.setGuestsGuestReferenceId(details.getGuestsId());
@@ -75,7 +68,7 @@ public class TestCancel_GroupBundle_CancelRoom extends AccommodationBaseTest {
         add.retrieveSalesOrderId(getBook().getTravelPlanId());
         add.setSalesOrderId(add.getBundleSalesOrderIds()[0]);
 
-        FindMiscPackages find = new FindMiscPackages(locEnv, "MinimalInfo");
+        FindMiscPackages find = new FindMiscPackages(Environment.getBaseEnvironmentName(environment), "MinimalInfo");
         find.setArrivalDate(Randomness.generateCurrentXMLDate(arrivalDaysOut));
         find.setBookDate(Randomness.generateCurrentXMLDate());
         find.sendRequest();

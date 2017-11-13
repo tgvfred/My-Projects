@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestShare_twoTcg_differentResorts_Negative extends AccommodationBaseTest {
@@ -19,7 +18,7 @@ public class TestShare_twoTcg_differentResorts_Negative extends AccommodationBas
     @BeforeMethod(alwaysRun = true)
     @Parameters({ "environment" })
     public void setup(String environment) {
-        Environment.getBaseEnvironmentName(environment);
+
         setEnvironment(environment);
         isComo.set("false");
         setDaysOut(0);

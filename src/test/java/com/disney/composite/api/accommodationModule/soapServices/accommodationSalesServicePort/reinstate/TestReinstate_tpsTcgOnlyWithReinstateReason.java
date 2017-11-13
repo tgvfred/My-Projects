@@ -30,7 +30,7 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());

@@ -46,7 +46,6 @@ public class Test_GetAccommodationExternalReferences_bookingWithMultipleAccommEx
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/externalReferences[2]/externalReferenceSource", getExternalRefSource());
         aNewString = Randomness.randomNumber(20);
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/externalReferences[2]/externalReferenceNumber", aNewString);
-        getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
     }

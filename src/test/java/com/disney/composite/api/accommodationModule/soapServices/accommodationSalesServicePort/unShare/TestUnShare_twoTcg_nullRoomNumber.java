@@ -38,7 +38,6 @@ public class TestUnShare_twoTcg_nullRoomNumber extends AccommodationBaseTest {
         isComo.set("true");
         setSendRequest(false);
         bookReservation();
-        getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         firstTCG = getBook().getTravelComponentGroupingId();
@@ -54,7 +53,6 @@ public class TestUnShare_twoTcg_nullRoomNumber extends AccommodationBaseTest {
         isComo.set("true");
         setSendRequest(false);
         bookReservation();
-        getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         captureSecondOwnerId();

@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestReinstate_bookedReservation_Negative extends AccommodationBaseTest {
@@ -19,7 +18,7 @@ public class TestReinstate_bookedReservation_Negative extends AccommodationBaseT
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());

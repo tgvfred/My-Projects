@@ -146,6 +146,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails exten
         getAdditionalGuests().get(1).setPrimary(false);
         validations.verifyTpPartyIds(tpPartyIds, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
-        validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), getHouseHold().primaryGuest(), 2, 2, "N", "NULL", getFacilityId(), getAdditionalGuests());
+        // validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), getHouseHold().primaryGuest(), 2, 2, "N", "NULL", getFacilityId(), getAdditionalGuests());
     }
 }
