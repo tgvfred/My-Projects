@@ -1,14 +1,14 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ejb="http://ejb.service.resmanagement.wdw.com/">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.experiencemediav1.fulfillment.lodging.bussvcs.wdpr.com/">
    <soapenv:Header/>
    <soapenv:Body>
-      <ejb:getAccommodationExternalReferences>
-         <!--Optional:-->
-         <request>
-            <travelPlanSegmentId>?</travelPlanSegmentId>
-            <travelComponentGroupingId>?</travelComponentGroupingId>
+      <ser:retrieveRFIdMediaReferenceByMedia>
+         <request locationId="?">
+            <experienceMedia mediaType="?" chipType="?">
+               <!--1 or more repetitions:-->
+               <rfidMediaReferences type="?" value="?"/>
+            </experienceMedia>
          </request>
-         <!--Optional:-->
-         <serviceContext>
+         <context>
             <addressRole>?</addressRole>
             <conversationId>?</conversationId>
             <messageId>?</messageId>
@@ -26,7 +26,7 @@
             <requestTimeStamp>?</requestTimeStamp>
             <toAddressRole>?</toAddressRole>
             <userName>?</userName>
-         </serviceContext>
-      </ejb:getAccommodationExternalReferences>
+         </context>
+      </ser:retrieveRFIdMediaReferenceByMedia>
    </soapenv:Body>
 </soapenv:Envelope>

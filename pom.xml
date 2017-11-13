@@ -188,14 +188,10 @@
 					</executions>
 					<configuration>
 		 				<testFailureIgnore>false</testFailureIgnore>
-		               
-		               <!--  <skipTests>true</skipTests>  -->
 		              	<suiteXmlFiles>
 							<suiteXmlFile>${testNGSourceDirectory}/${suiteXmlFile}</suiteXmlFile>
 						</suiteXmlFiles>
-
 					</configuration>
-					
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>

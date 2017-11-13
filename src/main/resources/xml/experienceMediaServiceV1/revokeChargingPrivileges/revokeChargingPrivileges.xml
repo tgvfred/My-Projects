@@ -1,13 +1,8 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ejb="http://ejb.service.resmanagement.wdw.com/">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.experiencemediav1.fulfillment.lodging.bussvcs.wdpr.com/">
    <soapenv:Header/>
    <soapenv:Body>
-      <ejb:getAccommodationExternalReferences>
-         <!--Optional:-->
-         <request>
-            <travelPlanSegmentId>?</travelPlanSegmentId>
-            <travelComponentGroupingId>?</travelComponentGroupingId>
-         </request>
-         <!--Optional:-->
+      <ser:revokeChargingPrivileges>
+         <experienceMedia mediaId="?" mediaType="?"/>
          <serviceContext>
             <addressRole>?</addressRole>
             <conversationId>?</conversationId>
@@ -27,6 +22,6 @@
             <toAddressRole>?</toAddressRole>
             <userName>?</userName>
          </serviceContext>
-      </ejb:getAccommodationExternalReferences>
+      </ser:revokeChargingPrivileges>
    </soapenv:Body>
 </soapenv:Envelope>

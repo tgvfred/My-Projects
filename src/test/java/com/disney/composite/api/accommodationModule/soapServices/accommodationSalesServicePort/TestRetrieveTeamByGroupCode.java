@@ -21,7 +21,7 @@ public class TestRetrieveTeamByGroupCode {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveTeamsByGroupCode", "example" })
     public void testRetrieveTeamsByGroupCode_MainFlow() {
 
-        RetrieveTeamsByGroupCode RetrieveTeamsByGroupCode = new RetrieveTeamsByGroupCode(environment, "");
+        RetrieveTeamsByGroupCode RetrieveTeamsByGroupCode = new RetrieveTeamsByGroupCode(environment);
         RetrieveTeamsByGroupCode.setgroupcode("Donald" + Randomness.randomAlphaNumeric(4));
         RetrieveTeamsByGroupCode.sendRequest();
         System.out.println(RetrieveTeamsByGroupCode.getRequest());
