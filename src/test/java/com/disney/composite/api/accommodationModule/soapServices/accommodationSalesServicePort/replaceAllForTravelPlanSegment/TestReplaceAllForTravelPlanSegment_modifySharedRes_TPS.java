@@ -69,7 +69,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setReplaceAll("true");
         getBook().sendRequest();
-        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying a shared res: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
         tcgs.put(getBook().getTravelComponentGroupingId(), getBook().getTravelComponentGroupingId());
 

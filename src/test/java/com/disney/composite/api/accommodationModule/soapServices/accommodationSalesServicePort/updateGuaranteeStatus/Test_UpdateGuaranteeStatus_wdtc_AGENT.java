@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UpdateGuaranteeStatus;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UpdateGuaranteeStatusHelper;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_UpdateGuaranteeStatus_wdtc_AGENT extends AccommodationBaseTest {
@@ -53,14 +52,16 @@ public class Test_UpdateGuaranteeStatus_wdtc_AGENT extends AccommodationBaseTest
         update.sendRequest();
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", update);
 
-        if (Environment.isSpecialEnvironment(environment)) {
-            // Validation when running in Latest_CM
-            helper.validation(getBook().getTravelPlanId(), "AGENT_GUARANTEED", "GROUP_GUARANTEED", "Y");
-        } else {
-            // Validation when running in Latest
-            helper.validation(getBook().getTravelPlanId(), "DEPOSIT", "AGENT_GUARANTEED", "Y");
+        helper.validation(getBook().getTravelPlanId(), "DEPOSIT", "AGENT_GUARANTEED", "Y");
 
-        }
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // // Validation when running in Latest_CM
+        // helper.validation(getBook().getTravelPlanId(), "AGENT_GUARANTEED", "GROUP_GUARANTEED", "Y");
+        // } else {
+        // // Validation when running in Latest
+        // helper.validation(getBook().getTravelPlanId(), "DEPOSIT", "AGENT_GUARANTEED", "Y");
+        //
+        // }
     }
 
 }
