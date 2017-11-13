@@ -17,7 +17,7 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
     String commentText = "This is test comment " + Randomness.randomAlphaNumeric(4);
     String parentId = "";
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments" }, invocationCount = 10)
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments" })
     public void TestRetrieveComments_roomOnly_inactiveComments_positive() {
 
         String expectedIsActive = "true";
