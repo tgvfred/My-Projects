@@ -76,6 +76,7 @@ public class TestUnShare_twoTcg_oneAdaRes extends AccommodationBaseTest {
 
         // verify that the owner id's for the first and second tcg do not match.
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
+        TestReporter.setAssertFailed(false);
         validateResponse();
         validations();
 
