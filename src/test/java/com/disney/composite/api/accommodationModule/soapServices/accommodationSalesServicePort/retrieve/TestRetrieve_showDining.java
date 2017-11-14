@@ -35,7 +35,7 @@ public class TestRetrieve_showDining extends AccommodationBaseTest {
         System.out.println(book.getResponse());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve", "negative" })
     public void testRetrieve_showDining() {
         String fault = "No accommodation components found in this travel plan,";
 
