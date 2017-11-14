@@ -29,7 +29,6 @@ public class TestRetrieve_shared extends AccommodationBaseTest {
         setValues(getEnvironment());
 
         setAddNewGuest(true);
-        isComo.set("false");
         bookReservation();
 
         tcg = getBook().getTravelComponentGroupingId();

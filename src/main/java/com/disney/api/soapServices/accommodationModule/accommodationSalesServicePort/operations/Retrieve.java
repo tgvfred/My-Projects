@@ -532,7 +532,6 @@ public class Retrieve extends AccommodationSalesServicePort {
      * Validate travelPlanInfo.travelPlanSegments.cancellationNumber
      * Validate travelPlanInfo.travelPlanSegments.celebrationCount
      * TCG Validation
-     * Validate travelPlanInfo.travelPlanSegments.confirmationDetails
      * Validate travelPlanInfo.travelPlanSegments.guaranteed
      * Validate travelPlanInfo.travelPlanSegments.period
      * Validate travelPlanInfo.travelPlanSegments.status
