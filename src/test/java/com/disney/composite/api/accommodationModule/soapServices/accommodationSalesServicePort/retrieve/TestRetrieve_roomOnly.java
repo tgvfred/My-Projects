@@ -18,14 +18,12 @@ public class TestRetrieve_roomOnly extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
 
-        isComo.set("false");
         bookReservation();
         System.out.println(getBook().getResponse());
     }

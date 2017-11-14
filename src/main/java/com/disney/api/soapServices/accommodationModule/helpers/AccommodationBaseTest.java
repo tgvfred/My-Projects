@@ -1210,7 +1210,8 @@ public class AccommodationBaseTest extends BaseRestTest {
         for (int i = 0; i < roomTypeAndFacInfo.length; i++) {
 
             // Removing Pop Century from the config list until after 7.23 release - WWA 11/3/2017
-            if (!rs.getValue("RSRT_FAC_ID", i + 1).equals("80010403")) {
+            if (!rs.getValue("RSRT_FAC_ID", i + 1).equals("80010403") &&
+                    !rs.getValue("RSRT_FAC_ID", i + 1).equals("80010384")) {
                 roomTypeAndFacInfo[i][0] = rs.getValue("NUMROOMS", i + 1);
                 roomTypeAndFacInfo[i][1] = rs.getValue("ROOM_TYPE", i + 1);
                 roomTypeAndFacInfo[i][2] = rs.getValue("RESORT", i + 1);
