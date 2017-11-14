@@ -362,10 +362,17 @@ public class RetrieveHelper {
                 + "[true]");
         TestReporter.softAssertEquals(retrieve.getTPAddressDetailsPrimary("2"), "true", "Verify the second TP primary returned [" + retrieve.getTPAddressDetailsPrimary("2") + "] is as expected "
                 + "[true]");
-        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsAddressLine1("1"), firstAddressLine1, "Verify the first TP address1 returned [" + retrieve.getTPAddressDetailsAddressLine1("1") + "] is as expected "
-                + "[" + firstAddressLine1 + "]");
-        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsAddressLine1("2"), secondAddressLine1, "Verify the second TP address1 returned [" + retrieve.getTPAddressDetailsAddressLine1("2") + "] is as expected "
-                + "[" + secondAddressLine1 + "]");
+        /*
+         * TestReporter.softAssertTrue(!retrieve.getTPAddressDetailsAddressLine1(firstAddressLine1).isEmpty(), "Verify the first TP address1 returned is as expected "
+         * + "[" + firstAddressLine1 + "]");
+         * TestReporter.softAssertTrue(!retrieve.getTPAddressDetailsAddressLine1(secondAddressLine1).isEmpty(), "Verify the second TP address1 returned is as expected "
+         * + "[" + secondAddressLine1 + "]");
+         */
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsAddressLine1("1"), firstAddressLine1, "Verify the first TP address returned [" + retrieve.getTPAddressDetailsAddressLine1("1") + "] is as expected "
+                + "[" + firstAddressCity + "]");
+        TestReporter.softAssertEquals(retrieve.getTPAddressDetailsAddressLine1("2"), secondAddressLine1, "Verify the second TP address returned [" + retrieve.getTPAddressDetailsAddressLine1("2") + "] is as expected "
+                + "[" + secondAddressCity + "]");
+
         TestReporter.softAssertEquals(retrieve.getTPAddressDetailsCity("1"), firstAddressCity, "Verify the first TP address city returned [" + retrieve.getTPAddressDetailsCity("1") + "] is as expected "
                 + "[" + firstAddressCity + "]");
         TestReporter.softAssertEquals(retrieve.getTPAddressDetailsCity("2"), secondAddressCity, "Verify the second TP address city returned [" + retrieve.getTPAddressDetailsCity("2") + "] is as expected "
