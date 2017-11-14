@@ -43,13 +43,15 @@ public class Test_RetrieveSummary_twoTcg_roomOnly extends AccommodationBaseTest 
     public void testRetrieveSummary_twoTcg_roomOnly() {
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main2TCG");
-        if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingIdIndex("1", book.getTravelComponentGroupingId());
-            retrieve.setRequestTravelComponentGroupingIdIndex("2", book1.getTravelComponentGroupingId());
-        } else {
-            retrieve.setRequestTravelComponentGroupingIdIndex("1", book.getTravelPlanSegmentId());
-            retrieve.setRequestTravelComponentGroupingIdIndex("2", book1.getTravelPlanSegmentId());
-        }
+
+        // Per AmitC, TK-692088, TPS will be the input into the TCG node - 11/14/2017 - WWA
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // retrieve.setRequestTravelComponentGroupingIdIndex("1", book.getTravelComponentGroupingId());
+        // retrieve.setRequestTravelComponentGroupingIdIndex("2", book1.getTravelComponentGroupingId());
+        // } else {
+        retrieve.setRequestTravelComponentGroupingIdIndex("1", book.getTravelPlanSegmentId());
+        retrieve.setRequestTravelComponentGroupingIdIndex("2", book1.getTravelPlanSegmentId());
+        // }
 
         int tries = 0;
         int maxTries = 20;

@@ -31,13 +31,15 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestRetrieveTaxExempt("true");
-        if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", book.getTravelPlanSegmentId());
-            retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", book.getTravelComponentGroupingId());
-            // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
-        } else {
-            retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
-        }
+        // Per AmitC, TK-692088, TPS will be the input into the TCG node - 11/14/2017 - WWA
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", book.getTravelPlanSegmentId());
+        // retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", book.getTravelComponentGroupingId());
+        // // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
+        // } else {
+        retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+        // }
+
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 

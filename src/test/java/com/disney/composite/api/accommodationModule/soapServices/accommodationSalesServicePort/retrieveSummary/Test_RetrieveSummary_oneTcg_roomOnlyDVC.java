@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyDVC extends BookDVCCashHelper {
@@ -26,11 +25,13 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyDVC extends BookDVCCashHelper {
     public void testRetrieveSummary_oneTcg_roomOnlyDVC() {
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-        if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(getFirstBooking().getTravelComponentGroupingId());
-        } else {
-            retrieve.setRequestTravelComponentGroupingId(getFirstBooking().getTravelPlanSegmentId());
-        }
+        // Per AmitC, TK-692088, TPS will be the input into the TCG node - 11/14/2017 - WWA
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // retrieve.setRequestTravelComponentGroupingId(getFirstBooking().getTravelComponentGroupingId());
+        // } else {
+        retrieve.setRequestTravelComponentGroupingId(getFirstBooking().getTravelPlanSegmentId());
+        // }
+
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getFirstBooking().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
