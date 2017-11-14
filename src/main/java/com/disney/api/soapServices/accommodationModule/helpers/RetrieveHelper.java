@@ -60,9 +60,9 @@ public class RetrieveHelper {
             TestReporter.softAssertTrue(!retrieve.getPPAddress().isEmpty(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
             TestReporter.softAssertTrue(!retrieve.getPPEmail().isEmpty(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
 
-            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoTP().isEmpty(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoTP().isEmpty(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getRoomReadyNotificationInfoTP() + "].");
 
-            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoRequired().isEmpty(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoRequired().isEmpty(), "Verify the room ready notification information required in response [" + retrieve.getRoomReadyNotificationInfoRequired() + "].");
 
             TestReporter.softAssertTrue(!retrieve.getTravelStatus().isEmpty(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "]-- ");
             TestReporter.assertAll();
@@ -84,9 +84,9 @@ public class RetrieveHelper {
             TestReporter.softAssertTrue(!retrieve.getPPAddress().isEmpty(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
             TestReporter.softAssertTrue(!retrieve.getPPEmail().isEmpty(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
 
-            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoTP().isEmpty(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoTP().isEmpty(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getRoomReadyNotificationInfoTP() + "].");
 
-            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoRequired().isEmpty(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoRequired().isEmpty(), "Verify the room ready notification information required in response [" + retrieve.getRoomReadyNotificationInfoRequired() + "].");
 
             try {
                 TestReporter.assertEquals(guestGuestId, retrieve.getGuestId("1"), "Verify the guest id [" + retrieve.getGuestId("1") + "] matches the expected [" + guestGuestId + "]");
