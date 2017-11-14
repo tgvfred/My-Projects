@@ -274,7 +274,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         validateApplicationError(oar, AccommodationErrorCode.NO_ACCOMMODATION_FOUND);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
     public void TestOverrideAccommodationRates_autoCancelled() {
 
         String fault = "Cancelled accommodations cannot be overriden : null";
@@ -302,7 +302,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
     }
 
     // giving java null pointer exception -works in database
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_cancelled() {
 
         cancel();
