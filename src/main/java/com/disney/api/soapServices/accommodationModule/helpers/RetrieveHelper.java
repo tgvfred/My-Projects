@@ -52,19 +52,19 @@ public class RetrieveHelper {
         String travelStatus = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelStatus");
 
         if (sbc) {
-            TestReporter.softAssertNotNull(retrieve.getPartyId(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPartyId().isEmpty(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
 
-            TestReporter.softAssertNotNull(retrieve.getPPFirstName(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
-            TestReporter.softAssertNotNull(retrieve.getPPLastName(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
-            TestReporter.softAssertNotNull(retrieve.getPPPhone(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
-            TestReporter.softAssertNotNull(retrieve.getPPAddress(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
-            TestReporter.softAssertNotNull(retrieve.getPPEmail(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPFirstName().isEmpty(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPLastName().isEmpty(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPPhone().isEmpty(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPAddress().isEmpty(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPEmail().isEmpty(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
 
-            TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoTP(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoTP().isEmpty(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
 
-            TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoRequired(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoRequired().isEmpty(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
 
-            TestReporter.softAssertNotNull(retrieve.getTravelStatus(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
+            TestReporter.softAssertTrue(!retrieve.getTravelStatus().isEmpty(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "]-- ");
             TestReporter.assertAll();
         } else {
 
@@ -76,25 +76,25 @@ public class RetrieveHelper {
 
             TestReporter.softAssertEquals(startPeriod, retrieve.getPeriodSD(), "Verify the period start date [" + retrieve.getPeriodSD() + "] matches the expected [" + startPeriod + "]");
             TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
-            TestReporter.softAssertNotNull(retrieve.getPartyId(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPartyId().isEmpty(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
 
-            TestReporter.softAssertNotNull(retrieve.getPPFirstName(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
-            TestReporter.softAssertNotNull(retrieve.getPPLastName(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
-            TestReporter.softAssertNotNull(retrieve.getPPPhone(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
-            TestReporter.softAssertNotNull(retrieve.getPPAddress(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
-            TestReporter.softAssertNotNull(retrieve.getPPEmail(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPFirstName().isEmpty(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPLastName().isEmpty(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPPhone().isEmpty(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPAddress().isEmpty(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPEmail().isEmpty(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
 
-            TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoTP(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoTP().isEmpty(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
 
-            TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoRequired(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoRequired().isEmpty(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
 
             try {
                 TestReporter.assertEquals(guestGuestId, retrieve.getGuestId("1"), "Verify the guest id [" + retrieve.getGuestId("1") + "] matches the expected [" + guestGuestId + "]");
             } catch (AssertionError e) {
-                TestReporter.assertEquals(guestGuestId, retrieve.getGuestId("2"), "Verify the guest id [" + retrieve.getGuestId("2") + "] matches the expected [" + guestGuestId + "]");
+                TestReporter.assertEquals(guestGuestId, retrieve.getGuestId("2"), "Verify the guest id [" + retrieve.getGuestId("2") + "] matches the expected [" + guestGuestId + "].");
             }
 
-            TestReporter.softAssertNotNull(retrieve.getTravelStatus(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
+            TestReporter.softAssertTrue(!retrieve.getTravelStatus().isEmpty(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "].-- ");
             TestReporter.assertAll();
         }
     }
@@ -142,58 +142,16 @@ public class RetrieveHelper {
         TestReporter.softAssertEquals(guestAddress, retrieve.getAddress(), "Verify the guest address [" + retrieve.getAddress() + "] matches the expected [" + guestAddress + "]");
         TestReporter.softAssertEquals(guestEmail, retrieve.getEmail(), "Verify the email [" + retrieve.getEmail() + "] matches the expected [" + guestEmail + "]");
 
-        TestReporter.softAssertNotNull(retrieve.getPartyId(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getPartyId().isEmpty(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
 
-        TestReporter.softAssertNotNull(retrieve.getPPFirstName(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
-        TestReporter.softAssertNotNull(retrieve.getPPLastName(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
-        TestReporter.softAssertNotNull(retrieve.getPPPhone(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
-        TestReporter.softAssertNotNull(retrieve.getPPAddress(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
-        TestReporter.softAssertNotNull(retrieve.getPPEmail(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
-        TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoTP(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
-        TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoRequired(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
-        TestReporter.softAssertNotNull(retrieve.getTravelStatus(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
-        TestReporter.assertAll();
-    }
-
-    public void baseValidationShowDining(com.disney.api.soapServices.diningModule.showDiningService.operations.Book book, HouseHold hh, Retrieve retrieve) {
-
-        String guestfirstName = hh.primaryGuest().getFirstName();
-
-        String guestlastName = hh.primaryGuest().getLastName();
-
-        String guestPhone = hh.primaryGuest().getAllPhones().get(0).getNumber();
-
-        String guestAddress = hh.primaryGuest().getAllAddresses().get(0).getAddress1();
-
-        String guestEmail = hh.primaryGuest().getAllEmails().get(0).getEmail();
-
-        String startPeriod = book.getStartDate();
-
-        // String endPeriod = book.getResponseRoomDetailsResortPeriodEndDate("1");
-
-        String guestPartyId = hh.primaryGuest().getPartyId();
-
-        String guestGuestId = hh.primaryGuest().getGuestId();
-
-        TestReporter.softAssertEquals(guestfirstName, retrieve.getFirstName(), "Verify the first name [" + retrieve.getFirstName() + "] matches the expected [" + guestfirstName + "]");
-        TestReporter.softAssertEquals(guestlastName, retrieve.getLastName(), "Verify the last name [" + retrieve.getLastName() + "] matches the expected [" + guestlastName + "]");
-        TestReporter.softAssertEquals(guestPhone, retrieve.getPhone(), "Verify the guest phone [" + retrieve.getPhone() + "] matches the expected [" + guestPhone + "]");
-        TestReporter.softAssertEquals(guestAddress, retrieve.getAddress(), "Verify the guest address [" + retrieve.getAddress() + "] matches the expected [" + guestAddress + "]");
-        TestReporter.softAssertEquals(guestEmail, retrieve.getEmail(), "Verify the email [" + retrieve.getEmail() + "] matches the expected [" + guestEmail + "]");
-
-        TestReporter.softAssertEquals(startPeriod, retrieve.getPeriodSD(), "Verify the period start date [" + retrieve.getPeriodSD() + "] matches the expected [" + startPeriod + "]");
-        // TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
-        TestReporter.softAssertNotNull(retrieve.getPartyId(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
-
-        TestReporter.softAssertNotNull(retrieve.getPPFirstName(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
-        TestReporter.softAssertNotNull(retrieve.getPPLastName(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
-        TestReporter.softAssertNotNull(retrieve.getPPPhone(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
-        TestReporter.softAssertNotNull(retrieve.getPPAddress(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
-        TestReporter.softAssertNotNull(retrieve.getPPEmail(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
-        TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoTP(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
-        TestReporter.softAssertNotNull(retrieve.getRoomReadyNotificationInfoRequired(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
-        TestReporter.softAssertEquals(guestGuestId, retrieve.getGuestId("1"), "Verify the guest id [" + retrieve.getGuestId("1") + "] matches the expected [" + guestGuestId + "]");
-        TestReporter.softAssertNotNull(retrieve.getTravelStatus(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
+        TestReporter.softAssertTrue(!retrieve.getPPFirstName().isEmpty(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
+        TestReporter.softAssertTrue(!retrieve.getPPLastName().isEmpty(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
+        TestReporter.softAssertTrue(!retrieve.getPPPhone().isEmpty(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
+        TestReporter.softAssertTrue(!retrieve.getPPAddress().isEmpty(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
+        TestReporter.softAssertTrue(!retrieve.getPPEmail().isEmpty(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
+        TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoTP().isEmpty(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getPartyId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoRequired().isEmpty(), "Verify the room ready notification information required in response [" + retrieve.getPartyId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTravelStatus().isEmpty(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "] ");
         TestReporter.assertAll();
     }
 
