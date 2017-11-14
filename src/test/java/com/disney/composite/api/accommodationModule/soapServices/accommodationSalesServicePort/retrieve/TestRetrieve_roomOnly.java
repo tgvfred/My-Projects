@@ -24,10 +24,7 @@ public class TestRetrieve_roomOnly extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-
-        isComo.set("false");
         bookReservation();
-        System.out.println(getBook().getResponse());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })

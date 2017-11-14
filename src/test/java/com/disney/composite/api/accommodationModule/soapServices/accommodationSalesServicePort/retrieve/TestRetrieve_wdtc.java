@@ -24,8 +24,6 @@ public class TestRetrieve_wdtc extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         setIsWdtcBooking(true);
-
-        isComo.set("false");
         bookReservation();
 
     }
