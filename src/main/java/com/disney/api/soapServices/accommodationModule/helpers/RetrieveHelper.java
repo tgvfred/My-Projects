@@ -180,6 +180,24 @@ public class RetrieveHelper {
         TestReporter.assertTrue(!retrieve.getTPSPartyId().equals(""), "Verify the primary guest party id is in the response [" + retrieve.getTPSPartyId() + "].");
         TestReporter.assertTrue(!retrieve.getTPSGuestId().equals(""), "Verify the primary guest guest id is in the response [" + retrieve.getTPSGuestId() + "].");
 
+        TestReporter.softAssertTrue(!retrieve.getConfirmDetailId().equals(""), "Verify the confirmation detail id is in the response [" + retrieve.getConfirmDetailId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmIndicator().equals(""), "Verify the confiramtion indicator is in the response [" + retrieve.getConfirmIndicator() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmType().equals(""), "Verify the confirmation type is in the response [" + retrieve.getConfirmType() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmContactName().equals(""), "Verify the confirmation contact name is in the response [" + retrieve.getConfirmContactName() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmDefaultConfirmIndicator().equals(""), "Verify the confirmation default confirmation indicator is in the response [" + retrieve.getConfirmDefaultConfirmIndicator() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmIndividual().equals(""), "Verify the confirmation individual is in the response [" + retrieve.getConfirmIndividual() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmJDOSequenceNumber().equals(""), "Verify the confirmation jdo sequence number is in the response [" + retrieve.getConfirmJDOSequenceNumber() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmLocatorId().equals(""), "Verify the confirmation locator id is in the response [" + retrieve.getConfirmLocatorId() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getConfirmPartyId().equals(""), "Verify the confirmation party id is in the response [" + retrieve.getConfirmPartyId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmGDPartyId().equals(""), "Verify the confirmation guest details party id is in the response [" + retrieve.getConfirmGDPartyId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmGDDoNotMailIndicator().equals(""), "Verify the confirmation guest details do not mail indicator is in the response [" + retrieve.getConfirmGDDoNotMailIndicator() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getConfirmGDDoNotPhoneIndictor().equals(""), "Verify the  confirmation guest details do not phone indicatoris in the response [" + retrieve.getConfirmGDDoNotPhoneIndictor() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmGDDclGuestId().equals(""), "Verify the  confirmation guest details dcl guest id is in the response [" + retrieve.getConfirmGDDclGuestId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmGDGuestId().equals(""), "Verify the  confirmation guest details guest id is in the response [" + retrieve.getConfirmGDGuestId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getConfirmGDActive().equals(""), "Verify the confirmation guest details active is in the response [" + retrieve.getConfirmGDActive() + "].");
+
         TestReporter.assertTrue(!retrieve.getTravelPlanId().equals(""), "Verify the travel Plan id is in the response[" + retrieve.getTravelPlanId() + "].");
 
         TestReporter.assertTrue(!retrieve.getTravelPlanSegmentId().equals(""), "Verify the travel Plan segement id in the response [" + retrieve.getTravelPlanSegmentId() + "].");
@@ -214,6 +232,45 @@ public class RetrieveHelper {
                 TestReporter.assertTrue(!retrieve.getGuestReferencesGuestId(j, i).equals(""), "Verify the  guest references guest id at node [" + i + "] is in the response [" + retrieve.getGuestReferencesGuestId(j, i) + "].");
             }
         }
+
+        TestReporter.softAssertTrue(!retrieve.getAccommBookDate().equals(""), "Verify the book date is in the response[" + retrieve.getAccommBookDate() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommComponentId().equals(""), "Verify the component id is in the response [" + retrieve.getAccommComponentId() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommFacilityId().equals(""), "Verify the facility id is in the response[" + retrieve.getAccommFacilityId() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommGroupTeamId().equals(""), "Verify the group team id is in the response [" + retrieve.getAccommGroupTeamId() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommPackageCode().equals(""), "Verify the package code is in the response[" + retrieve.getAccommPackageCode() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommPeriodSD().equals(""), "Verify the period start date is in the response [" + retrieve.getAccommPeriodSD() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommPeriodED().equals(""), "Verify the period end date is in the response[" + retrieve.getAccommPeriodED() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommProfiles().equals(""), "Verify the profiles is in the response [" + retrieve.getAccommProfiles() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommRSR().equals(""), "Verify the RSR is in the response[" + retrieve.getAccommRSR() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommWholesaler().equals(""), "Verify the wholesaler is in the response [" + retrieve.getAccommWholesaler() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommRates().equals(""), "Verify the rates is in the response[" + retrieve.getAccommRates() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommResortCode().equals(""), "Verify the resort code is in the response [" + retrieve.getAccommResortCode() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommRoomTypeCode().equals(""), "Verify the room type code is in the response[" + retrieve.getAccommRoomTypeCode() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommStatus().equals(""), "Verify the status is in the response [" + retrieve.getAccommStatus() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommShared().equals(""), "Verify the shared is in the response[" + retrieve.getAccommShared() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommReservationType().equals(""), "Verify the reservation type is in the response [" + retrieve.getAccommReservationType() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommRoomOnly().equals(""), "Verify the room only is in the response [" + retrieve.getAccommRoomOnly() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommSpecialNeedsRequested().equals(""), "Verify the special needs requested is in the response[" + retrieve.getAccommSpecialNeedsRequested() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommTravelComponentGroupingId().equals(""), "Verify the travel component grouping id is in the response [" + retrieve.getAccommTravelComponentGroupingId() + "].");
+
     }
 
     public void ticketValidation(Retrieve retrieve) {
