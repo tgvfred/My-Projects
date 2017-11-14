@@ -68,10 +68,17 @@
 			<version>1.0.2</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.disney.gqe.composite.api</groupId>
+			<artifactId>TravelPlan</artifactId>
+			<version>1.0.11</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.disney.gqe.composite.api</groupId>
 			<artifactId>DVCSales</artifactId>
-			<version>1.0.13</version>
+			<version>1.0.15</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -180,12 +187,11 @@
 						</execution>
 					</executions>
 					<configuration>
-		 				<testFailureIgnore>false</testFailureIgnore>		               
-		               <!--  <skipTests>true</skipTests>  -->
+		 				<testFailureIgnore>false</testFailureIgnore>
 		              	<suiteXmlFiles>
 							<suiteXmlFile>${testNGSourceDirectory}/${suiteXmlFile}</suiteXmlFile>
 						</suiteXmlFiles>
-					</configuration>				
+					</configuration>
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>

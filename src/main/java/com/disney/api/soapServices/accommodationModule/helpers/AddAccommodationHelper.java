@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.utils.TestReporter;
 
+@Deprecated
 public class AddAccommodationHelper {
     private String environment;
     private WebService ws;
@@ -174,10 +175,7 @@ public class AddAccommodationHelper {
         addAccommodation.setDeptDate(String.valueOf(Integer.parseInt(getDaysOut()) + Integer.parseInt(getNights())));
         addAccommodation.setLocationID(getLocationId());
         addAccommodation.sendRequest();
-        // if (!addAccommodation.getResponseStatusCode().equals("200")) {
-        // System.out.println(((Book) getWs()).getRequest());
-        // System.out.println(((Book) getWs()).getResponse());
-        // }
+
         TestReporter.assertTrue(addAccommodation.getResponseStatusCode().equals("200"), "Verify that no error occurred adding an accommodation: " + addAccommodation.getFaultString());
         setTcgId(addAccommodation.getTravelComponentGroupingId());
         setTcId(addAccommodation.getTravelComponentId());

@@ -70,7 +70,7 @@ public class TestUpdateComments_parentTC_removeProfile extends AccommodationBase
         // Validate changes and updated comment Id
         TestReporter.logStep("Validate changes and updated comment Id.");
         TestReporter.setAssertFailed(false);
-        TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred getting options by filter", update);
+        TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred updating comments:" + update.getFaultString(), update);
         TestReporter.softAssertTrue(update.getCommentText().equals(commentText + " update"), "Verify that the commentText node [" + update.getCommentText() + "] is what is expected [" + commentText + " update" + "]");
         try {
             update.getProfileId();

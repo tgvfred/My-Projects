@@ -103,7 +103,7 @@ public class TestReplaceAllForTravelPlanSegment_BookWholesaler extends Accommoda
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
         validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
 
-        validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1, "N", "01905", getFacilityId());
+        // validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1, "N", "01905", getFacilityId());
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
@@ -111,7 +111,7 @@ public class TestReplaceAllForTravelPlanSegment_BookWholesaler extends Accommoda
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.sendRequest();
             if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
             }
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");

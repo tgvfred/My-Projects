@@ -24,6 +24,10 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
     private String tcgId = null;
     private String tcgId2 = null;
     private Map<String, String> tcgs = new HashMap<>();
+    private String resortCode;
+    private String roomTypeCode;
+    private String locationId;
+    private String facilityId;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -43,10 +47,12 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         tcgs.put(tcgId, tcgId);
         tpPtyId = getBook().getGuestId();
 
+        setSendRequest(false);
+        bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
-        getBook().setReplaceAll("true");
         getBook().setTravelPlanGuestPartyAndGuestIds(tpPtyId, tpPtyId);
+        getBook().setReplaceAll("true");
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         tcgId2 = getBook().getTravelComponentGroupingId();
@@ -64,12 +70,14 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_modifySharedRes_TPS() {
+        setSendRequest(false);
+        // bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setReplaceAll("true");
         getBook().sendRequest();
-        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying a shared res: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
         tcgs.put(getBook().getTravelComponentGroupingId(), getBook().getTravelComponentGroupingId());
 
@@ -112,9 +120,9 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
-        validations.validateModificationBackendMultiAccomm(6, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
+        validations.validateModificationBackendMultiAccomm(4, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), tcgs);
-        validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId(), 3);
+        validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId(), 2);
         validations.verifyTcStatusByTcg(tcgId, "Booked");
         validations.verifyTcStatusByTcg(tcgId2, "Booked");
         validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
@@ -123,9 +131,9 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), tcgId, getHouseHold().primaryGuest());
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), tcgId2, getHouseHold().primaryGuest());
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
-        validations.verifyNumberOfChargesByStatus("UnEarned", 3, getBook().getTravelPlanId());
-        validations.verifyChargeDetail(12, getBook().getTravelPlanId());
-        validations.verifyChargeGroupsStatusCount("UnEarned", 5, getBook().getTravelPlanId());
+        validations.verifyNumberOfChargesByStatus("UnEarned", 2, getBook().getTravelPlanId());
+        validations.verifyChargeDetail(8, getBook().getTravelPlanId());
+        validations.verifyChargeGroupsStatusCount("UnEarned", 4, getBook().getTravelPlanId());
 
         // Validate RIM
         validations.verifyInventoryAssigned(tcgId, 1, getBook().getTravelPlanId());
@@ -138,7 +146,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
+        // validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
         validations.validateResortAndRoomType(getBook().getTravelPlanId(), getFacilityId(), getRoomTypeCode());
         validations.validateAreaPeriod(getBook().getTravelPlanId(), getArrivalDate(), getDepartureDate());

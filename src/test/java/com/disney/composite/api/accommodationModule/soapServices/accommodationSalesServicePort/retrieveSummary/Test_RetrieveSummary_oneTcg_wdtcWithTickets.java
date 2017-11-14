@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.FindTicketPriceGridByPackage;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.GetTicketProducts;
 import com.disney.utils.Environment;
@@ -100,6 +101,7 @@ public class Test_RetrieveSummary_oneTcg_wdtcWithTickets extends AccommodationBa
         book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/phoneDetails/number", getHouseHold().primaryGuest().primaryPhone().getNumber());
         book.setRequestNodeValueByXPath("/Envelope/Body/bookReservations/request/roomReservationRequest/travelPlanGuest/emailDetails/address", getHouseHold().primaryGuest().primaryEmail().getEmail());
 
+        book.setRequestNodeValueByXPath("//travelAgent", BaseSoapCommands.REMOVE_NODE.toString());
         book.sendRequest();
         if (book.getResponse().contains("Error Invoking Pricing Service")) {
             // System.out.println();
@@ -126,11 +128,13 @@ public class Test_RetrieveSummary_oneTcg_wdtcWithTickets extends AccommodationBa
     public void testRetrieveSummary_oneTcg_wdtcWithTickets() {
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-        if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
-        } else {
-            retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
-        }
+        // Per AmitC, TK-692088, TPS will be the input into the TCG node - 11/14/2017 - WWA
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
+        // } else {
+        retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+        // }
+
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 

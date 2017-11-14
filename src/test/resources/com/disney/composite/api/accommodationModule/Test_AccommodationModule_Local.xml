@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="AccommodationModule_Suite" parallel="methods" thread-count="20" configfailurepolicy="continue">
 	<parameter name="environment" value="latest_cm" />
-	<test name="AccommodationModule_checkout" parallel="methods" thread-count="5">
+	<test name="AccommodationModule_checkout" parallel="methods" thread-count="2">
 		<groups>
 			<run>
 				<exclude name="presmoke"/>

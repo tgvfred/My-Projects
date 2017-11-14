@@ -105,7 +105,11 @@ public class RetrieveSummary extends AccommodationSalesServicePort {
     }
 
     public String getTicketGroup() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/ticketGroup");
+        try {
+            return getResponseNodeValueByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/ticketGroup");
+        } catch (XPathNotFoundException e) {
+            return null;
+        }
     }
 
     int index = getNumberOfRequestNodesByXPath("/Envelope/Body/retrieveSummaryResponse/accommodationsSummaryDetails/accommodationDetail/guestReferences") + 1;

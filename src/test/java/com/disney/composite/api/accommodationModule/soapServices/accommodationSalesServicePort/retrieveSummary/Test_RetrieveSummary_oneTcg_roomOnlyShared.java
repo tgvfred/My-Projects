@@ -8,7 +8,8 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Environment;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBaseTest {
@@ -41,13 +42,29 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
 
         // Flips correctly while booking, but the it isn't flipped in RetrieveSummary RS
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-        if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        } else {
-            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
-        }
-        retrieve.sendRequest();
+        // Per AmitC, TK-692088, TPS will be the input into the TCG node - 11/14/2017 - WWA
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        // } else {
+        retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
+        // }
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            try {
+                retrieve.sendRequest();
+                tries++;
+                retrieve.getShared();
+                success = true;
+            } catch (XPathNotFoundException e) {
+            }
+        } while (tries < maxTries && !success);
+
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.assertTrue(success, "Verify that a shared node was found in the response.");
         TestReporter.assertTrue(retrieve.getShared().equals("true"), "Shared Successfully flipped! ");
 
         // Old vs New Validation

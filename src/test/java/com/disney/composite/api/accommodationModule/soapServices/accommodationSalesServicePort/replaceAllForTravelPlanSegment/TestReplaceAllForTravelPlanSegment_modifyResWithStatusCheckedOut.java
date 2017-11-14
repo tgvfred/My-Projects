@@ -141,7 +141,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
         Map<String, String> status = new HashMap<>();
         status.put("Past Visit", "Past Visit");
         status.put("Checked In", "Checked In");
-        validations.validateTPV3(getBook().getTravelPlanId(), status, getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 2, 2, "N", "NULL", getFacilityId());
+        // validations.validateTPV3(getBook().getTravelPlanId(), status, getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 2, 2, "N", "NULL", getFacilityId());
 
     }
 }
