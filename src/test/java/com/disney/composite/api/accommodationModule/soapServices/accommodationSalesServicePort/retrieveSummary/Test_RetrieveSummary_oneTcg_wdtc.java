@@ -7,7 +7,9 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_wdtc extends AccommodationBaseTest {
@@ -50,7 +52,20 @@ public class Test_RetrieveSummary_oneTcg_wdtc extends AccommodationBaseTest {
         } else {
             retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         }
-        retrieve.sendRequest();
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            try {
+                retrieve.sendRequest();
+                tries++;
+                retrieve.getRoomOnlyStatus();
+                success = true;
+            } catch (XPathNotFoundException e) {
+            }
+        } while (tries < maxTries && !success);
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.logStep("Verify roomOnly node is false.");

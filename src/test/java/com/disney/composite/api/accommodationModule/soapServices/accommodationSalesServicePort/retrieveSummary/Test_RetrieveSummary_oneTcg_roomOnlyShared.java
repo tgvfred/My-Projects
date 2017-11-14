@@ -8,7 +8,9 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBaseTest {
@@ -46,8 +48,23 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
         } else {
             retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         }
-        retrieve.sendRequest();
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            try {
+                retrieve.sendRequest();
+                tries++;
+                retrieve.getShared();
+                success = true;
+            } catch (XPathNotFoundException e) {
+            }
+        } while (tries < maxTries && !success);
+
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.assertTrue(success, "Verify that a shared node was found in the response.");
         TestReporter.assertTrue(retrieve.getShared().equals("true"), "Shared Successfully flipped! ");
 
         // Old vs New Validation
