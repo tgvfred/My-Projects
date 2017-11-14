@@ -60,14 +60,15 @@ public class GetOptions extends AccommodationSalesServicePort {
         }
 
         return keyValuePairs;
+
     }
 
     public Set<Entry<String, String>> getResponseOptionKeyValuePairs() {
         Set<Entry<String, String>> toreturn = new HashSet<>();
-        for (int i = getNumberOfResponseNodesByXPath("/Envelope/Body/getOptionsByFilterResponse/response"); i > 0; i--) {
+        for (int i = getNumberOfResponseNodesByXPath("/Envelope/Body/getOptionsResponse/response"); i > 0; i--) {
             toreturn.add(new SimpleImmutableEntry<String, String>(
-                    getResponseNodeValueByXPath("/Envelope/Body/getOptionsByFilterResponse/response[" + i + "]/optionKey"),
-                    getResponseNodeValueByXPath("/Envelope/Body/getOptionsByFilterResponse/response[" + i + "]/optionValue")));
+                    getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/response[" + i + "]/optionKey"),
+                    getResponseNodeValueByXPath("/Envelope/Body/getOptionsResponse/response[" + i + "]/optionValue")));
         }
         return toreturn;
     }
