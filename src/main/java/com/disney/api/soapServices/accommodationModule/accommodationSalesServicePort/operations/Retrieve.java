@@ -633,7 +633,7 @@ public class Retrieve extends AccommodationSalesServicePort {
     }
 
     public String getCancellationNumber() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/cancellationNumber/");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/cancellationNumber");
     }
 
     public String getCelebrationCount() {
@@ -838,7 +838,7 @@ public class Retrieve extends AccommodationSalesServicePort {
     }
 
     public String getAccommRSR() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/rsr");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/RSR");
 
     }
 
