@@ -283,12 +283,15 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
 
         OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
 
-        String sql = " select a.tps_id, c.tc_grp_nb, a.TPS_ARVL_DT" +
-                " from res_mgmt.tps a" +
-                " join res_mgmt.tc_grp c on a.tps_id = c.tps_id" +
-                " where a.create_usr_id_cd = 'AutoJUnit.us'" +
-                " and a.trvl_sts_nm = 'Auto Cancelled'" +
-                " and a.TPS_ARVL_DT > sysdate";
+        String sql = "  select d.tps_id, b.tc_grp_nb, d.TPS_ARVL_DT "
+                + " from res_mgmt.ACM_CMPNT a "
+                + " join res_mgmt.TC b on a.ACM_TC_ID = b.TC_ID "
+                + " join res_mgmt.TC_GRP c on b.TC_GRP_NB = c.TC_GRP_NB "
+                + " join res_mgmt.TPS d on c.TPS_ID = d.TPS_ID "
+                + " where d.create_usr_id_cd = 'AutoJUnit.us' "
+                + " and d.trvl_sts_nm = 'Auto Cancelled' "
+                + " and d.TPS_ARVL_DT > sysdate "
+                + " and rownum = 1";
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
