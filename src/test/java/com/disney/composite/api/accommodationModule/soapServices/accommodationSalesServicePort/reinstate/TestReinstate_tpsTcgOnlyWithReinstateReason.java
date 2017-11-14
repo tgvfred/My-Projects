@@ -162,10 +162,10 @@ public class TestReinstate_tpsTcgOnlyWithReinstateReason extends AccommodationBa
         // reinstateHelper.validateReservationHistory(numExpectedRecords8);
 
         int numExpectedRecords10 = 1;
-        reinstateHelper.validateTPV3Records(numExpectedRecords10, getArrivalDate(), getDepartureDate());
+        // reinstateHelper.validateTPV3Records(numExpectedRecords10, getArrivalDate(), getDepartureDate());
 
         int numExpectedRecords11 = 1;
-        reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), getDepartureDate());
+        // reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), getDepartureDate());
 
         reinstateHelper.validateTCFee(true, 1);
 

@@ -111,12 +111,6 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_DOMDISP() {
-
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
@@ -450,12 +444,6 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_roomOnly_WTHRCKO() {
-
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
         helper.set(new CheckInHelper(getEnvironment(), getBook()));
 
         int tries = 0;
@@ -563,12 +551,6 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void TestCheckout_bundle() {
-
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
         AddBundleHelper bundleHelper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         bundleHelper.addBundle(getBook().getTravelPlanId(), getDaysOut());
 
@@ -613,7 +595,14 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
         validateRIM(assignOwnerId);
         additionalValidations_Bundle(assignOwnerId);
-        validateChargeGroupsChargesAndFolio_Bundle(helper.get().getTcgId());
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(getEnvironment()), Database.DREAMS);
+        String sql = "select * "
+                + "from res_mgmt.tc_grp a "
+                + "where a.tps_id = " + getBook().getTravelPlanSegmentId() + " "
+                + "and a.TC_GRP_TYP_NM = 'PACKAGE'";
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        validateChargeGroupsChargesAndFolio_Bundle(rs.getValue("TC_GRP_NB"));
     }
 
     private void additionalValidations_Bundle(String assignOwnerId) {
@@ -790,7 +779,16 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 + "where a.EXTNL_REF_VAL in ('" + getBook().getTravelPlanId() + "','" + getBook().getTravelPlanSegmentId() + "','" + getBook().getTravelComponentGroupingId() + "') "
                 + "and CHRG_ACTV_IN is not null";
         Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
+        Recordset rs = null;
+
+        int tries = 0;
+        int maxTries = 30;
+        do {
+            Sleeper.sleep(1000);
+            rs = new Recordset(db.getResultSet(sql));
+            tries++;
+        } while (tries < maxTries && !rs.getValue("CHRG_ACTV_IN").equals("N"));
+
         TestReporter.softAssertTrue(rs.getRowCount() == 4, "Verify that 4 charges were found.");
         do {
             TestReporter.softAssertEquals(rs.getValue("CHRG_PST_ST_NM"), "Earned", "Verify that the charge past state name [" + rs.getValue("CHRG_PST_ST_NM") + "] is that which is expected [Earned].");
@@ -847,15 +845,15 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
                 + "from folio.EXTNL_REF a "
                 + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
                 + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
-                + "where a.EXTNL_REF_VAL in ('" + getBook().getTravelPlanId() + "','" + getBook().getTravelPlanSegmentId() + "','" + getBook().getTravelComponentGroupingId() + "')";
+                + "where a.EXTNL_REF_VAL in ('" + getBook().getTravelPlanId() + "','" + getBook().getTravelPlanSegmentId() + "','" + getBook().getTravelComponentGroupingId() + "','" + tcg + "')";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertTrue(rs.getRowCount() == 3, "Verify that 3 charge groups were found.");
+        TestReporter.softAssertTrue(rs.getRowCount() == 4, "Verify that 3 charge groups were found.");
         do {
             if (!rs.getValue("EXTNL_REF_VAL").equals(tcg)) {
                 TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "Past Visit", "Verify that the charge group status [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Past Visit].");
             } else {
-                TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "Earned", "Verify that the charge group status [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Earned].");
+                TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "UnEarned", "Verify that the charge group status [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [UnEarned].");
             }
             TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_ACTV_IN"), "Y", "Verify that the charge group active indicator [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Y].");
             rs.moveNext();

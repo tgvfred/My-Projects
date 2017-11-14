@@ -11,6 +11,9 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode GROUP_TEAM_NOT_CREATED = new ApplicationErrorCode(APP_NAME, 7179,
             "Group Team Can not be Created");
 
+    public static final ApplicationErrorCode CANNOT_OVERRIDE_CANCELLED_RES = new ApplicationErrorCode(APP_NAME, 8509,
+            " Cancelled accommodations cannot be overriden");
+
     public static final ApplicationErrorCode ACCOMM_NOT_BOOKED_STATUS_UNSHARED = new ApplicationErrorCode(APP_NAME, 27192,
             " Accommodation should be in Booked status to be UnShared");
 

@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveComments_roomOnly_inactiveComments extends AccommodationBaseTest {
@@ -47,6 +48,9 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
         create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create.sendRequest();
 
+        // Wait a short amount of time to allow enough time for the comment timestamps to be different, and in the correct order
+        Sleeper.sleep(5000);
+
         CreateComments create2 = new CreateComments(environment, "Main");
         create2.setParentIds(parentId);
         create2.setIsActive(expectedIsActive);
@@ -69,6 +73,9 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
         create2.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create2.sendRequest();
 
+        // Wait a short amount of time to allow enough time for the comment timestamps to be different, and in the correct order
+        Sleeper.sleep(5000);
+
         CreateComments create3 = new CreateComments(environment, "Main");
         create3.setParentIds(parentId);
         create3.setIsActive(expectedIsActive);
@@ -90,6 +97,9 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
         create3.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create3.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create3.sendRequest();
+
+        // Wait a short amount of time to allow enough time for the comment timestamps to be different, and in the correct order
+        Sleeper.sleep(5000);
 
         CreateComments create4 = new CreateComments(environment, "Main");
         create4.setParentIds(parentId);
@@ -128,6 +138,9 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
         TestReporter.logAPI(!create3.getResponseStatusCode().equals("200"), "An error occurred in the create comment request", create);
         TestReporter.logAPI(!create4.getResponseStatusCode().equals("200"), "An error occurred in the create comment request", create);
 
+        // Wait a short amount of time to allow enough time for the comment timestamps to be different, and in the correct order
+        Sleeper.sleep(5000);
+
         // Remove third and fourth comments
         RemoveComments remove3 = new RemoveComments(environment, "Main");
         remove3.setEnvironment(Environment.getBaseEnvironmentName(environment));
@@ -136,12 +149,18 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
         remove3.sendRequest();
         TestReporter.logAPI(!remove3.getResponseStatusCode().equals("200"), "An error occurred with the request to remove the third comment", remove3);
 
+        // Wait a short amount of time to allow enough time for the comment timestamps to be different, and in the correct order
+        Sleeper.sleep(5000);
+
         RemoveComments remove4 = new RemoveComments(environment, "Main");
         remove4.setEnvironment(Environment.getBaseEnvironmentName(environment));
         remove4.setparentIds(getBook().getTravelComponentId());
         remove4.setcommentId(create4.getCommentId());
         remove4.sendRequest();
         TestReporter.logAPI(!remove4.getResponseStatusCode().equals("200"), "An error occurred with the request to remove the third comment", remove4);
+
+        // Wait a short amount of time to allow enough time for the comment timestamps to be different, and in the correct order
+        Sleeper.sleep(5000);
 
         // Validate comment with a call to retrieveComments
         RetrieveComments retrieve = new RetrieveComments(environment, "Main");
@@ -154,7 +173,7 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
 
         // validates that active ones come before inactive
         validateActiveOrder(retrieve);
-        
+
         if (Environment.isSpecialEnvironment(environment)) {
 
             RetrieveComments clone = (RetrieveComments) retrieve.clone();
@@ -166,7 +185,6 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
 
             TestReporter.assertTrue(retrieve.validateResponseNodeQuantity(clone, true), "Validating Response Comparison");
         }
-        
 
     }
 
