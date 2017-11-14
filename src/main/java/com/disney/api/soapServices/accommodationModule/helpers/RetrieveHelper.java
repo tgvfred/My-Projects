@@ -155,7 +155,7 @@ public class RetrieveHelper {
         TestReporter.assertAll();
     }
 
-    public void baseValidationShowDining(com.disney.api.soapServices.diningModule.showDiningService.operations.Book book, HouseHold hh, Retrieve retrieve) {
+    public void baseValidationShowDining(Book book, HouseHold hh, Retrieve retrieve) {
 
         String guestfirstName = hh.primaryGuest().getFirstName();
 

@@ -9,43 +9,52 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.api.soapServices.diningModule.showDiningService.operations.Book;
 import com.disney.utils.Environment;
-import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
+import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class TestRetrieve_showDining extends AccommodationBaseTest {
 
     private Book book;
     private HouseHold hh = new HouseHold(1);
+    private ScheduledEventReservation diningRes;
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        isComo.set("true");
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(getEnvironment());
+        bookReservation();
 
-        book = new Book(Environment.getBaseEnvironmentName(environment), ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-        book.setServiceStartDateTime(Randomness.generateCurrentXMLDatetime(Randomness.randomNumberBetween(15, 45)));
-        book.setParty(hh);
-        book.sendRequest();
-
-        TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "An error occurred during booking: " + book.getFaultString(), book);
-        System.out.println(book.getRequest());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_showDining() {
 
+        diningRes = new ShowDiningReservation(environment.toLowerCase().replace("_cm", ""), getHouseHold());
+        diningRes.setTravelPlanId(getBook().getTravelPlanId());
+        diningRes.setFacilityName("Pioneer Hall");
+        diningRes.setProductName("Hoop-Dee-Doo-Cat 2-1st Show");
+        diningRes.setServiceStartDate(getBook().getStartDate());
+        diningRes.book("OneComponentsNoAddOns");
+
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
-        retrieve.setTravelPlanId(book.getTravelPlanId());
-        retrieve.setLocationId("1284");
+        retrieve.setTravelPlanId(getBook().getTravelPlanId());
+        retrieve.setLocationId(getLocationId());
         retrieve.sendRequest();
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
-        helper.baseValidationShowDining(book, hh, retrieve);
+        helper.baseValidation(getBook(), retrieve);
 
         // Old vs New
         if (Environment.isSpecialEnvironment(getEnvironment())) {
