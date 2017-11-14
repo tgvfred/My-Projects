@@ -32,7 +32,7 @@ public class TestRetrieve_SbcRes_package extends AccommodationBaseTest {
     private String tpsExtRefValue;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
-    public void testRetrieve_SbcRes_roomOnly() {
+    public void testRetrieve_SbcRes_package() {
 
         packageBooking();
 

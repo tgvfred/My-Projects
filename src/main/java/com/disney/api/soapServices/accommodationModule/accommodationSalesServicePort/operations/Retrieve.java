@@ -234,9 +234,21 @@ public class Retrieve extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails[" + index + "]/primary");
     }
 
+    /*
+     * public String getTPAddressDetailsPrimary(String value) {
+     * return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails/primary[text()," + value + "]");
+     * }
+     */
+
     public String getTPAddressDetailsAddressLine1(String index) {
         return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails[" + index + "]/addressLine1");
     }
+
+    /*
+     * public String getTPAddressDetailsAddressLine1(String value) {
+     * return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails/addressLine1[text()," + value + "]");
+     * }
+     */
 
     public String getTPAddressDetailsCity(String index) {
         return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails[" + index + "]/city");
