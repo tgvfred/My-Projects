@@ -4,7 +4,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyOneAccommodationsSummaryDetailsReturned extends AccommodationBaseTest {
@@ -13,11 +12,13 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneAccommodationsSummaryDetails
     public void testRetrieveSummary_oneTcg_roomOnlyOneAccommodationsSummaryDetailsReturned() {
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-        if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        } else {
-            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
-        }
+        // Per AmitC, TK-692088, TPS will be the input into the TCG node - 11/14/2017 - WWA
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        // } else {
+        retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
+        // }
+
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
