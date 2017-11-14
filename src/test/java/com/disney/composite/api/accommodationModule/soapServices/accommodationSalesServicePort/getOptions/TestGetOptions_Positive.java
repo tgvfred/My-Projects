@@ -30,38 +30,38 @@ public class TestGetOptions_Positive extends BaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptions" })
     public void testGetOptions_COUNTRY() {
-        validateSpecialEnvironment("COUNTRY");
+        validateSpecialEnvironment("COUNTRY", "getOptions_Country");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptions" })
     public void testGetOptions_LANGUAGE() {
-        validateSpecialEnvironment("LANGUAGE");
+        validateSpecialEnvironment("LANGUAGE", "getOptions_Language");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptions" })
     public void testGetOptions_DEVICE_TYPE() {
-        validateSpecialEnvironment("DEVICE_TYPE");
+        validateSpecialEnvironment("DEVICE_TYPE", "getOptions_Device");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptions" })
     public void testGetOptions_LOCATOR_USE_TYPE() {
-        validateSpecialEnvironment("LOCATOR_USE_TYPE");
+        validateSpecialEnvironment("LOCATOR_USE_TYPE", "getOptions_Locator");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptions" })
     public void testgetOptions_SUFFIX() {
-        validateSpecialEnvironment("SUFFIX");
+        validateSpecialEnvironment("SUFFIX", "getOptions_Suffix");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptions" })
     public void testgetOptions_SALUTATION() {
-        validateSpecialEnvironment("SALUTATION");
+        validateSpecialEnvironment("SALUTATION", "getOptions_Salutation");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptions" })
     public void testgetOptions_REGION() {
         // Only exists in Latest, so Response Node Validation is skipped
-        validateSpecialEnvironment("REGION");
+        validateSpecialEnvironment("REGION", "getOptions_Region");
 
         TestReporter.logScenario("Test - Get Options - REGION");
 
@@ -122,7 +122,7 @@ public class TestGetOptions_Positive extends BaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptions" })
     public void testgetOptions_ALTERNATE_COUNTRY_CODE() {
-        validateSpecialEnvironment("ALTERNATE_COUNTRY_CODE");
+        validateSpecialEnvironment("ALTERNATE_COUNTRY_CODE", "getOptions_AltCountryCode");
     }
 
     /*
@@ -169,12 +169,14 @@ public class TestGetOptions_Positive extends BaseTest {
         }
     }
 
-    private void validateSpecialEnvironment(String parameter) {
+    private void validateSpecialEnvironment(String parameter, String scenario) {
         TestReporter.logScenario("Test - Get Options - " + parameter);
         GetOptions service = new GetOptions(environment);
         service.setOptionEnum(parameter);
         service.sendRequest();
         TestReporter.logAPI(!service.getResponseStatusCode().equals("200"), "An error occurred in the get " + parameter + " options request", service);
+
+        service.validateResponseNodeQuantity(scenario, true);
 
         if (Environment.isSpecialEnvironment(environment) || isComo.equals("true")) {
             BaseSoapService serviceBaseLine = (BaseSoapService) service.clone();
