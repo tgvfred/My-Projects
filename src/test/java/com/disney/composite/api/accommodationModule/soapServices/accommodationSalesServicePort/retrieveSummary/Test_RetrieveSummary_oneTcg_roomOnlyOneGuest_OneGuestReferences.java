@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences extends AccommodationBaseTest {
@@ -13,12 +14,27 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences ext
     public void testRetrieveSummary_oneTcg_roomOnlyOneGuest_OneGuestReferences() {
 
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
-        if (Environment.isSpecialEnvironment(environment)) {
-            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        } else {
-            retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
-        }
-        retrieve.sendRequest();
+        // Per AmitC, TK-692088, TPS will be the input into the TCG node - 11/14/2017 - WWA
+        // if (Environment.isSpecialEnvironment(environment)) {
+        // retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        // } else {
+        retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
+        // }
+
+        int tries = 0;
+        int maxTries = 20;
+        boolean success = false;
+        do {
+            Sleeper.sleep(1000);
+            retrieve.sendRequest();
+            tries++;
+
+            if (Environment.isSpecialEnvironment(environment) && retrieve.getGuestReferenceDetails().equals(1)) {
+                success = true;
+            } else if (retrieve.getGuestReferenceDetails().equals(2)) {
+                success = true;
+            }
+        } while (tries < maxTries && !success);
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.logStep("Verify one GuestReferenceDetails node is found.");

@@ -4,9 +4,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -16,9 +15,11 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends AccommodationBaseTest {
     private CheckInHelper helper;
-    private AddAccommodationHelper accommHelper;
-    private Add add;
+    // private AddAccommodationHelper accommHelper;
+    // private Add add;
     private String locVar;
+    private AccommodationBaseTest base;
+    private ReplaceAllForTravelPlanSegment book;
 
     @Override
     @Parameters("environment")
@@ -34,33 +35,29 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
         setEnvironment("latest");
         locVar = environment;
         bookReservation();
+        base = this;
+        book = base.getBook();
+
+        setSendRequest(false);
+        bookReservation();
+        getBook().setTravelPlanId(book.getTravelPlanId());
+        getBook().setTravelPlanSegementId(book.getTravelPlanSegmentId());
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second accommodation: " + getBook().getFaultString(), getBook());
     }
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
     public void testCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne() {
-
-        /*
-         * if (Environment.isSpecialEnvironment(environment)) {
-         * if (true) {
-         * throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
-         * }
-         * }
-         */
-        // Add a second accommodation
-        accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
-        add = accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
-                getLocationId());
-
         // Checkin the first accommodation
         helper = new CheckInHelper(locVar, getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         // Checkin and checkout the second accommodation
-        helper = new CheckInHelper(getEnvironment(), add);
+        helper = new CheckInHelper(getEnvironment(), book);
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
         helper.checkOut(getLocationId());
 
-        String assignOwnerId = validateResMgmt(add.getTravelComponentId());
+        String assignOwnerId = validateResMgmt(book.getTravelComponentId());
         validateRIM(assignOwnerId);
         additionalValidations(assignOwnerId);
         validateChargeGroupsChargesAndFolio();
@@ -94,7 +91,7 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
                 + "from res_mgmt.tc a "
                 + "left outer join res_mgmt.tc_rsn b on a.tc_id = b.tc_id "
                 + "left outer join res_mgmt.prdf_tc_rsn c on b.PRDF_TC_RSN_ID = c.PRDF_TC_RSN_ID "
-                + "where a.tc_grp_nb = '" + add.getTravelComponentGroupingId() + "'";
+                + "where a.tc_grp_nb = '" + book.getTravelComponentGroupingId() + "'";
 
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
@@ -108,13 +105,13 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
     }
 
     public String validateResMgmt(String TcId) {
-        String tcId = add.getTravelComponentId();
+        String tcId = book.getTravelComponentId();
 
         TestReporter.logStep("Verify Res Mgmt");
         String sql = "select c.* " + " from res_mgmt.tps a "
                 + " left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + " left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb " + " where tc_id = "
-                + add.getTravelComponentId();
+                + book.getTravelComponentId();
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
@@ -132,7 +129,7 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
                 + "from res_mgmt.tps a "
                 + "left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "left outer join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "where a.tp_id = '" + add.getTravelPlanId() + "' "
+                + "where a.tp_id = '" + book.getTravelPlanId() + "' "
                 + "and c.tc_typ_nm = 'AccommodationComponent'";
 
         db = new OracleDatabase(environment, Database.DREAMS);
@@ -190,7 +187,7 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
                 + "left outer join folio.CHRG_ITEM e on d.CHRG_ID = e.CHRG_ID "
                 + "left outer join folio.CHRG_GRP_FOLIO f on c.CHRG_GRP_ID = f.ROOT_CHRG_GRP_ID "
                 + "left outer join folio.FOLIO g on f.CHRG_GRP_FOLIO_ID = g.FOLIO_ID "
-                + "where a.EXTNL_REF_VAL in ('" + add.getTravelPlanId() + "','" + add.getTravelPlanSegmentId() + "','" + add.getTravelComponentGroupingId() + "') "
+                + "where a.EXTNL_REF_VAL in ('" + book.getTravelPlanId() + "','" + book.getTravelPlanSegmentId() + "','" + book.getTravelComponentGroupingId() + "') "
                 + "and folio_sts_nm is not null";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
@@ -210,7 +207,7 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
                 + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
                 + "left outer join folio.CHRG d on c.CHRG_GRP_ID = d.CHRG_GRP_ID "
                 + "left outer join folio.CHRG_ITEM e on d.CHRG_ID = e.CHRG_ID "
-                + "where a.EXTNL_REF_VAL in ('" + add.getTravelPlanId() + "','" + add.getTravelPlanSegmentId() + "','" + add.getTravelComponentGroupingId() + "') "
+                + "where a.EXTNL_REF_VAL in ('" + book.getTravelPlanId() + "','" + book.getTravelPlanSegmentId() + "','" + book.getTravelComponentGroupingId() + "') "
                 + "and CHRG_ACTV_IN is not null";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
@@ -230,7 +227,7 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
                 + "from folio.EXTNL_REF a "
                 + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
                 + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
-                + "where a.EXTNL_REF_VAL in ('" + add.getTravelPlanId() + "','" + add.getTravelPlanSegmentId() + "','" + add.getTravelComponentGroupingId() + "')";
+                + "where a.EXTNL_REF_VAL in ('" + book.getTravelPlanId() + "','" + book.getTravelPlanSegmentId() + "','" + book.getTravelComponentGroupingId() + "')";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         TestReporter.softAssertTrue(rs.getRowCount() == 3, "Verify that 3 charge groups were found.");

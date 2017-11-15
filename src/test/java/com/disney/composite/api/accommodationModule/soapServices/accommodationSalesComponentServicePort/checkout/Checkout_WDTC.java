@@ -37,12 +37,6 @@ public class Checkout_WDTC extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void TestCheckout_wdtc() {
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Accommodation Type, Fix is in progress");
-        // }
-        // }
-
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 

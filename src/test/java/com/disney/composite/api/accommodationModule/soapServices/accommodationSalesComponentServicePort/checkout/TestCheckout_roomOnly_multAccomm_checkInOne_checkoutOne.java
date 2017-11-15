@@ -5,7 +5,6 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -15,7 +14,7 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne extends AccommodationBaseTest {
     private CheckInHelper helper;
-    private AddAccommodationHelper accommHelper;
+    // private AddAccommodationHelper accommHelper;
     private String locVar;
     // private Book book;
 
@@ -31,6 +30,7 @@ public class TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne extends Acc
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         locVar = environment; // cm
+        setAddRoom(true);
         bookReservation();
     }
 
@@ -45,9 +45,9 @@ public class TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne extends Acc
          * }
          */
         // Add a second accommodation
-        accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
-        accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
-                getLocationId());
+        // accommHelper = new AddAccommodationHelper(getEnvironment(), getBook());
+        // accommHelper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(),
+        // getLocationId());
 
         // Checkin the first accommodation
         helper = new CheckInHelper(locVar, getBook());

@@ -78,7 +78,7 @@ public class RemoveRateOverrideHelper {
         override.setRequestNodeValueByXPath("/Envelope/Body/overrideRate/request/locationId", "1");
         override.sendRequest();
 
-        TestReporter.logAPI(!override.getResponseStatusCode().equals("200"), "Error sending request", override);
+        TestReporter.logAPI(!override.getResponseStatusCode().equals("200"), "Error sending request: " + override.getFaultString(), override);
     }
 
     private void callRemoveRateOverride(String env, ReplaceAllForTravelPlanSegment book) {

@@ -1479,7 +1479,7 @@ public class ValidationHelper {
         Recordset rs = null;
 
         int tries = 0;
-        int maxTries = 20;
+        int maxTries = 60;
         boolean success = false;
         do {
             Sleeper.sleep(1000);
@@ -1558,7 +1558,7 @@ public class ValidationHelper {
         Recordset rs = null;
 
         int tries = 0;
-        int maxTries = 20;
+        int maxTries = 60;
         boolean success = false;
         do {
             rs = new Recordset(db.getResultSet(sql));
@@ -1634,7 +1634,7 @@ public class ValidationHelper {
         Recordset rs = null;
 
         int tries = 0;
-        int maxTries = 20;
+        int maxTries = 60;
         boolean success = false;
         do {
             rs = new Recordset(db.getResultSet(sql));
@@ -1715,7 +1715,7 @@ public class ValidationHelper {
         Recordset rs = null;
 
         int tries = 0;
-        int maxTries = 20;
+        int maxTries = 60;
         boolean success = false;
         do {
             rs = new Recordset(db.getResultSet(sql));
@@ -1814,7 +1814,7 @@ public class ValidationHelper {
         Recordset rs = null;
 
         int tries = 0;
-        int maxTries = 20;
+        int maxTries = 60;
         boolean success = false;
         do {
             rs = new Recordset(db.getResultSet(sql));

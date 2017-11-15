@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"/>
+	<soap:Body>
+		<ns4:getOptionsResponse xmlns:ns2="http://exception.service.disney.com/" xmlns:ns3="http://transferobject.booking.dreams.wdw.com/TravelPlan" xmlns:ns4="http://sales.accommodation.transferobject.booking.dreams.wdw.com" xmlns:ns5="http://transferobject.booking.dreams.wdw.com/Segment">
+			<response>
+				<optionKey>PAGER</optionKey>
+				<optionValue>PAGER</optionValue>
+			</response>
+			<response>
+				<optionKey>CELLULAR</optionKey>
+				<optionValue>CELLULAR</optionValue>
+			</response>
+			<response>
+				<optionKey>FAX</optionKey>
+				<optionValue>FAX</optionValue>
+			</response>
+			<response>
+				<optionKey>UNKNOWN</optionKey>
+				<optionValue>UNKNOWN</optionValue>
+			</response>
+			<response>
+				<optionKey>HANDSET</optionKey>
+				<optionValue>HANDSET</optionValue>
+			</response>
+		</ns4:getOptionsResponse>
+	</soap:Body>
+</soap:Envelope>

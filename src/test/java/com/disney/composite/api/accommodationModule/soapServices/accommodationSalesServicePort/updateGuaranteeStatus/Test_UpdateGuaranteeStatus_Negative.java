@@ -24,7 +24,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateGuaranteeStatus", "negative" })
     public void testUpdateGuaranteeStatus_invalidTcg() {
 
-        String faultString = "Accommodations not found : ACCOMMODATIONS NOT FOUND";
+        String faultString = "Travel Component Grouping not found : TravelComponentGrouping not found";
 
         UpdateGuaranteeStatus update = new UpdateGuaranteeStatus(environment);
         update.setRequestTravelComponentGroupingId("4815162342");
@@ -32,7 +32,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(faultString, update.getFaultString(), "Verify that the fault string [" + update.getFaultString() + "] is that which is expected.[" + faultString + "]");
-        validateApplicationError(update, AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND);
+        validateApplicationError(update, AccommodationErrorCode.TRAVEL_COMPONENT_GROUPING_NOT_FOUND);
 
     }
 
