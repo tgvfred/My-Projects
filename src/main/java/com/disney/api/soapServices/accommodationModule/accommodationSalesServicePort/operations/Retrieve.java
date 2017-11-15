@@ -6,7 +6,6 @@ import java.util.Arrays;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
@@ -847,14 +846,9 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     }
 
-    public String getAccommRates(String response) {
-        try {
-            return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/rates");
-        } catch (XPathNotFoundException e) {
-            TestReporter.assertTrue(true, "This xpath cannot be found in the retrieve response");
-            response="This xpath cannot be found in the retrieve response";
-            return response;
-        }
+    public String getAccommRates() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/rates");
 
     }
 
