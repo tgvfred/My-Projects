@@ -4,6 +4,7 @@ import com.disney.AutomationException;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Book;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -225,6 +226,7 @@ public class RetrieveHelper {
 
     public void tcgValidation(Retrieve retrieve) {
         TestReporter.logStep("TCG Validation");
+        Sleeper.sleep(1000);
         int NumberOfTravelPlanSegments = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments");
         int NumberOfGuestReferences = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[1]/componentGroupings[1]/accommodation/guestReferences");
         int NumberOfComponentGroupings = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings");
@@ -247,6 +249,8 @@ public class RetrieveHelper {
                         TestReporter.softAssertTrue(!retrieve.getGuestReferencesPartyId(j, i).isEmpty(), "Verify the guest references  party id at node [" + i + "] is in the response[" + retrieve.getGuestReferencesPartyId(j, i) + "].");
 
                         TestReporter.softAssertTrue(!retrieve.getGuestReferencesGuestId(j, i).isEmpty(), "Verify the  guest references guest id at node [" + i + "] is in the response [" + retrieve.getGuestReferencesGuestId(j, i) + "].");
+
+                        Sleeper.sleep(2000);
                         TestReporter.assertAll();
 
                     }
