@@ -1,25 +1,43 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
 
-public class sandBox {
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.utils.TestReporter;
 
-    public String getTPAddressDetailsCity(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails[" + index + "]/city");
+public class sandBox extends AccommodationSalesServicePort {
+
+    public sandBox(String env) {
+        super(env);
     }
 
-    public String getTPAddressDetailsCountry(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails[" + index + "]/country");
+    public String getTPAddressDetailsCity(String value) {
+        try {
+            return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails/city[text()," + value + "]");
+        } catch (XPathNotFoundException e) {
+            TestReporter.assertTrue(false, "This value: [" + value + "] cannot be found in the retrieve response");
+        }
+        return "";
     }
 
-    public String getTPAddressDetailsPostalCode(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails[" + index + "]/postalCode");
+    public String getTPAddressDetailsCountry(String value) {
+        try {
+            return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails/country[text()," + value + "]");
+        } catch (XPathNotFoundException e) {
+            TestReporter.assertTrue(false, "This value: [" + value + "] cannot be found in the retrieve response");
+        }
+        return "";
     }
 
-    public String getTPAddressDetailsState(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails[" + index + "]/state");
+    public String getTPAddressDetailsPostalCode(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails/postalCode[text()," + value + "]");
     }
 
-    public String getTPAddressDetailsRegion(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails[" + index + "]/regionName");
+    public String getTPAddressDetailsState(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails/state[text()," + value + "]");
+    }
+
+    public String getTPAddressDetailsRegion(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/addressDetails/regionName[text()," + value + "]");
     }
 
     // TP Email Details --------------------------------------------------------------------------------------------------------------
@@ -28,12 +46,12 @@ public class sandBox {
         return getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/emailDetails");
     }
 
-    public String getTPEmailDetailsPrimary(String index) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/emailDetails[" + index + "]/primary");
+    public String getTPEmailDetailsPrimary(String value) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/emailDetails/primary[text()," + value + "]");
     }
 
-    public String getTPEmailDetailsAddress(String index) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/emailDetails[" + index + "]/address");
+    public String getTPEmailDetailsAddress(String value) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/emailDetails/address[text()," + value + "]");
     }
 
     // TP Phone Details --------------------------------------------------------------------------------------------------------------
@@ -42,12 +60,12 @@ public class sandBox {
         return getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/phoneDetails");
     }
 
-    public String getTPPhoneDetailsPrimary(String index) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/phoneDetails[" + index + "]/primary");
+    public String getTPPhoneDetailsPrimary(String value) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/phoneDetails/primary[text()," + value + "]");
     }
 
-    public String getTPPhoneDetailsNumber(String index) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/phoneDetails[" + index + "]/number");
+    public String getTPPhoneDetailsNumber(String value) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanGuests/guest/phoneDetails/number[text()," + value + "]");
     }
 
     // PP Address Details ---------------------------------------------------------------------------------------------------------------
@@ -56,52 +74,52 @@ public class sandBox {
         return getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails");
     }
 
-    public String getPPAddressDetailsPrimary(String index) {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails[" + index + "]/primary");
+    public String getPPAddressDetailsPrimary(String value) {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails/primary[text()," + value + "]");
     }
 
-    public String getPPAddressDetailsAddressLine1(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails[" + index + "]/addressLine1");
+    public String getPPAddressDetailsAddressLine1(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails/addressLine1[text()," + value + "]");
     }
 
-    public String getPPAddressDetailsCity(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails[" + index + "]/city");
+    public String getPPAddressDetailsCity(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails/city[text()," + value + "]");
     }
 
-    public String getPPAddressDetailsCountry(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails[" + index + "]/country");
+    public String getPPAddressDetailsCountry(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails/country[text()," + value + "]");
     }
 
-    public String getPPAddressDetailsPostalCode(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails[" + index + "]/postalCode");
+    public String getPPAddressDetailsPostalCode(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails/postalCode[text()," + value + "]");
     }
 
-    public String getPPAddressDetailsState(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails[" + index + "]/state");
+    public String getPPAddressDetailsState(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails/state[text()," + value + "]");
     }
 
-    public String getPPAddressDetailsRegion(String index) {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails[" + index + "]/regionName");
+    public String getPPAddressDetailsRegion(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails/regionName[text()," + value + "]");
     }
 
-    public String getPPFirstName() {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/firstName");
+    public String getPPFirstName(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/firstName[text()," + value + "]");
     }
 
-    public String getPPLastName() {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/lastName");
+    public String getPPLastName(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/lastName[text()," + value + "]");
     }
 
-    public String getPPPhone() {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/phoneDetails/number");
+    public String getPPPhone(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/phoneDetails/number[text()," + value + "]");
     }
 
-    public String getPPAddress() {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails/addressLine1");
+    public String getPPAddress(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/addressDetails/addressLine1[text()," + value + "]");
     }
 
-    public String getPPEmail() {
-        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/emailDetails/address");
+    public String getPPEmail(String value) {
+        return getResponseNodeValueByXPath("Envelope/Body/retrieveResponse/travelPlanInfo/primaryParty/guest/emailDetails/address[text()," + value + "]");
     }
 
     // PP Email Details --------------------------------------------------------------------------------------------------------------
