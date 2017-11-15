@@ -24,6 +24,17 @@ public class TestRetrieveTeamByGroupCode extends BaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveTeamsByGroupCode" })
+    public void testRetrieveTeamsByGroupCodeInvalidGroupCode() {
+
+        RetrieveTeamsByGroupCode retrieveTeamsByGroupCode = new RetrieveTeamsByGroupCode(environment);
+        retrieveTeamsByGroupCode.setgroupcode("Pluto987");
+        retrieveTeamsByGroupCode.sendRequest();
+        TestReporter.logAPI(!retrieveTeamsByGroupCode.getResponseStatusCode().equals("200"), "The response code was  200", retrieveTeamsByGroupCode);
+        TestReporter.assertNull(retrieveTeamsByGroupCode.getTeamCode(), "The team code retrieved: " + retrieveTeamsByGroupCode.getTeamCode() + ".   Expected null");
+
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveTeamsByGroupCode" })
     public void testRetrieveTeamsByGroupCodeSingle() {
 
         String sql = "select a.grp_cd, a.grp_tm_nm " +
