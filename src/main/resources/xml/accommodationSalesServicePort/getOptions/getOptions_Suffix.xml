@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"/>
+	<soap:Body>
+		<ns4:getOptionsResponse xmlns:ns2="http://transferobject.booking.dreams.wdw.com/TravelPlan" xmlns:ns3="http://exception.service.disney.com/" xmlns:ns4="http://sales.accommodation.transferobject.booking.dreams.wdw.com" xmlns:ns5="http://transferobject.booking.dreams.wdw.com/Segment">
+			<response>
+				<optionKey>Jr.</optionKey>
+				<optionValue>Junior</optionValue>
+			</response>
+			<response>
+				<optionKey>MD</optionKey>
+				<optionValue>Medical Doctor</optionValue>
+			</response>
+			<response>
+				<optionKey>Sr.</optionKey>
+				<optionValue>Senior</optionValue>
+			</response>
+			<response>
+				<optionKey>V</optionKey>
+				<optionValue>The Fifth</optionValue>
+			</response>
+			<response>
+				<optionKey>I</optionKey>
+				<optionValue>The First</optionValue>
+			</response>
+			<response>
+				<optionKey>IV</optionKey>
+				<optionValue>The Fourth</optionValue>
+			</response>
+			<response>
+				<optionKey>II</optionKey>
+				<optionValue>The Second</optionValue>
+			</response>
+			<response>
+				<optionKey>III</optionKey>
+				<optionValue>The Third</optionValue>
+			</response>
+		</ns4:getOptionsResponse>
+	</soap:Body>
+</soap:Envelope>
