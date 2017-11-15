@@ -24,8 +24,6 @@ public class TestRetrieve_wdtc extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         setIsWdtcBooking(true);
-
-        isComo.set("false");
         bookReservation();
 
     }
@@ -42,7 +40,7 @@ public class TestRetrieve_wdtc extends AccommodationBaseTest {
 
         RetrieveHelper helper = new RetrieveHelper();
         helper.baseValidation(getBook(), retrieve);
-        helper.TpsValidation(retrieve);
+        // helper.TpsValidation(retrieve);
 
         TestReporter.assertTrue(!retrieve.getBlockCode().equals(""), "The block code in the response is [" + retrieve.getBlockCode() + "].");
         TestReporter.assertTrue(!retrieve.getTicketGroup().equals(""), "The ticket group in the response is [" + retrieve.getTicketGroup() + "].");

@@ -4,6 +4,7 @@ import com.disney.AutomationException;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Book;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -31,6 +32,8 @@ public class RetrieveHelper {
 
     public void baseValidation(ReplaceAllForTravelPlanSegment book, Retrieve retrieve) {
 
+        TestReporter.logStep("Base Validation");
+
         String guestfirstName = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/firstName");
 
         String guestlastName = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/lastName");
@@ -52,6 +55,7 @@ public class RetrieveHelper {
         String travelStatus = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelStatus");
 
         if (sbc) {
+            TpsValidation(retrieve);
             TestReporter.softAssertTrue(!retrieve.getPartyId().isEmpty(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
 
             TestReporter.softAssertTrue(!retrieve.getPPFirstName().isEmpty(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
@@ -91,15 +95,18 @@ public class RetrieveHelper {
             try {
                 TestReporter.assertEquals(guestGuestId, retrieve.getGuestId("1"), "Verify the guest id [" + retrieve.getGuestId("1") + "] matches the expected [" + guestGuestId + "]");
             } catch (AssertionError e) {
-                TestReporter.assertEquals(guestGuestId, retrieve.getGuestId("2"), "Verify the guest id [" + retrieve.getGuestId("2") + "] matches the expected [" + guestGuestId + "].");
+                TestReporter.assertEquals(guestGuestId, retrieve.getGuestId("2"), "Verify the guest id [" + retrieve.getGuestId("2") + "] matches the expected [" + guestGuestId + "]2.");
             }
 
             TestReporter.softAssertTrue(!retrieve.getTravelStatus().isEmpty(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "].-- ");
+
+            TpsValidation(retrieve);
             TestReporter.assertAll();
         }
     }
 
     public void baseValidationDVC(Book book, Retrieve retrieve) {
+        TestReporter.logStep("Base Validation for DVC");
 
         String guestfirstName = book.getPrimaryGuestFirstName();
 
@@ -156,78 +163,184 @@ public class RetrieveHelper {
     }
 
     public void TpsValidation(Retrieve retrieve) {
+        TestReporter.logStep("TPS Validation");
 
-        TestReporter.assertTrue(!retrieve.getAreadPeriodSD().isEmpty(), "Verify the area period start date is in response [" + retrieve.getAreadPeriodSD() + "].");
+        TestReporter.softAssertTrue(!retrieve.getAreadPeriodSD().isEmpty(), "Verify the area period start date is in response [" + retrieve.getAreadPeriodSD() + "].");
 
-        TestReporter.assertTrue(!retrieve.getAreadPeriodED().isEmpty(), "Verify the area period end date is in response [" + retrieve.getAreadPeriodED() + "].");
+        TestReporter.softAssertTrue(!retrieve.getAreadPeriodED().isEmpty(), "Verify the area period end date is in response [" + retrieve.getAreadPeriodED() + "].");
 
-        TestReporter.assertTrue(!retrieve.getCancellationNumber().isEmpty(), "Verify the cancellation number in the response [" + retrieve.getCancellationNumber() + "].");
+        TestReporter.softAssertTrue(!retrieve.getCancellationNumber().isEmpty(), "Verify the cancellation number in the response [" + retrieve.getCancellationNumber() + "].");
 
-        TestReporter.assertTrue(!retrieve.getCelebrationCount().isEmpty(), "Verify the celebration count is in the response[" + retrieve.getCelebrationCount() + "].");
+        TestReporter.softAssertTrue(!retrieve.getCelebrationCount().isEmpty(), "Verify the celebration count is in the response[" + retrieve.getCelebrationCount() + "].");
 
-        TestReporter.assertTrue(!retrieve.getGuaranteed().isEmpty(), "Verify the Guaranteed is in the response [" + retrieve.getGuaranteed() + "].");
+        TestReporter.softAssertTrue(!retrieve.getGuaranteed().isEmpty(), "Verify the Guaranteed is in the response [" + retrieve.getGuaranteed() + "].");
 
-        TestReporter.assertTrue(!retrieve.getPeriodSD().isEmpty(), "Verify the period start date is in response [" + retrieve.getPeriodSD() + "].");
+        TestReporter.softAssertTrue(!retrieve.getPeriodSD().isEmpty(), "Verify the period start date is in response [" + retrieve.getPeriodSD() + "].");
 
-        TestReporter.assertTrue(!retrieve.getPeriodED().isEmpty(), "Verify the period end date is in response [" + retrieve.getPeriodED() + "].");
+        TestReporter.softAssertTrue(!retrieve.getPeriodED().isEmpty(), "Verify the period end date is in response [" + retrieve.getPeriodED() + "].");
 
-        TestReporter.assertTrue(!retrieve.getStatus().isEmpty(), "Verify the status is in the response [" + retrieve.getStatus() + "].");
+        TestReporter.softAssertTrue(!retrieve.getStatus().isEmpty(), "Verify the status is in the response [" + retrieve.getStatus() + "].");
 
-        TestReporter.assertTrue(!retrieve.getTPSfirstName().isEmpty(), "Verify the primary guest first name is in the response [" + retrieve.getTPSfirstName() + "].");
-        TestReporter.assertTrue(!retrieve.getTPSLasttName().isEmpty(), "Verify the primary guest last name is in the response [" + retrieve.getTPSLasttName() + "].");
-        TestReporter.assertTrue(!retrieve.getTPSaddress().isEmpty(), "Verify the primary guest address is in the response [" + retrieve.getTPSaddress() + "].");
-        TestReporter.assertTrue(!retrieve.getTPSemail().isEmpty(), "Verify the primary guest email is in the response [" + retrieve.getTPSemail() + "].");
-        TestReporter.assertTrue(!retrieve.getTPSPartyId().isEmpty(), "Verify the primary guest party id is in the response [" + retrieve.getTPSPartyId() + "].");
-        TestReporter.assertTrue(!retrieve.getTPSGuestId().isEmpty(), "Verify the primary guest guest id is in the response [" + retrieve.getTPSGuestId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTPSfirstName().isEmpty(), "Verify the primary guest first name is in the response [" + retrieve.getTPSfirstName() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTPSLasttName().isEmpty(), "Verify the primary guest last name is in the response [" + retrieve.getTPSLasttName() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTPSaddress().isEmpty(), "Verify the primary guest address is in the response [" + retrieve.getTPSaddress() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTPSemail().isEmpty(), "Verify the primary guest email is in the response [" + retrieve.getTPSemail() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTPSPartyId().isEmpty(), "Verify the primary guest party id is in the response [" + retrieve.getTPSPartyId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTPSGuestId().isEmpty(), "Verify the primary guest guest id is in the response [" + retrieve.getTPSGuestId() + "].");
+
+        if (retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails") >= 1) {
+
+            TestReporter.softAssertTrue(!retrieve.getConfirmDetailId().isEmpty(), "Verify the confirmation detail id is in the response [" + retrieve.getConfirmDetailId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmIndicator().isEmpty(), "Verify the confiramtion indicator is in the response [" + retrieve.getConfirmIndicator() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmType().isEmpty(), "Verify the confirmation type is in the response [" + retrieve.getConfirmType() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmContactName().isEmpty(), "Verify the confirmation contact name is in the response [" + retrieve.getConfirmContactName() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmDefaultConfirmIndicator().isEmpty(), "Verify the confirmation default confirmation indicator is in the response [" + retrieve.getConfirmDefaultConfirmIndicator() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmIndividual().isEmpty(), "Verify the confirmation individual is in the response [" + retrieve.getConfirmIndividual() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmJDOSequenceNumber().isEmpty(), "Verify the confirmation jdo sequence number is in the response [" + retrieve.getConfirmJDOSequenceNumber() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmLocatorId().isEmpty(), "Verify the confirmation locator id is in the response [" + retrieve.getConfirmLocatorId() + "].");
+
+            TestReporter.softAssertTrue(!retrieve.getConfirmPartyId().isEmpty(), "Verify the confirmation party id is in the response [" + retrieve.getConfirmPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmGDPartyId().isEmpty(), "Verify the confirmation guest details party id is in the response [" + retrieve.getConfirmGDPartyId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmGDDoNotMailIndicator().isEmpty(), "Verify the confirmation guest details do not mail indicator is in the response [" + retrieve.getConfirmGDDoNotMailIndicator() + "].");
+
+            TestReporter.softAssertTrue(!retrieve.getConfirmGDDoNotPhoneIndictor().isEmpty(), "Verify the  confirmation guest details do not phone indicatoris in the response [" + retrieve.getConfirmGDDoNotPhoneIndictor() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmGDDclGuestId().isEmpty(), "Verify the  confirmation guest details dcl guest id is in the response [" + retrieve.getConfirmGDDclGuestId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmGDGuestId().isEmpty(), "Verify the  confirmation guest details guest id is in the response [" + retrieve.getConfirmGDGuestId() + "].");
+            TestReporter.softAssertTrue(!retrieve.getConfirmGDActive().isEmpty(), "Verify the confirmation guest details active is in the response [" + retrieve.getConfirmGDActive() + "].");
+
+        }
 
         TestReporter.assertTrue(!retrieve.getTravelPlanId().isEmpty(), "Verify the travel Plan id is in the response[" + retrieve.getTravelPlanId() + "].");
 
-        TestReporter.assertTrue(!retrieve.getTravelPlanSegmentId().isEmpty(), "Verify the travel Plan segement id in the response [" + retrieve.getTravelPlanSegmentId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTravelPlanSegmentId().isEmpty(), "Verify the travel Plan segement id in the response [" + retrieve.getTravelPlanSegmentId() + "].");
 
-        TestReporter.assertTrue(!retrieve.getBundleDetailPresent().isEmpty(), "Verify the bundle detail present is in the response[" + retrieve.getBundleDetailPresent() + "].");
+        TestReporter.softAssertTrue(!retrieve.getBundleDetailPresent().isEmpty(), "Verify the bundle detail present is in the response[" + retrieve.getBundleDetailPresent() + "].");
 
-        TestReporter.assertTrue(!retrieve.getOnsiteMessagingEnabled().isEmpty(), "Verify the onsite messaging enabled is in the response [" + retrieve.getOnsiteMessagingEnabled() + "].");
+        TestReporter.softAssertTrue(!retrieve.getOnsiteMessagingEnabled().isEmpty(), "Verify the onsite messaging enabled is in the response [" + retrieve.getOnsiteMessagingEnabled() + "].");
+
+        tcgValidation(retrieve);
+
+        TestReporter.assertAll();
 
     }
 
     public void tcgValidation(Retrieve retrieve) {
-
-        int NumberOfGuestReferences = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[1]/accommodation/guestReferences");
+        TestReporter.logStep("TCG Validation");
+        Sleeper.sleep(1000);
+        int NumberOfTravelPlanSegments = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments");
+        int NumberOfGuestReferences = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[1]/componentGroupings[1]/accommodation/guestReferences");
         int NumberOfComponentGroupings = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings");
-        TestReporter.assertTrue(NumberOfGuestReferences >= 2, "The number of guest references nodes are [" + NumberOfGuestReferences + "]");
+        if (NumberOfTravelPlanSegments == 1) {
+            if (NumberOfGuestReferences >= 2) {
+                TestReporter.assertTrue(NumberOfGuestReferences >= 2, "The number of guest references nodes are [" + NumberOfGuestReferences + "]");
 
-        for (int j = 1; j <= NumberOfComponentGroupings; j++) {
-            for (int i = 1; i <= NumberOfGuestReferences; i++) {
+                for (int j = 1; j <= NumberOfComponentGroupings; j++) {
+                    for (int i = 1; i <= NumberOfGuestReferences; i++) {
+                        TestReporter.softAssertTrue(!retrieve.getGuestReferencesfirstName(j, i).isEmpty(), "Verify the guest references at node [" + i + "] first name    is in response [" + retrieve.getGuestReferencesfirstName(j, i) + "].");
 
-                TestReporter.assertTrue(!retrieve.getGuestReferencesfirstName(j, i).isEmpty(), "Verify the guest references at node [" + i + "] first name    is in response [" + retrieve.getGuestReferencesfirstName(j, i) + "].");
+                        TestReporter.softAssertTrue(!retrieve.getGuestReferencesLastName(j, i).isEmpty(), "Verify the guest references last name at node [" + i + "] is in response [" + retrieve.getGuestReferencesLastName(j, i) + "].");
 
-                TestReporter.assertTrue(!retrieve.getGuestReferencesLastName(j, i).isEmpty(), "Verify the guest references last name at node [" + i + "] is in response [" + retrieve.getGuestReferencesLastName(j, i) + "].");
+                        TestReporter.softAssertTrue(!retrieve.getGuestReferencesphone(j, i).isEmpty(), "Verify the guest references  phone at node  [" + i + "] is in the response [" + retrieve.getGuestReferencesphone(j, i) + "].");
 
-                TestReporter.assertTrue(!retrieve.getGuestReferencesphone(j, i).isEmpty(), "Verify the guest references  phone at node  [" + i + "] is in the response [" + retrieve.getGuestReferencesphone(j, i) + "].");
+                        TestReporter.softAssertTrue(!retrieve.getGuestReferencesaddress(j, i).isEmpty(), "Verify the guest references address at node [" + i + "] is in the response[" + retrieve.getGuestReferencesaddress(j, i) + "].");
 
-                TestReporter.assertTrue(!retrieve.getGuestReferencesaddress(j, i).isEmpty(), "Verify the guest references address at node [" + i + "] is in the response[" + retrieve.getGuestReferencesaddress(j, i) + "].");
+                        TestReporter.softAssertTrue(!retrieve.getGuestReferencesemail(j, i).isEmpty(), "Verify the  guest references  email  at node [" + i + "] is  in the response [" + retrieve.getGuestReferencesemail(j, i) + "].");
 
-                TestReporter.assertTrue(!retrieve.getGuestReferencesemail(j, i).isEmpty(), "Verify the  guest references  email  at node [" + i + "] is  in the response [" + retrieve.getGuestReferencesemail(j, i) + "].");
+                        TestReporter.softAssertTrue(!retrieve.getGuestReferencesPartyId(j, i).isEmpty(), "Verify the guest references  party id at node [" + i + "] is in the response[" + retrieve.getGuestReferencesPartyId(j, i) + "].");
 
-                TestReporter.assertTrue(!retrieve.getGuestReferencesPartyId(j, i).isEmpty(), "Verify the guest references  party id at node [" + i + "] is in the response[" + retrieve.getGuestReferencesPartyId(j, i) + "].");
+                        TestReporter.softAssertTrue(!retrieve.getGuestReferencesGuestId(j, i).isEmpty(), "Verify the  guest references guest id at node [" + i + "] is in the response [" + retrieve.getGuestReferencesGuestId(j, i) + "].");
 
-                TestReporter.assertTrue(!retrieve.getGuestReferencesGuestId(j, i).isEmpty(), "Verify the  guest references guest id at node [" + i + "] is in the response [" + retrieve.getGuestReferencesGuestId(j, i) + "].");
+                        Sleeper.sleep(2000);
+                        TestReporter.assertAll();
+
+                    }
+                }
             }
+        } else {
+
+            for (int k = 1; k <= NumberOfTravelPlanSegments; k++) {
+                String firstName = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[" + k + "]/componentGroupings/accommodation/guestReferences/guest/firstName");
+                String lastName = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[" + k + "]/componentGroupings/accommodation/guestReferences/guest/lastName");
+                String address = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[" + k + "]/componentGroupings/accommodation/guestReferences/guest/addressDetails/addressLine1");
+                String phone = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[" + k + "]/componentGroupings/accommodation/guestReferences/guest/phoneDetails/number");
+                String email = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[" + k + "]/componentGroupings/accommodation/guestReferences/guest/emailDetails/address");
+                String partyId = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[" + k + "]/componentGroupings/accommodation/guestReferences/guest/partyId");
+                String guestId = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments[" + k + "]/componentGroupings/accommodation/guestReferences/guest/guestId");
+
+                TestReporter.softAssertTrue(!firstName.isEmpty(), "Verify the guest references at node [" + k + "] first name    is in response [" + firstName + "].");
+
+                TestReporter.softAssertTrue(!lastName.isEmpty(), "Verify the guest references last name at node [" + k + "] is in response [" + lastName + "].");
+
+                TestReporter.softAssertTrue(!phone.isEmpty(), "Verify the guest references  phone at node  [" + k + "] is in the response [" + phone + "].");
+
+                TestReporter.softAssertTrue(!address.isEmpty(), "Verify the guest references address at node [" + k + "] is in the response[" + address + "].");
+
+                TestReporter.softAssertTrue(!email.isEmpty(), "Verify the  guest references  email  at node [" + k + "] is  in the response [" + email + "].");
+
+                TestReporter.softAssertTrue(!partyId.isEmpty(), "Verify the guest references  party id at node [" + k + "] is in the response[" + partyId + "].");
+
+                TestReporter.softAssertTrue(!guestId.isEmpty(), "Verify the  guest references guest id at node [" + k + "] is in the response [" + guestId + "].");
+                TestReporter.assertAll();
+
+            }
+
         }
+
+        TestReporter.softAssertTrue(!retrieve.getAccommBookDate().isEmpty(), "Verify the book date is in the response[" + retrieve.getAccommBookDate() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommComponentId().isEmpty(), "Verify the component id is in the response [" + retrieve.getAccommComponentId() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommFacilityId().isEmpty(), "Verify the facility id is in the response[" + retrieve.getAccommFacilityId() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommGroupTeamId().isEmpty(), "Verify the group team id is in the response [" + retrieve.getAccommGroupTeamId() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommPackageCode().isEmpty(), "Verify the package code is in the response[" + retrieve.getAccommPackageCode() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommPeriodSD().isEmpty(), "Verify the period start date is in the response [" + retrieve.getAccommPeriodSD() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommPeriodED().isEmpty(), "Verify the period end date is in the response[" + retrieve.getAccommPeriodED() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommProfiles().isEmpty(), "Verify the profiles is in the response [" + retrieve.getAccommProfiles() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommRSR().isEmpty(), "Verify the RSR is in the response[" + retrieve.getAccommRSR() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommWholesaler().isEmpty(), "Verify the wholesaler is in the response [" + retrieve.getAccommWholesaler() + "].");
+
+        if (retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/rates") >= 1) {
+
+            TestReporter.softAssertTrue(!retrieve.getAccommRates().isEmpty(), "Verify the rates is in the response[" + retrieve.getAccommRates() + "].");
+        }
+        TestReporter.softAssertTrue(!retrieve.getAccommResortCode().isEmpty(), "Verify the resort code is in the response [" + retrieve.getAccommResortCode() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommRoomTypeCode().isEmpty(), "Verify the room type code is in the response[" + retrieve.getAccommRoomTypeCode() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommStatus().isEmpty(), "Verify the status is in the response [" + retrieve.getAccommStatus() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommShared().isEmpty(), "Verify the shared is in the response[" + retrieve.getAccommShared() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommReservationType().isEmpty(), "Verify the reservation type is in the response [" + retrieve.getAccommReservationType() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommRoomOnly().isEmpty(), "Verify the room only is in the response [" + retrieve.getAccommRoomOnly() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommSpecialNeedsRequested().isEmpty(), "Verify the special needs requested is in the response[" + retrieve.getAccommSpecialNeedsRequested() + "].");
+
+        TestReporter.softAssertTrue(!retrieve.getAccommTravelComponentGroupingId().isEmpty(), "Verify the travel component grouping id is in the response [" + retrieve.getAccommTravelComponentGroupingId() + "].");
+
     }
 
     public void ticketValidation(Retrieve retrieve) {
+        TestReporter.logStep("Ticket Validation");
 
-        TestReporter.assertTrue(!retrieve.getTicketStatus().isEmpty(), "Verify the ticket details status is in response [" + retrieve.getTicketStatus() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTicketStatus().isEmpty(), "Verify the ticket details status is in response [" + retrieve.getTicketStatus() + "].");
 
-        TestReporter.assertTrue(!retrieve.getTicketGuestId().isEmpty(), "Verify the ticket details guest id is in response [" + retrieve.getTicketGuestId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTicketGuestId().isEmpty(), "Verify the ticket details guest id is in response [" + retrieve.getTicketGuestId() + "].");
 
-        TestReporter.assertTrue(!retrieve.getTicketAgeType().isEmpty(), "Verify the ticket details age type is in the response [" + retrieve.getTicketAgeType() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTicketAgeType().isEmpty(), "Verify the ticket details age type is in the response [" + retrieve.getTicketAgeType() + "].");
 
-        TestReporter.assertTrue(!retrieve.getTicketComponentId().isEmpty(), "Verify the ticket details component id is in the response[" + retrieve.getTicketComponentId() + "].");
+        TestReporter.softAssertTrue(!retrieve.getTicketComponentId().isEmpty(), "Verify the ticket details component id is in the response[" + retrieve.getTicketComponentId() + "].");
 
-        TestReporter.assertTrue(!retrieve.getTicketCode().isEmpty(), "Verify the ticket details ticket code is in the response [" + retrieve.getTicketCode() + "].");
-
+        TestReporter.softAssertTrue(!retrieve.getTicketCode().isEmpty(), "Verify the ticket details ticket code is in the response [" + retrieve.getTicketCode() + "].");
+        TestReporter.assertAll();
     }
 
     public void sqlGuest_PartyId(String env, String tp) {
@@ -244,9 +357,10 @@ public class RetrieveHelper {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }
 
-        TestReporter.assertTrue(!rs.getValue("GUEST_ID", 1).isEmpty(), "The guest id  is [" + rs.getValue("GUEST_ID", 1) + "]");
+        TestReporter.softAssertTrue(!rs.getValue("GUEST_ID", 1).isEmpty(), "The guest id  is [" + rs.getValue("GUEST_ID", 1) + "]");
 
-        TestReporter.assertTrue(!rs.getValue("PARTY_ID", 1).isEmpty(), "The party id  is [" + rs.getValue("PARTY_ID", 1) + "]");
+        TestReporter.softAssertTrue(!rs.getValue("PARTY_ID", 1).isEmpty(), "The party id  is [" + rs.getValue("PARTY_ID", 1) + "]");
+        TestReporter.assertAll();
     }
 
     public void sqlConfirmationDetails(String env, String tps, Retrieve retrieve) {
@@ -256,7 +370,7 @@ public class RetrieveHelper {
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        rs.print();
+        // rs.print();
         if (rs.getRowCount() == 0) {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }
@@ -277,9 +391,10 @@ public class RetrieveHelper {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }
 
-        TestReporter.assertTrue(!rs.getValue("ADM_TC_ID", 1).isEmpty(), "The admission tc id  is [" + rs.getValue("ADM_TC_ID", 1) + "]");
+        TestReporter.softAssertTrue(!rs.getValue("ADM_TC_ID", 1).isEmpty(), "The admission tc id  is [" + rs.getValue("ADM_TC_ID", 1) + "]");
 
-        TestReporter.assertTrue(!rs.getValue("ATS_TKT_CD", 1).isEmpty(), "The ticket cd  is [" + rs.getValue("ATS_TKT_CD", 1) + "]");
+        TestReporter.softAssertTrue(!rs.getValue("ATS_TKT_CD", 1).isEmpty(), "The ticket cd  is [" + rs.getValue("ATS_TKT_CD", 1) + "]");
+        TestReporter.assertAll();
     }
 
     public void sqlTPSDetails(String env, String tps, Retrieve retrieve) {
@@ -294,12 +409,12 @@ public class RetrieveHelper {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }
 
-        TestReporter.assertTrue(rs.getValue("TPS_ID", 1).equals(retrieve.getTravelPlanSegmentId()), "The travel plan segment id  matches [" + rs.getValue("TPS_ID", 1) + "] the response [" + retrieve.getTravelPlanSegmentId() + "].");
+        TestReporter.softAssertTrue(rs.getValue("TPS_ID", 1).equals(retrieve.getTravelPlanSegmentId()), "The travel plan segment id  matches [" + rs.getValue("TPS_ID", 1) + "] the response [" + retrieve.getTravelPlanSegmentId() + "].");
 
-        TestReporter.assertTrue(rs.getValue("TP_ID", 1).equals(retrieve.getTravelPlanId()), "The travel Plan id  matches [" + rs.getValue("TP_ID", 1) + "] the response [" + retrieve.getTravelPlanId() + "].");
+        TestReporter.softAssertTrue(rs.getValue("TP_ID", 1).equals(retrieve.getTravelPlanId()), "The travel Plan id  matches [" + rs.getValue("TP_ID", 1) + "] the response [" + retrieve.getTravelPlanId() + "].");
 
-        TestReporter.assertTrue(!rs.getValue("TRVL_STS_NM", 1).isEmpty(), "The travel status name is [" + rs.getValue("TRVL_STS_NM", 1) + "].");
-
+        TestReporter.softAssertTrue(!rs.getValue("TRVL_STS_NM", 1).isEmpty(), "The travel status name is [" + rs.getValue("TRVL_STS_NM", 1) + "].");
+        TestReporter.assertAll();
     }
 
     public void sqlTPSConfirmationDetails(String env, String tps, Retrieve retrieve) {
@@ -315,9 +430,9 @@ public class RetrieveHelper {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }
 
-        TestReporter.assertTrue(!rs.getValue("TPS_ID", 1).isEmpty(), "The travel plan segment id is [" + rs.getValue("TPS_ID", 1) + "]");
-        TestReporter.assertTrue(!rs.getValue("TPS_CNFIRM_RCPNT_ID", 1).isEmpty(), "The tps confirmation rcpnt id is [" + rs.getValue("TPS_CNFIRM_RCPNT_ID", 1) + "]");
-
+        TestReporter.softAssertTrue(!rs.getValue("TPS_ID", 1).isEmpty(), "The travel plan segment id is [" + rs.getValue("TPS_ID", 1) + "]");
+        TestReporter.softAssertTrue(!rs.getValue("TPS_CNFIRM_RCPNT_ID", 1).isEmpty(), "The tps confirmation rcpnt id is [" + rs.getValue("TPS_CNFIRM_RCPNT_ID", 1) + "]");
+        TestReporter.assertAll();
     }
 
     public void sqlPrimaryTPLinkedDVCReservation(String env, String tp, Retrieve retrieve) {
@@ -333,11 +448,13 @@ public class RetrieveHelper {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }
 
-        TestReporter.assertTrue(!rs.getValue("TPS_CNFIRM_RCPNT_ID", 1).isEmpty(), "The tps confirmation rcpnt id is [" + rs.getValue("TPS_CNFIRM_RCPNT_ID", 1) + "]");
-        TestReporter.assertTrue(!rs.getValue("TPS_ID", 1).isEmpty(), "The travel plan segment id is [" + rs.getValue("TPS_ID", 1) + "]");
+        TestReporter.softAssertTrue(!rs.getValue("TPS_CNFIRM_RCPNT_ID", 1).isEmpty(), "The tps confirmation rcpnt id is [" + rs.getValue("TPS_CNFIRM_RCPNT_ID", 1) + "]");
+        TestReporter.softAssertTrue(!rs.getValue("TPS_ID", 1).isEmpty(), "The travel plan segment id is [" + rs.getValue("TPS_ID", 1) + "]");
+        TestReporter.assertAll();
     }
 
     public void multiAddressCheck(ReplaceAllForTravelPlanSegment book, Retrieve retrieve, HouseHold hh) {
+        TestReporter.logStep("Validating Multiple Address Returned");
 
         TestReporter.softAssertTrue(retrieve.getTPAddressDetailsCount() == 2, "Verify two TP Address Detail blocks are returned.  Count: [" + retrieve.getTPAddressDetailsCount() + "]");
         TestReporter.softAssertTrue(retrieve.getPrimaryPtyAddressDetailsCount() == 2, "Verify two primary party Address Detail blocks are returned.  Count: [" + retrieve.getPrimaryPtyAddressDetailsCount() + "]");
@@ -489,6 +606,7 @@ public class RetrieveHelper {
     }
 
     public void multiEmailCheck(ReplaceAllForTravelPlanSegment book, Retrieve retrieve, HouseHold hh) {
+        TestReporter.logStep("Validating Multiple Email Details Returned");
 
         TestReporter.softAssertTrue(retrieve.getTPEmailDetailsCount() == 2, "Verify two TP Email Detail blocks are returned.  Count: [" + retrieve.getTPEmailDetailsCount() + "]");
         TestReporter.softAssertTrue(retrieve.getPPEmailDetailsCount() == 2, "Verify two primary party Email Detail blocks are returned.  Count: [" + retrieve.getPPEmailDetailsCount() + "]");
@@ -545,6 +663,7 @@ public class RetrieveHelper {
     }
 
     public void multiPhoneCheck(ReplaceAllForTravelPlanSegment book, Retrieve retrieve, HouseHold hh) {
+        TestReporter.logStep("Validating Multiple Phone Details Returned");
 
         TestReporter.softAssertTrue(retrieve.getTPPhoneDetailsCount() == 2, "Verify two TP Phone Detail blocks are returned.  Count: [" + retrieve.getTPPhoneDetailsCount() + "]");
         TestReporter.softAssertTrue(retrieve.getPPPhoneDetailsCount() == 2, "Verify two primary party Phone Detail blocks are returned.  Count: [" + retrieve.getPPPhoneDetailsCount() + "]");
@@ -614,6 +733,7 @@ public class RetrieveHelper {
     }
 
     public void dvcMembershipValidations(Retrieve retrieve, DVCMember member) {
+        TestReporter.logStep("Validating DVC Membership Information");
 
         TestReporter.softAssertEquals(retrieve.getMembershipId(), member.getMembershipRefId(), "Verify the membership ID from the retrieve [" + retrieve.getMembershipId() + "] is as expected "
                 + "[" + member.getMembershipRefId() + "]");
