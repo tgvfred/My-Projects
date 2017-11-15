@@ -4,6 +4,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.helpers.OfferQueryHelper;
+import com.disney.api.helpers.RoomResHelper;
 import com.disney.api.mq.sbc.RoomRes;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.GetAccommodationExternalReferences;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -36,9 +38,9 @@ public class Test_GetAccommodationExternalReferences_bookingWithMultipleAccommEx
         bookReservation();
 
         // Sample DDR Res
-        // OfferQueryHelper offer = new OfferQueryHelper(environment, "WDW", "DDRAH", true);
-        // RoomResHelper res = new RoomResHelper(environment, "WDW", "Main", "1 Adult", offer.resortCode, offer.roomType, offer.packageCode);
-        // room = res.getRoomRes();
+        OfferQueryHelper offer = new OfferQueryHelper(environment, "WDW", "OfferQueryRQ_WDW_Swan", false, "none");
+        RoomResHelper res = new RoomResHelper(environment, "WDW", "Main", "1 Adult", offer);
+        room = res.getRoomRes();
 
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("externalReferences"));
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/externalReferences[2]", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceSource"));
