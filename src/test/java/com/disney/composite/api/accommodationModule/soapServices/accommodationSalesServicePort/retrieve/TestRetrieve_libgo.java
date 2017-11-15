@@ -44,7 +44,7 @@ public class TestRetrieve_libgo extends AccommodationBaseTest {
 
         RetrieveHelper helper = new RetrieveHelper();
         helper.baseValidation(getBook(), retrieve);
-        helper.TpsValidation(retrieve);
+        // helper.TpsValidation(retrieve);
         TestReporter.assertTrue(!retrieve.getBlockCode().equals(""), "The block code in the response is [" + retrieve.getBlockCode() + "].");
         TestReporter.assertTrue(!retrieve.getTicketGroup().equals(""), "The ticket group in the response is [" + retrieve.getTicketGroup() + "].");
         TestReporter.assertTrue(!retrieve.getExternalRefNum().equals(""), "The External Reference Number in the response is [" + retrieve.getExternalRefNum() + "].");
