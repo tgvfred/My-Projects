@@ -847,6 +847,7 @@ public class Retrieve extends AccommodationSalesServicePort {
     }
 
     public String getAccommRates() {
+
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/rates");
 
     }
