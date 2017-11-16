@@ -17,16 +17,12 @@ public class TestRetrieve_vip extends AccommodationBaseTest {
     public void setup(String environment) {
         setEnvironment(environment);
         isComo.set("false");
-
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
-
         setValues(getEnvironment());
-        isComo.set("false");
         setNonZeroVip(true);
-
         bookReservation();
 
     }

@@ -28,7 +28,6 @@ public class TestRetrieve_RRN extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        isComo.set("false");
         bookReservation();
 
     }

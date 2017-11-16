@@ -27,7 +27,7 @@ public class TestRetrieveTeamByGroupCode extends BaseTest {
     public void testRetrieveTeamsByGroupCodeInvalidGroupCode() {
 
         RetrieveTeamsByGroupCode retrieveTeamsByGroupCode = new RetrieveTeamsByGroupCode(environment);
-        retrieveTeamsByGroupCode.setgroupcode("9Pluto987");
+        retrieveTeamsByGroupCode.setgroupcode("Pluto987");
         retrieveTeamsByGroupCode.sendRequest();
         TestReporter.logAPI(!retrieveTeamsByGroupCode.getResponseStatusCode().equals("200"), "The response code was  200", retrieveTeamsByGroupCode);
         TestReporter.assertNull(retrieveTeamsByGroupCode.getTeamCode(), "The team code retrieved: " + retrieveTeamsByGroupCode.getTeamCode() + ".   Expected null");
