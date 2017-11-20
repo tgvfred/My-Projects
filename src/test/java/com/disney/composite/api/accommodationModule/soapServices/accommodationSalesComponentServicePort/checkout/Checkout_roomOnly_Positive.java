@@ -814,7 +814,7 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         TestReporter.softAssertTrue(rs.getRowCount() == 4, "Verify that 4 charges were found.");
         do {
             TestReporter.softAssertEquals(rs.getValue("CHRG_PST_ST_NM"), "Earned", "Verify that the charge past state name [" + rs.getValue("CHRG_PST_ST_NM") + "] is that which is expected [Earned].");
-            TestReporter.softAssertEquals(rs.getValue("CHRG_ACTV_IN"), "Y", "Verify that the charge active indicator [" + rs.getValue("CHRG_ACTV_IN") + "] is that which is expected [Y].");
+            TestReporter.softAssertEquals(rs.getValue("CHRG_ACTV_IN"), "N", "Verify that the charge active indicator [" + rs.getValue("CHRG_ACTV_IN") + "] is that which is expected [N].");
             TestReporter.softAssertEquals(rs.getValue("RECOG_STS_NM"), "APPROVED", "Verify that the RECOG status [" + rs.getValue("RECOG_STS_NM") + "] is that which is expected [APPROVED].");
             rs.moveNext();
         } while (rs.hasNext());
@@ -850,8 +850,10 @@ public class Checkout_roomOnly_Positive extends AccommodationBaseTest {
         Recordset rs = new Recordset(db.getResultSet(sql));
         TestReporter.softAssertTrue(rs.getRowCount() == 4, "Verify that 3 charge groups were found.");
         do {
-            if (!rs.getValue("EXTNL_REF_VAL").equals(tcg)) {
+            if (rs.getValue("EXTNL_REF_VAL").equals(getBook().getTravelPlanSegmentId()) || rs.getValue("EXTNL_REF_VAL").equals(getBook().getTravelComponentGroupingId())) {
                 TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "Past Visit", "Verify that the charge group status [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Past Visit].");
+            } else if (rs.getValue("EXTNL_REF_VAL").equals(getBook().getTravelPlanId())) {
+                TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "Earned", "Verify that the charge group status [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Earned].");
             } else {
                 TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "UnEarned", "Verify that the charge group status [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [UnEarned].");
             }
