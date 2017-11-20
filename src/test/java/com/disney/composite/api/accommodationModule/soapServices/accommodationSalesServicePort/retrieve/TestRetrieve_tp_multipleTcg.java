@@ -59,6 +59,7 @@ public class TestRetrieve_tp_multipleTcg extends AccommodationBaseTest {
 
         // validations
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
         helper.tcgValidation(retrieve);
 

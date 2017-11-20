@@ -42,6 +42,7 @@ public class TestRetrieve_guestWithMultPhones extends AccommodationBaseTest {
 
         RetrieveHelper helper = new RetrieveHelper();
         helper.multiPhoneCheck(getBook(), retrieve, getHouseHold());
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
 
         // Old vs New

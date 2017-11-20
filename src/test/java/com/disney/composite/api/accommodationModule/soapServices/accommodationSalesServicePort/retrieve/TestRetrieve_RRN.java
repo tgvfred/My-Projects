@@ -57,6 +57,7 @@ public class TestRetrieve_RRN extends AccommodationBaseTest {
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
 
         TestReporter.assertTrue(retrieve.getRoomReadyNotificationInformationTPID().equals(getBook().getTravelPlanId()), "The Room Ready Notification Information tp id id [" + retrieve.getRoomReadyNotificationInformationTPID() + "]");
