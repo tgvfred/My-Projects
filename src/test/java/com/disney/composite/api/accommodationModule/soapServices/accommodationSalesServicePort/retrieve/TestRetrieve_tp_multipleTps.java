@@ -30,8 +30,6 @@ public class TestRetrieve_tp_multipleTps extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-
-        isComo.set("false");
         bookReservation();
 
         tpId = getBook().getTravelPlanId();

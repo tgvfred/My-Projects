@@ -176,7 +176,7 @@ public class TestGetOptions_Positive extends BaseTest {
         service.sendRequest();
         TestReporter.logAPI(!service.getResponseStatusCode().equals("200"), "An error occurred in the get " + parameter + " options request", service);
 
-        service.validateResponseNodeQuantity(scenario, true);
+        service.validateResponseNodeQuantity(scenario, false);
 
         if (Environment.isSpecialEnvironment(environment) || isComo.equals("true")) {
             BaseSoapService serviceBaseLine = (BaseSoapService) service.clone();

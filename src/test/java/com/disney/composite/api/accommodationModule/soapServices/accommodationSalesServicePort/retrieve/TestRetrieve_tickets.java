@@ -26,7 +26,6 @@ public class TestRetrieve_tickets extends AccommodationBaseTest {
         setValues(getEnvironment());
         setAddTickets(true);
         setAddNewGuest(true);
-        isComo.set("false");
         bookReservation();
 
     }

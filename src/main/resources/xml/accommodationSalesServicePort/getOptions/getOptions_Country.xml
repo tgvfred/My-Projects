@@ -233,11 +233,11 @@
 			</response>
 			<response>
 				<optionKey>CUW</optionKey>
-				<optionValue>CuraÃ§ao</optionValue>
+				<optionValue>[a-A z-Z 0-9]+</optionValue>
 			</response>
 			<response>
 				<optionKey>CIV</optionKey>
-				<optionValue>CÃ”TE D''IVOIRE</optionValue>
+				<optionValue>[a-A z-Z 0-9]+</optionValue>
 			</response>
 			<response>
 				<optionKey>DNK</optionKey>
@@ -997,7 +997,7 @@
 			</response>
 			<response>
 				<optionKey>ALA</optionKey>
-				<optionValue>Ã…LAND ISLANDS</optionValue>
+				<optionValue>([0-9 a-z A-Z]+).*</optionValue>
 			</response>
 		</ns4:getOptionsResponse>
 	</soap:Body>
