@@ -45,6 +45,7 @@ public class TestRetrieve_SbcRes_package extends AccommodationBaseTest {
 
         RetrieveHelper helper = new RetrieveHelper();
         helper.setFlag(true);
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
 
         TestReporter.softAssertEquals(firstName, retrieve.getFirstName(), "Verify the first name [" + retrieve.getFirstName() + "] matches the expected [" + firstName + "]");

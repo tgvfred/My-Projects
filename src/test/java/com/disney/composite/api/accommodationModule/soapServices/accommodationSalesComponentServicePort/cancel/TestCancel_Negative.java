@@ -2,6 +2,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND;
 import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_CANCELLED;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.CANNOT_CANCEL_ACCOMMODATIONS_WITH_TICKETS;
 import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_EXTERNAL_REFERENCE_CODE_REQUIRED;
 import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION;
 
@@ -91,5 +92,26 @@ public class TestCancel_Negative extends AccommodationBaseTest {
 
         validateApplicationError(cancel, ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_CANCELLED);
 
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
+    public void testCancel_groupBookingWithTickets() {
+        // groupBooking();
+        // addTickets();
+        try {
+            cancel();
+        } catch (Exception e) {
+
+        }
+        setIsWdtcBooking(true);
+        setAddTickets(true);
+        bookReservation();
+
+        TestReporter.logScenario("Test - Cancel - Group Booking With Tickets");
+
+        Cancel cancel = new Cancel(environment);
+        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.sendRequest();
+        validateApplicationError(cancel, CANNOT_CANCEL_ACCOMMODATIONS_WITH_TICKETS);
     }
 }

@@ -17,6 +17,11 @@ public class RetrieveHelper {
     public boolean sbc = false;
     public boolean first = false;
     public boolean second = false;
+    public Boolean validateProfile = true;
+
+    public void setValidateProfile(Boolean validateProfile) {
+        this.validateProfile = validateProfile;
+    }
 
     public void setFlag(Boolean boo) {
         this.sbc = boo;
@@ -300,7 +305,9 @@ public class RetrieveHelper {
 
         TestReporter.softAssertTrue(!retrieve.getAccommPeriodED().isEmpty(), "Verify the period end date is in the response[" + retrieve.getAccommPeriodED() + "].");
 
-        TestReporter.softAssertTrue(!retrieve.getAccommProfiles().isEmpty(), "Verify the profiles is in the response [" + retrieve.getAccommProfiles() + "].");
+        if (validateProfile) {
+            TestReporter.softAssertTrue(!retrieve.getAccommProfiles().isEmpty(), "Verify the profiles is in the response [" + retrieve.getAccommProfiles() + "].");
+        }
 
         TestReporter.softAssertTrue(!retrieve.getAccommRSR().isEmpty(), "Verify the RSR is in the response[" + retrieve.getAccommRSR() + "].");
 
