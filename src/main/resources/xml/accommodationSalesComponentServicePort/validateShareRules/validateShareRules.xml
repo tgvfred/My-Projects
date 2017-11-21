@@ -10,7 +10,6 @@
                <!--Optional:-->
                <startDate>?</startDate>
             </sharePeriod>
-            <!--1 or more repetitions:-->
             <sharedRoomDetails>
                <!--Optional:-->
                <blockCode>?</blockCode>

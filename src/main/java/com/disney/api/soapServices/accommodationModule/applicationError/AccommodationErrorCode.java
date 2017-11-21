@@ -41,6 +41,9 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode PARTY_SERVICE_FAILURE = new ApplicationErrorCode(APP_NAME, 7135,
             "Error Invoking  PartyService Service ");
 
+    public static final ApplicationErrorCode DATES_MUST_OVERLAP = new ApplicationErrorCode(APP_NAME, 7135,
+            "Accommodation can not be shared - dates must overlap at least one night");
+
     public static final ApplicationErrorCode INVALID_REQUEST = new ApplicationErrorCode(APP_NAME, 9042,
             "INVALID REQUEST!");
 
