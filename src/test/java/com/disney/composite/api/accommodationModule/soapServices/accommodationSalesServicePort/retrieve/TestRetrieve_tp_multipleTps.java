@@ -30,8 +30,6 @@ public class TestRetrieve_tp_multipleTps extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-
-        isComo.set("false");
         bookReservation();
 
         tpId = getBook().getTravelPlanId();
@@ -58,6 +56,7 @@ public class TestRetrieve_tp_multipleTps extends AccommodationBaseTest {
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
         helper.TpsValidation(retrieve);
 

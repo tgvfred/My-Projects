@@ -6,8 +6,8 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.ReinstateHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
@@ -25,9 +25,11 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
     String TCG;
     private String travelStatus = "Booked";
     private String tpsCancelDate = "NULL";
-    private AddAccommodationHelper helper;
+    // private AddAccommodationHelper helper;
     private String env;
+    private ReplaceAllForTravelPlanSegment book2;
 
+    @SuppressWarnings("static-access")
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -42,12 +44,28 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
         bookReservation();
         TCG = getBook().getTravelComponentGroupingId();
         env = environment;
+
+        AccommodationBaseTest base = new AccommodationBaseTest();
+        base.setEnvironment(getEnvironment());
+        base.beforeSuite(base.getEnvironment());
+        base.setDaysOut(0);
+        base.setNights(1);
+        base.setArrivalDate(getDaysOut());
+        base.setDepartureDate(getNights());
+        base.setValues(getFacilityId(), getRoomTypeCode(), getLocationId());
+        base.setSendRequest(false);
+        base.bookReservation();
+        base.getBook().setTravelPlanId(getBook().getTravelPlanId());
+        base.getBook().setTravelPlanSegementId(getBook().getTravelPlanSegmentId());
+        base.getBook().sendRequest();
+        TestReporter.logAPI(!base.getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second accommodation: " + base.getBook().getFaultString(), base.getBook());
+        book2 = base.getBook();
     }
 
     @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodatoinsales" })
     public void Test_Reinstate_twoAccomm_cancelOne() {
-        helper = new AddAccommodationHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook());
-        helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
+        // helper = new AddAccommodationHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook());
+        // helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
         cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
@@ -127,8 +145,8 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
         int numExpectedRecords14 = 2;
         reinstateHelper.validateTCReservationStatusForTCG(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "1",
                 "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
-        reinstateHelper.validateTCReservationStatusForTCGs(numExpectedRecords14, helper.getTcId(), getArrivalDate(), getDepartureDate(), "1",
-                "Booked", getFacilityId(), helper.getTcgId());
+        reinstateHelper.validateTCReservationStatusForTCGs(numExpectedRecords14, book2.getTravelComponentId(), getArrivalDate(), getDepartureDate(), "1",
+                "Booked", getFacilityId(), book2.getTravelComponentGroupingId());
 
         int numExpectedRecords12 = 1;
         reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, cancel.getCancellationNumber(), getArrivalDate(), getDepartureDate());
@@ -152,13 +170,13 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
 
         int numExpectedRecords8 = 4;
         reinstateHelper.validateReservationHistoryMultAccomm(numExpectedRecords8, getBook().getTravelComponentId());
-        reinstateHelper.validateReservationHistoryMultAccomm(numExpectedRecords8, helper.getTcgId());
+        reinstateHelper.validateReservationHistoryMultAccomm(numExpectedRecords8, book2.getTravelComponentGroupingId());
         // reinstateHelper.validateReservationHistory(numExpectedRecords8);
 
-        int numExpectedRecords10 = 1;
+        // int numExpectedRecords10 = 1;
         // reinstateHelper.validateTPV3Records(numExpectedRecords10, getArrivalDate(), getDepartureDate());
 
-        int numExpectedRecords11 = 1;
+        // int numExpectedRecords11 = 1;
         // reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), getDepartureDate());
 
         reinstateHelper.validateTCFee(true, 1);

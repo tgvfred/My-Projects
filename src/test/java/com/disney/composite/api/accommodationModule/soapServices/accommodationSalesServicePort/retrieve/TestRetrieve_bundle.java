@@ -12,8 +12,6 @@ import com.disney.utils.TestReporter;
 
 public class TestRetrieve_bundle extends AccommodationBaseTest {
 
-    private String tcgId;
-
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -27,9 +25,6 @@ public class TestRetrieve_bundle extends AccommodationBaseTest {
         setIsBundle(true);
         isComo.set("true");
         bookReservation();
-
-        tcgId = getBundleTcg();
-
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })

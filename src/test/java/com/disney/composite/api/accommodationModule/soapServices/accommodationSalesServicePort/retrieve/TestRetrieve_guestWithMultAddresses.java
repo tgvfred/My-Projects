@@ -42,6 +42,7 @@ public class TestRetrieve_guestWithMultAddresses extends AccommodationBaseTest {
 
         RetrieveHelper helper = new RetrieveHelper();
         helper.multiAddressCheck(getBook(), retrieve, getHouseHold());
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
 
         // Old vs New

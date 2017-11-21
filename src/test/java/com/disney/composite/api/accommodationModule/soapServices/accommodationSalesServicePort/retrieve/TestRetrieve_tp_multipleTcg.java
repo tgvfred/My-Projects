@@ -32,7 +32,6 @@ public class TestRetrieve_tp_multipleTcg extends AccommodationBaseTest {
         setValues(getEnvironment());
 
         setAddNewGuest(true);
-        isComo.set("false");
         bookReservation();
 
         tpId = getBook().getTravelPlanId();
@@ -58,10 +57,9 @@ public class TestRetrieve_tp_multipleTcg extends AccommodationBaseTest {
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
-        System.out.println(retrieve.getResponse());
-
         // validations
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
         helper.tcgValidation(retrieve);
 

@@ -40,22 +40,6 @@ public class TestRetrieve_checkedOut extends AccommodationBaseTest {
     public void testRetrieve_checkedOut() {
         String tcg = getBook().getTravelComponentGroupingId();
 
-        /*
-         * CheckIn checkin = new CheckIn(environment, "Main");
-         * checkin.setTravelComponentGroupingId(tcg);
-         * checkin.setGuestId(getGuestId());
-         * checkin.setLocationId(getLocationId());
-         * checkin.sendRequest();
-         * TestReporter.logAPI(!checkin.getResponseStatusCode().equals("200"), "An error occurred getting checkin : " + checkin.getFaultString(), checkin);
-         *
-         * CheckOut checkout = new CheckOut(environment, "Check Out");
-         * checkout.setTravelComponentGroupingId(tcg);
-         * checkout.setLocationId(getLocationId());
-         * checkout.sendRequest();
-         * System.out.println(checkout.getResponse());
-         * TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "An error occurred getting checkout: " + checkout.getFaultString(), checkout);
-         */
-
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
@@ -84,9 +68,8 @@ public class TestRetrieve_checkedOut extends AccommodationBaseTest {
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
-        System.out.println(retrieve.getResponse());
-
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
         helper.sqlTPSDetails(environment, getBook().getTravelPlanSegmentId(), retrieve);
         helper.sqlTPSConfirmationDetails(environment, getBook().getTravelPlanSegmentId(), retrieve);
