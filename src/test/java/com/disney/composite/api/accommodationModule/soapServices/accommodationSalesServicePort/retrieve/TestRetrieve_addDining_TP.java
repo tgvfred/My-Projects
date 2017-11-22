@@ -40,6 +40,7 @@ public class TestRetrieve_addDining_TP extends AccommodationBaseTest {
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
 
         TestReporter.assertTrue(retrieve.getComponentGroupingsCount() == 1, "Verify only one component groupings block is returned. Count: "

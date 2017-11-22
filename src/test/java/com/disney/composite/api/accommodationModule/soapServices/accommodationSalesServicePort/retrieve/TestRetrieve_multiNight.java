@@ -41,6 +41,7 @@ public class TestRetrieve_multiNight extends AccommodationBaseTest {
         String dateTwo = retrieve.getAccommRatesDate("2").substring(0, 10);
 
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
 
         TestReporter.softAssertTrue(retrieve.getAccommRatesCount() == 2, "Verify there are two Accomodation rates");

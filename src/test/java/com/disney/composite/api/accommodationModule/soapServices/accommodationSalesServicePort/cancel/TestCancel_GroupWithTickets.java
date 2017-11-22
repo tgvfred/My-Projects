@@ -13,6 +13,7 @@ import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.oper
 import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
@@ -46,7 +47,14 @@ public class TestCancel_GroupWithTickets extends AccommodationBaseTest {
 
         details = new RetrieveDetailsByTravelPlanId(Environment.getBaseEnvironmentName(environment), "Main");
         details.setTravelPlanId(getBook().getTravelPlanId());
-        details.sendRequest();
+
+        int tries = 0;
+        int maxTries = 30;
+        do {
+            Sleeper.sleep(1000);
+            details.sendRequest();
+            tries++;
+        } while (tries < maxTries && !details.getResponseStatusCode().equals("200"));
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
 
         add = new AddBundle(Environment.getBaseEnvironmentName(environment), "Main");

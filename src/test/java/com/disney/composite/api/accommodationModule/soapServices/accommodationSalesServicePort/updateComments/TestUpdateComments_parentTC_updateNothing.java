@@ -53,7 +53,7 @@ public class TestUpdateComments_parentTC_updateNothing extends AccommodationBase
         // Validate node response values
         TestReporter.logStep("Validate Response node values.");
         TestReporter.setAssertFailed(false);
-        TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred getting options by filter", update);
+        TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred updating comments: " + update.getFaultString(), update);
         TestReporter.softAssertTrue(update.getSendToGSR().equals(sendToGSR), "Verify that the sendToGSR node [" + update.getSendToGSR() + "] is what is expected [" + sendToGSR + "]");
         TestReporter.softAssertTrue(update.getConfidential().equals(confidential), "Verify that the confidential node [" + update.getConfidential() + "] is what is expected [" + confidential + "]");
         TestReporter.softAssertTrue(update.getCommentText().equals(commentText), "Verify that the commentText node [" + update.getCommentText() + "] is what is expected [" + commentText + "]");

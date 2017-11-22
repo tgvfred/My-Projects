@@ -57,7 +57,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithAccommAndD
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
 
-        TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
+        TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation: " + process.getFaultString(), process);
         // validations
 
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();

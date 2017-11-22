@@ -43,6 +43,7 @@ public class TestRetrieve_libgo extends AccommodationBaseTest {
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
         // helper.TpsValidation(retrieve);
         TestReporter.assertTrue(!retrieve.getBlockCode().equals(""), "The block code in the response is [" + retrieve.getBlockCode() + "].");
