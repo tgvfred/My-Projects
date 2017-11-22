@@ -18,7 +18,6 @@ import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.FindRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.accommodationStatusComponentService.operations.UpdateSingleRoomStatus;
-import com.disney.api.utils.dataFactory.database.sqlStorage.Dreams;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
@@ -27,6 +26,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.Dreams_AccommodationQueries;
+import com.disney.utils.dataFactory.database.sqlStorage.Dreams_TPS;
 
 public class CheckInHelper {
     private String environment;
@@ -323,7 +323,7 @@ public class CheckInHelper {
         Retrieve retrieve = new Retrieve(getEnvironment(), "Main");
         retrieve.setRequestNodeValueByXPath("//request/travelPlanId", getTpId());
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams.getLocationIdByTpId(getTpId())));
+        Recordset rs = new Recordset(db.getResultSet(Dreams_TPS.getLocationIdByTpId(getTpId())));
 
         do {
             retrieve.setRequestNodeValueByXPath("//request/locationId", rs.getValue("WRK_LOC_ID"));
