@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.disney.gqe.composite.api</groupId>
+	<groupId>com.disney.mslt.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.0.32</version>
+	<version>1.1.00</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -11,110 +11,125 @@
 	      <name>WDPRO</name>
 	      <url>https://nexus.disney.com/nexus/content/repositories/WDPRO/</url>
 	    </repository>
-	  	</distributionManagement>	
+  	</distributionManagement>	
+  	<properties>
+	    <apiUtilsSoap.version>1.1.00</apiUtilsSoap.version>
+	    <activity.version>1.1.00</activity.version>  
+	    <admission.version>1.1.00</admission.version>    
+	    <dining.version>1.1.00</dining.version>    
+	    <dvcCorp.version>1.1.00</dvcCorp.version>     
+	    <dvcPoints.version>1.1.00</dvcPoints.version>     
+	    <dvcSales.version>1.1.00</dvcSales.version>     
+	    <eai.version>1.1.00</eai.version>      
+	    <facility.version>1.1.00</facility.version>      
+	    <folio.version>1.1.00</folio.version>      
+	    <groups.version>1.1.00</groups.version>
+	    <party.version>1.1.00</party.version>    
+	    <pricing.version>1.1.00</pricing.version>      
+	    <resource.version>1.1.00</resource.version>           
+	    <travelplan.version>1.1.00</travelplan.version>           
+	    <travelplanSegment.version>1.1.00</travelplanSegment.version>        
+		<testNGSourceDirectory>src/test/resources</testNGSourceDirectory>
+		<additionalparam>-Xdoclint:none</additionalparam>
+	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>com.disney.gqe</groupId>
+			<groupId>com.disney.mslt</groupId>
 			<artifactId>APIUtilsSoap</artifactId>
-			<version>1.0.74</version>
+			<version>${apiUtilsSoap.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>Party</artifactId>
-			<version>1.0.10</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>Pricing</artifactId>
-			<version>1.0.9</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>Folio</artifactId>
-			<version>1.0.8</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>EAI</artifactId>
-			<version>1.0.17</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>TravelPlanSegment</artifactId>
-			<version>1.0.01</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>Resource</artifactId>
-			<version>1.0.11</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>Dining</artifactId>
-			<version>1.0.6</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
+			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Activity</artifactId>
-			<version>1.0.2</version>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>TravelPlan</artifactId>
-			<version>1.0.11</version>
+			<version>${activity.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>DVCSales</artifactId>
-			<version>1.0.15</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>DVCPoints</artifactId>
-			<version>1.0.00</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>DVCCorp</artifactId>
-			<version>1.0.00</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>Facility</artifactId>
-			<version>1.0.3</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
-			<artifactId>Groups</artifactId>
-			<version>1.0.3</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.disney.gqe.composite.api</groupId>
+			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Admission</artifactId>
-			<version>1.0.2</version>
+			<version>${admission.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>Dining</artifactId>
+			<version>${dining.version}</version>
+			<scope>provided</scope>
+		</dependency>	
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>DVCCorp</artifactId>
+			<version>${dvcCorp.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>DVCPoints</artifactId>
+			<version>${dvcPoints.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>DVCSales</artifactId>
+			<version>${dvcSales.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>EAI</artifactId>
+			<version>${eai.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>Facility</artifactId>
+			<version>${facility.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>Folio</artifactId>
+			<version>${folio.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>Groups</artifactId>
+			<version>${groups.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>Party</artifactId>
+			<version>${apiUtilsSoap.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>Pricing</artifactId>
+			<version>${pricing.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>Resource</artifactId>
+			<version>${resource.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>TravelPlan</artifactId>
+			<version>${travelplan.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>TravelPlanSegment</artifactId>
+			<version>${travelplanSegment.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>	
-	<properties>
-		<additionalparam>-Xdoclint:none</additionalparam>
-		<testNGSourceDirectory>src/test/resources</testNGSourceDirectory>
-	</properties>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -196,8 +211,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.3</version>
 					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
+						<source>1.8</source>
+						<target>1.8</target>
 					</configuration>
 				</plugin>
 			</plugins>
