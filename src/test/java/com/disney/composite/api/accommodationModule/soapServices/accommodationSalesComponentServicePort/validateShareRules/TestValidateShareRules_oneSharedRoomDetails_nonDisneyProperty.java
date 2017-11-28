@@ -27,7 +27,7 @@ public class TestValidateShareRules_oneSharedRoomDetails_nonDisneyProperty exten
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules", "negative" })
     public void testValidateShareRules_oneSharedRoomDetails_nonDisneyProperty() {
 
         String faultString = "Property should be Disney : null";

@@ -48,7 +48,7 @@ public class TestValidateShareRules_twoSharedRoomDetails_mismatchedResortTypes e
         endDate = getDepartureDate();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules", "negative" })
     public void testValidateShareRules_twoSharedRoomDetails_mismatchedResortTypes() {
 
         setSendRequest(false);

@@ -10,7 +10,7 @@ import com.disney.utils.TestReporter;
 
 public class TestValidateShareRules_nullSharedRoomDetails extends AccommodationBaseTest {
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules", "negative" })
     public void testValidateShareRules_nullSharedRoomDetails() {
 
         String faultString = "Required parameters are missing : null";

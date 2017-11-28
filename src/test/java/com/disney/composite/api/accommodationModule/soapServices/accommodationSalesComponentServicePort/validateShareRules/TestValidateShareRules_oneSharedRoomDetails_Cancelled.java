@@ -29,7 +29,7 @@ public class TestValidateShareRules_oneSharedRoomDetails_Cancelled extends Accom
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules", "negative" })
     public void testValidateShareRules_oneSharedRoomDetails_Cancelled() {
 
         Cancel cancel = new Cancel(environment, "Main");
