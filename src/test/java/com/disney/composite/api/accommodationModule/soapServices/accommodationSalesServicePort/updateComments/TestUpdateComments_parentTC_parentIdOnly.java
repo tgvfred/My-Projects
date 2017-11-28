@@ -7,7 +7,6 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Randomness;
-import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestUpdateComments_parentTC_parentIdOnly extends AccommodationBaseTest {
@@ -34,13 +33,13 @@ public class TestUpdateComments_parentTC_parentIdOnly extends AccommodationBaseT
         update.setRequestNodeValueByXPath("/Envelope/Body/updateComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         update.setRequestNodeValueByXPath("/Envelope/Body/updateComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
 
-        int tries = 0;
-        int maxTries = 20;
-        do {
-            Sleeper.sleep(1000);
-            update.sendRequest();
-            tries++;
-        } while (tries < maxTries && !update.getResponseStatusCode().equals("200"));
+        // int tries = 0;
+        // int maxTries = 20;
+        // do {
+        // Sleeper.sleep(1000);
+        update.sendRequest();
+        // tries++;
+        // } while (tries < maxTries && !update.getResponseStatusCode().equals("200"));
 
         // Validate that the nodes are not present in the xml
         TestReporter.logStep("Verify the nodes are not present in the response xml");

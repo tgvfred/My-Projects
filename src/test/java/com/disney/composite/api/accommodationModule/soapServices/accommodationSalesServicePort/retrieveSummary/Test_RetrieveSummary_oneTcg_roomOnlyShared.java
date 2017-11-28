@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
@@ -18,7 +19,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
+        setEnvironment(Environment.getBaseEnvironmentName(environment));
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
@@ -29,7 +30,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
         setIsShared(true);
         bookReservation();
 
-        Share share = new Share(environment);
+        Share share = new Share(Environment.getBaseEnvironmentName(environment));
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.setRoomNumber(BaseSoapCommands.REMOVE_NODE.toString());
         share.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
@@ -41,7 +42,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
     public void testRetrieveSummary_oneTcg_roomOnlyShared() {
 
         // Flips correctly while booking, but the it isn't flipped in RetrieveSummary RS
-        RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
+        RetrieveSummary retrieve = new RetrieveSummary(Environment.getBaseEnvironmentName(environment), "Main");
         // Per AmitC, TK-692088, TPS will be the input into the TCG node - 11/14/2017 - WWA
         // if (Environment.isSpecialEnvironment(environment)) {
         // retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
