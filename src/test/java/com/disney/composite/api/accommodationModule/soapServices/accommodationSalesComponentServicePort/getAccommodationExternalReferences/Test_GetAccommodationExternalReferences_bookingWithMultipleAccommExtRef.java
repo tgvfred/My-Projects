@@ -36,15 +36,9 @@ public class Test_GetAccommodationExternalReferences_bookingWithMultipleAccommEx
         bookReservation();
 
         // Sample DDR Res
-<<<<<<< HEAD
         // OfferQueryHelper offer = new OfferQueryHelper(environment, "WDW", "OfferQueryRQ_WDW_Swan", false, "none");
         // RoomResHelper res = new RoomResHelper(environment, "WDW", "Main", "1 Adult", offer);
         // room = res.getRoomRes();
-=======
-        OfferQueryHelper offer = new OfferQueryHelper(Environment.getBaseEnvironmentName(environment), "WDW", "OfferQueryRQ_WDW_Swan", false, "none");
-        RoomResHelper res = new RoomResHelper(Environment.getBaseEnvironmentName(environment), "WDW", "Main", "1 Adult", offer);
-        room = res.getRoomRes();
->>>>>>> bf814478752006235c47175a1171f656476df3c3
 
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails", BaseSoapCommands.ADD_NODE.commandAppend("externalReferences"));
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/externalReferences[2]", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceSource"));
