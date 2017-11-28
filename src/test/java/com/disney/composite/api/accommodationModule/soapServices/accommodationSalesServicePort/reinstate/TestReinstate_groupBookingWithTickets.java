@@ -195,10 +195,10 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
         reinstateHelper.validateReservationHistoryMultAccomm(numExpectedRecords8, getBook().getTravelComponentId());
         // reinstateHelper.validateReservationHistory(numExpectedRecords8);
 
-        int numExpectedRecords10 = 1;
+        // int numExpectedRecords10 = 1;
         // reinstateHelper.validateTPV3Records(numExpectedRecords10, getArrivalDate(), Randomness.generateCurrentXMLDate(getNights() + 1));
 
-        int numExpectedRecords11 = 1;
+        // int numExpectedRecords11 = 1;
         // reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), Randomness.generateCurrentXMLDate(getNights() + 1));
 
         reinstateHelper.validateTCFee(false, 0);

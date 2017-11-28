@@ -50,6 +50,7 @@ public class TestRetrieve_bookPackageSelectableTickets extends AccommodationBase
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
         helper.sqlAdmissionComponentDetails(environment, getBook().getTravelComponentGroupingId());
 

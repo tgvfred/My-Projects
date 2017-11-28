@@ -51,6 +51,7 @@ public class TestRetrieve_addConfirmation extends AccommodationBaseTest {
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
         helper.sqlTPSConfirmationDetails(Environment.getBaseEnvironmentName(getEnvironment()), getBook().getTravelPlanSegmentId(), retrieve);
 

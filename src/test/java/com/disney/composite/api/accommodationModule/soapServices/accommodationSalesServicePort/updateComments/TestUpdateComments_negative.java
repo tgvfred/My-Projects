@@ -26,7 +26,7 @@ public class TestUpdateComments_negative extends AccommodationBaseTest {
         validateApplicationError(update, AccommodationErrorCode.CREATE_COMMENTS);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "updateComments", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "updateComments", "negative", "debug" })
     public void testCreateComments_nullCommentsInfo() {
 
         String faultString = "Create Comments Request Invalid : CommentRequest should be provided";
@@ -34,6 +34,8 @@ public class TestUpdateComments_negative extends AccommodationBaseTest {
         UpdateComments update = new UpdateComments(environment, "Main");
         update.setparentIds(parentId);
         update.setRequestNodeValueByXPath("/Envelope/Body/updateComments/request/commentsInfo", BaseSoapCommands.REMOVE_NODE.toString());
+        update.setRequestNodeValueByXPath("//tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
+        update.setRequestNodeValueByXPath("//roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         update.sendRequest();
 
         TestReporter.assertEquals(update.getFaultString(), faultString, "Verify that the fault string [" + update.getFaultString() + "] is that which is expected [" + faultString + "].");

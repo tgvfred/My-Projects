@@ -16,7 +16,6 @@ public class TestUpdateComments_parentTC_parentIdOnly extends AccommodationBaseT
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateComments" })
     public void testUpdateComments_parentTC_parentIdOnly() {
-
         parentId = getBook().getTravelComponentId();
         UpdateComments update = new UpdateComments(environment, "Main");
         update.setparentIds(parentId);
@@ -33,7 +32,14 @@ public class TestUpdateComments_parentTC_parentIdOnly extends AccommodationBaseT
         update.setRequestNodeValueByXPath("/Envelope/Body/updateComments/request/commentsInfo/commentOwnerDetail", BaseSoapCommands.REMOVE_NODE.toString());
         update.setRequestNodeValueByXPath("/Envelope/Body/updateComments/request/roomExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         update.setRequestNodeValueByXPath("/Envelope/Body/updateComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
+
+        // int tries = 0;
+        // int maxTries = 20;
+        // do {
+        // Sleeper.sleep(1000);
         update.sendRequest();
+        // tries++;
+        // } while (tries < maxTries && !update.getResponseStatusCode().equals("200"));
 
         // Validate that the nodes are not present in the xml
         TestReporter.logStep("Verify the nodes are not present in the response xml");

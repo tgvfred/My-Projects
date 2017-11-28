@@ -18,7 +18,6 @@ public class TestRetrieve_profile extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        isComo.set("false");
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -28,7 +27,6 @@ public class TestRetrieve_profile extends AccommodationBaseTest {
         setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
-        System.out.println(getBook().getResponse());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })

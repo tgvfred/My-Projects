@@ -51,6 +51,7 @@ public class TestRetrieve_checkedIn extends AccommodationBaseTest {
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retrieve details: " + retrieve.getFaultString(), retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
         helper.sqlTPSDetails(environment, getBook().getTravelPlanSegmentId(), retrieve);
         helper.sqlTPSConfirmationDetails(environment, getBook().getTravelPlanSegmentId(), retrieve);

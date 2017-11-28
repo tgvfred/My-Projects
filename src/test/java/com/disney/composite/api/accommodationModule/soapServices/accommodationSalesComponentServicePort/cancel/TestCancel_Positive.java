@@ -6,15 +6,9 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.AddAccommodationHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
-import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.core.BaseSoapService;
-import com.disney.api.soapServices.pricingModule.packagingService.operations.FindTicketPriceGridByPackage;
-import com.disney.api.soapServices.pricingModule.packagingService.operations.GetTicketProducts;
 import com.disney.utils.Environment;
-import com.disney.utils.PackageCodes;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -47,31 +41,61 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         sendRequestAndValidateSoapResponse(cancel);
     }
 
+    @SuppressWarnings("static-access")
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
     public void testCancel_addAccommodation_cancelOne_tcgOnly() {
-        AddAccommodationHelper helper = addAccommodation();
+        String tpId = getBook().getTravelPlanId();
+        String tpsId = getBook().getTravelPlanSegmentId();
+        AccommodationBaseTest base = new AccommodationBaseTest();
+        base.setEnvironment(getEnvironment());
+        base.setDaysOut(0);
+        base.setNights(1);
+        base.setArrivalDate(getDaysOut());
+        base.setDepartureDate(getNights());
+        base.setValues(getFacilityId(), getRoomTypeCode(), getLocationId());
+        setSendRequest(false);
+        base.bookReservation();
+        base.getBook().setTravelPlanId(tpId);
+        base.getBook().setTravelPlanSegementId(tpsId);
+        base.getBook().sendRequest();
+        TestReporter.logAPI(!base.getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second reservation: " + base.getBook().getFaultString(), base.getBook());
 
         TestReporter.logScenario("Test - Cancel - Add Accommodation Cancel One TCG Only");
 
         Cancel cancel = buildRequestForDefaultBook();
         sendRequestAndValidateSoapResponse(cancel);
-        verifyNotCancelled(helper.getTcgId());
+        verifyNotCancelled(base.getBook().getTravelComponentGroupingId());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
+    @SuppressWarnings("static-access")
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "debug" })
     public void testCancel_addAccommodation_checkInOne_cancelOne_tcgOnly() {
         checkIn();
-        AddAccommodationHelper helper = addAccommodation();
+        String tpId = getBook().getTravelPlanId();
+        String tpsId = getBook().getTravelPlanSegmentId();
+        AccommodationBaseTest base = new AccommodationBaseTest();
+        base.setEnvironment(getEnvironment());
+        base.setDaysOut(0);
+        base.setNights(1);
+        base.setArrivalDate(getDaysOut());
+        base.setDepartureDate(getNights());
+        base.setValues(getFacilityId(), getRoomTypeCode(), getLocationId());
+        setSendRequest(false);
+        base.bookReservation();
+        base.getBook().setTravelPlanId(tpId);
+        base.getBook().setTravelPlanSegementId(tpsId);
+        base.getBook().sendRequest();
+        TestReporter.logAPI(!base.getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second reservation: " + base.getBook().getFaultString(), base.getBook());
 
         TestReporter.logScenario("Test - Cancel - Add Accommodation Check In One Cancel One TCG Only");
 
         Cancel cancel = new Cancel(environment);
-        cancel.setTravelComponentGroupingId(helper.getTcgId());
+        cancel.setTravelComponentGroupingId(base.getBook().getTravelComponentGroupingId());
         sendRequestAndValidateSoapResponse(cancel);
         verifyNotCancelled(getBook().getTravelComponentGroupingId());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "debug" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
     public void testCancel_addBundle_cancelAccommodation_tcgOnly() {
         addBundle();
 
@@ -90,18 +114,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
 
         Cancel cancel = buildRequestForDefaultBook();
         sendRequestAndValidateSoapResponse(cancel);
-    }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
-    public void testCancel_groupBookingWithTickets() {
-        groupBooking();
-        addTickets();
-
-        TestReporter.logScenario("Test - Cancel - Group Booking With Tickets");
-
-        Cancel cancel = buildRequestForDefaultBook();
-        sendRequestAndValidateSoapResponse(cancel);
-
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
@@ -129,11 +141,11 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     /*
      * Utility Functions
      */
-    private AddAccommodationHelper addAccommodation() {
-        AddAccommodationHelper helper = new AddAccommodationHelper(Environment.getBaseEnvironmentName(environment), getBook());
-        helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
-        return helper;
-    }
+    // private AddAccommodationHelper addAccommodation() {
+    // AddAccommodationHelper helper = new AddAccommodationHelper(Environment.getBaseEnvironmentName(environment), getBook());
+    // helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
+    // return helper;
+    // }
 
     private void addBundle() {
         setIsWdtcBooking(false);
@@ -141,96 +153,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         setIsBundle(true);
         setSkipDeposit(true);
         bookReservation();
-    }
-
-    private void addTickets() {
-        getBook().setRoomDetailsBlockCode("01825");
-        setArrivalDate(45);
-        setDepartureDate(1);
-
-        boolean success = false;
-        String packageCode = null;
-        PackageCodes pkg = new PackageCodes();
-        for (int i = 0; i < 100 && !success; i++) {
-            try {
-                packageCode = pkg.retrievePackageCode(environment, String.valueOf(getDaysOut()),
-                        getLocationId(), "WDW PKG", "*WDTC", getResortCode(), getRoomTypeCode(), "R MYW Pkg + Deluxe Dining");
-                success = true;
-            } catch (AssertionError e) {
-                setValues();
-            }
-        }
-        TestReporter.assertTrue(success, "The package code was found successfully.");
-        getBook().setRoomDetailsPackageCode(packageCode);
-        getBook().setRoomDetailsResortCode(getResortCode());
-        getBook().setRoomDetailsRoomTypeCode(getRoomTypeCode());
-        getBook().setAreaPeriodStartDate(getArrivalDate());
-        getBook().setAreaPeriodEndDate(getDepartureDate());
-
-        FindTicketPriceGridByPackage find = new FindTicketPriceGridByPackage(environment);
-        find.setPackageCode(packageCode);
-        find.sendRequest();
-        TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred finding tickets for package code [" + packageCode + "].");
-        trySetRequestNodeValueByXPath(getBook(), "//replaceAllForTravelPlanSegment/request/roomDetails/ticketGroup", find.getTicketGroupName());
-
-        GetTicketProducts get = new GetTicketProducts(environment, "Main");
-        get.setTicketGroupName(find.getTicketGroupName());
-        get.sendRequest();
-        TestReporter.assertTrue(get.getResponseStatusCode().equals("200"), "Verify that no error occurred finding ticket products for ticket group name [" + find.getTicketGroupName() + "].");
-        String admissionProductId = get.getAdmissionProductIdByTicketDescription("2 Day Base Ticket");
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/baseAdmissionProductId", admissionProductId);
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/code", admissionProductId);
-
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/firstName", getHouseHold().primaryGuest().getFirstName());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/lastName", getHouseHold().primaryGuest().getLastName());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/addressLine1", getHouseHold().primaryGuest().primaryAddress().getAddress1());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/city", getHouseHold().primaryGuest().primaryAddress().getCity());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/country", getHouseHold().primaryGuest().getAllAddresses().get(0).getCountry());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/postalCode", getHouseHold().primaryGuest().primaryAddress().getZipCode());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/state", getHouseHold().primaryGuest().primaryAddress().getState());
-
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/guestReference/guest/firstName", getHouseHold().primaryGuest().getFirstName());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/guestReference/guest/lastName", getHouseHold().primaryGuest().getLastName());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/guestReference/guest/addressDetails/addressLine1", getHouseHold().primaryGuest().primaryAddress().getAddress1());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/guestReference/guest/addressDetails/city", getHouseHold().primaryGuest().primaryAddress().getCity());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/guestReference/guest/addressDetails/country", getHouseHold().primaryGuest().getAllAddresses().get(0).getCountry());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/guestReference/guest/addressDetails/postalCode", getHouseHold().primaryGuest().primaryAddress().getZipCode());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/guestReference/guest/addressDetails/state", getHouseHold().primaryGuest().primaryAddress().getState());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/guestReference/guest/phoneDetails/number", getHouseHold().primaryGuest().primaryPhone().getNumber());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/roomDetails/ticketDetails/guestReference/guest/emailDetails/address", getHouseHold().primaryGuest().primaryEmail().getEmail());
-
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/firstName", getHouseHold().primaryGuest().getFirstName());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/lastName", getHouseHold().primaryGuest().getLastName());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/addressDetails/addressLine1", getHouseHold().primaryGuest().primaryAddress().getAddress1());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/addressDetails/city", getHouseHold().primaryGuest().primaryAddress().getCity());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/addressDetails/country", getHouseHold().primaryGuest().getAllAddresses().get(0).getCountry());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/addressDetails/postalCode", getHouseHold().primaryGuest().primaryAddress().getZipCode());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/addressDetails/state", getHouseHold().primaryGuest().primaryAddress().getState());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/phoneDetails/number", getHouseHold().primaryGuest().primaryPhone().getNumber());
-        trySetRequestNodeValueByXPath(getBook(), "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomReservationRequest/travelPlanGuest/emailDetails/address", getHouseHold().primaryGuest().primaryEmail().getEmail());
-
-        TestReporter.assertTrue(getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a prereq reservation: " + getBook().getFaultString());
-        setTpId(getBook().getTravelPlanId());
-        retrieveReservation();
-    }
-
-    private void trySetRequestNodeValueByXPath(BaseSoapService bss, String xpath, String value) {
-        if (bss.getNumberOfRequestNodesByXPath(xpath) > 0) {
-            bss.setRequestNodeValueByXPath(xpath, value.isEmpty() ? BaseSoapCommands.REMOVE_NODE.toString() : value);
-        } else if (!value.isEmpty()) {
-            resolveMissingPath(bss, xpath);
-            bss.setRequestNodeValueByXPath(xpath, value);
-        }
-    }
-
-    private void resolveMissingPath(BaseSoapService bss, String xpath) {
-        int lastindex = xpath.lastIndexOf('/');
-        String parentxpath = xpath.substring(0, lastindex);
-        String node = xpath.substring(lastindex + 1, xpath.length()).split("\\[")[0];
-        if (bss.getNumberOfRequestNodesByXPath(parentxpath) == 0) {
-            resolveMissingPath(bss, parentxpath);
-        }
-        bss.setRequestNodeValueByXPath(parentxpath, BaseSoapCommands.ADD_NODE.commandAppend(node));
     }
 
     private void checkingIn() {

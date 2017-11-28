@@ -185,8 +185,8 @@ public class RetrieveShareChainHelper {
         String retrieveDate[] = date.split("T");
         String databaseDate[] = rs.getValue("CHRG_FFL_DTS").split(" ");
         TestReporter.assertEquals(retrieveDate[0], databaseDate[0], "Verify the date [" + retrieveDate[0] + "] matches the expected [" + databaseDate[0] + "]");
-        String splitNetPrice[] = netPrice.split("\\.0");
-        TestReporter.assertEquals(splitNetPrice[0], rs.getValue("CHRG_AM"), "Verify the net price [" + splitNetPrice[0] + "] matches the expected [" + rs.getValue("CHRG_AM") + "]");
+        // String splitNetPrice[] = netPrice.split("\\.0");
+        TestReporter.assertEquals(Double.parseDouble(netPrice), Double.parseDouble(rs.getValue("CHRG_AM")), "Verify the net price [" + Double.parseDouble(netPrice) + "] matches the expected [" + Double.parseDouble(rs.getValue("CHRG_AM")) + "]");
         pointsValue = pointsValue.equals("0") ? "NULL" : pointsValue;
         TestReporter.assertEquals(pointsValue, rs.getValue("DVC_PTS_VL"), "Verify the points value [" + pointsValue + "] matches the expected [" + rs.getValue("DVC_PTS_VL") + "]");
 
@@ -196,17 +196,13 @@ public class RetrieveShareChainHelper {
         Map<Integer, String> dates = new HashMap<>();
         int numRateDetails = retrieve.getNumberOfResponseNodesByXPath("/Envelope/Body/retrieveShareChainResponse/shareRoomDetails[1]/sharedRoomDetail/rateDetails");
         String basePrice = "";
-        String netPrice = "";
         if (numRateDetails > 1) {
             double totPrice = 0.0;
-            double totNetPrice = 0.0;
             for (int i = 1; i <= numRateDetails; i++) {
                 totPrice += Double.parseDouble(retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveShareChainResponse/shareRoomDetails/sharedRoomDetail/rateDetails[" + i + "]/basePrice"));
                 dates.put(i, retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveShareChainResponse/shareRoomDetails/sharedRoomDetail/rateDetails[" + i + "]/date").split("T")[0]);
-                totNetPrice += Double.parseDouble(retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveShareChainResponse/shareRoomDetails/sharedRoomDetail/rateDetails[" + i + "]/netPrice"));
             }
             basePrice = String.valueOf(totPrice);
-            netPrice = String.valueOf(totNetPrice);
         } else {
             basePrice = retrieve.getResponseNodeValueByXPath("/Envelope/Body/retrieveShareChainResponse/shareRoomDetails/sharedRoomDetail/rateDetails/basePrice");
         }
@@ -222,13 +218,11 @@ public class RetrieveShareChainHelper {
                 + " where a.CHRG_EXTNL_REF_VL = '" + retrieve.getTravelComponentId() + "'";
         Recordset rs = new Recordset(db.getResultSet(sql));
 
-        String dbNetPrice = "";
         Double calcNetPrice = 0.0;
         do {
             calcNetPrice += Double.parseDouble(rs.getValue("CHRG_AM"));
             rs.moveNext();
         } while (rs.hasNext());
-        dbNetPrice = String.valueOf(calcNetPrice);
 
         rs.moveFirst();
 

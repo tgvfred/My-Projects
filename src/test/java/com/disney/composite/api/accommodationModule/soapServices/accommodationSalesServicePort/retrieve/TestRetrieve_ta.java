@@ -24,8 +24,6 @@ public class TestRetrieve_ta extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         setAddTravelAgency(true);
-
-        isComo.set("false");
         bookReservation();
 
     }

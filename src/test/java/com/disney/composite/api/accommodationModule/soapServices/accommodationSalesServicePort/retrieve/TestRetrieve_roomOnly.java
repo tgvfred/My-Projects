@@ -23,9 +23,7 @@ public class TestRetrieve_roomOnly extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-
         bookReservation();
-        System.out.println(getBook().getResponse());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
@@ -39,6 +37,7 @@ public class TestRetrieve_roomOnly extends AccommodationBaseTest {
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting retriveve details: " + retrieve.getFaultString(), retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
 
         // clone validations

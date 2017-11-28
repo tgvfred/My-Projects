@@ -45,12 +45,10 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
         tpsNum2 = getBook().getTravelPlanSegmentId();
         tcgNum2 = getBook().getTravelComponentGroupingId();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second TPS: " + getBook().getFaultString(), getBook());
-
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
     public void testProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTps() {
-
         String tp = getBook().getTravelPlanId();
 
         AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
@@ -69,7 +67,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
         process.setAttemptAutoReinstate("true");
         process.sendRequest();
 
-        TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation.", process);
+        TestReporter.logAPI(!process.getResponseStatusCode().equals("200"), "An error occurred process container modify business event the reservation: " + process.getFaultString(), process);
         // validations
 
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();

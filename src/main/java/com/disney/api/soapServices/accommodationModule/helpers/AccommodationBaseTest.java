@@ -1622,7 +1622,13 @@ public class AccommodationBaseTest extends BaseRestTest {
     private void addBundle() {
         details = new RetrieveDetailsByTravelPlanId(Environment.getBaseEnvironmentName(getEnvironment()), "Main");
         details.setTravelPlanId(getBook().getTravelPlanId());
-        details.sendRequest();
+
+        int tries = 0;
+        int maxTries = 20;
+        do {
+            Sleeper.sleep(1000);
+            details.sendRequest();
+        } while (tries < maxTries && !details.getResponseStatusCode().equals("200"));
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
 
         add = new AddBundle(Environment.getBaseEnvironmentName(getEnvironment()), "Main");

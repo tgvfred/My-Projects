@@ -43,6 +43,7 @@ public class TestRetrieve_multipleGuests extends AccommodationBaseTest {
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred getting option details: " + retrieve.getFaultString(), retrieve);
 
         RetrieveHelper helper = new RetrieveHelper();
+        helper.setValidateProfile(false);
         helper.baseValidation(getBook(), retrieve);
         helper.tcgValidation(retrieve);
 

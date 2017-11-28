@@ -3,7 +3,7 @@
 <suite name="Cancel_Suite" parallel="methods" thread-count="10" configfailurepolicy="continue">
 	<parameter name="environment" value="latest_cm" />
 	<test name="Cancel_Test">
-		<!-- <groups>
+<!-- 		<groups>
 			<run>
 				<include name="debug"></include>
 			</run>

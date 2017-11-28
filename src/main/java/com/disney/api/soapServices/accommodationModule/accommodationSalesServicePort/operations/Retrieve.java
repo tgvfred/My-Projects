@@ -532,7 +532,6 @@ public class Retrieve extends AccommodationSalesServicePort {
      * Validate travelPlanInfo.travelPlanSegments.cancellationNumber
      * Validate travelPlanInfo.travelPlanSegments.celebrationCount
      * TCG Validation
-     * Validate travelPlanInfo.travelPlanSegments.confirmationDetails
      * Validate travelPlanInfo.travelPlanSegments.guaranteed
      * Validate travelPlanInfo.travelPlanSegments.period
      * Validate travelPlanInfo.travelPlanSegments.status
@@ -550,6 +549,86 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     public String getAreadPeriodED() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/areaPeriod/endDate");
+    }
+
+    // <confirmationDetails>
+    // <confirmationDetailId>37506342</confirmationDetailId>
+    // <confirmationIndicator>false</confirmationIndicator>
+    // <confirmationType>Print</confirmationType>
+    // <contactName>BugCracker</contactName>
+    // <defaultConfirmationIndicator>false</defaultConfirmationIndicator>
+    // <individual>false</individual>
+    // <jdoSequenceNumber>0</jdoSequenceNumber>
+    // <locatorId>425439698</locatorId>
+    // <partyId>0</partyId>
+    // <guestDetail>
+    // <partyId>0</partyId>
+    // <doNotMailIndicator>false</doNotMailIndicator>
+    // <doNotPhoneIndicator>false</doNotPhoneIndicator>
+    // <dclGuestId>0</dclGuestId>
+    // <guestId>278861137</guestId>
+    // <active>false</active>
+    // </guestDetail>
+    // </confirmationDetails>
+
+    public String getConfirmDetailId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/confirmationDetailId");
+    }
+
+    public String getConfirmIndicator() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/confirmationIndicator");
+    }
+
+    public String getConfirmType() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/confirmationType");
+    }
+
+    public String getConfirmContactName() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/contactName");
+    }
+
+    public String getConfirmDefaultConfirmIndicator() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/defaultConfirmationIndicator");
+    }
+
+    public String getConfirmIndividual() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/individual");
+    }
+
+    public String getConfirmJDOSequenceNumber() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/jdoSequenceNumber");
+    }
+
+    public String getConfirmLocatorId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/locatorId");
+    }
+
+    public String getConfirmPartyId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/partyId");
+    }
+
+    public String getConfirmGDPartyId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/guestDetail/partyId");
+    }
+
+    public String getConfirmGDDoNotMailIndicator() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/guestDetail/doNotMailIndicator");
+    }
+
+    public String getConfirmGDDoNotPhoneIndictor() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/guestDetail/doNotPhoneIndicator");
+    }
+
+    public String getConfirmGDDclGuestId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/guestDetail/dclGuestId");
+    }
+
+    public String getConfirmGDGuestId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/guestDetail/guestId");
+    }
+
+    public String getConfirmGDActive() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/confirmationDetails/guestDetail/active");
     }
 
     public String getCancellationNumber() {
@@ -758,7 +837,7 @@ public class Retrieve extends AccommodationSalesServicePort {
     }
 
     public String getAccommRSR() {
-        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/rsr");
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/RSR");
 
     }
 
@@ -768,6 +847,7 @@ public class Retrieve extends AccommodationSalesServicePort {
     }
 
     public String getAccommRates() {
+
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/rates");
 
     }
