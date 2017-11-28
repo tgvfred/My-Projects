@@ -82,6 +82,8 @@ public class TestValidateShareRules_twoSharedRoomDetails_mismatchedBlocks extend
         validate.setEndDate(endDate, "1");
         validate.setStartDate(getArrivalDate(), "2");
         validate.setEndDate(getDepartureDate(), "2");
+        validate.setBlockCode("Invalid", "1");
+        validate.setBlockCode("Invalid2", "2");
         validate.sendRequest();
 
         TestReporter.assertTrue(validate.getFaultString().contains(faultString), "Verify that the fault string [" + validate.getFaultString() + "] is that which is expected [" + faultString + "].");
