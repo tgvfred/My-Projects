@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ValidateShareRules;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
@@ -70,6 +71,16 @@ public class TestValidateShareRules_threeSharedRoomDetails extends Accommodation
 
         TestReporter.assertTrue(validate.getReturn().contains("true"), "Validate the return value is set to true as expected: [" + validate.getReturn() + "]");
 
+        if (Environment.isSpecialEnvironment(environment)) {
+            ValidateShareRules clone = (ValidateShareRules) validate.clone();
+            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+            clone.sendRequest();
+            if (!clone.getResponseStatusCode().equals("200")) {
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+            }
+            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            TestReporter.assertTrue(clone.validateResponseNodeQuantity(validate, true), "Validating Response Comparison");
+        }
     }
 
     public void bookTwoMore() {

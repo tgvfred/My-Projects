@@ -20,7 +20,7 @@ public class TestValidateShareRules_twoSharedRoomDetails_mismatchedBlocks extend
     private String tcId;
     private String startDate;
     private String endDate;
-    private String packageCode;
+    // private String packageCode;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -43,10 +43,10 @@ public class TestValidateShareRules_twoSharedRoomDetails_mismatchedBlocks extend
         tcId = book.getTravelComponentId();
         startDate = getArrivalDate();
         endDate = getDepartureDate();
-        packageCode = getPackageCode();
+        // packageCode = getPackageCode();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules", "negative" })
     public void testValidateShareRules_twoSharedRoomDetails_mismatchedBlocks() {
 
         setSendRequest(false);
@@ -82,8 +82,7 @@ public class TestValidateShareRules_twoSharedRoomDetails_mismatchedBlocks extend
         validate.setEndDate(endDate, "1");
         validate.setStartDate(getArrivalDate(), "2");
         validate.setEndDate(getDepartureDate(), "2");
-        validate.setBlockCode("Invalid", "1");
-        validate.setBlockCode("Invalid2", "2");
+        validate.setBlockCode("01905", "1");
         validate.sendRequest();
 
         TestReporter.assertTrue(validate.getFaultString().contains(faultString), "Verify that the fault string [" + validate.getFaultString() + "] is that which is expected [" + faultString + "].");

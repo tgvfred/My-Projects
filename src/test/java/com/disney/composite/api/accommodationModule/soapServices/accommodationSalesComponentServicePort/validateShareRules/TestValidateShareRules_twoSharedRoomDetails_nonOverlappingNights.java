@@ -46,7 +46,7 @@ public class TestValidateShareRules_twoSharedRoomDetails_nonOverlappingNights ex
         endDate = Randomness.generateCurrentXMLDate(getDaysOut() + 1);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules", "negative" })
     public void testValidateShareRules_twoSharedRoomDetails_nonOverlappingNights() {
 
         setSendRequest(false);

@@ -25,7 +25,7 @@ public class TestValidateShareRules_oneSharedRoomDetails_InvalidPartyMix extends
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "validateShareRules", "negative" })
     public void testValidateShareRules_oneSharedRoomDetails_InvalidPartyMix() {
 
         String faultString = "Invalid Party Mix.  Cannot Create Share With Accommodation : Invalid Party Mix. Cannot Create Share With Accommodation";
