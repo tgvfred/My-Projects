@@ -35,6 +35,26 @@ public class CalculateSharedRates extends AccommodationSalesServicePort {
         setRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations/travelComponentId", value);
     }
 
+    public void setPeriodSD(String value) {
+
+        setRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations/resortPeriod/startDate", value);
+    }
+
+    public void setPeriodED(String value) {
+
+        setRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations/resortPeriod/endDate", value);
+    }
+
+    public void setPeriodSD2(String value) {
+
+        setRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations[2]/resortPeriod/startDate", value);
+    }
+
+    public void setPeriodED2(String value) {
+
+        setRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations[2]/resortPeriod/endDate", value);
+    }
+
     public void setShared(String value) {
 
         setRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations/shared", value);
