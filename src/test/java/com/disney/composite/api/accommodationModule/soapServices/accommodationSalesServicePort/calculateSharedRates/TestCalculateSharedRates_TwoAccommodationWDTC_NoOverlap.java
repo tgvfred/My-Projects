@@ -32,7 +32,8 @@ public class TestCalculateSharedRates_TwoAccommodationWDTC_NoOverlap extends Acc
     public void testCalculateSharedRates_TwoAccommodationRO() {
 
         CalculateSharedRates calculate = new CalculateSharedRates(environment, "TwoAccommodations");
-
+        calculate.setBookingDate("2017-10-25T00:00:00");
+        calculate.setBookingDate2("2017-10-27T00:00:00");
         calculate.sendRequest();
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", calculate);
 
