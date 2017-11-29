@@ -1,7 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.calculateSharedRates;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CalculateSharedRates;
@@ -11,21 +9,21 @@ import com.disney.utils.TestReporter;
 
 public class TestCalculateSharedRates_TwoAccommodationRO_MultiDay extends AccommodationBaseTest {
 
-    @Override
-    @BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void setup(String environment) {
-        setEnvironment(environment);
-        isComo.set("false");
-        setDaysOut(0);
-        setNights(1);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getDaysOut() + getNights());
-        setValues(getEnvironment());
-        isComo.set("false");
-        bookReservation();
-
-    }
+    // @Override
+    // @BeforeMethod(alwaysRun = true)
+    // @Parameters("environment")
+    // public void setup(String environment) {
+    // setEnvironment(environment);
+    // isComo.set("false");
+    // setDaysOut(0);
+    // setNights(1);
+    // setArrivalDate(getDaysOut());
+    // setDepartureDate(getDaysOut() + getNights());
+    // setValues(getEnvironment());
+    // isComo.set("false");
+    // bookReservation();
+    //
+    // }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateSharedRates" })
     public void testCalculateSharedRates_TwoAccommodationRO() {
