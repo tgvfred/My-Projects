@@ -9,21 +9,6 @@ import com.disney.utils.TestReporter;
 
 public class TestCalculateSharedRates_TwoAccommodationRO extends AccommodationBaseTest {
 
-    // @Override
-    // @BeforeMethod(alwaysRun = true)
-    // @Parameters("environment")
-    // public void setup(String environment) {
-    // setEnvironment(environment);
-    // isComo.set("false");
-    // setDaysOut(0);
-    // setNights(1);
-    // setArrivalDate(getDaysOut());
-    // setDepartureDate(getDaysOut() + getNights());
-    // setValues(getEnvironment());
-    // isComo.set("false");
-    // bookReservation();
-    //
-    // }
     String rateDetailsAccommOne;
     String rateDetailsAccommTwo;
     double rateDetails1;
