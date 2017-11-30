@@ -32,7 +32,7 @@ public class TestValidateShareRules_twoSharedRoomDetails extends AccommodationBa
         setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
-        setValues("80010385", "CA", "51");
+        setValues(getEnvironment());
         isComo.set("true");
         bookReservation();
 
@@ -55,7 +55,6 @@ public class TestValidateShareRules_twoSharedRoomDetails extends AccommodationBa
         setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
-        setValues("80010385", "CA", "51");
         bookReservation();
         book.setTravelPlanId(tpId);
         book.setTravelPlanSegementId(tpsId);
@@ -82,8 +81,6 @@ public class TestValidateShareRules_twoSharedRoomDetails extends AccommodationBa
         validate.setEndDate(endDate, "1");
         validate.setStartDate(getArrivalDate(), "2");
         validate.setEndDate(getDepartureDate(), "2");
-        validate.setPackageCode(packageCode, "1");
-        validate.setPackageCode(packageCode, "2");
         validate.setBlockCode(BaseSoapCommands.REMOVE_NODE.toString(), "1");
         validate.setBlockCode(BaseSoapCommands.REMOVE_NODE.toString(), "2");
         validate.sendRequest();

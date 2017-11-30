@@ -307,7 +307,7 @@ public class PaymentSettlementHelper {
         }
         TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200", "Verify that no error occurred retrieving the balance for the reservation: " + retrieveBalance.getFaultString());
 
-        PostCardPayment postPayment = new PostCardPayment(getEnvironment(), "VisaCreditCard");
+        PostCardPayment postPayment = new PostCardPayment(getEnvironment(), "Visa-CreditCard");
         setPaymentAmount(retrieveBalance.getDepositRequired());
         postPayment.setAmount(getPaymentAmount());
         postPayment.setFolioId(retrieveBalance.getFolioId());
