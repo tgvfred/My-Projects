@@ -191,6 +191,35 @@ public class UpdateProcessStatusListHelper {
                 + " in the DB [" + date.substring(0, 10) + "]");
     }
 
+    public void validationOverallRest(String procRunId, String status, String procDate) {
+        Sleeper.sleep(10000);
+        String sql = "select a.GRP_RES_PROC_RUN_ID, a.GRP_RES_PROC_RUN_STS_NM, a.UPDT_USR_ID_CD, a.GRP_RES_PROC_RUN_DTS "
+                + "from res_mgmt.GRP_RES_PROC_RUN a "
+                + "where a.GRP_RES_PROC_RUN_ID = '" + procRunId + "'";
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment.get()), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Nothing found for proc run ID [ " + procRunId + " ]", sql);
+        }
+
+        stsNM = rs.getValue("GRP_RES_PROC_RUN_STS_NM");
+        idCD = rs.getValue("UPDT_USR_ID_CD");
+        date = rs.getValue("GRP_RES_PROC_RUN_DTS");
+
+        TestReporter.logStep("Validate proc run id [" + procRunId + "].");
+
+        TestReporter.assertEquals(stsNM, status, "Verify the Status Name [" + status + "] matches the Status Name found"
+                + " in the DB [" + stsNM + "]");
+
+        TestReporter.assertEquals(idCD, "comotest", "Verify the ID Code [comotest] matches the ID Code found"
+                + " in the DB [" + idCD + "]");
+
+        TestReporter.assertEquals(date.substring(0, 10), procDate, "Verify the Group Reservation Process Run Date [" + procDate + "] matches the Group Reservation Process Run Date found"
+                + " in the DB [" + date.substring(0, 10) + "]");
+    }
+
     public void validationOverall_MASSCancel(String procRunId, String status, String procDate) {
         Sleeper.sleep(10000);
         String sql = "select a.GRP_RES_PROC_RUN_ID, a.GRP_RES_PROC_RUN_STS_NM, a.UPDT_USR_ID_CD, a.GRP_RES_PROC_RUN_DTS "
