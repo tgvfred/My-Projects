@@ -48,8 +48,9 @@ public class TestCalculateSharedRates_TwoAccommodationWDTC extends Accommodation
         TestReporter.softAssertTrue(calculate.getTravelStatus().equals(calculate.getTravelStatusRQ()), "The travel status in the request [" + calculate.getTravelStatusRQ() + "] matches the travel status in the response [" + calculate.getTravelStatus() + "].");
 
         TestReporter.softAssertTrue(totalRateAmountString.equals(calculate.getTotalRateAmount()), "The rate details in the first acommodation is [" + rateDetailsAccommOne + "] and the second is [" + rateDetailsAccommTwo + "] and is equal to the [" + calculate.getTotalRateAmount() + "]");
-        TestReporter.softAssertTrue(calculate.getShared().equals("true"), "The Shared node is set to [" + calculate.getShared() + "].");
-
+        for (int j = 1; j <= calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations/rateDetails/shared"); j++) {
+            TestReporter.softAssertTrue(calculate.getShared(j).equals("true"), "The Shared node in the accommodation node number[" + j + "] is set to [" + calculate.getShared(j) + "].");
+        }
         if (Environment.isSpecialEnvironment(environment)) {
             CalculateSharedRates clone = (CalculateSharedRates) calculate.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));

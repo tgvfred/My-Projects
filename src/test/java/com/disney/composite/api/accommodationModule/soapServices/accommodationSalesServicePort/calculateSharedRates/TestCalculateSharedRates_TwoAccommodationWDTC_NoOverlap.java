@@ -25,15 +25,15 @@ public class TestCalculateSharedRates_TwoAccommodationWDTC_NoOverlap extends Acc
         calculate.setPeriodSD2("2017-10-27T00:00:00");
         calculate.setPeriodED2("2017-10-28T00:00:00");
         calculate.sendRequest();
-        TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", calculate);
+        TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred Calculating Shared Rates: " + calculate.getFaultString(), calculate);
 
-        rateDetailsAccommOne = calculate.getRateDetailsAccommOne();
-        rateDetailsAccommTwo = calculate.getRateDetailsAccommTwo();
-        rateDetails1 = Double.parseDouble(rateDetailsAccommOne);
-        rateDetails2 = Double.parseDouble(rateDetailsAccommTwo);
-        Double totalRateAmount = 0.0;
-        totalRateAmount = rateDetails1 + rateDetails2;
-        String totalRateAmountString = String.valueOf(totalRateAmount);
+        // rateDetailsAccommOne = calculate.getRateDetailsAccommOne();
+        // rateDetailsAccommTwo = calculate.getRateDetailsAccommTwo();
+        // rateDetails1 = Double.parseDouble(rateDetailsAccommOne);
+        // rateDetails2 = Double.parseDouble(rateDetailsAccommTwo);
+        // Double totalRateAmount = 0.0;
+        // totalRateAmount = rateDetails1 + rateDetails2;
+        // String totalRateAmountString = String.valueOf(totalRateAmount);
 
         TestReporter.softAssertTrue(calculate.getBookingDate().equals(calculate.getBookingDateRQ()), "The booking date in the request [" + calculate.getBookingDateRQ() + "] matches the booking date in the response [" + calculate.getBookingDate() + "].");
         TestReporter.softAssertTrue(calculate.getInventoryStatus().equals(calculate.getInventoryStatusRQ()), "The inventory status in the request [" + calculate.getInventoryStatusRQ() + "] matches the inventory status in the response [" + calculate.getInventoryStatus() + "].");
@@ -50,10 +50,12 @@ public class TestCalculateSharedRates_TwoAccommodationWDTC_NoOverlap extends Acc
         TestReporter.softAssertTrue(calculate.getDoNotPhoneIndicator().equals(calculate.getDoNotPhoneIndicatorRQ()), "The Do Not Phone Indicator in the request [" + calculate.getDoNotPhoneIndicatorRQ() + "] matches the Do Not Phone Indicator in the response [" + calculate.getDoNotPhoneIndicator() + "].");
         TestReporter.softAssertTrue(calculate.getTravelStatus().equals(calculate.getTravelStatusRQ()), "The travel status in the request [" + calculate.getTravelStatusRQ() + "] matches the travel status in the response [" + calculate.getTravelStatus() + "].");
 
-        TestReporter.softAssertTrue(totalRateAmountString.equals(calculate.getTotalRateAmount()), "The rate details in the first acommodation is [" + rateDetailsAccommOne + "] and the second is [" + rateDetailsAccommTwo + "] and is equal to the [" + calculate.getTotalRateAmount() + "]");
-
-        TestReporter.softAssertTrue(calculate.getShared().equals("false"), "The Shared node is set to [" + calculate.getShared() + "].");
-
+        TestReporter.softAssertTrue(calculate.getRateDetailsAccommOneNoOverlap(1).equals(calculate.getTotalRateAmountIndex()), "The rate details in the first acommodation is [" + calculate.getRateDetailsAccommOneNoOverlap(1) + "] and is equal to the first total rate amount [" + calculate.getTotalRateAmountIndex() + "]");
+        TestReporter.softAssertTrue("0.0".equals(calculate.getTotalRateAmountIndex2().toString()), "The second total rates [" + calculate.getTotalRateAmountIndex2() + "] will equal 0.0");
+        TestReporter.softAssertTrue(calculate.getRateDetailsAccommTwoNoOverlap(1).equals(calculate.getTotalRateAmountIndex3()), "The rate details in the second accommodation is [" + calculate.getRateDetailsAccommTwoNoOverlap(1) + "] and is equal to the [" + calculate.getTotalRateAmountIndex3() + "]");
+        for (int j = 1; j <= calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations/rateDetails/shared"); j++) {
+            TestReporter.softAssertTrue(calculate.getShared(j).equals("false"), "The Shared node in the accommodation node number[" + j + "] is set to [" + calculate.getShared(j) + "].");
+        }
         if (Environment.isSpecialEnvironment(environment)) {
             CalculateSharedRates clone = (CalculateSharedRates) calculate.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
