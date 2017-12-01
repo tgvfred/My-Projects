@@ -4,12 +4,12 @@
 	<parameter name="environment" value="latest" />
 	<test name="AccommodationModule">
 		<packages>
-			<package name="com.disney.composite.api.accommodationModule.*"></package>
+			
 		</packages>
 			<groups>
 				<run>
-				<include name="accommodation" />
-				<include name="smoke" />
+				<exclude name="accommodation" />
+				<exclude name="smoke" />
 				<exclude name="dev"  />
 				</run>
 			</groups>

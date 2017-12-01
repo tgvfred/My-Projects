@@ -6,12 +6,12 @@
 		<groups>
 			<run>
 				<!-- <include name="accommodation" /> -->
-				<include name="smoke" />
+				<exclude name="smoke" />
 				<exclude name="dev"  />
 			</run>
 		</groups>
 		<packages>
-			<package name="com.disney.composite.api.accommodationModule.*"></package>
+			
 		</packages>
 	</test>
 </suite>

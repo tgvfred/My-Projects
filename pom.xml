@@ -23,6 +23,7 @@
 	    <eai.version>1.1.00</eai.version>      
 	    <facility.version>1.1.00</facility.version>      
 	    <folio.version>1.1.00</folio.version>      
+	    <guestCelebrations.version>1.1.00</guestCelebrations.version>  
 	    <groups.version>1.1.00</groups.version>
 	    <party.version>1.1.00</party.version>    
 	    <pricing.version>1.1.00</pricing.version>      
@@ -91,6 +92,12 @@
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Folio</artifactId>
 			<version>${folio.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>GuestCelebration</artifactId>
+			<version>${guestCelebrations.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
