@@ -48,7 +48,7 @@ public class TestCalculateSharedRates_TwoAccommodationRO extends AccommodationBa
         TestReporter.softAssertTrue(totalRateAmountString.equals(calculate.getTotalRateAmount()), "The rate details in the first acommodation is [" + rateDetailsAccommOne + "] and the second is [" + rateDetailsAccommTwo + "] and is equal to the [" + calculate.getTotalRateAmount() + "]");
 
         for (int j = 1; j <= calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations/rateDetails/shared"); j++) {
-            TestReporter.softAssertTrue(calculate.getShared(j).equals("false"), "The Shared node in the accommodation node number[" + j + "] is set to [" + calculate.getShared(j) + "].");
+            TestReporter.softAssertTrue(calculate.getShared(j).equals("true"), "The Shared node in the accommodation node number[" + j + "] is set to [" + calculate.getShared(j) + "].");
         }
         if (Environment.isSpecialEnvironment(environment)) {
             CalculateSharedRates clone = (CalculateSharedRates) calculate.clone();
