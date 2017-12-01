@@ -18,8 +18,6 @@ public class TestCalculateSharedRates_TwoAccommodationRO extends AccommodationBa
     public void testCalculateSharedRates_TwoAccommodationRO() {
 
         CalculateSharedRates calculate = new CalculateSharedRates(environment, "TwoAccommodations");
-        // calculate.setTcgID(getBook().getTravelComponentGroupingId());
-        // calculate.setTcID(getBook().getTravelComponentId());
 
         calculate.sendRequest();
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", calculate);
@@ -48,8 +46,10 @@ public class TestCalculateSharedRates_TwoAccommodationRO extends AccommodationBa
         TestReporter.softAssertTrue(calculate.getTravelStatus().equals(calculate.getTravelStatusRQ()), "The travel status in the request [" + calculate.getTravelStatusRQ() + "] matches the travel status in the response [" + calculate.getTravelStatus() + "].");
 
         TestReporter.softAssertTrue(totalRateAmountString.equals(calculate.getTotalRateAmount()), "The rate details in the first acommodation is [" + rateDetailsAccommOne + "] and the second is [" + rateDetailsAccommTwo + "] and is equal to the [" + calculate.getTotalRateAmount() + "]");
-        TestReporter.softAssertTrue(calculate.getShared().equals("true"), "The Shared node is set to [" + calculate.getShared() + "].");
 
+        for (int j = 1; j <= calculate.getNumberOfResponseNodesByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations/rateDetails/shared"); j++) {
+            TestReporter.softAssertTrue(calculate.getShared(j).equals("false"), "The Shared node in the accommodation node number[" + j + "] is set to [" + calculate.getShared(j) + "].");
+        }
         if (Environment.isSpecialEnvironment(environment)) {
             CalculateSharedRates clone = (CalculateSharedRates) calculate.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));

@@ -241,14 +241,24 @@ public class CalculateSharedRates extends AccommodationSalesServicePort {
 
     }
 
-    public String getShared() {
+    public String getShared(int index) {
 
-        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations/shared");
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations[" + index + "]/rateDetails/shared");
     }
 
     public String getSharedRQ() {
 
         return getRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations/shared");
+    }
+
+    public String getRateDetailsAccommOneNoOverlap(int index) {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations/rateDetails[" + index + "]/basePrice");
+    }
+
+    public String getRateDetailsAccommTwoNoOverlap(int index) {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations[2]/rateDetails[" + index + "]/basePrice");
     }
 
     public String getRateDetailsAccommOne() {
@@ -258,12 +268,47 @@ public class CalculateSharedRates extends AccommodationSalesServicePort {
 
     public String getRateDetailsAccommTwo() {
 
-        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse//splitRateWithTotalTO/accommodations[2]/rateDetails/basePrice");
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations[2]/rateDetails/basePrice");
+    }
+
+    public String getRateDetailsAccommTwoRD2() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations[2]/rateDetails[2]/basePrice");
+    }
+
+    public String getRateDetailsAccommTwoRD3() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations[2]/rateDetails[3]/basePrice");
+    }
+
+    public String getRateDetailsAccommOneRD2() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations/rateDetails[2]/basePrice");
+    }
+
+    public String getRateDetailsAccommOneRD3() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/accommodations/rateDetails[3]/basePrice");
     }
 
     public String getTotalRateAmount() {
 
         return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/totalRates/rate/amount");
+    }
+
+    public String getTotalRateAmountIndex() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/totalRates/rate/amount");
+    }
+
+    public String getTotalRateAmountIndex2() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/totalRates[2]/rate/amount");
+    }
+
+    public String getTotalRateAmountIndex3() {
+
+        return getResponseNodeValueByXPath("/Envelope/Body/calculateSharedRatesResponse/splitRateWithTotalTO/totalRates[3]/rate/amount");
     }
 
 }
