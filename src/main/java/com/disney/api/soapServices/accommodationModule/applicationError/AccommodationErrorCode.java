@@ -47,6 +47,9 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode INVALID_REQUEST = new ApplicationErrorCode(APP_NAME, 9042,
             "INVALID REQUEST!");
 
+    public static final ApplicationErrorCode INV_REQUEST = new ApplicationErrorCode(APP_NAME, 9042,
+            "INVALID REQUEST !");
+
     public static final ApplicationErrorCode ROOM_TYPE_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 8602,
             "Room Type not found ");
 

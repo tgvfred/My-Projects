@@ -59,7 +59,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, AccommodationErrorCode.INVALID_REQUEST);
+        validateApplicationError(checkout, AccommodationErrorCode.INV_REQUEST);
 
     }
 
@@ -105,7 +105,7 @@ public class Checkout_Negative extends AccommodationBaseTest {
         checkout.sendRequest();
 
         TestReporter.assertTrue(checkout.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(checkout, AccommodationErrorCode.INVALID_REQUEST);
+        validateApplicationError(checkout, AccommodationErrorCode.INV_REQUEST);
 
     }
 
