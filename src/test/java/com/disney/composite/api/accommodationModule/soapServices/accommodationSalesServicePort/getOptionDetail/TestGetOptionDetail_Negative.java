@@ -12,7 +12,7 @@ public class TestGetOptionDetail_Negative extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail", "negative" })
     public void TestGetOptionDetail_nullOptionKeyVal() {
-        String fault = "INVALID REQUEST! : Option key value not provided";
+        String fault = "INVALID REQUEST ! : Option key value not provided";
         String deviceType = "CANCEL_REASON";
         TestReporter.logScenario("Test - Get Option Detail  - Null Option Key Value");
 
@@ -30,7 +30,7 @@ public class TestGetOptionDetail_Negative extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail", "negative" })
     public void TestGetOptionDetail_nullAccommodationSalesOptionsEnum() {
 
-        String fault = "INVALID REQUEST! : The OptionType parameter passed to getOptions operation is null";
+        String fault = "INVALID REQUEST ! : The OptionType parameter passed to getOptions operation is null";
         String optionKeyValue = "3";
         TestReporter.logScenario("Test - Get Option Detail - Null Accommodation Sales Options Enum");
 

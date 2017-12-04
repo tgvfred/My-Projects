@@ -45,9 +45,6 @@ public class AccommodationErrorCode {
             "Accommodation can not be shared - dates must overlap at least one night");
 
     public static final ApplicationErrorCode INVALID_REQUEST = new ApplicationErrorCode(APP_NAME, 9042,
-            "INVALID REQUEST!");
-
-    public static final ApplicationErrorCode INV_REQUEST = new ApplicationErrorCode(APP_NAME, 9042,
             "INVALID REQUEST !");
 
     public static final ApplicationErrorCode ROOM_TYPE_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 8602,
@@ -270,7 +267,7 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode COMMUNICATION_CHANNEL_REQUIRED = new ApplicationErrorCode(APP_NAME, 9123,
             "communication Channel is required");
 
-    public static final ApplicationErrorCode SALES_CHANNEL_REQUIRED = new ApplicationErrorCode(APP_NAME, 9124,
+    public static final ApplicationErrorCode SALES_CHANNEL_REQUIRED = new ApplicationErrorCode(APP_NAME, 7094,
             "Sales Channel is required");
 
     public static final ApplicationErrorCode MULIPLE_ROOM_DETAILS = new ApplicationErrorCode(APP_NAME, 9125,
