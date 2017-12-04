@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.mslt.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.1.00</version>
+	<version>1.1.01</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -13,7 +13,7 @@
 	    </repository>
   	</distributionManagement>	
   	<properties>
-	    <apiUtilsSoap.version>1.1.00</apiUtilsSoap.version>
+	    <apiUtilsSoap.version>1.1.01</apiUtilsSoap.version>
 	    <activity.version>1.1.00</activity.version>  
 	    <admission.version>1.1.00</admission.version>    
 	    <dining.version>1.1.00</dining.version>    
@@ -109,7 +109,7 @@
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Party</artifactId>
-			<version>${apiUtilsSoap.version}</version>
+			<version>${party.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
