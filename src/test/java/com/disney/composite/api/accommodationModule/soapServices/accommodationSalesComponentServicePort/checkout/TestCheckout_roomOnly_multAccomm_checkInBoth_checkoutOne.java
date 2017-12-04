@@ -32,7 +32,6 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        setEnvironment("latest");
         locVar = environment;
         bookReservation();
         base = this;

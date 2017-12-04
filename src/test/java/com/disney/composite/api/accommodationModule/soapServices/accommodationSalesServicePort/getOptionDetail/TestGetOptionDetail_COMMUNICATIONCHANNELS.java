@@ -36,7 +36,6 @@ public class TestGetOptionDetail_COMMUNICATIONCHANNELS extends AccommodationBase
     // accommodation sales request grabs data providers from database
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_COMMUNICATIONCHANNELS(String COMNCTN_CHAN_ID, String COMNCTN_CHAN_NM) {
-        System.out.println(COMNCTN_CHAN_ID + " " + COMNCTN_CHAN_NM);
 
         GetOptionDetail getOptionDetail = new GetOptionDetail(Environment.getBaseEnvironmentName(environment));
         getOptionDetail.setAccommodationSalesOptionsEnum("COMMUNICATIONCHANNELS");

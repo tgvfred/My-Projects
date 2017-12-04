@@ -32,9 +32,6 @@ public class TestGetOptionDetail_LANGUAGE extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_LANGUAGE(String key, String value) {
 
-        // System.out.println(key);
-        // System.out.println(value);
-
         GetOptionDetail getOptionDetail = new GetOptionDetail(environment);
         getOptionDetail.setAccommodationSalesOptionsEnum("LANGUAGE");
 
