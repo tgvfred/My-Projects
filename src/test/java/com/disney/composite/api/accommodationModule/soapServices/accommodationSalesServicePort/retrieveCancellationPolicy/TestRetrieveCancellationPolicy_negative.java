@@ -87,7 +87,7 @@ public class TestRetrieveCancellationPolicy_negative extends AccommodationBaseTe
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationPolicy", "negative" })
     public void testRetrieveCancellationPolicy_invalidTps() {
 
-        String faultString = "TRAVEL_PLAN_SEGMENT_NOT_FOUND : Travel Plan Segment  Not Found for TPSId ";
+        String faultString = "Travel Plan Segment Not Found : Travel Plan Segment  Not Found for TPSId ";
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId("5555555");

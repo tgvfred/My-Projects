@@ -255,7 +255,7 @@ public class AccommodationErrorCode {
             "Cannot cancel DVC Reservation");
 
     public static final ApplicationErrorCode TRAVEL_COMPONENT_GROUPING_NOT_FOUND = new ApplicationErrorCode(APP_NAME,
-            9120, "Travel Component Grouping not found");
+            9039, "Travel Component Grouping not found");
 
     public static final ApplicationErrorCode REINSTATE_NOT_ALLOWED = new ApplicationErrorCode(APP_NAME, 9121,
             "This reservation is not eligible to be Re-instated. "
