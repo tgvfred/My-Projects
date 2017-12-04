@@ -4,6 +4,7 @@ import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 
 public class AccommodationErrorCode {
     private static final String APP_NAME = "Accommodation Sales";
+    private static final String LILO_APP_NAME = "LILO_RESM";
 
     public static final ApplicationErrorCode ACCOMM_NOT_BOOKED_STATUS_SHARED = new ApplicationErrorCode(APP_NAME, 17192,
             " Accommodation should be in Booked status to be Shared");
@@ -264,7 +265,10 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode NOT_CANCELLED = new ApplicationErrorCode(APP_NAME, 9122,
             "Accommodation Not in Cancelled State");
 
-    public static final ApplicationErrorCode COMMUNICATION_CHANNEL_REQUIRED = new ApplicationErrorCode(APP_NAME, 9123,
+    public static final ApplicationErrorCode COMMUNICATION_CHANNEL_REQUIRED = new ApplicationErrorCode(APP_NAME, 7096,
+            "communication Channel is required");
+
+    public static final ApplicationErrorCode LILO_COMMUNICATION_CHANNEL_REQUIRED = new ApplicationErrorCode(LILO_APP_NAME, 7096,
             "communication Channel is required");
 
     public static final ApplicationErrorCode SALES_CHANNEL_REQUIRED = new ApplicationErrorCode(APP_NAME, 7094,
