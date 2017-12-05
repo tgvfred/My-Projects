@@ -73,7 +73,7 @@ public class AccommodationErrorCode {
             "TRAVEL_PLAN_NOT_FOUND");
 
     public static final ApplicationErrorCode TRAVEL_PLAN_SEGMENT_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7008,
-            "TRAVEL_PLAN_SEGMENT_NOT_FOUND");
+            "Travel Plan Segment Not Found");
 
     public static final ApplicationErrorCode INVALID_RESORT_PERIOD = new ApplicationErrorCode(APP_NAME, 7107,
             " Resort Period is invalid ");

@@ -119,7 +119,7 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
+        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
@@ -161,7 +161,7 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
+        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
@@ -181,7 +181,7 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
+        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
@@ -201,7 +201,7 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
+        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
@@ -209,7 +209,7 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         String date = Randomness.generateCurrentXMLDate();
         String id = "472911928036";
         String idLevel = "TravelPlanSegment";
-        String faultString = "Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
+        String faultString = "cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
         ScheduledEventReservation res = new ShowDiningReservation("Latest");
         res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
@@ -224,7 +224,7 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
+        validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
     }
 
 }
