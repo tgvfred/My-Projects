@@ -13,7 +13,7 @@ public class Test_SearchAccommodationsForShare_ROSameDay_NullRequest extends Acc
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "searchAccommodationsForShare", "negative" })
     public void test_SearchAccommodationsForShare_ROSameDay_NullRequest() {
 
-        String faultString = "Invalid Search Criteria  : Search Request Not Valid !";
+        String faultString = "Search Criteria is Invalid : Search Request Not Valid !";
 
         SearchAccommodationsForShare search = new SearchAccommodationsForShare(environment, "Main");
         search.setRequest(BaseSoapCommands.REMOVE_NODE.toString());

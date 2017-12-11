@@ -6,7 +6,7 @@
 	<test name="TestOverrideAccommodationRates_Negative">
 		<groups>
 			<run>
-				<include name="debug"></include>
+				<include name="negative"></include>
 			</run>
 		</groups>
 		<classes>

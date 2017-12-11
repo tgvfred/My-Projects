@@ -188,8 +188,8 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode DATEFACILITY_SERVICE_FAILURE = new ApplicationErrorCode(APP_NAME, 9147,
             "Error Invoking Date Facility Service ");
 
-    public static final ApplicationErrorCode INVALID_SEARCH_CRITERIA = new ApplicationErrorCode(APP_NAME, 7028,
-            "Invalid Search Criteria ");
+    public static final ApplicationErrorCode INVALID_SEARCH_CRITERIA = new ApplicationErrorCode(APP_NAME, 7124,
+            "Search Criteria is Invalid ");
 
     public static final ApplicationErrorCode TRAVEL_PLAN_SEARCH_NO_RESULT = new ApplicationErrorCode(APP_NAME, 7183,
             "No travel plan data found.");
@@ -206,7 +206,10 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode REVENUE_TYPE_IS_REQUIRED = new ApplicationErrorCode(APP_NAME, 8055,
             "UNITPRICE.BASECHARGE.REVENUE TYPE IS REQUIRED!!");
 
-    public static final ApplicationErrorCode CREATE_COMMENTS = new ApplicationErrorCode(APP_NAME, 8078,
+    public static final ApplicationErrorCode CREATE_COMMENTS = new ApplicationErrorCode(LILO_APP_NAME, 8078,
+            "Create Comments Request Invalid");
+
+    public static final ApplicationErrorCode UPDATE_COMMENTS = new ApplicationErrorCode(APP_NAME, 8078,
             "Create Comments Request Invalid");
 
     public static final ApplicationErrorCode SERVICE_ID_CONVERSION_ERROR = new ApplicationErrorCode(APP_NAME, 8117,
@@ -248,7 +251,7 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode REVENUE_TYPE_NULL_FROM_PRICING = new ApplicationErrorCode(APP_NAME, 9120,
             "Revenue Type from Pricing is null");
 
-    public static final ApplicationErrorCode ACCOMMODATIONS_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 9121,
+    public static final ApplicationErrorCode ACCOMMODATIONS_NOT_FOUND = new ApplicationErrorCode(APP_NAME, 7192,
             "Accommodations not found");
 
     public static final ApplicationErrorCode DVC_RESERVATION = new ApplicationErrorCode(APP_NAME, 9122,
@@ -288,11 +291,11 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode GAURANTEE_STATUS_CAN_NOT_BE_CHANGED = new ApplicationErrorCode(APP_NAME,
             7195, " Guarantee status can not be changed ");
 
-    public static final ApplicationErrorCode LOCATION_ID_MANDATORY = new ApplicationErrorCode(APP_NAME, 9126,
+    public static final ApplicationErrorCode LOCATION_ID_MANDATORY = new ApplicationErrorCode(APP_NAME, 8317,
             "Location Id is Mandatory");
 
-    public static final ApplicationErrorCode RECORD_NOT_FOUND_EXCEPTION = new ApplicationErrorCode(APP_NAME, 9127,
-            "Record Not Found");
+    public static final ApplicationErrorCode RECORD_NOT_FOUND_EXCEPTION = new ApplicationErrorCode(APP_NAME, 7065,
+            "RECORD NOT FOUND");
 
     public static final ApplicationErrorCode ACCOMMODATION_COMPONENT_NOT_FOUND = new ApplicationErrorCode(APP_NAME,
             9128, "Accommodation Component not found");
@@ -333,17 +336,17 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode ACCOMMODATION_SHAREPARTYMIX_NOT_OVERLAP = new ApplicationErrorCode(APP_NAME, 7638,
             "Share Party Mix - overlap period error");
 
-    public static final ApplicationErrorCode OVERRIDE_RATE_RACK_RATE_ERROR = new ApplicationErrorCode(APP_NAME, 7139,
+    public static final ApplicationErrorCode OVERRIDE_RATE_RACK_RATE_ERROR = new ApplicationErrorCode(APP_NAME, 7138,
             "Override rate cannot be more than rack rate.");
 
     public static final ApplicationErrorCode RATE_OVERRIDE_FAILURE = new ApplicationErrorCode(APP_NAME, 7140,
             "Rate override failed");
 
-    public static final ApplicationErrorCode INVALID_CHANGE_REASON = new ApplicationErrorCode(APP_NAME, 7141,
+    public static final ApplicationErrorCode INVALID_CHANGE_REASON = new ApplicationErrorCode(APP_NAME, 7146,
             " Change Reason is invalid ");
 
     public static final ApplicationErrorCode CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS = new ApplicationErrorCode(
-            APP_NAME, 7142, " Cancelled accommodations cannot be overriden");
+            APP_NAME, 8509, " Cancelled accommodations cannot be overriden");
 
     public static final ApplicationErrorCode INVALID_SHARE_DATA = new ApplicationErrorCode(APP_NAME, 7140,
             "One Property Reservation cannot have multiple Accommodations which are shared");
