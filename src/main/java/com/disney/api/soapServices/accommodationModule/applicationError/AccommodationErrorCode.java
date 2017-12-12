@@ -260,7 +260,7 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode TRAVEL_COMPONENT_GROUPING_NOT_FOUND = new ApplicationErrorCode(APP_NAME,
             9039, "Travel Component Grouping not found");
 
-    public static final ApplicationErrorCode REINSTATE_NOT_ALLOWED = new ApplicationErrorCode(APP_NAME, 9121,
+    public static final ApplicationErrorCode REINSTATE_NOT_ALLOWED = new ApplicationErrorCode(APP_NAME, 100016,
             "This reservation is not eligible to be Re-instated. "
                     + "Please contact the appropriate Reservation Office, "
                     + "Operations Support or Manager for assistance");
@@ -289,7 +289,7 @@ public class AccommodationErrorCode {
             " Package Rate Category not found");
 
     public static final ApplicationErrorCode GAURANTEE_STATUS_CAN_NOT_BE_CHANGED = new ApplicationErrorCode(APP_NAME,
-            7195, " Guarantee status can not be changed ");
+            100015, " Guarantee status can not be changed ");
 
     public static final ApplicationErrorCode LOCATION_ID_MANDATORY = new ApplicationErrorCode(APP_NAME, 8317,
             "Location Id is Mandatory");
@@ -339,7 +339,7 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode OVERRIDE_RATE_RACK_RATE_ERROR = new ApplicationErrorCode(APP_NAME, 7138,
             "Override rate cannot be more than rack rate.");
 
-    public static final ApplicationErrorCode RATE_OVERRIDE_FAILURE = new ApplicationErrorCode(APP_NAME, 7140,
+    public static final ApplicationErrorCode RATE_OVERRIDE_FAILURE = new ApplicationErrorCode(APP_NAME, 7048,
             "Rate override failed");
 
     public static final ApplicationErrorCode INVALID_CHANGE_REASON = new ApplicationErrorCode(APP_NAME, 7146,
