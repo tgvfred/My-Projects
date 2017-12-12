@@ -431,6 +431,9 @@ public final class AccommodationErrorCode {
     public static final ApplicationErrorCode CREATE_COMMENTS = new ApplicationErrorCode(APP_NAME, 8078,
             "Create Comments Request Invalid");
 
+    public static final ApplicationErrorCode UPDATE_COMMENTS = new ApplicationErrorCode(APP_NAME, 8078,
+            "Create Comments Request Invalid");
+
     public static final ApplicationErrorCode TRAVEL_PLAN_REQUIRED = new ApplicationErrorCode(APP_NAME, 9024,
             "Travel Plan Required");
 
@@ -721,6 +724,10 @@ public final class AccommodationErrorCode {
     public static final ApplicationErrorCode CANNOT_CREATE_MODIFY_ACCESS_EVENT = new ApplicationErrorCode(APP_NAME,
             10199, "Unable to Create an Modify Access Event");
 
+    public static final ApplicationErrorCode REINSTATE_NOT_ALLOWED = new ApplicationErrorCode(APP_NAME, 100016,
+            "This reservation is not eligible to be Re-instated. "
+                    + "Please contact the appropriate Reservation Office, "
+                    + "Operations Support or Manager for assistance");
     public static final ApplicationErrorCode MOD_MORE_THAN_ONE_SHARE_ACCOMM = new ApplicationErrorCode(APP_NAME, 7150,
             "Cannot have more than one shared accommodation for Modification");
 
@@ -765,6 +772,45 @@ public final class AccommodationErrorCode {
 
     public static final ApplicationErrorCode INVALID_TC_ID = new ApplicationErrorCode(APP_NAME, 7176,
             " Invalid Travel Component Id.");
+
+    public static final ApplicationErrorCode GAURANTEE_STATUS_CAN_NOT_BE_CHANGED = new ApplicationErrorCode(APP_NAME,
+            100015, " Guarantee status can not be changed ");
+
+    public static final ApplicationErrorCode SERVICE_REQUEST_SERVICE_FAILURE = new ApplicationErrorCode(APP_NAME, 9131,
+            "Error Invoking Service Request Service ");
+
+    public static final ApplicationErrorCode INVALID_TRAVEL_STATUS_FOR_SHARE = new ApplicationErrorCode(APP_NAME, 7131,
+            "Travel Status is invalid for Share");
+
+    public static final ApplicationErrorCode ACCOMMODATION_ALREADY_ADDED_FOR_SHARE = new ApplicationErrorCode(APP_NAME,
+            7132, "Accommodation has already been added for Share");
+
+    public static final ApplicationErrorCode CANT_CHANGE_BLOCK_RESORT_PACKAGE_FOR_SHARED_ACCOMMODATION = new ApplicationErrorCode(
+            APP_NAME, 7208, "Cannot change Block/Resort/Package for an shared Accommodation.");
+
+    public static final ApplicationErrorCode INVALID_PARTY_MIX_FOR_SHARE = new ApplicationErrorCode(APP_NAME, 7137,
+            "Invalid Party Mix.  Cannot Create Share With Accommodation");
+
+    public static final ApplicationErrorCode PROPERTY_SHOULD_BE_DISNEY = new ApplicationErrorCode(APP_NAME, 7136,
+            "Property should be Disney");
+
+    public static final ApplicationErrorCode ACCOMMODATION_PERIOD_NOT_OVERLAP = new ApplicationErrorCode(APP_NAME, 7138,
+            "Accommodation can not be shared - dates must overlap at least one night");
+
+    public static final ApplicationErrorCode ACCOMMODATION_SHAREPARTYMIX_NOT_OVERLAP = new ApplicationErrorCode(APP_NAME, 7638,
+            "Share Party Mix - overlap period error");
+
+    public static final ApplicationErrorCode INVALID_NUMBER_FORMAT = new ApplicationErrorCode(APP_NAME, 7143,
+            "Invalid Number Format");
+
+    public static final ApplicationErrorCode INVALID_VISIT_PURPOSE = new ApplicationErrorCode(APP_NAME, 7144,
+            "Invalid Visit Purpose");
+
+    public static final ApplicationErrorCode XBMS_SERVICE_FAILURE = new ApplicationErrorCode(APP_NAME, 7145,
+            "XBMS Service Failure");
+
+    public static final ApplicationErrorCode ENTERPRICE_FACILITY_REQUIRED = new ApplicationErrorCode(APP_NAME, 7146,
+            "Enterprise Facility Id Missing");
 
     public static final ApplicationErrorCode CANNOT_MODIFY_CHECKEDIN_ACCOMMADATION = new ApplicationErrorCode(APP_NAME,
             7187, "Checked In Accommodation cannot be modified");
@@ -845,9 +891,6 @@ public final class AccommodationErrorCode {
 
     public static final ApplicationErrorCode EXCEEDS_MAXIMUM_LIMIT = new ApplicationErrorCode(APP_NAME, 7126,
             "Exceeds Maximum Limit");
-
-    public static final ApplicationErrorCode ACCOMMODATION_PERIOD_NOT_OVERLAP = new ApplicationErrorCode(APP_NAME, 7135,
-            "Accommodation can not be shared - dates must overlap at least one night");
 
     public static final ApplicationErrorCode INVALID_TRAVELPLAN_ID_RECIEVED_FROM_SIEBEL = new ApplicationErrorCode(
             APP_NAME, 7193, " Invalid Travel Plan Id received from SIEBEL");
@@ -937,21 +980,6 @@ public final class AccommodationErrorCode {
     public static final ApplicationErrorCode RETRIEVE_GUEST_SUMMARY = new ApplicationErrorCode(APP_NAME, 9003,
             "RETRIEVE GUEST SUMMARY");
 
-    public static final ApplicationErrorCode INVALID_PARTY_MIX_FOR_SHARE = new ApplicationErrorCode(APP_NAME, 7137,
-            "Invalid Party Mix.  Cannot Create Share With Accommodation");
-
-    public static final ApplicationErrorCode CANT_CHANGE_BLOCK_RESORT_PACKAGE_FOR_SHARED_ACCOMMODATION = new ApplicationErrorCode(
-            APP_NAME, 7208, "Cannot change Block/Resort/Package for an shared Accommodation.");
-
-    public static final ApplicationErrorCode PROPERTY_SHOULD_BE_DISNEY = new ApplicationErrorCode(APP_NAME, 7136,
-            "Property should be Disney");
-
-    public static final ApplicationErrorCode ACCOMMODATION_ALREADY_ADDED_FOR_SHARE = new ApplicationErrorCode(APP_NAME,
-            7132, "Accommodation has already been added for Share");
-
-    public static final ApplicationErrorCode INVALID_TRAVEL_STATUS_FOR_SHARE = new ApplicationErrorCode(APP_NAME, 7131,
-            "Travel Status is invalid for Share");
-
     public static final ApplicationErrorCode RFID_MEDIA_NOT_AVAILABLE = new ApplicationErrorCode(APP_NAME, 91442,
             "Rfid Media not available for any of the Travel Plan Guest.");
 
@@ -1030,25 +1058,8 @@ public final class AccommodationErrorCode {
     public static final ApplicationErrorCode DVC_RESERVATION = new ApplicationErrorCode(APP_NAME, 100015,
             "Cannot cancel DVC Reservation");
 
-    public static final ApplicationErrorCode REINSTATE_NOT_ALLOWED = new ApplicationErrorCode(APP_NAME, 100016,
-            "This reservation is not eligible to be Re-instated. "
-                    + "Please contact the appropriate Reservation Office, "
-                    + "Operations Support or Manager for assistance");
-
     public static final ApplicationErrorCode MULIPLE_ROOM_DETAILS = new ApplicationErrorCode(APP_NAME, 100017,
             "Multiple Room Details");
-
-    public static final ApplicationErrorCode GAURANTEE_STATUS_CAN_NOT_BE_CHANGED = new ApplicationErrorCode(APP_NAME,
-            100015, " Guarantee status can not be changed ");
-
-    public static final ApplicationErrorCode INVALID_NUMBER_FORMAT = new ApplicationErrorCode(APP_NAME, 100016,
-            "Invalid Number Format");
-
-    public static final ApplicationErrorCode INVALID_VISIT_PURPOSE = new ApplicationErrorCode(APP_NAME, 100017,
-            "Invalid Visit Purpose");
-
-    public static final ApplicationErrorCode XBMS_SERVICE_FAILURE = new ApplicationErrorCode(APP_NAME, 100018,
-            "XBMS Service Failure");
 
     public static final ApplicationErrorCode ROOM_INVENTORY_API_SERVICE_FAILURE = new ApplicationErrorCode(APP_NAME,
             100018, "Error Invoking Room Inventory API");
