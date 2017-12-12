@@ -63,7 +63,7 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_invalidTps() {
 
-        String fault = "Record Not Found : No TravelPlanSegment Found !";
+        String fault = "No TravelPlanSegment Found";
         Retrieve retrieve = new Retrieve(environment);
         retrieve.setTravelPlanSegmentId("18384489184");
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
@@ -78,7 +78,7 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_invalidTp() {
 
-        String fault = "Record Not Found : No TravelPlan Found !";
+        String fault = "No TravelPlan Found";
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
         retrieve.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
         retrieve.setTravelPlanId("46476544747");

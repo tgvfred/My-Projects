@@ -50,7 +50,7 @@ public class TestReinstate_nullCommunicationChannel_Negative extends Accommodati
 
         String faultstring = "communication Channel is required : null";
 
-        validateApplicationError(reinstate, AccommodationErrorCode.LILO_COMMUNICATION_CHANNEL_REQUIRED);
+        validateApplicationError(reinstate, AccommodationErrorCode.COMMUNICATION_CHANNEL_REQUIRED);
 
         TestReporter.assertEquals(faultstring, reinstate.getFaultString(), "Verify that the fault string [" + reinstate.getFaultString() + "] is that which is expected.[" + faultstring + "]");
 

@@ -57,6 +57,6 @@ public class TestShare_twoTcg_checkingInBothRes extends AccommodationBaseTest {
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.assertTrue(share.getFaultString().contains(faultString), "Verify that the fault string [" + share.getFaultString() + "] contains that which is expected [" + faultString + "].");
-        validateApplicationError(share, AccommodationErrorCode.ACCOMM_NOT_BOOKED_STATUS_SHARED);
+        validateApplicationError(share, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_SHARED);
     }
 }

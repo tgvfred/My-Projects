@@ -55,6 +55,6 @@ public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
         unshare.setLocationId(getLocationId());
         unshare.sendRequest();
         TestReporter.assertTrue(unshare.getFaultString().contains(faultString), "Verify that the fault string [" + unshare.getFaultString() + "] contains that which is expected [" + faultString + "].");
-        validateApplicationError(unshare, AccommodationErrorCode.ACCOMM_NOT_BOOKED_STATUS_UNSHARED);
+        validateApplicationError(unshare, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_UNSHARED);
     }
 }

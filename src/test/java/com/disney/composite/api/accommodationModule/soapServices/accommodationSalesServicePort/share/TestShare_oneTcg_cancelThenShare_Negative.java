@@ -51,7 +51,7 @@ public class TestShare_oneTcg_cancelThenShare_Negative extends AccommodationBase
 
         String faultString = " Accommodation should be in Booked status to be Shared : Accommodation not in Booked Status";
 
-        validateApplicationError(share, AccommodationErrorCode.ACCOMM_NOT_BOOKED_STATUS_SHARED);
+        validateApplicationError(share, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_SHARED);
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
 
     }

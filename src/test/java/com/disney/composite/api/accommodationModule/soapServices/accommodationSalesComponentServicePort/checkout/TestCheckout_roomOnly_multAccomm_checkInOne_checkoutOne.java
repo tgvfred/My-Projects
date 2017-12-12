@@ -4,8 +4,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -52,7 +54,22 @@ public class TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne extends Acc
         // Checkin the first accommodation
         helper = new CheckInHelper(locVar, getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-        helper.checkOut(getLocationId());
+
+        String refType = "RESERVATION";
+        String refNumber = getExternalRefNumber();
+        String refSource = getExternalRefSource();
+        Checkout checkout = new Checkout(getEnvironment(), "main");
+        checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setIsBellServiceRequired(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setIsSameRoomNumberAssigned(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        checkout.setExternalReferenceType(refType);
+        checkout.setExternalReferenceNumber(refNumber);
+        checkout.setExternalReferenceSource(refSource);
+        checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setCheckoutDate(Randomness.generateCurrentXMLDate());
+        checkout.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.sendRequest();
 
         String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
         validateRIM(assignOwnerId);
@@ -75,7 +92,6 @@ public class TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne extends Acc
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         TestReporter.softAssertTrue(rs.getRowCount() == 1, "Verify that 1 record was returned.");
-        TestReporter.softAssertTrue(!rs.getValue("AUTO_ASGN_RSRC_ID").equals("NULL"), "Verify that the auto asign resource ID [" + rs.getValue("AUTO_ASGN_RSRC_ID") + "] is not null.");
         TestReporter.softAssertTrue(rs.getValue("OWNR_STS_NM").equals("COMPLETED"), "Verify that the owner status [" + rs.getValue("OWNR_STS_NM") + "] is that which is expected [COMPLETED].");
         TestReporter.softAssertTrue(rs.getValue("RSRC_ASGN_REQ_ID").equals("NULL"), "Verify that the resource assingment request ID [" + rs.getValue("RSRC_ASGN_REQ_ID") + "] is that which is expected [NULL].");
         TestReporter.softAssertTrue(rs.getValue("ASGN_ID").equals("NULL"), "Verify that the assignment ID [" + rs.getValue("ASGN_ID") + "] is that which is expected [NULL].");
