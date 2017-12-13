@@ -12,7 +12,7 @@ public class TestRetrievePostedCancellationFee_TPS_invalidId extends Accommodati
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
     public void testRetrievePostedCancellationFee_TPS_invalidId() {
 
-        String faultString = "TRAVEL_PLAN_SEGMENT_NOT_FOUND : Travel Plan Segment Should not be NULL";
+        String faultString = "Travel Plan Segment Not Found : Travel Plan Segment Should not be NULL";
 
         RetrievePostedCancellationFee retrieve = new RetrievePostedCancellationFee(environment, "Main");
         retrieve.setid("1234");

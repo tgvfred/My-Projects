@@ -30,7 +30,7 @@ public class TestRetrieveRates_DVC_Points extends BookDVCPointsHelper {
         String tcgId = getBook().getTravelComponentGroupingId();
         String tpId = getBook().getTravelPlanId();
         String roomCode = getRoomTypeCode();
-        String packageName = "WDW DVC Member Points Room Only";
+        String packageName = "DVBR DVC Member Points Room Only";
         String rateDate = "";
         String dayCount = Integer.toString(getNights());
         String overridden = "true";

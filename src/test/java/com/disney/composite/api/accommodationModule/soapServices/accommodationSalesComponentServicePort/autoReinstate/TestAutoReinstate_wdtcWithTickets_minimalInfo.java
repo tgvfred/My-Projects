@@ -28,7 +28,7 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
         locEnv = environment;
 
         daysOut.set(Randomness.randomNumberBetween(1, 12));

@@ -16,7 +16,7 @@ public class TestSearchResortReservationsByGuest_Negative extends AccommodationB
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "searchResortReservationsByGuest", "negative" })
     public void testSearchResortReservationsByGuest_nullRequest() {
-        String fault = "Invalid Search Criteria  : Search Request Not Valid !";
+        String fault = "Search Criteria is Invalid : Search Request Not Valid !";
         TestReporter.logScenario("Test - Search Resort Reservations By Guest - Null Request");
 
         SearchResortReservationsByGuest searchResortReservationsByGuest = new SearchResortReservationsByGuest(environment);
@@ -31,7 +31,7 @@ public class TestSearchResortReservationsByGuest_Negative extends AccommodationB
     public void testSearchResortReservationsByGuest_invalidPostalCode_GuestLastNameOnly() {
         String lastName = "ASD";
         String postalCode = "123456789";
-        String fault = "Invalid Search Criteria  : No Accommodation Components Found !";
+        String fault = "Search Criteria is Invalid : No Accommodation Components Found !";
         TestReporter.logScenario("Test - Search Resort Reservations By Guest - Invalid Postal Code- Guest Last Name Only");
 
         SearchResortReservationsByGuest searchResortReservationsByGuest = new SearchResortReservationsByGuest(environment);
@@ -58,7 +58,7 @@ public class TestSearchResortReservationsByGuest_Negative extends AccommodationB
         String lastName = "ASD*";
         String arrivalDate = dtf.format(localDate);
 
-        String fault = "Invalid Search Criteria  : No Accommodation Components Found !";
+        String fault = "Search Criteria is Invalid : No Accommodation Components Found !";
         TestReporter.logScenario("Test - Search Resort Reservations By Guest - Invalid Resort Code- Arrival Date- Last Name Only");
 
         SearchResortReservationsByGuest searchResortReservationsByGuest = new SearchResortReservationsByGuest(environment);

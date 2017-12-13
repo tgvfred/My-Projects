@@ -9,9 +9,10 @@ import com.disney.api.soapServices.accommodationModule.applicationError.Accommod
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.TestReporter;
 
-public class TestShare_oneTcg_dvc_Negative extends BookDVCCashHelper {
+public class TestShare_Dvc_Negative extends BookDVCCashHelper {
 
     private Share share;
+    private String tcgfirstTd;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -21,6 +22,10 @@ public class TestShare_oneTcg_dvc_Negative extends BookDVCCashHelper {
 
         setUseDvcResort(true);
         setCheckingIn(true);
+        setBook(bookDvcReservation("testBook_MCash", 1));
+        setTpId(getFirstBooking().getTravelPlanId());
+        tcgfirstTd = getBook().getTravelComponentGroupingId();
+
         setBook(bookDvcReservation("testBook_MCash", 1));
         setTpId(getFirstBooking().getTravelPlanId());
     }
@@ -34,13 +39,15 @@ public class TestShare_oneTcg_dvc_Negative extends BookDVCCashHelper {
         // }
         // }
         share = new Share(environment, "Main_oneTcg");
-        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        share.setTravelComponentGroupingId(tcgfirstTd);
+        share.addSharedComponent();
+        share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
 
         String faultString = "Accommodation is invalid for Share : DVC reservations should not be shared";
 
-        TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(share, AccommodationErrorCode.ACCOMMODATION_INVALID_FOR_SHARE);
+        TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
     }
 
 }

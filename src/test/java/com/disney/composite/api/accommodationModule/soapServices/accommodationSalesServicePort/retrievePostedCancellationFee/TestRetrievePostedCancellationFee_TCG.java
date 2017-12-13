@@ -32,7 +32,7 @@ public class TestRetrievePostedCancellationFee_TCG extends AccommodationBaseTest
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
     public void testRetrievePostedCancellationFee_TCG() {
 
-        String faultString = "TRAVEL_PLAN_SEGMENT_NOT_FOUND : Travel Plan Segment Should not be NULL";
+        String faultString = "Travel Plan Segment Not Found : Travel Plan Segment Should not be NULL";
 
         RetrievePostedCancellationFee retrieve = new RetrievePostedCancellationFee(environment, "Main");
         retrieve.setid(getBook().getTravelComponentGroupingId());

@@ -30,9 +30,6 @@ public class TestGetOptionDetail_LOCATOR_TYPE extends AccommodationBaseTest {
     // @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_LOCATOR_TYPE(String key, String value) {
 
-        // System.out.println(key);
-        // System.out.println(value);
-
         GetOptionDetail getOptionDetail = new GetOptionDetail(environment);
         getOptionDetail.setAccommodationSalesOptionsEnum("LOCATOR_USE_TYPE");
 

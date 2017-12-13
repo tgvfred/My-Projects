@@ -17,7 +17,7 @@ public class TestRetrieve_addDining_TpAndTps extends AccommodationBaseTest {
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
         isComo.set("true");
         setDaysOut(0);
         setNights(1);

@@ -15,7 +15,7 @@ public class TestUpdateComments_negative extends AccommodationBaseTest {
     String parentId = "";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "updateComments", "negative" })
-    public void testCreateComments_nullRequest() {
+    public void testUpdateComments_nullRequest() {
 
         String faultString = "Create Comments Request Invalid : CommentRequest should be provided";
         UpdateComments update = new UpdateComments(environment, "Main");
@@ -23,11 +23,11 @@ public class TestUpdateComments_negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(update.getFaultString(), faultString, "Verify that the fault string [" + update.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(update, AccommodationErrorCode.CREATE_COMMENTS);
+        validateApplicationError(update, AccommodationErrorCode.UPDATE_COMMENTS);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "updateComments", "negative", "debug" })
-    public void testCreateComments_nullCommentsInfo() {
+    public void testUpdateComments_nullCommentsInfo() {
 
         String faultString = "Create Comments Request Invalid : CommentRequest should be provided";
         parentId = getBook().getTravelComponentId();
@@ -39,7 +39,7 @@ public class TestUpdateComments_negative extends AccommodationBaseTest {
         update.sendRequest();
 
         TestReporter.assertEquals(update.getFaultString(), faultString, "Verify that the fault string [" + update.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(update, AccommodationErrorCode.CREATE_COMMENTS);
+        validateApplicationError(update, AccommodationErrorCode.UPDATE_COMMENTS);
     }
 
 }

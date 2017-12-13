@@ -31,9 +31,6 @@ public class TestGetOptionDetail_COUNTRY extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_COUNTRY(String key, String value) {
 
-        // System.out.println(key);
-        // System.out.println(value);
-
         GetOptionDetail getOptionDetail = new GetOptionDetail(environment);
         getOptionDetail.setAccommodationSalesOptionsEnum("COUNTRY");
 
@@ -70,8 +67,6 @@ public class TestGetOptionDetail_COUNTRY extends AccommodationBaseTest {
 
             allPairs.put(OptionKey, OptionV);
         }
-
-        System.out.println(allPairs.values());
 
         Object[][] objKeyValue = new Object[allPairs.size()][2];
         int i = 0;

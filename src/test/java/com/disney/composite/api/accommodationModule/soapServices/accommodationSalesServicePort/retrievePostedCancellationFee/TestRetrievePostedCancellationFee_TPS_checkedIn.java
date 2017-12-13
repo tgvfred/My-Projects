@@ -55,13 +55,13 @@ public class TestRetrievePostedCancellationFee_TPS_checkedIn extends Accommodati
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrievePostedCancellationFee" })
     public void testRetrievePostedCancellationFee_TPS_checkedIn() {
 
-        String faultString = "Cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for checked in or checked out reservation";
+        String faultString = "cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for checked in or checked out reservation";
 
         RetrievePostedCancellationFee retrieve = new RetrievePostedCancellationFee(environment, "Main");
         retrieve.setid(getBook().getTravelPlanSegmentId());
         retrieve.sendRequest();
 
         TestReporter.assertTrue(retrieve.getFaultString().contains(faultString), "Verify that the fault string [" + retrieve.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE_CAPS);
+        validateApplicationError(retrieve, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
     }
 }

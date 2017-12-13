@@ -88,7 +88,7 @@ public class TestUnShare_oneTcg extends AccommodationBaseTest {
     public void validations() {
         UnShareHelper helper = new UnShareHelper(getEnvironment());
 
-        int numExpectedRecords = 2;
+        int numExpectedRecords = 1;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;

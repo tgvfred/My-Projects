@@ -29,10 +29,7 @@ public class TestGetOptionDetail_ALTERNATE_COUNTRY_CODE extends AccommodationBas
 
     // accommodation sales request grabs data providers from party service response
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
-    public void testGetOptionDetail_LANGUAGE(String key, String value) {
-
-        // System.out.println(key);
-        // System.out.println(value);
+    public void testGetOptionDetail_ALTERNATE_COUNTRY_CODE(String key, String value) {
 
         GetOptionDetail getOptionDetail = new GetOptionDetail(environment);
         getOptionDetail.setAccommodationSalesOptionsEnum("ALTERNATE_COUNTRY_CODE");
@@ -68,9 +65,6 @@ public class TestGetOptionDetail_ALTERNATE_COUNTRY_CODE extends AccommodationBas
 
             allPairs.put(OptionKey, OptionV);
         }
-
-        System.out.println(allPairs.values());
-
         Object[][] objKeyValue = new Object[allPairs.size()][2];
         int i = 0;
         for (String key : allPairs.keySet()) {

@@ -21,17 +21,15 @@ public class TestUpdateComments_parentTC_removeProfile extends AccommodationBase
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "UpdateComments" })
     public void testUpdateComments_parentTC_removeProfile() {
-
         parentId = getBook().getTravelComponentId();
         String isActive = "true";
-        String sendToGSR = "false";
         String confidential = "true";
         String commentLevel = "TC";
         String createdBy = "AutoJUnit.us";
         UpdateComments update = new UpdateComments(environment, "Main");
         update.setparentIds(parentId);
         update.setIsActive(isActive);
-        update.setSendToGSR(sendToGSR);
+        update.setSendToGSR("false");
         update.setConfidential(confidential);
         update.setProfileId(profileId);
         update.setProfileCode(BaseSoapCommands.REMOVE_NODE.toString());
@@ -54,7 +52,6 @@ public class TestUpdateComments_parentTC_removeProfile extends AccommodationBase
         TestReporter.logStep("Validate Response node values.");
         TestReporter.setAssertFailed(false);
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred updating comments: " + update.getFaultString(), update);
-        TestReporter.softAssertTrue(update.getSendToGSR().equals(sendToGSR), "Verify that the sendToGSR node [" + update.getSendToGSR() + "] is what is expected [" + sendToGSR + "]");
         TestReporter.softAssertTrue(update.getConfidential().equals(confidential), "Verify that the confidential node [" + update.getConfidential() + "] is what is expected [" + confidential + "]");
         TestReporter.softAssertTrue(update.getCommentText().equals(commentText), "Verify that the commentText node [" + update.getCommentText() + "] is what is expected [" + commentText + "]");
         TestReporter.softAssertTrue(update.getCommentLevel().equals(commentLevel), "Verify that the commentLevel node [" + update.getCommentLevel() + "] is what is expected [" + commentLevel + "]");

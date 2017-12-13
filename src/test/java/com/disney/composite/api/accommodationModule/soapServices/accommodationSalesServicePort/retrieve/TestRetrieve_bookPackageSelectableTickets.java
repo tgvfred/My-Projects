@@ -24,7 +24,7 @@ public class TestRetrieve_bookPackageSelectableTickets extends AccommodationBase
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
         locEnv = environment;
         daysOut.set(1);
         nights.set(1);

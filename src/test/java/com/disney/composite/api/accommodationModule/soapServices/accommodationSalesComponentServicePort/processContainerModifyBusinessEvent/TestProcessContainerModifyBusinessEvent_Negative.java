@@ -33,7 +33,7 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent", "negative" })
     public void TestProcessContainerModifyBusinessEvent_guarAccomm() {
-        String fault = "INVALID REQUEST! : Missing Parameters or ExternalReferenceDetail cannot be null";
+        String fault = "INVALID REQUEST ! : Missing Parameters or ExternalReferenceDetail cannot be null";
 
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent - guarAccomm");
 

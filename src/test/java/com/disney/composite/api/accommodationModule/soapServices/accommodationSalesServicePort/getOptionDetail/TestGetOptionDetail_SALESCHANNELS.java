@@ -36,7 +36,6 @@ public class TestGetOptionDetail_SALESCHANNELS extends AccommodationBaseTest {
     // accommodation sales request grabs data providers from the database
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_SALESCHANNELS(String SLS_CHAN_ID, String SLS_CHAN_NM) {
-        System.out.println(SLS_CHAN_ID + " " + SLS_CHAN_NM);
 
         GetOptionDetail getOptionDetail = new GetOptionDetail(Environment.getBaseEnvironmentName(environment));
         getOptionDetail.setAccommodationSalesOptionsEnum("SALESCHANNELS");

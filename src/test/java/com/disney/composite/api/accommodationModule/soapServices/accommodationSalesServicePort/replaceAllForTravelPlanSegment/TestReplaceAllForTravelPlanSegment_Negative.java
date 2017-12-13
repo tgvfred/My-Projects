@@ -248,7 +248,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         String tpId = dvc.getFirstBooking().getTravelPlanId();
         String tpsId = dvc.getFirstBooking().getTravelPlanSegmentId();
 
-        String faultString = "INVALID REQUEST! : DVC Reservations not supported";
+        String faultString = "INVALID REQUEST ! : DVC Reservations not supported";
         bookReservation();
         getBook().setSecurityValue("DVC");
         getBook().setTravelPlanId(tpId);

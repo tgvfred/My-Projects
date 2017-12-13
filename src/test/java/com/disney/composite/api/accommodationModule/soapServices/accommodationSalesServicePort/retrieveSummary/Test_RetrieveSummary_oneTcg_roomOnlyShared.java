@@ -19,7 +19,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyShared extends AccommodationBas
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(environment));
+        setEnvironment(environment);
         isComo.set("false");
         setDaysOut(0);
         setNights(1);

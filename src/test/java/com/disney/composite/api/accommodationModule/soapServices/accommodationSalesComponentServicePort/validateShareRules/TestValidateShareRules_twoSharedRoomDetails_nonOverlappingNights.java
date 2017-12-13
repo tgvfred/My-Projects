@@ -87,6 +87,6 @@ public class TestValidateShareRules_twoSharedRoomDetails_nonOverlappingNights ex
         validate.sendRequest();
 
         TestReporter.assertTrue(validate.getFaultString().contains(faultString), "Verify that the fault string [" + validate.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(validate, AccommodationErrorCode.DATES_MUST_OVERLAP);
+        validateApplicationError(validate, AccommodationErrorCode.ACCOMMODATION_PERIOD_NOT_OVERLAP);
     }
 }

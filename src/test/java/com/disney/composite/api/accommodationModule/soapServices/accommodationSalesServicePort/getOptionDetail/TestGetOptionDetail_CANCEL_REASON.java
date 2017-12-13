@@ -32,7 +32,6 @@ public class TestGetOptionDetail_CANCEL_REASON extends AccommodationBaseTest {
     // accommodation sales request grabs data providers from database
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
     public void testGetOptionDetail_CANCEL_REASON(String TC_RSN_TYP_NM, String LGCY_RSN_CD, String TC_RSN_NM) {
-        System.out.println(TC_RSN_TYP_NM + " " + LGCY_RSN_CD + " " + TC_RSN_NM);
 
         GetOptionDetail getOptionDetail = new GetOptionDetail(Environment.getBaseEnvironmentName(environment));
         getOptionDetail.setAccommodationSalesOptionsEnum("CANCEL_REASON");

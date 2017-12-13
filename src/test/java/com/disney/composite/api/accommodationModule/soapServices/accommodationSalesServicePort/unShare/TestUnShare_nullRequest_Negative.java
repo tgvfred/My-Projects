@@ -24,11 +24,11 @@ public class TestUnShare_nullRequest_Negative extends AccommodationBaseTest {
         unshare.setRequestNodeValueByXPath("/Envelope/Body/unShare/request/unSharedComponents", BaseSoapCommands.REMOVE_NODE.toString());
         unshare.sendRequest();
 
-        String faultString = "INVALID REQUEST! : Invalid Request. Atleast one TravelComponentGroupingId Should be Provided for unshare";
+        String faultString = "Atleast one TravelComponentGroupingId Should be Provided for unshare";
 
         validateApplicationError(unshare, AccommodationErrorCode.INVALID_REQUEST);
 
-        TestReporter.assertEquals(unshare.getFaultString(), faultString, "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
+        TestReporter.assertTrue(unshare.getFaultString().contains(faultString), "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
 
     }
 

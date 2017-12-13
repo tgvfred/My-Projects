@@ -430,7 +430,6 @@ public class AutoReinstateHelper {
 
         TestReporter.softAssertEquals(rs.getValue("TC_ID"), tcID, "Verify the TC id [" + rs.getValue("TC_ID") + "] matches the TC id in the DB [" + tcID + "].");
         TestReporter.softAssertEquals(rs.getValue("TC_GRP_NB"), tcgID, "Verify the TCG id [" + rs.getValue("TC_GRP_NM") + "] matches the TCG in the DB [" + tcgID + "].");
-        TestReporter.softAssertEquals(rs.getValue("SLS_CHAN_ID"), "1", "Verify the sales channel id [" + rs.getValue("SLS_CHAN_ID") + "] matches the sales channel id in the DB [1].");
         TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), "Booked", "Verify the travel status name [" + rs.getValue("TRVL_STS_NM") + "] matches the travel status name in the DB [Booked].");
         TestReporter.softAssertEquals(rs.getValue("TC_CHRG_IN"), "Y", "Verify the TC charge [" + rs.getValue("TC_CHRG_IN") + "] matches the TC charge in the DB [Y].");
         TestReporter.assertAll();

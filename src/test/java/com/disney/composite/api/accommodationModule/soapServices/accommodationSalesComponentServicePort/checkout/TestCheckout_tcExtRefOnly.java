@@ -52,7 +52,7 @@ public class TestCheckout_tcExtRefOnly extends AccommodationBaseTest {
         checkout.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
         checkout.sendRequest();
 
-        String faultString = "INVALID REQUEST! : ExternalReferences and TCG Id needs to be provided";
+        String faultString = "INVALID REQUEST ! : ExternalReferences and TCG Id needs to be provided";
         TestReporter.assertEquals(faultString, checkout.getFaultString(), "Verify that the fault string [" + checkout.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(checkout, AccommodationErrorCode.INVALID_REQUEST);
     }

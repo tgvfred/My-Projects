@@ -10,9 +10,10 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
-public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
+public class TestUnShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
     private UnShare unshare;
     private Share share;
     private String firstTCG;
@@ -27,20 +28,22 @@ public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
-        isComo.set("true");
-        setSendRequest(false);
         bookReservation();
 
+        firstTCG = getBook().getTravelComponentGroupingId();
+        bookReservation();
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         firstTCG = getBook().getTravelComponentGroupingId();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
-    public void Test_unShare_oneTcg_shareThenCheckIn() {
+    public void test_unShare_oneTcg_shareThenCheckIn() {
         String faultString = " Accommodation should be in Booked status to be UnShared : Accommodation not in Booked Status";
         share = new Share(environment, "Main_oneTcg");
-        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        share.setTravelComponentGroupingId(firstTCG);
+        share.addSharedComponent();
+        share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
@@ -50,11 +53,13 @@ public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
         checkIn.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + share.getFaultString(), share);
 
+        // Allow asychronous events to fully check in
+        Sleeper.sleep(3000);
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(firstTCG);
         unshare.setLocationId(getLocationId());
         unshare.sendRequest();
         TestReporter.assertTrue(unshare.getFaultString().contains(faultString), "Verify that the fault string [" + unshare.getFaultString() + "] contains that which is expected [" + faultString + "].");
-        validateApplicationError(unshare, AccommodationErrorCode.ACCOMM_NOT_BOOKED_STATUS_UNSHARED);
+        validateApplicationError(unshare, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_UNSHARED);
     }
 }
