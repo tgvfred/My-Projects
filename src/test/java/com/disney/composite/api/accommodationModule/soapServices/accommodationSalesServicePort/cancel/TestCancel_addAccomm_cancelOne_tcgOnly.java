@@ -12,6 +12,7 @@ import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.AddAccommodationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
@@ -113,8 +114,8 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
         cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 2);
         cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 1);
-        // Verify the reasonID matches the reason code used for the given TCId
-        // cancelHelper.verifyProductReasonID(book.getTravelComponentId());
+        // pause to allow TPV3 sync
+        Sleeper.sleep(5000);
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
