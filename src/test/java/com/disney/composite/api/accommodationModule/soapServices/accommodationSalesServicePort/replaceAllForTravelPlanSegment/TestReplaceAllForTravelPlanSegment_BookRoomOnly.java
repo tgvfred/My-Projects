@@ -34,7 +34,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly extends Accommodati
         getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
         tpPtyId = getBook().getGuestId();
 
-        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(getEnvironment()));
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
