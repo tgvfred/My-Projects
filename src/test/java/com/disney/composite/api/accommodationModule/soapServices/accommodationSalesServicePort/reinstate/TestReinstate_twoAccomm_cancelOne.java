@@ -143,9 +143,9 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
         reinstateHelper.validateActiveChargeGroup(numExpectedRecords);
 
         int numExpectedRecords14 = 2;
-        reinstateHelper.validateTCReservationStatusForTCG(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "1",
+        reinstateHelper.validateTCReservationStatusForTCG(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), getSalesChannelId(),
                 "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
-        reinstateHelper.validateTCReservationStatusForTCGs(numExpectedRecords14, book2.getTravelComponentId(), getArrivalDate(), getDepartureDate(), "1",
+        reinstateHelper.validateTCReservationStatusForTCGs(numExpectedRecords14, book2.getTravelComponentId(), getArrivalDate(), getDepartureDate(), getSalesChannelId(),
                 "Booked", getFacilityId(), book2.getTravelComponentGroupingId());
 
         int numExpectedRecords12 = 1;

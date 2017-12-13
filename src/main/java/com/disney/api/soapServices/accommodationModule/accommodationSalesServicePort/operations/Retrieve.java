@@ -885,6 +885,11 @@ public class Retrieve extends AccommodationSalesServicePort {
 
     }
 
+    public String getAccommSalesChannelId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/salesChannelId");
+
+    }
+
     public String getAccommRoomOnly() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings/accommodation/roomOnly");
 

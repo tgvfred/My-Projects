@@ -103,6 +103,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<String> agencyId = new ThreadLocal<String>();
     private ThreadLocal<String> guestId = new ThreadLocal<String>();
     private ThreadLocal<String> partyId = new ThreadLocal<String>();
+    private ThreadLocal<String> salesChannelId = new ThreadLocal<String>();
     private ThreadLocal<String> packageCode = new ThreadLocal<String>();
     private ThreadLocal<String> guestAddressLocatorId = new ThreadLocal<String>();
     public ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>();
@@ -423,6 +424,14 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public String getPackageType() {
         return packageType.get();
+    }
+
+    public String getSalesChannelId() {
+        return salesChannelId.get();
+    }
+
+    public void setSalesChannelId(String salesChannelId) {
+        this.salesChannelId.set(salesChannelId);
     }
 
     protected void setXmlRepo(String location) {
@@ -1738,6 +1747,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         TestReporter.assertTrue(getRetrieve().getResponseStatusCode().equals("200"), "Verify that an error did not occurred retrieving the prereq reservation: " + getRetrieve().getFaultString());
         partyId.set(getRetrieve().getPartyId());
         guestId.set(getRetrieve().getGuestId());
+        salesChannelId.set(getRetrieve().getAccommSalesChannelId());
         guestAddressLocatorId.set(getRetrieve().getResponseNodeValueByXPath("//travelPlanInfo/travelPlanGuests/guest/addressDetails/guestLocatorId"));
     }
 

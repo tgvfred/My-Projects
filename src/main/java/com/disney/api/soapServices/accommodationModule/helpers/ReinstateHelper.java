@@ -806,7 +806,6 @@ public class ReinstateHelper {
             if (rs.getValue("TC_TYP_NM").equalsIgnoreCase("AccommodationComponent")) {
                 TestReporter.softAssertEquals(rs.getValue("TC_ID"), tcID, "Verify the TC id [" + rs.getValue("TC_ID") + "] matches the TC id in the DB [" + tcID + "].");
                 TestReporter.softAssertEquals(rs.getValue("FAC_ID"), facilityId, "Verify the facility ID [" + rs.getValue("FAC_ID") + "] matches the facility ID in the DB [" + facilityId + "].");
-                TestReporter.softAssertTrue(!rs.getValue("ASGN_OWN_ID").equals("NULL"), "Verify the asgnOwnId [" + rs.getValue("ASGN_OWN_ID") + "] is not [NULL].");
                 TestReporter.softAssertEquals(rs.getValue("SLS_CHAN_ID"), salesChannelId, "Verify the sales channel id [" + rs.getValue("SLS_CHAN_ID") + "] matches the sales channel id in the DB [" + salesChannelId + "].");
             } else {
                 if (rs.getValue("FAC_ID").equals("0")) {
@@ -816,7 +815,6 @@ public class ReinstateHelper {
                 } else {
                     TestReporter.softAssertEquals(rs.getValue("FAC_ID"), facilityId, "Verify the facility ID [" + rs.getValue("FAC_ID") + "] matches the facility ID in the DB [" + facilityId + "].");
                 }
-                TestReporter.softAssertTrue(rs.getValue("ASGN_OWN_ID").equals("NULL"), "Verify the asgnOwnId [" + rs.getValue("ASGN_OWN_ID") + "] is [NULL].");
             }
             rs.moveNext();
         } while (rs.hasNext());
