@@ -13,7 +13,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
-public class TestUnShare_oneTcg_shareThenCheckIn extends AccommodationBaseTest {
+public class TestUnShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
     private UnShare unshare;
     private Share share;
     private String firstTCG;
