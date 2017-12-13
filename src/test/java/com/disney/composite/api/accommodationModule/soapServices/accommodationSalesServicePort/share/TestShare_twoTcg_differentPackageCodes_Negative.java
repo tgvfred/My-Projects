@@ -48,7 +48,7 @@ public class TestShare_twoTcg_differentPackageCodes_Negative extends Accommodati
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share", "negative" })
-    public void Test_Share_twoTcg_differentRoomTypes_Negative() {
+    public void testShare_twoTcg_differentPackageCodes_Negative() {
 
         // if (Environment.isSpecialEnvironment(environment)) {
         // if (true) {
