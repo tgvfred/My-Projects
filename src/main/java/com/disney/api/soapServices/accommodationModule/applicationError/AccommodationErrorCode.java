@@ -794,7 +794,7 @@ public final class AccommodationErrorCode {
     public static final ApplicationErrorCode PROPERTY_SHOULD_BE_DISNEY = new ApplicationErrorCode(APP_NAME, 7136,
             "Property should be Disney");
 
-    public static final ApplicationErrorCode ACCOMMODATION_PERIOD_NOT_OVERLAP = new ApplicationErrorCode(APP_NAME, 7138,
+    public static final ApplicationErrorCode ACCOMMODATION_PERIOD_NOT_OVERLAP = new ApplicationErrorCode(APP_NAME, 7135,
             "Accommodation can not be shared - dates must overlap at least one night");
 
     public static final ApplicationErrorCode ACCOMMODATION_SHAREPARTYMIX_NOT_OVERLAP = new ApplicationErrorCode(APP_NAME, 7638,

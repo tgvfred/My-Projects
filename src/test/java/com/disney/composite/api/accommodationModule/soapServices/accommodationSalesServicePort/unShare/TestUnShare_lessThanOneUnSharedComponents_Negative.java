@@ -25,7 +25,7 @@ public class TestUnShare_lessThanOneUnSharedComponents_Negative extends Accommod
         unshare.setLocationId("51");
         unshare.sendRequest();
 
-        String faultString = "INVALID REQUEST! : Invalid Request. Atleast one TravelComponentGroupingId Should be Provided for unshare";
+        String faultString = "Atleast one TravelComponentGroupingId Should be Provided for unshare";
 
         validateApplicationError(unshare, AccommodationErrorCode.INVALID_REQUEST);
 

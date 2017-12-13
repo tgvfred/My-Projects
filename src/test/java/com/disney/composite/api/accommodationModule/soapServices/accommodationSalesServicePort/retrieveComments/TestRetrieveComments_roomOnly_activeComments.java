@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveComments_roomOnly_activeComments extends AccommodationBaseTest {
@@ -46,6 +47,8 @@ public class TestRetrieveComments_roomOnly_activeComments extends AccommodationB
         create.setRequestNodeValueByXPath("/Envelope/Body/createComments/request/tpsExternalReference", BaseSoapCommands.REMOVE_NODE.toString());
         create.sendRequest();
 
+        // Adding pause to ensure sorting incase both RQ sent within a second of each other
+        Sleeper.sleep(1000);
         CreateComments create2 = new CreateComments(environment, "Main");
         create2.setParentIds(parentId);
         create2.setIsActive(expectedIsActive);

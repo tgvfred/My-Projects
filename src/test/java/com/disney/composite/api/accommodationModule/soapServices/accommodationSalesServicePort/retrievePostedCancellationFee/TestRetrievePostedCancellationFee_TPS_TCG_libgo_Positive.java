@@ -17,7 +17,7 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_libgo_Positive extends Ac
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(30);
+        setDaysOut(5);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
