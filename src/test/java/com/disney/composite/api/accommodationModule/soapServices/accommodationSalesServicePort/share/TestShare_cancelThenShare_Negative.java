@@ -12,9 +12,10 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
-public class TestShare_oneTcg_cancelThenShare_Negative extends AccommodationBaseTest {
+public class TestShare_cancelThenShare_Negative extends AccommodationBaseTest {
 
     private Share share;
+    private String firstTCG;
 
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -29,16 +30,14 @@ public class TestShare_oneTcg_cancelThenShare_Negative extends AccommodationBase
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
         setValues();
         bookReservation();
+
+        firstTCG = getBook().getTravelComponentGroupingId();
+        bookReservation();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share", "negative" })
-    public void Test_Share_oneTcg_cancelThenShare_Negative() {
+    public void Test_Share_cancelThenShare_Negative() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-        // }
-        // }
         Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -46,7 +45,9 @@ public class TestShare_oneTcg_cancelThenShare_Negative extends AccommodationBase
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + cancel.getFaultString(), cancel);
 
         share = new Share(environment, "Main_oneTcg");
-        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        share.setTravelComponentGroupingId(firstTCG);
+        share.addSharedComponent();
+        share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
 
         String faultString = " Accommodation should be in Booked status to be Shared : Accommodation not in Booked Status";

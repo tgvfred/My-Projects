@@ -9,7 +9,7 @@ import com.disney.api.soapServices.accommodationModule.applicationError.Accommod
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.TestReporter;
 
-public class TestShare_oneTcg_dvc_Negative extends BookDVCCashHelper {
+public class TestShare_Dvc_Negative extends BookDVCCashHelper {
 
     private Share share;
     private String tcgfirstTd;

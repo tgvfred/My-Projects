@@ -13,13 +13,7 @@ public class TestUnShare_lessThanOneUnSharedComponents_Negative extends Accommod
     private UnShare unshare;
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
-    public void Test_unShare_lessThanOneUnSharedComponents_Negative() {
-
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-        // }
-        // }
+    public void test_unShare_lessThanOneUnSharedComponents_Negative() {
         unshare = new UnShare(environment, "Main");
         unshare.setRequestNodeValueByXPath("/Envelope/Body/unShare/request/unSharedComponents", BaseSoapCommands.REMOVE_NODE.toString());
         unshare.setLocationId("51");
@@ -29,7 +23,7 @@ public class TestUnShare_lessThanOneUnSharedComponents_Negative extends Accommod
 
         validateApplicationError(unshare, AccommodationErrorCode.INVALID_REQUEST);
 
-        TestReporter.assertEquals(unshare.getFaultString(), faultString, "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
+        TestReporter.assertTrue(unshare.getFaultString().contains(faultString), "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
 
     }
 

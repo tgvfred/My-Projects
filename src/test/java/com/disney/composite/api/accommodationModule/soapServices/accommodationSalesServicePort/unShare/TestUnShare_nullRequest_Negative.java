@@ -28,7 +28,7 @@ public class TestUnShare_nullRequest_Negative extends AccommodationBaseTest {
 
         validateApplicationError(unshare, AccommodationErrorCode.INVALID_REQUEST);
 
-        TestReporter.assertEquals(unshare.getFaultString(), faultString, "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
+        TestReporter.assertTrue(unshare.getFaultString().contains(faultString), "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
 
     }
 

@@ -4,7 +4,7 @@
 	<parameter name="environment" value="latest_cm" />
 	<test name="TestShare_oneTcg_cancelThenShare_Negative">
 		 <classes>
-			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share.TestShare_oneTcg_cancelThenShare_Negative"></class>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share.TestShare_cancelThenShare_Negative"></class>
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->
