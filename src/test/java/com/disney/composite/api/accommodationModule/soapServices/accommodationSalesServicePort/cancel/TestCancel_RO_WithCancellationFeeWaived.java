@@ -32,7 +32,7 @@ public class TestCancel_RO_WithCancellationFeeWaived extends AccommodationBaseTe
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RO_WithCancellationFeeWaived() {
         TestReporter.logScenario("Test Cancel RO With Cancellation Fee Waived");
 

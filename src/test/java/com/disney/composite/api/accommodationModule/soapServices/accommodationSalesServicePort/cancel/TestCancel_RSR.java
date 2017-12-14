@@ -35,7 +35,7 @@ public class TestCancel_RSR extends AccommodationBaseTest {
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RSR() {
         TestReporter.logScenario("Test Cancel RSR");
 

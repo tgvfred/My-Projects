@@ -34,7 +34,7 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_addBundle_cancelAccommodation_tcgOnly() {
         TestReporter.logScenario("Test Cancel");
 

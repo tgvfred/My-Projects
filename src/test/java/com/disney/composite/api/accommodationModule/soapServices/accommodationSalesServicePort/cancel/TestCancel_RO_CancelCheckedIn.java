@@ -53,7 +53,7 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
         TestReporter.assertTrue(checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getBook().getTravelPlanId() + "]: " + checkIn.getFaultString());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RO_CancelCheckedIn() {
         TestReporter.logScenario("Test Cancel RO Checked IN negative");
 

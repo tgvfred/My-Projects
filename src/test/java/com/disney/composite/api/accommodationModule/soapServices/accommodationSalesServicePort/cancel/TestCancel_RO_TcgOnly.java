@@ -34,7 +34,7 @@ public class TestCancel_RO_TcgOnly extends AccommodationBaseTest {
         checkingIn(Environment.getBaseEnvironmentName(getEnvironment()));
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RO_TcgOnly() {
         TestReporter.logScenario("Test Cancel RO CheckingIn Tcg Only");
 

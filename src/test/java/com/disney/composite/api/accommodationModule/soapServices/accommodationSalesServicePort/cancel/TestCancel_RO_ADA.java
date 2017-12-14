@@ -35,7 +35,7 @@ public class TestCancel_RO_ADA extends AccommodationBaseTest {
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RO_ADA() {
         TestReporter.logScenario("Test Cancel RO ADA");
 

@@ -33,7 +33,7 @@ public class TestCancel_RO_AdditionalAdult extends AccommodationBaseTest {
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RO_AdditionalAdult() {
         TestReporter.logScenario("Test Cancel RO Additional Adult");
 

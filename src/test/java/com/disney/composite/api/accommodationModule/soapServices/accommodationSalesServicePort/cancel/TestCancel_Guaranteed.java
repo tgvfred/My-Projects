@@ -36,7 +36,7 @@ public class TestCancel_Guaranteed extends AccommodationBaseTest {
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_Guaranteed() {
         TestReporter.logScenario("Test Cancel Guaranteed");
 
