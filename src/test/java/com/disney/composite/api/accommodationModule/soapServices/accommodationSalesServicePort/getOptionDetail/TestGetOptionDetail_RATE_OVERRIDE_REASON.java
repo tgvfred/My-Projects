@@ -47,8 +47,6 @@ public class TestGetOptionDetail_RATE_OVERRIDE_REASON extends AccommodationBaseT
         } else {
 
             getOptionDetail.sendRequest();
-            // System.out.println(getOptionDetail.getResponse());
-            // System.out.println(getOptionDetail.getRequest());
             TestReporter.logAPI(!getOptionDetail.getResponseStatusCode().equals("200"), "Error in the request. Response status code not 200.", getOptionDetail);
             TestReporter.assertTrue(getOptionDetail.getOptionValue().equals(TC_RSN_NM), "The response Option Value [" + getOptionDetail.getOptionValue() + "] matches the database TC_RSN_NM [" + TC_RSN_NM + "].");
         }
