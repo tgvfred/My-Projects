@@ -16,7 +16,7 @@
 	    <apiUtilsSoap.version>1.1.01</apiUtilsSoap.version>
 	    <activity.version>1.1.00</activity.version>  
 	    <admission.version>1.1.00</admission.version>    
-	    <dining.version>1.1.00</dining.version>    
+	    <dining.version>1.1.01</dining.version>    
 	    <dvcCorp.version>1.1.00</dvcCorp.version>     
 	    <dvcPoints.version>1.1.00</dvcPoints.version>     
 	    <dvcSales.version>1.1.02</dvcSales.version>     

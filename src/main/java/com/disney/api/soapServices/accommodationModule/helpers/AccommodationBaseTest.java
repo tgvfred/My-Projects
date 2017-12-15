@@ -36,12 +36,14 @@ import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentS
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
+import com.disney.api.soapServices.admissionModule.admissionSalesServicePort.helpers.pricingHelpers.RoomTypes;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.folioModule.folioServicePort.operations.RetrieveFolioBalanceDue;
 import com.disney.api.soapServices.folioModule.paymentService.operations.PostCardPayment;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.FindMiscPackages;
+import com.disney.api.soapServices.pricingModule.packagingService.operations.helpers.PackageCodeHelper;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.FindRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.availabilityWSPort.operations.FreezeInventory;
@@ -1352,15 +1354,18 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setAreaPeriod(Randomness.generateCurrentXMLDate(getDaysOut()), Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
             getBook().setRoomDetails_ResortPeriod(Randomness.generateCurrentXMLDate(getDaysOut()), Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
             getBook().setRoomDetailsBookingDate(Randomness.generateCurrentXMLDate());
-
+            String roomType = "";
             if ((isWdtcBooking() != null) && (isWdtcBooking() == true)) {
                 setPackageBillCode("*WDTC");
                 if (isValid(getMywPackageCode()) && getMywPackageCode()) {
                     setPackageDescription("R MYW Pkg");
+                    roomType = RoomTypes.getRoomPlusMywTicket();
                 } else if (isValid(getMywPlusDinePackageCode()) && getMywPlusDinePackageCode()) {
                     setPackageDescription("R MYW Pkg + Dining");
+                    roomType = RoomTypes.getTicketPlusDisneyDiningPlan();
                 } else {
                     setPackageDescription("R MYW Pkg + Deluxe Dining");
+                    roomType = RoomTypes.getTicketPlusDeluxeDiningPlan();
                 }
                 setPackageType("WDW PKG");
                 try {
@@ -1373,10 +1378,14 @@ public class AccommodationBaseTest extends BaseRestTest {
                     getBook().setExternalReference("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                     getBook().setRoomDetails_ExternalRefs("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                 }
+                PackageCodeHelper helper = new PackageCodeHelper(getEnvironment(), Randomness.generateCurrentXMLDate(), roomType, "WDTC - Walt Disney World Packages", getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
+                packageCode.set(helper.getPackageCode());
             } else if (isValid(getIsLibgoBooking()) && (getIsLibgoBooking() == true)) {
                 setPackageBillCode("*DWSL");
                 setPackageDescription("ANN MYW Pkg + Dining");
                 setPackageType("WHOLESALE");
+                PackageCodeHelper helper = new PackageCodeHelper(getEnvironment(), Randomness.generateCurrentXMLDate(), RoomTypes.getTicketPlusDisneyDiningPlan(), "DREAMS - United States", getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
+                packageCode.set(helper.getPackageCode());
                 try {
                     getBook().setRoomDetailsBlockCode("01905");
                 } catch (XPathNotFoundException e) {
@@ -1391,22 +1400,26 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setPackageBillCode("");
                 setPackageDescription("");
                 setPackageType("DRC RO");
+                PackageCodeHelper helper = new PackageCodeHelper(getEnvironment(), Randomness.generateCurrentXMLDate(), RoomTypes.getRoomOnly(), "DRC RO", getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
+                packageCode.set(helper.getPackageCode());
             }
             pkg = new PackageCodes();
             boolean success = false;
             int pkgMaxTries = 15;
             int pkgTries = 0;
-            do {
-                try {
-                    packageCode.set(pkg.retrievePackageCode(getEnvironment(), String.valueOf(getDaysOut()),
-                            getLocationId(), getPackageType(), getPackageBillCode(), getResortCode(), getRoomTypeCode(), getPackageDescription()));
-                    success = true;
-                } catch (AssertionError e) {
-                    setValues();
-                    pkg.setUseBookingDates(false);
-                }
-                pkgTries++;
-            } while (!success && (pkgTries < pkgMaxTries));
+            if (StringUtils.isEmpty(packageCode.get())) {
+                do {
+                    try {
+                        packageCode.set(pkg.retrievePackageCode(getEnvironment(), String.valueOf(getDaysOut()),
+                                getLocationId(), getPackageType(), getPackageBillCode(), getResortCode(), getRoomTypeCode(), getPackageDescription()));
+                        success = true;
+                    } catch (AssertionError e) {
+                        setValues();
+                        pkg.setUseBookingDates(false);
+                    }
+                    pkgTries++;
+                } while (!success && (pkgTries < pkgMaxTries));
+            }
             getBook().setRoomDetailsPackageCode(getPackageCode());
             getBook().setRoomDetailsResortCode(getResortCode());
             getBook().setRoomDetailsRoomTypeCode(getRoomTypeCode());
