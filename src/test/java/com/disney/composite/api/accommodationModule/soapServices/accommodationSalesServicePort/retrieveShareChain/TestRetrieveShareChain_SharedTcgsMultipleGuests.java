@@ -17,6 +17,9 @@ import com.disney.utils.TestReporter;
 public class TestRetrieveShareChain_SharedTcgsMultipleGuests extends AccommodationBaseTest {
     private ReplaceAllForTravelPlanSegment firstBooking;
     private ReplaceAllForTravelPlanSegment secondBooking;
+    private int setValidation = 1;
+    private String validateTcg;
+    private String validateTc;
 
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -91,7 +94,7 @@ public class TestRetrieveShareChain_SharedTcgsMultipleGuests extends Accommodati
         TestReporter.logStep("Validate that 2 guestReferenceDetails nodes are returned in both sharedRoomDetail nodes");
         helper.validateNodeCount(retrieve, guestReferenceXPath, retrieve.getNumberOfResponseNodesByXPath(sharedRoomDetailXPath) * 2);
 
-        // Validate old vs. new service
+        // Validate old vs. new service+
         TestReporter.logStep("Validate old vs new service");
         if (Environment.isSpecialEnvironment(getEnvironment())) {
             RetrieveShareChain clone = (RetrieveShareChain) retrieve.clone();
@@ -121,9 +124,17 @@ public class TestRetrieveShareChain_SharedTcgsMultipleGuests extends Accommodati
                     "Validating Response Comparison");
         }
 
+        if (setValidation == 1) {
+            validateTc = booking.getTravelComponentId();
+            validateTcg = booking.getTravelComponentGroupingId();
+            setValidation = 0;
+        }
+
         TestReporter.logStep("Base validations");
+        helper.validateTcAndTcg(validateTcg, validateTc, retrieve);
         helper.validateBaseNodes(booking, retrieve);
-        helper.validateGuestDetails(booking, retrieve);
         helper.validateMultipleRateDetails(environment, retrieve);
+
     }
+
 }
