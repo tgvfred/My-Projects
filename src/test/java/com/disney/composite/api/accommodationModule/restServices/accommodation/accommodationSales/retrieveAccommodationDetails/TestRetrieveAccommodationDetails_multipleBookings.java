@@ -11,6 +11,7 @@ import com.disney.api.restServices.accommodationSales.retrieveAccommodationDetai
 import com.disney.api.restServices.accommodationSales.retrieveAccommodationDetails.response.RetrieveAccommodationDetailsResponse;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestRetrieveAccommodationDetails_multipleBookings extends AccommodationBaseTest {
@@ -48,12 +49,13 @@ public class TestRetrieveAccommodationDetails_multipleBookings extends Accommoda
 
         RetrieveAccommodationDetailsRequest request = new RetrieveAccommodationDetailsRequest();
 
-        int travelPlanInt = Integer.parseInt(tpId);
-        int travelPlanInt2 = Integer.parseInt(tpId2);
+        long tpIdLong = Long.parseLong(tpId);
+        long tpIdLong2 = Long.parseLong(tpId2);
+        request.setTravelPlanIds(Arrays.asList(tpIdLong, tpIdLong2));
 
-        request.setTravelPlanIds(Arrays.asList(travelPlanInt, travelPlanInt2));
+        // request.setTravelPlanIds(Arrays.asList(travelPlanInt, travelPlanInt2));
 
-        RestResponse response = AccommodationSalesRest.accommodationSales(environment).retrieveAccommodationDetails().sendPostRequest(request);
+        RestResponse response = AccommodationSalesRest.accommodationSales(Environment.getBaseEnvironmentName(getEnvironment())).retrieveAccommodationDetails().sendPostRequest(request);
         validateResponse(response);
         RetrieveAccommodationDetailsResponse rr = response.mapJSONToObject(RetrieveAccommodationDetailsResponse.class);
         TestReporter.softAssertTrue(tpId.equals(rr.getTravelPlanId()), "The travel plan id in the request [" + tpId + "] matches the travel plan in the response [" + rr.getTravelPlanId() + "]");

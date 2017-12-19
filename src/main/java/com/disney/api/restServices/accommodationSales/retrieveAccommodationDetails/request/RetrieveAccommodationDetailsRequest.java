@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RetrieveAccommodationDetailsRequest {
-    private List<Integer> travelPlanIds = new ArrayList<Integer>();
+    private List<Long> travelPlanIds = new ArrayList<Long>();
 
-    public List<Integer> getTravelPlanIds() {
-    return travelPlanIds;
+    public List<Long> getTravelPlanIds() {
+        return travelPlanIds;
     }
 
-    public void setTravelPlanIds(List<Integer> travelPlanIds) {
-    this.travelPlanIds = travelPlanIds;
+    public void setTravelPlanIds(List<Long> travelPlanIds) {
+        this.travelPlanIds = travelPlanIds;
     }
 }

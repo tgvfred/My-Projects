@@ -1,5 +1,7 @@
 package com.disney.composite.api.accommodationModule.restServices.accommodation.accommodationSales.retrieveAccommodationDetails;
 
+import java.util.Arrays;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -9,6 +11,7 @@ import com.disney.api.restServices.accommodationSales.retrieveAccommodationDetai
 import com.disney.api.restServices.accommodationSales.retrieveAccommodationDetails.response.RetrieveAccommodationDetailsResponse;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -38,10 +41,11 @@ public class TestRetrieveAccommodationDetails_RoomOnly extends AccommodationBase
         RetrieveAccommodationDetailsRequest request = new RetrieveAccommodationDetailsRequest();
 
         String tp = getBook().getTravelPlanId().toString();
+        long tpIdLong = Long.parseLong(tp);
+        request.setTravelPlanIds(Arrays.asList(tpIdLong));
 
-        // request.setTravelPlanIds(Arrays.asList(tp.to));
-
-        RestResponse response = AccommodationSalesRest.accommodationSales(environment).retrieveAccommodationDetails().sendPostRequest(request);
+        RestResponse response = AccommodationSalesRest.accommodationSales(Environment.getBaseEnvironmentName(environment)).retrieveAccommodationDetails().sendPostRequest(request);
+        System.out.println(tp);
         validateResponse(response);
         RetrieveAccommodationDetailsResponse rr = response.mapJSONToObject(RetrieveAccommodationDetailsResponse.class);
 

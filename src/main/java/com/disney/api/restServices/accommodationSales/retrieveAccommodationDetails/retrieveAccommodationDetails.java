@@ -8,7 +8,7 @@ import com.disney.api.restServices.core.RestService;
 public class retrieveAccommodationDetails {
 
     private RestService restService;
-    private String resource = "/details";
+    private String resource = "/accommodations/details";
 
     public retrieveAccommodationDetails(RestService restService, String resource) {
         this.restService = restService;
@@ -17,7 +17,7 @@ public class retrieveAccommodationDetails {
 
     public RestResponse sendPostRequest(RetrieveAccommodationDetailsRequest request) {
         String json = restService.getJsonFromObject(request);
-        return restService.sendPostRequest(resource, HeaderType.REST, json);
+        return restService.sendPostRequest(resource, HeaderType.COMO, json);
     }
 
 }
