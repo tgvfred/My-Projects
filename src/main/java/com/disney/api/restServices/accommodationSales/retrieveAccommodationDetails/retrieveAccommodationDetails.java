@@ -16,6 +16,7 @@ public class retrieveAccommodationDetails {
     }
 
     public RestResponse sendPostRequest(RetrieveAccommodationDetailsRequest request) {
+
         String json = restService.getJsonFromObject(request);
         return restService.sendPostRequest(resource, HeaderType.COMO, json);
     }

@@ -7,14 +7,14 @@ import com.disney.api.restServices.accommodationSales.retrieveAccommodationDetai
 
 public class RetrieveAccommodationDetailsResponse {
 
-    private Integer travelPlanId;
+    private Long travelPlanId;
     private List<AccommodationDetail> accommodationDetails = new ArrayList<AccommodationDetail>();
 
-    public Integer getTravelPlanId() {
+    public Long getTravelPlanId() {
         return travelPlanId;
     }
 
-    public void setTravelPlanId(Integer travelPlanId) {
+    public void setTravelPlanId(Long travelPlanId) {
         this.travelPlanId = travelPlanId;
     }
 
