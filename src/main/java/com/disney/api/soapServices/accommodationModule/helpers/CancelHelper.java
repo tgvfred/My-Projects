@@ -7,7 +7,6 @@ import org.w3c.dom.Document;
 
 import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
-import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.dvcModule.pointsService.operations.RetrievePointBalanceSummary;
 import com.disney.api.soapServices.dvcModule.pointsService.operations.RetrievePointBalanceSummary.PointSummary;
 import com.disney.api.soapServices.dvcModule.pointsService.operations.RetrievePointsActivity;
@@ -291,18 +290,6 @@ public class CancelHelper {
         rs = new Recordset(db.getResultSet(DVCSalesDreams.getUniqueSourceAccountingCenterIdsByChargeGroupIds(nodeChargeGroups + "," + rootChargeGroups)));
         // rs.print();
 
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            retrieveFolioDetails.setSourceAccountingCenter(rs.getValue("SRC_ACCT_CTR_ID", i));
-            retrieveFolioDetails.sendRequest();
-
-            int actualNumCharges;
-            try {
-                actualNumCharges = XMLTools.getNodeList(XMLTools.makeXMLDocument(retrieveFolioDetails.getResponse()), "/Envelope/Body/retrieveFolioDetailsResponse/returnParameter/folioDetails/chargeGroupsTO/chargesTOList/chargeTOList").getLength();
-            } catch (XPathNotFoundException e) {
-                actualNumCharges = 0;
-            }
-            TestReporter.softAssertEquals(actualNumCharges, numCharges, "Verify that the number of charges [" + actualNumCharges + "] is that which is expected [" + numCharges + "] for TP ID [" + tpId + "] and source accounting center [" + rs.getValue("SRC_ACCT_CTR_ID", i) + "].");
-        }
         TestReporter.assertAll();
     }
 
@@ -442,18 +429,6 @@ public class CancelHelper {
         rs = new Recordset(db.getResultSet(DVCSalesDreams.getUniqueSourceAccountingCenterIdsByChargeGroupIds(nodeChargeGroups + "," + rootChargeGroups).replace("not in ('UnEarned')", "in ('" + status + "')")));
         // rs.print();
 
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-            retrieveFolioDetails.setSourceAccountingCenter(rs.getValue("SRC_ACCT_CTR_ID", i));
-            retrieveFolioDetails.sendRequest();
-
-            int actualNumCharges;
-            try {
-                actualNumCharges = XMLTools.getNodeList(XMLTools.makeXMLDocument(retrieveFolioDetails.getResponse()), "/Envelope/Body/retrieveFolioDetailsResponse/returnParameter/folioDetails/chargeGroupsTO/chargesTOList/chargeTOList").getLength();
-            } catch (XPathNotFoundException e) {
-                actualNumCharges = 0;
-            }
-            TestReporter.softAssertEquals(actualNumCharges, numCharges, "Verify that the number of charges [" + actualNumCharges + "] is that which is expected [" + numCharges + "] for TP ID [" + tpId + "] and source accounting center [" + rs.getValue("SRC_ACCT_CTR_ID", i) + "].");
-        }
         TestReporter.assertAll();
     }
 

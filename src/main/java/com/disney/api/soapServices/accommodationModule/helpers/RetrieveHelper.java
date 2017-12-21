@@ -432,7 +432,6 @@ public class RetrieveHelper {
 
         Database db = new OracleDatabase(env, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        rs.print();
         if (rs.getRowCount() == 0) {
             throw new AutomationException("No records were returned. SQL: [" + sql + "].");
         }

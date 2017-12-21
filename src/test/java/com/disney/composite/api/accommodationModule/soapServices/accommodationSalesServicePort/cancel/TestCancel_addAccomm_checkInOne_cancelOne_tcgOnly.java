@@ -41,7 +41,7 @@ public class TestCancel_addAccomm_checkInOne_cancelOne_tcgOnly extends Accommoda
         checkInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_addAccomm_checkInOne_cancelOne_tcgOnly() {
         TestReporter.logScenario("Test Cancel RO ADA");
 

@@ -23,7 +23,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         db = new OracleDatabase(environment, Database.DREAMS);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })
     public void testCancel_Booked_tcgOnly_RoomOnly() {
         TestReporter.logScenario("Test - Cancel - TCG Only Room Only");
 
@@ -31,7 +31,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         sendRequestAndValidateSoapResponse(cancel);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })
     public void testCancel_CheckingIn_tcgOnly() {
         checkingIn();
 
@@ -42,7 +42,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     }
 
     @SuppressWarnings("static-access")
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })
     public void testCancel_addAccommodation_cancelOne_tcgOnly() {
         String tpId = getBook().getTravelPlanId();
         String tpsId = getBook().getTravelPlanSegmentId();
@@ -68,7 +68,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     }
 
     @SuppressWarnings("static-access")
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "debug" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })
     public void testCancel_addAccommodation_checkInOne_cancelOne_tcgOnly() {
         checkIn();
         String tpId = getBook().getTravelPlanId();
@@ -95,7 +95,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         verifyNotCancelled(getBook().getTravelComponentGroupingId());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })
     public void testCancel_addBundle_cancelAccommodation_tcgOnly() {
         addBundle();
 
