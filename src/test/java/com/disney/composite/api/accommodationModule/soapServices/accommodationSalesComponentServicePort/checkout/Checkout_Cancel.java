@@ -47,19 +47,29 @@ public class Checkout_Cancel extends AccommodationBaseTest {
     public void TestCheckout_roomOnly_multAccomm_cancelOne_checkInOne_checkoutOne() {
         // Cancel One
         TestReporter.logScenario("Cancel");
-        Cancel cancel = new Cancel(environment, "Main");
+        Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(firstTcg);
-        cancel.setExternalReferenceType("RESERVATION");
-        cancel.setExternalReferenceNumber(getExternalRefNumber());
-        cancel.setExternalReferenceSource(externalRefSource);
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
-
+        checkInHelper = new CheckInHelper(getEnvironment(), getBook());
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+                checkInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel();
+                setValues();
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
         // Checkin One and then Checkout One
         TestReporter.logScenario("Checkin One");
-        checkInHelper = new CheckInHelper(getEnvironment(), getBook());
+
         checkInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         TestReporter.logScenario("Checkout One");

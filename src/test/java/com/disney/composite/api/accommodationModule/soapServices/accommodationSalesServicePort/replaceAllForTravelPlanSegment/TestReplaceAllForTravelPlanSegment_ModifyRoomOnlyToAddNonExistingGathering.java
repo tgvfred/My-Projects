@@ -38,7 +38,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddNonExistingGa
         tcId = getBook().getTravelComponentId();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "tpv3" })
     public void testReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddNonExistingGathering() {
         setAddGathering(true);
         setSendRequest(false);
@@ -68,7 +68,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddNonExistingGa
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
-        validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
+        validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyModificationIsFoundInResHistory(getBook().getTravelPlanId());

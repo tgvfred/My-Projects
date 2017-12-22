@@ -34,8 +34,6 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         setSendRequest(false);
         isComo.set("true");
         bookReservation();
-        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
-        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         tpId = getBook().getTravelPlanId();
@@ -43,17 +41,20 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
 
-        upgrade();
+        // upgrade();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType() {
+        // .sleep(3000);
+        upgrade();
         setValues("80010385", "CA", "51");
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
+        ;
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying a booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
@@ -134,7 +135,7 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         upgrade.setCommunicationChannel("Guest Facing");
         upgrade.setEndDate(getDepartureDate());
         upgrade.setFacilityId(getFacilityId());
-        upgrade.setFreezeId(BaseSoapCommands.REMOVE_NODE.toString());
+        // upgrade.setFreezeId(freezeInventory());
         upgrade.setInventoryOverrideContactName(BaseSoapCommands.REMOVE_NODE.toString());
         upgrade.setInventoryOverrideReason(BaseSoapCommands.REMOVE_NODE.toString());
         upgrade.setLocationId(getLocationId());

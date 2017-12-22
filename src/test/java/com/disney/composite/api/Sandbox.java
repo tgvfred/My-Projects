@@ -18,7 +18,7 @@ public class Sandbox {
         // helper = new PackageCodeHelper("Latest", Randomness.generateCurrentXMLDate(), RoomTypes.getWeddings(), "DREAMS - United States", "1G", "GA", Randomness.generateCurrentXMLDate(50));
 
         // WDTC
-        PackageCodeHelper helper = new PackageCodeHelper("Latest", Randomness.generateCurrentXMLDate(), RoomTypes.getRoomPlusMywTicket(), "WDW PKG", "1G", "GA", Randomness.generateCurrentXMLDate(50));
+        PackageCodeHelper helper = new PackageCodeHelper("Latest", Randomness.generateCurrentXMLDate(), RoomTypes.getRoomOnly(), "RSR", "1G", "GA", Randomness.generateCurrentXMLDate(50));
         // setPackageCode(helper.getPackageCode());
         System.out.println(helper.getPackageCode());
     }

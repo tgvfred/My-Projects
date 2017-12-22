@@ -12,7 +12,6 @@ import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extends AccommodationBaseTest {
     private String tpPtyId = null;
@@ -54,9 +53,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extend
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
 
-        // Generate a new household guest
-        setHouseHold(new HouseHold(1));
-
         setSendRequest(false);
         bookReservation();
         getBook().setTravelPlanId(tpId);
@@ -71,6 +67,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extend
         boolean success = false;
         do {
             Sleeper.sleep(1000);
+
             getBook().sendRequest();
             tries++;
             if (getBook().getResponseStatusCode().equals("200")) {
@@ -84,7 +81,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extend
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
-        validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
+        validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyModificationIsFoundInResHistory(getBook().getTravelPlanId());
@@ -102,7 +99,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extend
         validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
 
         // Validate guest
-        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());

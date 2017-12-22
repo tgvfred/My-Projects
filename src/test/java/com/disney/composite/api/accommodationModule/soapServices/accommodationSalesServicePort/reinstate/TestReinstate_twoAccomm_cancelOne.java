@@ -67,11 +67,9 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
         // helper = new AddAccommodationHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook());
         // helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
-        cancel = new Cancel(environment, "Main");
+        cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
 

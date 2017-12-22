@@ -37,19 +37,15 @@ public class TestAutoReinstate_roomOnly_multAccomm_cancelBoth_reinstateOne exten
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a new TPS with an existing TP: " + getBook().getFaultString(), getBook());
 
-        cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main");
+        cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "MainCancel");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(firstTCG);
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
-        cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main");
+        Sleeper.sleep(3000);
+        cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "MainCancel");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
 
@@ -62,43 +58,6 @@ public class TestAutoReinstate_roomOnly_multAccomm_cancelBoth_reinstateOne exten
 
         validations();
 
-        // cancel the reinstated booking in order to clone
-        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
-        cancel.setTravelComponentGroupingId(firstTCG);
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
-        cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
-        auto.setTravelComponentGroupingId(firstTCG);
-        auto.sendRequest();
-        TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while auto reinstating: " + auto.getFaultString(), auto);
-        if (Environment.isSpecialEnvironment(environment)) {
-            cancel.sendRequest();
-            TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
-            AutoReinstate clone = (AutoReinstate) auto.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-
-            int tries = 0;
-            int maxTries = 10;
-            boolean success = false;
-            do {
-                Sleeper.sleep(1000);
-                try {
-                    clone.sendRequest();
-                    success = true;
-                } catch (Exception e) {
-
-                }
-                tries++;
-            } while (tries < maxTries && !success);
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
-            }
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(auto, true), "Validating Response Comparison");
-        }
     }
 
     public void validations() {

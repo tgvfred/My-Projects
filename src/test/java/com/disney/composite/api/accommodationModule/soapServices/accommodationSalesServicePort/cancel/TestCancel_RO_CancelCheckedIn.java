@@ -12,7 +12,6 @@ import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
-import com.disney.utils.date.DateTimeConversion;
 
 public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
 
@@ -59,11 +58,8 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
 
         String faultString = "Accommodation should be in Booked status to be cancelled";
 
-        Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
+        Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
 
         cancel.sendRequest();
 

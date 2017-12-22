@@ -38,7 +38,7 @@ public class TestUnShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
-    public void test_unShare_oneTcg_shareThenCheckIn() {
+    public void test_unShare_twoTcg_shareThenCheckIn() {
         String faultString = " Accommodation should be in Booked status to be UnShared : Accommodation not in Booked Status";
         share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(firstTCG);
@@ -50,6 +50,10 @@ public class TestUnShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
         CheckIn checkIn = new CheckIn(environment, "Main");
         checkIn.setTravelComponentGroupingId(firstTCG);
         checkIn.setRequestNodeValueByXPath("/Envelope/Body/checkIn/request/checkInGuestDetails/guestId", BaseSoapCommands.REMOVE_NODE.toString());
+        checkIn.sendRequest();
+        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + share.getFaultString(), share);
+
+        checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         checkIn.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + share.getFaultString(), share);
 

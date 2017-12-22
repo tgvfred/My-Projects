@@ -23,6 +23,9 @@ public class TestRetrieveCancellationFee_TpsExtRefAndTcgExtRef extends Accommoda
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
+        setValues(getEnvironment());
+        setIsWdtcBooking(true);
+        setMywPackageCode(true);
         bookReservation();
     }
 

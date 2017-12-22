@@ -108,7 +108,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWithMultiRoomDetails_noTcg
         tcgIds.put(tcgId, tcgId);
         tcgIds.put(tcg2, tcg2);
         tcgIds.put(tcg3, tcg3);
-        validations.validateModificationBackendMultiAccomm(6, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
+        validations.validateModificationBackendMultiAccomm(6, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), tcgIds);
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId(), 3);
         validations.verifyTcStatusByTcg(tcgId, "Booked");

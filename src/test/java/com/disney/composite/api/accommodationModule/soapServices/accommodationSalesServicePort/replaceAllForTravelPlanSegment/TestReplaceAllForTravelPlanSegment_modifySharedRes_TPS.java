@@ -15,6 +15,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends AccommodationBaseTest {
@@ -35,7 +36,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
     public void setup(String environment) {
         setEnvironment(environment);
         setDaysOut(0);
-        setNights(1);
+        setNights(4);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
@@ -47,6 +48,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         tcgs.put(tcgId, tcgId);
         tpPtyId = getBook().getGuestId();
 
+        Sleeper.sleep(3000);
         setSendRequest(false);
         bookReservation();
         getBook().setTravelPlanId(tpId);
@@ -57,7 +59,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         tcgId2 = getBook().getTravelComponentGroupingId();
         tcgs.put(getBook().getTravelComponentGroupingId(), getBook().getTravelComponentGroupingId());
-
+        Sleeper.sleep(3000);
         Share share = new Share(getEnvironment());
         share.setTravelComponentGroupingId(tcgId);
         share.addSharedComponent();
@@ -71,7 +73,9 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_modifySharedRes_TPS() {
         setSendRequest(false);
-        // bookReservation();
+        setDaysOut(1);
+        setDepartureDate(getNights());
+        bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         getBook().setTravelComponentGroupingId(tcgId);
@@ -98,10 +102,15 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
-            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/age");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/age");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/age");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
+
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
                     "Validating Response Comparison");
 
@@ -131,8 +140,8 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), tcgId, getHouseHold().primaryGuest());
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), tcgId2, getHouseHold().primaryGuest());
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
-        validations.verifyNumberOfChargesByStatus("UnEarned", 2, getBook().getTravelPlanId());
-        validations.verifyChargeDetail(8, getBook().getTravelPlanId());
+        validations.verifyNumberOfChargesByStatus("UnEarned", 8, getBook().getTravelPlanId());
+        validations.verifyChargeDetail(32, getBook().getTravelPlanId());
         validations.verifyChargeGroupsStatusCount("UnEarned", 4, getBook().getTravelPlanId());
 
         // Validate RIM

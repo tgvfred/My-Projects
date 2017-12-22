@@ -38,7 +38,8 @@ public class TestOverrideAccommodationRates_extRefWithNullTCG extends Accommodat
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-
+        setIsWdtcBooking(true);
+        setMywPackageCode(true);
         isComo.set("false");
         bookReservation();
     }

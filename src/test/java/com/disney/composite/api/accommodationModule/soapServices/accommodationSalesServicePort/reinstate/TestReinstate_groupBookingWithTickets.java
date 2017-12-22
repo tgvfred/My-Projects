@@ -85,6 +85,7 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
     public void Test_Reinstate_groupBookingWithTickets() {
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
 
+        Sleeper.sleep(3000);
         Cancel cancel = new Cancel(environment, "MainTickets");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -94,7 +95,7 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
         cancelNumber = cancel.getCancellationNumber();
-
+        Sleeper.sleep(3000);
         reinstate = new Reinstate(environment, "Main_2");
         reinstate.setTravelComponentGroupingId(TCG);
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
@@ -103,7 +104,7 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
 
         int numBookedComponents_reinstate = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
         TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate + 1, "Verify that the number of reinstated components [" + (numBookedComponents_reinstate) + "] is that which is expected [" + (numBookedComponents_book) + "].");
-
+        Sleeper.sleep(3000);
         validations();
         // cancel and reinstate in order to clone on the old service.
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
@@ -174,18 +175,17 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
         int numExpectedRecords12 = 1;
         reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, "0", getArrivalDate(), getDepartureDate());
 
-        int numExpectedRecords2 = 11;
-        // String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, workLocation);
-        String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, null, 11, 0);
+        int numExpectedRecords2 = 10;
+        String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, null, numExpectedRecords2, 0);
 
-        int numExpectedRecords3 = 11;
+        int numExpectedRecords3 = 10;
         // reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3);
-        reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3, 11, 0);
+        reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3, numExpectedRecords3, 0);
 
         int numExpectedRecords4 = 12;
         reinstateHelper.validateFolioStatus(numExpectedRecords4);
 
-        int numExpectedRecords5 = 12;
+        int numExpectedRecords5 = 11;
         reinstateHelper.validateFolioData(numExpectedRecords5);
 
         int numExpectedRecords6 = 12;

@@ -251,10 +251,10 @@ public class CheckInHelper {
         checkIn.setGuestId(getPrimaryGuestId());
         checkIn.setLocationId(rs.getValue("WRK_LOC_ID", 1));
         checkIn.setTravelComponentGroupingId(getTcgId());
-        int maxTries = 5;
+        int maxTries = 1;
         int tries = 0;
         do {
-            Sleeper.sleep(Randomness.randomNumberBetween(3, 5) * 1000);
+            // Sleeper.sleep(Randomness.randomNumberBetween(3, 5) * 1000);
             checkIn.sendRequest();
             if (!checkIn.getResponseStatusCode().equals("200")) {
                 Sleeper.sleep(Randomness.randomNumberBetween(3, 7) * 1000);

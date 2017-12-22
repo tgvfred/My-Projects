@@ -10,7 +10,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AutoReinstateHelper;
 import com.disney.utils.Environment;
-import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestAutoReinstate_roomOnly_autoCancelled extends AccommodationBaseTest {
@@ -45,38 +44,6 @@ public class TestAutoReinstate_roomOnly_autoCancelled extends AccommodationBaseT
         TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + auto.getFaultString(), auto);
 
         validations();
-
-        // cancel and reinstate in order to clone on the old service.
-
-        autoCancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        autoCancel.sendRequest();
-
-        auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        // auto.sendRequest();
-        TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while creating a comment: " + auto.getFaultString(), auto);
-        if (Environment.isSpecialEnvironment(environment)) {
-            AutoReinstate clone = (AutoReinstate) auto.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-
-            int tries = 0;
-            int maxTries = 10;
-            boolean success = false;
-            do {
-                Sleeper.sleep(1000);
-                try {
-                    clone.sendRequest();
-                    success = true;
-                } catch (Exception e) {
-
-                }
-                tries++;
-            } while (tries < maxTries && !success);
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(auto, true), "Validating Response Comparison");
-        }
     }
 
     public void validations() {

@@ -112,11 +112,11 @@ public class TestReplaceAllForTravelPlanSegment_modifyToAddAccommToCancelledRes 
         tpsIds.put("1", tpsId);
         tpsIds.put("2", getBook().getTravelPlanSegmentId());
         Map<String, String> extRefs = new HashMap<>();
-        extRefs.put("1", getExternalRefNumber());
-        extRefs.put("2", getExternalRefNumber());
+        extRefs.put("1", "NULL");
+        extRefs.put("2", "NULL");
         Map<String, String> extRefTypes = new HashMap<>();
-        extRefTypes.put("1", "RESERVATION");
-        extRefTypes.put("2", "RESERVATION");
+        extRefTypes.put("1", "NULL");
+        extRefTypes.put("2", "NULL");
         validations.validateModificationBackendMultiAccomm(4, "Booked", "", getArrivalDate(), getDepartureDate(), extRefTypes, extRefs,
                 getBook().getTravelPlanId(), tpsIds, tcgs);
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId(), 2);

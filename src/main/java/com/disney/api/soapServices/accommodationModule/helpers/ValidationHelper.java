@@ -136,7 +136,7 @@ public class ValidationHelper {
                 + "left outer join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "left outer join res_mgmt.tc c  on b. tc_grp_nb = c.tc_grp_nb "
                 + "left outer join res_mgmt.tc_gst d on c.tc_id = d.tc_id "
-                + "left outer join res_mgmt.tps_extnl_ref e on a. tps_id = e.tps_id "
+                // + "left outer join res_mgmt.tps_extnl_ref e on a. tps_id = e.tps_id "
                 + "where a.tp_id = " + tpId;
         rs = new Recordset(db.getResultSet(sql));
         if (rs.getRowCount() == 0) {
@@ -152,8 +152,8 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM", i), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM", i) + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT", i).split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT", i).split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT", i).split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DPRT_DT", i).split(" ")[0] + "] is that which is expected [" + departuredate + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
         }
         TestReporter.assertAll();
         return rs;
@@ -207,8 +207,8 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM", i), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM", i) + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT", i).split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT", i).split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT", i).split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT", i).split(" ")[0] + "] is that which is expected [" + departuredate + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
         }
         TestReporter.assertAll();
     }
@@ -242,7 +242,7 @@ public class ValidationHelper {
                 + "from res_mgmt.tps a "
                 + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "join res_mgmt.TPS_EXTNL_REF d on a.tps_id = d.tps_id "
+                // + "join res_mgmt.TPS_EXTNL_REF d on a.tps_id = d.tps_id "
                 + "where a.tp_id = '" + tpId + "' ";
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
@@ -255,9 +255,9 @@ public class ValidationHelper {
             TestReporter.softAssertTrue(tcgs.containsKey(rs.getValue("TC_GRP_NB", i)), "Verify that the TCG ID [" + rs.getValue("TC_GRP_NB", i) + "] is included in the TCGs which are expected [" + tcgs + "].");
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM", i), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM", i) + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT", i).split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT", i).split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT", i).split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT", i).split(" ")[0] + "] is that which is expected [" + departuredate + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
+            TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT", i).split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DPRT_DT", i).split(" ")[0] + "] is that which is expected [" + departuredate + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
         }
         TestReporter.assertAll();
     }
@@ -274,7 +274,7 @@ public class ValidationHelper {
                 + "from res_mgmt.tps a "
                 + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "left outer join res_mgmt.TPS_EXTNL_REF d on a.tps_id = d.tps_id "
+                // + "left outer join res_mgmt.TPS_EXTNL_REF d on a.tps_id = d.tps_id "
                 + "where a.tp_id = '" + tpId + "' ";
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
@@ -296,8 +296,8 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM") + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT").split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT").split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT").split(" ")[0] + "] is that which is expected [" + departuredate + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefTypes.get(mapKey), "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefTypes.get(mapKey) + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefs.get(mapKey), "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefs.get(mapKey) + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefTypes.get(mapKey), "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefTypes.get(mapKey) + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefs.get(mapKey), "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefs.get(mapKey) + "].");
             rs.moveNext();
             counter++;
         } while (rs.hasNext());
@@ -316,7 +316,7 @@ public class ValidationHelper {
                 + "from res_mgmt.tps a "
                 + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "left outer join res_mgmt.TPS_EXTNL_REF d on a.tps_id = d.tps_id "
+                // + "left outer join res_mgmt.TPS_EXTNL_REF d on a.tps_id = d.tps_id "
                 + "where a.tp_id = '" + tpId + "' ";
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
@@ -338,8 +338,8 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM") + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT").split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT").split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT").split(" ")[0] + "] is that which is expected [" + departuredate + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefTypes.get(mapKey), "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefTypes.get(mapKey) + "].");
-            TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefs.get(mapKey), "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefs.get(mapKey) + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefTypes.get(mapKey), "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefTypes.get(mapKey) + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefs.get(mapKey), "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefs.get(mapKey) + "].");
             rs.moveNext();
             counter++;
         } while (rs.hasNext());
@@ -375,7 +375,7 @@ public class ValidationHelper {
                 + "from res_mgmt.tps a "
                 + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "left outer join res_mgmt.tps_extnl_ref d on a.tps_id = d.tps_id "
+                // + "left outer join res_mgmt.tps_extnl_ref d on a.tps_id = d.tps_id "
                 + "where a.tp_id = " + tpId;
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
@@ -393,8 +393,8 @@ public class ValidationHelper {
                 TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM") + "] is that which is expected [" + travelStatusName + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT").split(" ")[0], arrivalDates.get("dining").split("T")[0], "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDates.get("dining").split("T")[0] + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT").split(" ")[0], departureDates.get("dining").split("T")[0], "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT").split(" ")[0] + "] is that which is expected [" + departureDates.get("dining").split("T")[0] + "].");
-                TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), "NULL", "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [NULL].");
-                TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), "NULL", "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [NULL].");
+                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), "NULL", "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [NULL].");
+                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), "NULL", "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [NULL].");
             } else if (rs.getValue("TC_GRP_TYP_NM").equalsIgnoreCase("ACCOMMODATION")) {
                 TestReporter.log("Verify Accommodation");
                 TestReporter.softAssertEquals(rs.getValue("TP_ID"), tpId, "Verify that the TP ID [" + rs.getValue("TP_ID") + "] is that which is expected [" + tpId + "].");
@@ -403,8 +403,8 @@ public class ValidationHelper {
                 TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM") + "] is that which is expected [" + travelStatusName + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT").split(" ")[0], arrivalDates.get("accommodation"), "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDates.get("accommodation") + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT").split(" ")[0], departureDates.get("accommodation"), "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT").split(" ")[0] + "] is that which is expected [" + departureDates.get("accommodation") + "].");
-                TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefType + "].");
-                TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefValue + "].");
+                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefType + "].");
+                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefValue + "].");
             }
             rs.moveNext();
         } while (rs.hasNext());
@@ -509,7 +509,6 @@ public class ValidationHelper {
                 + "where a.tp_id = " + tpId;
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
-        System.out.println();
         for (int i = 1; i < allGuests.size(); i++) {
             Guest guest = allGuests.get(i);
             do {
@@ -705,6 +704,31 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM", i), status,
                     "Verify that the [" + rs.getValue("CHRG_GRP_TYP_NM", i) + "] charge group [" + rs.getValue("CHRG_GRP_ID", i) + "] status [" + rs.getValue("CHRG_GRP_STS_NM", i) + "] is [" + status + "] as expected.");
         }
+        TestReporter.assertAll();
+    }
+
+    public void validateRsrFolioCreated(String tpId) {
+
+        TestReporter.logStep("Verify RSR Folio created for Travel Plan " + tpId);
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+
+        String sql = " select d.*, b.CHRG_GRP_ID  CHRG_GRP_ID " +
+                "from folio.extnl_ref a, folio.chrg_grp_extnl_ref b, folio.CHRG_GRP_FOLIO c, folio.folio d  " +
+                "where a.EXTNL_REF_VAL = '" + tpId + "'  " +
+                "and a.EXTNL_REF_ID = b.EXTNL_REF_ID  " +
+                "and b.CHRG_GRP_ID = c.ROOT_CHRG_GRP_ID " +
+                "and c.CHRG_GRP_FOLIO_ID = d.folio_id  ";
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        TestReporter.softAssertTrue(rs.getRowCount() == 2, "Valid two Folios were found for Root Charge Group [ " + rs.getValue("CHRG_GRP_ID") + " ]");
+        boolean foundRsr = false;
+        for (rs.moveFirst(); rs.hasNext(); rs.moveNext()) {
+            if (rs.getValue("FOLIO_TYP_NM").equals("INTERNAL_ORGANIZATION")) {
+                foundRsr = false;
+            }
+        }
+
+        TestReporter.softAssertTrue(foundRsr, "Ensure RSR Folio was created");
         TestReporter.assertAll();
     }
 

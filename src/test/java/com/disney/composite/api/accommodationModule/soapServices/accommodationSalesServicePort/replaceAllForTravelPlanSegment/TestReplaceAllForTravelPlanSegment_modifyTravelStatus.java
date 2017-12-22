@@ -2,12 +2,10 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
-import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_modifyTravelStatus extends AccommodationBaseTest {
@@ -35,7 +33,8 @@ public class TestReplaceAllForTravelPlanSegment_modifyTravelStatus extends Accom
         tcId = getBook().getTravelComponentId();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
+    // Invalid case
+    // @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_modifyTravelStatus() {
 
         setSendRequest(false);
@@ -44,21 +43,11 @@ public class TestReplaceAllForTravelPlanSegment_modifyTravelStatus extends Accom
         getBook().setTravelPlanSegementId(tpsId);
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setTravelComponentId(tcId);
-        getBook().setRoomDetailsTravelStatus("Checked In");
+        // getBook().setRoomDetailsTravelStatus("Checked In");
         getBook().setReplaceAll("true");
         // getBook().sendRequest();
 
-        int tries = 0;
-        int maxTries = 20;
-        boolean success = false;
-        do {
-            Sleeper.sleep(1000);
-            getBook().sendRequest();
-            tries++;
-            if (getBook().getResponseStatusCode().equals("200")) {
-                success = true;
-            }
-        } while ((tries < maxTries) && !success);
+        getBook().sendRequest();
 
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();

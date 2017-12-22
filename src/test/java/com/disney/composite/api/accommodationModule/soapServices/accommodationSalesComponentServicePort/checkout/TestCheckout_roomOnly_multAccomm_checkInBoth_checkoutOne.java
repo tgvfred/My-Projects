@@ -152,13 +152,13 @@ public class TestCheckout_roomOnly_multAccomm_checkInBoth_checkoutOne extends Ac
         rs = new Recordset(db.getResultSet(sql));
         do {
             if (rs.getValue("TC_ID").equals(TcId)) {
-                TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Booked", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Booked].");
+                TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Checked In", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Checked In].");
                 TestReporter.softAssertEquals(rs.getValue("TC_CHKOT_DTS").split(" ")[0], Randomness.generateCurrentXMLDate(), "Verify that the checkout date [" + rs.getValue("TC_CHKOT_DTS").split(" ")[0] + "] is that which is expected [" + Randomness.generateCurrentXMLDate() + "].");
                 TestReporter.softAssertEquals(rs.getValue("TC_STS"), "Past Visit", "Verify that the TC status [" + rs.getValue("TC_STS") + "] is that which is expected [Past Visit].");
             } else {
-                TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Booked", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Booked].");
+                TestReporter.softAssertEquals(rs.getValue("TPS_STS"), "Checked In", "Verify that the TPS status [" + rs.getValue("TPS_STS") + "] is that which is expected [Checked In].");
                 TestReporter.softAssertEquals(rs.getValue("TC_CHKOT_DTS"), "NULL", "Verify that the checkout date [" + rs.getValue("TC_CHKOT_DTS") + "] is that which is expected [NULL].");
-                TestReporter.softAssertEquals(rs.getValue("TC_STS"), "Booked", "Verify that the TC status [" + rs.getValue("TC_STS") + "] is that which is expected [Booked].");
+                TestReporter.softAssertEquals(rs.getValue("TC_STS"), "Checked In", "Verify that the TC status [" + rs.getValue("TC_STS") + "] is that which is expected [Checked In].");
             }
             rs.moveNext();
         } while (rs.hasNext());

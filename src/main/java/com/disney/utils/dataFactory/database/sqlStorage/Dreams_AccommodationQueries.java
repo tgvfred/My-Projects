@@ -32,6 +32,7 @@ public class Dreams_AccommodationQueries extends Dreams {
                 + "and TXN_ACCT_CTR_ID not in (77803, 10054) "
                 + "and WRK_LOC_NM not like ('%HOLA%')"
                 + "and HM_RSRT_FAC_ID = e.FAC_ID "
+                + "and c.RSRT_FAC_ID not in (select unique(a.DVC_RSRT_FAC_ID) from rsrc_inv.dvc_rm_typ_xref a ) "
                 + "group by NUMROOMS, ROOM_TYPE, c.SEQ_NM, ROOM_DESC, c.RSRT_FAC_ID, WRK_LOC_ID "
                 + "order by NUMROOMS desc";
     }
