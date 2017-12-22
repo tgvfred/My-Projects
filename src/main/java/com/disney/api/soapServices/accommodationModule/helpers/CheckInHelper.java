@@ -241,19 +241,27 @@ public class CheckInHelper {
     }
 
     public void checkIn(String locationId, String daysOut, String nights, String facilityId) {
-        checkingIn(locationId, daysOut, nights, facilityId);
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getLocationIdByTpId(getTpId())));
-
-        pollForTPV3(getTpId());
-
-        CheckIn checkIn = new CheckIn(environment, "UI_Booking");
-        checkIn.setGuestId(getPrimaryGuestId());
-        checkIn.setLocationId(rs.getValue("WRK_LOC_ID", 1));
-        checkIn.setTravelComponentGroupingId(getTcgId());
-        int maxTries = 1;
+        int maxTries = 5;
         int tries = 0;
+        CheckIn checkIn = new CheckIn(environment, "UI_Booking");
         do {
+            if (tries == 0) {
+                checkingIn(locationId, daysOut, nights, facilityId);
+            } else {
+
+                FindRoomForReservation findRoom = findRoomForReservation();
+                setRoomRsrc(assignRoomForReservation(findRoom, daysOut, nights, facilityId));
+                updateSingleRoomStatus("updateToCleanAndVacant");
+            }
+            Database db = new OracleDatabase(environment, Database.DREAMS);
+            Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getLocationIdByTpId(getTpId())));
+
+            pollForTPV3(getTpId());
+
+            checkIn.setGuestId(getPrimaryGuestId());
+            checkIn.setLocationId(rs.getValue("WRK_LOC_ID", 1));
+            checkIn.setTravelComponentGroupingId(getTcgId());
+
             // Sleeper.sleep(Randomness.randomNumberBetween(3, 5) * 1000);
             checkIn.sendRequest();
             if (!checkIn.getResponseStatusCode().equals("200")) {

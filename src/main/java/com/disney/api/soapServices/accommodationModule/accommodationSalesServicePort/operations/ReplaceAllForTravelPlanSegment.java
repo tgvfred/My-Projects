@@ -2083,6 +2083,14 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
             setRequestNodeValueByXPath(baseXpath + "/specialNeedsRequested", "false");
         }
 
+        if ((base.isWdtcBooking() != null) && (base.isWdtcBooking() == true)) {
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+            setRequestNodeValueByXPath(baseXpath + "/blockCode", "01825");
+        } else if (base.getIsLibgoBooking() != null && (base.getIsLibgoBooking() == true)) {
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("blockCode"));
+            setRequestNodeValueByXPath(baseXpath + "/blockCode", "01905");
+        }
+
         // Add the external references
         String tempXpath = baseXpath + "/externalReferences";
         setRequestNodeValueByXPath(tempXpath, BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceType"));
