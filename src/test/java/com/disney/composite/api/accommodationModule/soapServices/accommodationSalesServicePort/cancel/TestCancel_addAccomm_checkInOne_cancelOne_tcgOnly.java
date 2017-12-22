@@ -12,6 +12,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.AddAccommodationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestCancel_addAccomm_checkInOne_cancelOne_tcgOnly extends AccommodationBaseTest {
@@ -49,6 +50,10 @@ public class TestCancel_addAccomm_checkInOne_cancelOne_tcgOnly extends Accommoda
         Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         cancel.sendRequest();
         TestReporter.assertTrue(cancel.getFaultString().contains(faultString), "Verify that the fault string [" + cancel.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(cancel, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_CANCELLED);

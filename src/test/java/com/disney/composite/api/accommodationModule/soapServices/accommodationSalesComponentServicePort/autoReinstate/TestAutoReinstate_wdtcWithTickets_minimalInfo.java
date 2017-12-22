@@ -47,11 +47,19 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
     public void Test_AutoReinstate_wdtcWithTickets_minimalInfo() {
         FindTicketPriceGridByPackage find = new FindTicketPriceGridByPackage(environment);
         find.setPackageCode(getPackageCode());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         find.sendRequest();
         TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred finding tickets for package code [" + getPackageCode() + "].");
 
         GetTicketProducts get = new GetTicketProducts(environment, "Main");
         get.setTicketGroupName(find.getTicketGroupName());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         get.sendRequest();
         TestReporter.assertTrue(get.getResponseStatusCode().equals("200"), "Verify that no error occurred finding ticket products for ticket group name [" + find.getTicketGroupName() + "].");
         code = get.getCodeByTicketDescriptionAndAgeType("2 Day Base Ticket", "Adult");
@@ -59,6 +67,10 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
         bookPackage = new BookPackageSelectableTickets(locEnv, "singleTickets");
         bookPackage.setExternalReference("01825", getExternalRefNumber());
         bookPackage.setTickets(code, getHouseHold().primaryGuest(), getLocationId(), getBook().getTravelPlanSegmentId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         bookPackage.sendRequest();
         TestReporter.logAPI(!bookPackage.getResponseStatusCode().equals("200"), "Verify that no error occurred booking package selectable tickets: " + bookPackage.getFaultString(), bookPackage);
 

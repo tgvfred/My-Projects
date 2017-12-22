@@ -15,6 +15,7 @@ import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.oper
 import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.database.Database;
@@ -51,6 +52,10 @@ public class TestCancel_GroupBundle_CancelRoom extends AccommodationBaseTest {
 
         details = new RetrieveDetailsByTravelPlanId(Environment.getBaseEnvironmentName(environment), "Main");
         details.setTravelPlanId(getBook().getTravelPlanId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         details.sendRequest();
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
 

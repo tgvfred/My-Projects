@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestShare_twoTcg_checkInThenShare_Negative extends AccommodationBaseTest {
@@ -60,6 +61,10 @@ public class TestShare_twoTcg_checkInThenShare_Negative extends AccommodationBas
         CheckIn checkIn = new CheckIn(environment, "Main");
         checkIn.setTravelComponentGroupingId(firstTCG);
         checkIn.setGuestId(guestId);
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         checkIn.sendRequest();
         TestReporter.logAPI(!checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + checkIn.getFaultString(), checkIn);
 

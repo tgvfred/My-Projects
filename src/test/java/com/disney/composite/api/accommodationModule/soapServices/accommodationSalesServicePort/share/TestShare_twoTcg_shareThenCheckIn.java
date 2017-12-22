@@ -58,6 +58,10 @@ public class TestShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
         share.setTravelComponentGroupingId(firstTCG);
         share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
