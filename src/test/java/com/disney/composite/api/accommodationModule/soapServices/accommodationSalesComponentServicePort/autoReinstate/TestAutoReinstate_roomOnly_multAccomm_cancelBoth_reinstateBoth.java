@@ -41,12 +41,20 @@ public class TestAutoReinstate_roomOnly_multAccomm_cancelBoth_reinstateBoth exte
         cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "MainCancel");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(firstTCG);
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
 
         cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "MainCancel");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
 
@@ -59,6 +67,10 @@ public class TestAutoReinstate_roomOnly_multAccomm_cancelBoth_reinstateBoth exte
 
         auto = new AutoReinstate(environment, "Main");
         auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         auto.sendRequest();
         TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + auto.getFaultString(), auto);
 

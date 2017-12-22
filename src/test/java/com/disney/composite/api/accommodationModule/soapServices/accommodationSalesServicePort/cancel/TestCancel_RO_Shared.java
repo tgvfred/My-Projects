@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
@@ -35,6 +36,10 @@ public class TestCancel_RO_Shared extends AccommodationBaseTest {
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.setRequestNodeValueByXPath("/Envelope/Body/share/request/roomNumber", "fx:removenode");
         share.setRequestNodeValueByXPath("/Envelope/Body/share/request/locationId", getLocationId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         share.sendRequest();
         TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing TCG ID [" + getBook().getTravelComponentGroupingId() + "]: " + share.getFaultString());
     }

@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AutoReinstateHelper;
 import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestAutoReinstate_roomOnly_autoCancelled extends AccommodationBaseTest {
@@ -40,6 +41,10 @@ public class TestAutoReinstate_roomOnly_autoCancelled extends AccommodationBaseT
 
         auto = new AutoReinstate(environment, "Main");
         auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         auto.sendRequest();
         TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + auto.getFaultString(), auto);
 

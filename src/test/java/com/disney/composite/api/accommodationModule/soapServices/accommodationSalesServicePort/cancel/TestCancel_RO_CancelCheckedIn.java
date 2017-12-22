@@ -39,6 +39,10 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
         checkIn.setGuestId(getBook().getGuestId());
         checkIn.setLocationId(getLocationId());
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         checkIn.sendRequest();
         if (checkIn.getFaultString().contains("Row was updated or deleted by another transaction")) {
             maxTries = 5;

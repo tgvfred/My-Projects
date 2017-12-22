@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UnShareHelper;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -62,6 +63,10 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         // unshare the first reservation.
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(firstTCG);
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         unshare.sendRequest();
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
 
@@ -71,6 +76,10 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         // unshare the second reservation.
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         unshare.sendRequest();
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
         validateResponse();

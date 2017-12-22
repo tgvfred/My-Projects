@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ShareHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -56,6 +57,10 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
         share.setTravelComponentGroupingId(firstTCG);
         share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
         validateResponse();
