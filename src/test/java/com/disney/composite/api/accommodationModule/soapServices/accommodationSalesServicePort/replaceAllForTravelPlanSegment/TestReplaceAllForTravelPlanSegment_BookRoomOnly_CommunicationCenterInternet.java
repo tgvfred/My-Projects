@@ -10,16 +10,10 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
-import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
-public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddConfirmationDetails extends AccommodationBaseTest {
-
-    private String tpPtyId;
-    private String tpId = null;
-    private String tpsId = null;
-    private String tcgId = null;
-    private String tcId = null;
+public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_CommunicationCenterInternet extends AccommodationBaseTest {
+    private String tpPtyId = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -32,53 +26,24 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddConfirmationD
         setDepartureDate(getNights());
         setValues(getEnvironment());
         isComo.set("true");
-        bookReservation();
-        tpId = getBook().getTravelPlanId();
-        tpsId = getBook().getTravelPlanSegmentId();
-        tcgId = getBook().getTravelComponentGroupingId();
-        tcId = getBook().getTravelComponentId();
-        tpPtyId = getBook().getGuestId();
-    }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
-    public void testReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddConfirmationDetails() {
         setSendRequest(false);
-        setAddConfirmationDetails(true);
-        bookReservation();
-        getBook().setTravelPlanId(tpId);
-        getBook().setTravelPlanSegementId(tpsId);
-        getBook().setTravelComponentGroupingId(tcgId);
-        getBook().setTravelComponentId(tcId);
-        getBook().setReplaceAll("true");
-        getBook().setRequestNodeValueByXPath("//confirmationDetails/guestDetail/guestId", tpPtyId);
-        // getBook().sendRequest();
-
-        int tries = 0;
-        int maxTries = 20;
-        boolean success = false;
-        do {
-            Sleeper.sleep(1000);
-            getBook().sendRequest();
-            tries++;
-            if (getBook().getResponseStatusCode().equals("200")) {
-                success = true;
-            }
-        } while ((tries < maxTries) && !success);
-
-        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
-        validations();
     }
 
-    private void validations() {
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnly_CommunicationCenterInternet() {
+        bookReservation();
+        getBook().setCommunicationChannel("Internet");
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
         tpPtyId = getBook().getGuestId();
 
-        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(getEnvironment()));
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
-        validations.verifyModificationIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
 
         // Validate Folio
@@ -93,15 +58,11 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddConfirmationD
         validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
 
         // Validate guest
-        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
-        // validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
 
-        // Validate TPS confirmation
-        String contactName = getBook().getRequestNodeValueByXPath("//request/contactName");
-        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Print", tpPtyId, "Y", "N", contactName, "N");
+        validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1, "N", "NULL", getFacilityId());
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
@@ -114,14 +75,21 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddConfirmationD
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
                     "Validating Response Comparison");
 

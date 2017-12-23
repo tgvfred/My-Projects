@@ -44,34 +44,32 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithConfirmationDeta
 
         ValidationHelper validations = new ValidationHelper(getEnvironment());
 
-        /*
-         * // Validate reservation
-         * validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",
-         * getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
-         * validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
-         * validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
-         *
-         * // Validate Folio
-         * validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
-         * validations.verifyNumberOfChargesByStatus("UnEarned", 1, getBook().getTravelPlanId());
-         * validations.verifyChargeDetail(4, getBook().getTravelPlanId());
-         * validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
-         *
-         * // Validate RIM
-         * validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
-         * validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
-         * validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
-         *
-         * // Validate guest
-         * validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
-         * validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
-         * validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-         * validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
-         * // validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
-         */
+        // Validate reservation
+        validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",
+                getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
+        validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
+        validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
+
+        // Validate Folio
+        validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
+        validations.verifyNumberOfChargesByStatus("UnEarned", 1, getBook().getTravelPlanId());
+        validations.verifyChargeDetail(4, getBook().getTravelPlanId());
+        validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
+
+        // Validate RIM
+        validations.verifyInventoryAssigned(getBook().getTravelComponentGroupingId(), 1, getBook().getTravelPlanId());
+        validations.validateSpecialNeeds(getBook().getTravelPlanId(), "false");
+        validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
+
+        // Validate guest
+        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
+        validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
+        validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
+
         // Validate TPS confirmation
         String contactName = getBook().getRequestNodeValueByXPath("//request/contactName");
-        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Print", tpPtyId, "Y", "N", contactName);
+        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Print", tpPtyId, "Y", "N", contactName, "N");
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
