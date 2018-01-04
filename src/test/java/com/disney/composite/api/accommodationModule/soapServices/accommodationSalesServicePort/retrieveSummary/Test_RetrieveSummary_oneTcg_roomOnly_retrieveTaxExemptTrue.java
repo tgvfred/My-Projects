@@ -10,8 +10,6 @@ import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends AccommodationBaseTest {
 
-    private String environment;
-
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
