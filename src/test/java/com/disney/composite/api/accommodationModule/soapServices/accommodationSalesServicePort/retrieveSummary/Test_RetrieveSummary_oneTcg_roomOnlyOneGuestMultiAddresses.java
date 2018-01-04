@@ -27,6 +27,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyOneGuestMultiAddresses extends 
         bookReservation();
 
         book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "ROMultiAddr");
+        book.setRoomDetailsPackageCode(getPackageCode());
         // book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "RoomOnlyNoTicketsMultiAddr");
         book.sendRequest();
         TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify that no error occurred while booking: " + book.getFaultString(), book);

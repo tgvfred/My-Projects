@@ -28,6 +28,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationB
         bookReservation();
 
         book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "book2AdultsAndTwoRoom");
+        book.setRoomDetailsPackageCode(getPackageCode());
         book.sendRequest();
         book.getResponse();
         TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify no error occurred booking a res: " + book.getFaultString(), book);

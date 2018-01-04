@@ -4,26 +4,29 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends AccommodationBaseTest {
 
     private String environment;
 
-    private ReplaceAllForTravelPlanSegment book;
-
+    @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
-    public void testBefore(String environment) {
-        this.environment = environment;
-
-        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "RoomOnlyNoTicketsTaxExempt");
-        book.sendRequest();
-        TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify that no error occurred booking a res: " + book.getFaultString(), book);
+    public void setup(String environment) {
+        setEnvironment(environment);
+        isComo.set("false");
+        setDaysOut(0);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(environment);
+        setSendRequest(false);
+        setIsRSR(true);
+        bookReservation();
+        getBook().sendRequest();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
@@ -37,11 +40,11 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
         // retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", book.getTravelComponentGroupingId());
         // // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
         // } else {
-        retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+        retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         // }
 
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.logStep("Verify Tax Exempt Details are found.");
         TestReporter.assertTrue(retrieve.getTaxExemptCertificateNumber().equals("1"), "Tax Exempt Certificate Number Found [1]! ");
