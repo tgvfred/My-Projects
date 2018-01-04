@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.mslt.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.1.02</version>
+	<version>1.1.03</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -13,7 +13,7 @@
 	    </repository>
   	</distributionManagement>	
   	<properties>
-	    <apiUtilsSoap.version>1.1.01</apiUtilsSoap.version>
+	    <apiUtilsSoap.version>1.1.02</apiUtilsSoap.version>
 	    <activity.version>1.1.00</activity.version>  
 	    <admission.version>1.1.00</admission.version>    
 	    <dining.version>1.1.01</dining.version>    
@@ -44,19 +44,16 @@
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Activity</artifactId>
 			<version>${activity.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Admission</artifactId>
 			<version>${admission.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Dining</artifactId>
 			<version>${dining.version}</version>
-			<scope>provided</scope>
 		</dependency>	
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
@@ -86,55 +83,46 @@
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Facility</artifactId>
 			<version>${facility.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Folio</artifactId>
 			<version>${folio.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>GuestCelebration</artifactId>
 			<version>${guestCelebrations.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Groups</artifactId>
 			<version>${groups.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Party</artifactId>
 			<version>${party.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Pricing</artifactId>
 			<version>${pricing.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Resource</artifactId>
 			<version>${resource.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>TravelPlan</artifactId>
 			<version>${travelplan.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>TravelPlanSegment</artifactId>
 			<version>${travelplanSegment.version}</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>	
 	<build>

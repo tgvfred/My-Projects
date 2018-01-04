@@ -14,6 +14,13 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap extends 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates" })
     public void Test_CalculateUnsharedRates_twoSharedRoomDetails_twoOverlap() {
         calculate = new CalculateUnsharedRates(environment, "TwoOverlap");
+        String pkg = getPackageCode();
+        calculate.setUnsharedAccomadationSharedRoomDetailPackageCode(pkg);
+        calculate.setUnsharedAccomadationUnSharedRoomDetailPackageCode(pkg);
+        calculate.setUnsharedChainSharedRoomDetailPackageCode(pkg, "1");
+        calculate.setUnsharedChainSharedRoomDetailPackageCode(pkg, "2");
+        calculate.setUnsharedChainUnSharedRoomDetailPackageCode(pkg, "1");
+        calculate.setUnsharedChainUnSharedRoomDetailPackageCode(pkg, "2");
         calculate.sendRequest();
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 

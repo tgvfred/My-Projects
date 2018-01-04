@@ -149,6 +149,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> addTickets = new ThreadLocal<Boolean>();
     private ThreadLocal<String> ticketDescription = new ThreadLocal<>();
     private ThreadLocal<Boolean> bypassFreeze = new ThreadLocal<Boolean>();
+    private ThreadLocal<String> confirmationDetailsType = new ThreadLocal<String>();
     private ThreadLocal<Boolean> addConfirmatinoDetails = new ThreadLocal<Boolean>();
     private ThreadLocal<Boolean> addGathering = new ThreadLocal<Boolean>();
     private ThreadLocal<Map<String, String>> gatheringData = new ThreadLocal<>();
@@ -816,6 +817,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         return this.addRoom.get();
     }
 
+    public ThreadLocal<String> getConfirmationDetailsType() {
+        return confirmationDetailsType;
+    }
+
+    public void setConfirmationDetailsType(ThreadLocal<String> confirmationDetailsType) {
+        this.confirmationDetailsType = confirmationDetailsType;
+    }
+
     public boolean validateResponseNodeQuantity(String scenario, boolean exact) {
         TestReporter.logDebug("Entering AccommodationBaseTest#validateResponseNodeQuantity");
 
@@ -1379,14 +1388,18 @@ public class AccommodationBaseTest extends BaseRestTest {
                     getBook().setExternalReference("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                     getBook().setRoomDetails_ExternalRefs("01825", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
                 }
+                // if (packageCode.get() == null || packageCode.get().isEmpty()) {
                 PackageCodeHelper helper = new PackageCodeHelper(Environment.getBaseEnvironmentName(getEnvironment()), Randomness.generateCurrentXMLDate(), roomType, "WDTC - Walt Disney World Packages", getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
                 packageCode.set(helper.getPackageCode());
+                // }
             } else if (isValid(getIsLibgoBooking()) && (getIsLibgoBooking() == true)) {
                 setPackageBillCode("*DWSL");
                 setPackageDescription("ANN MYW Pkg + Dining");
                 setPackageType("WHOLESALE");
+                // if (packageCode.get() == null || packageCode.get().isEmpty()) {
                 PackageCodeHelper helper = new PackageCodeHelper(Environment.getBaseEnvironmentName(getEnvironment()), Randomness.generateCurrentXMLDate(), RoomTypes.getTicketPlusDisneyDiningPlan(), "DREAMS - United States", getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
                 packageCode.set(helper.getPackageCode());
+                // }
                 try {
                     getBook().setRoomDetailsBlockCode("01905");
                 } catch (XPathNotFoundException e) {
@@ -1406,9 +1419,10 @@ public class AccommodationBaseTest extends BaseRestTest {
                 } else {
                     setPackageType("DRC RO");
                 }
-
+                // if (packageCode.get() == null || packageCode.get().isEmpty()) {
                 PackageCodeHelper helper = new PackageCodeHelper(Environment.getBaseEnvironmentName(getEnvironment()), Randomness.generateCurrentXMLDate(), RoomTypes.getRoomOnly(), getPackageType(), getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
                 packageCode.set(helper.getPackageCode());
+                // }
                 getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
                 getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
             }
@@ -1489,7 +1503,8 @@ public class AccommodationBaseTest extends BaseRestTest {
             }
 
             if (isValid(getAddConfirmationDetails()) && (getAddConfirmationDetails() == true)) {
-                getBook().setConfirmationDetails("0", "true", "Address", "true", "true", "1", "0", "0", getHouseHold().primaryGuest());
+                String type = (isValid(getConfirmationDetailsType()) && getConfirmationDetailsType().get() != null) ? getConfirmationDetailsType().get() : "Print";
+                getBook().setConfirmationDetails("0", "true", type, "true", "true", "1", "0", "0", getHouseHold().primaryGuest());
             }
 
             if (isValid(getAddGathering()) && (getAddGathering() == true)) {

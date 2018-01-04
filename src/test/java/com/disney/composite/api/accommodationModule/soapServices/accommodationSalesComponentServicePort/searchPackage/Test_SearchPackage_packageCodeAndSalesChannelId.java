@@ -12,16 +12,15 @@ public class Test_SearchPackage_packageCodeAndSalesChannelId extends Accommodati
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "SearchPackage" })
     public void testSearchPackage_packageCodeAndSalesChannelId() {
-
         SearchPackage search = new SearchPackage(environment, "Main");
-        search.setPackageCode("X697A");
+        search.setPackageCode(getPackageCode());
         search.setSalesChannelIDs("1");
         search.setPackageDescription(BaseSoapCommands.REMOVE_NODE.toString());
         search.setBookingDate(BaseSoapCommands.REMOVE_NODE.toString());
         search.setResortArrivalDate(BaseSoapCommands.REMOVE_NODE.toString());
         search.sendRequest();
         TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", search);
-
+        search.getPackageDescriptionByPackageCode(getPackageCode());
         // Old vs New Validation
         if (Environment.isSpecialEnvironment(environment)) {
             SearchPackage clone = (SearchPackage) search.clone();

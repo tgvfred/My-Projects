@@ -73,6 +73,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_ModToNonDisney e
         setResortCode("SWN");
         setRoomTypeCode("SA");
         setFacilityId("80069789");
+        Sleeper.sleep(3000);
         bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);

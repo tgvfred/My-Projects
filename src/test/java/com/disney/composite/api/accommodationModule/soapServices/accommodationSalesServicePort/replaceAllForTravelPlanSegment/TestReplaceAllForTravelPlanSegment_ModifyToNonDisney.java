@@ -41,6 +41,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyToNonDisney extends Accomm
         setResortCode("SWN");
         setRoomTypeCode("SA");
         setFacilityId("80069789");
+        System.out.println(getBook().getRequest());
         bookReservation();
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
@@ -49,6 +50,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyToNonDisney extends Accomm
         getBook().setReplaceAll("true");
         getBook().sendRequest();
 
+        System.out.println(getBook().getRequest());
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
 

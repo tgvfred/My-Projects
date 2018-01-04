@@ -40,6 +40,16 @@ public class CalculateSharedRates extends AccommodationSalesServicePort {
         setRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations[2]/bookingDate", value);
     }
 
+    public void setPackageCode(String value) {
+
+        setRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations/packageCode", value);
+    }
+
+    public void setPackageCode2(String value) {
+
+        setRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations[2]/packageCode", value);
+    }
+
     public void setTcID(String value) {
 
         setRequestNodeValueByXPath("/Envelope/Body/calculateSharedRates/request/accommodations/travelComponentId", value);

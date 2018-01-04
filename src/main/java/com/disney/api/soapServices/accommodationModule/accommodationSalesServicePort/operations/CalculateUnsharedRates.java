@@ -1126,4 +1126,32 @@ public class CalculateUnsharedRates extends AccommodationSalesServicePort {
     public String getSharedRoomDetailBlockCode(String index) {
         return getResponseNodeValueByXPath("//shareRoomDetails[" + index + "]/sharedRoomDetail/blockCode");
     }
+
+    public void setUnsharedAccomadationSharedRoomDetailPackageCode(String value) {
+        setRequestNodeValueByXPath(" /Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/sharedRoomDetail/packageCode", value);
+    }
+
+    public void setUnsharedAccomadationUnSharedRoomDetailPackageCode(String value) {
+        setRequestNodeValueByXPath(" /Envelope/Body/calculateUnsharedRates/request/unsharedAccomadation/unSharedRoomDetail/packageCode", value);
+    }
+
+    public void setUnsharedChainUnSharedRoomDetailPackageCode(String value, String index) {
+
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/sharedRoomDetail/packageCode", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/sharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("packageCode"));
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/sharedRoomDetail/packageCode", value);
+        }
+    }
+
+    public void setUnsharedChainSharedRoomDetailPackageCode(String value, String index) {
+
+        try {
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/unSharedRoomDetail/packageCode", value);
+        } catch (XPathNotFoundException e) {
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/unSharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("packageCode"));
+            setRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[" + index + "]/unSharedRoomDetail/packageCode", value);
+        }
+    }
 }

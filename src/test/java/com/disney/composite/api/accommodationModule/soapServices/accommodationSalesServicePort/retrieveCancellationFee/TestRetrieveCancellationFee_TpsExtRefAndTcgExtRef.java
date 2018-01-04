@@ -36,7 +36,6 @@ public class TestRetrieveCancellationFee_TpsExtRefAndTcgExtRef extends Accommoda
         String tcgId = getBook().getTravelComponentGroupingId();
         String idLevel = "TravelPlanSegment";
         String idLevelTcg = "TravelComponentGrouping";
-        String refType = getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceType");
         String refNum = getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber");
         String refSource = getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource");
 
@@ -44,7 +43,7 @@ public class TestRetrieveCancellationFee_TpsExtRefAndTcgExtRef extends Accommoda
         fee.setCancelDate(date);
         fee.setID(tpsId);
         fee.setIdentityLevel(idLevel);
-        fee.setReferenceType(refType);
+        fee.setReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
         fee.setReferenceNumber(refNum);
         fee.setReferenceSource(refSource);
         fee.setReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
@@ -54,12 +53,8 @@ public class TestRetrieveCancellationFee_TpsExtRefAndTcgExtRef extends Accommoda
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/id", tcgId);
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/identityLevel", idLevelTcg);
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceDetail"));
-        fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/externalReferenceDetail", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceType"));
-        fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/externalReferenceDetail", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceCode"));
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/externalReferenceDetail", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceNumber"));
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/externalReferenceDetail", BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceSource"));
-        fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/externalReferenceDetail/externalReferenceCode", BaseSoapCommands.REMOVE_NODE.toString());
-        fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/externalReferenceDetail/externalReferenceType", refType);
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/externalReferenceDetail/externalReferenceNumber", refNum);
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/externalReferenceDetail/externalReferenceSource", refSource);
         fee.sendRequest();

@@ -14,6 +14,15 @@ public class TestCalculateUnsharedRates_threeSharedRoomDetails_threeOverlap exte
     public void Test_CalculateUnsharedRates_threeSharedRoomDetails_threeOverlap() {
 
         calculate = new CalculateUnsharedRates(environment, "ThreeOverlap");
+        // String pkg = getPackageCode();
+        // calculate.setUnsharedAccomadationSharedRoomDetailPackageCode(pkg);
+        // calculate.setUnsharedAccomadationUnSharedRoomDetailPackageCode(pkg);
+        // calculate.setUnsharedChainSharedRoomDetailPackageCode(pkg, "1");
+        // calculate.setUnsharedChainSharedRoomDetailPackageCode(pkg, "2");
+        // calculate.setUnsharedChainSharedRoomDetailPackageCode(pkg, "3");
+        // calculate.setUnsharedChainUnSharedRoomDetailPackageCode(pkg, "1");
+        // calculate.setUnsharedChainUnSharedRoomDetailPackageCode(pkg, "2");
+        // calculate.setUnsharedChainUnSharedRoomDetailPackageCode(pkg, "3");
         calculate.sendRequest();
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 
