@@ -52,7 +52,7 @@ public class Test_UpdateGuaranteeStatus_wdtc_NONE extends AccommodationBaseTest 
         update.sendRequest();
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", update);
 
-        helper.validation(getBook().getTravelPlanId(), "DEPOSIT", "NONE", "N");
+        helper.validation(getBook().getTravelPlanId(), "NONE", "NONE", "N");
 
         // if (Environment.isSpecialEnvironment(environment)) {
         // // Validation when running in Latest_CM

@@ -9,9 +9,9 @@ public class UnShare extends AccommodationSalesServicePort {
         super(environment);
         // Generate a request from a project xml file
         setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("unShare")));
-        generateServiceContext();
         // setRequestNodeValueByXPath(getTestScenario("/services/accommodationSalesServicePort/UnShare/UnShareInputs.xls", scenario));
         setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
+        generateServiceContext();
         removeComments();
         removeWhiteSpace();
     }

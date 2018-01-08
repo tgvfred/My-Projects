@@ -32,9 +32,11 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
         setUseDvcResort(true);
         setUseNonZeroPoints(true);
         bookDvcReservation("TestMergeToTravelPlan_MCash", 1);
+        System.out.println(getFirstBooking().getRequest());
         makeCCPayment(removeCM(environment));
         setUseExistingValues(true);
         bookDvcReservation("TestMergeToTravelPlan_MCash", 2);
+        System.out.println(getSecondBooking().getRequest());
     }
 
     @AfterMethod(alwaysRun = true)
@@ -57,8 +59,6 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
 
-        helper.baseValidationDVC(getFirstBooking(), retrieve);
-        helper.baseValidationDVC(getSecondBooking(), retrieve);
         helper.dvcMembershipValidations(retrieve, getFirstMember());
         helper.dvcMembershipValidations(retrieve, getSecondMember());
 
