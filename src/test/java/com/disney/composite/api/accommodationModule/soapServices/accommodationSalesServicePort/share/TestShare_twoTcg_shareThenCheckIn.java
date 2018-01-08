@@ -45,6 +45,8 @@ public class TestShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
 
         bookReservation();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+
+        Sleeper.sleep(60000);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share" })

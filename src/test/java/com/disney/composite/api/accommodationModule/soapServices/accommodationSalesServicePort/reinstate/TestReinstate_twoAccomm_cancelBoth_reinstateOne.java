@@ -35,7 +35,7 @@ public class TestReinstate_twoAccomm_cancelBoth_reinstateOne extends Accommodati
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());

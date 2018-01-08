@@ -22,7 +22,7 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
     public void setup(String environment) {
         setEnvironment(environment);
         isComo.set("false");
-        daysOut.set(Randomness.randomNumberBetween(1, 12));
+        daysOut.set(Randomness.randomNumberBetween(30, 42));
         nights.set(Randomness.randomNumberBetween(1, 3));
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));

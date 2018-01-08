@@ -38,6 +38,7 @@ public class TestReinstate_cancelFeeWaived extends AccommodationBaseTest {
         setValues(getEnvironment());
         isComo.set("true");
         bookReservation();
+        Sleeper.sleep(30000);
         env = environment;
         TCG = getBook().getTravelComponentGroupingId();
     }

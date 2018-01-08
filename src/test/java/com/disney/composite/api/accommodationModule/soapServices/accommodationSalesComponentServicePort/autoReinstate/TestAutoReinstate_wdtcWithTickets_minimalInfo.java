@@ -31,7 +31,7 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
         setEnvironment(environment);
         locEnv = environment;
 
-        daysOut.set(Randomness.randomNumberBetween(1, 12));
+        daysOut.set(Randomness.randomNumberBetween(30, 42));
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));

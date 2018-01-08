@@ -28,7 +28,7 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
     private String tpsCancelDate = Randomness.generateCurrentDatetime().split(" ")[0];
     private AddBundle add;
     private RetrieveDetailsByTravelPlanId details;
-    private int arrivalDaysOut = 0;
+    private int arrivalDaysOut = 40;
     private int departureDaysOut = 4;
     String cancelNumber;
 

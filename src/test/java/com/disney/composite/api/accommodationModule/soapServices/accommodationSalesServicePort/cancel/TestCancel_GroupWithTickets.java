@@ -24,7 +24,7 @@ public class TestCancel_GroupWithTickets extends AccommodationBaseTest {
     private HouseHold hh;
     private AddBundle add;
     private RetrieveDetailsByTravelPlanId details;
-    private int arrivalDaysOut = 0;
+    private int arrivalDaysOut = 40;
     private int departureDaysOut = 4;
     private String firstBundleTcg;
 

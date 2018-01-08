@@ -35,7 +35,7 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -48,7 +48,7 @@ public class TestReinstate_twoAccomm_cancelOne extends AccommodationBaseTest {
         AccommodationBaseTest base = new AccommodationBaseTest();
         base.setEnvironment(getEnvironment());
         base.beforeSuite(base.getEnvironment());
-        base.setDaysOut(0);
+        base.setDaysOut(40);
         base.setNights(1);
         base.setArrivalDate(getDaysOut());
         base.setDepartureDate(getNights());

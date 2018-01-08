@@ -23,7 +23,7 @@ public class TestCancel_RO_TcgOnly extends AccommodationBaseTest {
     public void setup(String environment) {
         setEnvironment(environment);
         isComo.set("false");
-        daysOut.set(0);
+        daysOut.set(40);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));

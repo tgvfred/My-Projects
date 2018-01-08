@@ -24,7 +24,7 @@ public class TestAutoReinstate_roomOnly_cancelFeeNotWaived extends Accommodation
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(30);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());

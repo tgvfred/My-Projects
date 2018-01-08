@@ -1,6 +1,7 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.cancel;
 
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -21,6 +22,20 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     @BeforeClass(alwaysRun = true)
     public static void beforeClass(String environment) {
         db = new OracleDatabase(environment, Database.DREAMS);
+    }
+
+    @Override
+    @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
+    public void setup(String environment) {
+        setEnvironment(environment);
+        setDaysOut(30);
+        setNights(1);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getDaysOut() + getNights());
+        setValues(getEnvironment());
+        isComo.set("false");
+        bookReservation();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })

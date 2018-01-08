@@ -30,7 +30,7 @@ public class TestReinstate_guaranteed extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
