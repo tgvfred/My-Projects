@@ -340,7 +340,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
     public void TestReplaceAllForTravelPlanSegment_modifyDFCheckedOut() {
-        String faultString = " Modification not supported for Share Chain Reservation with status: - Checked In, Past Visit, DF Checked Out, Not Arrived, No Show";
+        String faultString = "Accommodation is in DF Checked Out status. Cannot modify this reservation";
 
         String sql = "select * "
                 + "from( "

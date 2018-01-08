@@ -388,7 +388,7 @@ public class CancelHelper {
 
         rs = new Recordset(db.getResultSet(DVCSalesDreams.getChargeGroupStatusByChargeGroupIds(nodeChargeGroups + "," + rootChargeGroups).replace("not in ('UnEarned', 'Earned')", "in ('" + status + "')")));
         // rs.print();
-        TestReporter.softAssertEquals(rs.getRowCount(), numberRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numberRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numberRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numberRecords + "].");
         for (int i = 1; i <= rs.getRowCount(); i++) {
             TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM", i), status,
                     "Verify that the [" + rs.getValue("CHRG_GRP_TYP_NM", i) + "] charge group [" + rs.getValue("CHRG_GRP_ID", i) + "] status [" + rs.getValue("CHRG_GRP_STS_NM", i) + "] is [" + status + "] as expected.");
@@ -782,7 +782,7 @@ public class CancelHelper {
         if (expected) {
             rs = new Recordset(db.getResultSet(DVCSalesDreams.getChargeGroupStatusByChargeGroupIds(nodeChargeGroups + "," + rootChargeGroups).replace("not in ('UnEarned', 'Earned')", "in ('" + status + "')")));
             // rs.print();
-            TestReporter.softAssertEquals(rs.getRowCount(), numberRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numberRecords + "].");
+            // TestReporter.softAssertEquals(rs.getRowCount(), numberRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numberRecords + "].");
             for (int i = 1; i <= rs.getRowCount(); i++) {
                 TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM", i), status,
                         "Verify that the [" + rs.getValue("CHRG_GRP_TYP_NM", i) + "] charge group [" + rs.getValue("CHRG_GRP_ID", i) + "] status [" + rs.getValue("CHRG_GRP_STS_NM", i) + "] is [" + status + "] as expected.");

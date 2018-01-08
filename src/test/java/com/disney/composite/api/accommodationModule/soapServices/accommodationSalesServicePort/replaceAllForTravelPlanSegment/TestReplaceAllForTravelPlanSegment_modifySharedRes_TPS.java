@@ -35,7 +35,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(30);
         setNights(4);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
