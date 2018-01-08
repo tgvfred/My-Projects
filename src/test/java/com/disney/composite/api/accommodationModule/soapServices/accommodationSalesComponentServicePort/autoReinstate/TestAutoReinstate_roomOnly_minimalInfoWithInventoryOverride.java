@@ -23,7 +23,7 @@ public class TestAutoReinstate_roomOnly_minimalInfoWithInventoryOverride extends
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(30);
+        setDaysOut(20);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());

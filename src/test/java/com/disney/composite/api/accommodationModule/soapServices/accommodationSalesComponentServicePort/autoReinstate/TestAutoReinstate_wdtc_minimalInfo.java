@@ -23,7 +23,7 @@ public class TestAutoReinstate_wdtc_minimalInfo extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(30);
+        setDaysOut(20);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());

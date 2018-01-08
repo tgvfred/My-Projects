@@ -236,7 +236,9 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void setDepartureDate(int nights) {
-        setNights(nights);
+        if (this.nights == null || this.nights.get() == null) {
+            setNights(nights);
+        }
         this.departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
     }
 

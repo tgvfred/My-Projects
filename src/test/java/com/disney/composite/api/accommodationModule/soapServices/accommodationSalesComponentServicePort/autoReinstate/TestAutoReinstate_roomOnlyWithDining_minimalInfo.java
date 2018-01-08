@@ -23,7 +23,7 @@ public class TestAutoReinstate_roomOnlyWithDining_minimalInfo extends Accommodat
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(30);
+        setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
