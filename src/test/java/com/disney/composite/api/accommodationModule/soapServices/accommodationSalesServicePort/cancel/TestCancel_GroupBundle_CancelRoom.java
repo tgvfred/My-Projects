@@ -10,11 +10,9 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.pricingModule.packagingService.operations.FindMiscPackages;
 import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
 import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Environment;
-import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
@@ -55,35 +53,6 @@ public class TestCancel_GroupBundle_CancelRoom extends AccommodationBaseTest {
 
         // Add a wait to avoid async issues
         Sleeper.sleep(5000);
-
-        details.sendRequest();
-        TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
-
-        add = new AddBundle(Environment.getBaseEnvironmentName(environment), "Main");
-        add.setGuestsGuestNameFirstName(getHouseHold().primaryGuest().getFirstName());
-        add.setGuestsGuestNameLastName(getHouseHold().primaryGuest().getLastName());
-        add.setGuestsGuestReferenceId(details.getGuestsId());
-        add.setGuestsId(details.getGuestsId());
-        add.setPackageBundleRequestsBookDate(Randomness.generateCurrentXMLDate(arrivalDaysOut));
-        add.setPackageBundleRequestsContactName(getHouseHold().primaryGuest().getFirstName() + " " + getHouseHold().primaryGuest().getLastName());
-        add.setPackageBundleRequestsEndDate(Randomness.generateCurrentXMLDate(departureDaysOut - 2) + "T00:00:00");
-        add.setPackageBundleRequestsSalesOrderItemGuestsGUestReferenceId(details.getGuestsId());
-        add.setPackageBundleRequestsStartDate(Randomness.generateCurrentXMLDate(arrivalDaysOut + 1) + "T00:00:00");
-        add.setTravelPlanId(getBook().getTravelPlanId());
-        add.retrieveSalesOrderId(getBook().getTravelPlanId());
-        add.setSalesOrderId(add.getBundleSalesOrderIds()[0]);
-
-        FindMiscPackages find = new FindMiscPackages(Environment.getBaseEnvironmentName(environment), "MinimalInfo");
-        find.setArrivalDate(Randomness.generateCurrentXMLDate(arrivalDaysOut));
-        find.setBookDate(Randomness.generateCurrentXMLDate());
-        find.sendRequest();
-        TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred adding a bundle to TP ID [" + getBook().getTravelPlanId() + "]: " + add.getFaultString());
-        add.setPackageBundleRequestsCode(find.getPackageCode());
-
-        add.sendRequest();
-        TestReporter.assertEquals(add.getResponseStatusCode(), "200", "An error occurred while adding a bundle.\nRequest:\n" + add.getRequest() + "\nResonse:\n" + add.getResponse());
-
-        firstBundleTcg = findBundleTcg(getBook().getTravelPlanId());
 
         details.sendRequest();
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
