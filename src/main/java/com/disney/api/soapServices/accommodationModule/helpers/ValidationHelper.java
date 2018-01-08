@@ -724,7 +724,7 @@ public class ValidationHelper {
         boolean foundRsr = false;
         for (rs.moveFirst(); rs.hasNext(); rs.moveNext()) {
             if (rs.getValue("FOLIO_TYP_NM").equals("INTERNAL_ORGANIZATION")) {
-                foundRsr = false;
+                foundRsr = true;
             }
         }
 

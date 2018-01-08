@@ -1764,6 +1764,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void retrieveReservation() {
         Sleeper.sleep(5000);
         retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
+        // retrieve.set(new Retrieve(getEnvironment(), "Main"));
         getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", getBook().getTravelPlanId());
         getRetrieve().setRequestNodeValueByXPath("//request/locationId", getLocationId());
         getRetrieve().sendRequest();
