@@ -127,6 +127,7 @@ public class TestOverrideAccommodationRates_RO_ThreeAdultsOneNight extends Accom
         oar.setLocationId(locationId);
 
         oar.sendRequest();
+        Sleeper.sleep(5000);
 
         // updated recordset after request is sent
         Recordset rs5 = new Recordset(db.getResultSet(sql1));

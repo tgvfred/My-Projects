@@ -40,8 +40,8 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGatherin
         setGatheringData(gatheringData);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "tpv3", "debug" })
-    public void TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering() {
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "gathering" })
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering() {
         bookReservation();
         tpPtyId = getBook().getGuestId();
 

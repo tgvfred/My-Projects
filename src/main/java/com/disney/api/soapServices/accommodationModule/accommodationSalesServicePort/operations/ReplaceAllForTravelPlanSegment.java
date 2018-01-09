@@ -1121,7 +1121,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setTaxExemptDetailCertificateNumber(String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+            try {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request", BaseSoapCommands.ADD_NODES.commandAppend("taxExemptDetail/taxExemptCertificateNumber"));
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+            }
         } else {
             throw new AutomationException("The tax exempt detail certificate number cannot be null or empty");
         }
@@ -1129,7 +1134,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setTaxExemptDetailType(String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+            try {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail", BaseSoapCommands.ADD_NODE.commandAppend("taxExemptType"));
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+            }
         } else {
             throw new AutomationException("The tax exempt detail type cannot be null or empty");
         }

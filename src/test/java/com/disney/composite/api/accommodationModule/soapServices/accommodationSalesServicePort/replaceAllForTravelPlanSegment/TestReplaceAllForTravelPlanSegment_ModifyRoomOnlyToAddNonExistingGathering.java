@@ -38,7 +38,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddNonExistingGa
         tcId = getBook().getTravelComponentId();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "tpv3" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "gathering" })
     public void testReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddNonExistingGathering() {
         setAddGathering(true);
         setSendRequest(false);

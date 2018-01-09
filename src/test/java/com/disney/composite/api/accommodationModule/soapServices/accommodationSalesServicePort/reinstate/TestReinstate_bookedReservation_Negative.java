@@ -19,7 +19,7 @@ public class TestReinstate_bookedReservation_Negative extends AccommodationBaseT
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(30);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());

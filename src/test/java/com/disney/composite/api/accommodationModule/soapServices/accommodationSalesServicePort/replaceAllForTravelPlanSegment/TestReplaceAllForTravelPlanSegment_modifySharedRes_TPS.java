@@ -25,10 +25,6 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
     private String tcgId = null;
     private String tcgId2 = null;
     private Map<String, String> tcgs = new HashMap<>();
-    private String resortCode;
-    private String roomTypeCode;
-    private String locationId;
-    private String facilityId;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -73,7 +69,7 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_modifySharedRes_TPS() {
         setSendRequest(false);
-        setDaysOut(1);
+        setDaysOut(31);
         setDepartureDate(getNights());
         bookReservation();
         getBook().setTravelPlanId(tpId);

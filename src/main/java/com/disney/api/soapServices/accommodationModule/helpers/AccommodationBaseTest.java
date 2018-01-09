@@ -1302,6 +1302,15 @@ public class AccommodationBaseTest extends BaseRestTest {
     @AfterMethod(alwaysRun = true)
     public void teardown() {
         try {
+            retrieveReservation();
+            if (getRetrieve().getTravelStatus().toLowerCase().contains("check")) {
+                CheckInHelper helper = new CheckInHelper(environment, getBook());
+                helper.checkOut(locationId.get());
+            }
+
+        } catch (Exception e) {
+        }
+        try {
             if ((skipCancel == null) || (skipCancel.get() == null) || (skipCancel.get() != true)) {
                 cancel();
             }
@@ -1425,8 +1434,11 @@ public class AccommodationBaseTest extends BaseRestTest {
                 PackageCodeHelper helper = new PackageCodeHelper(Environment.getBaseEnvironmentName(getEnvironment()), Randomness.generateCurrentXMLDate(), RoomTypes.getRoomOnly(), getPackageType(), getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
                 packageCode.set(helper.getPackageCode());
                 // }
-                getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
-                getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                try {
+                    getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                } catch (XPathNotFoundException e) {
+                }
             }
             pkg = new PackageCodes();
             boolean success = false;
@@ -2135,8 +2147,8 @@ public class AccommodationBaseTest extends BaseRestTest {
     private void addDining() {
         diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), hh.get());
         diningRes.setTravelPlanId(getBook().getTravelPlanId());
-        diningRes.setFacilityName("Pioneer Hall");
-        diningRes.setProductName("Hoop-Dee-Doo-Cat 2-1st Show");
+        diningRes.setFacilityName("Fort Wilderness Pavilion");
+        diningRes.setProductName("Mickey's Backyard BBQ - Premium Seating");
         diningRes.setServiceStartDate(getArrivalDate());
         diningRes.book("NoComponentsNoAddons");
 

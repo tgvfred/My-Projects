@@ -64,7 +64,7 @@ public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationB
         // captureSecondOwnerId();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare" }, invocationCount = 10)
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare" })
     public void Test_unShare_twoTcgs_differentStartAndEndDates() {
 
         setEnvironment(environment);

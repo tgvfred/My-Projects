@@ -26,7 +26,7 @@ public class Checkout_Cancel extends AccommodationBaseTest {
     public void setup(String environment) {
         setEnvironment(environment);
         isComo.set("false");
-        setDaysOut(30);
+        setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
@@ -36,10 +36,10 @@ public class Checkout_Cancel extends AccommodationBaseTest {
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second accommodation: " + getBook().getFaultString(), getBook());
 
+        firstTcg = getBook().getTravelComponentGroupingId();
         getBook().setTravelPlanId(getBook().getTravelPlanId());
         getBook().setTravelPlanSegementId(getBook().getTravelPlanSegmentId());
         getBook().sendRequest();
-        firstTcg = getBook().getTravelComponentGroupingId();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second accommodation: " + getBook().getFaultString(), getBook());
     }
 

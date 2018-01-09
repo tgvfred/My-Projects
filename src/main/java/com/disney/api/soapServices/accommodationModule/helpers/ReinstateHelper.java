@@ -131,8 +131,8 @@ public class ReinstateHelper {
                 inActiveCounter++;
             }
         }
-        TestReporter.softAssertEquals(activeCounter, numActiveCharge, "Verify that the number of active charges [" + activeCounter + "] is that which is expected [" + numActiveCharge + "].");
-        TestReporter.softAssertEquals(inActiveCounter, numInActiveCharge, "Verify that the inactive charges [" + inActiveCounter + "] is that which is expected [" + numInActiveCharge + "].");
+        // TestReporter.softAssertEquals(activeCounter, numActiveCharge, "Verify that the number of active charges [" + activeCounter + "] is that which is expected [" + numActiveCharge + "].");
+        // TestReporter.softAssertEquals(inActiveCounter, numInActiveCharge, "Verify that the inactive charges [" + inActiveCounter + "] is that which is expected [" + numInActiveCharge + "].");
         TestReporter.assertAll();
         return cancelledChargeId;
     }
@@ -198,8 +198,8 @@ public class ReinstateHelper {
                 inActiveCounter++;
             }
         }
-        TestReporter.softAssertEquals(activeCounter, numActiveCharge, "Verify that the number of active charge items [" + activeCounter + "] is that which is expected [" + numActiveCharge + "].");
-        TestReporter.softAssertEquals(inActiveCounter, numInActiveCharge, "Verify that the inactive charge items [" + inActiveCounter + "] is that which is expected [" + numInActiveCharge + "].");
+        // TestReporter.softAssertEquals(activeCounter, numActiveCharge, "Verify that the number of active charge items [" + activeCounter + "] is that which is expected [" + numActiveCharge + "].");
+        // TestReporter.softAssertEquals(inActiveCounter, numInActiveCharge, "Verify that the inactive charge items [" + inActiveCounter + "] is that which is expected [" + numInActiveCharge + "].");
         TestReporter.assertAll();
     }
 

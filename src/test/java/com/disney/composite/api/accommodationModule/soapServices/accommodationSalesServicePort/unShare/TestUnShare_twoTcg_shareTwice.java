@@ -47,7 +47,7 @@ public class TestUnShare_twoTcg_shareTwice extends AccommodationBaseTest {
         captureFirstOwnerId();
 
         // book second reservation.
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());

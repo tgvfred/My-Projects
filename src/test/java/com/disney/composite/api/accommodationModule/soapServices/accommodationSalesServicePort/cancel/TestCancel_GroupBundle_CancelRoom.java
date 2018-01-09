@@ -10,27 +10,16 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
-import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Environment;
-import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.DVCSalesDreams;
-import com.disney.utils.dataFactory.guestFactory.HouseHold;
 import com.disney.utils.date.DateTimeConversion;
 
 public class TestCancel_GroupBundle_CancelRoom extends AccommodationBaseTest {
-
-    private HouseHold hh;
-    private AddBundle add;
-    private RetrieveDetailsByTravelPlanId details;
-    private int arrivalDaysOut = 40;
-    private int departureDaysOut = 4;
-    private String firstBundleTcg;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -38,7 +27,7 @@ public class TestCancel_GroupBundle_CancelRoom extends AccommodationBaseTest {
     public void setup(String environment) {
 
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -47,15 +36,6 @@ public class TestCancel_GroupBundle_CancelRoom extends AccommodationBaseTest {
         isComo.set("true");
         // retrieveReservation();
         bookReservation();
-
-        details = new RetrieveDetailsByTravelPlanId(Environment.getBaseEnvironmentName(environment), "Main");
-        details.setTravelPlanId(getBook().getTravelPlanId());
-
-        // Add a wait to avoid async issues
-        Sleeper.sleep(5000);
-
-        details.sendRequest();
-        TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
@@ -123,7 +103,6 @@ public class TestCancel_GroupBundle_CancelRoom extends AccommodationBaseTest {
         cancelHelper.verifyInventoryReleased(getBook().getTravelComponentGroupingId());
         cancelHelper.verifyNumberOfTpPartiesByTpId(1);
         cancelHelper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Cancelled");
-        cancelHelper.verifyTcStatusByTcg(firstBundleTcg, "Booked");
         cancelHelper.verifyExchangeFeeFound(false);
         cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 1);
         cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 1);

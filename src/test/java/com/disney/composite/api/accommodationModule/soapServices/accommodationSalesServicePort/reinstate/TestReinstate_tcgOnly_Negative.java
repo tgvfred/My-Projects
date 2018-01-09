@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.Cancel;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestReinstate_tcgOnly_Negative extends AccommodationBaseTest {
@@ -41,7 +42,7 @@ public class TestReinstate_tcgOnly_Negative extends AccommodationBaseTest {
         cancel.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         cancel.sendRequest();
         TestReporter.assertTrue(cancel.getResponseStatusCode().equals("200"), "Verify that no error occurred cancelling a reservation: " + cancel.getFaultString());
-
+        Sleeper.sleep(3000);
         reinstate = new Reinstate(env, "Main_2");
         reinstate.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         reinstate.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());

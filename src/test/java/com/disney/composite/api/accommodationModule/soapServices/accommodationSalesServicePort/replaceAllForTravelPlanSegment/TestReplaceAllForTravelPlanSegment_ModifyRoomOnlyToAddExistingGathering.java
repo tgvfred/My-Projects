@@ -38,7 +38,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddExistingGathe
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug", "tpv3" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "gathering" })
     public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering() {
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();

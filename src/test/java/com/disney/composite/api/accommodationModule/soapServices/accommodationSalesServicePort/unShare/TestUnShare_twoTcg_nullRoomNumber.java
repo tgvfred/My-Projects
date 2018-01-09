@@ -30,7 +30,7 @@ public class TestUnShare_twoTcg_nullRoomNumber extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -46,7 +46,7 @@ public class TestUnShare_twoTcg_nullRoomNumber extends AccommodationBaseTest {
         captureFirstOwnerId();
 
         // book second reservation.
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());

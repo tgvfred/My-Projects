@@ -8,8 +8,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
-import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -20,11 +18,6 @@ import com.disney.utils.date.DateTimeConversion;
 public class TestCancel_GroupWithTickets extends AccommodationBaseTest {
 
     private HouseHold hh;
-    private AddBundle add;
-    private RetrieveDetailsByTravelPlanId details;
-    private int arrivalDaysOut = 40;
-    private int departureDaysOut = 4;
-    private String firstBundleTcg;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -113,7 +106,6 @@ public class TestCancel_GroupWithTickets extends AccommodationBaseTest {
         cancelHelper.verifyInventoryReleased(getBook().getTravelComponentGroupingId());
         cancelHelper.verifyNumberOfTpPartiesByTpId(1);
         cancelHelper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Cancelled");
-        cancelHelper.verifyTcStatusByTcg(firstBundleTcg, "Booked");
         cancelHelper.verifyExchangeFeeFound(false);
         cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 1);
         cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 1);
