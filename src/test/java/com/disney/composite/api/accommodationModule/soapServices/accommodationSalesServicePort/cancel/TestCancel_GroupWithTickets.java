@@ -39,7 +39,7 @@ public class TestCancel_GroupWithTickets extends AccommodationBaseTest {
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
-    public void testCancel_GroupBundle_CancelRoom() {
+    public void testCancel_GroupWithTickets() {
         TestReporter.logScenario("Test Cancel");
 
         Cancel cancel = new Cancel(environment, "MainTickets");

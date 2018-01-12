@@ -64,7 +64,7 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
         TestReporter.logAPI(!reinstate.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + reinstate.getFaultString(), reinstate);
 
         int numBookedComponents_reinstate = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
-        TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate + 1, "Verify that the number of reinstated components [" + (numBookedComponents_reinstate) + "] is that which is expected [" + (numBookedComponents_book) + "].");
+        TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate, "Verify that the number of reinstated components [" + (numBookedComponents_reinstate) + "] is that which is expected [" + (numBookedComponents_book) + "].");
         Sleeper.sleep(3000);
         validations();
         // cancel and reinstate in order to clone on the old service.

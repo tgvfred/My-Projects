@@ -33,10 +33,12 @@ public class TestReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToTrue 
         setValues(getEnvironment());
         setAddTickets(true);
         isComo.set("true");
+        bookReservation();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
     public void testReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToTrue() {
+
         String tpId = getBook().getTravelPlanId();
         String tpsId = getBook().getTravelPlanSegmentId();
         String tcgId = getBook().getTravelComponentGroupingId();
@@ -147,9 +149,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToTrue 
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
-        String admissionComponentId = validations.validateAdmissionComponentAdded(getBook().getTravelComponentGroupingId());
-        String ticketComponentPrice = validations.validateAdmissionComponentDetails(admissionComponentId, getTicketsHelper().getCode());
-        validations.validateAdmissionComponentPrice(getBook().getTravelPlanId(), ticketComponentPrice);
+        validations.validateAdmissionComponentAdded(getBook().getTravelComponentGroupingId());
 
         // Validate Folio
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
