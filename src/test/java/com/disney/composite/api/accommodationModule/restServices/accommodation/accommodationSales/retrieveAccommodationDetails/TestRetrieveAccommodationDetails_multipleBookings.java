@@ -79,7 +79,7 @@ public class TestRetrieveAccommodationDetails_multipleBookings extends Accommoda
         Recordset rs = new Recordset(db.getResultSet(sql));
         Database db2 = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs2 = new Recordset(db2.getResultSet(sql2));
-        System.out.print(tpId + "---" + tpId2);
+
         TestReporter.softAssertTrue(tpId.equals(rr[0].getTravelPlanId().toString()), "The travel plan id in the request [" + tpId + "] matches the travel plan in the response [" + rr[0].getTravelPlanId() + "]");
         TestReporter.softAssertTrue(tpId2.equals(rr[1].getTravelPlanId().toString()), "The travel plan id in the request [" + tpId2 + "] matches the travel plan in the response [" + rr[1].getTravelPlanId() + "]");
 

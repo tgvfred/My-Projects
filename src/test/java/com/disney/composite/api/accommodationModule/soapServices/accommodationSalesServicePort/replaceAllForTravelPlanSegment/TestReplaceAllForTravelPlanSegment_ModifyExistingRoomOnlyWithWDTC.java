@@ -40,7 +40,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
         setValues(getEnvironment());
         isComo.set("true");
         bookReservation();
-        System.out.println(getBook().getRequest());
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
@@ -61,7 +60,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
         getBook().setReplaceAll("true");
         getBook().sendRequest();
 
-        System.out.println(getBook().getRequest());
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
 
         tpPtyId = getBook().getGuestId();

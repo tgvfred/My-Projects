@@ -2120,4 +2120,18 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         tempXpath = tempXpath + "/guestReferenceDetails";
         addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, base.getAdditionalGuests().get(base.getAdditionalGuests().size()), tempXpath);
     }
+
+    public void setCruiseDetails(String shipID, String voyageNumber) {
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request", BaseSoapCommands.ADD_NODE.commandAppend("cruiseDetail"));
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail", BaseSoapCommands.ADD_NODE.commandAppend("shipId"));
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail", BaseSoapCommands.ADD_NODE.commandAppend("voyageNumber"));
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail/shipId", shipID);
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail/voyageNumber", voyageNumber);
+
+    }
+
+    public void setDclGuestId(String id) {
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelPlanGuest/dclGuestId", id);
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/dclGuestId", id);
+    }
 }

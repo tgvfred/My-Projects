@@ -165,6 +165,8 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Map<String, String>> membershipData = new ThreadLocal<>();
     private ThreadLocal<Boolean> addPrimaryGuestODS = new ThreadLocal<>();
     private ThreadLocal<Boolean> addTravelAgency = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addCruiseDetails = new ThreadLocal<>();
+    public ThreadLocal<String> dclGuestId = new ThreadLocal<>();
     private ThreadLocal<Map<String, String>> profileData = new ThreadLocal<>();
     private ThreadLocal<Boolean> addProfile = new ThreadLocal<>();
     private ThreadLocal<Boolean> mywPackageCode = new ThreadLocal<>();
@@ -815,6 +817,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         this.addRoom.set(addRoom);
     }
 
+    public Boolean getAddCruiseDetails() {
+        return addCruiseDetails.get();
+    }
+
+    public void setAddCruiseDetails(Boolean addCruiseDetails) {
+        this.addCruiseDetails.set(addCruiseDetails);
+    }
+
     public Boolean getAddRoom() {
         return this.addRoom.get();
     }
@@ -1368,6 +1378,12 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setRoomDetails_ExternalRefs(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), getExternalRefSource(), "RESERVATION");
         }
 
+        getBook().setRoomDetailsResortCode(getResortCode());
+        getBook().setRoomDetailsRoomTypeCode(getRoomTypeCode());
+        getBook().setRoomDetailsLocationId(getLocationId());
+        getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
+        getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
+
         PackageCodes pkg = new PackageCodes();
         int maxTries = 10;
         int tries = 0;
@@ -1427,18 +1443,29 @@ public class AccommodationBaseTest extends BaseRestTest {
                 if ((isRSR() != null) && (isRSR() == true)) {
                     setPackageType("RSR");
                     getBook().setRoomDetailsRsrReservation("true");
+                    try {
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                    } catch (XPathNotFoundException e) {
+                    }
+                } else if ((getAddCruiseDetails() != null) && (getAddCruiseDetails() == true)) {
+                    getBook().setExternalReference("DCLFIT", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setRoomDetails_ExternalRefs("DCLFIT", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setCruiseDetails("DD", "0748");
+                    getBook().setDclGuestId(Randomness.randomNumber(12));
+                    setPackageType("DCL");
                 } else {
                     setPackageType("DRC RO");
+                    try {
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                    } catch (XPathNotFoundException e) {
+                    }
                 }
                 // if (packageCode.get() == null || packageCode.get().isEmpty()) {
                 PackageCodeHelper helper = new PackageCodeHelper(Environment.getBaseEnvironmentName(getEnvironment()), Randomness.generateCurrentXMLDate(), RoomTypes.getRoomOnly(), getPackageType(), getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
                 packageCode.set(helper.getPackageCode());
                 // }
-                try {
-                    getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
-                    getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
-                } catch (XPathNotFoundException e) {
-                }
             }
             pkg = new PackageCodes();
             boolean success = false;
@@ -1457,12 +1484,8 @@ public class AccommodationBaseTest extends BaseRestTest {
                     pkgTries++;
                 } while (!success && (pkgTries < pkgMaxTries));
             }
+
             getBook().setRoomDetailsPackageCode(getPackageCode());
-            getBook().setRoomDetailsResortCode(getResortCode());
-            getBook().setRoomDetailsRoomTypeCode(getRoomTypeCode());
-            getBook().setRoomDetailsLocationId(getLocationId());
-            getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
-            getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
             // getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
 
             if ((isADA() != null) && (isADA() == true)) {
@@ -1604,7 +1627,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             if (isValid(getAddProfile()) && (getAddProfile() == true)) {
                 if (!isValid(getProfileData())) {
                     setProfileData(new HashMap<String, String>());
-                    getProfileData().put(PROFILE_ID, "600");
+                    getProfileData().put(PROFILE_ID, "191");
                 }
                 Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
                 Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getProfileInformationById(getProfileData().get(PROFILE_ID))));

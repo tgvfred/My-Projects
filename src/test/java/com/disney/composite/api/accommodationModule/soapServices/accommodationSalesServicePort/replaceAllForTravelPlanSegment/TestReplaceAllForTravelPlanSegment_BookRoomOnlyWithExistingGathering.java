@@ -14,6 +14,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.GatheringHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering extends AccommodationBaseTest {
@@ -30,9 +31,10 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGatherin
         setDepartureDate(getNights());
         setValues(getEnvironment());
         isComo.set("true");
-        GatheringHelper helper = new GatheringHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
+        GatheringHelper helper = new GatheringHelper(Environment.getBaseEnvironmentName(getEnvironment()));
         helper.createGathering(getFacilityId());
 
+        Sleeper.sleep(10000);
         Map<String, String> gatheringData = new HashMap<>();
         gatheringData.put(GATHERING_ID, helper.getGroupCode());
         gatheringData.put(GATHERING_NAME, helper.getGroupName());

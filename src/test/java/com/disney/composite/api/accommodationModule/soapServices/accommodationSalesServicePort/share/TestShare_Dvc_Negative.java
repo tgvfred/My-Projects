@@ -25,7 +25,7 @@ public class TestShare_Dvc_Negative extends BookDVCCashHelper {
         setBook(bookDvcReservation("testBook_MCash", 1));
         setTpId(getFirstBooking().getTravelPlanId());
         tcgfirstTd = getBook().getTravelComponentGroupingId();
-
+        setPackageCode(null);
         setBook(bookDvcReservation("testBook_MCash", 1));
         setTpId(getFirstBooking().getTravelPlanId());
     }

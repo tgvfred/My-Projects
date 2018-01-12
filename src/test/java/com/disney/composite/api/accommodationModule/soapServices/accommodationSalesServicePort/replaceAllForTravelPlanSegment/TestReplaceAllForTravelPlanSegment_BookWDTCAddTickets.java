@@ -17,7 +17,7 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToTrue extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_BookWDTCAddTickets extends AccommodationBaseTest {
     private String tpPtyId = null;
     private String odsGuestId;
 
@@ -31,29 +31,20 @@ public class TestReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToTrue 
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setIsWdtcBooking(true);
+        setMywPackageCode(true);
         setAddTickets(true);
+        setSendRequest(false);
+
         isComo.set("true");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
-    public void testReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToTrue() {
-        String tpId = getBook().getTravelPlanId();
-        String tpsId = getBook().getTravelPlanSegmentId();
-        String tcgId = getBook().getTravelComponentGroupingId();
-        String tcId = getBook().getTravelComponentId();
-        setSendRequest(false);
-        setIsWdtcBooking(true);
-        setMywPackageCode(true);
+    public void testReplaceAllForTravelPlanSegment_BookWDTCAddTickets() {
         bookReservation();
-
-        getBook().setTravelPlanId(tpId);
-        getBook().setTravelPlanSegementId(tpsId);
-        getBook().setTravelComponentGroupingId(tcgId);
-        getBook().setTravelComponentId(tcId);
-        getBook().setReplaceAll("true");
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/ticketDetails/partOfPackage", "true");
         getBook().sendRequest();
-        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Failed to book", getBook());
         tpPtyId = getBook().getGuestId();
         String sql = "select b.TXN_PTY_EXTNL_REF_VAL "
                 + "from res_mgmt.tp_pty a "
@@ -62,17 +53,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToTrue 
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
         Recordset rs = null;
 
-        int tries = 0;
-        int maxTries = 60;
-        boolean success = false;
-        do {
-            Sleeper.sleep(1000);
-            rs = new Recordset(db.getResultSet(sql));
-            tries++;
-            if (rs.getRowCount() > 0) {
-                success = true;
-            }
-        } while ((tries < maxTries) && !success);
+        rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 10));
 
         if (rs.getRowCount() == 0) {
             throw new AutomationException("No TXN_PTY_EXTNL_REF_VAL was found in GUEST.TXN_PTY_EXTNL_REF table for TP ID [" + getBook().getTravelPlanId() + "].");
@@ -86,9 +67,9 @@ public class TestReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToTrue 
             ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
 
-            tries = 0;
-            maxTries = 20;
-            success = false;
+            int tries = 0;
+            int maxTries = 20;
+            boolean success = false;
             do {
                 Sleeper.sleep(1000);
                 clone.sendRequest();
@@ -138,9 +119,6 @@ public class TestReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToTrue 
     private void validations() {
 
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
-
-        // Validate Ticket Part of Package updated
-        TestReporter.assertTrue(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/partOfPackage").equals("true"), "Ticket Details partOfPackages was [ TRUE ] as expected");
 
         // Validate reservation
         validations.validateModificationBackend(3, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",

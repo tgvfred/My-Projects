@@ -32,11 +32,9 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
         setUseDvcResort(true);
         setUseNonZeroPoints(true);
         bookDvcReservation("TestMergeToTravelPlan_MCash", 1);
-        System.out.println(getFirstBooking().getRequest());
         makeCCPayment(removeCM(environment));
         setUseExistingValues(true);
         bookDvcReservation("TestMergeToTravelPlan_MCash", 2);
-        System.out.println(getSecondBooking().getRequest());
     }
 
     @AfterMethod(alwaysRun = true)
