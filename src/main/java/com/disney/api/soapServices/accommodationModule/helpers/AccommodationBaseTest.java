@@ -112,7 +112,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>();
     private ThreadLocal<String> externalRefNumber = new ThreadLocal<String>();
     public static String externalRefSource = "DPMSProperty";
-    private static String[][] roomTypeAndFacInfo = new String[30][6];
+    private static String[][] roomTypeAndFacInfo = new String[25][6];
     private Map<String, String> noPackageCodes = new HashMap<String, String>();
     public ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>();
     private ThreadLocal<HouseHold> hh = new ThreadLocal<HouseHold>();
