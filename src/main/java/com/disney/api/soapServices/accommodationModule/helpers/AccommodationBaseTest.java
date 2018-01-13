@@ -61,6 +61,7 @@ import com.disney.utils.dataFactory.ResortInfo;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.FacilityDatabase;
+import com.disney.utils.dataFactory.database.ProfileDatabase;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.DVCSalesDreams;
@@ -111,7 +112,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>();
     private ThreadLocal<String> externalRefNumber = new ThreadLocal<String>();
     public static String externalRefSource = "DPMSProperty";
-    private static String[][] roomTypeAndFacInfo = new String[35][6];
+    private static String[][] roomTypeAndFacInfo = new String[30][6];
     private Map<String, String> noPackageCodes = new HashMap<String, String>();
     public ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>();
     private ThreadLocal<HouseHold> hh = new ThreadLocal<HouseHold>();
@@ -1254,18 +1255,18 @@ public class AccommodationBaseTest extends BaseRestTest {
             roomTypeAndFacInfo[i][3] = rs.getValue("ROOM_DESC", i + 1);
             roomTypeAndFacInfo[i][4] = rs.getValue("RSRT_FAC_ID", i + 1);
             roomTypeAndFacInfo[i][5] = rs.getValue("LOC_ID", i + 1);
-            TestReporter.logStep("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
+            TestReporter.log("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
                     " **ROOM TYPE: " + roomTypeAndFacInfo[i][1] +
                     " **RESORT: " + roomTypeAndFacInfo[i][2] +
                     " **ROOM DESCRIPTION: " + roomTypeAndFacInfo[i][3] +
                     " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
                     " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
-            // System.out.println("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
-            // " **ROOM TYPE: " + roomTypeAndFacInfo[i][1] +
-            // " **RESORT: " + roomTypeAndFacInfo[i][2] +
-            // " **ROOM DESCRIPTION: " + roomTypeAndFacInfo[i][3] +
-            // " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
-            // " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
+            System.out.println("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
+                    " **ROOM TYPE: " + roomTypeAndFacInfo[i][1] +
+                    " **RESORT: " + roomTypeAndFacInfo[i][2] +
+                    " **ROOM DESCRIPTION: " + roomTypeAndFacInfo[i][3] +
+                    " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
+                    " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
             // }
         }
         setSendRequest(true);
@@ -1627,16 +1628,17 @@ public class AccommodationBaseTest extends BaseRestTest {
             if (isValid(getAddProfile()) && (getAddProfile() == true)) {
                 if (!isValid(getProfileData())) {
                     setProfileData(new HashMap<String, String>());
-                    getProfileData().put(PROFILE_ID, "191");
+                    getProfileData().put(PROFILE_ID, "600");
                 }
-                Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+
+                Database db = new Database(ProfileDatabase.getInfo(getEnvironment()));
                 Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getProfileInformationById(getProfileData().get(PROFILE_ID))));
                 TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that a profile is found in the DB for profile ID [" + getProfileData().get(PROFILE_ID) + "].");
-                getProfileData().put(PROFILE_CODE, rs.getValue("PROFILE_CODE"));
-                getProfileData().put(PROFILE_DESCRIPTION, rs.getValue("PROFILE_DESCRIPTION"));
-                getProfileData().put(PROFILE_TYPE, rs.getValue("PROFILE_TYPE"));
-                getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PROFILE_ROUTINGS_NAME"));
-                getProfileData().put(PROFILE_SELECTABLE, rs.getValue("PROFILE_SELECTABLE"));
+                getProfileData().put(PROFILE_CODE, rs.getValue("PRFL_VAL_CD"));
+                getProfileData().put(PROFILE_DESCRIPTION, rs.getValue("PRFL_VAL_DS"));
+                getProfileData().put(PROFILE_TYPE, rs.getValue("PRFL_TYP_NM"));
+                getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PRFL_RTE_TYP_NM"));
+                getProfileData().put(PROFILE_SELECTABLE, rs.getValue("SLCT_IN"));
                 getBook().setReservationDetail_Profiles(getProfileData());
             }
 

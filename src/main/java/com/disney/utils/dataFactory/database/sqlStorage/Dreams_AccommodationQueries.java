@@ -27,7 +27,7 @@ public class Dreams_AccommodationQueries extends Dreams {
                 + "and seq_nm not like ('%20%') "
                 + "and NUMROOMS > 100 "
                 + "and ROOM_DESC not like '%accessible%' "
-                + "and c.SEQ_NM like '% %' AND WRK_LOC_ID NOT IN ( 32100,32301, 66,555) "
+                + "and c.SEQ_NM like '% %' AND WRK_LOC_ID NOT IN ( 32100,32301, 66,555,63,597) "
                 + "and TXN_ACCT_CTR_ID is not null "
                 + "and TXN_ACCT_CTR_ID not in (77803, 10054) "
                 + "and WRK_LOC_NM not like ('%HOLA%')"
