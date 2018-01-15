@@ -96,21 +96,16 @@ public class TestCancel_Negative extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
     public void testCancel_groupBookingWithTickets() {
-        // groupBooking();
-        // addTickets();
-        try {
-            cancel();
-        } catch (Exception e) {
-
-        }
-        setIsWdtcBooking(true);
         setAddTickets(true);
+        setSendRequest(false);
         bookReservation();
+        getBook().sendRequest();
 
         TestReporter.logScenario("Test - Cancel - Group Booking With Tickets");
 
         Cancel cancel = new Cancel(environment);
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setCancelTickets("false");
         cancel.sendRequest();
         validateApplicationError(cancel, CANNOT_CANCEL_ACCOMMODATIONS_WITH_TICKETS);
     }
