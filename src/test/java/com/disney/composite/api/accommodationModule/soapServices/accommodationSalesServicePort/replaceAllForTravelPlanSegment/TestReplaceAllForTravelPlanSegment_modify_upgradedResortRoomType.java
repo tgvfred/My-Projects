@@ -26,7 +26,7 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(30);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());

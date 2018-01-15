@@ -8,9 +8,9 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ProcessContainerModifyBusinessEventHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.folioModule.paymentService.operations.PostCardPayment;
-import com.disney.utils.Environment;
+import com.disney.api.soapServices.folioModule.paymentService.helpers.CardPaymentHelper;
 import com.disney.utils.TestReporter;
+import com.disney.utils.tdm.pCard.CardTypes;
 
 public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPayment extends AccommodationBaseTest {
 
@@ -53,18 +53,8 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
 
         // validations
 
-        PostCardPayment pcp = new PostCardPayment(Environment.getBaseEnvironmentName(environment), "Visa-CreditCard");
-        pcp.setTravelPlanSegmentId(tps);
-        pcp.setTravelPlanId(tp);
-        pcp.setAmount("60");
-        pcp.setFolioId("138020007");
-
-        pcp.setBookingReference("DREAMS_TP", tp);
-        pcp.setExternalReference("DREAMS_TC", getBook().getTravelComponentId());
-        pcp.setRequestNodeValueByXPath("/Envelope/Body/postCardPayment/pmtInfo/cardAuthorizationInfoTO/retrievalReferenceNumber", "1234423434");
-        pcp.setLocationId(getLocationId());
-        pcp.setPartyId(getBook().getPartyId("1"));
-        pcp.sendRequest();
+        CardPaymentHelper payment = new CardPaymentHelper(getBook(), getHouseHold());
+        payment.makePaymentForIndividual(CardTypes.VISA);
 
         ProcessContainerModifyBusinessEventHelper helper = new ProcessContainerModifyBusinessEventHelper();
         String status = "UnEarned";
