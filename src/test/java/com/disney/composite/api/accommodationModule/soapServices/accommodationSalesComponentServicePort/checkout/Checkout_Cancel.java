@@ -53,13 +53,11 @@ public class Checkout_Cancel extends AccommodationBaseTest {
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
+
+        TestReporter.logScenario("Checkin One");
         checkInHelper = new CheckInHelper(getEnvironment(), getBook());
         checkInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
         // Checkin One and then Checkout One
-        TestReporter.logScenario("Checkin One");
-
-        checkInHelper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-
         TestReporter.logScenario("Checkout One");
         checkInHelper.checkOut(getLocationId());
 

@@ -14,6 +14,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentS
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Book;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.FindRoomForReservation;
@@ -139,23 +140,27 @@ public class CheckInHelper {
             throw new AutomationException("The book object cannot be null.");
         } else {
             setWs(ws);
-            if (ws instanceof ReplaceAllForTravelPlanSegment) {
-                setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
-                setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
-                setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
-                setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
-            } else if (ws instanceof Add) {
-                setTpId(((Add) ws).getTravelPlanId());
-                setTpsId(((Add) ws).getTravelPlanSegmentId());
-                setTcgId(((Add) ws).getTravelComponentGroupingId());
-                setTcId(((Add) ws).getTravelComponentId());
-            } else if (ws instanceof Book) {
-                setTpId(((Book) ws).getTravelPlanId());
-                setTpsId(((Book) ws).getTravelPlanSegmentId());
-                setTcgId(((Book) ws).getTravelComponentGroupingId());
-                setTcId(((Book) ws).getTravelComponentId());
-            } else {
-                throw new AutomationException("The WebService object is not supported by this class.");
+            try {
+                if (ws instanceof ReplaceAllForTravelPlanSegment) {
+                    setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
+                    setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
+                    setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
+                    setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
+                } else if (ws instanceof Add) {
+                    setTpId(((Add) ws).getTravelPlanId());
+                    setTpsId(((Add) ws).getTravelPlanSegmentId());
+                    setTcgId(((Add) ws).getTravelComponentGroupingId());
+                    setTcId(((Add) ws).getTravelComponentId());
+                } else if (ws instanceof Book) {
+                    setTpId(((Book) ws).getTravelPlanId());
+                    setTpsId(((Book) ws).getTravelPlanSegmentId());
+                    setTcgId(((Book) ws).getTravelComponentGroupingId());
+                    setTcId(((Book) ws).getTravelComponentId());
+                } else {
+                    throw new AutomationException("The WebService object is not supported by this class.");
+                }
+            } catch (XPathNotFoundException xpnfe) {
+                TestReporter.logAPI(true, "Booking did not have required values in response", ws);
             }
         }
         retrieveReservation();

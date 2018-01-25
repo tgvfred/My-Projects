@@ -1242,8 +1242,18 @@ public class AccommodationBaseTest extends BaseRestTest {
         isComo.set(new String());
         this.isComo.set(System.getenv("isComo") == null ? "false" : System.getenv("isComo"));
         setEnvironment(environment);
+
+        String facSql = "SELECT WRK_LOC_ID FROM TFDB_3.WRK_LOC WHERE HM_ENTRPRS_FAC_ID IS NOT NULL AND TXN_ACCT_CTR_ID IS NOT NULL AND HM_ENTRPRS_FAC_ID <> 1";
+        Database facDb = new Database(FacilityDatabase.getInfo("Load")); // Always execute in Load as Latest always has data issues
+        Recordset facRs = new Recordset(facDb.getResultSet(facSql));
+        String workLocations = "";
+        for (facRs.moveFirst(); facRs.hasNext(); facRs.moveNext()) {
+            workLocations = workLocations + facRs.getValue("WRK_LOC_ID") + " ,";
+        }
+
+        workLocations = workLocations.substring(0, workLocations.length() - 1);
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts()));
+        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts(workLocations)));
         for (int i = 0; i < roomTypeAndFacInfo.length; i++) {
 
             // Removing Pop Century from the config list until after 7.23 release - WWA 11/3/2017
@@ -1319,7 +1329,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                 helper.checkOut(locationId.get());
             }
 
-        } catch (Exception e) {
+        } catch (Exception | AssertionError e) {
         }
         try {
             if ((skipCancel == null) || (skipCancel.get() == null) || (skipCancel.get() != true)) {
@@ -1445,8 +1455,10 @@ public class AccommodationBaseTest extends BaseRestTest {
                     setPackageType("RSR");
                     getBook().setRoomDetailsRsrReservation("true");
                     try {
-                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
-                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                        if ((skipExternalRef.get() != null) && (skipExternalRef.get() != false)) {
+                            getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
+                            getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                        }
                     } catch (XPathNotFoundException e) {
                     }
                 } else if ((getAddCruiseDetails() != null) && (getAddCruiseDetails() == true)) {
@@ -1458,8 +1470,10 @@ public class AccommodationBaseTest extends BaseRestTest {
                 } else {
                     setPackageType("DRC RO");
                     try {
-                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
-                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                        if ((skipExternalRef.get() != null) && (skipExternalRef.get() != false)) {
+                            getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
+                            getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                        }
                     } catch (XPathNotFoundException e) {
                     }
                 }
@@ -1801,6 +1815,10 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void retrieveReservation() {
+        if (getBook() == null || getBook().getTravelPlanId().isEmpty()) {
+            return;
+        }
+
         Sleeper.sleep(5000);
         retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
         // retrieve.set(new Retrieve(getEnvironment(), "Main"));

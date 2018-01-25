@@ -6,9 +6,9 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
+import com.disney.api.soapServices.groupsModule.applicationError.GroupsErrorCodes;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -288,7 +288,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         getBook().sendRequest();
 
         TestReporter.assertTrue(getBook().getFaultString().trim().contains(faultString.trim()), "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(getBook(), LiloSystemErrorCode.UNEXPECTED_ERROR);
+        validateApplicationError(getBook(), GroupsErrorCodes.GROUP_CODE_DOES_NOT_EXIST);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative" })
@@ -411,7 +411,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
             getBook().setTravelPlanSegementId(rs.getValue("TPS_ID"));
             getBook().sendRequest();
             TestReporter.assertTrue(getBook().getFaultString().trim().contains(faultString.trim()), "Verify that the faultstring [" + getBook().getFaultString() + "] is that which is expected [" + faultString + "].");
-            validateApplicationError(getBook(), AccommodationErrorCode.INVALID_REQUEST);
+            validateApplicationError(getBook(), AccommodationErrorCode.INVALID_RES_MODIFY_REQUEST);
         }
     }
 }

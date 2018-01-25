@@ -33,6 +33,8 @@ public class TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne extends Acc
         setValues(getEnvironment());
         locVar = environment; // cm
         setAddRoom(true);
+        setIsWdtcBooking(true);
+        setMywPackageCode(true);
         bookReservation();
     }
 
@@ -65,16 +67,16 @@ public class TestCheckout_roomOnly_multAccomm_checkInOne_checkoutOne extends Acc
         checkout.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         checkout.setExternalReferenceType(refType);
         checkout.setExternalReferenceNumber(refNumber);
-        checkout.setExternalReferenceSource(refSource);
+        checkout.setExternalReferenceSource("Accovia");
         checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         checkout.setCheckoutDate(Randomness.generateCurrentXMLDate());
         checkout.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
         checkout.sendRequest();
 
+        TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "Validate checkout received no errors", checkout);
         String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
         validateRIM(assignOwnerId);
         additionalValidations(assignOwnerId);
-        validateChargeGroupsChargesAndFolio();
     }
 
     private void additionalValidations(String assignOwnerId) {

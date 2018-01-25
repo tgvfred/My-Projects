@@ -28,6 +28,8 @@ public class TestCheckout_bundle extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
+        setIsWdtcBooking(true);
+        setMywPackageCode(true);
         bookReservation();
     }
 
@@ -85,7 +87,7 @@ public class TestCheckout_bundle extends AccommodationBaseTest {
         checkout.setTravelComponentGroupingId(tcgId);
         checkout.setExternalReferenceType(refType);
         checkout.setExternalReferenceNumber(refNumber);
-        checkout.setExternalReferenceSource(refSource);
+        checkout.setExternalReferenceSource("Accovia");
         checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         checkout.setCheckoutDate(checkoutDate);
         checkout.setLocationId(locationId);

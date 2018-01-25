@@ -12,6 +12,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType extends AccommodationBaseTest {
@@ -46,15 +47,15 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType() {
-        // .sleep(3000);
+
         upgrade();
+        Sleeper.sleep(5000);
         setValues("80010385", "CA", "51");
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
-        ;
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying a booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();

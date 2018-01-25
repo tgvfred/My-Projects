@@ -1,6 +1,7 @@
 package com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.AccommodationSalesComponentService;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.XMLTools;
 
 public class Checkout extends AccommodationSalesComponentService {
@@ -88,6 +89,10 @@ public class Checkout extends AccommodationSalesComponentService {
 
     public void setExternalReferenceSource(String value) {
         setRequestNodeValueByXPath("/Envelope/Body/checkout/request/externalReferenceDetail/externalReferenceSource", value);
+    }
+
+    public void removeExternalReference() {
+        setRequestNodeValueByXPath("/Envelope/Body/checkout/request/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
     }
 
     public void setCheckoutDate(String value) {
