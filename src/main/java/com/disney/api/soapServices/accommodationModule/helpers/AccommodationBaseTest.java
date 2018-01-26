@@ -1455,10 +1455,10 @@ public class AccommodationBaseTest extends BaseRestTest {
                     setPackageType("RSR");
                     getBook().setRoomDetailsRsrReservation("true");
                     try {
-                        if ((skipExternalRef.get() != null) && (skipExternalRef.get() != false)) {
-                            getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
-                            getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
-                        }
+                        // if ((skipExternalRef.get() != null) && (skipExternalRef.get() != false)) {
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                        // }
                     } catch (XPathNotFoundException e) {
                     }
                 } else if ((getAddCruiseDetails() != null) && (getAddCruiseDetails() == true)) {
@@ -1470,10 +1470,10 @@ public class AccommodationBaseTest extends BaseRestTest {
                 } else {
                     setPackageType("DRC RO");
                     try {
-                        if ((skipExternalRef.get() != null) && (skipExternalRef.get() != false)) {
-                            getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
-                            getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
-                        }
+                        // if ((skipExternalRef.get() != null) && (skipExternalRef.get() != false)) {
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                        // }
                     } catch (XPathNotFoundException e) {
                     }
                 }

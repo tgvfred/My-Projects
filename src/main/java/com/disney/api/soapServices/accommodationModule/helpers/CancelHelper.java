@@ -982,7 +982,7 @@ public class CancelHelper {
                 + "from sales_tp.tp a "
                 + "where a.tp_id = '" + tpId + "'";
         Database db = new OracleDatabase(environment, Database.SALESTP);
-        Recordset rs = new Recordset(db.getResultSet(sql));
+        Recordset rs = new Recordset(db.tryGetResultSetUntil(sql, 12, 10));
         TestReporter.softAssertTrue(rs.getRowCount() > 0, "Verify that a TPV3 record was created.");
     }
 
@@ -1007,5 +1007,17 @@ public class CancelHelper {
         Database db = new OracleDatabase(environment, Database.SALESTP);
         Recordset rs = new Recordset(db.getResultSet(sql));
         TestReporter.softAssertTrue(rs.getRowCount() > 0, "Verify that a TPV3 sales order record was created.");
+    }
+
+    public void verifyTPV3SalesOrderStatusByType(String tpId, String salesOrderType, String expectedStatus) {
+        TestReporter.logStep("Verify TPV3 sales order record created.");
+        String sql = "select * "
+                + " from sales_tp.sls_ord a, sales_tp.SLS_ORD_ITEM b "
+                + " where a.tp_id = '" + tpId + "'"
+                + " and SLS_ORD_ITEM_TYP_NM ='" + salesOrderType + "'";
+        Database db = new OracleDatabase(environment, Database.SALESTP);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        TestReporter.softAssertTrue(rs.getRowCount() > 0, "Verify that a TPV3 sales order item record was created.");
+        TestReporter.softAssertTrue(rs.getValue("SLS_ORD_ITEM_STS_NM").equalsIgnoreCase(expectedStatus), "Validate Sales Order status is [ " + expectedStatus + " ]. DB status [ " + rs.getValue("SLS_ORD_ITEM_STS_NM") + " ]");
     }
 }
