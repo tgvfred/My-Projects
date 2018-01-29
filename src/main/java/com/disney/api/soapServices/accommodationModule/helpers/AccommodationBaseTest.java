@@ -2188,7 +2188,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     private void addDining() {
-        diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), hh.get());
+        diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         diningRes.setTravelPlanId(getBook().getTravelPlanId());
         diningRes.setFacilityName("Fort Wilderness Pavilion");
         diningRes.setProductName("Mickey's Backyard BBQ - Premium Seating");

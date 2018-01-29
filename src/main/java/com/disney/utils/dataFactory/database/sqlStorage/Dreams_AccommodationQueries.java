@@ -39,7 +39,7 @@ public class Dreams_AccommodationQueries extends Dreams {
     }
 
     public static String getRoomTypesWithHighRoomCounts(String workLocationIds) {
-
+        String ids = workLocationIds.replace(",66 ", "");
         return "select NUMROOMS, ROOM_TYPE, c.SEQ_NM RESORT, ROOM_DESC, c.RSRT_FAC_ID , WRK_LOC_ID "
                 + "from( select NUMROOMS, b.RSRC_INVTRY_TYP_CD ROOM_TYPE, FAC_ID, RM_DS ROOM_DESC "
                 + "from( select count(a.rsrc_id) NUMROOMS, a.RSRC_INVTRY_TYP_ID  TYPE_ID, a.RSRT_FAC_ID FAC_ID, a.RM_DS "
@@ -55,9 +55,9 @@ public class Dreams_AccommodationQueries extends Dreams {
                 + "and seq_nm not like ('%20%') "
                 + "and NUMROOMS > 100 "
                 + "and ROOM_DESC not like '%accessible%' "
-                + "and c.SEQ_NM like '% %' AND WRK_LOC_ID IN ( " + workLocationIds + ") "
+                + "and c.SEQ_NM like '% %' AND WRK_LOC_ID IN ( " + ids + ") "
                 + "and TXN_ACCT_CTR_ID is not null "
-                + "and TXN_ACCT_CTR_ID not in (77803, 10054) "
+                + "and TXN_ACCT_CTR_ID not in (77803, 10054,66) "
                 + "and WRK_LOC_NM not like ('%HOLA%')"
                 + "and HM_RSRT_FAC_ID = e.FAC_ID "
                 + "and c.RSRT_FAC_ID not in (select unique(a.DVC_RSRT_FAC_ID) from rsrc_inv.dvc_rm_typ_xref a ) "

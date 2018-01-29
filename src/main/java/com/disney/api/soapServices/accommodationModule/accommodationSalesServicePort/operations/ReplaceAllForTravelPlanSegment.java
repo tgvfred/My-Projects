@@ -595,11 +595,14 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
             throw new AutomationException("The phone object cannot be null");
         }
         setRequestNodeValueByXPath(baseXpath + "/phoneDetails/locatorId", phone.getLocatorId());
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/guestLocatorId", "0");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/primary", "true");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/deviceType", "HANDSET");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/extension", "0");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/number", phone.getNumber());
+        try {
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/guestLocatorId", "0");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/primary", "true");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/deviceType", "HANDSET");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/extension", "0");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/number", phone.getNumber());
+        } catch (XPathNotFoundException e) {
+        }
     }
 
     public void setGuestAddress(String baseXpath, Address address) {
