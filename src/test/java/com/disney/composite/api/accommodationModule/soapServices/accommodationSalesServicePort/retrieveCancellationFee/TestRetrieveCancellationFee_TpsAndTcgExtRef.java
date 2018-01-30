@@ -35,7 +35,7 @@ public class TestRetrieveCancellationFee_TpsAndTcgExtRef extends AccommodationBa
         String tcgId = getBook().getTravelComponentGroupingId();
         String idLevel = "TravelPlanSegment";
         String idLevelTcg = "TravelComponentGrouping";
-        String refType = getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceType");
+        // String refType = getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceType");
         String refNum = getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber");
         String refSource = getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource");
 
@@ -49,7 +49,7 @@ public class TestRetrieveCancellationFee_TpsAndTcgExtRef extends AccommodationBa
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/id", tcgId);
         fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails[2]/identityLevel", idLevelTcg);
         fee.setReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
-        fee.setReferenceType(refType);
+        fee.setReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
         fee.setReferenceNumber(refNum);
         fee.setReferenceSource(refSource);
         fee.sendRequest();

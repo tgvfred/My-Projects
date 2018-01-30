@@ -3,6 +3,12 @@ package com.disney.api.soapServices.accommodationModule.accommodationSalesServic
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.utils.XMLTools;
 
+/**
+ * @deprecated deprecated as Add was only used by DVC and has now moved to
+ *             {@link com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.AddAccommodation}
+ * @author phlej001
+ *
+ */
 @Deprecated
 public class Add extends AccommodationSalesServicePort {
 
@@ -60,7 +66,7 @@ public class Add extends AccommodationSalesServicePort {
     }
 
     /**
-     * 
+     *
      * @summary Method to set the request departure date - modified to handle 2 scenarios
      *          1) a string-number is passed as the days out (EX: "0")
      *          2) a string-function is passed as the days out (EX: "fx:GetDate; Daysout:0")
@@ -70,7 +76,7 @@ public class Add extends AccommodationSalesServicePort {
      *            - string used to define the days out in the request; see summary for more details
      * @throws NA
      * @return NA
-     * 
+     *
      */
     public void setDeptDate(String deptDateDaysOut) {
         if (deptDateDaysOut.contains("fx:GetDate; Daysout:")) {
@@ -81,7 +87,7 @@ public class Add extends AccommodationSalesServicePort {
     }
 
     /**
-     * 
+     *
      * @summary Method to set the request arrival date - modified to handle 2 scenarios
      *          1) a string-number is passed as the days out (EX: "0")
      *          2) a string-function is passed as the days out (EX: "fx:GetDate; Daysout:0")
@@ -91,7 +97,7 @@ public class Add extends AccommodationSalesServicePort {
      *            - string used to define the days out in the request; see summary for more details
      * @throws NA
      * @return NA
-     * 
+     *
      */
     public void setArrivalDate(String arrivalDaysOut) {
         if (arrivalDaysOut.contains("fx:GetDate; Daysout:")) {

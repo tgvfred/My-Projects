@@ -30,6 +30,7 @@ public class TestAutoReinstate_roomOnly_cancelFeeWaived extends AccommodationBas
         setValues(getEnvironment());
         isComo.set("false");
         bookReservation();
+        Sleeper.sleep(60000);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate" })

@@ -105,6 +105,7 @@ public class TestOverrideAccommodationRates_TA extends AccommodationBaseTest {
         oar.setOverrideReason("RTPRTSIZE");
         oar.setLocationId(locationId);
         oar.sendRequest();
+        Sleeper.sleep(5000);
 
         Recordset rs5 = new Recordset(db.getResultSet(sql1));
         Recordset rs6 = new Recordset(db.getResultSet(sql2));

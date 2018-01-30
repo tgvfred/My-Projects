@@ -31,7 +31,7 @@ public class TestShare_twoTcg_differentStartAndEndDates extends AccommodationBas
 
         setEnvironment(environment);
         isComo.set("false");
-        setDaysOut(0);
+        setDaysOut(40);
         setArrivalDate(getDaysOut());
         setNights(2);
         setDepartureDate(getNights());
@@ -42,7 +42,7 @@ public class TestShare_twoTcg_differentStartAndEndDates extends AccommodationBas
         firstTC = getBook().getTravelComponentId();
         firstTPS = getBook().getTravelPlanSegmentId();
         captureFirstOwnerId();
-        setDaysOut(1);
+        setDaysOut(41);
         setArrivalDate(getDaysOut());
         setNights(2);
         setDepartureDate(getNights());

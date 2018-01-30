@@ -33,7 +33,7 @@ public class TestReinstate_tpsTcgOnlyWithInventoryOverrideReason extends Accommo
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -48,7 +48,7 @@ public class TestReinstate_tpsTcgOnlyWithInventoryOverrideReason extends Accommo
     public void Test_Reinstate_tpsTcgOnlyWithInventoryOverrideReason() {
 
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
-
+        Sleeper.sleep(3000);
         Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -56,7 +56,7 @@ public class TestReinstate_tpsTcgOnlyWithInventoryOverrideReason extends Accommo
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
 
         cancelNumber = cancel.getCancellationNumber();
-
+        Sleeper.sleep(3000);
         reinstate = new Reinstate(env, "Main_2");
         reinstate.setTravelComponentGroupingId(TCG);
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
@@ -77,14 +77,14 @@ public class TestReinstate_tpsTcgOnlyWithInventoryOverrideReason extends Accommo
         reinstateRsn = reinstate.getRequestNodeValueByXPath("/Envelope/Body/reinstate/request/reinstateReasonCode");
         int numBookedComponents_reinstate = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
         TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate, "Verify that the number of booked components [" + numBookedComponents_reinstate + "] is that which is expected [" + numBookedComponents_book + "].");
-
+        Sleeper.sleep(3000);
         validations();
         // cancel and reinstate in order to clone on the old service.
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
+        Sleeper.sleep(3000);
         reinstate.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         // reinstate.sendRequest();
@@ -179,7 +179,7 @@ public class TestReinstate_tpsTcgOnlyWithInventoryOverrideReason extends Accommo
         int numExpectedRecords11 = 1;
         // reinstateHelper.validateTPV3SalesOrderAccomm(numExpectedRecords11, getArrivalDate(), getDepartureDate());
 
-        reinstateHelper.validateTCFee(true, 1);
+        reinstateHelper.validateTCFee(true, 0);
 
         int numExpectedRecords9 = 1;
         reinstateHelper.validateRIM(numExpectedRecords9, getRoomTypeCode());

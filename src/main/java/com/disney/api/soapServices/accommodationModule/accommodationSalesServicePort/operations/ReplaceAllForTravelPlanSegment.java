@@ -595,11 +595,14 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
             throw new AutomationException("The phone object cannot be null");
         }
         setRequestNodeValueByXPath(baseXpath + "/phoneDetails/locatorId", phone.getLocatorId());
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/guestLocatorId", "0");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/primary", "true");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/deviceType", "HANDSET");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/extension", "0");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/number", phone.getNumber());
+        try {
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/guestLocatorId", "0");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/primary", "true");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/deviceType", "HANDSET");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/extension", "0");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/number", phone.getNumber());
+        } catch (XPathNotFoundException e) {
+        }
     }
 
     public void setGuestAddress(String baseXpath, Address address) {
@@ -1121,7 +1124,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setTaxExemptDetailCertificateNumber(String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+            try {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request", BaseSoapCommands.ADD_NODES.commandAppend("taxExemptDetail/taxExemptCertificateNumber"));
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+            }
         } else {
             throw new AutomationException("The tax exempt detail certificate number cannot be null or empty");
         }
@@ -1129,7 +1137,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setTaxExemptDetailType(String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+            try {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail", BaseSoapCommands.ADD_NODE.commandAppend("taxExemptType"));
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+            }
         } else {
             throw new AutomationException("The tax exempt detail type cannot be null or empty");
         }
@@ -2109,5 +2122,19 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         // setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestReferenceDetails"));
         tempXpath = tempXpath + "/guestReferenceDetails";
         addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, base.getAdditionalGuests().get(base.getAdditionalGuests().size()), tempXpath);
+    }
+
+    public void setCruiseDetails(String shipID, String voyageNumber) {
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request", BaseSoapCommands.ADD_NODE.commandAppend("cruiseDetail"));
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail", BaseSoapCommands.ADD_NODE.commandAppend("shipId"));
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail", BaseSoapCommands.ADD_NODE.commandAppend("voyageNumber"));
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail/shipId", shipID);
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail/voyageNumber", voyageNumber);
+
+    }
+
+    public void setDclGuestId(String id) {
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelPlanGuest/dclGuestId", id);
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/dclGuestId", id);
     }
 }

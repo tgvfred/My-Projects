@@ -59,6 +59,8 @@ public class TestCalculateSharedRates_TwoAccommodationWDTC_MultiDayPartial exten
         calculate.setPeriodED(book1.getEndDate());
         calculate.setPeriodSD2(getArrivalDate());
         calculate.setPeriodED2(getDepartureDate());
+        calculate.setPackageCode(getPackageCode());
+        calculate.setPackageCode2(getPackageCode());
         calculate.sendRequest();
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", calculate);
 

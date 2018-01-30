@@ -34,6 +34,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setAddTravelAgency(true);
         isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();

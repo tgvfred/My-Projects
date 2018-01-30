@@ -21,7 +21,7 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
     public void setup(String environment) {
         setEnvironment(environment);
         isComo.set("false");
-        setDaysOut(0);
+        setDaysOut(30);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
@@ -46,7 +46,6 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel request.", ac);
 
         PaymentSettlementHelper pay = new PaymentSettlementHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook(), getHouseHold());
-
         pay.makeFullPayment();
 
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);

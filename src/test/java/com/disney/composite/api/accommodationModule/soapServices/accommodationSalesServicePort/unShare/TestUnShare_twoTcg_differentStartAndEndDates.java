@@ -18,8 +18,10 @@ import com.disney.utils.dataFactory.database.SQLValidationException;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationBaseTest {
+
     private UnShare unshare;
     private Share share;
+
     private String firstOwnerId;
     private String secondOwnerId;
     private String firstTCG;
@@ -29,9 +31,44 @@ public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationB
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
+
     public void setup(String environment) {
         setEnvironment(environment);
         setDaysOut(0);
+        setNights(2);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getNights());
+        setValues(getEnvironment());
+        isComo.set("true");
+        setSendRequest(false);
+        // bookReservation();
+        // getBook().sendRequest();
+        // TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        /*
+         * firstTCG = getBook().getTravelComponentGroupingId();
+         * firstTPS = getBook().getTravelPlanSegmentId();
+         * firstTC = getBook().getTravelComponentId();
+         */
+        // captureFirstOwnerId();
+
+        // book second reservation.
+        setDaysOut(1);
+        setNights(2);
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getNights());
+        isComo.set("true");
+        setSendRequest(false);
+        // bookReservation();
+        // getBook().sendRequest();
+        // TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        // captureSecondOwnerId();
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare" })
+    public void Test_unShare_twoTcgs_differentStartAndEndDates() {
+
+        setEnvironment(environment);
+        setDaysOut(30);
         setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -47,7 +84,7 @@ public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationB
         captureFirstOwnerId();
 
         // book second reservation.
-        setDaysOut(1);
+        setDaysOut(31);
         setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -56,12 +93,10 @@ public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationB
         bookReservation();
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
-        captureSecondOwnerId();
-    }
+        // captureSecondOwnerId();
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare" })
-    public void Test_unShare_twoTcgs_differentStartAndEndDates() {
         share = new Share(environment, "Main_oneTcg");
+        // share.setServiceURL("http://10.81.82.65:8080/Accommodation/AccommodationSalesServicePort");
         share.setTravelComponentGroupingId(firstTCG);
         share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -76,6 +111,8 @@ public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationB
         unshare.setTravelComponentGroupingId(firstTCG);
         unshare.setLocationId(getLocationId());
 
+        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
+
         // Add a wait to avoid async issues
         Sleeper.sleep(5000);
 
@@ -87,11 +124,11 @@ public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationB
         validateResponse();
         validations();
 
-        share.sendRequest();
+        // share.sendRequest();
         if (Environment.isSpecialEnvironment(environment)) {
             UnShare clone = (UnShare) unshare.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
+            // clone.sendRequest();
             if (!clone.getResponseStatusCode().equals("200")) {
                 TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
             }
@@ -100,6 +137,7 @@ public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationB
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(unshare, true), "Validating Response Comparison");
         }
+
     }
 
     public void validateResponse() {

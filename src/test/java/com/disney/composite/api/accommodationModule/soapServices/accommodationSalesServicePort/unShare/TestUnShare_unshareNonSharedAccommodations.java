@@ -31,7 +31,7 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -45,7 +45,7 @@ public class TestUnShare_unshareNonSharedAccommodations extends AccommodationBas
         captureFirstOwnerId();
 
         // book second reservation.
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());

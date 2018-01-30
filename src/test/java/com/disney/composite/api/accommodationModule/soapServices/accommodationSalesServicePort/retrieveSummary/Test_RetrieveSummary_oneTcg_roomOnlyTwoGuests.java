@@ -4,15 +4,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyTwoGuests extends AccommodationBaseTest {
-
-    private ReplaceAllForTravelPlanSegment book;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -25,12 +22,11 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoGuests extends Accommodation
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(environment);
+        setSendRequest(false);
         bookReservation();
-
-        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "ROTwoAdults");
-        book.sendRequest();
-        book.getResponse();
-        TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify that no error occurred booking a res: " + book.getFaultString(), book);
+        getBook().addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, new Guest());
+        getBook().addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, new Guest());
+        getBook().sendRequest();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
@@ -43,11 +39,11 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoGuests extends Accommodation
         // retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", book.getTravelComponentGroupingId());
         // // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
         // } else {
-        retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+        retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         // }
 
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + retrieve.getFaultString(), retrieve);
 
         TestReporter.logStep("Verify two guestReferences nodes are returned");
         TestReporter.assertTrue(retrieve.getGuestReferenceDetails("1") != null && retrieve.getGuestReferenceDetails("2") != null, "Two guestReferenceDetails nodes found! ");

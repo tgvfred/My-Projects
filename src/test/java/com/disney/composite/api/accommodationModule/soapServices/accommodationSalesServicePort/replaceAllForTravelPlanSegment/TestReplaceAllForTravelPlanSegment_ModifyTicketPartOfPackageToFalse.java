@@ -31,10 +31,13 @@ public class TestReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToFalse
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setIsWdtcBooking(true);
+        setMywPackageCode(true);
         setAddTickets(true);
         isComo.set("true");
         setSendRequest(false);
         bookReservation();
+        Sleeper.sleep(5000);
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/ticketDetails/partOfPackage", "true");
         getBook().sendRequest();
     }
@@ -50,6 +53,10 @@ public class TestReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToFalse
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
+        setIsWdtcBooking(false);
+        setMywPackageCode(false);
+
+        bookReservation();
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/ticketDetails/partOfPackage", "false");
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
@@ -80,6 +87,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyTicketPartOfPackageToFalse
 
         validations();
 
+        Sleeper.sleep(5000);
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
             ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();

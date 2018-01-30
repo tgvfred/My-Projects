@@ -57,7 +57,6 @@ public class TestReplaceAllForTravelPlanSegment_modifyTravelStatus extends Accom
 
     private void validations() {
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
-        System.out.println();
         // Validate reservation
         validations.validateModificationBackend(2, "Checked In", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());

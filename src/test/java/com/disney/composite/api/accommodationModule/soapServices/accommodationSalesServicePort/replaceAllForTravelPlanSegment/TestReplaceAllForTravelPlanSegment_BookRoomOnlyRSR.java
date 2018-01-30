@@ -24,7 +24,6 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyRSR extends Accommod
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
-        isComo.set("true");
         setIsRSR(true);
     }
 

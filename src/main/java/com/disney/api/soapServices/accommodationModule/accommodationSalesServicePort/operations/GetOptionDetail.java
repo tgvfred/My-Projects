@@ -4,8 +4,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.utils.XMLTools;
 
 public class GetOptionDetail extends AccommodationSalesServicePort {
-    private String name, name2;
-
     public GetOptionDetail(String environment, String scenario) {
         super(environment);
 

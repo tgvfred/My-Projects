@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.mslt.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.1.02</version>
+	<version>1.1.08</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -13,20 +13,21 @@
 	    </repository>
   	</distributionManagement>	
   	<properties>
-	    <apiUtilsSoap.version>1.1.01</apiUtilsSoap.version>
+	    <apiUtilsSoap.version>1.1.06</apiUtilsSoap.version>
 	    <activity.version>1.1.00</activity.version>  
 	    <admission.version>1.1.00</admission.version>    
 	    <dining.version>1.1.01</dining.version>    
 	    <dvcCorp.version>1.1.00</dvcCorp.version>     
 	    <dvcPoints.version>1.1.00</dvcPoints.version>     
-	    <dvcSales.version>1.1.02</dvcSales.version>     
+	    <dvcSales.version>1.1.04</dvcSales.version>     
 	    <eai.version>1.1.00</eai.version>      
 	    <facility.version>1.1.00</facility.version>      
-	    <folio.version>1.1.00</folio.version>      
+	    <folio.version>1.1.01</folio.version>      
 	    <guestCelebrations.version>1.1.00</guestCelebrations.version>  
 	    <groups.version>1.1.00</groups.version>
 	    <party.version>1.1.00</party.version>    
-	    <pricing.version>1.1.00</pricing.version>      
+	    <pricing.version>1.1.00</pricing.version>  
+	    <profile.version>1.1.01</profile.version>        
 	    <resource.version>1.1.00</resource.version>           
 	    <travelplan.version>1.1.00</travelplan.version>           
 	    <travelplanSegment.version>1.1.00</travelplanSegment.version>        
@@ -44,19 +45,16 @@
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Activity</artifactId>
 			<version>${activity.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Admission</artifactId>
 			<version>${admission.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Dining</artifactId>
 			<version>${dining.version}</version>
-			<scope>provided</scope>
 		</dependency>	
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
@@ -86,55 +84,51 @@
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Facility</artifactId>
 			<version>${facility.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Folio</artifactId>
 			<version>${folio.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>GuestCelebration</artifactId>
 			<version>${guestCelebrations.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Groups</artifactId>
 			<version>${groups.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Party</artifactId>
 			<version>${party.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Pricing</artifactId>
 			<version>${pricing.version}</version>
-			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>Profile</artifactId>
+			<version>${profile.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Resource</artifactId>
 			<version>${resource.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>TravelPlan</artifactId>
 			<version>${travelplan.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>TravelPlanSegment</artifactId>
 			<version>${travelplanSegment.version}</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>	
 	<build>

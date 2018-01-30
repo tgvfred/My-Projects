@@ -9,6 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
@@ -34,6 +35,7 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setNights(2);
         bookReservation();
+        Sleeper.sleep(60000);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share", "negative" })

@@ -28,7 +28,7 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
         // to invoke lower levels of reporting
         setEnvironment(environment);
         isComo.set("false");
-        daysOut.set(0);
+        daysOut.set(30);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));

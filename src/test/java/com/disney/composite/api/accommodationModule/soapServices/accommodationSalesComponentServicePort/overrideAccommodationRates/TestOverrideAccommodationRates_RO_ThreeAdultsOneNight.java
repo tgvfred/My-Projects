@@ -9,7 +9,6 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.OverrideAccommodationRatesRequest;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
@@ -17,9 +16,10 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class TestOverrideAccommodationRates_RO_ThreeAdultsOneNight extends AccommodationBaseTest {
-    private ReplaceAllForTravelPlanSegment book;
+    // private ReplaceAllForTravelPlanSegment book;
 
     Map<String, String> allPairs = new HashMap<String, String>();
     Map<String, String> allPairs2 = new HashMap<String, String>();
@@ -38,9 +38,11 @@ public class TestOverrideAccommodationRates_RO_ThreeAdultsOneNight extends Accom
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(environment), "ROThreeAdults");
-        book.sendRequest();
-
+        setSendRequest(false);
+        bookReservation();
+        getBook().addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, new Guest());
+        getBook().addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, new Guest());
+        getBook().sendRequest();
         isComo.set("false");
 
     }
@@ -48,9 +50,9 @@ public class TestOverrideAccommodationRates_RO_ThreeAdultsOneNight extends Accom
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates" })
     public void testOverrideAccommodationRates_RO_ThreeAdultsOneNight() {
 
-        String tp_id1 = book.getTravelPlanId();
+        String tp_id1 = getBook().getTravelPlanId();
         String tp_id2;
-        String tcg_id = book.getTravelComponentGroupingId();
+        String tcg_id = getBook().getTravelComponentGroupingId();
 
         // Book room only booking (1 night, 1 adult)
         // Capture charge ids, charge amounts, charge items ids, charge item amounts, folio item ids, folio item amounts (to be used in a later validation)
@@ -125,6 +127,7 @@ public class TestOverrideAccommodationRates_RO_ThreeAdultsOneNight extends Accom
         oar.setLocationId(locationId);
 
         oar.sendRequest();
+        Sleeper.sleep(5000);
 
         // updated recordset after request is sent
         Recordset rs5 = new Recordset(db.getResultSet(sql1));

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestReplaceAllForTravelPlanSegment_ModifyToNonDisney" parallel="methods" thread-count="20">
-	<parameter name="environment" value="latest_CM" />
+	<parameter name="environment" value="latest" />
+	<parameter name="localHostList" value="AccommodationSalesServicePort" />
+	<parameter name="localHostUrlList" value="http://10.81.82.65:8080/Accommodation/AccommodationSalesServicePort" />
+	
 	<test name="TestReplaceAllForTravelPlanSegment_ModifyToNonDisney">
 		<!-- <groups>
 			<run>

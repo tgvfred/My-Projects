@@ -19,6 +19,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly extends Accommodati
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
+        TestReporter.setDebugLevel(2);
         setEnvironment(environment);
         setDaysOut(0);
         setNights(1);

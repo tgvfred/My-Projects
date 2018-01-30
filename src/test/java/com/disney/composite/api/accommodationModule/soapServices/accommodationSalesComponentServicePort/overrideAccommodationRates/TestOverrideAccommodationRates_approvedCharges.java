@@ -118,6 +118,7 @@ public class TestOverrideAccommodationRates_approvedCharges extends Accommodatio
         oar.setLocationId(locationId);
         oar.sendRequest();
 
+        Sleeper.sleep(5000);
         Recordset rs5 = new Recordset(db.getResultSet(sql1));
         Recordset rs6 = new Recordset(db.getResultSet(sql2));
         Recordset rs7 = new Recordset(db.getResultSet(sql3));

@@ -7,8 +7,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
-import com.disney.utils.PackageCodes_RSR;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
@@ -35,14 +33,10 @@ public class TestShare_twoTcg_differentPackageCodes_Negative extends Accommodati
 
         firstTCG = getBook().getTravelComponentGroupingId();
 
-        PackageCodes_RSR pkg = new PackageCodes_RSR();
-        String packageCode = pkg.retrievePackageCode(getEnvironment(), String.valueOf(getDaysOut()),
-                getLocationId(), "RSR", "", getResortCode(), getRoomTypeCode(), "WDW RSR CR");
-
         setSendRequest(false);
+        setIsRSR(true);
         bookReservation();
-        getBook().setRoomDetailsPackageCode(packageCode);
-        getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
+
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
     }
