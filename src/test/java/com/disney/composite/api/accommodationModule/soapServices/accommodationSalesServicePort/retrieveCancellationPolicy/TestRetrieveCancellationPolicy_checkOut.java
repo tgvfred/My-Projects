@@ -4,13 +4,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckIn;
-import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckOut;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveCancellationPolicy;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
@@ -37,22 +35,9 @@ public class TestRetrieveCancellationPolicy_checkOut extends AccommodationBaseTe
 
         String faultString = "cannot calculate Cancel fee : Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
-        CheckIn checkIn = new CheckIn(environment, "Main");
-        try {
-            checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        } catch (XPathNotFoundException e) {
-            checkIn.setRequestNodeValueByXPath("/Envelope/Body/checkIn/request", BaseSoapCommands.ADD_NODE.commandAppend("travelComponentGroupingId"));
-            checkIn.setRequestNodeValueByXPath("/Envelope/Body/checkIn/request/travelComponentGroupingId", getBook().getTravelComponentGroupingId());
-        }
-        checkIn.setRequestNodeValueByXPath("/Envelope/Body/checkIn/request/checkInGuestDetails/guestId", BaseSoapCommands.REMOVE_NODE.toString());
-        checkIn.sendRequest();
-
-        CheckOut check = new CheckOut(environment, "Check Out");
-        check.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        check.setRequestNodeValueByXPath("/Envelope/Body/checkOut/request/locationId", BaseSoapCommands.REMOVE_NODE.toString());
-        check.sendRequest();
-
-        TestReporter.logAPI(!check.getResponseStatusCode().equals("200"), "An error occurred when sending request", check);
+        CheckInHelper helper = new CheckInHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook());
+        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        helper.checkOut(getLocationId());
 
         RetrieveCancellationPolicy retrieve = new RetrieveCancellationPolicy(environment, "Main");
         retrieve.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());

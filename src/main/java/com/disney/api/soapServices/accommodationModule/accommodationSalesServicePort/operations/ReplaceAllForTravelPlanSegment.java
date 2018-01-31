@@ -1992,7 +1992,15 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     // *********************************************************************************************************
 
     public String getTravelComponentGroupingId() {
-        return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
+        try {
+            return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
+        } catch (XPathNotFoundException e) {
+            if (!getFaultString().isEmpty()) {
+                TestReporter.logAPI(true, "Error in booking response: " + getFaultString(), this);
+            }
+            System.out.println(getResponse());
+            throw new AutomationException("No travelcomponent grouping ID found in response");
+        }
     }
 
     public String getTravelComponentId() {
@@ -2004,11 +2012,27 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public String getTravelPlanId() {
-        return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
+        try {
+            return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
+        } catch (XPathNotFoundException e) {
+            if (!getFaultString().isEmpty()) {
+                TestReporter.logAPI(true, "Error in booking response: " + getFaultString(), this);
+            }
+            System.out.println(getResponse());
+            throw new AutomationException("No travelplan ID found in response");
+        }
     }
 
     public String getTravelPlanSegmentId() {
-        return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
+        try {
+            return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
+        } catch (XPathNotFoundException e) {
+            if (!getFaultString().isEmpty()) {
+                TestReporter.logAPI(true, "Error in booking response: " + getFaultString(), this);
+            }
+            System.out.println(getResponse());
+            throw new AutomationException("No travelplansegment ID found in response");
+        }
     }
 
     public String getPartyId(String index) {

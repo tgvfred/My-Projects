@@ -43,13 +43,14 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         tcId = getBook().getTravelComponentId();
 
         // upgrade();
+        Sleeper.sleep(15000);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType() {
 
         upgrade();
-        Sleeper.sleep(5000);
+        Sleeper.sleep(15000);
         setValues("80010385", "CA", "51");
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
