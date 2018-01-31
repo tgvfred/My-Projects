@@ -21,12 +21,12 @@
 	    <dvcPoints.version>1.1.00</dvcPoints.version>     
 	    <dvcSales.version>1.1.04</dvcSales.version>     
 	    <eai.version>1.1.00</eai.version>      
-	    <facility.version>1.1.00</facility.version>      
+	    <facility.version>1.1.02</facility.version>      
 	    <folio.version>1.1.01</folio.version>      
 	    <guestCelebrations.version>1.1.00</guestCelebrations.version>  
 	    <groups.version>1.1.00</groups.version>
 	    <party.version>1.1.00</party.version>    
-	    <pricing.version>1.1.00</pricing.version>  
+	    <pricing.version>1.1.01</pricing.version>  
 	    <profile.version>1.1.01</profile.version>        
 	    <resource.version>1.1.00</resource.version>           
 	    <travelplan.version>1.1.00</travelplan.version>           

@@ -20,6 +20,7 @@ public class TestCheckout_roomOnly_BEREAV extends AccommodationBaseTest {
     @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
+        // AccommodationFacilityTO fac = FacilityHelper.getFacilityInfoByEnterpriseFacilityID(environment, "334222");
         setEnvironment(environment);
         isComo.set("false");
         setDaysOut(0);
@@ -27,7 +28,9 @@ public class TestCheckout_roomOnly_BEREAV extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        bookReservation();
+        setResortCode("15");
+        setRoomTypeCode("5A");
+        setFacilityId("305669");
     }
 
     @Override
@@ -50,23 +53,25 @@ public class TestCheckout_roomOnly_BEREAV extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "checkout", "Accommodation" })
     public void testCheckout_roomOnly_BEREAV() {
 
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
-
-        int tries = 0;
-        int maxTries = 5;
-        boolean success = false;
-        do {
-            try {
-
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
-                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-                success = true;
-            } catch (Exception e) {
-                cancel();
-                setValues();
-                bookReservation();
-            }
-        } while (tries < maxTries && !success);
+        bookReservation();
+        /*
+         * helper.set(new CheckInHelper(getEnvironment(), getBook()));
+         *
+         * int tries = 0;
+         * int maxTries = 5;
+         * boolean success = false;
+         * do {
+         * try {
+         *
+         * helper.set(new CheckInHelper(getEnvironment(), getBook()));
+         * helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+         * success = true;
+         * } catch (Exception e) {
+         * cancel();
+         * bookReservation();
+         * }
+         * } while (tries < maxTries && !success);
+         */
 
         String status = "false";
         String tcgId = getBook().getTravelComponentGroupingId();

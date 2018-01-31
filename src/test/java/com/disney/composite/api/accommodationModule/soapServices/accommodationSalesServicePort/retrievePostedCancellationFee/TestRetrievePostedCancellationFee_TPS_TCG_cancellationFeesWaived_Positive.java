@@ -17,7 +17,7 @@ public class TestRetrievePostedCancellationFee_TPS_TCG_cancellationFeesWaived_Po
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(5);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());

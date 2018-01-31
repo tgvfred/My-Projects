@@ -815,7 +815,7 @@ public final class AccommodationErrorCode {
     public static final ApplicationErrorCode CANNOT_MODIFY_CHECKEDIN_ACCOMMADATION = new ApplicationErrorCode(APP_NAME,
             7187, "Checked In Accommodation cannot be modified");
 
-    public static final ApplicationErrorCode INVALID_RES_MODIFY_REQUEST = new ApplicationErrorCode(APP_NAME, 9105,
+    public static final ApplicationErrorCode INVALID_RES_MODIFY_REQUEST = new ApplicationErrorCode(APP_NAME, 100029,
             "Invalid Modify Request");
 
     public static final ApplicationErrorCode INVALID_EXTERENAL_REFERENCE_DETAIL = new ApplicationErrorCode(APP_NAME,
@@ -1084,5 +1084,14 @@ public final class AccommodationErrorCode {
 
     public static final ApplicationErrorCode INVALID_COMMENT_ID = new ApplicationErrorCode(APP_NAME, 100026,
             "No Comments exists for Comment Id");
+
+    public static final ApplicationErrorCode FREEZE_ID_NOT_OBTAINED = new ApplicationErrorCode(APP_NAME, 100027,
+            "The Inventory Requested for this reservation is not available. Please contact your FSA or Manager for assistance");
+
+    public static final ApplicationErrorCode INVALID_FREEZE_REQUEST = new ApplicationErrorCode(APP_NAME, 100028,
+            "Invalid Freeze Request. See HTTP Status Code");
+
+    public static final ApplicationErrorCode INVALID_FACILITY_CHECKOUT = new ApplicationErrorCode(APP_NAME, 100030,
+            "Reservation of other than Disney's Grand Californian facility , can not be checked out");
 
 }

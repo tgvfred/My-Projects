@@ -131,7 +131,6 @@ public class TestRetrieveShareChain_SharedTcgsMultipleGuests extends Accommodati
         }
 
         TestReporter.logStep("Base validations");
-        helper.validateTcAndTcg(validateTcg, validateTc, retrieve);
         helper.validateBaseNodes(booking, retrieve);
         helper.validateMultipleRateDetails(environment, retrieve);
 
