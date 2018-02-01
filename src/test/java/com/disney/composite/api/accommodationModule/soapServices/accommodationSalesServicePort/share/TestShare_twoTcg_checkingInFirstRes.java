@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -52,5 +53,15 @@ public class TestShare_twoTcg_checkingInFirstRes extends AccommodationBaseTest {
         share.sendRequest();
         TestReporter.assertTrue(share.getFaultString().contains(faultString), "Verify that the fault string [" + share.getFaultString() + "] contains that which is expected [" + faultString + "].");
         validateApplicationError(share, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_SHARED);
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }

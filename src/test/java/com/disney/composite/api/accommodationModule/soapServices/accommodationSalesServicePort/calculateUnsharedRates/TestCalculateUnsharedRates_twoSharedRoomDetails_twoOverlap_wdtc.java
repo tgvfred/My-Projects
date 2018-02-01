@@ -11,12 +11,15 @@ import com.disney.utils.TestReporter;
 
 public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap_wdtc extends AccommodationBaseTest {
     CalculateUnsharedRates calculate;
+    String TCG1 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[1]/unSharedRoomDetail/travelComponentGroupingId");
+    String TCG2 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[2]/unSharedRoomDetail/travelComponentGroupingId");
 
     @Override
     @AfterMethod(alwaysRun = true)
     public void teardown() {
         try {
-            cancel();
+            cancel(TCG1);
+            cancel(TCG2);
         } catch (Exception e) {
 
         }

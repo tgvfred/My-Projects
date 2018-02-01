@@ -37,7 +37,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyToAddAccommToCancelledRes 
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
-        cancel();
+        cancel(tcgId);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })

@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -43,7 +44,8 @@ public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationB
         setSendRequest(false);
         // bookReservation();
         // getBook().sendRequest();
-        // TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        // TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " +
+        // getBook().getFaultString(), getBook());
         /*
          * firstTCG = getBook().getTravelComponentGroupingId();
          * firstTPS = getBook().getTravelPlanSegmentId();
@@ -60,7 +62,8 @@ public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationB
         setSendRequest(false);
         // bookReservation();
         // getBook().sendRequest();
-        // TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        // TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " +
+        // getBook().getFaultString(), getBook());
         // captureSecondOwnerId();
     }
 
@@ -202,5 +205,15 @@ public class TestUnShare_twoTcg_differentStartAndEndDates extends AccommodationB
         }
 
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }

@@ -27,7 +27,7 @@ public class Test_UpdateGuaranteeStatus_wdtc_DEPOSIT_Negative extends Accommodat
     @AfterMethod(alwaysRun = true)
     public void teardown() {
         try {
-            cancel();
+            cancel(getBook().getTravelComponentGroupingId());
         } catch (Exception e) {
 
         }

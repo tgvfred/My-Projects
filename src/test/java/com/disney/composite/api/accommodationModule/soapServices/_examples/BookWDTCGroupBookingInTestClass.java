@@ -32,7 +32,7 @@ public class BookWDTCGroupBookingInTestClass extends AccommodationBaseTest {
     @Override
     @AfterMethod(alwaysRun = true)
     public void teardown() {
-        cancel();
+        cancel(getBook().getTravelComponentGroupingId());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "example" })

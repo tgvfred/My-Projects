@@ -51,7 +51,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
             helper.checkOut(getLocationId());
         } catch (Exception e) {
             try {
-                cancel();
+                cancel(tcgId);
             } catch (Exception e2) {
 
             }
@@ -143,7 +143,8 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
         Map<String, String> status = new HashMap<>();
         status.put("Past Visit", "Past Visit");
         status.put("Booked", "Booked");
-        // validations.validateTPV3(getBook().getTravelPlanId(), status, getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 2, 2, "N", "NULL", getFacilityId());
+        // validations.validateTPV3(getBook().getTravelPlanId(), status, getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 2, 2,
+        // "N", "NULL", getFacilityId());
 
     }
 }

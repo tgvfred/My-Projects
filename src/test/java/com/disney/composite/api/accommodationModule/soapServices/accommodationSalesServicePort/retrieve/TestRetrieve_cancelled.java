@@ -43,7 +43,7 @@ public class TestRetrieve_cancelled extends AccommodationBaseTest {
         //
         // cancel.sendRequest();
 
-        cancel();
+        cancel(tcg);
         // TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");

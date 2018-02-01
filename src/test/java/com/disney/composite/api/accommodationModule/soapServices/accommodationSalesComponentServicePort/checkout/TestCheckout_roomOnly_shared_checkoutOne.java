@@ -72,7 +72,7 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
                 helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
-                cancel();
+                cancel(getBook().getTravelComponentGroupingId());
                 setValues();
                 bookReservation();
             }
