@@ -1343,14 +1343,12 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void cancel(String tcg) {
         Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(getEnvironment()), "MainCancel");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
-        if (getBook() != null) {
-            if (getBook().getTravelComponentGroupingId() != null) {
-                cancel.setTravelComponentGroupingId(tcg);
-            }
-        } else {
-            cancel.setTravelComponentGroupingId(tcgId.get());
+        cancel.setTravelComponentGroupingId(tcg);
+        try {
+            cancel.sendRequest();
+        } catch (Exception e) {
         }
-        cancel.sendRequest();
+
     }
 
     @AfterSuite(alwaysRun = true)
