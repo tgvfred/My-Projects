@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveShareChain;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -134,6 +135,16 @@ public class TestRetrieveShareChain_SharedTcgsMultipleGuests extends Accommodati
         helper.validateBaseNodes(booking, retrieve);
         helper.validateMultipleRateDetails(environment, retrieve);
 
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstBooking.getTravelComponentGroupingId());
+            cancel(secondBooking.getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 
 }
