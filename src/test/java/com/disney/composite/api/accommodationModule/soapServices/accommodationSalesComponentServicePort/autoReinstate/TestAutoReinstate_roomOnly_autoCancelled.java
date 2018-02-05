@@ -23,13 +23,14 @@ public class TestAutoReinstate_roomOnly_autoCancelled extends AccommodationBaseT
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(30);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         isComo.set("false");
         bookReservation();
+        Sleeper.sleep(60000);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate" })
@@ -41,42 +42,14 @@ public class TestAutoReinstate_roomOnly_autoCancelled extends AccommodationBaseT
 
         auto = new AutoReinstate(environment, "Main");
         auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         auto.sendRequest();
         TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + auto.getFaultString(), auto);
 
         validations();
-
-        // cancel and reinstate in order to clone on the old service.
-
-        autoCancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        autoCancel.sendRequest();
-
-        auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        // auto.sendRequest();
-        TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while creating a comment: " + auto.getFaultString(), auto);
-        if (Environment.isSpecialEnvironment(environment)) {
-            AutoReinstate clone = (AutoReinstate) auto.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-
-            int tries = 0;
-            int maxTries = 10;
-            boolean success = false;
-            do {
-                Sleeper.sleep(1000);
-                try {
-                    clone.sendRequest();
-                    success = true;
-                } catch (Exception e) {
-
-                }
-                tries++;
-            } while (tries < maxTries && !success);
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(auto, true), "Validating Response Comparison");
-        }
     }
 
     public void validations() {

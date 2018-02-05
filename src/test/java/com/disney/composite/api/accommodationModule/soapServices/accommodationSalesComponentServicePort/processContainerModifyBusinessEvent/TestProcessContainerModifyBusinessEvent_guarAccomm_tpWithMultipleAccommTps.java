@@ -24,7 +24,7 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
     public void setup(String environment) {
         setEnvironment(environment);
         isComo.set("false");
-        setDaysOut(0);
+        setDaysOut(30);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());

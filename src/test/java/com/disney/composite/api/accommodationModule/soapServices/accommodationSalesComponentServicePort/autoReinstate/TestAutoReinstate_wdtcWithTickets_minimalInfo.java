@@ -31,7 +31,7 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
         setEnvironment(environment);
         locEnv = environment;
 
-        daysOut.set(Randomness.randomNumberBetween(1, 12));
+        daysOut.set(Randomness.randomNumberBetween(10, 22));
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
@@ -47,11 +47,19 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
     public void Test_AutoReinstate_wdtcWithTickets_minimalInfo() {
         FindTicketPriceGridByPackage find = new FindTicketPriceGridByPackage(environment);
         find.setPackageCode(getPackageCode());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         find.sendRequest();
         TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred finding tickets for package code [" + getPackageCode() + "].");
 
         GetTicketProducts get = new GetTicketProducts(environment, "Main");
         get.setTicketGroupName(find.getTicketGroupName());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         get.sendRequest();
         TestReporter.assertTrue(get.getResponseStatusCode().equals("200"), "Verify that no error occurred finding ticket products for ticket group name [" + find.getTicketGroupName() + "].");
         code = get.getCodeByTicketDescriptionAndAgeType("2 Day Base Ticket", "Adult");
@@ -59,6 +67,10 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
         bookPackage = new BookPackageSelectableTickets(locEnv, "singleTickets");
         bookPackage.setExternalReference("01825", getExternalRefNumber());
         bookPackage.setTickets(code, getHouseHold().primaryGuest(), getLocationId(), getBook().getTravelPlanSegmentId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         bookPackage.sendRequest();
         TestReporter.logAPI(!bookPackage.getResponseStatusCode().equals("200"), "Verify that no error occurred booking package selectable tickets: " + bookPackage.getFaultString(), bookPackage);
 
@@ -67,46 +79,13 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
         cancel.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
+        Sleeper.sleep(3000);
         auto = new AutoReinstate(environment, "Main");
         auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         auto.sendRequest();
         TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + auto.getFaultString(), auto);
 
         validations();
-
-        // cancel and reinstate in order to clone on the old service.
-        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
-        cancel.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
-        cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
-        auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        // auto.sendRequest();
-        TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while creating a comment: " + auto.getFaultString(), auto);
-        if (Environment.isSpecialEnvironment(environment)) {
-            AutoReinstate clone = (AutoReinstate) auto.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-
-            int tries = 0;
-            int maxTries = 10;
-            boolean success = false;
-            do {
-                Sleeper.sleep(1000);
-                try {
-                    clone.sendRequest();
-                    success = true;
-                } catch (Exception e) {
-
-                }
-                tries++;
-            } while (tries < maxTries && !success);
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(auto, true), "Validating Response Comparison");
-        }
     }
 
     public void validations() {

@@ -78,7 +78,7 @@ public class TestReplaceAllForTravelPlanSegment_BookWholesaler extends Accommoda
         // Validate Folio
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
         validations.verifyNumberOfChargesByStatus("UnEarned", 6, getBook().getTravelPlanId());
-        validations.verifyChargeDetail(10, getBook().getTravelPlanId());
+        validations.verifyChargeDetail(9, getBook().getTravelPlanId());
         validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
         Map<String, String> groupDelegateSmallBalanceWriteoff = new HashMap<String, String>();
         groupDelegateSmallBalanceWriteoff.put(ServiceConstants.FolioExternalReference.DREAMS_TCG, "N");

@@ -33,7 +33,6 @@ public class TestUpdateComments extends BaseRestTest {
     @BeforeClass(alwaysRun = true)
     @Parameters({ "environment" })
     public void setup(@Optional String environment) {
-        TestReporter.setDebugLevel(TestReporter.INFO);
         this.environment = environment;
 
         // generate accommodation booking

@@ -17,10 +17,12 @@ public class TestCalculateSharedRates_TwoAccommodationRO_NoOverlap extends Accom
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateSharedRates" })
     public void testCalculateSharedRates_TwoAccommodationRO_NoOverlap() {
 
+        // System.out.println(twoDaysFromToday);
         CalculateSharedRates calculate = new CalculateSharedRates(environment, "TwoAccommodations");
         calculate.setBookingDate("2017-10-25T00:00:00");
         calculate.setPeriodSD("2017-10-25T00:00:00");
         calculate.setPeriodED("2017-10-26T00:00:00");
+
         calculate.setBookingDate2("2017-10-27T00:00:00");
         calculate.setPeriodSD2("2017-10-27T00:00:00");
         calculate.setPeriodED2("2017-10-28T00:00:00");

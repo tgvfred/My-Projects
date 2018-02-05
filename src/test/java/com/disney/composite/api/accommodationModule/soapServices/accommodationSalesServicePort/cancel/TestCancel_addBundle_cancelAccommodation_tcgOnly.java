@@ -22,7 +22,7 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
     public void setup(String environment) {
         setEnvironment(environment);
         isComo.set("false");
-        daysOut.set(Randomness.randomNumberBetween(1, 12));
+        daysOut.set(Randomness.randomNumberBetween(30, 42));
         nights.set(Randomness.randomNumberBetween(1, 3));
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
@@ -34,16 +34,13 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_addBundle_cancelAccommodation_tcgOnly() {
         TestReporter.logScenario("Test Cancel");
 
-        Cancel cancel = new Cancel(environment, "Main");
+        Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
-
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
@@ -95,7 +92,7 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         cancelHelper.verifyChargeGroupsCancelled();
         cancelHelper.verifyCancellationIsFoundInResHistory(getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
         // cancelHelper.verifyCancellationComment(getRetrieve(), "Air not available CancellationNumber : " + cancel.getCancellationNumber());
-        cancelHelper.verifyNumberOfCharges(0);
+        cancelHelper.verifyNumberOfCharges(1);
         cancelHelper.verifyInventoryReleased(getBook().getTravelComponentGroupingId());
         cancelHelper.verifyNumberOfTpPartiesByTpId(1);
         cancelHelper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Cancelled");
@@ -110,6 +107,9 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
+        cancelHelper.verifyTPV3SalesOrderStatusByType(getBook().getTravelPlanId(), "ACCOMMODATION", "CANCELLED");
+        cancelHelper.verifyTPV3SalesOrderStatusByType(getBook().getTravelPlanId(), "BUNDLE", "CANCELLED");
+        cancelHelper.verifyTPV3SalesOrderStatusByType(getBook().getTravelPlanId(), "PACKAGE", "CANCELLED");
         TestReporter.assertAll();
     }
 

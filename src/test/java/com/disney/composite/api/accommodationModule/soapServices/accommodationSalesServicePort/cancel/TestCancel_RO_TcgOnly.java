@@ -7,10 +7,10 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
-import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
@@ -23,7 +23,7 @@ public class TestCancel_RO_TcgOnly extends AccommodationBaseTest {
     public void setup(String environment) {
         setEnvironment(environment);
         isComo.set("false");
-        daysOut.set(0);
+        daysOut.set(40);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
@@ -31,18 +31,17 @@ public class TestCancel_RO_TcgOnly extends AccommodationBaseTest {
         setIsWdtcBooking(false);
         setValues();
         bookReservation();
-        checkingIn(Environment.getBaseEnvironmentName(getEnvironment()));
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RO_TcgOnly() {
         TestReporter.logScenario("Test Cancel RO CheckingIn Tcg Only");
 
-        Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
+        Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
 
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);

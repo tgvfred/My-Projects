@@ -34,6 +34,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithUnusedTps extends A
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setIsWdtcBooking(true);
         isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();
@@ -51,6 +52,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithUnusedTps extends A
         getBook().setTravelPlanSegementId(id.getId());
         // getBook().setTravelComponentGroupingId(tcgId);
         // getBook().setTravelComponentId(tcId);
+
         getBook().setReplaceAll("false");
         getBook().setRequestNodeValueByXPath("//request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
         getBook().setRequestNodeValueByXPath("//request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
@@ -107,12 +109,12 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithUnusedTps extends A
         tpsIds.put("1", tpsId);
         tpsIds.put("2", getBook().getTravelPlanSegmentId());
         Map<String, String> extRefs = new HashMap<>();
-        extRefs.put("1", extRefNum);
+        extRefs.put("1", "NULL");
         extRefs.put("2", "NULL");
         Map<String, String> extRefTypes = new HashMap<>();
-        extRefTypes.put("1", "RESERVATION");
+        extRefTypes.put("1", "NULL");
         extRefTypes.put("2", "NULL");
-        validations.validateModificationBackendMultiTPS(4, "Booked", "", getArrivalDate(), getDepartureDate(), extRefTypes, extRefs,
+        validations.validateModificationBackendMultiTPS(26, "Booked", "", getArrivalDate(), getDepartureDate(), extRefTypes, extRefs,
                 getBook().getTravelPlanId(), tpsIds, tcgs);
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId(), 2);
         validations.verifyTcStatusByTcg(tcgId, "Booked");
@@ -121,8 +123,8 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithUnusedTps extends A
         // Validate Folio
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), tpsId, tcgId, getHouseHold().primaryGuest());
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
-        validations.verifyNumberOfChargesByStatus("UnEarned", 2, getBook().getTravelPlanId());
-        validations.verifyChargeDetail(8, getBook().getTravelPlanId());
+        validations.verifyNumberOfChargesByStatus("UnEarned", 18, getBook().getTravelPlanId());
+        validations.verifyChargeDetail(26, getBook().getTravelPlanId());
         validations.verifyChargeGroupsStatusCount("UnEarned", 5, getBook().getTravelPlanId());
 
         // Validate RIM

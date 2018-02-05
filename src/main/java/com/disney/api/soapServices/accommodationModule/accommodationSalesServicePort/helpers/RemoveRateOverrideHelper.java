@@ -66,7 +66,7 @@ public class RemoveRateOverrideHelper {
         override.setRequestNodeValueByXPath("/Envelope/Body/overrideRate/request/additionalAdultChargesOverridden", BaseSoapCommands.REMOVE_NODE.toString());
         override.setRequestNodeValueByXPath("/Envelope/Body/overrideRate/request/rateDetails/additionalCharge", Randomness.randomNumber(2).toString() + ".0");
         override.setRequestNodeValueByXPath("/Envelope/Body/overrideRate/request/rateDetails/additionalChargeOverridden", "true");
-        override.setRequestNodeValueByXPath("/Envelope/Body/overrideRate/request/rateDetails/basePrice", Randomness.randomNumber(1).toString() + ".0");
+        override.setRequestNodeValueByXPath("/Envelope/Body/overrideRate/request/rateDetails/basePrice", Randomness.randomNumberBetween(1, 5) + ".0");
         override.setRequestNodeValueByXPath("/Envelope/Body/overrideRate/request/rateDetails/dayCount", "0");
         override.setRequestNodeValueByXPath("/Envelope/Body/overrideRate/request/rateDetails/overidden", "false");
         override.setRequestNodeValueByXPath("/Envelope/Body/overrideRate/request/rateDetails/shared", "false");

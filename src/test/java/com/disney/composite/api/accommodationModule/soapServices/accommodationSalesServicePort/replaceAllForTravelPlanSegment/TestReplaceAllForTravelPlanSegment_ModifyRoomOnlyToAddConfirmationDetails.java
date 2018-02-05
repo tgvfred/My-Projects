@@ -75,7 +75,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddConfirmationD
         ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
 
         // Validate reservation
-        validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
+        validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId());
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyModificationIsFoundInResHistory(getBook().getTravelPlanId());
@@ -101,7 +101,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddConfirmationD
 
         // Validate TPS confirmation
         String contactName = getBook().getRequestNodeValueByXPath("//request/contactName");
-        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Email", tpPtyId, "Y", "N", contactName);
+        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Print", tpPtyId, "Y", "N", contactName, "N");
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {

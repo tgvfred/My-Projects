@@ -58,7 +58,6 @@ public class TestGetOptionDetail_COUNTRY extends AccommodationBaseTest {
         int numberOfOptionKeys = 0;
 
         numberOfOptionKeys = getOptions.getNumberOfResponseNodesByXPath("/Envelope/Body/getOptionsResponse/return/optionKey");
-        System.out.println(numberOfOptionKeys);
 
         for (int index = 1; index <= numberOfOptionKeys; index++) {
 

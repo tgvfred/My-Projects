@@ -22,7 +22,7 @@ public class TestAutoReinstate_nullSalesChannel_negative extends AccommodationBa
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(30);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());

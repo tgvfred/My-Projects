@@ -4,14 +4,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationBaseTest {
-    private ReplaceAllForTravelPlanSegment book;
+    // private ReplaceAllForTravelPlanSegment book;
     private Integer two = 2;
 
     @Override
@@ -22,15 +20,16 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationB
         isComo.set("false");
         setDaysOut(0);
         setNights(1);
+        setAddRoom(true);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(environment);
         bookReservation();
+        // getBook().setTravelPlanId(getBook().getTravelPlanId());
+        // getBook().setTravelPlanSegementId(getBook().getTravelPlanSegmentId());
+        // getBook().setReplaceAll("true");
 
-        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "book2AdultsAndTwoRoom");
-        book.sendRequest();
-        book.getResponse();
-        TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify no error occurred booking a res: " + book.getFaultString(), book);
+        bookReservation();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
@@ -45,11 +44,11 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyTwoRooms extends AccommodationB
         // retrieve.setRequestTravelComponentGroupingIdIndexAdd("3", book.getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails[2]/travelComponentGroupingId"));
         // // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
         // } else {
-        retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+        retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         // }
 
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelPlanSegmentId() + "]", retrieve);
 
         TestReporter.logStep("Verify two accommodationsSummaryDetails nodes are returned");
         TestReporter.assertTrue(retrieve.getAccommodationsSummaryDetails().equals(two), "Two accommodationsSummaryDetails nodes found! First TCGID is [" + retrieve.getTravelComponentGroupingId("1") + "] & Second TCGID is [" + retrieve.getTravelComponentGroupingId("2") + "]");

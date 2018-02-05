@@ -78,7 +78,7 @@ public class TestCancel_GroupBundle_CancelBundle_Negative extends AccommodationB
         TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_GroupBundle_CancelBundle_Negative() {
         TestReporter.logScenario("Test Cancel_GroupBundle_CancelBundle_Negative");
 

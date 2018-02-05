@@ -15,6 +15,13 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_NoOverlap extends A
     public void testCalculateUnsharedRates_twoSharedRoomDetails_NoOverlap() {
 
         calculate = new CalculateUnsharedRates(environment, "NoOverlap");
+        // String pkg = getPackageCode();
+        // calculate.setUnsharedAccomadationSharedRoomDetailPackageCode(pkg);
+        // calculate.setUnsharedAccomadationUnSharedRoomDetailPackageCode(pkg);
+        // calculate.setUnsharedChainSharedRoomDetailPackageCode(pkg, "1");
+        // calculate.setUnsharedChainSharedRoomDetailPackageCode(pkg, "2");
+        // calculate.setUnsharedChainUnSharedRoomDetailPackageCode(pkg, "1");
+        // calculate.setUnsharedChainUnSharedRoomDetailPackageCode(pkg, "2");
         calculate.sendRequest();
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 

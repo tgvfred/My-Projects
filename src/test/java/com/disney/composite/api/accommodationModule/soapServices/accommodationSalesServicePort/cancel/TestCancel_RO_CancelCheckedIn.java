@@ -12,7 +12,6 @@ import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
-import com.disney.utils.date.DateTimeConversion;
 
 public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
 
@@ -40,6 +39,10 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
         checkIn.setGuestId(getBook().getGuestId());
         checkIn.setLocationId(getLocationId());
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         checkIn.sendRequest();
         if (checkIn.getFaultString().contains("Row was updated or deleted by another transaction")) {
             maxTries = 5;
@@ -53,17 +56,14 @@ public class TestCancel_RO_CancelCheckedIn extends AccommodationBaseTest {
         TestReporter.assertTrue(checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getBook().getTravelPlanId() + "]: " + checkIn.getFaultString());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RO_CancelCheckedIn() {
         TestReporter.logScenario("Test Cancel RO Checked IN negative");
 
         String faultString = "Accommodation should be in Booked status to be cancelled";
 
-        Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
+        Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
 
         cancel.sendRequest();
 

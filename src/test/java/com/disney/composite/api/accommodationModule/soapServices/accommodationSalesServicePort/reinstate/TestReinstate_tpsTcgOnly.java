@@ -31,7 +31,7 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -46,14 +46,14 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
     public void Test_Reinstate_tpsTcgOnly() {
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
 
-        cancel = new Cancel(environment, "Main");
+        Sleeper.sleep(3000);
+        cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
         cancel.sendRequest();
         TestReporter.assertTrue(cancel.getResponseStatusCode().equals("200"), "Verify that no error occurred cancelling a reservation: " + cancel.getFaultString());
 
+        Sleeper.sleep(3000);
         reinstate = new Reinstate(env, "TCG_TPS_Only");
         reinstate.setTravelComponentGroupingId(TCG);
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
@@ -62,12 +62,13 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
 
         int numBookedComponents_reinstate = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
         TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate, "Verify that the number of booked components [" + numBookedComponents_reinstate + "] is that which is expected [" + numBookedComponents_book + "].");
-
+        Sleeper.sleep(3000);
         validations();
         // cancel and reinstate in order to clone on the old service.
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
+        Sleeper.sleep(3000);
         TestReporter.assertTrue(cancel.getResponseStatusCode().equals("200"), "Verify that no error occurred cancelling a reservation: " + cancel.getFaultString());
         reinstate.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
@@ -126,7 +127,7 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
         reinstateHelper.validateActiveChargeGroup(numExpectedRecords);
 
         int numExpectedRecords14 = 2;
-        reinstateHelper.validateTCReservationStatus(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "1",
+        reinstateHelper.validateTCReservationStatus(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), getSalesChannelId(),
                 "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
 
         int numExpectedRecords12 = 1;
@@ -164,7 +165,7 @@ public class TestReinstate_tpsTcgOnly extends AccommodationBaseTest {
         int numExpectedRecords13 = 1;
         reinstateHelper.validateTCGReservationStatus(numExpectedRecords13, getBook().getTravelComponentGroupingId());
 
-        reinstateHelper.validateTCFee(true, 1);
+        reinstateHelper.validateTCFee(true, 0);
     }
 
 }

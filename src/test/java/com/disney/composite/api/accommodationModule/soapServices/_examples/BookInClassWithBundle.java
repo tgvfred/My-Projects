@@ -19,7 +19,7 @@ public class BookInClassWithBundle extends AccommodationBaseTest {
     @Override
     @AfterMethod(alwaysRun = true)
     public void teardown() {
-        cancel();
+        cancel(getBook().getTravelComponentGroupingId());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "example" })
@@ -31,6 +31,6 @@ public class BookInClassWithBundle extends AccommodationBaseTest {
         setValues(getEnvironment());
         setIsBundle(true);
         bookReservation();
-        cancel();
+        cancel(getBook().getTravelComponentGroupingId());
     }
 }

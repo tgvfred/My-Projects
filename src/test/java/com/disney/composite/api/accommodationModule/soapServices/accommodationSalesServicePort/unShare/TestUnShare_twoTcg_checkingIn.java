@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -10,6 +11,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
@@ -50,6 +52,8 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
 
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+
+        Sleeper.sleep(60000);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
@@ -59,6 +63,10 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
         share.setTravelComponentGroupingId(firstTCG);
         share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
@@ -70,8 +78,22 @@ public class TestUnShare_twoTcg_checkingIn extends AccommodationBaseTest {
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(firstTCG);
         unshare.setLocationId(getLocationId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         unshare.sendRequest();
         TestReporter.assertTrue(unshare.getFaultString().contains(faultString), "Verify that the fault string [" + unshare.getFaultString() + "] contains that which is expected [" + faultString + "].");
-        validateApplicationError(unshare, AccommodationErrorCode.ACCOMM_NOT_BOOKED_STATUS_UNSHARED);
+        validateApplicationError(unshare, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_UNSHARED);
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }

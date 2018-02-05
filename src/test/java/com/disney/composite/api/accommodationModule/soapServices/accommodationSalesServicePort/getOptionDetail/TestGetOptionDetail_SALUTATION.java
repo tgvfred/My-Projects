@@ -70,8 +70,6 @@ public class TestGetOptionDetail_SALUTATION extends AccommodationBaseTest {
             allPairs.put(OptionKey, OptionV);
         }
 
-        System.out.println(allPairs.values());
-
         Object[][] objKeyValue = new Object[allPairs.size()][2];
         int i = 0;
         for (String key : allPairs.keySet()) {

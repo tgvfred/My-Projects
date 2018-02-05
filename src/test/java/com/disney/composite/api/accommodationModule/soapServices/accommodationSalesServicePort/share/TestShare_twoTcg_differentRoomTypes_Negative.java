@@ -1,9 +1,11 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.AutomationException;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -38,9 +40,18 @@ public class TestShare_twoTcg_differentRoomTypes_Negative extends AccommodationB
         String previousResort = getResortCode();
         String previousRoomTypeCode = getRoomTypeCode();
 
+        int count = 0;
         do {
             setValues();
-        } while (!(getResortCode().equals(previousResort) && !getRoomTypeCode().equals(previousRoomTypeCode)));
+            if (!getResortCode().equals(previousResort) && !getRoomTypeCode().equals(previousRoomTypeCode)) {
+                break;
+            }
+            count++;
+        } while (count < 10);
+
+        if (count == 10) {
+            throw new AutomationException("Failed to set proper room confiurations");
+        }
 
         bookReservation();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
@@ -65,6 +76,16 @@ public class TestShare_twoTcg_differentRoomTypes_Negative extends AccommodationB
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(share, AccommodationErrorCode.CANT_CHANGE_BLOCK_RESORT_PACKAGE_FOR_SHARED_ACCOMMODATION);
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 
 }

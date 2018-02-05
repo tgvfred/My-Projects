@@ -38,6 +38,7 @@ public class TestReinstate_cancelFeeWaived extends AccommodationBaseTest {
         setValues(getEnvironment());
         isComo.set("true");
         bookReservation();
+        Sleeper.sleep(30000);
         env = environment;
         TCG = getBook().getTravelComponentGroupingId();
     }
@@ -54,7 +55,6 @@ public class TestReinstate_cancelFeeWaived extends AccommodationBaseTest {
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
         TestReporter.log("Cancellation number: " + cancel.getCancellationNumber());
-
         cancelNumber = cancel.getCancellationNumber();
 
         reinstate = new Reinstate(env, "Main_2");
@@ -62,7 +62,7 @@ public class TestReinstate_cancelFeeWaived extends AccommodationBaseTest {
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         reinstate.sendRequest();
         TestReporter.logAPI(!reinstate.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + reinstate.getFaultString(), reinstate);
-
+        Sleeper.sleep(3000);
         int numBookedComponents_reinstate = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
         TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate, "Verify that the number of booked components [" + numBookedComponents_reinstate + "] is that which is expected [" + numBookedComponents_book + "].");
 
@@ -72,7 +72,7 @@ public class TestReinstate_cancelFeeWaived extends AccommodationBaseTest {
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
+        Sleeper.sleep(3000);
         reinstate.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         // reinstate.sendRequest();
@@ -130,7 +130,7 @@ public class TestReinstate_cancelFeeWaived extends AccommodationBaseTest {
         reinstateHelper.validateActiveChargeGroup(numExpectedRecords);
 
         int numExpectedRecords14 = 2;
-        reinstateHelper.validateTCReservationStatusForTCG(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "1",
+        reinstateHelper.validateTCReservationStatusForTCG(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), getSalesChannelId(),
                 "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
 
         int numExpectedRecords12 = 1;

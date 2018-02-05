@@ -30,6 +30,7 @@ public class TestAutoReinstate_roomOnly_cancelFeeWaived extends AccommodationBas
         setValues(getEnvironment());
         isComo.set("false");
         bookReservation();
+        Sleeper.sleep(60000);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate" })
@@ -38,48 +39,19 @@ public class TestAutoReinstate_roomOnly_cancelFeeWaived extends AccommodationBas
         Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(environment), "Main_WithFeeWaived");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
+        Sleeper.sleep(3000);
         auto = new AutoReinstate(environment, "Main");
         auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         auto.sendRequest();
         TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + auto.getFaultString(), auto);
 
         validations();
-
-        // cancel and reinstate in order to clone on the old service.
-        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
-        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.sendRequest();
-        TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
-        auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        // auto.sendRequest();
-        TestReporter.logAPI(!auto.getResponseStatusCode().equals("200"), "An error occurred while creating a comment: " + auto.getFaultString(), auto);
-        if (Environment.isSpecialEnvironment(environment)) {
-            AutoReinstate clone = (AutoReinstate) auto.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-
-            int tries = 0;
-            int maxTries = 10;
-            boolean success = false;
-            do {
-                Sleeper.sleep(1000);
-                try {
-                    clone.sendRequest();
-                    success = true;
-                } catch (Exception e) {
-
-                }
-                tries++;
-            } while (tries < maxTries && !success);
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(auto, true), "Validating Response Comparison");
-        }
     }
 
     public void validations() {

@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -7,7 +8,12 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.FacilityDatabase;
+import com.disney.utils.dataFactory.database.NoRecordsInRecordsetException;
+import com.disney.utils.dataFactory.database.Recordset;
 
 public class TestShare_twoTcg_differentResorts_Negative extends AccommodationBaseTest {
 
@@ -36,25 +42,25 @@ public class TestShare_twoTcg_differentResorts_Negative extends AccommodationBas
 
         String previousResort = getResortCode();
         String previousRoomTypeCode = getRoomTypeCode();
-        // Loop until
-        // 1. The resort is the same
-        // 2. The room type has changed for the original resort
-        do {
-            setValues();
-        } while (!getResortCode().equals(previousResort) && getRoomTypeCode().equals(previousRoomTypeCode));
+
+        String sql = "SELECT RM_TYP_CD FROM TFDB_3.SYS_FAC A JOIN TFDB_3.RM_TYP B ON A.FAC_ID = B.FAC_ID WHERE SYS_FAC_CD = '" + previousResort + "' AND RM_TYP_CD <> '" + previousRoomTypeCode + "' LIMIT 1";
+        Database db = new Database(FacilityDatabase.getInfo(Environment.getBaseEnvironmentName(environment)));
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new NoRecordsInRecordsetException("Failed to find rooms in Facility DB for Facility Code [ " + previousResort + " ]", sql);
+        }
+
+        setRoomTypeCode(rs.getValue("RM_TYP_CD"));
+
         bookReservation();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "share", "negative" })
-    public void Test_Share_twoTcg_differentResorts_Negative() {
+    public void test_Share_twoTcg_differentResorts_Negative() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-        // }
-        // }
         share = new Share(environment, "Main_twoTcg");
         share.setTravelComponentGroupingId(firstTcg);
         share.addSharedComponent();
@@ -65,6 +71,16 @@ public class TestShare_twoTcg_differentResorts_Negative extends AccommodationBas
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(share, AccommodationErrorCode.CANT_CHANGE_BLOCK_RESORT_PACKAGE_FOR_SHARED_ACCOMMODATION);
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTcg);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 
 }

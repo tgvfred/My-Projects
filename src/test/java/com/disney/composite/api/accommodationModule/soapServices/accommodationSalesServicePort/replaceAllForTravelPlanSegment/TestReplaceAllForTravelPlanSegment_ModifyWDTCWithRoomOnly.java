@@ -91,8 +91,8 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWDTCWithRoomOnly extends A
         groupDelegateSmallBalanceWriteoff.put(ServiceConstants.FolioExternalReference.DREAMS_TPS, "N");
         groupDelegateSmallBalanceWriteoff.put(ServiceConstants.FolioExternalReference.DREAMS_TP, "Y");
         Map<String, String> guaranteeTypes = new HashMap<String, String>();
-        guaranteeTypes.put(ServiceConstants.FolioExternalReference.DREAMS_TCG, "DEPOSIT");
-        guaranteeTypes.put(ServiceConstants.FolioExternalReference.DREAMS_TPS, "DEPOSIT");
+        guaranteeTypes.put(ServiceConstants.FolioExternalReference.DREAMS_TCG, "NONE");
+        guaranteeTypes.put(ServiceConstants.FolioExternalReference.DREAMS_TPS, "NONE");
         guaranteeTypes.put(ServiceConstants.FolioExternalReference.DREAMS_TP, "NULL");
         validations.verifyFolioGuaranteeStatus(this, groupDelegateSmallBalanceWriteoff, guaranteeTypes, "N");
 

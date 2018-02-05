@@ -11,12 +11,15 @@ import com.disney.utils.TestReporter;
 
 public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap_wdtc extends AccommodationBaseTest {
     CalculateUnsharedRates calculate;
+    String TCG1 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[1]/unSharedRoomDetail/travelComponentGroupingId");
+    String TCG2 = calculate.getRequestNodeValueByXPath("/Envelope/Body/calculateUnsharedRates/request/unSharedChain/shareRoomDetails[2]/unSharedRoomDetail/travelComponentGroupingId");
 
     @Override
     @AfterMethod(alwaysRun = true)
     public void teardown() {
         try {
-            cancel();
+            cancel(TCG1);
+            cancel(TCG2);
         } catch (Exception e) {
 
         }
@@ -24,7 +27,7 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap_wdtc ext
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "calculateUnsharedRates" })
     public void Test_CalculateUnsharedRates_twoSharedRoomDetails_twoOverlap_wdtc() {
-
+        String roPkg = getPackageCode();
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
@@ -33,7 +36,16 @@ public class TestCalculateUnsharedRates_twoSharedRoomDetails_twoOverlap_wdtc ext
         setIsWdtcBooking(true);
         bookReservation();
 
+        String wdtcPkg = getPackageCode();
+
         calculate = new CalculateUnsharedRates(environment, "TwoOverlap");
+        calculate.setUnsharedAccomadationSharedRoomDetailPackageCode(wdtcPkg);
+        calculate.setUnsharedAccomadationUnSharedRoomDetailPackageCode(roPkg);
+        calculate.setUnsharedChainSharedRoomDetailPackageCode(wdtcPkg, "1");
+        calculate.setUnsharedChainSharedRoomDetailPackageCode(roPkg, "2");
+        calculate.setUnsharedChainUnSharedRoomDetailPackageCode(wdtcPkg, "1");
+        calculate.setUnsharedChainUnSharedRoomDetailPackageCode(roPkg, "2");
+
         calculate.sendRequest();
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 

@@ -34,6 +34,9 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
+        setAddTravelAgency(true);
+        setIsWdtcBooking(true);
+        setMywPackageCode(true);
         isComo.set("true");
         bookReservation();
         tpId = getBook().getTravelPlanId();
@@ -48,7 +51,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
             helper.checkOut(getLocationId());
         } catch (Exception e) {
             try {
-                cancel();
+                cancel(tcgId);
             } catch (Exception e2) {
 
             }
@@ -66,7 +69,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
         getBook().setReplaceAll("true");
-        getBook().setRoomDetailsTravelStatus("Checked In");
+        // getBook().setRoomDetailsTravelStatus("Checked In");
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
@@ -113,18 +116,17 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
         Map<String, String> tcgs = new HashMap<>();
         tcgs.put(tcgId, tcgId);
         tcgs.put(getBook().getTravelComponentGroupingId(), getBook().getTravelComponentGroupingId());
-        validations.validateModificationBackendMultiAccomm(4, "Checked In", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
+        validations.validateModificationBackendMultiAccomm(4, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", getExternalRefNumber(),
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), tcgs);
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
-        validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Checked In");
+        validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
         validations.verifyTcStatusByTcg(tcgId, "Past Visit");
 
         // Validate Folio
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
         validations.verifyNumberOfChargesByStatus("Past Visit", 1, getBook().getTravelPlanId());
-        validations.verifyNumberOfChargesByStatus("Earned", 1, getBook().getTravelPlanId());
         validations.verifyChargeDetail(8, getBook().getTravelPlanId());
-        validations.verifyChargeGroupsStatusCount("Earned", 3, getBook().getTravelPlanId());
+        validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
         validations.verifyChargeGroupsStatusCount("Past Visit", 1, getBook().getTravelPlanId());
 
         // Validate RIM
@@ -140,8 +142,9 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedOut ex
 
         Map<String, String> status = new HashMap<>();
         status.put("Past Visit", "Past Visit");
-        status.put("Checked In", "Checked In");
-        // validations.validateTPV3(getBook().getTravelPlanId(), status, getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 2, 2, "N", "NULL", getFacilityId());
+        status.put("Booked", "Booked");
+        // validations.validateTPV3(getBook().getTravelPlanId(), status, getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 2, 2,
+        // "N", "NULL", getFacilityId());
 
     }
 }

@@ -75,16 +75,23 @@ public class RetrieveShareChainHelper {
     }
 
     public void validateNodeCount(RetrieveShareChain retrieve, String xpath, int count) {
-        TestReporter.assertTrue(retrieve.getNumberOfResponseNodesByXPath(xpath) == count, "Verify there is only one node returned [" + retrieve.getNumberOfResponseNodesByXPath(xpath) + "]");
+        TestReporter.assertTrue(retrieve.getNumberOfResponseNodesByXPath(xpath) == count, "Verify number of nodes returned [" + retrieve.getNumberOfResponseNodesByXPath(xpath) + "]");
+    }
+
+    public void validateTcAndTcg(String tcgId, String tcId, RetrieveShareChain retrieve) {
+
+        TestReporter.softAssertEquals(tcgId, retrieve.getTravelComponentGroupingId(), "Verify the tcg Id [" + retrieve.getTravelComponentGroupingId() + "] matches the expected [" + tcgId + "]");
+        TestReporter.softAssertEquals(tcId, retrieve.getTravelComponentId(), "Verify the tc Id [" + retrieve.getTravelComponentId() + "] matches the expected [" + tcId + "]");
+
     }
 
     public void validateBaseNodes(ReplaceAllForTravelPlanSegment book, RetrieveShareChain retrieve) {
+        int index = 0;
 
         String bookingDate = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/bookingDate");
         String packageCode = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/packageCode");
-        String roomTypeCode = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomTypeCode");
         String tcgId = book.getTravelComponentGroupingId();
-        String tcId = book.getTravelComponentId();
+        String roomTypeCode = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomTypeCode");
         String travelStatus = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelStatus");
         String resortPeriodEndDate = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortPeriod/endDate");
         String resortPeriodStartDate = book.getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortPeriod/startDate");
@@ -105,14 +112,16 @@ public class RetrieveShareChainHelper {
         String splitResortEndDate[] = resortPeriodEndDate.split("T");
         String splitResortStartDate[] = resortPeriodStartDate.split("T");
 
-        TestReporter.softAssertEquals(splitBookingDate[0], splitRetrieveBookingDate[0], "Verify the booking date [" + splitRetrieveBookingDate[0] + "] matches the expected [" + splitBookingDate[0] + "]");
+        if (!tcgId.equals(retrieve.getTravelComponentGroupingId())) {
+            index = 1;
+        }
+
+        TestReporter.softAssertEquals(splitBookingDate[index], splitRetrieveBookingDate[index], "Verify the booking date [" + splitRetrieveBookingDate[index] + "] matches the expected [" + splitBookingDate[index] + "]");
         TestReporter.softAssertEquals(packageCode, retrieve.getPackageCode(), "Verify the package code [" + retrieve.getPackageCode() + "] matches the expected [" + packageCode + "]");
         TestReporter.softAssertEquals(roomTypeCode, retrieve.roomTypeCode(), "Verify the room type code [" + retrieve.roomTypeCode() + "] matches the expected [" + roomTypeCode + "]");
-        TestReporter.softAssertEquals(tcgId, retrieve.getTravelComponentGroupingId(), "Verify the tcg Id [" + retrieve.getTravelComponentGroupingId() + "] matches the expected [" + tcgId + "]");
-        TestReporter.softAssertEquals(tcId, retrieve.getTravelComponentId(), "Verify the tc Id [" + retrieve.getTravelComponentId() + "] matches the expected [" + tcId + "]");
-        TestReporter.softAssertEquals(travelStatus, retrieve.getTravelStatus(), "Verify the tcg Id [" + retrieve.getTravelStatus() + "] matches the expected [" + travelStatus + "]");
-        TestReporter.softAssertEquals(splitResortEndDate[0], splitRetrieveResortEndDate[0], "Verify the resort period end date [" + splitRetrieveResortEndDate[0] + "] matches the expected [" + splitResortEndDate[0] + "]");
-        TestReporter.softAssertEquals(splitResortStartDate[0], splitRetrieveResortStartDate[0], "Verify the resort period start date [" + splitRetrieveResortStartDate[0] + "] matches the expected [" + splitResortStartDate[0] + "]");
+        TestReporter.softAssertEquals(travelStatus, retrieve.getTravelStatus(), "Verify the travel status [" + retrieve.getTravelStatus() + "] matches the expected [" + travelStatus + "]");
+        TestReporter.softAssertEquals(splitResortEndDate[index], splitRetrieveResortEndDate[index], "Verify the resort period end date [" + splitRetrieveResortEndDate[index] + "] matches the expected [" + splitResortEndDate[index] + "]");
+        TestReporter.softAssertEquals(splitResortStartDate[index], splitRetrieveResortStartDate[index], "Verify the resort period start date [" + splitRetrieveResortStartDate[index] + "] matches the expected [" + splitResortStartDate[index] + "]");
         TestReporter.softAssertEquals(phoneNumber, retrieve.getPhoneNumber(), "Verify the phone number [" + retrieve.getPhoneNumber() + "] matches the expected [" + phoneNumber + "]");
         TestReporter.softAssertEquals(addressLine1, retrieve.getAddressLine1(), "Verify the address line 1 [" + retrieve.getAddressLine1() + "] matches the expected [" + addressLine1 + "]");
         TestReporter.softAssertEquals(city, retrieve.getCity(), "Verify the city [" + retrieve.getCity() + "] matches the expected [" + city + "]");

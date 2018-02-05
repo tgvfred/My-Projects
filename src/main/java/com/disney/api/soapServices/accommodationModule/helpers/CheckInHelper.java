@@ -14,6 +14,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentS
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Add;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
+import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Book;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.FindRoomForReservation;
@@ -139,23 +140,27 @@ public class CheckInHelper {
             throw new AutomationException("The book object cannot be null.");
         } else {
             setWs(ws);
-            if (ws instanceof ReplaceAllForTravelPlanSegment) {
-                setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
-                setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
-                setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
-                setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
-            } else if (ws instanceof Add) {
-                setTpId(((Add) ws).getTravelPlanId());
-                setTpsId(((Add) ws).getTravelPlanSegmentId());
-                setTcgId(((Add) ws).getTravelComponentGroupingId());
-                setTcId(((Add) ws).getTravelComponentId());
-            } else if (ws instanceof Book) {
-                setTpId(((Book) ws).getTravelPlanId());
-                setTpsId(((Book) ws).getTravelPlanSegmentId());
-                setTcgId(((Book) ws).getTravelComponentGroupingId());
-                setTcId(((Book) ws).getTravelComponentId());
-            } else {
-                throw new AutomationException("The WebService object is not supported by this class.");
+            try {
+                if (ws instanceof ReplaceAllForTravelPlanSegment) {
+                    setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
+                    setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
+                    setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
+                    setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
+                } else if (ws instanceof Add) {
+                    setTpId(((Add) ws).getTravelPlanId());
+                    setTpsId(((Add) ws).getTravelPlanSegmentId());
+                    setTcgId(((Add) ws).getTravelComponentGroupingId());
+                    setTcId(((Add) ws).getTravelComponentId());
+                } else if (ws instanceof Book) {
+                    setTpId(((Book) ws).getTravelPlanId());
+                    setTpsId(((Book) ws).getTravelPlanSegmentId());
+                    setTcgId(((Book) ws).getTravelComponentGroupingId());
+                    setTcId(((Book) ws).getTravelComponentId());
+                } else {
+                    throw new AutomationException("The WebService object is not supported by this class.");
+                }
+            } catch (XPathNotFoundException xpnfe) {
+                TestReporter.logAPI(true, "Booking did not have required values in response", ws);
             }
         }
         retrieveReservation();
@@ -202,15 +207,16 @@ public class CheckInHelper {
                 roomAdded = true;
             }
         }
-        ;
+
         if (assignRoom == null) {
             TestReporter.log("\n\nRQ:\n\n");
             TestReporter.logNoXmlTrim(findRoom.getRequest());
             TestReporter.log("\n\nRS:\n\n");
             TestReporter.logNoXmlTrim(findRoom.getResponse());
         }
+
         TestReporter.assertNotNull(assignRoom, "No rooms were found for this reservation.");
-        TestReporter.assertTrue(roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoom.getFaultString());
+        TestReporter.logAPI(!roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoom.getFaultString(), assignRoom);
 
         setRoomRsrc(new String[2]);
         getRoomRsrc()[0] = roomNumber;
@@ -232,7 +238,7 @@ public class CheckInHelper {
         checkingIn.setLocationId(locationId);
         checkingIn.setTravelComponentGroupingId(getTcgId());
         checkingIn.sendRequest();
-        TestReporter.assertTrue(checkingIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getTpId() + "]: " + checkingIn.getFaultString());
+        TestReporter.logAPI(!checkingIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getTpId() + "]: " + checkingIn.getFaultString(), checkingIn);
     }
 
     public void checkIn(String locationId, Integer daysOut, Integer nights, String facilityId) {
@@ -240,27 +246,35 @@ public class CheckInHelper {
     }
 
     public void checkIn(String locationId, String daysOut, String nights, String facilityId) {
-        checkingIn(locationId, daysOut, nights, facilityId);
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getLocationIdByTpId(getTpId())));
-
-        pollForTPV3(getTpId());
-
-        CheckIn checkIn = new CheckIn(environment, "UI_Booking");
-        checkIn.setGuestId(getPrimaryGuestId());
-        checkIn.setLocationId(rs.getValue("WRK_LOC_ID", 1));
-        checkIn.setTravelComponentGroupingId(getTcgId());
-        int maxTries = 20;
+        int maxTries = 5;
         int tries = 0;
+        CheckIn checkIn = new CheckIn(environment, "UI_Booking");
         do {
-            Sleeper.sleep(Randomness.randomNumberBetween(3, 5) * 1000);
+            if (tries == 0) {
+                checkingIn(locationId, daysOut, nights, facilityId);
+            } else {
+
+                FindRoomForReservation findRoom = findRoomForReservation();
+                setRoomRsrc(assignRoomForReservation(findRoom, daysOut, nights, facilityId));
+                updateSingleRoomStatus("updateToCleanAndVacant");
+            }
+            Database db = new OracleDatabase(environment, Database.DREAMS);
+            Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getLocationIdByTpId(getTpId())));
+
+            pollForTPV3(getTpId());
+
+            checkIn.setGuestId(getPrimaryGuestId());
+            checkIn.setLocationId(rs.getValue("WRK_LOC_ID", 1));
+            checkIn.setTravelComponentGroupingId(getTcgId());
+
+            // Sleeper.sleep(Randomness.randomNumberBetween(3, 5) * 1000);
             checkIn.sendRequest();
             if (!checkIn.getResponseStatusCode().equals("200")) {
                 Sleeper.sleep(Randomness.randomNumberBetween(3, 7) * 1000);
             }
             tries++;
         } while (!checkIn.getResponseStatusCode().equals("200") && (tries < maxTries));
-        TestReporter.assertTrue(checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getTpId() + "]: " + checkIn.getFaultString());
+        TestReporter.logAPI(!checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getTpId() + "]: " + checkIn.getFaultString(), checkIn);
     }
 
     private void pollForTPV3(String tpId) {
@@ -271,7 +285,7 @@ public class CheckInHelper {
         Database db = new OracleDatabase(getEnvironment(), Database.SALESTP);
         Recordset rs = null;
         int tries = 0;
-        int maxTries = 20;
+        int maxTries = 5;
         boolean success = false;
         do {
             Sleeper.sleep(1000);
@@ -310,6 +324,7 @@ public class CheckInHelper {
         updateStatus.setResourceId(roomNumner);
         updateStatus.setRoomNumber(resourceId);
         updateStatus.sendRequest();
+        TestReporter.logAPI(!updateStatus.getResponseStatusCode().equals("200"), "Failed to update room status", updateStatus);
     }
 
     public void updateSingleRoomStatus(String scenario) {
@@ -317,6 +332,7 @@ public class CheckInHelper {
         updateStatus.setResourceId(getRoomRsrc()[1]);
         updateStatus.setRoomNumber(getRoomRsrc()[0]);
         updateStatus.sendRequest();
+        TestReporter.logAPI(!updateStatus.getResponseStatusCode().equals("200"), "Failed to update room status", updateStatus);
     }
 
     public void retrieveReservation() {

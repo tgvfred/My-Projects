@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
@@ -33,15 +34,15 @@ public class TestCancel_RO_CheckingIn extends AccommodationBaseTest {
         checkingIn(Environment.getBaseEnvironmentName(getEnvironment()));
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RO_CheckingIn() {
         TestReporter.logScenario("Test Cancel RO CheckingIn");
 
-        Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
+        Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
 
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);

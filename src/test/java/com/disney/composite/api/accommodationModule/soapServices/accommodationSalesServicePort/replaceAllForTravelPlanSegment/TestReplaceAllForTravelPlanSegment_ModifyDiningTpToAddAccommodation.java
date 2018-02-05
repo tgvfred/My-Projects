@@ -54,7 +54,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyDiningTpToAddAccommodation
         }
 
         try {
-            cancel();
+            cancel(getBook().getTravelComponentGroupingId());
         } catch (Exception e) {
 
         }
@@ -90,7 +90,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyDiningTpToAddAccommodation
         Map<String, String> departureDates = new HashMap<String, String>();
         departureDates.put("accommodation", getDepartureDate());
         departureDates.put("dining", dining.getServiceStartDate().split("T")[0]);
-        validations.validateModificationBackend(5, "Booked", "", arrivalDates, departureDates, "RESERVATION", getExternalRefNumber(),
+        validations.validateModificationBackend(5, "Booked", "", arrivalDates, departureDates, "NULL", "NULL",
                 getBook().getTravelPlanId(), tpsIds, tcgIds);
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Booked");
@@ -107,10 +107,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyDiningTpToAddAccommodation
         validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
 
         // Validate guest
-        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
-        validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
         Map<String, String> partyIds = new HashMap<>();
         String sql = "select d.TXN_IDVL_PTY_ID "
@@ -138,14 +135,21 @@ public class TestReplaceAllForTravelPlanSegment_ModifyDiningTpToAddAccommodation
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");
             clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
+            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
             clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
+            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
             TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
                     "Validating Response Comparison");
 

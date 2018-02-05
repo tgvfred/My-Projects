@@ -32,6 +32,8 @@ public class Test_GetAccommodationExternalReferences_bookingWithMultipleAccommEx
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(environment);
+        setIsWdtcBooking(true);
+        setMywPackageCode(true);
         setSendRequest(false);
         bookReservation();
 

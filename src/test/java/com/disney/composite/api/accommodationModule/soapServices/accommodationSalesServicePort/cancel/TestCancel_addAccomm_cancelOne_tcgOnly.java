@@ -12,6 +12,7 @@ import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.AddAccommodationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
@@ -27,7 +28,7 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
         // to invoke lower levels of reporting
         setEnvironment(environment);
         isComo.set("false");
-        daysOut.set(0);
+        daysOut.set(30);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
@@ -41,15 +42,16 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
         helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_addAccomm_cancelOne_tcgOnly() {
         TestReporter.logScenario("Test Cancel add accom cancel one tcg only");
 
-        Cancel cancel = new Cancel(environment, "Main");
+        Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setCancelDate(BaseSoapCommands.REMOVE_NODE.toString());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
 
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation.", cancel);
@@ -113,8 +115,8 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
         cancelHelper.verifyChargeGroupsStatusCount("UnEarned", 2);
         cancelHelper.verifyNumberOfChargesByStatus("Cancelled", 1);
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 1);
-        // Verify the reasonID matches the reason code used for the given TCId
-        // cancelHelper.verifyProductReasonID(book.getTravelComponentId());
+        // pause to allow TPV3 sync
+        Sleeper.sleep(5000);
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());

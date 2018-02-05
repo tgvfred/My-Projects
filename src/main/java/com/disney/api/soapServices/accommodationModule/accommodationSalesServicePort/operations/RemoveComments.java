@@ -3,6 +3,12 @@ package com.disney.api.soapServices.accommodationModule.accommodationSalesServic
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.utils.XMLTools;
 
+/**
+ * @deprecated deprecated in 8,5
+ * @author phlej001
+ *
+ */
+@Deprecated
 public class RemoveComments extends AccommodationSalesServicePort {
 
     public RemoveComments(String environment, String scenario) {

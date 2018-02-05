@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.utils.Environment;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
@@ -21,7 +22,7 @@ public class TestCancel_RO_Shared extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -35,19 +36,20 @@ public class TestCancel_RO_Shared extends AccommodationBaseTest {
         share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.setRequestNodeValueByXPath("/Envelope/Body/share/request/roomNumber", "fx:removenode");
         share.setRequestNodeValueByXPath("/Envelope/Body/share/request/locationId", getLocationId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         share.sendRequest();
         TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing TCG ID [" + getBook().getTravelComponentGroupingId() + "]: " + share.getFaultString());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RO_Shared() {
         TestReporter.logScenario("Test Cancel RO Shared");
 
-        Cancel cancel = new Cancel(environment, "Main");
-        cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
+        Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        cancel.setExternalReferenceNumber(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceNumber"));
-        cancel.setExternalReferenceSource(getBook().getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/externalReferences/externalReferenceSource"));
 
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);

@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -9,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.UnShareHelper;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -30,7 +32,7 @@ public class TestUnShare_oneTcg extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -62,6 +64,10 @@ public class TestUnShare_oneTcg extends AccommodationBaseTest {
         unshare = new UnShare(environment, "Main");
         unshare.setTravelComponentGroupingId(firstTCG);
         unshare.setLocationId(getLocationId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         unshare.sendRequest();
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + unshare.getFaultString(), unshare);
         validateResponse();
@@ -88,7 +94,7 @@ public class TestUnShare_oneTcg extends AccommodationBaseTest {
     public void validations() {
         UnShareHelper helper = new UnShareHelper(getEnvironment());
 
-        int numExpectedRecords = 2;
+        int numExpectedRecords = 1;
         helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
 
         int numExpectedRecords2 = 1;
@@ -122,5 +128,15 @@ public class TestUnShare_oneTcg extends AccommodationBaseTest {
 
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
 
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }

@@ -14,7 +14,6 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
-import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -51,6 +50,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
     public void testReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC() {
         setIsWdtcBooking(true);
+        setMywPackageCode(true);
         setSendRequest(false);
         bookReservation();
         getBook().setTravelPlanId(tpId);
@@ -58,19 +58,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
         getBook().setTravelComponentGroupingId(tcgId);
         getBook().setTravelComponentId(tcId);
         getBook().setReplaceAll("true");
-        // getBook().sendRequest();
-
-        int tries = 0;
-        int maxTries = 20;
-        boolean success = false;
-        do {
-            Sleeper.sleep(1000);
-            getBook().sendRequest();
-            tries++;
-            if (getBook().getResponseStatusCode().equals("200")) {
-                success = true;
-            }
-        } while ((tries < maxTries) && !success);
+        getBook().sendRequest();
 
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
 
@@ -80,26 +68,13 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
                 + "join guest.TXN_PTY_EXTNL_REF b on a.TXN_PTY_ID = b.TXN_PTY_ID "
                 + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
-        Recordset rs = null;
-
-        tries = 0;
-        maxTries = 60;
-        success = false;
-        do {
-            Sleeper.sleep(1000);
-            rs = new Recordset(db.getResultSet(sql));
-            tries++;
-            if (rs.getRowCount() > 0) {
-                success = true;
-            }
-        } while ((tries < maxTries) && !success);
-
+        Recordset rs = new Recordset(db.getResultSet(sql));
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
         ValidationHelper validations = new ValidationHelper(getEnvironment());
 
         // Validate reservation
-        validations.validateModificationBackend(13, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", extRefNum,
+        validations.validateModificationBackend(7, "Booked", "", getArrivalDate(), getDepartureDate(), "RESERVATION", extRefNum,
                 getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), "01825");
         validations.verifyBookingIsFoundInResHistory(getBook().getTravelPlanId());
         validations.verifyModificationIsFoundInResHistory(getBook().getTravelPlanId());
@@ -107,8 +82,8 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingRoomOnlyWithWDTC e
 
         // Validate Folio
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
-        validations.verifyNumberOfChargesByStatus("UnEarned", 9, getBook().getTravelPlanId());
-        validations.verifyChargeDetail(13, getBook().getTravelPlanId());
+        validations.verifyNumberOfChargesByStatus("UnEarned", 6, getBook().getTravelPlanId());
+        validations.verifyChargeDetail(10, getBook().getTravelPlanId());
         validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
         Map<String, String> groupDelegateSmallBalanceWriteoff = new HashMap<String, String>();
         groupDelegateSmallBalanceWriteoff.put(ServiceConstants.FolioExternalReference.DREAMS_TCG, "N");

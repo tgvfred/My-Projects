@@ -4,15 +4,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveSummary;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.guestFactory.Guest;
 
 public class Test_RetrieveSummary_oneTcg_roomOnly_oneAdultOneChild extends AccommodationBaseTest {
-    private ReplaceAllForTravelPlanSegment book;
-
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -24,12 +21,12 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_oneAdultOneChild extends Accom
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(environment);
+        setSendRequest(false);
         bookReservation();
-
-        book = new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), "book1Adult1Child");
-        book.sendRequest();
-        book.getResponse();
-        TestReporter.logAPI(!book.getResponseStatusCode().equals("200"), "Verify that no error occurred booking a res: " + book.getFaultString(), book);
+        Guest guest = new Guest();
+        guest.setAge("10");
+        getBook().addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, guest);
+        getBook().sendRequest();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
@@ -42,11 +39,11 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_oneAdultOneChild extends Accom
         // retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", book.getTravelComponentGroupingId());
         // // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
         // } else {
-        retrieve.setRequestTravelComponentGroupingId(book.getTravelPlanSegmentId());
+        retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         // }
 
         retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + book.getTravelComponentGroupingId() + "]", retrieve);
+        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]", retrieve);
         TestReporter.assertTrue(retrieve.getNumberofAdults().equals("1"), "Number of Adults is [1]! ");
         TestReporter.assertTrue(retrieve.getNumberofChildren().equals("1"), "Number of Children is [1]! ");
 

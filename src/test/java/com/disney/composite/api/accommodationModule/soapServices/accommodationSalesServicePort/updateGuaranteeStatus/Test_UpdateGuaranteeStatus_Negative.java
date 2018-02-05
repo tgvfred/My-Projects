@@ -15,7 +15,7 @@ public class Test_UpdateGuaranteeStatus_Negative extends AccommodationBaseTest {
     @AfterMethod(alwaysRun = true)
     public void teardown() {
         try {
-            cancel();
+            cancel(getBook().getTravelComponentGroupingId());
         } catch (Exception e) {
 
         }

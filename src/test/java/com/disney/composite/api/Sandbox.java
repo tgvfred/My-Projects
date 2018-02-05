@@ -2,15 +2,15 @@ package com.disney.composite.api;
 
 import org.testng.annotations.Test;
 
-import com.disney.utils.tdm.rfidMediaRepo.RFIDMediaRepo;
-import com.disney.utils.tdm.rfidMediaRepo.objects.RFIDMedia;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Quickbook;
 
 public class Sandbox {
 
     @Test
     public void roomOnlyBooking() {
-        // OfferQueryHelper offer = new OfferQueryHelper(environment, "WDW", "Package", true);
-        RFIDMedia media = RFIDMediaRepo.getRfidMedia("Bashful");
+        Quickbook book = new Quickbook("latest", "UI Booking");
+        book.sendRequest();
+        System.out.println(book.getResponse());
     }
 
 }

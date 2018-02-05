@@ -8,9 +8,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Reinstate;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ReinstateHelper;
-import com.disney.api.soapServices.pricingModule.packagingService.operations.FindMiscPackages;
-import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
-import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
@@ -23,13 +20,8 @@ import com.disney.utils.date.DateTimeConversion;
 
 public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest {
     Reinstate reinstate;
-    String TCG;
     private String travelStatus = "Booked";
     private String tpsCancelDate = Randomness.generateCurrentDatetime().split(" ")[0];
-    private AddBundle add;
-    private RetrieveDetailsByTravelPlanId details;
-    private int arrivalDaysOut = 0;
-    private int departureDaysOut = 4;
     String cancelNumber;
 
     @Override
@@ -37,7 +29,7 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(30);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -48,43 +40,13 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
         // retrieveReservation();
         bookReservation();
 
-        details = new RetrieveDetailsByTravelPlanId(Environment.getBaseEnvironmentName(environment), "Main");
-        details.setTravelPlanId(getBook().getTravelPlanId());
-        details.sendRequest();
-        TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
-
-        add = new AddBundle(Environment.getBaseEnvironmentName(environment), "Main");
-        add.setGuestsGuestNameFirstName(getHouseHold().primaryGuest().getFirstName());
-        add.setGuestsGuestNameLastName(getHouseHold().primaryGuest().getLastName());
-        add.setGuestsGuestReferenceId(details.getGuestsId());
-        add.setGuestsId(details.getGuestsId());
-        add.setPackageBundleRequestsBookDate(Randomness.generateCurrentXMLDate(arrivalDaysOut));
-        add.setPackageBundleRequestsContactName(getHouseHold().primaryGuest().getFirstName() + " " + getHouseHold().primaryGuest().getLastName());
-        add.setPackageBundleRequestsEndDate(Randomness.generateCurrentXMLDate(departureDaysOut - 2) + "T00:00:00");
-        add.setPackageBundleRequestsSalesOrderItemGuestsGUestReferenceId(details.getGuestsId());
-        add.setPackageBundleRequestsStartDate(Randomness.generateCurrentXMLDate(arrivalDaysOut + 1) + "T00:00:00");
-        add.setTravelPlanId(getBook().getTravelPlanId());
-        add.retrieveSalesOrderId(getBook().getTravelPlanId());
-        add.setSalesOrderId(add.getBundleSalesOrderIds()[0]);
-
-        FindMiscPackages find = new FindMiscPackages(Environment.getBaseEnvironmentName(environment), "MinimalInfo");
-        find.setArrivalDate(Randomness.generateCurrentXMLDate(arrivalDaysOut));
-        find.setBookDate(Randomness.generateCurrentXMLDate());
-        find.sendRequest();
-        TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred adding a bundle to TP ID [" + getBook().getTravelPlanId() + "]: " + add.getFaultString());
-        add.setPackageBundleRequestsCode(find.getPackageCode());
-
-        add.sendRequest();
-        TestReporter.assertEquals(add.getResponseStatusCode(), "200", "An error occurred while adding a bundle.\nRequest:\n" + add.getRequest() + "\nResonse:\n" + add.getResponse());
-        details.sendRequest();
-        TestReporter.assertEquals(details.getResponseStatusCode(), "200", "An error occurred while retrieveing the details.\nRequest:\n" + details.getRequest() + "\nResonse:\n" + details.getResponse());
-        TCG = getBook().getTravelComponentGroupingId();
     }
 
     @Test(groups = { "api", "regression", "reinstate", "accommodation", "accommodatoinsales" })
     public void Test_Reinstate_groupBookingWithTickets() {
         int numBookedComponents_book = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
 
+        Sleeper.sleep(3000);
         Cancel cancel = new Cancel(environment, "MainTickets");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
@@ -94,23 +56,23 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
         cancelNumber = cancel.getCancellationNumber();
-
+        Sleeper.sleep(3000);
         reinstate = new Reinstate(environment, "Main_2");
-        reinstate.setTravelComponentGroupingId(TCG);
+        reinstate.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         reinstate.sendRequest();
         TestReporter.logAPI(!reinstate.getResponseStatusCode().equals("200"), "An error occurred while reinstating: " + reinstate.getFaultString(), reinstate);
 
         int numBookedComponents_reinstate = getNumberOfBookedComponents(getBook().getTravelComponentGroupingId());
-        TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate, "Verify that the number of booked components [" + numBookedComponents_reinstate + "] is that which is expected [" + (numBookedComponents_book) + "].");
-
+        TestReporter.assertEquals(numBookedComponents_book, numBookedComponents_reinstate, "Verify that the number of reinstated components [" + (numBookedComponents_reinstate) + "] is that which is expected [" + (numBookedComponents_book) + "].");
+        Sleeper.sleep(3000);
         validations();
         // cancel and reinstate in order to clone on the old service.
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation." + cancel.getFaultString(), cancel);
-
+        Sleeper.sleep(3000);
         reinstate.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         reinstate.setTravelPlanSegmentId(getBook().getTravelPlanSegmentId());
         // reinstate.sendRequest();
@@ -167,25 +129,24 @@ public class TestReinstate_groupBookingWithTickets extends AccommodationBaseTest
         int numExpectedRecords = 3;
         reinstateHelper.validateActiveChargeGroup(numExpectedRecords);
 
-        int numExpectedRecords14 = 13;
-        reinstateHelper.validateTCReservationStatusForTCGFacId(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), "3",
+        int numExpectedRecords14 = 12;
+        reinstateHelper.validateTCReservationStatusForTCGFacId(numExpectedRecords14, getBook().getTravelComponentId(), getArrivalDate(), getDepartureDate(), getSalesChannelId(),
                 "Booked", getFacilityId(), getBook().getTravelComponentGroupingId());
 
         int numExpectedRecords12 = 1;
         reinstateHelper.validateTPSReservationStatus(numExpectedRecords12, tpsCancelDate, travelStatus, "0", getArrivalDate(), getDepartureDate());
 
-        int numExpectedRecords2 = 11;
-        // String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, workLocation);
-        String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, null, 11, 0);
+        int numExpectedRecords2 = 10;
+        String cancelledChargeId = reinstateHelper.validateCharges(numExpectedRecords2, null, numExpectedRecords2, 0);
 
-        int numExpectedRecords3 = 11;
+        int numExpectedRecords3 = 10;
         // reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3);
-        reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3, 11, 0);
+        reinstateHelper.validateChargeItem(cancelledChargeId, numExpectedRecords3, numExpectedRecords3, 0);
 
         int numExpectedRecords4 = 12;
         reinstateHelper.validateFolioStatus(numExpectedRecords4);
 
-        int numExpectedRecords5 = 12;
+        int numExpectedRecords5 = 11;
         reinstateHelper.validateFolioData(numExpectedRecords5);
 
         int numExpectedRecords6 = 12;

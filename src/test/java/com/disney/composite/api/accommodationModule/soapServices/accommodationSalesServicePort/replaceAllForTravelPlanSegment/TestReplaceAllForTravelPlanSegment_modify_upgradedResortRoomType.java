@@ -12,6 +12,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType extends AccommodationBaseTest {
@@ -26,7 +27,7 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(30);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -34,8 +35,6 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         setSendRequest(false);
         isComo.set("true");
         bookReservation();
-        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
-        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         tpId = getBook().getTravelPlanId();
@@ -43,11 +42,15 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
 
-        upgrade();
+        // upgrade();
+        Sleeper.sleep(15000);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType() {
+
+        upgrade();
+        Sleeper.sleep(15000);
         setValues("80010385", "CA", "51");
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);
@@ -134,7 +137,7 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
         upgrade.setCommunicationChannel("Guest Facing");
         upgrade.setEndDate(getDepartureDate());
         upgrade.setFacilityId(getFacilityId());
-        upgrade.setFreezeId(BaseSoapCommands.REMOVE_NODE.toString());
+        // upgrade.setFreezeId(freezeInventory());
         upgrade.setInventoryOverrideContactName(BaseSoapCommands.REMOVE_NODE.toString());
         upgrade.setInventoryOverrideReason(BaseSoapCommands.REMOVE_NODE.toString());
         upgrade.setLocationId(getLocationId());

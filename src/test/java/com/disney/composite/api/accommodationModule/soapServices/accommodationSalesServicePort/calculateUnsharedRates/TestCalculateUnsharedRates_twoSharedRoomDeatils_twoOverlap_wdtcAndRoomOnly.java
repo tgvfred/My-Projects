@@ -15,6 +15,13 @@ public class TestCalculateUnsharedRates_twoSharedRoomDeatils_twoOverlap_wdtcAndR
     public void testCalculateUnsharedRates_twoSharedRoomDeatils_twoOverlap_wdtcAndRoomOnly() {
         calculate = new CalculateUnsharedRates(environment, "TwoOverlap");
         calculate.setBlockCode("01825", "1");
+        String pkg = getPackageCode();
+        calculate.setUnsharedAccomadationSharedRoomDetailPackageCode(pkg);
+        calculate.setUnsharedAccomadationUnSharedRoomDetailPackageCode(pkg);
+        calculate.setUnsharedChainSharedRoomDetailPackageCode(pkg, "1");
+        calculate.setUnsharedChainSharedRoomDetailPackageCode(pkg, "2");
+        calculate.setUnsharedChainUnSharedRoomDetailPackageCode(pkg, "1");
+        calculate.setUnsharedChainUnSharedRoomDetailPackageCode(pkg, "2");
         calculate.sendRequest();
         TestReporter.logAPI(!calculate.getResponseStatusCode().equals("200"), "An error occurred calculating unshared rates.", calculate);
 

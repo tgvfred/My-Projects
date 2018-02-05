@@ -27,7 +27,7 @@ public class Test_UpdateGuaranteeStatus_wdtc_MEMBER_GUARANTEED extends Accommoda
     @AfterMethod(alwaysRun = true)
     public void teardown() {
         try {
-            cancel();
+            cancel(getBook().getTravelComponentGroupingId());
         } catch (Exception e) {
 
         }

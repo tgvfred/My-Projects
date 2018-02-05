@@ -8,20 +8,29 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCPointsHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestRetrieveRates_DVC_Points extends BookDVCPointsHelper {
     private String locEnv = null;
+    private String packageName = "";
 
     @Override
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
-        locEnv = environment;
+        setEnvironment(environment);
+        locEnv = Environment.getBaseEnvironmentName(getEnvironment());
         setUseDvcResort(true);
         setUseNonZeroPoints(true);
         setBook(bookDvcReservation("testBookWithPay_MP", 1));
         setTpId(getFirstBooking().getTravelPlanId());
+
+        String sql = " SELECT PROD_EXTRNL_DS FROM RES_MGMT.TC JOIN PRICING.PROD ON TC.PROD_ID = PROD.PROD_ID WHERE TC.TC_TYP_NM = 'PackageTravelComponent' AND TC.TC_GRP_NB = " + getBook().getTravelComponentGroupingId();
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        packageName = rs.getValue("PROD_EXTRNL_DS");
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveRates" })
@@ -30,7 +39,6 @@ public class TestRetrieveRates_DVC_Points extends BookDVCPointsHelper {
         String tcgId = getBook().getTravelComponentGroupingId();
         String tpId = getBook().getTravelPlanId();
         String roomCode = getRoomTypeCode();
-        String packageName = "WDW DVC Member Points Room Only";
         String rateDate = "";
         String dayCount = Integer.toString(getNights());
         String overridden = "true";

@@ -1,5 +1,6 @@
 package com.disney.api.restServices.accommodationSales;
 
+import com.disney.api.restServices.accommodationSales.retrieveAccommodationDetails.retrieveAccommodationDetails;
 import com.disney.api.restServices.accommodationSales.updateComments.updateComments;
 import com.disney.api.restServices.core.RestService;
 
@@ -14,5 +15,10 @@ public class AccommodationSales {
 
     public updateComments updateComments() {
         return new updateComments(restService, resource);
+    }
+
+    public retrieveAccommodationDetails retrieveAccommodationDetails() {
+
+        return new retrieveAccommodationDetails(restService, resource);
     }
 }

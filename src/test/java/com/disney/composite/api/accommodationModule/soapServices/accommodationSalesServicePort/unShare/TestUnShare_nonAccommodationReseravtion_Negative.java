@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.UnShare;
@@ -22,12 +23,6 @@ public class TestUnShare_nonAccommodationReseravtion_Negative extends Accommodat
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "unShare", "negative" })
     public void Test_unShare_nonAccommodationReservation_Negative() {
-
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Folio Fix in Progress, for now operation not supported.");
-        // }
-        // }
         ScheduledEventReservation dining = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         dining.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
         tpId = dining.getTravelPlanId();
@@ -46,6 +41,15 @@ public class TestUnShare_nonAccommodationReseravtion_Negative extends Accommodat
 
         TestReporter.assertEquals(unshare.getFaultString(), faultString, "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
 
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(tcgId);
+        } catch (Exception e) {
+        }
     }
 
 }

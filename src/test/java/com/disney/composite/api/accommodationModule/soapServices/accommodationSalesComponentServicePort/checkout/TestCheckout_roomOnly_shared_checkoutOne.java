@@ -1,13 +1,17 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -18,6 +22,7 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
     private CheckInHelper helper;
     private String locVar;
     // private Book book;
+    private String firstTCG;
 
     @Override
     @Parameters("environment")
@@ -25,13 +30,21 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
     public void setup(String environment) {
         setEnvironment(environment);
         isComo.set("false");
-        setDaysOut(0);
-        setNights(1);
+        setDaysOut(1);
+        setNights(3);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         locVar = environment;
+        setSkipExternalRef(false);
         bookReservation();
+        firstTCG = getBook().getTravelComponentGroupingId();
+        setDaysOut(0);
+        setArrivalDate(getDaysOut());
+        setNights(2);
+        Sleeper.sleep(5000);
+        bookReservation();
+        Sleeper.sleep(5000);
     }
 
     @Test(groups = { "api", "regression", "checkout", "Accommodation", "debug" })
@@ -43,15 +56,47 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
          * }
          * }
          */
+
         Share share = new Share(getEnvironment(), "oneTcgOnly");
-        share.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        share.setTravelComponentGroupingId(firstTCG);
+        share.addSharedComponent();
+        share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing TCG ID [" + getBook().getTravelComponentGroupingId() + "]: " + share.getFaultString());
 
-        helper = new CheckInHelper(locVar, getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-        helper.checkOut(getLocationId());
+        helper = new CheckInHelper(getEnvironment(), getBook());
+        int tries = 0;
+        int maxTries = 5;
+        boolean success = false;
+        do {
+            try {
+                helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+                success = true;
+            } catch (Exception e) {
+                cancel(getBook().getTravelComponentGroupingId());
+                setValues();
+                bookReservation();
+            }
+        } while (tries < maxTries && !success);
 
+        String refType = "RESERVATION";
+        String refNumber = getExternalRefNumber();
+        String refSource = getExternalRefSource();
+        Checkout checkout = new Checkout(getEnvironment(), "main");
+        checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setIsBellServiceRequired(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setIsSameRoomNumberAssigned(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        checkout.setExternalReferenceType(refType);
+        checkout.setExternalReferenceNumber(refNumber);
+        checkout.setExternalReferenceSource(refSource);
+        checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.setCheckoutDate(Randomness.generateCurrentXMLDate());
+        checkout.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
+        checkout.sendRequest();
+
+        Sleeper.sleep(3000);
+        TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "Validate checkout received no errors", checkout);
         String assignOwnerId = validateResMgmt(getBook().getTravelComponentId());
         validateRIM(assignOwnerId);
         additionalValidations(assignOwnerId);
@@ -73,7 +118,6 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         TestReporter.softAssertTrue(rs.getRowCount() == 1, "Verify that 1 record was returned.");
-        TestReporter.softAssertTrue(!rs.getValue("AUTO_ASGN_RSRC_ID").equals("NULL"), "Verify that the auto asign resource ID [" + rs.getValue("AUTO_ASGN_RSRC_ID") + "] is not null.");
         TestReporter.softAssertTrue(rs.getValue("OWNR_STS_NM").equals("COMPLETED"), "Verify that the owner status [" + rs.getValue("OWNR_STS_NM") + "] is that which is expected [COMPLETED].");
         TestReporter.softAssertTrue(rs.getValue("RSRC_ASGN_REQ_ID").equals("NULL"), "Verify that the resource assingment request ID [" + rs.getValue("RSRC_ASGN_REQ_ID") + "] is that which is expected [NULL].");
         TestReporter.softAssertTrue(rs.getValue("ASGN_ID").equals("NULL"), "Verify that the assignment ID [" + rs.getValue("ASGN_ID") + "] is that which is expected [NULL].");
@@ -171,7 +215,7 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
 
     public void validateChargeGroupsChargesAndFolio() {
         validateChargGroups();
-        validateCharges();
+        validateCharges("Earned", "Y", "APPROVED");
         validateFolio();
     }
 
@@ -189,7 +233,6 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
                 + "and folio_sts_nm is not null";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertTrue(rs.getRowCount() == 1, "Verify that 1 folio was found.");
         do {
             TestReporter.softAssertEquals(rs.getValue("FOLIO_STS_NM"), "Earned", "Verify that the foloi status [" + rs.getValue("FOLIO_STS_NM") + "] is that which is expected [Earned].");
             rs.moveNext();
@@ -209,11 +252,33 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
                 + "and CHRG_ACTV_IN is not null";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertTrue(rs.getRowCount() == 4, "Verify that 4 charges were found.");
+
         do {
             TestReporter.softAssertEquals(rs.getValue("CHRG_PST_ST_NM"), "Earned", "Verify that the charge past state name [" + rs.getValue("CHRG_PST_ST_NM") + "] is that which is expected [Earned].");
             TestReporter.softAssertEquals(rs.getValue("CHRG_ACTV_IN"), "N", "Verify that the charge active indicator [" + rs.getValue("CHRG_ACTV_IN") + "] is that which is expected [N].");
             TestReporter.softAssertEquals(rs.getValue("RECOG_STS_NM"), "APPROVED", "Verify that the RECOG status [" + rs.getValue("RECOG_STS_NM") + "] is that which is expected [APPROVED].");
+            rs.moveNext();
+        } while (rs.hasNext());
+        TestReporter.assertAll();
+    }
+
+    public void validateCharges(String CHRG_PST_ST_NM, String CHRG_ACTV_IN, String RECOG_STS_NM) {
+        TestReporter.logStep("Validate charges");
+        String sql = "select CHRG_ACTV_IN, CHRG_PST_ST_NM, RECOG_STS_NM "
+                + "from folio.EXTNL_REF a "
+                + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
+                + "left outer join folio.CHRG d on c.CHRG_GRP_ID = d.CHRG_GRP_ID "
+                + "left outer join folio.CHRG_ITEM e on d.CHRG_ID = e.CHRG_ID "
+                + "where a.EXTNL_REF_VAL in ('" + getBook().getTravelPlanId() + "','" + getBook().getTravelPlanSegmentId() + "','" + getBook().getTravelComponentGroupingId() + "') "
+                + "and CHRG_ACTV_IN is not null";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        do {
+            TestReporter.softAssertEquals(rs.getValue("CHRG_PST_ST_NM"), CHRG_PST_ST_NM, "Verify that the charge past state name [" + rs.getValue("CHRG_PST_ST_NM") + "] is that which is expected [" + CHRG_PST_ST_NM + "].");
+            TestReporter.softAssertEquals(rs.getValue("CHRG_ACTV_IN"), CHRG_ACTV_IN, "Verify that the charge active indicator [" + rs.getValue("CHRG_ACTV_IN") + "] is that which is expected [" + CHRG_ACTV_IN + "].");
+            TestReporter.softAssertEquals(rs.getValue("RECOG_STS_NM"), RECOG_STS_NM, "Verify that the RECOG status [" + rs.getValue("RECOG_STS_NM") + "] is that which is expected [" + RECOG_STS_NM + "].");
             rs.moveNext();
         } while (rs.hasNext());
         TestReporter.assertAll();
@@ -228,12 +293,21 @@ public class TestCheckout_roomOnly_shared_checkoutOne extends AccommodationBaseT
                 + "where a.EXTNL_REF_VAL in ('" + getBook().getTravelPlanId() + "','" + getBook().getTravelPlanSegmentId() + "','" + getBook().getTravelComponentGroupingId() + "')";
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertTrue(rs.getRowCount() == 3, "Verify that 3 charge groups were found.");
         do {
             TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM"), "Past Visit", "Verify that the charge group status [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Past Visit].");
             TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_ACTV_IN"), "Y", "Verify that the charge group active indicator [" + rs.getValue("CHRG_GRP_STS_NM") + "] is that which is expected [Y].");
             rs.moveNext();
         } while (rs.hasNext());
         TestReporter.assertAll();
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }

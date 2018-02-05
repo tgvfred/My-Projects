@@ -153,7 +153,7 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         String faultString = "Cannot Calculate Cancellation Fee for cancelled or checked in or checked out reservation";
 
         RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
-        cancel();
+        cancel(getBook().getTravelComponentGroupingId());
         fee.setCancelDate(date);
         fee.setID(id);
         fee.setIdentityLevel(idLevel);

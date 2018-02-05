@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -9,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ShareHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -29,7 +31,7 @@ public class TestShare_twoTcg_shareTwice extends AccommodationBaseTest {
 
         setEnvironment(environment);
         isComo.set("false");
-        daysOut.set(0);
+        daysOut.set(40);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
@@ -51,23 +53,27 @@ public class TestShare_twoTcg_shareTwice extends AccommodationBaseTest {
 
         // verify that the owner id's for the first and second tcg do not match.
         TestReporter.softAssertTrue(firstOwnerId != secondOwnerId, "Verify the assignment owner Ids for each TCG [" + firstOwnerId + "] do not match [" + secondOwnerId + "].");
-
+        Sleeper.sleep(3000);
         share = new Share(environment, "Main_twoTcg");
         share.setTravelComponentGroupingId(firstTCG);
         share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
-
+        Sleeper.sleep(3000);
         share = new Share(environment, "Main_twoTcg");
         share.setTravelComponentGroupingId(firstTCG);
         share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
         validateResponse();
         validations();
-
+        Sleeper.sleep(3000);
         if (Environment.isSpecialEnvironment(environment)) {
             Share clone = (Share) share.clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
@@ -135,14 +141,14 @@ public class TestShare_twoTcg_shareTwice extends AccommodationBaseTest {
         String bookingDate = share.getBookingDate();
         String travelStatus = share.getTravelStatus();
 
-        TestReporter.softAssertEquals(firstTPS, tpsId, "Verify that the response returns the tpsID [" + firstTPS + "] that which is expected [" + tpsId + "].");
-        TestReporter.softAssertEquals(getBook().getTravelPlanSegmentId(), tpsId2, "Verify that the response returns the tpsID [" + getBook().getTravelPlanSegmentId() + "] that which is expected [" + tpsId2 + "].");
+        TestReporter.softAssertTrue(firstTPS.equals(tpsId) ? true : firstTPS.equals(tpsId2), "Verify that the response returns the tpsID [" + firstTPS + "] .");
+        TestReporter.softAssertTrue(getBook().getTravelPlanSegmentId().equals(tpsId) ? true : getBook().getTravelPlanSegmentId().equals(tpsId2), "Verify that the response returns the tpsID [" + getBook().getTravelPlanSegmentId() + "] .");
 
-        TestReporter.softAssertEquals(firstTCG, tcgId, "Verify that the response returns the tcgId [" + firstTCG + "] that which is expected [" + tcgId + "].");
-        TestReporter.softAssertEquals(getBook().getTravelComponentGroupingId(), tcgId2, "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "] that which is expected [" + tcgId2 + "].");
+        TestReporter.softAssertTrue(firstTCG.equals(tcgId) ? true : firstTCG.equals(tcgId2), "Verify that the response returns the tcgId [" + firstTCG + "]");
+        TestReporter.softAssertTrue(getBook().getTravelComponentGroupingId().equals(tcgId) ? true : getBook().getTravelComponentGroupingId().equals(tcgId2), "Verify that the response returns the tcgId [" + getBook().getTravelComponentGroupingId() + "]");
 
-        TestReporter.softAssertEquals(firstTC, tcId, "Verify that the response returns the tcId [" + firstTC + "] that which is expected [" + tcId + "].");
-        TestReporter.softAssertEquals(getBook().getTravelComponentId(), tcId2, "Verify that the response returns the tcId [" + getBook().getTravelComponentId() + "] that which is expected [" + tcId2 + "].");
+        TestReporter.softAssertTrue(firstTC.equals(tcId) ? true : firstTC.equals(tcId2), "Verify that the response returns the tcId [" + firstTC + "]");
+        TestReporter.softAssertTrue(getBook().getTravelComponentId().equals(tcId) ? true : getBook().getTravelComponentId().equals(tcId2), "Verify that the response returns the tcId [" + getBook().getTravelComponentId() + "] ");
 
         TestReporter.softAssertEquals(Randomness.generateCurrentXMLDate(), bookingDate.substring(0, 10), "Verify that the booking date [" + Randomness.generateCurrentXMLDate() + "] that which is expected [" + bookingDate.substring(0, 10) + "].");
         TestReporter.softAssertEquals(travelStatus, "Booked", "Verify that the response returns the travel status [" + travelStatus + "] that which is expected [Booked].");
@@ -183,5 +189,15 @@ public class TestShare_twoTcg_shareTwice extends AccommodationBaseTest {
         }
 
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }
