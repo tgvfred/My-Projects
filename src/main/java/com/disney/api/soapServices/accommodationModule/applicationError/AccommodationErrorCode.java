@@ -291,6 +291,9 @@ public class AccommodationErrorCode {
     public static final ApplicationErrorCode LOCATION_ID_MANDATORY = new ApplicationErrorCode(APP_NAME, 9126,
             "Location Id is Mandatory");
 
+    public static final ApplicationErrorCode LOCATION_ID_IS_MANDATORY = new ApplicationErrorCode(APP_NAME, 8317,
+            "Location Id is Mandatory");
+
     public static final ApplicationErrorCode RECORD_NOT_FOUND_EXCEPTION = new ApplicationErrorCode(APP_NAME, 9127,
             "Record Not Found");
 
