@@ -185,6 +185,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private Map<String, String> regexXpaths = new HashMap<>();
     private Document responseDocument = null;
     private Set<String> excludedBaselineXpaths = new HashSet<>();
+    private String tcg;
 
     public void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -1333,15 +1334,24 @@ public class AccommodationBaseTest extends BaseRestTest {
         }
         try {
             if ((skipCancel == null) || (skipCancel.get() == null) || (skipCancel.get() != true)) {
-                cancel();
+                cancel(tcg);
             }
         } catch (Exception e) {
         }
     }
 
+    public void cancel(String tcg) {
+        Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(getEnvironment()), "MainCancel");
+        cancel.setTravelComponentGroupingId(tcg);
+        try {
+            cancel.sendRequest();
+        } catch (Exception e) {
+        }
+
+    }
+
     public void cancel() {
         Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(getEnvironment()), "MainCancel");
-        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         if (getBook() != null) {
             if (tcgId != null && tcgId.get() != null && !tcgId.get().isEmpty()) {
                 cancel.setTravelComponentGroupingId(tcgId.get());
@@ -1351,7 +1361,11 @@ public class AccommodationBaseTest extends BaseRestTest {
         } else {
             cancel.setTravelComponentGroupingId(tcgId.get());
         }
-        cancel.sendRequest();
+        try {
+            cancel.sendRequest();
+        } catch (Exception e) {
+        }
+
     }
 
     @AfterSuite(alwaysRun = true)

@@ -78,7 +78,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyExistingReservation extend
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred modifying to a group booking: " + getBook().getFaultString(), getBook());
         tpPtyId = getBook().getGuestId();
 
-        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
+        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(getEnvironment()));
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",

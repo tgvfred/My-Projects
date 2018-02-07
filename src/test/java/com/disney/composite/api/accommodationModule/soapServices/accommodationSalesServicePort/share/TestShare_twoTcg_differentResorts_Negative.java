@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -70,6 +71,16 @@ public class TestShare_twoTcg_differentResorts_Negative extends AccommodationBas
 
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(share, AccommodationErrorCode.CANT_CHANGE_BLOCK_RESORT_PACKAGE_FOR_SHARED_ACCOMMODATION);
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTcg);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 
 }

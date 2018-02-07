@@ -23,7 +23,6 @@ public class TestRetrieve_bundle extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         setIsBundle(true);
-        isComo.set("true");
         bookReservation();
     }
 

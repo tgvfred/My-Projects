@@ -308,7 +308,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_cancelled() {
 
-        cancel();
+        cancel(getBook().getTravelComponentGroupingId());
         String fault = "Cancelled accommodations cannot be overriden : null";
 
         TestReporter.logScenario("Test - Override Accommodation Rates   - Cancelled");

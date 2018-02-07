@@ -54,7 +54,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyDiningTpToAddAccommodation
         }
 
         try {
-            cancel();
+            cancel(getBook().getTravelComponentGroupingId());
         } catch (Exception e) {
 
         }

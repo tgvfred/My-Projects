@@ -41,7 +41,7 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
         retrieve.setLocationId("0");
         retrieve.sendRequest();
         TestReporter.logAPI(!retrieve.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + retrieve.getFaultString() + " ]", retrieve);
-        validateApplicationError(retrieve, AccommodationErrorCode.LOCATION_ID_MANDATORY);
+        validateApplicationError(retrieve, AccommodationErrorCode.LOCATION_ID_IS_MANDATORY);
 
     }
 
@@ -64,6 +64,7 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
     public void testRetrieve_invalidTps() {
 
         String fault = "No TravelPlanSegment Found";
+
         Retrieve retrieve = new Retrieve(environment);
         retrieve.setTravelPlanSegmentId("18384489184");
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
@@ -79,6 +80,7 @@ public class TestRetrieve_Negative extends AccommodationBaseTest {
     public void testRetrieve_invalidTp() {
 
         String fault = "No TravelPlan Found";
+
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
         retrieve.setTravelPlanSegmentId(BaseSoapCommands.REMOVE_NODE.toString());
         retrieve.setTravelPlanId("46476544747");

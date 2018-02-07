@@ -175,7 +175,8 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         setIsWdtcBooking(false);
         setValues(getEnvironment());
         setIsBundle(true);
-        setSkipDeposit(true);
+        setSendRequest(true);
+
         bookReservation();
     }
 

@@ -4,13 +4,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
-import com.disney.utils.Randomness;
-import com.disney.utils.TestReporter;
 
 public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyRSR extends AccommodationBaseTest {
 
@@ -57,45 +53,44 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyRSR extends Accommod
         validations.verifyTpPartyId(getHouseHold().primaryGuest().getGuestId(), getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
-        validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), getHouseHold().primaryGuest().getGuestId(), getHouseHold().primaryGuest(), 1, 1, "N", "NULL", getFacilityId());
-
         // Validate the Old to the New
-        if (Environment.isSpecialEnvironment(environment)) {
-            ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
-            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
-            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
-            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
-            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
-            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
-            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
-            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
-            clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
-                    "Validating Response Comparison");
-
-            try {
-                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
-                cancel.setCancelDate(Randomness.generateCurrentXMLDate());
-                cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
-                cancel.sendRequest();
-            } catch (Exception e) {
-
-            }
-        }
-    }
+        /*
+         * if (Environment.isSpecialEnvironment(environment)) {
+         * ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();
+         * clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
+         * clone.sendRequest();
+         * if (!clone.getResponseStatusCode().equals("200")) {
+         * TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
+         * }
+         * clone.addExcludedBaselineAttributeValidations("@xsi:nil");
+         * clone.addExcludedBaselineAttributeValidations("@xsi:type");
+         * clone.addExcludedBaselineXpathValidations("/Envelope/Header");
+         * clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
+         * clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
+         * clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
+         * clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
+         * clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+         * clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
+         * clone.addExcludedBaselineXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
+         * clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
+         * clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
+         * clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+         * clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
+         * clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentId");
+         * clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/ticketDetails/guestReference/guest/partyId");
+         * clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
+         * clone.addExcludedXpathValidations("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
+         * TestReporter.assertTrue(clone.validateResponseNodeQuantity(getBook(), true),
+         * "Validating Response Comparison");
+         *
+         * try {
+         * Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
+         * cancel.setCancelDate(Randomness.generateCurrentXMLDate());
+         * cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
+         * cancel.sendRequest();
+         * } catch (Exception e) {
+         *
+         * }
+         * }
+         */ }
 }

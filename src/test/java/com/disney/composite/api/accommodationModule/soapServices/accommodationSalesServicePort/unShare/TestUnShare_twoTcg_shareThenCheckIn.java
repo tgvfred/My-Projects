@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -74,5 +75,15 @@ public class TestUnShare_twoTcg_shareThenCheckIn extends AccommodationBaseTest {
         unshare.sendRequest();
         TestReporter.assertTrue(unshare.getFaultString().contains(faultString), "Verify that the fault string [" + unshare.getFaultString() + "] contains that which is expected [" + faultString + "].");
         validateApplicationError(unshare, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_UNSHARED);
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }

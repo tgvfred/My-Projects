@@ -19,7 +19,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_Cancelled extends Accommodatio
     @Override
     @AfterMethod(alwaysRun = true)
     public void teardown() {
-        cancel();
+        cancel(getBook().getTravelComponentGroupingId());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })

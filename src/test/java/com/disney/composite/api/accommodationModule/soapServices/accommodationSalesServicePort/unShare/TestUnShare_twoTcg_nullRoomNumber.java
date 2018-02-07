@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -155,5 +156,15 @@ public class TestUnShare_twoTcg_nullRoomNumber extends AccommodationBaseTest {
         }
 
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }

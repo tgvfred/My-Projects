@@ -62,8 +62,6 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnly_CommunicationCenter
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
-        validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1, "N", "NULL", getFacilityId());
-
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
             ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();

@@ -67,7 +67,7 @@ public class TestCheckout_tpsExtRefAndTcg extends AccommodationBaseTest {
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
-                cancel();
+                cancel(getBook().getTravelComponentGroupingId());
                 setValues();
                 bookReservation();
             }

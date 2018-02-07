@@ -65,7 +65,7 @@ public class TestCheckout_bundle extends AccommodationBaseTest {
                 helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
                 success = true;
             } catch (Exception e) {
-                cancel();
+                cancel(getBook().getTravelComponentGroupingId());
                 setValues();
                 bookReservation();
             }

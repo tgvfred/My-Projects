@@ -758,6 +758,12 @@ public final class AccommodationErrorCode {
     public static final ApplicationErrorCode NO_ROOM_PRICES_FROM_PRICING = new ApplicationErrorCode(APP_NAME, 7188,
             "No Room Prices returned from Pricing");
 
+    public static final ApplicationErrorCode LOCATION_ID_IS_MANDATORY = new ApplicationErrorCode(APP_NAME, 8317,
+            "Location Id is Mandatory");
+
+    public static final ApplicationErrorCode RECORD_NOT_FOUND_EXC = new ApplicationErrorCode(APP_NAME, 9127,
+            "Record Not Found");
+
     public static final ApplicationErrorCode SERVICE_REQUEST_NOT_PRICED = new ApplicationErrorCode(APP_NAME, 8105,
             "The service request could not be priced successfully");
 

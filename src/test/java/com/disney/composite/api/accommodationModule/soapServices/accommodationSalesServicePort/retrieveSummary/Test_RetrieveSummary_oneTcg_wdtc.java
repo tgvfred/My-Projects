@@ -28,7 +28,7 @@ public class Test_RetrieveSummary_oneTcg_wdtc extends AccommodationBaseTest {
     @AfterMethod(alwaysRun = true)
     public void teardown() {
         try {
-            cancel();
+            cancel(getBook().getTravelComponentGroupingId());
         } catch (Exception e) {
 
         }

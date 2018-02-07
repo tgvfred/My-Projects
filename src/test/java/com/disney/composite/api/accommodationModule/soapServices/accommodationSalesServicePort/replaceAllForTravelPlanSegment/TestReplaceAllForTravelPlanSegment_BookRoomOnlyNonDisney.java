@@ -35,7 +35,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyNonDisney extends Ac
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
-        setResortCode("1B");
+        setResortCode("SWN");
         setRoomTypeCode("SA");
         setFacilityId("80069789");
         isComo.set("true");
