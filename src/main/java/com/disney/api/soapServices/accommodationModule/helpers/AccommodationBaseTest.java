@@ -1343,7 +1343,9 @@ public class AccommodationBaseTest extends BaseRestTest {
         Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(getEnvironment()), "MainCancel");
         cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         if (getBook() != null) {
-            if (getBook().getTravelComponentGroupingId() != null) {
+            if (tcgId != null && tcgId.get() != null && !tcgId.get().isEmpty()) {
+                cancel.setTravelComponentGroupingId(tcgId.get());
+            } else if (getBook().getTravelComponentGroupingId() != null) {
                 cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
             }
         } else {
@@ -1435,7 +1437,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setPackageDescription("ANN MYW Pkg + Dining");
                 setPackageType("WHOLESALE");
                 // if (packageCode.get() == null || packageCode.get().isEmpty()) {
-                PackageCodeHelper helper = new PackageCodeHelper(Environment.getBaseEnvironmentName(getEnvironment()), Randomness.generateCurrentXMLDate(), RoomTypes.getTicketPlusDisneyDiningPlan(), "DREAMS - United States", getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
+                PackageCodeHelper helper = new PackageCodeHelper(Environment.getBaseEnvironmentName(getEnvironment()), Randomness.generateCurrentXMLDate(), RoomTypes.getRoomPlusMywTicket(), "DREAMS - United States", getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
                 packageCode.set(helper.getPackageCode());
                 // }
                 try {
@@ -1820,8 +1822,8 @@ public class AccommodationBaseTest extends BaseRestTest {
         }
 
         Sleeper.sleep(5000);
-        retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
-        // retrieve.set(new Retrieve(getEnvironment(), "Main"));
+        // retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
+        retrieve.set(new Retrieve(getEnvironment(), "Main"));
         getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", getBook().getTravelPlanId());
         getRetrieve().setRequestNodeValueByXPath("//request/locationId", getLocationId());
         getRetrieve().sendRequest();
