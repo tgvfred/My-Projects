@@ -1557,6 +1557,24 @@ public class ValidationHelper {
         return admissionTcId;
     }
 
+    public void validateAdmissionComponentRemoved(String travelComponentGroupingId) {
+        String sql = "select * "
+                + "from res_mgmt.tc a "
+                + "where a.tc_grp_nb = " + travelComponentGroupingId;
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        boolean found = false;
+        do {
+            if (rs.getValue("TC_TYP_NM").equals("AdmissionComponent")) {
+                found = true;
+                rs.moveLast();
+            } else {
+                rs.moveNext();
+            }
+        } while (rs.hasNext() && !found);
+        TestReporter.assertFalse(found, "Verify that an admission TC was not found for TCG [" + travelComponentGroupingId + "].");
+    }
+
     public String validateAdmissionComponentDetails(String admissionComponentId, String code) {
         TestReporter.logStep("Verify admission component details");
         String sql = "select * "

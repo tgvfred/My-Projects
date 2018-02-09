@@ -358,7 +358,7 @@ public class TicketsHelper {
         bs.setRequestNodeValueByXPath(baseXpath + "/doNotPhoneIndicator", "0");
         bs.setRequestNodeValueByXPath(baseXpath + "/preferredLanguage", guest.getLanguagePreference());
         bs.setRequestNodeValueByXPath(baseXpath + "/dclGuestId", "0");
-        bs.setRequestNodeValueByXPath(baseXpath + "/guestId", "0");
+        bs.setRequestNodeValueByXPath(baseXpath + "/guestId", guest.getGuestId());
         bs.setRequestNodeValueByXPath(baseXpath + "/active", "0");
 
         // Add a phoneDetails node
