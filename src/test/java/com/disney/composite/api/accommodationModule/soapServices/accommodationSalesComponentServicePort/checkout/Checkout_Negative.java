@@ -4,31 +4,31 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Checkout;
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
-import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Cancel;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
-public class Checkout_Negative extends AccommodationBaseTest {
+public class Checkout_Negative extends BookDVCCashHelper {
 
     @Override
-    @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
-        isComo.set("false");
-        setDaysOut(0);
-        setNights(1);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getDaysOut() + getNights());
-        setValues(getEnvironment());
-        bookReservation();
+        setUseDvcResort(true);
+        setValues("305669", "5A", "10068", "15");
+        setUseExistingValues(true);
+        setRetrieveAfterBook(false);
+        bookDvcReservation("DVC_RM_TPS_ContractInGoodStatus", 1);
+        DVCSalesBaseTest.environment = environment;
+
     }
 
-    @Test(groups = { "api", "regression", "checkout", "accommodation", "negative" })
+    @Test(groups = { "api", "regression", "checkout", "accommodation", "negative", "GCAL" })
     public void TestCheckout_booked() {
 
         // if (Environment.isSpecialEnvironment(environment)) {
@@ -38,10 +38,10 @@ public class Checkout_Negative extends AccommodationBaseTest {
         // }
 
         String faultString = "INVALID REQUEST! : No Checked-In Accommodations found with the External Reference#";
-        String tcgId = getBook().getTravelComponentGroupingId();
+        String tcgId = getFirstBooking().getTravelComponentGroupingId();
         String refType = "RESERVATION";
-        String refNumber = "4612616";
-        String refSource = "Accovia";
+        String refNumber = getFirstBooking().getRequestNodeValueByXPath("//externalReferenceNumber");
+        String refSource = getFirstBooking().getRequestNodeValueByXPath("//externalReferenceSource");
 
         Checkout checkout = new Checkout(environment, "main");
         checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
@@ -63,26 +63,22 @@ public class Checkout_Negative extends AccommodationBaseTest {
 
     }
 
-    @Test(groups = { "api", "regression", "checkout", "accommodation", "negative", "debug" })
+    @Test(groups = { "api", "regression", "checkout", "accommodation", "negative", "GCAL" })
     public void TestCheckout_cancelled() {
 
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
-
+        String refNumber = getFirstBooking().getRequestNodeValueByXPath("//externalReferenceNumber");
+        String refSource = getFirstBooking().getRequestNodeValueByXPath("//externalReferenceSource");
         TestReporter.logScenario("Cancel");
 
-        Cancel cancel = new Cancel(environment, "MainCancel");
+        Cancel cancel = new Cancel(environment, "Main");
         cancel.setCancelDate(DateTimeConversion.ConvertToDateYYYYMMDD("0"));
-        cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        cancel.setTravelComponentGroupingId(getFirstBooking().getTravelComponentGroupingId());
         cancel.sendRequest();
         TestReporter.logAPI(!cancel.getResponseStatusCode().equals("200"), "An error occurred cancelling the reservation: " + cancel.getFaultString(), cancel);
         TestReporter.assertNotNull(cancel.getCancellationNumber(), "The response contains a cancellation number");
 
         String faultString = "INVALID REQUEST! : No Checked-In Accommodations found with the External Reference#";
-        String tcgId = getBook().getTravelComponentGroupingId();
+        String tcgId = getFirstBooking().getTravelComponentGroupingId();
         String refType = "RESERVATION";
 
         TestReporter.logScenario("Cancelled Checkout");
@@ -93,8 +89,8 @@ public class Checkout_Negative extends AccommodationBaseTest {
 
         checkout.setTravelComponentGroupingId(tcgId);
         checkout.setExternalReferenceType(refType);
-        checkout.setExternalReferenceNumber(getExternalRefNumber());
-        checkout.setExternalReferenceSource(getExternalRefSource());
+        checkout.setExternalReferenceNumber(refNumber);
+        checkout.setExternalReferenceSource(refSource);
         checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
 
         checkout.setCheckoutDate(BaseSoapCommands.REMOVE_NODE.toString());
@@ -106,17 +102,10 @@ public class Checkout_Negative extends AccommodationBaseTest {
 
     }
 
-    @Test(groups = { "api", "regression", "checkout", "accommodation", "negative" })
+    @Test(groups = { "api", "regression", "checkout", "accommodation", "negative", "GCAL" })
     public void TestCheckout_nullExtRefDetail() {
-
-        // if (Environment.isSpecialEnvironment(environment)) {
-        // if (true) {
-        // throw new SkipException("Response states Invalid Booking Type, Fix is in progress");
-        // }
-        // }
-
         String faultString = "External Reference is required : External Reference Number is missing !";
-        String tcgId = getBook().getTravelComponentGroupingId();
+        String tcgId = getFirstBooking().getTravelComponentGroupingId();
         String status = "false";
 
         Checkout checkout = new Checkout(environment, "main");

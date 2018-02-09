@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="AccommodationModule_Suite" parallel="methods" thread-count="20" configfailurepolicy="continue">
 	<parameter name="environment" value="latest_cm" />
-	<test name="AccommodationModule_tpv3" parallel="methods" thread-count="2">
+	<test name="AccommodationModule_tpv3" parallel="methods" thread-count="1">
 		<groups>
 			<run>
 				<exclude name="presmoke"/>
@@ -10,6 +10,7 @@
 				<exclude name="dev"/>
 				<!-- <exclude name="debug"/> -->
 				<include name="tpv3"></include>
+				<include name="GCAL"></include>
 				<exclude name="example"></exclude>
 			</run>
 		</groups>
@@ -26,6 +27,7 @@
 				<!-- <exclude name="debug"/> -->
 				<include name="checkout"></include>
 				<exclude name="tpv3"></exclude>
+				<exclude name="GCAL"></exclude>
 				<exclude name="example"></exclude>
 			</run>
 		</groups>
@@ -42,6 +44,7 @@
 				<!-- <exclude name="debug"/> -->
 				<include name="reinstate"></include>
 				<exclude name="tpv3"></exclude>
+				<exclude name="GCAL"></exclude>
 				<exclude name="example"></exclude>
 			</run>
 		</groups>
@@ -59,6 +62,7 @@
 				<exclude name="checkout"></exclude>
 				<exclude name="reinstate"></exclude>
 				<exclude name="tpv3"></exclude>
+				<exclude name="GCAL"></exclude>
 				<exclude name="example"></exclude>
 			</run>
 		</groups>

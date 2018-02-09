@@ -1321,6 +1321,26 @@ public class ValidationHelper {
         TestReporter.assertAll();
     }
 
+    public void verifyRIMRoomNumber(String tpId, String roomNumberExpected, Boolean recordsExpected) {
+        TestReporter.logStep("Verify the RIM Room Number");
+        String sql = "SELECT a.* " +
+                " FROM RSRC_INV.RM a " +
+                "JOIN RSRC_INV. RSRC_ASGN_OWNR b ON a.RSRC_ID = b.AUTO_ASGN_RSRC_ID " +
+                "JOIN RSRC_INV.RSRC_OWN c ON b.ASGN_OWNR_ID = c.ASGN_OWNR_ID " +
+                "JOIN RSRC_INV.RSRC_OWN_REF d ON c.RSRC_OWN_ID = d.RSRC_OWN_ID " +
+                "WHERE EXTNL_OWN_REF_VAL = '" + tpId + "'";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = null;
+        rs = new Recordset(db.tryGetResultSetUntil(sql, 5, 6));
+
+        if (recordsExpected) {
+            TestReporter.softAssertEquals(rs.getValue("RM_ID_VL"), roomNumberExpected, "Verify that the Room Number in DB [" + rs.getValue("RM_ID_VL") + "] is that which is expected [" + roomNumberExpected + "].");
+        } else {
+            TestReporter.softAssertTrue(rs.getRowCount() == 0, "Verify that no records were retruned.");
+        }
+        TestReporter.assertAll();
+    }
+
     public void verifyInventoryTrackingIdInRIM(String tpId, String inventoryTrackingId, Boolean recordsExpected) {
         TestReporter.logStep("Verify Inventory Tracking ID in RIM");
         String sql = "select a.EXTNL_OWN_REF_VAL "
@@ -1626,7 +1646,6 @@ public class ValidationHelper {
         TestReporter.softAssertEquals(rs.getValue("RL_NM"), "Guest", "Verify that the guest role [" + rs.getValue("RL_NM") + "] is that which is expected [Guest].");
         TestReporter.softAssertEquals(rs.getValue("TXN_GST_ID"), tpPartyId, "Verify that the guest ID [" + rs.getValue("TXN_GST_ID") + "] is that which is expected [" + tpPartyId + "].");
         TestReporter.softAssertEquals(rs.getValue("PRMY_GST_IN"), "Y", "Verify that the primary guest indicator [" + rs.getValue("PRMY_GST_IN") + "] is that which is expected [Y].");
-        TestReporter.softAssertEquals(rs.getValue("AGE_NB"), guest.getAge(), "Verify that the guest age [" + rs.getValue("AGE_NB") + "] is that which is expected [" + guest.getAge() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM"), guest.getLastName(), "Verify that the guest last name [" + rs.getValue("IDVL_LST_NM") + "] is that which is expected [" + guest.getLastName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM"), guest.getFirstName(), "Verify that the guest first name [" + rs.getValue("IDVL_FST_NM") + "] is that which is expected [" + guest.getFirstName() + "].");
 
@@ -1708,7 +1727,6 @@ public class ValidationHelper {
         TestReporter.log("Validating SLS_ORD table");
         sql = sql.replace("b.*", "c.*");
         rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertEquals(rs.getValue("DEST_NM"), "WDW", "Verify that the sales order destination name [" + rs.getValue("DEST_NM") + "] is that which is expected [WDW].");
         TestReporter.softAssertTrue(status.containsKey(rs.getValue("SLS_ORD_STS_NM")), "Verify that the sales order status [" + rs.getValue("SLS_ORD_STS_NM") + "] is contained in the map of expected value [" + status + "].");
         TestReporter.softAssertEquals(rs.getValue("SLS_ORD_ARVL_DT").split(" ")[0], arrivalDate, "Verify that the sales order start date [" + rs.getValue("SLS_ORD_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
         TestReporter.softAssertEquals(rs.getValue("SLS_ORD_DPRT_DT").split(" ")[0], departureDate, "Verify that the sales order end date [" + rs.getValue("SLS_ORD_DPRT_DT").split(" ")[0] + "] is that which is expected [" + departureDate + "].");

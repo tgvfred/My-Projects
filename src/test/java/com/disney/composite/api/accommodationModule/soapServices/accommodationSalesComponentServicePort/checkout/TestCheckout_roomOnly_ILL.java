@@ -1,81 +1,47 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.checkout;
 
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.helpers.CheckoutValidationHelper;
-import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Modify;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class TestCheckout_roomOnly_ILL extends AccommodationBaseTest {
-    private ThreadLocal<CheckInHelper> helper = new ThreadLocal<>();
-
+public class TestCheckout_roomOnly_ILL extends BookDVCCashHelper {
     @Override
-    @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
-        isComo.set("false");
-        setDaysOut(0);
-        setNights(1);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getDaysOut() + getNights());
-        setValues(getEnvironment());
-        bookReservation();
+        setUseDvcResort(true);
+        setValues("305669", "5A", "10068", "15");
+        setUseExistingValues(true);
+        setRetrieveAfterBook(false);
+        bookDvcReservation("DVC_RM_TPS_ContractInGoodStatus", 1);
+        DVCSalesBaseTest.environment = environment;
+        Modify modify = new Modify(getFirstBooking());
+        modify.setEnvironment(environment);
+        modify.setTravelStatus("Checked In");
+        modify.sendRequest();
+        TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "Verify that no error occurred modifying booking: " + modify.getFaultString(), modify);
     }
 
-    @Override
-    @AfterMethod(alwaysRun = true)
-    public void teardown() {
-        try {
-            helper.get().checkOut(getLocationId());
-            helper.get().updateSingleRoomStatus("updateToCleanAndVacant");
-        } catch (Exception e) {
-
-        }
-
-        try {
-            helper.get().updateSingleRoomStatus("updateToCleanAndVacant");
-        } catch (Exception e) {
-
-        }
-    }
-
-    @Test(groups = { "api", "regression", "checkout", "Accommodation" })
+    @Test(groups = { "api", "regression", "checkout", "Accommodation", "GCAL" })
     public void testCheckout_roomOnly_ILL() {
 
-        helper.set(new CheckInHelper(getEnvironment(), getBook()));
-
-        int tries = 0;
-        int maxTries = 5;
-        boolean success = false;
-        do {
-            try {
-
-                helper.set(new CheckInHelper(getEnvironment(), getBook()));
-                helper.get().checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-                success = true;
-            } catch (Exception e) {
-                cancel(getBook().getTravelComponentGroupingId());
-                setValues();
-                bookReservation();
-            }
-        } while (tries < maxTries && !success);
-
         String status = "false";
-        String tcgId = getBook().getTravelComponentGroupingId();
+        String tcgId = getFirstBooking().getTravelComponentGroupingId();
         String locationId = getLocationId();
         String checkoutDate = Randomness.generateCurrentXMLDate();
         String earlyCheckoutReason = "ILL";
         String refType = "RESERVATION";
-        String refNumber = getExternalRefNumber();
-        String refSource = getExternalRefSource();
+        String refNumber = getFirstBooking().getRequestNodeValueByXPath("//externalReferenceNumber");
+        String refSource = getFirstBooking().getRequestNodeValueByXPath("//externalReferenceSource");
 
         Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(earlyCheckoutReason);
@@ -92,11 +58,10 @@ public class TestCheckout_roomOnly_ILL extends AccommodationBaseTest {
 
         TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking out: " + checkout.getFaultString(), checkout);
 
-        CheckoutValidationHelper helper = new CheckoutValidationHelper(getBook());
-        String assignOwnerId = helper.validateResMgmt(getBook().getTravelComponentId());
+        CheckoutValidationHelper helper = new CheckoutValidationHelper(getFirstBooking());
+        String assignOwnerId = helper.validateResMgmt(getFirstBooking().getTravelComponentId());
         helper.validateRIM(assignOwnerId);
         helper.additionalValidations(assignOwnerId);
-        helper.validateChargeGroupsChargesAndFolio();
 
     }
 

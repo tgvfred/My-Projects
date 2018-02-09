@@ -6,6 +6,7 @@ import org.w3c.dom.Document;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.AccommodationSalesServicePort;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Book;
 import com.disney.utils.XMLTools;
 
 public class Modify extends AccommodationSalesServicePort {
@@ -60,6 +61,24 @@ public class Modify extends AccommodationSalesServicePort {
         removeWhiteSpace();
     }
 
+    public Modify(Book book) {
+        super(book.getEnvironment());
+        buildRequestFromWSDL("modify");
+        // Extract XML Doc from replaceAll and make it Modify
+        Document doc = XMLTools.makeXMLDocument(book.getRequest().replaceAll("book>", "modify>").replaceAll("reservationRequest", "request").replaceAll("dvc.bussvcs.wdpr", "booking.dreams.wdw"));
+        setRequestDocument(doc);
+
+        // Regen service context and clean up doc
+        generateServiceContext();
+        removeComments();
+        removeWhiteSpace();
+
+        setTravelPlanId(book.getTravelPlanId());
+        setTravelPlanSegmentId(book.getTravelPlanSegmentId());
+        setTravelComponentGroupingId(book.getTravelComponentGroupingId());
+        setTravelComponentId(book.getTravelComponentId());
+    }
+
     private void removeNode(String xpath) {
         try {
             setRequestNodeValueByXPath(xpath, BaseSoapCommands.REMOVE_NODE.toString());
@@ -82,6 +101,14 @@ public class Modify extends AccommodationSalesServicePort {
 
     public void setTravelPlanSegmentId(String tps_ID) {
         setRequestNodeValueByXPath("/Envelope/Body/modify/request/travelPlanSegmentId", tps_ID);
+    }
+
+    public void setTravelStatus(String status) {
+        setRequestNodeValueByXPathAndAddNode("/Envelope/Body/modify/request/roomDetail/travelStatus", status);
+    }
+
+    public void setRoomNumber(String status) {
+        setRequestNodeValueByXPathAndAddNode("/Envelope/Body/modify/request/roomDetail/roomNumber", status);
     }
 
     public String getPackageCode() {

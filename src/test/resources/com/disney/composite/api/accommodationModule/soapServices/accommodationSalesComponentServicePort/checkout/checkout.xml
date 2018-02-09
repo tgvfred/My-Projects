@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Checkout_all" parallel="methods" thread-count="4" configfailurepolicy="continue" data-provider-thread-count="5">
+<suite name="Checkout_all" parallel="methods" thread-count="1" configfailurepolicy="continue" data-provider-thread-count="1">
 	<parameter name="environment" value="latest_cm" />
 	<test name="Checkout_all">
 		<packages>

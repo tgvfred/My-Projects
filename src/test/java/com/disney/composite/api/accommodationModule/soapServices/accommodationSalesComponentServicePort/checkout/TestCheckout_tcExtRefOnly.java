@@ -4,40 +4,38 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Checkout;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Modify;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
-import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.TestReporter;
 
-public class TestCheckout_tcExtRefOnly extends AccommodationBaseTest {
-    private CheckInHelper helper;
-    private String locVar;
-
+public class TestCheckout_tcExtRefOnly extends BookDVCCashHelper {
     @Override
-    @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
     public void setup(String environment) {
-        setEnvironment(environment);
-        isComo.set("false");
-        setDaysOut(0);
-        setNights(1);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getDaysOut() + getNights());
-        setValues(getEnvironment());
-        locVar = environment;
-        bookReservation();
+        setUseDvcResort(true);
+        setValues("305669", "5A", "10068", "15");
+        setUseExistingValues(true);
+        setRetrieveAfterBook(false);
+        bookDvcReservation("DVC_RM_TPS_ContractInGoodStatus", 1);
+        DVCSalesBaseTest.environment = environment;
+        Modify modify = new Modify(getFirstBooking());
+        modify.setEnvironment(environment);
+        modify.setTravelStatus("Checked In");
+        modify.sendRequest();
+        TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "Verify that no error occurred modifying booking: " + modify.getFaultString(), modify);
     }
 
-    @Test(groups = { "api", "regression", "checkout", "Accommodation", "negative" })
+    @Test(groups = { "api", "regression", "checkout", "Accommodation", "negative", "GCAL" })
     public void testCheckout_tcExtRefOnly() {
-        helper = new CheckInHelper(locVar, getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
         String refType = "RESERVATION";
-        String refNumber = getExternalRefNumber();
-        String refSource = getExternalRefSource();
+        String refNumber = getFirstBooking().getRequestNodeValueByXPath("//externalReferenceNumber");
+        String refSource = getFirstBooking().getRequestNodeValueByXPath("//externalReferenceSource");
 
         Checkout checkout = new Checkout(getEnvironment(), "main");
         checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
