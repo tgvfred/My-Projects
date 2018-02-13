@@ -41,11 +41,6 @@ public class CheckInHelper {
     private String tpsId;
     private String tcgId;
     private String tcId;
-    private Boolean retrieveResFromDB = false;
-
-    public void setRetrieveResFromDB(Boolean retrieveResFromDB) {
-        this.retrieveResFromDB = retrieveResFromDB;
-    }
 
     public String getEnvironment() {
         return environment;
@@ -168,7 +163,43 @@ public class CheckInHelper {
                 TestReporter.logAPI(true, "Booking did not have required values in response", ws);
             }
         }
-        if (!retrieveResFromDB) {
+        retrieveReservation();
+    }
+
+    public CheckInHelper(String environment, WebService ws, boolean retrievFromDb) {
+        if ((environment == null) || StringUtils.isEmpty(environment)) {
+            throw new AutomationException("The environment field cannot be null or empty.");
+        } else {
+            setEnvironment(environment);
+        }
+        if (ws == null) {
+            throw new AutomationException("The book object cannot be null.");
+        } else {
+            setWs(ws);
+            try {
+                if (ws instanceof ReplaceAllForTravelPlanSegment) {
+                    setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
+                    setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
+                    setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
+                    setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
+                } else if (ws instanceof Add) {
+                    setTpId(((Add) ws).getTravelPlanId());
+                    setTpsId(((Add) ws).getTravelPlanSegmentId());
+                    setTcgId(((Add) ws).getTravelComponentGroupingId());
+                    setTcId(((Add) ws).getTravelComponentId());
+                } else if (ws instanceof Book) {
+                    setTpId(((Book) ws).getTravelPlanId());
+                    setTpsId(((Book) ws).getTravelPlanSegmentId());
+                    setTcgId(((Book) ws).getTravelComponentGroupingId());
+                    setTcId(((Book) ws).getTravelComponentId());
+                } else {
+                    throw new AutomationException("The WebService object is not supported by this class.");
+                }
+            } catch (XPathNotFoundException xpnfe) {
+                TestReporter.logAPI(true, "Booking did not have required values in response", ws);
+            }
+        }
+        if (!retrievFromDb) {
             retrieveReservation();
         } else {
             retrieveReservationFromDB();
