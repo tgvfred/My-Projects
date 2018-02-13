@@ -24,19 +24,20 @@ public class Test_RetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue extends 
         setSendRequest(false);
         setIsRSR(true);
         bookReservation();
+        getBook().setTaxExemptDetails("1", "Military");
         getBook().sendRequest();
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "RetrieveSummary" })
     public void testRetrieveSummary_oneTcg_roomOnly_retrieveTaxExemptTrue() {
-
+        System.out.println(getBook().getRequest());
         RetrieveSummary retrieve = new RetrieveSummary(environment, "Main");
         retrieve.setRequestRetrieveTaxExempt("true");
         // Per AmitC, TK-692088, TPS will be the input into the TCG node - 11/14/2017 - WWA
         // if (Environment.isSpecialEnvironment(environment)) {
-        // retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", book.getTravelPlanSegmentId());
-        // retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", book.getTravelComponentGroupingId());
-        // // retrieve.setRequestTravelComponentGroupingId(book.getTravelComponentGroupingId());
+        // retrieve.setRequestTravelComponentGroupingIdIndexAdd("1", getBook().getTravelPlanSegmentId());
+        // retrieve.setRequestTravelComponentGroupingIdIndexAdd("2", getBook().getTravelComponentGroupingId());
+        // retrieve.setRequestTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         // } else {
         retrieve.setRequestTravelComponentGroupingId(getBook().getTravelPlanSegmentId());
         // }

@@ -29,7 +29,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithNonExistingGathe
         isComo.set("true");
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "tpv3", "debug" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "gathering" })
     public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithNonExistingGathering() {
         bookReservation();
         tpPtyId = getBook().getGuestId();

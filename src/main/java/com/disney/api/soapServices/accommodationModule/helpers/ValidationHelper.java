@@ -8,10 +8,6 @@ import static com.disney.api.soapServices.accommodationModule.helpers.Accommodat
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_ID;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_POLICY_ID;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.MEMBERSHIP_PROD_CHANNEL_ID;
-import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_DESCRIPTION;
-import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_ID;
-import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_ROUTINGS_NAME;
-import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.PROFILE_TYPE;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.getAgeTypeByAge;
 import static com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest.isValid;
 
@@ -26,7 +22,6 @@ import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
@@ -44,6 +39,13 @@ public class ValidationHelper {
     private Boolean diningAddedOn;
     private String partyId;
     private Boolean guestIdExpected;
+
+    private final static String PROFILE_CODE = "code";
+    private final static String PROFILE_DESCRIPTION = "description";
+    private final static String PROFILE_ID = "id";
+    private final static String PROFILE_TYPE = "profileType";
+    private final static String PROFILE_ROUTINGS_NAME = "routings_name";
+    private final static String PROFILE_SELECTABLE = "selectable";
 
     public String getEnvironment() {
         return environment;
@@ -152,8 +154,6 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM", i), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM", i) + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT", i).split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT", i).split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT", i).split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DPRT_DT", i).split(" ")[0] + "] is that which is expected [" + departuredate + "].");
-            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
-            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
         }
         TestReporter.assertAll();
         return rs;
@@ -198,7 +198,7 @@ public class ValidationHelper {
         rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getReservationInfoByTpId(tpId)));
         // rs.print();
 
-        TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
         for (int i = 1; i <= rs.getRowCount(); i++) {
             TestReporter.log("Verify Row: " + String.valueOf(i));
             TestReporter.softAssertEquals(rs.getValue("TP_ID", i), tpId, "Verify that the TP ID [" + rs.getValue("TP_ID", i) + "] is that which is expected [" + tpId + "].");
@@ -207,8 +207,10 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM", i), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM", i) + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT", i).split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT", i).split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT", i).split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT", i).split(" ")[0] + "] is that which is expected [" + departuredate + "].");
-            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
-            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" +
+            // rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" +
+            // rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
         }
         TestReporter.assertAll();
     }
@@ -256,8 +258,10 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM", i), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM", i) + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT", i).split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT", i).split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT", i).split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DPRT_DT", i).split(" ")[0] + "] is that which is expected [" + departuredate + "].");
-            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
-            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM", i), extRefType, "Verify that the external ref type name [" +
+            // rs.getValue("TPS_EXTNL_REF_TYP_NM", i) + "] is that which is expected [" + extRefType + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL", i), extRefValue, "Verify that the external ref value [" +
+            // rs.getValue("TPS_EXTNL_REF_VL", i) + "] is that which is expected [" + extRefValue + "].");
         }
         TestReporter.assertAll();
     }
@@ -279,7 +283,7 @@ public class ValidationHelper {
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
 
-        TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
         int counter = 1;
         String mapKey = null;
         do {
@@ -296,8 +300,10 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM") + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT").split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT").split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT").split(" ")[0] + "] is that which is expected [" + departuredate + "].");
-            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefTypes.get(mapKey), "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefTypes.get(mapKey) + "].");
-            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefs.get(mapKey), "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefs.get(mapKey) + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefTypes.get(mapKey), "Verify that the external ref type name [" +
+            // rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefTypes.get(mapKey) + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefs.get(mapKey), "Verify that the external ref value [" +
+            // rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefs.get(mapKey) + "].");
             rs.moveNext();
             counter++;
         } while (rs.hasNext());
@@ -321,7 +327,7 @@ public class ValidationHelper {
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
 
-        TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
         int counter = 1;
         String mapKey = null;
         do {
@@ -338,8 +344,10 @@ public class ValidationHelper {
             TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM") + "] is that which is expected [" + travelStatusName + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT").split(" ")[0], arrivalDate, "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
             TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT").split(" ")[0], departuredate, "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT").split(" ")[0] + "] is that which is expected [" + departuredate + "].");
-            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefTypes.get(mapKey), "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefTypes.get(mapKey) + "].");
-            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefs.get(mapKey), "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefs.get(mapKey) + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefTypes.get(mapKey), "Verify that the external ref type name [" +
+            // rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefTypes.get(mapKey) + "].");
+            // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefs.get(mapKey), "Verify that the external ref value [" +
+            // rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefs.get(mapKey) + "].");
             rs.moveNext();
             counter++;
         } while (rs.hasNext());
@@ -380,7 +388,7 @@ public class ValidationHelper {
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
 
-        TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
 
         do {
 
@@ -393,8 +401,10 @@ public class ValidationHelper {
                 TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM") + "] is that which is expected [" + travelStatusName + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT").split(" ")[0], arrivalDates.get("dining").split("T")[0], "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDates.get("dining").split("T")[0] + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT").split(" ")[0], departureDates.get("dining").split("T")[0], "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT").split(" ")[0] + "] is that which is expected [" + departureDates.get("dining").split("T")[0] + "].");
-                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), "NULL", "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [NULL].");
-                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), "NULL", "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [NULL].");
+                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), "NULL", "Verify that the external ref type name [" +
+                // rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [NULL].");
+                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), "NULL", "Verify that the external ref value [" +
+                // rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [NULL].");
             } else if (rs.getValue("TC_GRP_TYP_NM").equalsIgnoreCase("ACCOMMODATION")) {
                 TestReporter.log("Verify Accommodation");
                 TestReporter.softAssertEquals(rs.getValue("TP_ID"), tpId, "Verify that the TP ID [" + rs.getValue("TP_ID") + "] is that which is expected [" + tpId + "].");
@@ -403,8 +413,10 @@ public class ValidationHelper {
                 TestReporter.softAssertEquals(rs.getValue("TRVL_STS_NM"), travelStatusName, "Verify that the travel status [" + rs.getValue("TRVL_STS_NM") + "] is that which is expected [" + travelStatusName + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_ARVL_DT").split(" ")[0], arrivalDates.get("accommodation"), "Verify that the arrival date [" + rs.getValue("TPS_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDates.get("accommodation") + "].");
                 TestReporter.softAssertEquals(rs.getValue("TPS_DPRT_DT").split(" ")[0], departureDates.get("accommodation"), "Verify that the departure date [" + rs.getValue("TPS_DsPRT_DT").split(" ")[0] + "] is that which is expected [" + departureDates.get("accommodation") + "].");
-                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefType, "Verify that the external ref type name [" + rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefType + "].");
-                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefValue, "Verify that the external ref value [" + rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefValue + "].");
+                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_TYP_NM"), extRefType, "Verify that the external ref type name [" +
+                // rs.getValue("TPS_EXTNL_REF_TYP_NM") + "] is that which is expected [" + extRefType + "].");
+                // TestReporter.softAssertEquals(rs.getValue("TPS_EXTNL_REF_VL"), extRefValue, "Verify that the external ref value [" +
+                // rs.getValue("TPS_EXTNL_REF_VL") + "] is that which is expected [" + extRefValue + "].");
             }
             rs.moveNext();
         } while (rs.hasNext());
@@ -426,7 +438,9 @@ public class ValidationHelper {
         TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM", 1), hh.primaryGuest().getFirstName(), "Verify that the guest first name [" + rs.getValue("IDVL_FST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getFirstName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_MID_NM", 1), hh.primaryGuest().getMiddleName(), "Verify that the guest middle [" + rs.getValue("IDVL_MID_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getMiddleName() + "].");
         TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM", 1), hh.primaryGuest().getLastName(), "Verify that the guest last name [" + rs.getValue("IDVL_LST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getLastName() + "].");
-        // TestReporter.softAssertTrue(rs.getValue("ADDR_LN_1_TX", 1).toUpperCase().contains(hh.primaryGuest().primaryAddress().getAddress1().toUpperCase()), "Verify that the address line 1 [" + rs.getValue("ADDR_LN_1_TX", 1) + "] contains that which is expected [" + hh.primaryGuest().primaryAddress().getAddress1() + "].");
+        // TestReporter.softAssertTrue(rs.getValue("ADDR_LN_1_TX", 1).toUpperCase().contains(hh.primaryGuest().primaryAddress().getAddress1().toUpperCase()),
+        // "Verify that the address line 1 [" + rs.getValue("ADDR_LN_1_TX", 1) + "] contains that which is expected [" +
+        // hh.primaryGuest().primaryAddress().getAddress1() + "].");
         if (!hh.primaryGuest().getOdsId().equals("0")) {
             TestReporter.softAssertEquals(rs.getValue("CITY_NM", 1), hh.primaryGuest().primaryAddress().getCity(), "Verify that the address city [" + rs.getValue("CITY_NM", 1) + "] is that which is expected [" + hh.primaryGuest().primaryAddress().getCity() + "].");
         }
@@ -611,6 +625,59 @@ public class ValidationHelper {
         TestReporter.assertAll();
     }
 
+    public void verifyPackageTravelComponent(String tcgId, String expectedRSR, String expectedRoomOnly, String expectedWholesaler) {
+        TestReporter.logStep("Verify TC Package Component");
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+
+        String sql = "SELECT b.* FROM RES_MGMT.TC a JOIN RES_MGMT.PKG_TC b ON a.TC_ID = b.PKG_TC_ID WHERE TC_GRP_NB = " + tcgId;
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        // rs.print();
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Failed to find any Package Component data", sql);
+        }
+
+        TestReporter.softAssertTrue(rs.getValue("RSR_IN").equalsIgnoreCase(expectedRSR), "Validate RSR_IN value [ " + rs.getValue("RSR_IN") + " ] matches expected [ " + expectedRSR + " ]");
+        TestReporter.softAssertTrue(rs.getValue("RM_ONLY_PKG_IN").equalsIgnoreCase(expectedRoomOnly), "Validate RM_ONLY_PKG_IN value [ " + rs.getValue("RM_ONLY_PKG_IN") + " ] matches expected [ " + expectedRoomOnly + " ]");
+        TestReporter.softAssertTrue(rs.getValue("WHLS_PKG_IN").equalsIgnoreCase(expectedWholesaler), "Validate WHLS_PKG_IN value [ " + rs.getValue("WHLS_PKG_IN") + " ] matches expected [ " + expectedWholesaler + " ]");
+        TestReporter.assertAll();
+    }
+
+    public void verifyNumberOfResMgmtRequest(String reference, String id, int expectedRecords) {
+        TestReporter.logStep("Verify RES_MGMT Requests");
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+
+        String sql = "SELECT * FROM RES_MGMT.RES_MGMT_REQ a JOIN RES_MGMT.RES_MGMT_REQ_RTE b ON a.RES_MGMT_REQ_ID = b.RES_MGMT_REQ_ID WHERE " + reference + " = " + id;
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        TestReporter.assertEquals(rs.getRowCount(), expectedRecords, "Validate DB record count [ " + rs.getRowCount() + " ] matches expected number of Request records [ " + expectedRecords + " ]");
+    }
+
+    public void verifyTpProfileRequest(String tpId, Map<String, String> profileData) {
+        TestReporter.logStep("Verify TP Profile requests");
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+
+        String sql = "SELECT * FROM RES_MGMT.RES_MGMT_REQ a JOIN RES_MGMT.RES_MGMT_REQ_RTE b ON a.RES_MGMT_REQ_ID = b.RES_MGMT_REQ_ID WHERE TP_ID = " + tpId + " AND RES_MGMT_PRFL_ID = " + profileData.get(PROFILE_ID);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        // rs.print();
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("Failed to find any profile request data", sql);
+        }
+
+        TestReporter.softAssertEquals(rs.getValue("RES_MGMT_REQ_TYP_NM"), profileData.get(PROFILE_TYPE), "Verify that the Profile Type [" + rs.getValue("RES_MGMT_REQ_TYP_NM") + "] is that which is expected [" + profileData.get(PROFILE_TYPE) + "].");
+        TestReporter.softAssertEquals(rs.getValue("RES_MGMT_REQ_TX"), profileData.get(PROFILE_DESCRIPTION), "Verify that the Profile Description [" + rs.getValue("RES_MGMT_REQ_TX") + "] is that which is expected [" + profileData.get(PROFILE_DESCRIPTION) + "].");
+        TestReporter.softAssertEquals(rs.getValue("RES_MGMT_RTE_NM"), profileData.get(PROFILE_ROUTINGS_NAME), "Verify that the Profile Routing Name [" + rs.getValue("RES_MGMT_RTE_NM") + "] is that which is expected [" + profileData.get(PROFILE_ROUTINGS_NAME) + "].");
+
+        TestReporter.assertAll();
+    }
+
+    public void verifyTpsExternalReferenceCreated(String tpsId, String tpsSourceName, String expectedExternalReferenceValue) {
+        TestReporter.logStep("Verify TPS External Reference for " + tpsSourceName + " was created");
+        String sql = "SELECT * FROM RES_MGMT.TPS_EXTNL_REF WHERE TPS_ID = " + tpsId + " AND TPS_SRC_NM = '" + tpsSourceName + "'";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 10));
+        TestReporter.assertTrue(rs.getValue("TPS_EXTNL_REF_VL").equals(expectedExternalReferenceValue), "Verify the External Reference Value [ " + expectedExternalReferenceValue + " ] was found in database [ " + rs.getValue("TPS_EXTNL_REF_VL") + " ] for TPS [ " + tpsId + " ]");
+    }
+
     public void verifyModificationIsFoundInResHistory(String tpId) {
         TestReporter.logStep("Verify MOdification Is Found In Res History");
         Database db = new OracleDatabase(environment, Database.DREAMS);
@@ -724,7 +791,7 @@ public class ValidationHelper {
         boolean foundRsr = false;
         for (rs.moveFirst(); rs.hasNext(); rs.moveNext()) {
             if (rs.getValue("FOLIO_TYP_NM").equals("INTERNAL_ORGANIZATION")) {
-                foundRsr = false;
+                foundRsr = true;
             }
         }
 
@@ -827,25 +894,18 @@ public class ValidationHelper {
             if (partyId != null) {
                 sql = "select b.TXN_PTY_EXTNL_REF_VAL "
                         + "from guest.TXN_PTY_EXTNL_REF b "
-                        + "where b.TXN_PTY_ID = '" + partyIds[i] + "'";
+                        + "where b.TXN_PTY_ID = '" + partyIds[i] + "'"
+                        + "and b.PTY_EXTNL_SRC_NM = 'ODS'";
             } else {
                 sql = "select a.TXN_PTY_ID, b.TXN_PTY_EXTNL_REF_VAL "
                         + "from res_mgmt.tp_pty a, guest.TXN_PTY_EXTNL_REF b "
                         + "where a.TXN_PTY_ID = '" + partyIds[i] + "' "
-                        + "and a.TXN_PTY_ID = b.TXN_PTY_ID";
+                        + "and a.TXN_PTY_ID = b.TXN_PTY_ID "
+                        + "and b.PTY_EXTNL_SRC_NM = 'ODS'";
             }
 
             Database db = new OracleDatabase(environment, Database.DREAMS);
-            Recordset rs;
-
-            int tries = 0;
-            int maxTries = 60;
-            do {
-                Sleeper.sleep(1000);
-                rs = new Recordset(db.getResultSet(sql));
-                tries++;
-            } while ((tries <= maxTries) && (rs.getRowCount() < 1));
-            // rs.print();
+            Recordset rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 10));
 
             if (rs.getRowCount() == 0) {
                 throw new SQLValidationException("Failed to find Guest External Ref", sql);
@@ -858,13 +918,8 @@ public class ValidationHelper {
 
             db = new OracleDatabase(environment, Database.GOMASTER);
 
-            tries = 0;
-            maxTries = 5;
-            do {
-                Sleeper.sleep(Randomness.randomNumberBetween(1, 3) * 1000);
-                rs = new Recordset(db.getResultSet(sql));
-                tries++;
-            } while ((rs.getRowCount() == 0) && (tries < maxTries));
+            rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 10));
+
             if (getGuestIdExpected() == null) {
                 TestReporter.softAssertTrue(rs.getRowCount() == 1, "Verify that an ODS record was returned for ODS guest ID [" + odsGuestId + "] guest ID was returned for TP party ID [" + partyIds[i] + "].");
             } else {
@@ -874,6 +929,45 @@ public class ValidationHelper {
                     TestReporter.softAssertTrue(rs.getRowCount() == 0, "Verify that no ODS record was returned for ODS guest ID [" + odsGuestId + "] guest ID was returned for TP party ID [" + partyIds[i] + "].");
                 }
             }
+        }
+        TestReporter.assertAll();
+    }
+
+    public void verifyDclGuestIdCreated(String tpId) {
+        TestReporter.logStep("Verify DCL Guest IDs For TP ID [" + tpId + "]");
+        String[] partyIds = null;
+        if (partyId == null) {
+            partyIds = searchForPartyByTpId(getEnvironment(), tpId);
+        } else {
+            partyIds = new String[1];
+            partyIds[0] = partyId;
+        }
+
+        for (int i = 0; i < partyIds.length; i++) {
+            String sql = "";
+            if (partyId != null) {
+                sql = "select b.TXN_PTY_EXTNL_REF_VAL "
+                        + "from guest.TXN_PTY_EXTNL_REF b "
+                        + "where b.TXN_PTY_ID = '" + partyIds[i] + "'"
+                        + "and b.PTY_EXTNL_SRC_NM = 'DCLGUESTID'";
+            } else {
+                sql = "select a.TXN_PTY_ID, b.TXN_PTY_EXTNL_REF_VAL "
+                        + "from res_mgmt.tp_pty a, guest.TXN_PTY_EXTNL_REF b "
+                        + "where a.TXN_PTY_ID = '" + partyIds[i] + "' "
+                        + "and a.TXN_PTY_ID = b.TXN_PTY_ID "
+                        + "and b.PTY_EXTNL_SRC_NM = 'DCLGUESTID'";
+            }
+
+            Database db = new OracleDatabase(environment, Database.DREAMS);
+            Recordset rs;
+
+            rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 10));
+
+            if (rs.getRowCount() == 0) {
+                throw new SQLValidationException("Failed to find Guest External Ref", sql);
+            }
+
+            TestReporter.softAssertTrue(rs.getRowCount() == 1, "Verify that an DCL External Reference [" + rs.getValue("TXN_PTY_EXTNL_REF_VAL") + "]  was returned for guest ID [" + rs.getValue("TXN_PTY_ID") + "] .");
         }
         TestReporter.assertAll();
     }
@@ -958,7 +1052,7 @@ public class ValidationHelper {
         String sql = "select a.TXN_PTY_ID "
                 + "from res_mgmt.tp_pty a "
                 + "where a.tp_id = '" + tpId + "'";
-        System.out.println();
+
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         Map<String, String> temp = new HashMap<>();
@@ -1146,7 +1240,7 @@ public class ValidationHelper {
         Database db = new OracleDatabase(environment, Database.DREAMS);
         Recordset rs = null;
         int tries = 0;
-        int maxTries = 60;
+        int maxTries = 5;
         Boolean success = false;
         rs = new Recordset(db.getResultSet(sql));
 
@@ -1223,6 +1317,26 @@ public class ValidationHelper {
 
             TestReporter.softAssertEquals(rs.getValue("ADLT_CN", i + 1), adultCount[i], "Verify that the adult count [" + rs.getValue("ADLT_CN", i + 1) + "] is that which is expected [" + adultCount[i] + "].");
             TestReporter.softAssertEquals(rs.getValue("CHLD_CN", i + 1), childCount[i], "Verify that the child count [" + rs.getValue("CHLD_CN", i + 1) + "] is that which is expected [" + childCount[i] + "].");
+        }
+        TestReporter.assertAll();
+    }
+
+    public void verifyRIMRoomNumber(String tpId, String roomNumberExpected, Boolean recordsExpected) {
+        TestReporter.logStep("Verify the RIM Room Number");
+        String sql = "SELECT a.* " +
+                " FROM RSRC_INV.RM a " +
+                "JOIN RSRC_INV. RSRC_ASGN_OWNR b ON a.RSRC_ID = b.AUTO_ASGN_RSRC_ID " +
+                "JOIN RSRC_INV.RSRC_OWN c ON b.ASGN_OWNR_ID = c.ASGN_OWNR_ID " +
+                "JOIN RSRC_INV.RSRC_OWN_REF d ON c.RSRC_OWN_ID = d.RSRC_OWN_ID " +
+                "WHERE EXTNL_OWN_REF_VAL = '" + tpId + "'";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = null;
+        rs = new Recordset(db.tryGetResultSetUntil(sql, 5, 6));
+
+        if (recordsExpected) {
+            TestReporter.softAssertEquals(rs.getValue("RM_ID_VL"), roomNumberExpected, "Verify that the Room Number in DB [" + rs.getValue("RM_ID_VL") + "] is that which is expected [" + roomNumberExpected + "].");
+        } else {
+            TestReporter.softAssertTrue(rs.getRowCount() == 0, "Verify that no records were retruned.");
         }
         TestReporter.assertAll();
     }
@@ -1443,6 +1557,24 @@ public class ValidationHelper {
         return admissionTcId;
     }
 
+    public void validateAdmissionComponentRemoved(String travelComponentGroupingId) {
+        String sql = "select * "
+                + "from res_mgmt.tc a "
+                + "where a.tc_grp_nb = " + travelComponentGroupingId;
+        Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+        boolean found = false;
+        do {
+            if (rs.getValue("TC_TYP_NM").equals("AdmissionComponent")) {
+                found = true;
+                rs.moveLast();
+            } else {
+                rs.moveNext();
+            }
+        } while (rs.hasNext() && !found);
+        TestReporter.assertFalse(found, "Verify that an admission TC was not found for TCG [" + travelComponentGroupingId + "].");
+    }
+
     public String validateAdmissionComponentDetails(String admissionComponentId, String code) {
         TestReporter.logStep("Verify admission component details");
         String sql = "select * "
@@ -1501,7 +1633,7 @@ public class ValidationHelper {
                 + "from sales_tp.tp a "
                 + "join sales_tp.tp_pty b on a.tp_id = b.tp_id "
                 + "join sales_tp.sls_ord c on b.tp_id = c.tp_id "
-                + "where a.tp_id = " + tpId;
+                + "where a.tp_id = " + tpId + "  order by TXN_GST_ID";
         Database db = new OracleDatabase(getEnvironment(), Database.SALESTP);
         Recordset rs = null;
 
@@ -1532,9 +1664,8 @@ public class ValidationHelper {
         TestReporter.softAssertEquals(rs.getValue("RL_NM"), "Guest", "Verify that the guest role [" + rs.getValue("RL_NM") + "] is that which is expected [Guest].");
         TestReporter.softAssertEquals(rs.getValue("TXN_GST_ID"), tpPartyId, "Verify that the guest ID [" + rs.getValue("TXN_GST_ID") + "] is that which is expected [" + tpPartyId + "].");
         TestReporter.softAssertEquals(rs.getValue("PRMY_GST_IN"), "Y", "Verify that the primary guest indicator [" + rs.getValue("PRMY_GST_IN") + "] is that which is expected [Y].");
-        TestReporter.softAssertEquals(rs.getValue("AGE_NB"), guest.getAge(), "Verify that the guest age [" + rs.getValue("AGE_NB") + "] is that which is expected [" + guest.getAge() + "].");
-        TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM"), guest.getLastName(), "Verify that the guest last name [" + rs.getValue("TP_STRT_DT") + "] is that which is expected [" + guest.getLastName() + "].");
-        TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM"), guest.getFirstName(), "Verify that the guest first name [" + rs.getValue("TP_STRT_DT") + "] is that which is expected [" + guest.getFirstName() + "].");
+        TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM"), guest.getLastName(), "Verify that the guest last name [" + rs.getValue("IDVL_LST_NM") + "] is that which is expected [" + guest.getLastName() + "].");
+        TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM"), guest.getFirstName(), "Verify that the guest first name [" + rs.getValue("IDVL_FST_NM") + "] is that which is expected [" + guest.getFirstName() + "].");
 
         TestReporter.log("Validating SLS_ORD table");
         sql = sql.replace("b.*", "c.*");
@@ -1614,7 +1745,6 @@ public class ValidationHelper {
         TestReporter.log("Validating SLS_ORD table");
         sql = sql.replace("b.*", "c.*");
         rs = new Recordset(db.getResultSet(sql));
-        TestReporter.softAssertEquals(rs.getValue("DEST_NM"), "WDW", "Verify that the sales order destination name [" + rs.getValue("DEST_NM") + "] is that which is expected [WDW].");
         TestReporter.softAssertTrue(status.containsKey(rs.getValue("SLS_ORD_STS_NM")), "Verify that the sales order status [" + rs.getValue("SLS_ORD_STS_NM") + "] is contained in the map of expected value [" + status + "].");
         TestReporter.softAssertEquals(rs.getValue("SLS_ORD_ARVL_DT").split(" ")[0], arrivalDate, "Verify that the sales order start date [" + rs.getValue("SLS_ORD_ARVL_DT").split(" ")[0] + "] is that which is expected [" + arrivalDate + "].");
         TestReporter.softAssertEquals(rs.getValue("SLS_ORD_DPRT_DT").split(" ")[0], departureDate, "Verify that the sales order end date [" + rs.getValue("SLS_ORD_DPRT_DT").split(" ")[0] + "] is that which is expected [" + departureDate + "].");
@@ -1995,7 +2125,7 @@ public class ValidationHelper {
                 + "from res_mgmt.tp_gthr "
                 + "where tp_id = " + travelPlanId;
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
+        Recordset rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 10));
         TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that the TP ID [" + travelPlanId + "] is associate with a gathering in the Dreams DB");
         TestReporter.softAssertEquals(rs.getValue("GTHR_CD"), gatheringData.get(GATHERING_ID), "Verify that the gathering code [" + rs.getValue("GTHR_CD") + "] is that which is expected [" + gatheringData.get(GATHERING_ID) + "].");
         TestReporter.softAssertEquals(rs.getValue("GTHR_TYP_NM"), gatheringData.get(GATHERING_TYPE), "Verify that the gathering type [" + rs.getValue("GTHR_TYP_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_TYPE) + "].");
@@ -2006,7 +2136,7 @@ public class ValidationHelper {
                 + "from sales_tp.tp_gthr "
                 + "where tp_id = " + travelPlanId;
         db = new OracleDatabase(getEnvironment(), Database.SALESTP);
-        rs = new Recordset(db.getResultSet(sql));
+        rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 10));
         TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that the TP ID [" + travelPlanId + "] is associate with a gathering in the SALESTP DB");
         TestReporter.softAssertEquals(rs.getValue("GTHR_CD"), gatheringData.get(GATHERING_ID), "Verify that the gathering code [" + rs.getValue("GTHR_CD") + "] is that which is expected [" + gatheringData.get(GATHERING_ID) + "].");
         TestReporter.softAssertEquals(rs.getValue("GTHR_TYP_NM"), gatheringData.get(GATHERING_TYPE), "Verify that the gathering type [" + rs.getValue("GTHR_TYP_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_TYPE) + "].");
@@ -2025,24 +2155,30 @@ public class ValidationHelper {
                 + "from res_mgmt.tp_gthr "
                 + "where tp_id = " + travelPlanId;
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-        TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that the TP ID [" + travelPlanId + "] is associate with a gathering in the Dreams DB");
-        TestReporter.softAssertEquals(rs.getValue("GTHR_CD"), gatheringData.get(GATHERING_ID), "Verify that the gathering code [" + rs.getValue("GTHR_CD") + "] is that which is expected [" + gatheringData.get(GATHERING_ID) + "].");
-        TestReporter.softAssertEquals(rs.getValue("GTHR_TYP_NM"), gatheringData.get(GATHERING_TYPE), "Verify that the gathering type [" + rs.getValue("GTHR_TYP_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_TYPE) + "].");
-        TestReporter.softAssertEquals(rs.getValue("GTHR_NM"), gatheringData.get(GATHERING_NAME), "Verify that the gathering name [" + rs.getValue("GTHR_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_NAME) + "].");
-
+        Recordset rs = null;
+        if (gatheringData != null) {
+            rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 10));
+            TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that the TP ID [" + travelPlanId + "] is associate with a gathering in the Dreams DB");
+            TestReporter.softAssertEquals(rs.getValue("GTHR_CD"), gatheringData.get(GATHERING_ID), "Verify that the gathering code [" + rs.getValue("GTHR_CD") + "] is that which is expected [" + gatheringData.get(GATHERING_ID) + "].");
+            TestReporter.softAssertEquals(rs.getValue("GTHR_TYP_NM"), gatheringData.get(GATHERING_TYPE), "Verify that the gathering type [" + rs.getValue("GTHR_TYP_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_TYPE) + "].");
+            TestReporter.softAssertEquals(rs.getValue("GTHR_NM"), gatheringData.get(GATHERING_NAME), "Verify that the gathering name [" + rs.getValue("GTHR_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_NAME) + "].");
+        } else {
+            rs = new Recordset(db.getResultSet(sql));
+            TestReporter.assertTrue(rs.getRowCount() == 0, "Verify that the TP ID [" + travelPlanId + "] is not associated with a gathering in the Dreams DB");
+        }
         TestReporter.log("Validate gathering in Dreams DB");
         sql = "select * "
                 + "from sales_tp.tp_gthr "
                 + "where tp_id = " + travelPlanId;
         db = new OracleDatabase(getEnvironment(), Database.SALESTP);
-        rs = new Recordset(db.getResultSet(sql));
-        if (tpv3Association) {
+        if (tpv3Association && gatheringData != null) {
+            rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 10));
             TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that the TP ID [" + travelPlanId + "] is associate with a gathering in the SALESTP DB");
             TestReporter.softAssertEquals(rs.getValue("GTHR_CD"), gatheringData.get(GATHERING_ID), "Verify that the gathering code [" + rs.getValue("GTHR_CD") + "] is that which is expected [" + gatheringData.get(GATHERING_ID) + "].");
             TestReporter.softAssertEquals(rs.getValue("GTHR_TYP_NM"), gatheringData.get(GATHERING_TYPE), "Verify that the gathering type [" + rs.getValue("GTHR_TYP_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_TYPE) + "].");
             TestReporter.softAssertEquals(rs.getValue("GTHR_NM"), gatheringData.get(GATHERING_NAME), "Verify that the gathering name [" + rs.getValue("GTHR_NM") + "] is that which is expected [" + gatheringData.get(GATHERING_NAME) + "].");
         } else {
+            rs = new Recordset(db.getResultSet(sql));
             TestReporter.assertTrue(rs.getRowCount() == 0, "Verify that the TP ID [" + travelPlanId + "] is not associated with a gathering in the SALESTP DB");
         }
         TestReporter.assertAll();
@@ -2200,6 +2336,33 @@ public class ValidationHelper {
             rs2 = new Recordset(db.getResultSet(sql2));
             TestReporter.softAssertEquals(rs2.getValue("TXN_ORG_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TXN_ORG_NM") + "] is that which is expected [" + ta.get("name") + "].");
             TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the travel agent ID [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
+        } else {
+            do {
+                TestReporter.softAssertTrue(rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that there is no travel agent associated with the group reservation");
+                rs.moveNext();
+            } while (rs.hasNext());
+        }
+
+        TestReporter.log("Validate travel agency");
+        sql = "SELECT e.TRVL_AGT_ID "
+                + "FROM  FOLIO.EXTNL_REF a "
+                + "INNER JOIN FOLIO.CHRG_GRP_EXTNL_REF b ON a.EXTNL_REF_ID = b.EXTNL_REF_ID "
+                + "INNER JOIN FOLIO.NODE_CHRG_GRP c ON b.CHRG_GRP_ID = c.ROOT_CHRG_GRP_ID "
+                + "INNER JOIN FOLIO.CHRG d ON c.NODE_CHRG_GRP_ID = d.CHRG_GRP_ID "
+                + "INNER JOIN FOLIO.PROD_CHRG e ON d.CHRG_ID = e.CHRG_ID "
+                + "WHERE a.EXTNL_SRC_NM = 'DREAMS_TP' "
+                + "AND a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
+        rs = new Recordset(db.getResultSet(sql));
+        if (!(isValid(base.getIsLibgoBooking()) && (base.getIsLibgoBooking() == true)) &&
+                !(isValid(base.isWdtcBooking()) && (base.isWdtcBooking() == true))) {
+            sql2 = "select * "
+                    + "from folio.trvl_agcy a "
+                    + "where a.TRVL_AGCY_ID = " + rs.getValue("TRVL_AGT_ID");
+            rs2 = new Recordset(db.getResultSet(sql2));
+            TestReporter.softAssertEquals(rs2.getValue("TRVL_AGCY_NM"), ta.get("name"), "Verify that the TA name [" + rs2.getValue("TRVL_AGCY_NM") + "] is that which is expected [" + ta.get("name") + "].");
+            TestReporter.softAssertTrue(!rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that the travel agent ID [" + rs.getValue("TRVL_AGT_ID") + "] is not null.");
+            TestReporter.softAssertEquals(rs2.getValue("IATA_ID"), ta.get("iataNumber"), "Verify that the IATA number [" + rs2.getValue("IATA_ID") + "] is that which is expected [" + ta.get("iataNumber") + "].");
+            TestReporter.softAssertEquals(rs2.getValue("TRVL_AGCY_ODS_ID"), ta.get("agencyOdsId"), "Verify that the ODS ID [" + rs2.getValue("TRVL_AGCY_ODS_ID") + "] is that which is expected [" + ta.get("agencyOdsId") + "].");
         } else {
             do {
                 TestReporter.softAssertTrue(rs.getValue("TRVL_AGT_ID").equals("NULL"), "Verify that there is no travel agent associated with the group reservation");

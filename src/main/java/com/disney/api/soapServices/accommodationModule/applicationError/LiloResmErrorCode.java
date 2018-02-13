@@ -95,4 +95,6 @@ public class LiloResmErrorCode {
             "TRAVEL_PLAN_SEGMENT_NOT_FOUND");
     public static final ApplicationErrorCode CANT_CALCULATE_CNCL_FEE = new ApplicationErrorCode(APP_NAME, 7080,
             "cannot calculate Cancel fee");
+    public static final ApplicationErrorCode ROUTING_REQUEST_INVALID = new ApplicationErrorCode(APP_NAME, 9085,
+            "Retrieve Service Requests By Routing Request is invalid");
 }

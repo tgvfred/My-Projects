@@ -92,6 +92,10 @@ public class Cancel extends AccommodationSalesComponentService {
         trySetRequestNodeValueByXPath("/Envelope/Body/cancel/request/travelComponentGroupingId", value);
     }
 
+    public void setCancelTickets(String value) {
+        trySetRequestNodeValueByXPath("/Envelope/Body/cancel/request/cancelTickets", value);
+    }
+
     /*
      * Response Getters
      */

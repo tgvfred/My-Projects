@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="OverrideAccommodationRates_" parallel="methods" thread-count="20">
+<suite name="OverrideAccommodationRates_" parallel="methods" thread-count="10">
 	<parameter name="environment" value="latest_cm" />
 	<test name="TestOverrideAccommodationRates_">
 	

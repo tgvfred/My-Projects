@@ -38,17 +38,19 @@ public class TestReplaceAllForTravelPlanSegment_ModifyRoomOnlyToAddExistingGathe
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug", "tpv3" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithExistingGathering() {
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "gathering" })
+    public void testReplaceAllForTravelPlanSegment_ModifyRoomOnlyWithExistingGathering() {
         tpId = getBook().getTravelPlanId();
         tpsId = getBook().getTravelPlanSegmentId();
         tcgId = getBook().getTravelComponentGroupingId();
         tcId = getBook().getTravelComponentId();
         tpPtyId = getBook().getGuestId();
 
+        Sleeper.sleep(10000);
         GatheringHelper helper = new GatheringHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
         helper.createGathering(getFacilityId());
 
+        Sleeper.sleep(10000);
         Map<String, String> gatheringData = new HashMap<>();
         gatheringData.put(GATHERING_ID, helper.getGroupCode());
         gatheringData.put(GATHERING_NAME, helper.getGroupName());

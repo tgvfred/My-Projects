@@ -48,7 +48,7 @@ public class TestReplaceAllForTravelPlanSegment_modifyResWithStatusCheckedIn ext
             helper.checkOut(getLocationId());
         } catch (Exception e) {
             try {
-                cancel();
+                cancel(tcgId);
             } catch (Exception e2) {
 
             }

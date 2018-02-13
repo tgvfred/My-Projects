@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -63,17 +64,19 @@ public class TestShare_twoTcg_checkInThenShare_Negative extends AccommodationBas
         checkIn.setGuestId(guestId);
 
         // Add a wait to avoid async issues
-        Sleeper.sleep(5000);
+        Sleeper.sleep(10000);
 
         checkIn.sendRequest();
         TestReporter.logAPI(!checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in a reservation " + checkIn.getFaultString(), checkIn);
 
+        Sleeper.sleep(10000);
         // check in the second res
         checkIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         checkIn.setGuestId(guestId2);
         checkIn.sendRequest();
         TestReporter.logAPI(!checkIn.getResponseStatusCode().equals("200"), "Verify that no error occurred while checking in the second reservation " + checkIn.getFaultString(), checkIn);
 
+        Sleeper.sleep(10000);
         share = new Share(environment, "Main_oneTcg");
         share.setTravelComponentGroupingId(firstTCG);
         share.addSharedComponent();
@@ -85,5 +88,15 @@ public class TestShare_twoTcg_checkInThenShare_Negative extends AccommodationBas
         validateApplicationError(share, AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_SHARED);
         TestReporter.assertEquals(share.getFaultString(), faultString, "Verify that the fault string [" + share.getFaultString() + "] is that which is expected [" + faultString + "].");
 
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }

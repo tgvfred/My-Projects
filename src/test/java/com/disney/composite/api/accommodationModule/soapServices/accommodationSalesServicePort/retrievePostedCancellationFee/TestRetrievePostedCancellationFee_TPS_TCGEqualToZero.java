@@ -23,7 +23,7 @@ public class TestRetrievePostedCancellationFee_TPS_TCGEqualToZero extends Accomm
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(5);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());

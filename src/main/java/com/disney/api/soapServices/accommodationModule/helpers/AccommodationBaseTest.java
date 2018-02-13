@@ -61,6 +61,7 @@ import com.disney.utils.dataFactory.ResortInfo;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.FacilityDatabase;
+import com.disney.utils.dataFactory.database.ProfileDatabase;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.database.sqlStorage.DVCSalesDreams;
@@ -111,7 +112,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public ThreadLocal<Boolean> skipExternalRef = new ThreadLocal<Boolean>();
     private ThreadLocal<String> externalRefNumber = new ThreadLocal<String>();
     public static String externalRefSource = "DPMSProperty";
-    private static String[][] roomTypeAndFacInfo = new String[35][6];
+    private static String[][] roomTypeAndFacInfo = new String[25][6];
     private Map<String, String> noPackageCodes = new HashMap<String, String>();
     public ThreadLocal<Boolean> fixedDates = new ThreadLocal<Boolean>();
     private ThreadLocal<HouseHold> hh = new ThreadLocal<HouseHold>();
@@ -165,6 +166,8 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Map<String, String>> membershipData = new ThreadLocal<>();
     private ThreadLocal<Boolean> addPrimaryGuestODS = new ThreadLocal<>();
     private ThreadLocal<Boolean> addTravelAgency = new ThreadLocal<>();
+    private ThreadLocal<Boolean> addCruiseDetails = new ThreadLocal<>();
+    public ThreadLocal<String> dclGuestId = new ThreadLocal<>();
     private ThreadLocal<Map<String, String>> profileData = new ThreadLocal<>();
     private ThreadLocal<Boolean> addProfile = new ThreadLocal<>();
     private ThreadLocal<Boolean> mywPackageCode = new ThreadLocal<>();
@@ -182,6 +185,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     private Map<String, String> regexXpaths = new HashMap<>();
     private Document responseDocument = null;
     private Set<String> excludedBaselineXpaths = new HashSet<>();
+    private String tcg;
 
     public void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -236,7 +240,9 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void setDepartureDate(int nights) {
-        setNights(nights);
+        if (this.nights == null || this.nights.get() == null) {
+            setNights(nights);
+        }
         this.departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
     }
 
@@ -813,6 +819,14 @@ public class AccommodationBaseTest extends BaseRestTest {
         this.addRoom.set(addRoom);
     }
 
+    public Boolean getAddCruiseDetails() {
+        return addCruiseDetails.get();
+    }
+
+    public void setAddCruiseDetails(Boolean addCruiseDetails) {
+        this.addCruiseDetails.set(addCruiseDetails);
+    }
+
     public Boolean getAddRoom() {
         return this.addRoom.get();
     }
@@ -1229,8 +1243,18 @@ public class AccommodationBaseTest extends BaseRestTest {
         isComo.set(new String());
         this.isComo.set(System.getenv("isComo") == null ? "false" : System.getenv("isComo"));
         setEnvironment(environment);
+
+        String facSql = "SELECT WRK_LOC_ID FROM TFDB_3.WRK_LOC WHERE HM_ENTRPRS_FAC_ID IS NOT NULL AND TXN_ACCT_CTR_ID IS NOT NULL AND HM_ENTRPRS_FAC_ID <> 1";
+        Database facDb = new Database(FacilityDatabase.getInfo("Load")); // Always execute in Load as Latest always has data issues
+        Recordset facRs = new Recordset(facDb.getResultSet(facSql));
+        String workLocations = "";
+        for (facRs.moveFirst(); facRs.hasNext(); facRs.moveNext()) {
+            workLocations = workLocations + facRs.getValue("WRK_LOC_ID") + " ,";
+        }
+
+        workLocations = workLocations.substring(0, workLocations.length() - 1);
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts()));
+        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts(workLocations)));
         for (int i = 0; i < roomTypeAndFacInfo.length; i++) {
 
             // Removing Pop Century from the config list until after 7.23 release - WWA 11/3/2017
@@ -1242,18 +1266,18 @@ public class AccommodationBaseTest extends BaseRestTest {
             roomTypeAndFacInfo[i][3] = rs.getValue("ROOM_DESC", i + 1);
             roomTypeAndFacInfo[i][4] = rs.getValue("RSRT_FAC_ID", i + 1);
             roomTypeAndFacInfo[i][5] = rs.getValue("LOC_ID", i + 1);
-            TestReporter.logStep("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
+            TestReporter.log("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
                     " **ROOM TYPE: " + roomTypeAndFacInfo[i][1] +
                     " **RESORT: " + roomTypeAndFacInfo[i][2] +
                     " **ROOM DESCRIPTION: " + roomTypeAndFacInfo[i][3] +
                     " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
                     " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
-            // System.out.println("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
-            // " **ROOM TYPE: " + roomTypeAndFacInfo[i][1] +
-            // " **RESORT: " + roomTypeAndFacInfo[i][2] +
-            // " **ROOM DESCRIPTION: " + roomTypeAndFacInfo[i][3] +
-            // " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
-            // " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
+            System.out.println("**NUMBER OF ROOMS: " + roomTypeAndFacInfo[i][0] +
+                    " **ROOM TYPE: " + roomTypeAndFacInfo[i][1] +
+                    " **RESORT: " + roomTypeAndFacInfo[i][2] +
+                    " **ROOM DESCRIPTION: " + roomTypeAndFacInfo[i][3] +
+                    " **FACILITY ID: " + roomTypeAndFacInfo[i][4] +
+                    " **LOCATION ID: " + roomTypeAndFacInfo[i][5]);
             // }
         }
         setSendRequest(true);
@@ -1300,24 +1324,48 @@ public class AccommodationBaseTest extends BaseRestTest {
     @AfterMethod(alwaysRun = true)
     public void teardown() {
         try {
+            retrieveReservation();
+            if (getRetrieve().getTravelStatus().toLowerCase().contains("check")) {
+                CheckInHelper helper = new CheckInHelper(environment, getBook());
+                helper.checkOut(locationId.get());
+            }
+
+        } catch (Exception | AssertionError e) {
+        }
+        try {
             if ((skipCancel == null) || (skipCancel.get() == null) || (skipCancel.get() != true)) {
-                cancel();
+                cancel(tcg);
             }
         } catch (Exception e) {
         }
     }
 
+    public void cancel(String tcg) {
+        Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(getEnvironment()), "MainCancel");
+        cancel.setTravelComponentGroupingId(tcg);
+        try {
+            cancel.sendRequest();
+        } catch (Exception e) {
+        }
+
+    }
+
     public void cancel() {
         Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(getEnvironment()), "MainCancel");
-        cancel.setCancelDate(Randomness.generateCurrentXMLDate());
         if (getBook() != null) {
-            if (getBook().getTravelComponentGroupingId() != null) {
+            if (tcgId != null && tcgId.get() != null && !tcgId.get().isEmpty()) {
+                cancel.setTravelComponentGroupingId(tcgId.get());
+            } else if (getBook().getTravelComponentGroupingId() != null) {
                 cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
             }
         } else {
             cancel.setTravelComponentGroupingId(tcgId.get());
         }
-        cancel.sendRequest();
+        try {
+            cancel.sendRequest();
+        } catch (Exception e) {
+        }
+
     }
 
     @AfterSuite(alwaysRun = true)
@@ -1356,6 +1404,12 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setExternalReference(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), getExternalRefSource(), "RESERVATION");
             getBook().setRoomDetails_ExternalRefs(BaseSoapCommands.REMOVE_NODE.toString(), getExternalRefNumber(), getExternalRefSource(), "RESERVATION");
         }
+
+        getBook().setRoomDetailsResortCode(getResortCode());
+        getBook().setRoomDetailsRoomTypeCode(getRoomTypeCode());
+        getBook().setRoomDetailsLocationId(getLocationId());
+        getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
+        getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
 
         PackageCodes pkg = new PackageCodes();
         int maxTries = 10;
@@ -1397,7 +1451,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setPackageDescription("ANN MYW Pkg + Dining");
                 setPackageType("WHOLESALE");
                 // if (packageCode.get() == null || packageCode.get().isEmpty()) {
-                PackageCodeHelper helper = new PackageCodeHelper(Environment.getBaseEnvironmentName(getEnvironment()), Randomness.generateCurrentXMLDate(), RoomTypes.getTicketPlusDisneyDiningPlan(), "DREAMS - United States", getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
+                PackageCodeHelper helper = new PackageCodeHelper(Environment.getBaseEnvironmentName(getEnvironment()), Randomness.generateCurrentXMLDate(), RoomTypes.getRoomPlusMywTicket(), "DREAMS - United States", getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
                 packageCode.set(helper.getPackageCode());
                 // }
                 try {
@@ -1416,15 +1470,33 @@ public class AccommodationBaseTest extends BaseRestTest {
                 if ((isRSR() != null) && (isRSR() == true)) {
                     setPackageType("RSR");
                     getBook().setRoomDetailsRsrReservation("true");
+                    try {
+                        // if ((skipExternalRef.get() != null) && (skipExternalRef.get() != false)) {
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                        // }
+                    } catch (XPathNotFoundException e) {
+                    }
+                } else if ((getAddCruiseDetails() != null) && (getAddCruiseDetails() == true)) {
+                    getBook().setExternalReference("DCLFIT", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setRoomDetails_ExternalRefs("DCLFIT", getExternalRefNumber(), BaseSoapCommands.REMOVE_NODE.toString(), BaseSoapCommands.REMOVE_NODE.toString());
+                    getBook().setCruiseDetails("DD", "0748");
+                    getBook().setDclGuestId(Randomness.randomNumber(12));
+                    setPackageType("DCL");
                 } else {
                     setPackageType("DRC RO");
+                    try {
+                        // if ((skipExternalRef.get() != null) && (skipExternalRef.get() != false)) {
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
+                        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
+                        // }
+                    } catch (XPathNotFoundException e) {
+                    }
                 }
                 // if (packageCode.get() == null || packageCode.get().isEmpty()) {
                 PackageCodeHelper helper = new PackageCodeHelper(Environment.getBaseEnvironmentName(getEnvironment()), Randomness.generateCurrentXMLDate(), RoomTypes.getRoomOnly(), getPackageType(), getResortCode(), getRoomTypeCode(), Randomness.generateCurrentXMLDate(getDaysOut()));
                 packageCode.set(helper.getPackageCode());
                 // }
-                getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
-                getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/externalReferences", BaseSoapCommands.REMOVE_NODE.toString());
             }
             pkg = new PackageCodes();
             boolean success = false;
@@ -1443,12 +1515,8 @@ public class AccommodationBaseTest extends BaseRestTest {
                     pkgTries++;
                 } while (!success && (pkgTries < pkgMaxTries));
             }
+
             getBook().setRoomDetailsPackageCode(getPackageCode());
-            getBook().setRoomDetailsResortCode(getResortCode());
-            getBook().setRoomDetailsRoomTypeCode(getRoomTypeCode());
-            getBook().setRoomDetailsLocationId(getLocationId());
-            getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
-            getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
             // getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
 
             if ((isADA() != null) && (isADA() == true)) {
@@ -1592,14 +1660,15 @@ public class AccommodationBaseTest extends BaseRestTest {
                     setProfileData(new HashMap<String, String>());
                     getProfileData().put(PROFILE_ID, "600");
                 }
-                Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+
+                Database db = new Database(ProfileDatabase.getInfo(getEnvironment()));
                 Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getProfileInformationById(getProfileData().get(PROFILE_ID))));
                 TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that a profile is found in the DB for profile ID [" + getProfileData().get(PROFILE_ID) + "].");
-                getProfileData().put(PROFILE_CODE, rs.getValue("PROFILE_CODE"));
-                getProfileData().put(PROFILE_DESCRIPTION, rs.getValue("PROFILE_DESCRIPTION"));
-                getProfileData().put(PROFILE_TYPE, rs.getValue("PROFILE_TYPE"));
-                getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PROFILE_ROUTINGS_NAME"));
-                getProfileData().put(PROFILE_SELECTABLE, rs.getValue("PROFILE_SELECTABLE"));
+                getProfileData().put(PROFILE_CODE, rs.getValue("PRFL_VAL_CD"));
+                getProfileData().put(PROFILE_DESCRIPTION, rs.getValue("PRFL_VAL_DS"));
+                getProfileData().put(PROFILE_TYPE, rs.getValue("PRFL_TYP_NM"));
+                getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PRFL_RTE_TYP_NM"));
+                getProfileData().put(PROFILE_SELECTABLE, rs.getValue("SLCT_IN"));
                 getBook().setReservationDetail_Profiles(getProfileData());
             }
 
@@ -1762,8 +1831,13 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void retrieveReservation() {
+        if (getBook() == null || getBook().getTravelPlanId().isEmpty()) {
+            return;
+        }
+
         Sleeper.sleep(5000);
-        retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
+        // retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
+        retrieve.set(new Retrieve(getEnvironment(), "Main"));
         getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", getBook().getTravelPlanId());
         getRetrieve().setRequestNodeValueByXPath("//request/locationId", getLocationId());
         getRetrieve().sendRequest();
@@ -2130,10 +2204,10 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     private void addDining() {
-        diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), hh.get());
+        diningRes = new ShowDiningReservation(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         diningRes.setTravelPlanId(getBook().getTravelPlanId());
-        diningRes.setFacilityName("Pioneer Hall");
-        diningRes.setProductName("Hoop-Dee-Doo-Cat 2-1st Show");
+        diningRes.setFacilityName("Fort Wilderness Pavilion");
+        diningRes.setProductName("Mickey's Backyard BBQ - Premium Seating");
         diningRes.setServiceStartDate(getArrivalDate());
         diningRes.book("NoComponentsNoAddons");
 

@@ -54,7 +54,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyDiningTpToAddAccommodation
         }
 
         try {
-            cancel();
+            cancel(getBook().getTravelComponentGroupingId());
         } catch (Exception e) {
 
         }
@@ -107,7 +107,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyDiningTpToAddAccommodation
         validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
 
         // Validate guest
-        validations.verifyNumberOfTpPartiesByTpId(2, getBook().getTravelPlanId());
+        validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
 
         Map<String, String> partyIds = new HashMap<>();
         String sql = "select d.TXN_IDVL_PTY_ID "

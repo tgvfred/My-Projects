@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.share;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -31,7 +32,7 @@ public class TestShare_twoTcg_differentStartAndEndDates extends AccommodationBas
 
         setEnvironment(environment);
         isComo.set("false");
-        setDaysOut(0);
+        setDaysOut(40);
         setArrivalDate(getDaysOut());
         setNights(2);
         setDepartureDate(getNights());
@@ -42,7 +43,7 @@ public class TestShare_twoTcg_differentStartAndEndDates extends AccommodationBas
         firstTC = getBook().getTravelComponentId();
         firstTPS = getBook().getTravelPlanSegmentId();
         captureFirstOwnerId();
-        setDaysOut(1);
+        setDaysOut(41);
         setArrivalDate(getDaysOut());
         setNights(2);
         setDepartureDate(getNights());
@@ -185,5 +186,15 @@ public class TestShare_twoTcg_differentStartAndEndDates extends AccommodationBas
         }
 
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }

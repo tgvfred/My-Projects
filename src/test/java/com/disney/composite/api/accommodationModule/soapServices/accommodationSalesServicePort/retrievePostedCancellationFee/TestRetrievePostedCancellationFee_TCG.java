@@ -19,7 +19,7 @@ public class TestRetrievePostedCancellationFee_TCG extends AccommodationBaseTest
 
         setEnvironment(environment);
         isComo.set("true");
-        daysOut.set(0);
+        daysOut.set(5);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));

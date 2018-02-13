@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.unShare;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -31,7 +32,7 @@ public class TestUnShare_twoTcg_shareTwice extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -47,7 +48,7 @@ public class TestUnShare_twoTcg_shareTwice extends AccommodationBaseTest {
         captureFirstOwnerId();
 
         // book second reservation.
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(2);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -178,5 +179,15 @@ public class TestUnShare_twoTcg_shareTwice extends AccommodationBaseTest {
         }
 
         secondOwnerId = rs.getValue("ASGN_OWN_ID");
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }

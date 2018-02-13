@@ -3,6 +3,12 @@ package com.disney.api.soapServices.accommodationModule.accommodationSalesCompon
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.AccommodationSalesComponentService;
 import com.disney.utils.XMLTools;
 
+/**
+ * @deprecated deprecated in 8.5. Now under AccommodationSalesBatchService
+ * @author phlej001
+ *
+ */
+@Deprecated
 public class AutoCancel extends AccommodationSalesComponentService {
 
     public AutoCancel(String environment, String scenario) {

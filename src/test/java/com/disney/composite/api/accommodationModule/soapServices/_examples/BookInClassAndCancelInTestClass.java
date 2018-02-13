@@ -29,7 +29,7 @@ public class BookInClassAndCancelInTestClass extends AccommodationBaseTest {
     @Override
     @AfterMethod(alwaysRun = true)
     public void teardown() {
-        cancel();
+        cancel(getBook().getTravelComponentGroupingId());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "example" })
@@ -40,7 +40,7 @@ public class BookInClassAndCancelInTestClass extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues();
         bookReservation();
-        cancel();
+        cancel(getBook().getTravelComponentGroupingId());
 
         gatherDataForValidations();
         validations();

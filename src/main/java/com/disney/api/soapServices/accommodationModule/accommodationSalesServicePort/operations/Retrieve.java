@@ -1051,6 +1051,7 @@ public class Retrieve extends AccommodationSalesServicePort {
         return TCG_IDs;
     }
 
+    @SuppressWarnings("unused")
     public String queryAndGetRandomTravelPlanId() {
         OracleDatabase db = new OracleDatabase("Sleepy", "Dreams");
         Recordset rs = new Recordset(db.getResultSet("Select * FROM RES_MGMT.TPS WHERE ROWNUM < 10"));

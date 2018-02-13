@@ -12,6 +12,7 @@ public class Dreams_AccommodationQueries extends Dreams {
     }
 
     public static String getRoomTypesWithHighRoomCounts() {
+
         return "select NUMROOMS, ROOM_TYPE, c.SEQ_NM RESORT, ROOM_DESC, c.RSRT_FAC_ID , WRK_LOC_ID "
                 + "from( select NUMROOMS, b.RSRC_INVTRY_TYP_CD ROOM_TYPE, FAC_ID, RM_DS ROOM_DESC "
                 + "from( select count(a.rsrc_id) NUMROOMS, a.RSRC_INVTRY_TYP_ID  TYPE_ID, a.RSRT_FAC_ID FAC_ID, a.RM_DS "
@@ -27,9 +28,36 @@ public class Dreams_AccommodationQueries extends Dreams {
                 + "and seq_nm not like ('%20%') "
                 + "and NUMROOMS > 100 "
                 + "and ROOM_DESC not like '%accessible%' "
-                + "and c.SEQ_NM like '% %' AND WRK_LOC_ID NOT IN ( 32100,32301, 66,555) "
+                + "and c.SEQ_NM like '% %' AND WRK_LOC_ID NOT IN ( 32100,32301, 66,555,63,597) "
                 + "and TXN_ACCT_CTR_ID is not null "
                 + "and TXN_ACCT_CTR_ID not in (77803, 10054) "
+                + "and WRK_LOC_NM not like ('%HOLA%')"
+                + "and HM_RSRT_FAC_ID = e.FAC_ID "
+                + "and c.RSRT_FAC_ID not in (select unique(a.DVC_RSRT_FAC_ID) from rsrc_inv.dvc_rm_typ_xref a ) "
+                + "group by NUMROOMS, ROOM_TYPE, c.SEQ_NM, ROOM_DESC, c.RSRT_FAC_ID, WRK_LOC_ID "
+                + "order by NUMROOMS desc";
+    }
+
+    public static String getRoomTypesWithHighRoomCounts(String workLocationIds) {
+        String ids = workLocationIds.replace(",66 ", "");
+        return "select NUMROOMS, ROOM_TYPE, c.SEQ_NM RESORT, ROOM_DESC, c.RSRT_FAC_ID , WRK_LOC_ID "
+                + "from( select NUMROOMS, b.RSRC_INVTRY_TYP_CD ROOM_TYPE, FAC_ID, RM_DS ROOM_DESC "
+                + "from( select count(a.rsrc_id) NUMROOMS, a.RSRC_INVTRY_TYP_ID  TYPE_ID, a.RSRT_FAC_ID FAC_ID, a.RM_DS "
+                + "from rsrc_inv.rm a "
+                + "group by a.RSRC_INVTRY_TYP_ID, a.RSRT_FAC_ID, a.RM_DS "
+                + "order by count(a.rsrc_id) desc) "
+                + "join rsrc_inv.RSRC_INVTRY_TYP b on b.RSRC_INVTRY_TYP_ID = TYPE_ID "
+                + "order by NUMROOMS desc) "
+                + "join rsrc_inv.rsrt_seq c on c.RSRT_FAC_ID = FAC_ID "
+                + "join rsrc_inv.WRK_LOC d on FAC_ID = d.HM_RSRT_FAC_ID "
+                + "join accting.FAC_TXN_ACCT_CTR e on TXN_ACCT_CTR_ID = e.DFLT_TXN_ACCT_CTR_ID "
+                + "where seq_nm not like ('New%') "
+                + "and seq_nm not like ('%20%') "
+                + "and NUMROOMS > 100 "
+                + "and ROOM_DESC not like '%accessible%' "
+                + "and c.SEQ_NM like '% %' AND WRK_LOC_ID IN ( " + ids + ") "
+                + "and TXN_ACCT_CTR_ID is not null "
+                + "and TXN_ACCT_CTR_ID not in (77803, 10054,66) "
                 + "and WRK_LOC_NM not like ('%HOLA%')"
                 + "and HM_RSRT_FAC_ID = e.FAC_ID "
                 + "and c.RSRT_FAC_ID not in (select unique(a.DVC_RSRT_FAC_ID) from rsrc_inv.dvc_rm_typ_xref a ) "

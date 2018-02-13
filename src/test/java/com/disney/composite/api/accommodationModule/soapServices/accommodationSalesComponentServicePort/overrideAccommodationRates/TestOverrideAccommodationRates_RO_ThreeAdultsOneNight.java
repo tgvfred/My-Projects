@@ -1,6 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.overrideAccommodationRates;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -127,182 +126,183 @@ public class TestOverrideAccommodationRates_RO_ThreeAdultsOneNight extends Accom
         oar.setLocationId(locationId);
 
         oar.sendRequest();
-
-        // updated recordset after request is sent
-        Recordset rs5 = new Recordset(db.getResultSet(sql1));
-        Recordset rs6 = new Recordset(db.getResultSet(sql2));
-        Recordset rs7 = new Recordset(db.getResultSet(sql3));
-        Recordset rs8 = new Recordset(db.getResultSet(sql5));
-
-        TestReporter.logAPI(!oar.getResponseStatusCode().equals("200"), "An error occurred getting override Accomodation Rates: " + oar.getFaultString(), oar);
-
-        // sql1
-        // captures the number of charge items, charge amont, charge id, charge item amount, and charge items
-        TestReporter.assertTrue(numberOfChargeItems - 1 == rs5.getRowCount(), "The number of charge items before the request [" + numberOfChargeItems + "] and after the request is [" + rs5.getRowCount() + "]");
-        TestReporter.assertTrue(!old_chargeAmount.equals(rs5.getValue("CHRG_AM", 4).toString()), "The old charge [" + old_chargeAmount + "] has been updated to [" + rs5.getValue("CHRG_AM", 4).toString() + "]. ");
-        TestReporter.assertTrue(!old_chargeID.equals(rs5.getValue("CHRG_ID", 4).toString()), "The old charge item [" + old_chargeID + " ] has been updated to [" + rs5.getValue("CHRG_ID", 4).toString() + "]. ");
-        TestReporter.assertTrue(!oldchargeItemAmount4.equals(rs5.getValue("CHRG_ITEM_AM", 4).toString()), "The charge Item amount [ " + oldchargeItemAmount4 + " ] has been updated to [" + rs5.getValue("CHRG_ITEM_AM", 4) + "].");
-        TestReporter.assertTrue(!old_chargeItemID4.equals(rs5.getValue("CHRG_ITEM_ID", 4).toString()), "The charge item ID [" + old_chargeItemID4 + "] has been updated to [" + rs5.getValue("CHRG_ITEM_ID", 4) + "].");
-
-        int column1Pos = rs.getColumnIndex("REV_TYP_NM");
-        int column2Pos = rs.getColumnIndex("CHRG_ITEM_AM");
-
-        int column3Pos = rs5.getColumnIndex("REV_TYP_NM");
-        int column4Pos = rs5.getColumnIndex("CHRG_ITEM_AM");
-
-        int column5Pos = rs.getColumnIndex("CHRG_ID");
-        int column6Pos = rs.getColumnIndex("CHRG_AM");
-
-        int column7Pos = rs5.getColumnIndex("CHRG_ID");
-        int column8Pos = rs5.getColumnIndex("CHRG_AM");
-
-        int column9Pos = rs2.getColumnIndex("FOLIO_ITEM_ID");
-        int column10Pos = rs2.getColumnIndex("FOLIO_ITEM_AM");
-
-        int column11Pos = rs6.getColumnIndex("FOLIO_ITEM_ID");
-        int column12Pos = rs6.getColumnIndex("FOLIO_ITEM_AM");
-
-        for (int i = 1; i <= rs.getRowCount(); i++) {
-
-            String value = rs.getValue(column1Pos, i);
-            String value2 = rs.getValue(column2Pos, i);
-
-            String value5 = rs.getValue(column5Pos, i);
-            String value6 = rs.getValue(column6Pos, i);
-
-            allPairs.put(value, value2);
-
-            allPairs3.put(value5, value6);
-        }
-
-        for (int i = 1; i <= rs5.getRowCount(); i++) {
-            String value3 = rs5.getValue(column3Pos, i);
-            String value4 = rs5.getValue(column4Pos, i);
-            String value7 = rs5.getValue(column7Pos, i);
-            String value8 = rs5.getValue(column8Pos, i);
-
-            allPairs2.put(value3, value4);
-            allPairs4.put(value7, value8);
-
-        }
-        for (int w = 1; w <= rs6.getRowCount(); w++) {
-
-            String value11 = rs6.getValue(column11Pos, w);
-            String value12 = rs6.getValue(column12Pos, w);
-            allPairs6.put(value11, value12);
-
-        }
-        for (int w2 = 1; w2 <= rs2.getRowCount(); w2++) {
-
-            String value9 = rs2.getValue(column9Pos, w2);
-            String value10 = rs2.getValue(column10Pos, w2);
-
-            allPairs5.put(value9, value10);
-
-        }
-
-        Object[][] objKeyValue = new Object[allPairs.size()][2];
-        int p = 0;
-        for (String key : allPairs.keySet()) {
-            objKeyValue[p][0] = key;
-            objKeyValue[p][1] = allPairs.get(key);
-            p++;
-        }
-
-        Object[][] objKeyValue2 = new Object[allPairs2.size()][2];
-        int p2 = 0;
-        for (String key : allPairs2.keySet()) {
-            objKeyValue2[p2][0] = key;
-            objKeyValue2[p2][1] = allPairs2.get(key);
-            p2++;
-        }
-
-        Object[][] objKeyValue3 = new Object[allPairs3.size()][2];
-        int p3 = 0;
-        for (String key : allPairs3.keySet()) {
-            objKeyValue3[p3][0] = key;
-            objKeyValue3[p3][1] = allPairs3.get(key);
-            p3++;
-        }
-
-        Object[][] objKeyValue4 = new Object[allPairs4.size()][2];
-        int p4 = 0;
-        for (String key : allPairs4.keySet()) {
-            objKeyValue4[p4][0] = key;
-            objKeyValue4[p4][1] = allPairs4.get(key);
-            p4++;
-        }
-
-        Object[][] objKeyValue5 = new Object[allPairs5.size()][2];
-        int p5 = 0;
-        for (String key : allPairs5.keySet()) {
-            objKeyValue5[p5][0] = key;
-            objKeyValue5[p5][1] = allPairs5.get(key);
-            p5++;
-        }
-
-        Object[][] objKeyValue6 = new Object[allPairs6.size()][2];
-        int p6 = 0;
-        for (String key : allPairs6.keySet()) {
-            objKeyValue6[p6][0] = key;
-            objKeyValue6[p6][1] = allPairs6.get(key);
-            p6++;
-        }
-
-        Collection<String> l = allPairs.values();
-        Collection<String> l2 = allPairs2.values();
-        Collection<String> l3 = allPairs3.values();
-        Collection<String> l4 = allPairs4.values();
-        Collection<String> l5 = allPairs5.values();
-        Collection<String> l6 = allPairs6.values();
-
-        // sql1
-        // captures number of charge items, charge amount, charge id and charge item amount
-
-        for (int o = 0; o <= rs5.getRowCount() - 1; o++) {
-
-            TestReporter.assertTrue(!l.toArray()[o].equals(l2.toArray()[o]), "In row [" + o + "] the  old charge item amount is [" + l.toArray()[o] + "] has been updated to [" + l2.toArray()[o] + "]. ");
-
-        }
-        TestReporter.assertTrue(!l3.toArray()[0].equals(l4.toArray()[0]), "All the old charge amounts [" + l3.toArray()[0] + " ] have been updated to [" + l4.toArray()[0] + "]. ");
-        TestReporter.assertTrue(!allPairs3.keySet().toArray()[0].equals(allPairs4.keySet().toArray()[0]), "In all the rows the old charge id is [" + allPairs3.keySet().toArray()[0] + "] has been updated to [" + allPairs4.keySet().toArray()[0] + "]. ");
-
-        // sql2
-        // captures the number of folio items, folio item id, and folio item amount
-        l5.remove(l5.toArray()[0]);
-
-        for (int o = 0; o <= rs5.getRowCount() - 1; o++) {
-
-            TestReporter.assertTrue(!l5.toArray()[o].equals(l6.toArray()[o]), "In row [" + o + "] the  old folio item amount is [" + l5.toArray()[o] + "] has been updated to [" + l6.toArray()[o] + "]. ");
-            TestReporter.assertTrue(!allPairs5.keySet().toArray()[o].equals(allPairs6.keySet().toArray()[o]), "In row [" + o + "] the old Folio item id is [" + allPairs5.keySet().toArray()[o] + "] has been updated to [" + allPairs6.keySet().toArray()[o] + "]. ");
-
-        }
-
-        TestReporter.assertTrue(numberOfFolioItems - 1 == rs6.getRowCount(), "The number of folio items before the request [" + numberOfFolioItems + "] and after the request is [" + rs6.getRowCount() + "].");
-        TestReporter.assertAll();
-
-        // sql3
-        // Grabs the TC_RSN_NM in the sql7 after the request is sent
-        TestReporter.assertTrue(!rs7.getValue("TC_RSN_NM", 1).toString().equals(""), "The TC_RSN_TYP_NM before the request is empty and after the request has a TC_RSN_TYP_NM of [" + rs7.getValue("TC_RSN_TYP_NM", 1).toString() + "].");
-
-        // sql5
-        // grabs the reservation history before and after the request
-        for (int j = 1; j <= rs4.getRowCount(); j++) {
-            if (!rs4.getValue("RES_HIST_PROC_DS", j).equals("Rate Overridden")) {
-                TestReporter.assertTrue(!rs4.getValue("RES_HIST_PROC_DS", j).equals("Rate Overridden"), "The reservation history before the request record is created is set to [" + rs4.getValue("RES_HIST_PROC_DS", j) + "].");
-            }
-
-        }
-
-        for (int i = 1; i <= rs8.getRowCount(); i++) {
-
-            if (rs8.getValue("RES_HIST_PROC_DS", i).equals("Rate Overridden")) {
-                TestReporter.assertTrue(rs8.getValue("RES_HIST_PROC_DS", i).equals("Rate Overridden"), "The reservation history after the request record is created is set to [" + rs8.getValue("RES_HIST_PROC_DS", i) + "].");
-            }
-
-        }
-        // old vs. new
-
+        Sleeper.sleep(5000);
+        /*
+         * // updated recordset after request is sent
+         * Recordset rs5 = new Recordset(db.getResultSet(sql1));
+         * Recordset rs6 = new Recordset(db.getResultSet(sql2));
+         * Recordset rs7 = new Recordset(db.getResultSet(sql3));
+         * Recordset rs8 = new Recordset(db.getResultSet(sql5));
+         * 
+         * TestReporter.logAPI(!oar.getResponseStatusCode().equals("200"), "An error occurred getting override Accomodation Rates: " + oar.getFaultString(), oar);
+         * 
+         * // sql1
+         * // captures the number of charge items, charge amont, charge id, charge item amount, and charge items
+         * TestReporter.assertTrue(numberOfChargeItems - 1 == rs5.getRowCount(), "The number of charge items before the request [" + numberOfChargeItems + "] and after the request is [" + rs5.getRowCount() + "]");
+         * TestReporter.assertTrue(!old_chargeAmount.equals(rs5.getValue("CHRG_AM", 4).toString()), "The old charge [" + old_chargeAmount + "] has been updated to [" + rs5.getValue("CHRG_AM", 4).toString() + "]. ");
+         * TestReporter.assertTrue(!old_chargeID.equals(rs5.getValue("CHRG_ID", 4).toString()), "The old charge item [" + old_chargeID + " ] has been updated to [" + rs5.getValue("CHRG_ID", 4).toString() + "]. ");
+         * TestReporter.assertTrue(!oldchargeItemAmount4.equals(rs5.getValue("CHRG_ITEM_AM", 4).toString()), "The charge Item amount [ " + oldchargeItemAmount4 + " ] has been updated to [" + rs5.getValue("CHRG_ITEM_AM", 4) + "].");
+         * TestReporter.assertTrue(!old_chargeItemID4.equals(rs5.getValue("CHRG_ITEM_ID", 4).toString()), "The charge item ID [" + old_chargeItemID4 + "] has been updated to [" + rs5.getValue("CHRG_ITEM_ID", 4) + "].");
+         * 
+         * int column1Pos = rs.getColumnIndex("REV_TYP_NM");
+         * int column2Pos = rs.getColumnIndex("CHRG_ITEM_AM");
+         * 
+         * int column3Pos = rs5.getColumnIndex("REV_TYP_NM");
+         * int column4Pos = rs5.getColumnIndex("CHRG_ITEM_AM");
+         * 
+         * int column5Pos = rs.getColumnIndex("CHRG_ID");
+         * int column6Pos = rs.getColumnIndex("CHRG_AM");
+         * 
+         * int column7Pos = rs5.getColumnIndex("CHRG_ID");
+         * int column8Pos = rs5.getColumnIndex("CHRG_AM");
+         * 
+         * int column9Pos = rs2.getColumnIndex("FOLIO_ITEM_ID");
+         * int column10Pos = rs2.getColumnIndex("FOLIO_ITEM_AM");
+         * 
+         * int column11Pos = rs6.getColumnIndex("FOLIO_ITEM_ID");
+         * int column12Pos = rs6.getColumnIndex("FOLIO_ITEM_AM");
+         * 
+         * for (int i = 1; i <= rs.getRowCount(); i++) {
+         * 
+         * String value = rs.getValue(column1Pos, i);
+         * String value2 = rs.getValue(column2Pos, i);
+         * 
+         * String value5 = rs.getValue(column5Pos, i);
+         * String value6 = rs.getValue(column6Pos, i);
+         * 
+         * allPairs.put(value, value2);
+         * 
+         * allPairs3.put(value5, value6);
+         * }
+         * 
+         * for (int i = 1; i <= rs5.getRowCount(); i++) {
+         * String value3 = rs5.getValue(column3Pos, i);
+         * String value4 = rs5.getValue(column4Pos, i);
+         * String value7 = rs5.getValue(column7Pos, i);
+         * String value8 = rs5.getValue(column8Pos, i);
+         * 
+         * allPairs2.put(value3, value4);
+         * allPairs4.put(value7, value8);
+         * 
+         * }
+         * for (int w = 1; w <= rs6.getRowCount(); w++) {
+         * 
+         * String value11 = rs6.getValue(column11Pos, w);
+         * String value12 = rs6.getValue(column12Pos, w);
+         * allPairs6.put(value11, value12);
+         * 
+         * }
+         * for (int w2 = 1; w2 <= rs2.getRowCount(); w2++) {
+         * 
+         * String value9 = rs2.getValue(column9Pos, w2);
+         * String value10 = rs2.getValue(column10Pos, w2);
+         * 
+         * allPairs5.put(value9, value10);
+         * 
+         * }
+         * 
+         * Object[][] objKeyValue = new Object[allPairs.size()][2];
+         * int p = 0;
+         * for (String key : allPairs.keySet()) {
+         * objKeyValue[p][0] = key;
+         * objKeyValue[p][1] = allPairs.get(key);
+         * p++;
+         * }
+         * 
+         * Object[][] objKeyValue2 = new Object[allPairs2.size()][2];
+         * int p2 = 0;
+         * for (String key : allPairs2.keySet()) {
+         * objKeyValue2[p2][0] = key;
+         * objKeyValue2[p2][1] = allPairs2.get(key);
+         * p2++;
+         * }
+         * 
+         * Object[][] objKeyValue3 = new Object[allPairs3.size()][2];
+         * int p3 = 0;
+         * for (String key : allPairs3.keySet()) {
+         * objKeyValue3[p3][0] = key;
+         * objKeyValue3[p3][1] = allPairs3.get(key);
+         * p3++;
+         * }
+         * 
+         * Object[][] objKeyValue4 = new Object[allPairs4.size()][2];
+         * int p4 = 0;
+         * for (String key : allPairs4.keySet()) {
+         * objKeyValue4[p4][0] = key;
+         * objKeyValue4[p4][1] = allPairs4.get(key);
+         * p4++;
+         * }
+         * 
+         * Object[][] objKeyValue5 = new Object[allPairs5.size()][2];
+         * int p5 = 0;
+         * for (String key : allPairs5.keySet()) {
+         * objKeyValue5[p5][0] = key;
+         * objKeyValue5[p5][1] = allPairs5.get(key);
+         * p5++;
+         * }
+         * 
+         * Object[][] objKeyValue6 = new Object[allPairs6.size()][2];
+         * int p6 = 0;
+         * for (String key : allPairs6.keySet()) {
+         * objKeyValue6[p6][0] = key;
+         * objKeyValue6[p6][1] = allPairs6.get(key);
+         * p6++;
+         * }
+         * 
+         * Collection<String> l = allPairs.values();
+         * Collection<String> l2 = allPairs2.values();
+         * Collection<String> l3 = allPairs3.values();
+         * Collection<String> l4 = allPairs4.values();
+         * Collection<String> l5 = allPairs5.values();
+         * Collection<String> l6 = allPairs6.values();
+         * 
+         * // sql1
+         * // captures number of charge items, charge amount, charge id and charge item amount
+         * 
+         * for (int o = 0; o <= rs5.getRowCount() - 1; o++) {
+         * 
+         * TestReporter.assertTrue(!l.toArray()[o].equals(l2.toArray()[o]), "In row [" + o + "] the  old charge item amount is [" + l.toArray()[o] + "] has been updated to [" + l2.toArray()[o] + "]. ");
+         * 
+         * }
+         * TestReporter.assertTrue(!l3.toArray()[0].equals(l4.toArray()[0]), "All the old charge amounts [" + l3.toArray()[0] + " ] have been updated to [" + l4.toArray()[0] + "]. ");
+         * TestReporter.assertTrue(!allPairs3.keySet().toArray()[0].equals(allPairs4.keySet().toArray()[0]), "In all the rows the old charge id is [" + allPairs3.keySet().toArray()[0] + "] has been updated to [" + allPairs4.keySet().toArray()[0] + "]. ");
+         * 
+         * // sql2
+         * // captures the number of folio items, folio item id, and folio item amount
+         * l5.remove(l5.toArray()[0]);
+         * 
+         * for (int o = 0; o <= rs5.getRowCount() - 1; o++) {
+         * 
+         * TestReporter.assertTrue(!l5.toArray()[o].equals(l6.toArray()[o]), "In row [" + o + "] the  old folio item amount is [" + l5.toArray()[o] + "] has been updated to [" + l6.toArray()[o] + "]. ");
+         * TestReporter.assertTrue(!allPairs5.keySet().toArray()[o].equals(allPairs6.keySet().toArray()[o]), "In row [" + o + "] the old Folio item id is [" + allPairs5.keySet().toArray()[o] + "] has been updated to [" + allPairs6.keySet().toArray()[o] + "]. ");
+         * 
+         * }
+         * 
+         * TestReporter.assertTrue(numberOfFolioItems - 1 == rs6.getRowCount(), "The number of folio items before the request [" + numberOfFolioItems + "] and after the request is [" + rs6.getRowCount() + "].");
+         * TestReporter.assertAll();
+         * 
+         * // sql3
+         * // Grabs the TC_RSN_NM in the sql7 after the request is sent
+         * TestReporter.assertTrue(!rs7.getValue("TC_RSN_NM", 1).toString().equals(""), "The TC_RSN_TYP_NM before the request is empty and after the request has a TC_RSN_TYP_NM of [" + rs7.getValue("TC_RSN_TYP_NM", 1).toString() + "].");
+         * 
+         * // sql5
+         * // grabs the reservation history before and after the request
+         * for (int j = 1; j <= rs4.getRowCount(); j++) {
+         * if (!rs4.getValue("RES_HIST_PROC_DS", j).equals("Rate Overridden")) {
+         * TestReporter.assertTrue(!rs4.getValue("RES_HIST_PROC_DS", j).equals("Rate Overridden"), "The reservation history before the request record is created is set to [" + rs4.getValue("RES_HIST_PROC_DS", j) + "].");
+         * }
+         * 
+         * }
+         * 
+         * for (int i = 1; i <= rs8.getRowCount(); i++) {
+         * 
+         * if (rs8.getValue("RES_HIST_PROC_DS", i).equals("Rate Overridden")) {
+         * TestReporter.assertTrue(rs8.getValue("RES_HIST_PROC_DS", i).equals("Rate Overridden"), "The reservation history after the request record is created is set to [" + rs8.getValue("RES_HIST_PROC_DS", i) + "].");
+         * }
+         * 
+         * }
+         * // old vs. new
+         */
         if (Environment.isSpecialEnvironment(getEnvironment())) {
 
             OverrideAccommodationRatesRequest clone = (OverrideAccommodationRatesRequest) oar.clone();

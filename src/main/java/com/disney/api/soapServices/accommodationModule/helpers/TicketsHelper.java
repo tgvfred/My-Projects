@@ -245,7 +245,10 @@ public class TicketsHelper {
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("componentId"));
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("dayCount"));
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("partOfPackage"));
-
+        int isPkg = bs.getNumberOfRequestNodesByXPath("//replaceAllForTravelPlanSegment/request/externalReference");
+        if (isPkg > 0) {
+            bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("selectable"));
+        }
         // Add an guestReference node
         bs.setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestReference"));
         baseXpath = baseXpath + "/guestReference";
@@ -333,6 +336,10 @@ public class TicketsHelper {
         bs.setRequestNodeValueByXPath(baseXpath + "/componentId", "0");
         bs.setRequestNodeValueByXPath(baseXpath + "/dayCount", "2");
         bs.setRequestNodeValueByXPath(baseXpath + "/partOfPackage", "false");
+        try {
+            bs.setRequestNodeValueByXPath(baseXpath + "/selectable", "true");
+        } catch (XPathNotFoundException ex) {
+        }
 
         baseXpath = baseXpath + "/guestReference";
         String tempXpath = baseXpath;
@@ -351,7 +358,7 @@ public class TicketsHelper {
         bs.setRequestNodeValueByXPath(baseXpath + "/doNotPhoneIndicator", "0");
         bs.setRequestNodeValueByXPath(baseXpath + "/preferredLanguage", guest.getLanguagePreference());
         bs.setRequestNodeValueByXPath(baseXpath + "/dclGuestId", "0");
-        bs.setRequestNodeValueByXPath(baseXpath + "/guestId", "0");
+        bs.setRequestNodeValueByXPath(baseXpath + "/guestId", guest.getGuestId());
         bs.setRequestNodeValueByXPath(baseXpath + "/active", "0");
 
         // Add a phoneDetails node

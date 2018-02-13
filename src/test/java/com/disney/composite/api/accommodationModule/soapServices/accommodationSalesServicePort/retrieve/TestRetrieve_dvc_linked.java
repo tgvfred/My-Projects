@@ -57,8 +57,6 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
 
         TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"), "An error occurred calling retrieve", retrieve);
 
-        helper.baseValidationDVC(getFirstBooking(), retrieve);
-        helper.baseValidationDVC(getSecondBooking(), retrieve);
         helper.dvcMembershipValidations(retrieve, getFirstMember());
         helper.dvcMembershipValidations(retrieve, getSecondMember());
 

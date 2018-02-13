@@ -22,7 +22,7 @@ public class TestRetrievePostedCancellationFee_TPS_multiTCG_cancellationFees_Pos
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());

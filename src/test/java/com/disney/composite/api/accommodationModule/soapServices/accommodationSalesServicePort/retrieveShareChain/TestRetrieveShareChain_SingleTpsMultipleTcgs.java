@@ -102,7 +102,6 @@ public class TestRetrieveShareChain_SingleTpsMultipleTcgs extends AccommodationB
         }
 
         TestReporter.logStep("Base validations");
-        helper.validateBaseNodes(book, retrieve);
         helper.validateGuestDetails(book, retrieve);
         helper.validateRateDetails(environment, retrieve);
     }

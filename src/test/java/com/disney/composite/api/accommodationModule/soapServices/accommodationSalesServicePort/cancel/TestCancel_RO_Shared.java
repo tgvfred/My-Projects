@@ -22,7 +22,7 @@ public class TestCancel_RO_Shared extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(40);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
@@ -47,7 +47,6 @@ public class TestCancel_RO_Shared extends AccommodationBaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
     public void testCancel_RO_Shared() {
         TestReporter.logScenario("Test Cancel RO Shared");
-
         Cancel cancel = new Cancel(environment, "MainCancel");
         cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
 

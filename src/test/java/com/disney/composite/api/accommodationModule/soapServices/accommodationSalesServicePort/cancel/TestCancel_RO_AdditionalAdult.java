@@ -24,7 +24,7 @@ public class TestCancel_RO_AdditionalAdult extends AccommodationBaseTest {
 
         setEnvironment(environment);
         isComo.set("true");
-        daysOut.set(0);
+        daysOut.set(40);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));

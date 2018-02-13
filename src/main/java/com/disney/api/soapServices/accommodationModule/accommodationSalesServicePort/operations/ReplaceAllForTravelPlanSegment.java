@@ -166,13 +166,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setReservationDetail_Profiles(Map<String, String> profileData) {
         String baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/profiles";
-        int numNodes = getNumberOfRequestNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/profiles");
-        if (numNodes == 0) {
-            addReservationDetail_Profiles(baseXpath, numNodes);
-        }
-        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail";
-        setAuditDetails(baseXpath += "/profiles/", "AutoJUnit.us", Randomness.generateCurrentXMLDate(), "AutoJUnit.us", Randomness.generateCurrentXMLDate(), BaseSoapCommands.REMOVE_NODE.toString());
-        baseXpath = "/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail";
+        int numNodes = getNumberOfRequestNodesByXPath(baseXpath) + 1;
+
+        addReservationDetail_Profiles(baseXpath, numNodes);
+        baseXpath = baseXpath + "[" + numNodes + "]";
+        setAuditDetails(baseXpath, "AutoJUnit.us", Randomness.generateCurrentXMLDate(), "AutoJUnit.us", Randomness.generateCurrentXMLDate(), BaseSoapCommands.REMOVE_NODE.toString());
+
         setProfileCode(baseXpath, profileData.get(PROFILE_CODE));
         setProfileDescription(baseXpath, profileData.get(PROFILE_DESCRIPTION));
         setProfileId(baseXpath, profileData.get(PROFILE_ID));
@@ -187,13 +186,13 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void addReservationDetail_Profiles(String baseXpath, int numNodes) {
         setRequestNodeValueByXPath(baseXpath.replace("/profiles", ""), BaseSoapCommands.ADD_NODE.commandAppend("profiles"));
-        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_CODE));
-        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_DESCRIPTION));
-        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_ID));
-        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_SELECTABLE));
-        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_TYPE));
-        setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_ROUTINGS_NAME.split("_")[0]));
-        setRequestNodeValueByXPath(baseXpath + "/" + PROFILE_ROUTINGS_NAME.split("_")[0], BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_ROUTINGS_NAME.split("_")[1]));
+        setRequestNodeValueByXPath(baseXpath + "[" + numNodes + "]", BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_CODE));
+        setRequestNodeValueByXPath(baseXpath + "[" + numNodes + "]", BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_DESCRIPTION));
+        setRequestNodeValueByXPath(baseXpath + "[" + numNodes + "]", BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_ID));
+        setRequestNodeValueByXPath(baseXpath + "[" + numNodes + "]", BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_SELECTABLE));
+        setRequestNodeValueByXPath(baseXpath + "[" + numNodes + "]", BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_TYPE));
+        setRequestNodeValueByXPath(baseXpath + "[" + numNodes + "]", BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_ROUTINGS_NAME.split("_")[0]));
+        setRequestNodeValueByXPath(baseXpath + "[" + numNodes + "]" + "/" + PROFILE_ROUTINGS_NAME.split("_")[0], BaseSoapCommands.ADD_NODE.commandAppend(PROFILE_ROUTINGS_NAME.split("_")[1]));
     }
 
     public void setReservationDetail_Profiles(String code, String description, String id, String name, String profileType, String selectable, String status, String type) {
@@ -595,11 +594,14 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
             throw new AutomationException("The phone object cannot be null");
         }
         setRequestNodeValueByXPath(baseXpath + "/phoneDetails/locatorId", phone.getLocatorId());
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/guestLocatorId", "0");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/primary", "true");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/deviceType", "HANDSET");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/extension", "0");
-        setRequestNodeValueByXPath(baseXpath + "/phoneDetails/number", phone.getNumber());
+        try {
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/guestLocatorId", "0");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/primary", "true");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/deviceType", "HANDSET");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/extension", "0");
+            setRequestNodeValueByXPath(baseXpath + "/phoneDetails/number", phone.getNumber());
+        } catch (XPathNotFoundException e) {
+        }
     }
 
     public void setGuestAddress(String baseXpath, Address address) {
@@ -629,11 +631,11 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setAuditDetails(String baseXpath, String createdBy, String createdDate, String updatedBy, String updatedDate, String status) {
         int numNodes = 0;
-        if (baseXpath.endsWith("/")) {
-            numNodes = getNumberOfRequestNodesByXPath(baseXpath + "auditDetail");
-        } else {
-            numNodes = getNumberOfRequestNodesByXPath(baseXpath + "/auditDetail");
-        }
+        // if (baseXpath.endsWith("/")) {
+        // numNodes = getNumberOfRequestNodesByXPath(baseXpath + "auditDetail");
+        // } else {
+        numNodes = getNumberOfRequestNodesByXPath(baseXpath + "/auditDetail");
+        // }
         if (numNodes == 0) {
             addAuditDetails(baseXpath);
         }
@@ -1121,7 +1123,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setTaxExemptDetailCertificateNumber(String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+            try {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request", BaseSoapCommands.ADD_NODES.commandAppend("taxExemptDetail/taxExemptCertificateNumber"));
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptCertificateNumber", value);
+            }
         } else {
             throw new AutomationException("The tax exempt detail certificate number cannot be null or empty");
         }
@@ -1129,7 +1136,12 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setTaxExemptDetailType(String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+            try {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail", BaseSoapCommands.ADD_NODE.commandAppend("taxExemptType"));
+                setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/taxExemptDetail/taxExemptType", value);
+            }
         } else {
             throw new AutomationException("The tax exempt detail type cannot be null or empty");
         }
@@ -1493,66 +1505,66 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
 
     public void setAuditDetailsCreatedBy(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "auditDetail/createdBy", value);
+            setRequestNodeValueByXPath(baseXpath + "/auditDetail/createdBy", value);
         }
     }
 
     public void setAuditDetailsCreatedDate(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "auditDetail/createdDate", value);
+            setRequestNodeValueByXPath(baseXpath + "/auditDetail/createdDate", value);
         }
     }
 
     public void setAuditDetailsUpdatedBy(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "auditDetail/updatedBy", value);
+            setRequestNodeValueByXPath(baseXpath + "/auditDetail/updatedBy", value);
         }
     }
 
     public void setAuditDetailsUpdatedDate(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "auditDetail/updatedDate", value);
+            setRequestNodeValueByXPath(baseXpath + "/auditDetail/updatedDate", value);
         }
     }
 
     public void setAuditDetailsStatus(String baseXpath, String value) {
         if (isValid(value)) {
             try {
-                setRequestNodeValueByXPath(baseXpath + "auditDetail/status", value);
+                setRequestNodeValueByXPath(baseXpath + "/auditDetail/status", value);
             } catch (XPathNotFoundException e) {
-                setRequestNodeValueByXPath(baseXpath + "auditDetail", BaseSoapCommands.ADD_NODE.commandAppend("status"));
-                setRequestNodeValueByXPath(baseXpath + "auditDetail/status", value);
+                setRequestNodeValueByXPath(baseXpath + "/auditDetail", BaseSoapCommands.ADD_NODE.commandAppend("status"));
+                setRequestNodeValueByXPath(baseXpath + "/auditDetail/status", value);
             }
         }
     }
 
     public void setProfileCode(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/code", value);
+            setRequestNodeValueByXPath(baseXpath + "/code", value);
         }
     }
 
     public void setProfileDescription(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/description", value);
+            setRequestNodeValueByXPath(baseXpath + "/description", value);
         }
     }
 
     public void setProfileId(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/id", value);
+            setRequestNodeValueByXPath(baseXpath + "/id", value);
         }
     }
 
     public void setProfileProfileType(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/profileType", value);
+            setRequestNodeValueByXPath(baseXpath + "/profileType", value);
         }
     }
 
     public void setProfileName(String baseXpath, String value) {
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/routings/name", value);
+            setRequestNodeValueByXPath(baseXpath + "/routings/name", value);
         }
     }
 
@@ -1568,17 +1580,17 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
                 break;
         }
         if (isValid(value)) {
-            setRequestNodeValueByXPath(baseXpath + "/profiles/selectable", value);
+            setRequestNodeValueByXPath(baseXpath + "/selectable", value);
         }
     }
 
     public void setProfileType(String baseXpath, String value) {
         if (isValid(value)) {
             try {
-                setRequestNodeValueByXPath(baseXpath + "/profiles/type", Randomness.generateCurrentXMLDate());
+                setRequestNodeValueByXPath(baseXpath + "/type", Randomness.generateCurrentXMLDate());
             } catch (XPathNotFoundException e) {
-                setRequestNodeValueByXPath(baseXpath + "/profiles", BaseSoapCommands.ADD_NODE.commandAppend("type"));
-                setRequestNodeValueByXPath(baseXpath + "/profiles/type", Randomness.generateCurrentXMLDate());
+                setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("type"));
+                setRequestNodeValueByXPath(baseXpath + "/type", Randomness.generateCurrentXMLDate());
             }
         }
     }
@@ -1979,7 +1991,15 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     // *********************************************************************************************************
 
     public String getTravelComponentGroupingId() {
-        return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
+        try {
+            return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelComponentGroupingId");
+        } catch (XPathNotFoundException e) {
+            if (!getFaultString().isEmpty()) {
+                TestReporter.logAPI(true, "Error in booking response: " + getFaultString(), this);
+            }
+            System.out.println(getResponse());
+            throw new AutomationException("No travelcomponent grouping ID found in response");
+        }
     }
 
     public String getTravelComponentId() {
@@ -1991,11 +2011,27 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     }
 
     public String getTravelPlanId() {
-        return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
+        try {
+            return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/travelPlanId");
+        } catch (XPathNotFoundException e) {
+            if (!getFaultString().isEmpty()) {
+                TestReporter.logAPI(true, "Error in booking response: " + getFaultString(), this);
+            }
+            System.out.println(getResponse());
+            throw new AutomationException("No travelplan ID found in response");
+        }
     }
 
     public String getTravelPlanSegmentId() {
-        return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
+        try {
+            return getResponseNodeValueByXPath("//replaceAllForTravelPlanSegmentResponse/response/travelPlanSegmentId");
+        } catch (XPathNotFoundException e) {
+            if (!getFaultString().isEmpty()) {
+                TestReporter.logAPI(true, "Error in booking response: " + getFaultString(), this);
+            }
+            System.out.println(getResponse());
+            throw new AutomationException("No travelplansegment ID found in response");
+        }
     }
 
     public String getPartyId(String index) {
@@ -2109,5 +2145,19 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         // setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("guestReferenceDetails"));
         tempXpath = tempXpath + "/guestReferenceDetails";
         addRoomDetails_RoomReservationDetail_GuestReferenceDetailGuest(false, false, base.getAdditionalGuests().get(base.getAdditionalGuests().size()), tempXpath);
+    }
+
+    public void setCruiseDetails(String shipID, String voyageNumber) {
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request", BaseSoapCommands.ADD_NODE.commandAppend("cruiseDetail"));
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail", BaseSoapCommands.ADD_NODE.commandAppend("shipId"));
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail", BaseSoapCommands.ADD_NODE.commandAppend("voyageNumber"));
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail/shipId", shipID);
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/cruiseDetail/voyageNumber", voyageNumber);
+
+    }
+
+    public void setDclGuestId(String id) {
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelPlanGuest/dclGuestId", id);
+        setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/dclGuestId", id);
     }
 }

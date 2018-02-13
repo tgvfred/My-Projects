@@ -25,7 +25,7 @@ public class TestCancel_booked_tcgOnly_roomOnly extends AccommodationBaseTest {
         // to invoke lower levels of reporting
         setEnvironment(environment);
         isComo.set("false");
-        daysOut.set(0);
+        daysOut.set(40);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));

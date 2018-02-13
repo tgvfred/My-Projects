@@ -4,14 +4,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.Checkout;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
-import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
-import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
@@ -38,29 +35,9 @@ public class TestRetrieve_checkedOut extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieve" })
     public void testRetrieve_checkedOut() {
-        String tcg = getBook().getTravelComponentGroupingId();
-
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-
-        // String tcgId = getBook().getTravelComponentGroupingId();
-        String checkoutDate = Randomness.generateCurrentXMLDate();
-        String refNumber = getExternalRefNumber();
-        String refSource = getExternalRefSource();
-
-        Checkout checkout = new Checkout(getEnvironment(), "main");
-        checkout.setEarlyCheckOutReason(BaseSoapCommands.REMOVE_NODE.toString());
-        checkout.setIsBellServiceRequired(BaseSoapCommands.REMOVE_NODE.toString());
-        checkout.setIsSameRoomNumberAssigned(BaseSoapCommands.REMOVE_NODE.toString());
-        checkout.setTravelComponentGroupingId(tcg);
-        checkout.setExternalReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
-        checkout.setExternalReferenceNumber(refNumber);
-        checkout.setExternalReferenceSource(refSource);
-        checkout.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
-        checkout.setCheckoutDate(checkoutDate);
-        checkout.setLocationId(BaseSoapCommands.REMOVE_NODE.toString());
-        checkout.sendRequest();
-        TestReporter.logAPI(!checkout.getResponseStatusCode().equals("200"), "An error occurred getting checkout details: " + checkout.getFaultString(), checkout);
+        helper.checkOut(getLocationId());
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
         retrieve.setTravelPlanId(getBook().getTravelPlanId());
