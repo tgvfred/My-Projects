@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestModify_ModifyCommunicationChannel" parallel="methods" data-provider-thread-count="10" thread-count="10">
+	<parameter name="environment" value="latest" />
+	<test name="TestModify_ModifyCommunicationChannel">
+		<classes>
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.modify.TestModify_ModifyCommunicationChannel" />
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
