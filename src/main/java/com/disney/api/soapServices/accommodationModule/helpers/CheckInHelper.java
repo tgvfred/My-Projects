@@ -166,6 +166,63 @@ public class CheckInHelper {
         retrieveReservation();
     }
 
+    public CheckInHelper(String environment, WebService ws, boolean retrievFromDb) {
+        if ((environment == null) || StringUtils.isEmpty(environment)) {
+            throw new AutomationException("The environment field cannot be null or empty.");
+        } else {
+            setEnvironment(environment);
+        }
+        if (ws == null) {
+            throw new AutomationException("The book object cannot be null.");
+        } else {
+            setWs(ws);
+            try {
+                if (ws instanceof ReplaceAllForTravelPlanSegment) {
+                    setTpId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanId());
+                    setTpsId(((ReplaceAllForTravelPlanSegment) ws).getTravelPlanSegmentId());
+                    setTcgId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentGroupingId());
+                    setTcId(((ReplaceAllForTravelPlanSegment) ws).getTravelComponentId());
+                } else if (ws instanceof Add) {
+                    setTpId(((Add) ws).getTravelPlanId());
+                    setTpsId(((Add) ws).getTravelPlanSegmentId());
+                    setTcgId(((Add) ws).getTravelComponentGroupingId());
+                    setTcId(((Add) ws).getTravelComponentId());
+                } else if (ws instanceof Book) {
+                    setTpId(((Book) ws).getTravelPlanId());
+                    setTpsId(((Book) ws).getTravelPlanSegmentId());
+                    setTcgId(((Book) ws).getTravelComponentGroupingId());
+                    setTcId(((Book) ws).getTravelComponentId());
+                } else {
+                    throw new AutomationException("The WebService object is not supported by this class.");
+                }
+            } catch (XPathNotFoundException xpnfe) {
+                TestReporter.logAPI(true, "Booking did not have required values in response", ws);
+            }
+        }
+        if (!retrievFromDb) {
+            retrieveReservation();
+        } else {
+            retrieveReservationFromDB();
+        }
+    }
+
+    private void retrieveReservationFromDB() {
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs;
+        String guestSql = "select a.TXN_PTY_ID GUEST_ID "
+                + "        from res_mgmt.tp_pty a "
+                + "        where a.tp_id = " + tpId;
+        rs = new Recordset(db.getResultSet(guestSql));
+        setPrimaryGuestId(rs.getValue("GUEST_ID"));
+
+        String partyId = "select a.TXN_PTY_EXTNL_REF_VAL PARTY_ID "
+                + "        from guest.TXN_PTY_EXTNL_REF a "
+                + "        where a.TXN_PTY_ID = " + primaryGuestId;
+        rs = new Recordset(db.getResultSet(partyId));
+        setPrimaryPartyId(rs.getValue("PARTY_ID"));
+
+    }
+
     public FindRoomForReservation findRoomForReservation() {
         FindRoomForReservation findRoom = new FindRoomForReservation(environment, "UI Booking");
         findRoom.setTravelPlanId(getTpId());
