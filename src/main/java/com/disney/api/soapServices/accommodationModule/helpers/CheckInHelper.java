@@ -41,6 +41,11 @@ public class CheckInHelper {
     private String tpsId;
     private String tcgId;
     private String tcId;
+    private Boolean retrieveResFromDB = false;
+
+    public void setRetrieveResFromDB(Boolean retrieveResFromDB) {
+        this.retrieveResFromDB = retrieveResFromDB;
+    }
 
     public String getEnvironment() {
         return environment;
@@ -163,7 +168,28 @@ public class CheckInHelper {
                 TestReporter.logAPI(true, "Booking did not have required values in response", ws);
             }
         }
-        retrieveReservation();
+        if (!retrieveResFromDB) {
+            retrieveReservation();
+        } else {
+            retrieveReservationFromDB();
+        }
+    }
+
+    private void retrieveReservationFromDB() {
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs;
+        String guestSql = "select a.TXN_PTY_ID GUEST_ID "
+                + "        from res_mgmt.tp_pty a "
+                + "        where a.tp_id = " + tpId;
+        rs = new Recordset(db.getResultSet(guestSql));
+        setPrimaryGuestId(rs.getValue("GUEST_ID"));
+
+        String partyId = "select a.TXN_PTY_EXTNL_REF_VAL PARTY_ID "
+                + "        from guest.TXN_PTY_EXTNL_REF a "
+                + "        where a.TXN_PTY_ID = " + primaryGuestId;
+        rs = new Recordset(db.getResultSet(partyId));
+        setPrimaryPartyId(rs.getValue("PARTY_ID"));
+
     }
 
     public FindRoomForReservation findRoomForReservation() {
