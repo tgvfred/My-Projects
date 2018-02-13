@@ -2274,13 +2274,18 @@ public class ValidationHelper {
     public void verifyTravelAgency(AccommodationBaseTest base) {
         TestReporter.logStep("Validate Travel Agency");
         Map<String, String> ta = base.getBook().getAgencyDetails();
-
+        String tpId = "";
+        try {
+            tpId = base.getBook().getTravelPlanId();
+        } catch (Exception e) {
+            tpId = base.getTpId();
+        }
         TestReporter.log("Validate reservation management");
         String sql = "select a.TRVL_AGCY_PTY_ID TPS_TRVL_AGCY_PTY_ID, a.TRVL_AGT_PTY_ID, c.TRVL_AGCY_PTY_ID TC_TRVL_AGCY_PTY_ID "
                 + "from res_mgmt.tps a "
                 + "join res_mgmt.tc_grp b on a.tps_id = b.tps_id "
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
-                + "where a.tp_id =  " + base.getBook().getTravelPlanId() + " "
+                + "where a.tp_id =  " + tpId + " "
                 + "and c.TC_TYP_NM = 'AccommodationComponent'";
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
@@ -2301,7 +2306,7 @@ public class ValidationHelper {
                 + "left outer join folio.CHRG_GRP_EXTNL_REF b on a.EXTNL_REF_ID = b.EXTNL_REF_ID "
                 + "left outer join folio.CHRG_GRP c on b.CHRG_GRP_ID = c.CHRG_GRP_ID "
                 + "left outer join folio.ROOT_CHRG_GRP d on c.CHRG_GRP_ID = d.ROOT_CHRG_GRP_ID "
-                + "where a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
+                + "where a.EXTNL_REF_VAL = '" + tpId + "'";
         rs = new Recordset(db.getResultSet(sql));
         if (!(isValid(base.getIsLibgoBooking()) && (base.getIsLibgoBooking() == true)) &&
                 !(isValid(base.isWdtcBooking()) && (base.isWdtcBooking() == true))) {
@@ -2326,7 +2331,7 @@ public class ValidationHelper {
                 + "INNER JOIN FOLIO.CHRG d ON c.NODE_CHRG_GRP_ID = d.CHRG_GRP_ID "
                 + "INNER JOIN FOLIO.PROD_CHRG e ON d.CHRG_ID = e.CHRG_ID "
                 + "WHERE a.EXTNL_SRC_NM = 'DREAMS_TP' "
-                + "AND a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
+                + "AND a.EXTNL_REF_VAL = '" + tpId + "'";
         rs = new Recordset(db.getResultSet(sql));
         if (!(isValid(base.getIsLibgoBooking()) && (base.getIsLibgoBooking() == true)) &&
                 !(isValid(base.isWdtcBooking()) && (base.isWdtcBooking() == true))) {
@@ -2351,7 +2356,7 @@ public class ValidationHelper {
                 + "INNER JOIN FOLIO.CHRG d ON c.NODE_CHRG_GRP_ID = d.CHRG_GRP_ID "
                 + "INNER JOIN FOLIO.PROD_CHRG e ON d.CHRG_ID = e.CHRG_ID "
                 + "WHERE a.EXTNL_SRC_NM = 'DREAMS_TP' "
-                + "AND a.EXTNL_REF_VAL = '" + base.getBook().getTravelPlanId() + "'";
+                + "AND a.EXTNL_REF_VAL = '" + tpId + "'";
         rs = new Recordset(db.getResultSet(sql));
         if (!(isValid(base.getIsLibgoBooking()) && (base.getIsLibgoBooking() == true)) &&
                 !(isValid(base.isWdtcBooking()) && (base.isWdtcBooking() == true))) {

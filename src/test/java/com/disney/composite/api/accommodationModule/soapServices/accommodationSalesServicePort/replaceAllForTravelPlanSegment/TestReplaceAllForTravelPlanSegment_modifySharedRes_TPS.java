@@ -3,6 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import java.util.HashMap;
 import java.util.Map;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -64,6 +65,12 @@ public class TestReplaceAllForTravelPlanSegment_modifySharedRes_TPS extends Acco
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         share.sendRequest();
         TestReporter.assertTrue(share.getResponseStatusCode().equals("200"), "Verify that no error occurred sharing a reservation: " + share.getFaultString());
+    }
+
+    @AfterMethod
+    public void cleanup() {
+        cancel(tcgId);
+        cancel(tcgId2);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })

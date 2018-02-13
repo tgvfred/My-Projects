@@ -7,10 +7,8 @@ import org.testng.annotations.Test;
 import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Modify;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
-import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Cancel;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.Environment;
-import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestModify_CheckInGrandCalifornian extends BookDVCCashHelper {
@@ -23,7 +21,7 @@ public class TestModify_CheckInGrandCalifornian extends BookDVCCashHelper {
     @Parameters("environment")
     public void setup(String environment) {
         setUseDvcResort(true);
-        setValues("305669", "5B", "10068", "15");
+        setValues("305669", "5A", "10068", "15");
         setUseExistingValues(true);
         setRetrieveAfterBook(false);
         bookDvcReservation("DVC_RM_TPS_ContractInGoodStatus", 1);
@@ -35,6 +33,7 @@ public class TestModify_CheckInGrandCalifornian extends BookDVCCashHelper {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "modify", "GCAL" })
     public void testModify_CheckInGrandCalifornian() {
         Modify modify = new Modify(getFirstBooking());
+        modify.setEnvironment(environment);
         modify.setTravelStatus("Checked In");
         modify.sendRequest();
         TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "Verify that no error occurred modifying booking: " + modify.getFaultString(), modify);
@@ -67,40 +66,6 @@ public class TestModify_CheckInGrandCalifornian extends BookDVCCashHelper {
         validations.validateAreaPeriod(modify.getTravelPlanId(), getArrivalDate(), getDepartureDate());
         getHouseHold().primaryGuest().setFirstName(getFirstMember().getMemberFirstName());
         getHouseHold().primaryGuest().setLastName(getFirstMember().getMemberLastName());
-        // Validate the Old to the New
-        if (Environment.isSpecialEnvironment(environment)) {
-            Modify clone = (Modify) modify.clone();
-            clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
-            clone.sendRequest();
-            if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
-            }
-            clone.addExcludedBaselineAttributeValidations("@xsi:nil");
-            clone.addExcludedBaselineAttributeValidations("@xsi:type");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Header");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/travelComponentGroupingId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/travelComponentId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/ticketDetails/guestReference/guest/partyId");
-            clone.addExcludedBaselineXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/exchangeFee");
-            clone.addExcludedXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/exchangeFee");
-            clone.addExcludedXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
-            clone.addExcludedXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
-            clone.addExcludedXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/travelComponentGroupingId");
-            clone.addExcludedXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/travelComponentId");
-            clone.addExcludedXpathValidations("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/ticketDetails/guestReference/guest/partyId");
-            TestReporter.assertTrue(clone.validateResponseNodeQuantity(modify, true),
-                    "Validating Response Comparison");
 
-            try {
-                Cancel cancel = new Cancel(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), "Main");
-                cancel.setCancelDate(Randomness.generateCurrentXMLDate());
-                cancel.setTravelComponentGroupingId(clone.getTravelComponentGroupingId());
-                cancel.sendRequest();
-            } catch (Exception e) {
-
-            }
-        }
     }
 }
