@@ -2,13 +2,13 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.GetOptionDetail;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
-import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
 
-public class TestGetOptionDetail_Negative extends AccommodationBaseTest {
+public class TestGetOptionDetail_Negative extends BaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail", "negative" })
     public void TestGetOptionDetail_nullOptionKeyVal() {

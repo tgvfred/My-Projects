@@ -3,29 +3,16 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import java.util.HashMap;
 import java.util.Map;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.BaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.GetOptionDetail;
-import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.partyModule.partyService.operations.GetOptions;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
-public class TestGetOptionDetail_COUNTRY extends AccommodationBaseTest {
+public class TestGetOptionDetail_COUNTRY extends BaseTest {
     Map<String, String> allPairs = new HashMap<String, String>();
-
-    @Override
-    @BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void setup(String environment) {
-        setEnvironment(environment);
-
-        isComo.set("false");
-
-    }
 
     // accommodation sales request grabs data providers from party service response
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "getOptionDetail" }, dataProvider = "dp")
@@ -47,7 +34,7 @@ public class TestGetOptionDetail_COUNTRY extends AccommodationBaseTest {
     // grabs the GetOptions operation from the Party Service Port and sends a request to get a key and value pair
     @DataProvider(name = "dp", parallel = true)
     public Object[][] OptionKV() {
-        GetOptions getOptions = new GetOptions(Environment.getBaseEnvironmentName(environment));
+        GetOptions getOptions = new GetOptions(environment);
         getOptions.setOptionType("COUNTRY");
         getOptions.sendRequest();
 

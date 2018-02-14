@@ -266,6 +266,24 @@ public class TestModify_Negative extends AccommodationBaseTest {
         validateError(modify, AccommodationErrorCode.INVALID_REQUEST, errorMessage);
     }
 
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "modify", "negative" })
+    public void testModify_NullCommunicationChannel() {
+        String errorMessage = "Communication Channel is required";
+        Modify modify = new Modify(book);
+        modify.setRequestNodeValueByXPath("/Envelope/Body/modify/request/communicationChannel", BaseSoapCommands.REMOVE_NODE.toString());
+        modify.sendRequest();
+        validateError(modify, AccommodationErrorCode.COMMUNICATION_CHANNEL_REQUIRED, errorMessage);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "modify", "negative" })
+    public void testModify_NullSalesChannel() {
+        String errorMessage = "Sales Channel is required";
+        Modify modify = new Modify(book);
+        modify.setRequestNodeValueByXPath("/Envelope/Body/modify/request/salesChannel", BaseSoapCommands.REMOVE_NODE.toString());
+        modify.sendRequest();
+        validateError(modify, AccommodationErrorCode.SALES_CHANNEL_REQUIRED, errorMessage);
+    }
+
     private void validateError(Modify modify, ApplicationErrorCode error, String errorMessage) {
         TestReporter.logAPI(!modify.getFaultString().trim().toLowerCase().contains(errorMessage.trim().toLowerCase()), "Validate expected error message [ " + errorMessage + " ] is returned in response [ " + modify.getFaultString() + " ]", modify);
         validateApplicationError(modify, error);
