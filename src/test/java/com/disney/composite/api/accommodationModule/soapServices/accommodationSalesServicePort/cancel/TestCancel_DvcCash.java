@@ -22,6 +22,7 @@ public class TestCancel_DvcCash extends BookDVCCashHelper {
     public void setup(String environment) {
         DVCSalesBaseTest.environment = environment;
         setUseDvcResort(true);
+        setRetrieveAfterBook(false);
         bookDvcReservation("testCancel_M$", 1);
         setTpId(getFirstBooking().getTravelPlanId());
         makeCCPayment(Environment.getBaseEnvironmentName(environment));

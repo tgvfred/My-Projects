@@ -29,6 +29,7 @@ public class TestRetrieve_dvc_exchangeFee extends BookDVCRtHelper {
     public void setup(String environment) {
         setEnvironment(removeCM(environment));
         setUseRtResort(true);
+        setRetrieveAfterBook(false);
 
         member = new DVCMember("testBookWithPay_RT", removeCM(environment));
         RetrievePointBalanceSummary retrievePointBalanceSummary = new RetrievePointBalanceSummary(removeCM(environment), "MinimalInfo");

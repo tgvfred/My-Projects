@@ -29,6 +29,7 @@ public class TestRetrieve_dvc_points extends BookDVCPointsHelper {
     public void setup(String environment) {
         setEnvironment(removeCM(environment));
         setUseNonZeroPoints(true);
+        setRetrieveAfterBook(false);
         setUseDvcResort(true);
         member = new DVCMember("testBookWithPay_MP", removeCM(environment));
         RetrievePointBalanceSummary retrievePointBalanceSummary = new RetrievePointBalanceSummary(removeCM(environment), "MinimalInfo");

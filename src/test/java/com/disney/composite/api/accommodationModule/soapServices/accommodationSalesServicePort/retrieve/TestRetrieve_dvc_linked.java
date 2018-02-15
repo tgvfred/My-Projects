@@ -30,6 +30,7 @@ public class TestRetrieve_dvc_linked extends BookDVCPointsHelper {
     public void setup(String environment) {
         DVCSalesBaseTest.environment = removeCM(environment);
         setUseDvcResort(true);
+        setRetrieveAfterBook(false);
         setUseNonZeroPoints(true);
         bookDvcReservation("TestMergeToTravelPlan_MCash", 1);
         makeCCPayment(removeCM(environment));
