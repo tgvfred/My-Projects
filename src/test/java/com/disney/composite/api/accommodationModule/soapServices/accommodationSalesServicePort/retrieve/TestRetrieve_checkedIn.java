@@ -26,7 +26,6 @@ public class TestRetrieve_checkedIn extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
 
-        setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
 

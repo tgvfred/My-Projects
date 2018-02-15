@@ -28,8 +28,13 @@ import org.w3c.dom.Document;
 import com.disney.AutomationException;
 import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.restServices.BaseRestTest;
+import com.disney.api.restServices.ResourceRest;
+import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
 import com.disney.api.restServices.github.content.Content;
+import com.disney.api.restServices.roomInventory.v1.roomInventories.request.RoomInventoryFreezeRequest;
+import com.disney.api.restServices.roomInventory.v1.roomInventories.request.StayDateRange;
+import com.disney.api.restServices.roomInventory.v1.roomInventories.response.RoomInventoryFreezeResponse;
 import com.disney.api.soapServices.ServiceConstants;
 import com.disney.api.soapServices.SoapException;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckingIn;
@@ -46,7 +51,6 @@ import com.disney.api.soapServices.pricingModule.packagingService.operations.Fin
 import com.disney.api.soapServices.pricingModule.packagingService.operations.helpers.PackageCodeHelper;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.AssignRoomForReservation;
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.FindRoomForReservation;
-import com.disney.api.soapServices.roomInventoryModule.availabilityWSPort.operations.FreezeInventory;
 import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
 import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
 import com.disney.utils.Base64Coder;
@@ -1809,24 +1813,28 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public String freezeInventory() {
         String freezeId = "";
-        FreezeInventory freeze = new FreezeInventory(Environment.getBaseEnvironmentName(getEnvironment()), "Main");
-        freeze.setPackageCode(getPackageCode());
-        freeze.setPartyMixFirstName(getHouseHold().primaryGuest().getFirstName(), "1");
-        freeze.setPartyMixLastName(getHouseHold().primaryGuest().getLastName(), "1");
-        freeze.setResortCode(getResortCode());
-        freeze.setRoomCode(getRoomTypeCode());
-        freeze.setResortPeriodStartDate(getArrivalDate());
-        freeze.setResortPeriodEndDate(getDepartureDate());
-        freeze.sendRequest();
-        TestReporter.logAPI(!freeze.getResponseStatusCode().equals("200"), "Generating Freeze ID", freeze);
-        //
-        try {
-            if (!freeze.getResponseStatusCode().equals("200")) {
-                throw new AutomationException();
-            }
-            freezeId = freeze.getFreezeId();
-        } catch (AutomationException e) {
-        }
+
+        RoomInventoryFreezeRequest request = RestService.readJsonFromFile(ResourceRest.getJsonPath("freezeRoom"), RoomInventoryFreezeRequest.class);
+
+        request.setPackageCode(getPackageCode());
+        request.setResortCode(getResortCode());
+        request.setRoomType(getRoomTypeCode());
+
+        // Update required Resort Stay info
+        StayDateRange date = new StayDateRange();
+        date.setStartDate(Randomness.generateCurrentXMLDate(getDaysOut()));
+        date.setEndDate(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+        date.setLos(getNights());
+        request.setStayDateRange(date);
+
+        // Send and Validate Freeze Request
+        RestResponse freezeResponse = ResourceRest.roomInventory(Environment.getBaseEnvironmentName(environment)).v1().roomInventories().freeze(request);
+        validateResponse(freezeResponse);
+
+        // Validate Freeze ID is created
+        RoomInventoryFreezeResponse response = freezeResponse.mapJSONToObject(RoomInventoryFreezeResponse.class);
+        TestReporter.assertTrue(StringUtils.isNotEmpty(response.getFreezeId()), "Validate Freeze Id is returned");
+        freezeId = response.getFreezeId();
         return freezeId;
     }
 

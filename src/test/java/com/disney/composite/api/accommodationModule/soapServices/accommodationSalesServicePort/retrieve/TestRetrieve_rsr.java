@@ -23,7 +23,6 @@ public class TestRetrieve_rsr extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         setIsRSR(true);
-        setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
 

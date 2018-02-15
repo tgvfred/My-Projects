@@ -28,8 +28,6 @@ public class TestRetrieve_shared extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-
-        setAddNewGuest(true);
         bookReservation();
 
         tcg = getBook().getTravelComponentGroupingId();

@@ -25,7 +25,6 @@ public class TestRetrieve_libgo extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         setIsLibgoBooking(true);
-        setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
 
