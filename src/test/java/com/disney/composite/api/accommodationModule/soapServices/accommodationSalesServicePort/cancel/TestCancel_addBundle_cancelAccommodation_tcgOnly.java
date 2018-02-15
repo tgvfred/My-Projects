@@ -16,6 +16,7 @@ import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
 
 public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends AccommodationBaseTest {
+    private AddBundleHelper helper = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -34,8 +35,10 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         setSkipDeposit(true);
         bookReservation();
 
-        AddBundleHelper helper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
+        helper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         helper.addBundle(getBook().getTravelPlanId(), getDaysOut());
+        System.out.println(helper.findBundleTcg(getBook().getTravelPlanId()));
+        System.out.println(helper.getBundleId());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
@@ -107,12 +110,12 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         cancelHelper.verifyNumberOfChargesByStatus("UnEarned", 0);
         // Verify the reasonID matches the reason code used for the given TCId
         // cancelHelper.verifyProductReasonID(getBook().getTravelComponentId());
-        cancelHelper.verifyTcStatusByTcg(getBundleTcg(), "Booked");
+        cancelHelper.verifyTcStatusByTcg(helper.findBundleTcg(getBook().getTravelPlanId()), "Booked");
         cancelHelper.verifyTPV3GuestRecordCreated(getBook().getTravelPlanId(), getHouseHold().primaryGuest());
         cancelHelper.verifyTPV3RecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
         cancelHelper.verifyTPV3SalesOrderStatusByType(getBook().getTravelPlanId(), "ACCOMMODATION", "CANCELLED");
-        cancelHelper.verifyTPV3SalesOrderStatusByType(getBook().getTravelPlanId(), "BUNDLE", "CANCELLED");
+        cancelHelper.verifyTPV3SalesOrderStatusByType(getBook().getTravelPlanId(), "BUNDLE", "BOOKED");
         cancelHelper.verifyTPV3SalesOrderStatusByType(getBook().getTravelPlanId(), "PACKAGE", "CANCELLED");
         TestReporter.assertAll();
     }

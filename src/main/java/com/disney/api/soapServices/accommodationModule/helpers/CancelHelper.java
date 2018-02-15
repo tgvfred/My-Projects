@@ -1014,6 +1014,7 @@ public class CancelHelper {
         String sql = "select * "
                 + " from sales_tp.sls_ord a, sales_tp.SLS_ORD_ITEM b "
                 + " where a.tp_id = '" + tpId + "'"
+                + " and a.SLS_ORD = b.SLS_ORD "
                 + " and SLS_ORD_ITEM_TYP_NM ='" + salesOrderType + "'";
         Database db = new OracleDatabase(environment, Database.SALESTP);
         Recordset rs = new Recordset(db.getResultSet(sql));
