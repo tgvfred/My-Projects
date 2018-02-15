@@ -247,6 +247,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         dvc.setEnvironment(Environment.getBaseEnvironmentName(environment));
         dvc.beforeSuite(dvc.getEnvironment());
         dvc.setUseDvcResort(true);
+        dvc.setRetrieveAfterBook(false);
         dvc.bookDvcReservation("testCancel_M$", 1);
         String tpId = dvc.getFirstBooking().getTravelPlanId();
         String tpsId = dvc.getFirstBooking().getTravelPlanSegmentId();

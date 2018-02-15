@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveRates;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.applicationError.LiloSystemErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
@@ -58,7 +57,7 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
 
         tcgId = rs.getValue("TC_GRP_NB");
         // String faultString = "Accommodation Component not found : NO ACCOMMODATION FOUND WITH ID#" + tcgId;
-        String faultString = "Unexpected Error occurred : retrieveRates : java.lang.NullPointerException";
+        String faultString = "Accommodation Component not found : Invalid TravelComponentGrouping";
 
         TestReporter.logScenario("Negative Dinning reservation rates");
         RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
@@ -66,7 +65,7 @@ public class TestRetrieveRates_Negative extends AccommodationBaseTest {
         retrieveRates.sendRequest();
 
         TestReporter.assertTrue(retrieveRates.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + retrieveRates.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(retrieveRates, LiloSystemErrorCode.UNEXPECTED_ERROR);
+        validateApplicationError(retrieveRates, AccommodationErrorCode.ACCOMMODATION_COMPONENT_NOT_FOUND);
 
     }
 }

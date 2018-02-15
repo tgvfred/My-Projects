@@ -4,12 +4,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoCancel;
+import com.disney.api.restServices.AccommodationSalesBatchServiceRest;
+import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoReinstate;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.AutoReinstateHelper;
-import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
@@ -30,15 +30,14 @@ public class TestAutoReinstate_roomOnly_autoCancelled extends AccommodationBaseT
         setValues(getEnvironment());
         isComo.set("false");
         bookReservation();
-        Sleeper.sleep(60000);
+        Sleeper.sleep(10000);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationComponentSalesService", "autoReinstate" })
     public void Test_AutoReinstate_roomOnly_autoCancelled() {
 
-        AutoCancel autoCancel = new AutoCancel(Environment.getBaseEnvironmentName(environment), "Main");
-        autoCancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        autoCancel.sendRequest();
+        RestResponse response = AccommodationSalesBatchServiceRest.accommodationSalesBatchService(environment).travelComponentGroupings().autoCancel(getBook().getTravelComponentGroupingId());
+        validateResponse(response);
 
         auto = new AutoReinstate(environment, "Main");
         auto.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());

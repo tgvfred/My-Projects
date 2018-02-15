@@ -50,7 +50,7 @@ public class TestReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType ex
     public void testReplaceAllForTravelPlanSegment_modify_upgradedResortRoomType() {
 
         upgrade();
-        Sleeper.sleep(15000);
+        Sleeper.sleep(35000);
         setValues("80010385", "CA", "51");
         getBook().setTravelPlanId(tpId);
         getBook().setTravelPlanSegementId(tpsId);

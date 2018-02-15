@@ -1,7 +1,5 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieveComments;
 
-import org.testng.annotations.Test;
-
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateComments;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RemoveComments;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveComments;
@@ -17,7 +15,8 @@ public class TestRetrieveComments_roomOnly_inactiveComments extends Accommodatio
     String commentText = "This is test comment " + Randomness.randomAlphaNumeric(4);
     String parentId = "";
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments" })
+    // Removded tests as RemoveComments is deprecated
+    // @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "CreateComments" })
     public void TestRetrieveComments_roomOnly_inactiveComments_positive() {
 
         String expectedIsActive = "true";

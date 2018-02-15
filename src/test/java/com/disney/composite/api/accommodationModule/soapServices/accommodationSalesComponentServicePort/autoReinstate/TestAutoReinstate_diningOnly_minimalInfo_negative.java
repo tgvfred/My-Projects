@@ -3,7 +3,7 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoReinstate;
-import com.disney.api.soapServices.accommodationModule.applicationError.LiloSystemErrorCode;
+import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.Cancel;
 import com.disney.utils.Environment;
@@ -40,9 +40,9 @@ public class TestAutoReinstate_diningOnly_minimalInfo_negative extends Accommoda
         auto.setTravelComponentGroupingId(tcg);
         auto.sendRequest();
 
-        String faultString = "Unexpected Error occurred : autoReinstate : java.lang.NullPointerException";
+        String faultString = "Accommodation Component not found";
 
-        validateApplicationError(auto, LiloSystemErrorCode.UNEXPECTED_ERROR_OCCURRED);
+        validateApplicationError(auto, AccommodationErrorCode.ACCOMMODATION_COMPONENT_NOT_FOUND);
         TestReporter.assertEquals(faultString, auto.getFaultString(), "Verify that the fault string [" + auto.getFaultString() + "] is that which is expected.[" + faultString + "]");
     }
 

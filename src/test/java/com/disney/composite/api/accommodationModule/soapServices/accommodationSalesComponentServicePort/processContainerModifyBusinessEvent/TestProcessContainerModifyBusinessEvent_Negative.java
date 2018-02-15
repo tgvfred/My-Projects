@@ -4,7 +4,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoCancel;
+import com.disney.api.restServices.AccommodationSalesBatchServiceRest;
+import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ProcessContainerModifyBusinessEvent;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -37,10 +38,8 @@ public class TestProcessContainerModifyBusinessEvent_Negative extends Accommodat
 
         TestReporter.logScenario("Test - processContainerModifyBusinessEvent - guarAccomm");
 
-        AutoCancel ac = new AutoCancel(environment);
-        ac.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        ac.sendRequest();
-
+        RestResponse response = AccommodationSalesBatchServiceRest.accommodationSalesBatchService(environment).travelComponentGroupings().autoCancel(getBook().getTravelComponentGroupingId());
+        validateResponse(response);
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(getBook().getTravelPlanSegmentId());
         process.setByPassFreeze("true");
