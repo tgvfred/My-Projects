@@ -37,8 +37,6 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
 
         helper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
         helper.addBundle(getBook().getTravelPlanId(), getDaysOut());
-        System.out.println(helper.findBundleTcg(getBook().getTravelPlanId()));
-        System.out.println(helper.getBundleId());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
