@@ -40,7 +40,7 @@ public class TestAutoReinstate_diningOnly_minimalInfo_negative extends Accommoda
         auto.setTravelComponentGroupingId(tcg);
         auto.sendRequest();
 
-        String faultString = "Accommodation Component not found";
+        String faultString = "Accommodation Component not found : Invalid TravelComponentGrouping";
 
         validateApplicationError(auto, AccommodationErrorCode.ACCOMMODATION_COMPONENT_NOT_FOUND);
         TestReporter.assertEquals(faultString, auto.getFaultString(), "Verify that the fault string [" + auto.getFaultString() + "] is that which is expected.[" + faultString + "]");

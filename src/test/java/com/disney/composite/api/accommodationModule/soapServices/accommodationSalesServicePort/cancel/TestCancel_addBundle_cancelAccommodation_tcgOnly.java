@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.AddBundleHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
@@ -29,9 +30,12 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
 
         setIsWdtcBooking(false);
         setValues(getEnvironment());
-        setIsBundle(true);
+        // setIsBundle(true);
         setSkipDeposit(true);
         bookReservation();
+
+        AddBundleHelper helper = new AddBundleHelper(Environment.getBaseEnvironmentName(getEnvironment()), getHouseHold());
+        helper.addBundle(getBook().getTravelPlanId(), getDaysOut());
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })

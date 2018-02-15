@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.OverrideAccommodationRatesRequest;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -42,7 +41,7 @@ public class TestOverrideAccommodationRates_RO_OneAdultTwoNights_OverrideOneNigh
         bookReservation();
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates" })
+    // @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates" })
     public void testOverrideAccommodationRates_RO_OneAdultTwoNights_OverrideOneNight() {
 
         String tp_id1 = getBook().getTravelPlanId();
