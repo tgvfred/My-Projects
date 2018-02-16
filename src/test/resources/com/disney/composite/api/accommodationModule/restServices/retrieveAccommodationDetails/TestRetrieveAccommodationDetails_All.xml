@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestRetrieveAccommodationDetails_All" parallel="methods" thread-count="20">
-	<parameter name="environment" value="latest_cm" />
+	<parameter name="environment" value="latest" />
+	<parameter name="darksideServiceList" value="REST_AccommodationSalesService" />
 	<test name="TestRetrieveAccommodationDetails_All">
 		 <packages>
 			<package name="com.disney.composite.api.accommodationModule.restServices.accommodation.accommodationSales.retrieveAccommodationDetails.*"></package>

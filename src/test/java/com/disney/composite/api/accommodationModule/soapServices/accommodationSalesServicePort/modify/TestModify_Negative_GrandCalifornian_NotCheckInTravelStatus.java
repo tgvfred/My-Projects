@@ -11,7 +11,7 @@ import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
 import com.disney.utils.TestReporter;
 
-public class TestModify_Negative_SourceAccountingCenterDoesntMatch extends BookDVCCashHelper {
+public class TestModify_Negative_GrandCalifornian_NotCheckInTravelStatus extends BookDVCCashHelper {
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -28,16 +28,16 @@ public class TestModify_Negative_SourceAccountingCenterDoesntMatch extends BookD
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "modify", "negative", "GCAL" })
-    public void testModify_Negative_SourceAccountingCenterDoesntMatch() {
-        String errorMessage = "Source Accounting Center Not Matching :  Modification Not Allowed";
+    public void testModify_Negative_GrandCalifornian_NotCheckInTravelStatus() {
+        String errorMessage = "Cannot modify DVC Reservation : Invalid Travel Status for Grand Cal Facility";
         Modify modify = new Modify(getFirstBooking());
 
         modify.setRequestNodeValueByXPath("/Envelope/Body/modify/request/roomDetail/resortCode", "15");
         modify.setRequestNodeValueByXPath("/Envelope/Body/modify/request/roomDetail/roomTypeCode", "5A");
         modify.setRequestNodeValueByXPath("/Envelope/Body/modify/request/locationId", "10068");
-        modify.setRequestNodeValueByXPathAndAddNode("/Envelope/Body/modify/request/roomDetail/travelStatus", "Checked In");
+        modify.setRequestNodeValueByXPathAndAddNode("/Envelope/Body/modify/request/roomDetail/travelStatus", "Booked");
         modify.sendRequest();
-        validateError(modify, AccommodationErrorCode.SOURCE_ACCOUNTING_CENTER_NOT_MATCHING, errorMessage);
+        validateError(modify, AccommodationErrorCode.DVC_MODIFY_RESERVATION, errorMessage);
     }
 
     private void validateError(Modify modify, ApplicationErrorCode error, String errorMessage) {

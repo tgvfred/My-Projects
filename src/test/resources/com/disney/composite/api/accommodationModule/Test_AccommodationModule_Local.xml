@@ -2,6 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="AccommodationModule_Suite" parallel="methods" thread-count="20" configfailurepolicy="continue">
 	<parameter name="environment" value="latest_cm" />
+	<parameter name="darksideServiceList" value="AccommodationSalesServicePort;AccommodationSalesComponentServicePort;REST_AccommodationSalesService" />
 	<test name="AccommodationModule_tpv3" parallel="methods" thread-count="1">
 		<groups>
 			<run>
