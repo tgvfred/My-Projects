@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ShareAccommodations;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.core.BaseSoapCommands;
 
 public class Test_shareAccommodations_emptyRoomReservationDetail_Negative extends AccommodationBaseTest {
 
@@ -15,7 +14,7 @@ public class Test_shareAccommodations_emptyRoomReservationDetail_Negative extend
 
         ShareAccommodations share = new ShareAccommodations(environment);
 
-        share.setAccommodation(BaseSoapCommands.REMOVE_NODE.toString());
+        // share.setAccommodation(BaseSoapCommands.REMOVE_NODE.toString());
         share.setBookingDate(getBook().getStartDate());
         share.setFreezeId("0");
         share.setGuaranteeStatus("None");
