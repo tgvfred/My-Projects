@@ -14,7 +14,7 @@ public class Test_shareAccommodations_nullRequest_Negative extends BaseTest {
 
         ShareAccommodations share = new ShareAccommodations(environment);
 
-        share.setAccommodation(BaseSoapCommands.REMOVE_NODE.toString());
+        share.setRequest(BaseSoapCommands.REMOVE_NODE.toString());
         share.sendRequest();
         validateApplicationError(share, MISSING_REQUIRED_PARAM_EXCEPTION);
     }

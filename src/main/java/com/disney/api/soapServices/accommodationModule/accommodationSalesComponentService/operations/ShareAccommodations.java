@@ -10,9 +10,10 @@ public class ShareAccommodations extends AccommodationSalesComponentService {
 
         // Generate a request from a project xml file
         setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("shareAccommodations")));
+        // generateServiceContext();
         removeComments();
         removeWhiteSpace();
-        generateServiceContext();
+
     }
 
     public ShareAccommodations(String environment, String scenario) {
@@ -20,8 +21,12 @@ public class ShareAccommodations extends AccommodationSalesComponentService {
 
         // Generate a request from a project xml file
         setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("shareAccommodations")));
-        generateServiceContext();
+        // generateServiceContext();
         // setRequestNodeValueByXPath(getTestScenario("/services/accommodationSalesServicePort/RetrieveSummay/RetrieveSummay.xls", scenario));
+        // setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
+
+        // generateServiceContext();
+
         setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
         removeComments();
         removeWhiteSpace();
@@ -41,7 +46,7 @@ public class ShareAccommodations extends AccommodationSalesComponentService {
     }
 
     public void setFreezeId(String value) {
-        setRequestNodeValueByXPath("Envelope/Body/shareAccommodationsrequest/accommodations/freezeId", value);
+        setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/freezeId", value);
     }
 
     public void setGuaranteeStatus(String value) {
