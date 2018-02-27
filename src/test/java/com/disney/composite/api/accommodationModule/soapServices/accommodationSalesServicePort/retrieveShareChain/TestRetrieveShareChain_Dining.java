@@ -17,7 +17,7 @@ public class TestRetrieveShareChain_Dining extends AccommodationBaseTest {
 
         String faultString = "Accommodations not found";
 
-        ScheduledEventReservation res = new ShowDiningReservation("Latest");
+        ScheduledEventReservation res = new ShowDiningReservation(environment);
         res.setTravelPlanId(getBook().getTravelPlanId());
         res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
 
