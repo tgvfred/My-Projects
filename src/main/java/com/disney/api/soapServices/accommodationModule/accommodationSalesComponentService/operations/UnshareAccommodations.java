@@ -32,51 +32,51 @@ public class UnshareAccommodations extends AccommodationSalesComponentService {
     }
 
     public void setBookingDate(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/bookingDate", value);
     }
 
     public void setCheckOutDateTime(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/checkOutDateTime", value);
     }
 
     public void setExternalReferenceType(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/externalReferences/externalReferenceType", value);
     }
 
     public void setExternalReferenceCode(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/externalReferences/externalReferenceCode", value);
     }
 
     public void setExternalReferenceSource(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/externalReferences/externalReferenceNumber", value);
     }
 
     public void setExternalReferenceNumber(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/externalReferences/externalReferenceSource", value);
     }
 
     public void setFplosId(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/fplosId", value);
     }
 
     public void setFreezeId(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/freezeId", value);
     }
 
     public void setInventoryTrackingId(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/InventoryTrackingId", value);
     }
 
     public void setGuaranteeStatus(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/guaranteeStatus", value);
     }
 
     public void setInventoryStatus(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/inventoryStatus", value);
     }
 
     public void setModificationDate(String value) {
-        setRequestNodeValueByXPath("", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/modificationDate", value);
     }
 
     public void setOverrideFreeze(String value) {
@@ -99,7 +99,7 @@ public class UnshareAccommodations extends AccommodationSalesComponentService {
         setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/rateDetails/additionalChargeOverridden", value);
     }
 
-    public void setBasePrise(String value) {
+    public void setBasePrice(String value) {
         setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/rateDetails/basePrice", value);
     }
 

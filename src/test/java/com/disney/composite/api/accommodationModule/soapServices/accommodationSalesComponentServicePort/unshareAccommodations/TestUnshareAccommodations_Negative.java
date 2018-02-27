@@ -6,6 +6,7 @@ import com.disney.api.BaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.UnshareAccommodations;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestUnshareAccommodations_Negative extends BaseTest {
@@ -30,7 +31,19 @@ public class TestUnshareAccommodations_Negative extends BaseTest {
         String faultString = "Accommodations not found";
 
         UnshareAccommodations unshare = new UnshareAccommodations(environment);
-        unshare.setRequestNodeValueByXPath("/Envelope/Body/shareAccommodations/request", BaseSoapCommands.REMOVE_ATTRIBUTE.toString());
+        unshare.setBookingDate(Randomness.generateCurrentXMLDatetime());
+        unshare.setGuaranteeStatus("NONE");
+        unshare.setOverrideFreeze("false");
+        unshare.setPackageCode("Q747P");
+        unshare.setAdditionalCharge("0.0");
+        unshare.setAdditionalChargeOverride("false");
+        unshare.setBasePrice("152.0");
+        unshare.setDate(Randomness.generateCurrentXMLDatetime(2));
+        unshare.setDayCount("0");
+        unshare.setOverriden("false");
+        unshare.setShared("false");
+        unshare.setNetPrice("0.0");
+        unshare.setPointsValue("0");
         unshare.sendRequest();
 
         TestReporter.assertTrue(unshare.getFaultString().contains(faultString), "Verify that the fault string [" + unshare.getFaultString() + "] is that which is expected [" + faultString + "].");
