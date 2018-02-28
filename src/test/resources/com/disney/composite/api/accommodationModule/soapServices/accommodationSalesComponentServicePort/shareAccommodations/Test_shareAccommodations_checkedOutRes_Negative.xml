@@ -4,7 +4,9 @@
 	<parameter name="environment" value="latest_cm" />
 	<test name="TestShareAccommodations_checkedOutRes_Negative">
 		<classes>
-			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.shareAccommodations.Test_shareAccommodations_checkedOutRes_Negative'></class>
+			<!--  class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.shareAccommodations.Test_shareAccommodations_checkedOutRes_Negative'-->
+		<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.shareAccommodations.Test_shareAccommodations_SampleRequest'></class>
+		
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

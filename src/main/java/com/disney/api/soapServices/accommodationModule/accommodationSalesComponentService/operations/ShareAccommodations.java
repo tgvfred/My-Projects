@@ -21,13 +21,13 @@ public class ShareAccommodations extends AccommodationSalesComponentService {
 
         // Generate a request from a project xml file
         setRequestDocument(XMLTools.loadXML(buildRequestFromWSDL("shareAccommodations")));
-        // generateServiceContext();
-        // setRequestNodeValueByXPath(getTestScenario("/services/accommodationSalesServicePort/RetrieveSummay/RetrieveSummay.xls", scenario));
+        generateServiceContext();
+        setRequestNodeValueByXPath(getTestScenario("/services/accommodationSalesComponentServicePort/shareAccommodations/Main.xls", getOperation(), scenario));
         // setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
 
-        // generateServiceContext();
+        generateServiceContext();
 
-        setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
+        // setRequestNodeValueByXPath(getTestScenario(getService(), getOperation(), scenario));
         removeComments();
         removeWhiteSpace();
     }
