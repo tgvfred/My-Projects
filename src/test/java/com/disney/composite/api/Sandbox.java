@@ -1,17 +1,27 @@
 package com.disney.composite.api;
 
-import org.testng.annotations.Test;
+import java.util.Date;
 
-import com.disney.api.soapServices.admissionModule.admissionSalesServicePort.helpers.pricingHelpers.RoomTypes;
-import com.disney.api.soapServices.pricingModule.packagingService.operations.helpers.PackageCodeHelper;
+import org.testng.annotations.Test;
 
 public class Sandbox {
 
     @Test
     public void roomOnlyBooking() {
-        PackageCodeHelper helper = new PackageCodeHelper("latest", "2018-02-12", RoomTypes.getRoomOnly(), "DRC RO", "SWN", "SA", "2018-02-05");
-        System.out.println(helper.getPackageCode());
+        Date currentDate = new Date();
+        Date effectiveFrom = new Date(currentDate.getTime() - (10 * 24 * 60 * 60 * 1000));
+        // Date effectiveTo = null;
+        Date effectiveTo = new Date(currentDate.getTime() + (10 * 24 * 60 * 60 * 1000));
+        System.out.println(isActive(currentDate, effectiveFrom, effectiveTo));
     }
 
+    private boolean isActive(
+            final Date currentDate,
+            final Date startDate,
+            final Date effectiveTo) {
+        return (startDate == null || currentDate.compareTo(startDate) >= 0)
+                && (effectiveTo == null
+                        || currentDate.compareTo(effectiveTo) <= 0);
+    }
 }
 //
