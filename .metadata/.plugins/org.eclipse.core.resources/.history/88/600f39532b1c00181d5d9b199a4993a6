@@ -1,0 +1,17 @@
+import java.util.ArrayList;
+
+public class gitTermianlPush {
+	public static void main (String[]args) {
+		System.out.println("This si a common Fizz Buzz Program");
+		
+		//Populate an array of multiples of 3
+		ArrayList<Integer> fizzArray = new ArrayList<Integer>();
+		
+		for(int i = 1; i <= 100; i++) {
+			fizzArray.add(i);
+		}
+		
+		System.out.println(fizzArray.toString());
+	}
+
+}
