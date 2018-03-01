@@ -13,7 +13,7 @@
 	    </repository>
   	</distributionManagement>	
   	<properties>
-	    <apiUtilsSoap.version>1.1.11</apiUtilsSoap.version>
+	    <apiUtilsSoap.version>1.1.13</apiUtilsSoap.version>
 	    <accommodationSalesBatchService.version>1.1.00</accommodationSalesBatchService.version>  
 	    <activity.version>1.1.00</activity.version>  
 	    <admission.version>1.1.00</admission.version>    
