@@ -27,7 +27,7 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
 
         setEnvironment(environment);
         isComo.set("false");
-        daysOut.set(40);
+        daysOut.set(0);
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
@@ -133,7 +133,7 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("packageCode"));
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/packageCode", getPackageCode());
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("resortCode"));
-        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/resortCode", "1S");
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/resortCode", getBook().getResortCode());
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("resortPeriod"));
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/resortPeriod", BaseSoapCommands.ADD_NODE.commandAppend("endDate"));
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/resortPeriod/endDate", getBook().getEndDate());
@@ -187,7 +187,8 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("shared"));
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/shared", "true");
         share.sendRequest();
-        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "An error occurred share reservation.", share);
+        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"),
+                "An error occurred share reservation: " + share.getFaultString(), share);
 
     }
 }
