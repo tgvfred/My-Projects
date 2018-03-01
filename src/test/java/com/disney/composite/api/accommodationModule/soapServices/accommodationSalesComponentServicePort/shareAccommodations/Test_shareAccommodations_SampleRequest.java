@@ -1,13 +1,49 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.shareAccommodations;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ShareAccommodations;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTest {
+    private Share share;
+    private String firstOwnerId;
+    private String secondOwnerId;
+    private String firstTCG;
+    private String firstTC;
+    private String firstTPS;
+    private String firstRC;
+    private String firstRS;
+
+    @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
+    public void setup(String environment) {
+
+        setEnvironment(environment);
+        isComo.set("false");
+        daysOut.set(40);
+        nights.set(1);
+        arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
+        departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
+        setValues();
+        bookReservation();
+
+        firstTCG = getBook().getTravelComponentGroupingId();
+        firstTC = getBook().getTravelComponentId();
+        firstTPS = getBook().getTravelPlanSegmentId();
+        firstRC = getBook().getRoomTypeCode();
+        firstRS = getBook().getResortCode();
+
+        bookReservation();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+    }
+
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "shareAccommodations" })
     public void test_shareAccommodations_SampleRQ() {
 
@@ -19,13 +55,13 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
         share.setInventoryStatus("Unassigned");
         share.setOverrideFreeze("false");
         share.setPackageCode(getPackageCode());
-        share.setResortCode(getResortCode());
+        share.setResortCode(firstRS);
         share.setResortEndDate(getBook().getEndDate());
         share.setResortStartDate(getBook().getStartDate());
-        share.setRoomTypeCode(getRoomTypeCode());
+        share.setRoomTypeCode(firstRC);
         share.setRSRReservations("false");
-        share.setTcgId(getBook().getTravelComponentGroupingId());
-        share.setTcId(getBook().getTravelComponentId());
+        share.setTcgId(firstTCG);
+        share.setTcId(firstTC);
         share.setTravelStatus("Booked");
         share.setLocationId(getLocationId());
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/shared", "true");
