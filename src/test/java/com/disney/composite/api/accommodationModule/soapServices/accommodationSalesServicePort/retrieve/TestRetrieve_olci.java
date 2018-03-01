@@ -24,8 +24,6 @@ public class TestRetrieve_olci extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-
-        setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
 

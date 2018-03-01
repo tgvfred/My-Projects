@@ -147,10 +147,8 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails_ModifyO
         Map<String, String> tpPartyIds = new HashMap<>();
         String partyId = getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[1]/accommodation/guestReferences/guest/guestId");
         tpPartyIds.put(partyId, partyId);
-        validations.verifyOdsGuestIdCreated(false, partyId);
         partyId = getRetrieve().getResponseNodeValueByXPath("/Envelope/Body/retrieveResponse/travelPlanInfo/travelPlanSegments/componentGroupings[2]/accommodation/guestReferences/guest/guestId");
         tpPartyIds.put(partyId, partyId);
-        validations.verifyOdsGuestIdCreated(false, partyId);
         validations.verifyTpPartyIds(tpPartyIds, getBook().getTravelPlanId());
         getAdditionalGuests().get(1).setPrimary(false);
         validations.verifyTpPartyIds(tpPartyIds, getBook().getTravelPlanId());

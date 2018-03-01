@@ -247,6 +247,7 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
         dvc.setEnvironment(Environment.getBaseEnvironmentName(environment));
         dvc.beforeSuite(dvc.getEnvironment());
         dvc.setUseDvcResort(true);
+        dvc.setRetrieveAfterBook(false);
         dvc.bookDvcReservation("testCancel_M$", 1);
         String tpId = dvc.getFirstBooking().getTravelPlanId();
         String tpsId = dvc.getFirstBooking().getTravelPlanSegmentId();
@@ -318,8 +319,10 @@ public class TestReplaceAllForTravelPlanSegment_Negative extends AccommodationBa
                 + "        from res_mgmt.tc_grp a "
                 + "        join res_mgmt.tc b on a.tc_grp_nb = b.tc_grp_nb "
                 + "        join res_mgmt.tps c on a.tps_id = c.tps_id "
+                + "        join res_mgmt.ACM_CMPNT d on b.tc_id = d.ACM_TC_ID"
                 + "        where a.TC_GRP_TYP_NM = 'ACCOMMODATION' "
                 + "        and b.trvl_sts_nm = 'Not Arrived' "
+                + "        and d.SHR_IN = 'N'"
                 + "        order by dbms_random.value"
                 + ")where rownum = 1";
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Retrieve_All" parallel="methods" thread-count="10">
-	<parameter name="environment" value="latest_cm" />
+	<parameter name="environment" value="latest" />
+	<parameter name="localHostList" value="AccommodationSalesServicePort" />
+	<parameter name="localHostUrlList" value="http://w7-2ua32215qz:8081/Accommodation/AccommodationSalesServicePort" />
 	<test name="Retrieve_All">
 		<packages>
 			<package name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.retrieve.*"></package>

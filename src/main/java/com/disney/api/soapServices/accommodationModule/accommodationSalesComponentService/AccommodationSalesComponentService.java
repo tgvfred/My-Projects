@@ -5,10 +5,7 @@ import com.disney.utils.Environment;
 
 public class AccommodationSalesComponentService extends BaseSoapService {
     public AccommodationSalesComponentService(String environment) {
-        setEnvironmentServiceURL("AccommodationSalesComponentServicePort", environment);
-        if (environment.equalsIgnoreCase(Environment.getEnvironmentName("Bashful"))) {
-            setServiceURL("http://accommodationsvcbash.wdw.disney.com:8080/Accommodation/AccommodationSalesComponentServicePort");
-        }
+        setEnvironmentServiceURL("AccommodationSalesComponentServicePort", Environment.getEnvironmentName(environment).equalsIgnoreCase("Grumpy_CM") ? "Grumpy" : environment);
         setXmlRepo("xml/accommodationSalesComponentServicePort");
     }
 }

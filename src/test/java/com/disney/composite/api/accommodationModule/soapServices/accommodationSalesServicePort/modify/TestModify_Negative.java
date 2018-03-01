@@ -13,6 +13,9 @@ import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestModify_Negative extends AccommodationBaseTest {
     private String tpId = null;
@@ -100,6 +103,17 @@ public class TestModify_Negative extends AccommodationBaseTest {
         modify.setRequestNodeValueByXPath("/Envelope/Body/modify/request/roomDetail/travelComponentGroupingId", "0");
         modify.sendRequest();
         validateError(modify, AccommodationErrorCode.ACCOMMODATIONS_NOT_FOUND, errorMessage);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "modify", "negative" })
+    public void testModify_TravelComponentGroupingnotMatchTPS() {
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet("SELECT TC_GRP_NB FROM RES_MGMT.TC_GRP WHERE ROWNUM =1"));
+        String errorMessage = "Travel Component Grouping not found : Invalid TravelComponentGrouping";
+        Modify modify = new Modify(book);
+        modify.setRequestNodeValueByXPath("/Envelope/Body/modify/request/roomDetail/travelComponentGroupingId", rs.getValue("TC_GRP_NB"));
+        modify.sendRequest();
+        validateError(modify, AccommodationErrorCode.TRAVEL_COMPONENT_GROUPING_NOT_FOUND, errorMessage);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "modify", "negative" })
@@ -264,6 +278,24 @@ public class TestModify_Negative extends AccommodationBaseTest {
         modify.setRequestNodeValueByXPath("/Envelope/Body/modify/request/communicationChannel", "Blah");
         modify.sendRequest();
         validateError(modify, AccommodationErrorCode.INVALID_REQUEST, errorMessage);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "modify", "negative" })
+    public void testModify_NullCommunicationChannel() {
+        String errorMessage = "Communication Channel is required";
+        Modify modify = new Modify(book);
+        modify.setRequestNodeValueByXPath("/Envelope/Body/modify/request/communicationChannel", BaseSoapCommands.REMOVE_NODE.toString());
+        modify.sendRequest();
+        validateError(modify, AccommodationErrorCode.COMMUNICATION_CHANNEL_REQUIRED, errorMessage);
+    }
+
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "modify", "negative" })
+    public void testModify_NullSalesChannel() {
+        String errorMessage = "Sales Channel is required";
+        Modify modify = new Modify(book);
+        modify.setRequestNodeValueByXPath("/Envelope/Body/modify/request/salesChannel", BaseSoapCommands.REMOVE_NODE.toString());
+        modify.sendRequest();
+        validateError(modify, AccommodationErrorCode.SALES_CHANNEL_REQUIRED, errorMessage);
     }
 
     private void validateError(Modify modify, ApplicationErrorCode error, String errorMessage) {

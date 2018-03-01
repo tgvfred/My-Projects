@@ -19,6 +19,7 @@ public class TestOverrideAccommodationRates_dvcPoints extends BookDVCPointsHelpe
         setEnvironment(environment);
         setUseDvcResort(true);
         setUseNonZeroPoints(true);
+        setRetrieveAfterBook(false);
         bookDvcReservation("testBookWithPay_MP", 1);
     }
 

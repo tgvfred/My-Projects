@@ -1,9 +1,10 @@
 package com.disney.composite.api;
 
+import java.util.Date;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -28,12 +29,19 @@ public class Sandbox {
 
     @Test
     public void roomOnlyBooking() {
-        Retrieve retrieve = new Retrieve(environment, "ByTPS_ID");
-        retrieve.setTravelPlanSegmentId(tpsId);
-        retrieve.setLocationId("51");
-        retrieve.sendRequest();
-        TestReporter.logAPI(!retrieve.getResponseStatusCode().equals("200"),
-                "Verify that no error occurred retrieving: " + retrieve.getFaultString(),
-                retrieve);
+        Date currentDate = new Date();
+        Date effectiveFrom = new Date(currentDate.getTime() - (10 * 24 * 60 * 60 * 1000));
+        // Date effectiveTo = null;
+        Date effectiveTo = new Date(currentDate.getTime() + (10 * 24 * 60 * 60 * 1000));
+        System.out.println(isActive(currentDate, effectiveFrom, effectiveTo));
+    }
+
+    private boolean isActive(
+            final Date currentDate,
+            final Date startDate,
+            final Date effectiveTo) {
+        return (startDate == null || currentDate.compareTo(startDate) >= 0)
+                && (effectiveTo == null
+                        || currentDate.compareTo(effectiveTo) <= 0);
     }
 }

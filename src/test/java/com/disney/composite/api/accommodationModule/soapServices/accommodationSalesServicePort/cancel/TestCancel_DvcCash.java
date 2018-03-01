@@ -9,7 +9,6 @@ import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
-import com.disney.utils.Environment;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
@@ -22,9 +21,9 @@ public class TestCancel_DvcCash extends BookDVCCashHelper {
     public void setup(String environment) {
         DVCSalesBaseTest.environment = environment;
         setUseDvcResort(true);
+        setRetrieveAfterBook(false);
         bookDvcReservation("testCancel_M$", 1);
         setTpId(getFirstBooking().getTravelPlanId());
-        makeCCPayment(Environment.getBaseEnvironmentName(environment));
 
         /*
          * Pausing script to ensure events making it downstream to DVC Corp

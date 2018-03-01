@@ -9,7 +9,6 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.CancelHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
-import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.AddAccommodationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
@@ -18,7 +17,11 @@ import com.disney.utils.XMLTools;
 import com.disney.utils.date.DateTimeConversion;
 
 public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTest {
-    private AddAccommodationHelper helper;
+
+    String firstTCG;
+    String firstTPS;
+    String firstTC;
+    String firstTP;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -38,8 +41,18 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
         setIsADA(false);
         bookReservation();
 
-        helper = new AddAccommodationHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook());
-        helper.addAccommodation(getResortCode(), getRoomTypeCode(), getPackageCode(), getDaysOut(), getNights(), getLocationId());
+        firstTCG = getBook().getTravelComponentGroupingId();
+        firstTPS = getBook().getTravelPlanSegmentId();
+        firstTC = getBook().getTravelComponentId();
+        firstTP = getBook().getTravelPlanId();
+
+        setSendRequest(false);
+        bookReservation();
+        getBook().setTravelPlanId(firstTP);
+        getBook().setTravelPlanSegementId(firstTPS);
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a new TPS with an existing TP: " + getBook().getFaultString(), getBook());
+
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "Cancel", "tpv3" })
@@ -108,7 +121,7 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
         // cancelHelper.verifyCancellationComment(getRetrieve(), "Air not available CancellationNumber : " + cancel.getCancellationNumber());
         cancelHelper.verifyNumberOfCharges(1);
         cancelHelper.verifyInventoryReleased(getBook().getTravelComponentGroupingId());
-        cancelHelper.verifyNumberOfTpPartiesByTpId(2);
+        cancelHelper.verifyNumberOfTpPartiesByTpId(1);
         cancelHelper.verifyTcStatusByTcg(getBook().getTravelComponentGroupingId(), "Cancelled");
         cancelHelper.verifyExchangeFeeFound(false);
         cancelHelper.verifyChargeGroupsStatusCount("Cancelled", 1);
@@ -122,17 +135,17 @@ public class TestCancel_addAccomm_cancelOne_tcgOnly extends AccommodationBaseTes
         cancelHelper.verifyTPV3SalesOrderRecordCreated(getBook().getTravelPlanId());
         TestReporter.assertAll();
 
-        cancelHelper = new CancelHelper(removeCM(environment), helper.getTpId());
+        cancelHelper = new CancelHelper(removeCM(environment), firstTP);
         cancelHelper.verifyChargeGroupsCancelled();
-        cancelHelper.verifyCancellationNotFoundInResHistory(helper.getTpsId(), helper.getTcgId(), helper.getTcId());
+        cancelHelper.verifyCancellationNotFoundInResHistory(firstTPS, firstTCG, firstTC);
         cancelHelper.verifyNumberOfCharges(1);
         cancelHelper.setInventoryReleased(false);
-        cancelHelper.verifyInventoryReleased(helper.getTcgId());
-        cancelHelper.verifyTcStatusByTcg(helper.getTcgId(), "Booked");
-        cancelHelper.verifyNumberOfTpPartiesByTpId(2);
+        cancelHelper.verifyInventoryReleased(firstTCG);
+        cancelHelper.verifyTcStatusByTcg(firstTCG, "Booked");
+        cancelHelper.verifyNumberOfTpPartiesByTpId(1);
         cancelHelper.verifyExchangeFeeFound(false);
-        cancelHelper.verifyTPV3RecordCreated(helper.getTpId());
-        cancelHelper.verifyTPV3SalesOrderRecordCreated(helper.getTpId());
+        cancelHelper.verifyTPV3RecordCreated(firstTP);
+        cancelHelper.verifyTPV3SalesOrderRecordCreated(firstTP);
         TestReporter.assertAll();
     }
 

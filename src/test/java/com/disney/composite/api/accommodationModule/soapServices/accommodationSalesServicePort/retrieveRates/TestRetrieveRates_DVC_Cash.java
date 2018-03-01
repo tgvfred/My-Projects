@@ -16,6 +16,7 @@ public class TestRetrieveRates_DVC_Cash extends BookDVCCashHelper {
     public void setup(String environment) {
         setEnvironment(environment);
 
+        setRetrieveAfterBook(false);
         setUseDvcResort(true);
         setBook(bookDvcReservation("testBook_MCash", 1));
         setTpId(getFirstBooking().getTravelPlanId());

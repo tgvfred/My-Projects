@@ -40,7 +40,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         Sleeper.sleep(5000);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
     public void testCancel_Booked_tcgOnly_RoomOnly() {
         TestReporter.logScenario("Test - Cancel - TCG Only Room Only");
 
@@ -48,7 +48,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         sendRequestAndValidateSoapResponse(cancel);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
     public void testCancel_CheckingIn_tcgOnly() {
         checkingIn();
 
@@ -59,7 +59,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     }
 
     @SuppressWarnings("static-access")
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
     public void testCancel_addAccommodation_cancelOne_tcgOnly() {
         String tpId = getBook().getTravelPlanId();
         String tpsId = getBook().getTravelPlanSegmentId();
@@ -85,27 +85,22 @@ public class TestCancel_Positive extends AccommodationBaseTest {
     }
 
     @SuppressWarnings("static-access")
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
     public void testCancel_addAccommodation_checkInOne_cancelOne_tcgOnly() {
-        setDaysOut(30);
-        setNights(1);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getDaysOut() + getNights());
-        setValues(getEnvironment());
-        isComo.set("false");
-        bookReservation();
-        checkIn();
-        String tpId = getBook().getTravelPlanId();
-        String tpsId = getBook().getTravelPlanSegmentId();
+
         AccommodationBaseTest base = new AccommodationBaseTest();
         base.setEnvironment(getEnvironment());
         base.setDaysOut(0);
         base.setNights(1);
-        base.setArrivalDate(getDaysOut());
-        base.setDepartureDate(getNights());
-        base.setValues(getFacilityId(), getRoomTypeCode(), getLocationId());
-        setSendRequest(false);
+        base.setArrivalDate(base.getDaysOut());
+        base.setDepartureDate(base.getNights());
+        base.setValues();
         base.bookReservation();
+        setSendRequest(false);
+        CheckInHelper helper = new CheckInHelper(getEnvironment(), base.getBook());
+        helper.checkIn(base.getLocationId(), base.getDaysOut(), base.getNights(), base.getFacilityId());
+        String tpId = base.getBook().getTravelPlanId();
+        String tpsId = base.getBook().getTravelPlanSegmentId();
         base.getBook().setTravelPlanId(tpId);
         base.getBook().setTravelPlanSegementId(tpsId);
         base.getBook().sendRequest();
@@ -119,7 +114,7 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         verifyNotCancelled(getBook().getTravelComponentGroupingId());
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "tpv3" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel" })
     public void testCancel_addBundle_cancelAccommodation_tcgOnly() {
         addBundle();
 
@@ -248,9 +243,6 @@ public class TestCancel_Positive extends AccommodationBaseTest {
         cancelHelper.verifyInventoryReleased(tcg);
         cancelHelper.verifyTcStatusByTcg(tcg, "Cancelled");
         cancelHelper.verifyExchangeFeeFound(false);
-        cancelHelper.verifyTPV3GuestRecordCreated(tpID, getHouseHold().primaryGuest());
-        cancelHelper.verifyTPV3RecordCreated(tpID);
-        cancelHelper.verifyTPV3SalesOrderRecordCreated(tpID);
         TestReporter.assertAll();
     }
 

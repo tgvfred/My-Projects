@@ -23,6 +23,7 @@ public class TestRetrieveRates_DVC_Points extends BookDVCPointsHelper {
         setEnvironment(environment);
         locEnv = Environment.getBaseEnvironmentName(getEnvironment());
         setUseDvcResort(true);
+        setRetrieveAfterBook(false);
         setUseNonZeroPoints(true);
         setBook(bookDvcReservation("testBookWithPay_MP", 1));
         setTpId(getFirstBooking().getTravelPlanId());

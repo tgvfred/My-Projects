@@ -15,6 +15,7 @@ public class Test_RetrieveSummary_oneTcg_roomOnlyDVC extends BookDVCCashHelper {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
+        setRetrieveAfterBook(false);
 
         setUseDvcResort(true);
         setBook(bookDvcReservation("testBook_MCash", 1));

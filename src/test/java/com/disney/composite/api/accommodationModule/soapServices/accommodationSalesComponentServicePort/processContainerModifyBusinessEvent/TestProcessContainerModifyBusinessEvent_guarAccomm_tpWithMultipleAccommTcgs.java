@@ -4,12 +4,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoCancel;
+import com.disney.api.restServices.AccommodationSalesBatchServiceRest;
+import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ProcessContainerModifyBusinessEvent;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ProcessContainerModifyBusinessEventHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
-import com.disney.utils.Environment;
 import com.disney.utils.TestReporter;
 
 public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTcgs extends AccommodationBaseTest {
@@ -52,10 +52,8 @@ public class TestProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAc
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "processContainerModifyBusinessEvent" })
     public void testProcessContainerModifyBusinessEvent_guarAccomm_tpWithMultipleAccommTcgs() {
 
-        AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
-        ac.setTravelComponentGroupingId(tcg);
-        ac.sendRequest();
-        TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel.", ac);
+        RestResponse response = AccommodationSalesBatchServiceRest.accommodationSalesBatchService(environment).travelComponentGroupings().autoCancel(tcg);
+        validateResponse(response);
 
         ProcessContainerModifyBusinessEvent process = new ProcessContainerModifyBusinessEvent(environment);
         process.setTravelPlanSegmentID(tpsId);

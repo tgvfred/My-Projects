@@ -24,7 +24,6 @@ public class TestRetrieve_profile extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         setAddProfile(true);
-        setAddNewGuest(true);
         isComo.set("false");
         bookReservation();
     }

@@ -4,7 +4,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.AutoCancel;
+import com.disney.api.restServices.AccommodationSalesBatchServiceRest;
+import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ProcessContainerModifyBusinessEvent;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.PaymentSettlementHelper;
@@ -40,10 +41,8 @@ public class TestProcessContainerModifyBusinessEvent_roomOnly_reinstateViaPaymen
         String tp = getBook().getTravelPlanId();
         String tcg = getBook().getTravelComponentGroupingId();
 
-        AutoCancel ac = new AutoCancel(Environment.getBaseEnvironmentName(environment));
-        ac.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-        ac.sendRequest();
-        TestReporter.logAPI(!ac.getResponseStatusCode().equals("200"), "An error occurred in the auto cancel request.", ac);
+        RestResponse response = AccommodationSalesBatchServiceRest.accommodationSalesBatchService(environment).travelComponentGroupings().autoCancel(getBook().getTravelComponentGroupingId());
+        validateResponse(response);
 
         PaymentSettlementHelper pay = new PaymentSettlementHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook(), getHouseHold());
         pay.makeFullPayment();
