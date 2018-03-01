@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestShareAccommodations_checkedOutRes_Negative" parallel="methods" thread-count="20" configfailurepolicy="continue" data-provider-thread-count="5">
+<suite name="TestShareAccommodations_sampleRQ " parallel="methods" thread-count="20" configfailurepolicy="continue" data-provider-thread-count="5">
 	<parameter name="environment" value="latest" />
-	<test name="TestShareAccommodations_checkedOutRes_Negative">
+	<test name="TestShareAccommodations_sampleRq">
 		<classes>
 		<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.shareAccommodations.Test_shareAccommodations_SampleRequest'></class>
 		
