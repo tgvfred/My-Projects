@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.mslt.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.1.10</version>
+	<version>1.1.12</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -13,7 +13,7 @@
 	    </repository>
   	</distributionManagement>	
   	<properties>
-	    <apiUtilsSoap.version>1.1.11</apiUtilsSoap.version>
+	    <apiUtilsSoap.version>1.1.13</apiUtilsSoap.version>
 	    <accommodationSalesBatchService.version>1.1.00</accommodationSalesBatchService.version>  
 	    <activity.version>1.1.00</activity.version>  
 	    <admission.version>1.1.00</admission.version>    

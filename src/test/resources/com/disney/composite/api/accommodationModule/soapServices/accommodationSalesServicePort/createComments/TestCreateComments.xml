@@ -2,6 +2,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestCreateComments" parallel="methods" thread-count="20">
 	<parameter name="environment" value="Latest" />
+	<parameter name="localHostList" value="AccommodationSalesServicePort" />
+	<parameter name="localHostUrlList" value="http://w7-2ua32215qz:8081/Accommodation/AccommodationSalesServicePort" />
 	<test name="TestCreateComments">
 		<packages>
 			<package name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.createComments.*"/>
