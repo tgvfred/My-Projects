@@ -13,7 +13,7 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
 
         ShareAccommodations share = new ShareAccommodations(environment);
 
-        share.setBookingDate("2017-10-25T00:00:00");
+        share.setBookingDate(getBook().getStartDate());
         share.setFreezeId("0");
         share.setGuaranteeStatus("None");
         share.setInventoryStatus("Unassigned");
