@@ -56,7 +56,7 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
         retrieveRates.sendRequest();
         TestReporter.logAPI(!retrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving rates", retrieveRates);
 
-        System.out.println(retrieveRates.getResponse());
+        // System.out.println(retrieveRates.getResponse());
 
         ShareAccommodations share = new ShareAccommodations(environment);
 
