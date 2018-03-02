@@ -48,7 +48,7 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
     public void test_shareAccommodations_SampleRQ() {
 
         ShareAccommodations share = new ShareAccommodations(environment);
-
+        getBook().getTotalRate();
         share.setBookingDate(getBook().getStartDate());
         share.setFreezeId("0");
         share.setGuaranteeStatus("None");
