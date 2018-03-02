@@ -26,7 +26,6 @@ import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
-import com.disney.utils.dataFactory.database.sqlStorage.Dreams_AccommodationQueries;
 import com.disney.utils.dataFactory.database.sqlStorage.Dreams_TPS;
 
 public class CheckInHelper {
@@ -315,13 +314,11 @@ public class CheckInHelper {
                 setRoomRsrc(assignRoomForReservation(findRoom, daysOut, nights, facilityId));
                 updateSingleRoomStatus("updateToCleanAndVacant");
             }
-            Database db = new OracleDatabase(environment, Database.DREAMS);
-            Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getLocationIdByTpId(getTpId())));
 
             pollForTPV3(getTpId());
 
             checkIn.setGuestId(getPrimaryGuestId());
-            checkIn.setLocationId(rs.getValue("WRK_LOC_ID", 1));
+            checkIn.setLocationId(locationId);
             checkIn.setTravelComponentGroupingId(getTcgId());
 
             // Sleeper.sleep(Randomness.randomNumberBetween(3, 5) * 1000);

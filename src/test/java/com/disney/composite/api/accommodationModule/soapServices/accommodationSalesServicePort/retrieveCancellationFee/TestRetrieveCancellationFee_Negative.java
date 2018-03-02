@@ -11,8 +11,6 @@ import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ScheduledEventReservation;
-import com.disney.utils.dataFactory.staging.bookSEReservation.ShowDiningReservation;
 
 public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest {
     private CheckInHelper checkedInHelper;
@@ -102,24 +100,21 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
     public void TestRetrieveCancellationFee_NullIdentiyDetailsExtRef() { // NPE ISSUE ON BOARD Task TK-670913
         String date = Randomness.generateCurrentXMLDate();
-        String refType = "RESERVATION";
-        String refNum = "875hhg03hg30hg";
-        String refSource = "DPMSProperty";
         String idLevel = "TravelPlanSegment";
-        String faultString = "Travel Plan Segment Should not be NULL";
+        String faultString = "External Reference Number is missing";
 
         RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
         fee.setCancelDate(date);
         fee.setID(BaseSoapCommands.REMOVE_NODE.toString());
-        fee.setReferenceType(refType);
-        fee.setReferenceNumber(refNum);
-        fee.setReferenceSource(refSource);
+        fee.setReferenceType(BaseSoapCommands.REMOVE_NODE.toString());
+        fee.setReferenceNumber(BaseSoapCommands.REMOVE_NODE.toString());
+        fee.setReferenceSource(BaseSoapCommands.REMOVE_NODE.toString());
         fee.setReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
         fee.setIdentityLevel(idLevel);
         fee.sendRequest();
 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.TRAVEL_PLAN_SEGMENT_NOT_FOUND);
+        validateApplicationError(fee, AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
@@ -200,27 +195,4 @@ public class TestRetrieveCancellationFee_Negative extends AccommodationBaseTest 
         TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
         validateApplicationError(fee, AccommodationErrorCode.CANNOT_CALCULATE_CANCEL_FEE);
     }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveCancellationFee", "negative" })
-    public void TestRetrieveCancellationFee_DiningOnly() {
-        String date = Randomness.generateCurrentXMLDate();
-        String idLevel = "TravelPlanSegment";
-        String faultString = "Travel Plan Segment Should not be NULL";
-
-        ScheduledEventReservation res = new ShowDiningReservation("Latest");
-        res.book(ScheduledEventReservation.ONECOMPONENTSNOADDONS);
-        // res.folio().settlement().createSettlementMethod(FolioInterfaceSettlement.defaultSettlementScenario); // Omit this line to get one without a CC
-        String tpsID = res.getConfirmationNumber();
-
-        RetrieveCancellationFee fee = new RetrieveCancellationFee(environment);
-        fee.setCancelDate(date);
-        fee.setID(tpsID);
-        fee.setIdentityLevel(idLevel);
-        fee.setRequestNodeValueByXPath("/Envelope/Body/retrieveCancellationFee/request/identityDetails/externalReferenceDetail", BaseSoapCommands.REMOVE_NODE.toString());
-        fee.sendRequest();
-
-        TestReporter.assertTrue(fee.getFaultString().replaceAll("\\s", "").contains(faultString.replaceAll("\\s", "")), "Verify that the fault string [" + fee.getFaultString() + "] is that which is expected [" + faultString + "].");
-        validateApplicationError(fee, AccommodationErrorCode.TRAVEL_PLAN_SEGMENT_NOT_FOUND);
-    }
-
 }

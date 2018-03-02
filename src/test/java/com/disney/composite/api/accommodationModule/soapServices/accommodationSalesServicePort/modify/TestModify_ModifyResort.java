@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestModify_ModifyResort extends AccommodationBaseTest {
@@ -90,6 +91,8 @@ public class TestModify_ModifyResort extends AccommodationBaseTest {
 
         validations.validateResortAndRoomType(modify.getTravelPlanId(), getFacilityId(), getRoomTypeCode());
         validations.validateAreaPeriod(modify.getTravelPlanId(), getArrivalDate(), getDepartureDate());
+
+        Sleeper.sleep(10000);
         validations.validateTPV3(tpId, "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1, "N", "NULL", getFacilityId());
 
         // Validate the Old to the New

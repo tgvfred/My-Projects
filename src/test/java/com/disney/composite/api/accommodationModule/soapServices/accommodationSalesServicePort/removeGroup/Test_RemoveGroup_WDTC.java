@@ -9,7 +9,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.TestReporter;
 
-public class Test_RemoveGroup_libgo extends AccommodationBaseTest {
+public class Test_RemoveGroup_WDTC extends AccommodationBaseTest {
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -21,13 +21,13 @@ public class Test_RemoveGroup_libgo extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        setIsLibgoBooking(true);
+        setIsWdtcBooking(true);
         bookReservation();
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationsales", "removeGroup" })
-    public void testRemoveGroup_libgo() {
+    public void testRemoveGroup_WDTC() {
         RemoveGroup removeGroup = new RemoveGroup(environment);
         removeGroup.setExternalReferenceInfo("01905", getExternalRefNumber(), getExternalRefSource());
         removeGroup.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
