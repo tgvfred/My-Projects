@@ -8,6 +8,7 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesCompone
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -21,7 +22,7 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(10);
+        setDaysOut(0);
         setNights(1); //
         setResortCode("1S");
         setRoomTypeCode("SA");
@@ -33,8 +34,8 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         firstBooking = getBook();
 
         // book second reservation.
-        setDaysOut(40);
-        setNights(2);
+        setDaysOut(0);
+        setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         isComo.set("true");
@@ -62,14 +63,14 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         String firstDetailShared = "false";
         String firstBasePrice = "152.0";
         String firstGuestAge = "49";
-        String firstPackageCode = "Q747P";
+        String firstPackageCode = getPackageCode();
         String firstResortCode = getBook().getResortCode();
         String guest1FirstName = "Elijah";
         String guest1LastName = "Holland";
         String firstDontMail = "false";
         String firstDontPhone = "false";
         String firstActive = "false";
-        String firstRoomTypeCode = "SA";
+        String firstRoomTypeCode = getRoomTypeCode();
         String firstRsrReservation = "false";
         String firstShared = "false";
         String firstGuestPurposeOfVisit = "Leisure";
@@ -80,14 +81,14 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         String secondDetailShared = "false";
         String secondBasePrice = "152.0";
         String secondGuestAge = "49";
-        String secondPackageCode = "Q747P";
+        String secondPackageCode = getPackageCode();
         String secondResortCode = getBook().getResortCode();
         String guest2FirstName = "Elijah";
         String guest2LastName = "Holland";
         String secondDontMail = "false";
         String secondDontPhone = "false";
         String secondActive = "false";
-        String secondRoomTypeCode = "SA";
+        String secondRoomTypeCode = getRoomTypeCode();
         String secondRsrReservation = "false";
         String secondShared = "false";
         String secondGuestPurposeOfVisit = "Leisure";
@@ -125,6 +126,14 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setTravelStatus("1", "BOOKED");
         unshare.setShared("1", firstShared);
         unshare.setUnsharedRoomTpsId("1", firstBooking.getTravelPlanSegmentId());
+        // unshare.setLocationId("1", getLocationId());
+        // getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails",
+        // BaseSoapCommands.ADD_NODE.commandAppend("externalReferences"));
+        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[1]/unSharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
+        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[1]/unSharedRoomDetail/locationId", getLocationId());
+        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails", BaseSoapCommands.REMOVE_NODE.toString());
 
         // second unshare
         unshare.setBookingDate("2", date(0));
@@ -158,6 +167,13 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setTravelStatus("2", "BOOKED");
         unshare.setShared("2", secondShared);
         unshare.setUnsharedRoomTpsId("2", firstBooking.getTravelPlanSegmentId());
+        // unshare.setLocationId("2", getLocationId());
+        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
+        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/locationId", getLocationId());
+        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails", BaseSoapCommands.REMOVE_NODE.toString());
+
         unshare.sendRequest();
 
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "An error occurred sending the request: " + unshare.getFaultString(), unshare);

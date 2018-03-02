@@ -75,6 +75,10 @@ public class UnshareAccommodations extends AccommodationSalesComponentService {
         setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[" + index + "]/unSharedRoomDetail/inventoryStatus", value);
     }
 
+    public void setLocationId(String index, String value) {
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[" + index + "]/unSharedRoomDetail/locationId", value);
+    }
+
     public void setModificationDate(String index, String value) {
         setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[" + index + "]/unSharedRoomDetail/modificationDate", value);
     }
