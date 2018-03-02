@@ -111,4 +111,35 @@ public class ShareAccommodations extends AccommodationSalesComponentService {
     public void setSpecialNeedsRequested(String value) {
         setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/specialNeedsRequested", value);
     }
+
+    public String getTcgIndex1() {
+
+        return getResponseNodeValueByXPath("Envelope/Body/shareAccommodationsResponse/return/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getTcgIndex2() {
+
+        return getResponseNodeValueByXPath("Envelope/Body/shareAccommodationsResponse/return/shareChainDetails/shareRoomDetails[2]/sharedRoomDetail/travelComponentGroupingId");
+    }
+
+    public String getTcIndex1() {
+
+        return getResponseNodeValueByXPath("Envelope/Body/shareAccommodationsResponse/return/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelComponentId");
+    }
+
+    public String getTcIndex2() {
+
+        return getResponseNodeValueByXPath("Envelope/Body/shareAccommodationsResponse/return/shareChainDetails/shareRoomDetails[2]/sharedRoomDetail/travelComponentId");
+    }
+
+    public String getBookingDate() {
+
+        return getResponseNodeValueByXPath("Envelope/Body/shareAccommodationsResponse/return/shareChainDetails/shareRoomDetails/sharedRoomDetail/bookingDate");
+    }
+
+    public String getTravelStatus() {
+
+        return getResponseNodeValueByXPath("Envelope/Body/shareAccommodationsResponse/return/shareChainDetails/shareRoomDetails/sharedRoomDetail/travelStatus");
+    }
+
 }
