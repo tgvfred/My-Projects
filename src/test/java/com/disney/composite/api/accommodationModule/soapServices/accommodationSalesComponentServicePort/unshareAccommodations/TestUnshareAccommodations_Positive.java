@@ -20,7 +20,7 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
     public void setup(String environment) {
         setEnvironment(environment);
         setDaysOut(10);
-        setNights(1);
+        setNights(1); //
         setResortCode("1S");
         setRoomTypeCode("SA");
         setArrivalDate(getDaysOut());
