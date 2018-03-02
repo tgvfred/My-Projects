@@ -24,6 +24,9 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
     private String firstTCG;
     private String firstTC;
     private String firstTPS;
+    private String firstRC;
+    private String firstRS;
+    private String book;
 
     @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
@@ -41,6 +44,9 @@ public class TestShare_twoTcg extends AccommodationBaseTest {
         firstTCG = getBook().getTravelComponentGroupingId();
         firstTC = getBook().getTravelComponentId();
         firstTPS = getBook().getTravelPlanSegmentId();
+        firstRC = getBook().getRoomTypeCode();
+        firstRS = getBook().getResortCode();
+        book = getBook().getResponse();
         captureFirstOwnerId();
 
         bookReservation();
