@@ -5,6 +5,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.ShareAccommodations;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveRates;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -27,7 +28,9 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
 
         setEnvironment(environment);
         isComo.set("false");
+
         daysOut.set(0);
+
         nights.set(1);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
@@ -39,7 +42,7 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
         firstTPS = getBook().getTravelPlanSegmentId();
         firstRC = getBook().getRoomTypeCode();
         firstRS = getBook().getResortCode();
-
+        // System.out.println(getBook().getResponse());
         bookReservation();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
     }
@@ -47,9 +50,17 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "shareAccommodations" })
     public void test_shareAccommodations_SampleRQ() {
 
+        RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
+        retrieveRates.setTravelComponentGroupingId(firstTCG);
+        // retrieveRates.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        retrieveRates.sendRequest();
+        TestReporter.logAPI(!retrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving rates", retrieveRates);
+
+        System.out.println(retrieveRates.getResponse());
+
         ShareAccommodations share = new ShareAccommodations(environment);
-        getBook().getTotalRate();
-        share.setBookingDate(getBook().getStartDate());
+
+        share.setBookingDate(getBook().getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/bookingDate"));
         share.setFreezeId("0");
         share.setGuaranteeStatus("None");
         share.setInventoryStatus("Unassigned");
@@ -74,7 +85,18 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/InventoryTrackingId", BaseSoapCommands.REMOVE_NODE.toString());
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/modificationDate", BaseSoapCommands.REMOVE_NODE.toString());
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateCategoryCode", BaseSoapCommands.REMOVE_NODE.toString());
-        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails", BaseSoapCommands.REMOVE_NODE.toString());
+
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails/additionalCharge", retrieveRates.getAdditionalCharge());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails/additionalChargeOverridden", "false");
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails/basePrice", retrieveRates.getBasePrice());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails/rackRate", BaseSoapCommands.REMOVE_NODE.toString());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails/date", getBook().getStartDate());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails/dayCount", retrieveRates.getDayCount());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails/overidden", retrieveRates.getRateDetailsOveridden());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails/shared", retrieveRates.getShared());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails/netPrice", "0.0");
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/rateDetails/pointsValue", "0");
+
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/roomNumber", BaseSoapCommands.REMOVE_NODE.toString());
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/roomReservationDetail/comments", BaseSoapCommands.REMOVE_NODE.toString());
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations/roomReservationDetail/guestReferenceDetails/guest/suffix", BaseSoapCommands.REMOVE_NODE.toString());
@@ -125,7 +147,7 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
 
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request", BaseSoapCommands.ADD_NODE.commandAppend("accommodations"));
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("bookingDate"));
-        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/bookingDate", getBook().getStartDate());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/bookingDate", getBook().getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/bookingDate"));
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("guaranteeStatus"));
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/guaranteeStatus", "None");
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("overideFreeze"));
@@ -133,7 +155,30 @@ public class Test_shareAccommodations_SampleRequest extends AccommodationBaseTes
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("packageCode"));
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/packageCode", getPackageCode());
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("resortCode"));
+
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("rateDetails"));
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails", BaseSoapCommands.ADD_NODE.commandAppend("additionalCharge"));
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails/additionalCharge", "0.0");
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails", BaseSoapCommands.ADD_NODE.commandAppend("additionalChargeOverridden"));
+
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails/additionalChargeOverridden", "false");
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails", BaseSoapCommands.ADD_NODE.commandAppend("basePrice"));
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails/basePrice", retrieveRates.getBasePrice());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails", BaseSoapCommands.ADD_NODE.commandAppend("date"));
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails/date", getBook().getStartDate());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails", BaseSoapCommands.ADD_NODE.commandAppend("dayCount"));
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails/dayCount", retrieveRates.getDayCount());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails", BaseSoapCommands.ADD_NODE.commandAppend("overidden"));
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails/overidden", retrieveRates.getRateDetailsOveridden());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails", BaseSoapCommands.ADD_NODE.commandAppend("shared"));
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails/shared", retrieveRates.getShared());
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails", BaseSoapCommands.ADD_NODE.commandAppend("netPrice"));
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails/netPrice", "0.0");
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails", BaseSoapCommands.ADD_NODE.commandAppend("pointsValue"));
+        share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/rateDetails/pointsValue", "0");
+
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/resortCode", getBook().getResortCode());
+
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]", BaseSoapCommands.ADD_NODE.commandAppend("resortPeriod"));
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/resortPeriod", BaseSoapCommands.ADD_NODE.commandAppend("endDate"));
         share.setRequestNodeValueByXPath("Envelope/Body/shareAccommodations/request/accommodations[2]/resortPeriod/endDate", getBook().getEndDate());

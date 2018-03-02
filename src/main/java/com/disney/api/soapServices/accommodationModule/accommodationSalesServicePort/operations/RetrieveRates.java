@@ -41,6 +41,10 @@ public class RetrieveRates extends AccommodationSalesServicePort {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/ratedetails/additionalChargeOverridden");
     }
 
+    public String getDate() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/ratedetails/date");
+    }
+
     public String getBillCode() {
         return getResponseNodeValueByXPath("/Envelope/Body/retrieveRatesResponse/accomodationRatesDetail/billCode");
     }
