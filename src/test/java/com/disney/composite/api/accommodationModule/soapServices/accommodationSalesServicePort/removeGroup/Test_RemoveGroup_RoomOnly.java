@@ -1,40 +1,23 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.removeGroup;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.helpers.StageRemoveGroupDataHelper;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RemoveGroup;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
 
-public class Test_RemoveGroup_libgo extends AccommodationBaseTest {
-
-    @Override
-    @BeforeMethod(alwaysRun = true)
-    @Parameters("environment")
-    public void setup(String environment) {
-        setEnvironment(environment);
-        setDaysOut(0);
-        setNights(1);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getDaysOut() + getNights());
-        setValues(getEnvironment());
-        setIsLibgoBooking(true);
-        bookReservation();
-
-    }
+public class Test_RemoveGroup_RoomOnly extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationsales", "removeGroup" })
-    public void testRemoveGroup_libgo() {
+    public void test_RemoveGroup_RoomOnly() {
         RemoveGroup removeGroup = new RemoveGroup(environment);
-        removeGroup.setExternalReferenceInfo("01905", getExternalRefNumber(), getExternalRefSource());
+        removeGroup.setRequestNodeValueByXPath("/Envelope/Body/removeGroup/request/externalReference", BaseSoapCommands.REMOVE_NODE.toString());
         removeGroup.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         removeGroup.sendRequest();
 
         TestReporter.logAPI(!removeGroup.getResponseStatusCode().equals("200"), "There was an error in response: " + removeGroup.getFaultString(), removeGroup);
-
         StageRemoveGroupDataHelper.validateResMgmtInfo(getBook());
         StageRemoveGroupDataHelper.validateResHistoryInfo(getBook());
         StageRemoveGroupDataHelper.validateTcGuestInfo(getBook());
