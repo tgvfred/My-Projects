@@ -6,8 +6,10 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.UnshareAccommodations;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
@@ -42,6 +44,17 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "unshareAccommodations" })
     public void testUnshareAccommodations_Positive() {
+
+        Share share = new Share(environment, "Main_oneTcg");
+        share.setTravelComponentGroupingId(firstBooking.getTravelComponentGroupingId());
+        share.addSharedComponent();
+        share.setSecondTravelComponentGroupingId(secondBooking.getTravelComponentGroupingId());
+
+        // Add a wait to avoid async issues
+        Sleeper.sleep(5000);
+
+        share.sendRequest();
+        TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
         String firstOverrideFreeze = "false";
         String firstaddChargeOverride = "false";
