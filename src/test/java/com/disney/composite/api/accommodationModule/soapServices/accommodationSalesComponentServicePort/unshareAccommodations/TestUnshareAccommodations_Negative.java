@@ -10,7 +10,7 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
 public class TestUnshareAccommodations_Negative extends AccommodationBaseTest {
-private String faultString = "Required parameters are missing";
+    private String faultString = "Required parameters are missing";
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "unshareAccommodations", "negative" })
     public void testUnshareAccommodations_NullRequest() {

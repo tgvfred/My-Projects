@@ -5,9 +5,9 @@
          <!--Optional:-->
          <request>
             <!--1 or more repetitions:-->
-            <shareChains>
+            <shareChains/>
+            <unsharedAccommodations>
                <!--Zero or more repetitions:-->
-               <shareRoomDetails>
                   <!--Optional:-->
                   <unSharedRoomDetail>
                      <!--Optional:-->
@@ -1138,8 +1138,8 @@
                      <dob>?</dob>
                   </guestDetail>
                   <travelPlanSegmentId>?</travelPlanSegmentId>
-               </shareRoomDetails>
-            </shareChains>
+             
+            </unsharedAccommodations>
             <!--1 or more repetitions:-->
             <unsharedAccommodations>
                <!--Optional:-->

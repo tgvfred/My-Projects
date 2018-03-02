@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.soapServices.accommodationModule.accommodationSalesComponentService.operations.UnshareAccommodations;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveRates;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.core.BaseSoapCommands;
@@ -57,6 +58,12 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         share.sendRequest();
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
+        RetrieveRates retrieveRates = new RetrieveRates(environment, "retrieveRates");
+        retrieveRates.setTravelComponentGroupingId(secondBooking.getTravelComponentGroupingId());
+
+        retrieveRates.sendRequest();
+        TestReporter.logAPI(!retrieveRates.getResponseStatusCode().equals("200"), "An error occurred retrieving rates", retrieveRates);
+
         String firstOverrideFreeze = "false";
         String firstaddChargeOverride = "false";
         String firstDetailsOverridden = "false";
@@ -95,6 +102,8 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
 
         // first unshare
         UnshareAccommodations unshare = new UnshareAccommodations(environment, "Main");
+
+        System.out.println(unshare.getRequest());
         unshare.setBookingDate("1", date(0));
         unshare.setOverrideFreeze("1", firstOverrideFreeze);
         unshare.setPackageCode("1", firstPackageCode);
