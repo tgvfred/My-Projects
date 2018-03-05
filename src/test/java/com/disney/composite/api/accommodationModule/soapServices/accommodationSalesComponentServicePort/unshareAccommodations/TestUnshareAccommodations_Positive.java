@@ -9,13 +9,18 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveRates;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.UnShareHelper;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
 public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
+    private UnshareAccommodations unshare;
+    private UnShareHelper helper;
     private ReplaceAllForTravelPlanSegment firstBooking;
     private ReplaceAllForTravelPlanSegment secondBooking;
+    private String firstTC;
+    private String firstTCG;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -30,6 +35,8 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         isComo.set("true");
         bookReservation();
         firstBooking = getBook();
+        firstTC = firstBooking.getTravelComponentId();
+        firstTCG = firstBooking.getTravelComponentGroupingId();
 
         // book second reservation.
         setDaysOut(0);
@@ -98,7 +105,7 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         String secondGuestPurposeOfVisit = "Leisure";
 
         // first unshare
-        UnshareAccommodations unshare = new UnshareAccommodations(environment, "Main");
+        unshare = new UnshareAccommodations(environment, "Main");
 
         unshare.setBookingDate("1", date(0));
         unshare.setOverrideFreeze("1", firstOverrideFreeze);
@@ -132,17 +139,6 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setShared("1", firstShared);
         unshare.setUnsharedRoomTpsId("1", firstBooking.getTravelPlanSegmentId());
 
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[1]/unSharedRoomDetail",
-        // BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[1]/unSharedRoomDetail/locationId",
-        // getLocationId());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails",
-        // BaseSoapCommands.REMOVE_NODE.toString());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails",
-        // BaseSoapCommands.REMOVE_NODE.toString());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails",
-        // BaseSoapCommands.REMOVE_NODE.toString());
-
         // second unshare
         unshare.setBookingDate("2", date(0));
         unshare.setOverrideFreeze("2", secondOverrideFreeze);
@@ -175,22 +171,23 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setTravelStatus("2", "BOOKED");
         unshare.setShared("2", secondShared);
         unshare.setUnsharedRoomTpsId("2", firstBooking.getTravelPlanSegmentId());
-
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail",
-        // BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/locationId",
-        // getLocationId());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails",
-        // BaseSoapCommands.REMOVE_NODE.toString());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails",
-        // BaseSoapCommands.REMOVE_NODE.toString());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails",
-        // BaseSoapCommands.REMOVE_NODE.toString());
-
         unshare.sendRequest();
 
         TestReporter.logAPI(!unshare.getResponseStatusCode().equals("200"), "An error occurred sending the request: " + unshare.getFaultString(), unshare);
+        validations();
+    }
 
+    public void validations() {
+        UnShareHelper helper = new UnShareHelper(getEnvironment());
+
+        int numExpectedRecords = 3;
+        helper.validateReservationHistory(numExpectedRecords, getBook().getTravelPlanSegmentId());
+        helper.validateUnshare(numExpectedRecords, getBook().getTravelPlanSegmentId());
+
+        int numExpectedRecords2 = 1;
+        helper.validateShareInFlag(numExpectedRecords2, getBook().getTravelComponentGroupingId());
+
+        helper.validateMultipleOwnerIds(firstTCG, getBook().getTravelComponentGroupingId());
     }
 
     public String date(int daysOut) {
