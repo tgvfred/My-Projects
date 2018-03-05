@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestShareAccommodation_nullAccommodation_Negative" parallel="methods" thread-count="20" configfailurepolicy="continue" data-provider-thread-count="5">
+	<parameter name="environment" value="latest_cm" />
+	<test name="TestShareAccommodation_nullAccommodation_Negative">
+		<classes>
+			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.shareAccommodations.Test_shareAccommodations_nullAccommodation_Negative'></class>
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
