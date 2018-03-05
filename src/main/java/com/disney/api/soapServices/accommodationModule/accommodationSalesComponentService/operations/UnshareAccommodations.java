@@ -288,7 +288,7 @@ public class UnshareAccommodations extends AccommodationSalesComponentService {
     }
 
     public void setUnsharedRoomTpsId(String index, String value) {
-        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/unsharedAccommodations/shareRoomDetails[" + index + "]/travelPlanSegmentId", value);
+        setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/unsharedAccommodations/travelPlanSegmentId[" + index + "]", value);
     }
 
 }
