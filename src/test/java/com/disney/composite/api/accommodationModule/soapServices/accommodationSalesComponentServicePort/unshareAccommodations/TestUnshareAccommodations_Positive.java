@@ -9,7 +9,6 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveRates;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Share;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
@@ -103,7 +102,7 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         // first unshare
         UnshareAccommodations unshare = new UnshareAccommodations(environment, "Main");
 
-        System.out.println(unshare.getRequest());
+        // System.out.println(unshare.getRequest());
         unshare.setBookingDate("1", date(0));
         unshare.setOverrideFreeze("1", firstOverrideFreeze);
         unshare.setPackageCode("1", firstPackageCode);
@@ -135,6 +134,7 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setTravelStatus("1", "BOOKED");
         unshare.setShared("1", firstShared);
         unshare.setUnsharedRoomTpsId("1", firstBooking.getTravelPlanSegmentId());
+        System.out.println(unshare.getRequest());
         // unshare.setLocationId("1", getLocationId());
         // getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails",
         // BaseSoapCommands.ADD_NODE.commandAppend("externalReferences"));
@@ -177,11 +177,11 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setShared("2", secondShared);
         unshare.setUnsharedRoomTpsId("2", firstBooking.getTravelPlanSegmentId());
         // unshare.setLocationId("2", getLocationId());
-        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
-        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/locationId", getLocationId());
-        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails", BaseSoapCommands.REMOVE_NODE.toString());
-        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails", BaseSoapCommands.REMOVE_NODE.toString());
-        unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/locationId", getLocationId());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails", BaseSoapCommands.REMOVE_NODE.toString());
 
         unshare.sendRequest();
 
