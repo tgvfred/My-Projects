@@ -29,13 +29,14 @@ public class TestRetrieve_shared extends AccommodationBaseTest {
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
         bookReservation();
-
+        Sleeper.sleep(15000);
         tcg = getBook().getTravelComponentGroupingId();
         roomTypeCode = getRoomTypeCode();
         resortCode = getResortCode();
         setSendRequest(false);
 
         bookReservation();
+        Sleeper.sleep(15000);
         getBook().setRoomDetailsRoomTypeCode(roomTypeCode);
         getBook().setRoomDetailsResortCode(resortCode);
         getBook().sendRequest();
@@ -52,6 +53,7 @@ public class TestRetrieve_shared extends AccommodationBaseTest {
         share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(secondTcg);
         share.sendRequest();
+        Sleeper.sleep(15000);
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second TPS: " + share.getFaultString(), share);
 
         Retrieve retrieve = new Retrieve(environment, "ByTP_ID");
