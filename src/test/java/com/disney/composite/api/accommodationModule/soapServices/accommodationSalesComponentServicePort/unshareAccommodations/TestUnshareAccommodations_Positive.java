@@ -24,8 +24,6 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         setEnvironment(environment);
         setDaysOut(0);
         setNights(1); //
-        setResortCode("1S");
-        setRoomTypeCode("SA");
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
@@ -67,7 +65,7 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         String firstaddChargeOverride = "false";
         String firstDetailsOverridden = "false";
         String firstDetailShared = "false";
-        String firstBasePrice = "152.0";
+        String firstBasePrice = retrieveRates.getBasePrice();
         String firstGuestAge = "49";
         String firstPackageCode = getPackageCode();
         String firstResortCode = getBook().getResortCode();
@@ -85,7 +83,7 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         String secondaddChargeOverride = "false";
         String secondDetailsOverridden = "false";
         String secondDetailShared = "false";
-        String secondBasePrice = "152.0";
+        String secondBasePrice = retrieveRates.getBasePrice();
         String secondGuestAge = "49";
         String secondPackageCode = getPackageCode();
         String secondResortCode = getBook().getResortCode();
@@ -102,18 +100,17 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         // first unshare
         UnshareAccommodations unshare = new UnshareAccommodations(environment, "Main");
 
-        // System.out.println(unshare.getRequest());
         unshare.setBookingDate("1", date(0));
         unshare.setOverrideFreeze("1", firstOverrideFreeze);
         unshare.setPackageCode("1", firstPackageCode);
         unshare.setResortCode("1", firstResortCode);
         unshare.setAdditionalChargeOverride("1", firstaddChargeOverride);
         unshare.setRateDetailsBasePrice("1", firstBasePrice);
-        unshare.setRateDetailsDate("1", date(2));
+        unshare.setRateDetailsDate("1", date(0));
         unshare.setRateDetailsOverriden("1", firstDetailsOverridden);
         unshare.setRateDetailsShared("1", firstDetailShared);
-        unshare.setResortEndDate("1", date(5));
-        unshare.setResortStartDate("1", date(4));
+        unshare.setResortEndDate("1", getDepartureDate());
+        unshare.setResortStartDate("1", getArrivalDate());
         unshare.setGuestAge("1", firstGuestAge);
         unshare.setGuestType("1", "ADULT");
         unshare.setGuestFirstName("1", guest1FirstName);
@@ -134,15 +131,20 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setTravelStatus("1", "BOOKED");
         unshare.setShared("1", firstShared);
         unshare.setUnsharedRoomTpsId("1", firstBooking.getTravelPlanSegmentId());
-        System.out.println(unshare.getRequest());
+
         // unshare.setLocationId("1", getLocationId());
         // getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails",
         // BaseSoapCommands.ADD_NODE.commandAppend("externalReferences"));
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[1]/unSharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[1]/unSharedRoomDetail/locationId", getLocationId());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails", BaseSoapCommands.REMOVE_NODE.toString());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails", BaseSoapCommands.REMOVE_NODE.toString());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[1]/unSharedRoomDetail",
+        // BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[1]/unSharedRoomDetail/locationId",
+        // getLocationId());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails",
+        // BaseSoapCommands.REMOVE_NODE.toString());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails",
+        // BaseSoapCommands.REMOVE_NODE.toString());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails",
+        // BaseSoapCommands.REMOVE_NODE.toString());
 
         // second unshare
         unshare.setBookingDate("2", date(0));
@@ -151,11 +153,11 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setResortCode("2", secondResortCode);
         unshare.setAdditionalChargeOverride("2", secondaddChargeOverride);
         unshare.setRateDetailsBasePrice("2", secondBasePrice);
-        unshare.setRateDetailsDate("2", date(2));
+        unshare.setRateDetailsDate("2", date(0));
         unshare.setRateDetailsOverriden("2", secondDetailsOverridden);
         unshare.setRateDetailsShared("2", secondDetailShared);
-        unshare.setResortEndDate("2", date(5));
-        unshare.setResortStartDate("2", date(4));
+        unshare.setResortEndDate("2", getDepartureDate());
+        unshare.setResortStartDate("2", getArrivalDate());
         unshare.setGuestAge("2", secondGuestAge);
         unshare.setGuestType("2", "ADULT");
         unshare.setGuestFirstName("2", guest2FirstName);
@@ -177,11 +179,16 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setShared("2", secondShared);
         unshare.setUnsharedRoomTpsId("2", firstBooking.getTravelPlanSegmentId());
         // unshare.setLocationId("2", getLocationId());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/locationId", getLocationId());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails", BaseSoapCommands.REMOVE_NODE.toString());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails", BaseSoapCommands.REMOVE_NODE.toString());
-        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails", BaseSoapCommands.REMOVE_NODE.toString());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail",
+        // BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/locationId",
+        // getLocationId());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/addressDetails",
+        // BaseSoapCommands.REMOVE_NODE.toString());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/emailDetails",
+        // BaseSoapCommands.REMOVE_NODE.toString());
+        // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/roomReservationDetail/guestReferenceDetails/guest/phoneDetails",
+        // BaseSoapCommands.REMOVE_NODE.toString());
 
         unshare.sendRequest();
 
