@@ -4,7 +4,7 @@
 	<parameter name="environment" value="latest" />
 	<test name="TestUnshareAccommodations_Positive">
 		<classes>
-			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.unshareAccommodations.TestUnshareAccommodations_Positive'></class>
+			<class name='com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.unshareAccommodations.TestUnshareAccommodations_oneAdaRes'></class>
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.unshareAccommodations;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -14,7 +15,7 @@ import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 
-public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
+public class TestUnshareAccommodations_oneAdaRes extends AccommodationBaseTest {
     private UnshareAccommodations unshare;
     private UnShareHelper helper;
     private ReplaceAllForTravelPlanSegment firstBooking;
@@ -44,6 +45,7 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         isComo.set("true");
+        setIsADA(true);
         bookReservation();
         secondBooking = getBook();
     }
@@ -192,6 +194,16 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
 
     public String date(int daysOut) {
         return Randomness.generateCurrentXMLDatetime(daysOut);
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 
 }
