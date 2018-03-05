@@ -132,9 +132,6 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setShared("1", firstShared);
         unshare.setUnsharedRoomTpsId("1", firstBooking.getTravelPlanSegmentId());
 
-        // unshare.setLocationId("1", getLocationId());
-        // getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails",
-        // BaseSoapCommands.ADD_NODE.commandAppend("externalReferences"));
         // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[1]/unSharedRoomDetail",
         // BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
         // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[1]/unSharedRoomDetail/locationId",
@@ -178,7 +175,7 @@ public class TestUnshareAccommodations_Positive extends AccommodationBaseTest {
         unshare.setTravelStatus("2", "BOOKED");
         unshare.setShared("2", secondShared);
         unshare.setUnsharedRoomTpsId("2", firstBooking.getTravelPlanSegmentId());
-        // unshare.setLocationId("2", getLocationId());
+
         // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail",
         // BaseSoapCommands.ADD_NODE.commandAppend("locationId"));
         // unshare.setRequestNodeValueByXPath("/Envelope/Body/unshareAccommodations/request/shareChains/shareRoomDetails[2]/unSharedRoomDetail/locationId",
