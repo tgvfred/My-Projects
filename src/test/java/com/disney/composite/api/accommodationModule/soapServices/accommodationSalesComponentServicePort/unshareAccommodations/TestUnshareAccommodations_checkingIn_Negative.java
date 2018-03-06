@@ -1,5 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.unshareAccommodations;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -188,5 +189,15 @@ public class TestUnshareAccommodations_checkingIn_Negative extends Accommodation
 
     public String date(int daysOut) {
         return Randomness.generateCurrentXMLDatetime(daysOut);
+    }
+
+    @Override
+    @AfterMethod(alwaysRun = true)
+    public void teardown() {
+        try {
+            cancel(firstTCG);
+            cancel(getBook().getTravelComponentGroupingId());
+        } catch (Exception e) {
+        }
     }
 }
