@@ -14,7 +14,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.testng.Reporter;
@@ -891,7 +890,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             TestReporter.logDebug("[ useLocalXml] set to [ true ], xml repo is [ " + xmlRepoUrl + " ]");
             String token = "P2FjY2Vzc190b2tlbj00ZmExNzBlZjE3NTA2MTM1ZGJkZTFiMzdjYjlhZDRlNDQ1MjVjN2Vm";
             String url = "https://github.disney.com/api/v3/repos/phlej001/TestDataOnDemand/contents/TestDataOnDemand/soap-xml-storage/{environment}/{service}/{operation}.xml" + Base64Coder.decodeString(token);
-            url = url.replace("{environment}", WordUtils.capitalize(getEnvironment().replace("_CM", "")));
+            url = url.replace("{environment}", StringUtils.capitalize(getEnvironment().replace("_CM", "")));
             url = url.replace("{service}", getService());
             url = url.replace("{operation}", scenario);
             xml = downloadXMLFromGit(url);
