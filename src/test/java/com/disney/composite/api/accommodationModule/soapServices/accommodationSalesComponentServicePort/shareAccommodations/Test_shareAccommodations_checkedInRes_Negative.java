@@ -14,7 +14,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class Test_shareAccommodations_checkedOutRes_Negative extends AccommodationBaseTest {
+public class Test_shareAccommodations_checkedInRes_Negative extends AccommodationBaseTest {
     String guestId;
     private CheckInHelper helper;
 
@@ -39,10 +39,9 @@ public class Test_shareAccommodations_checkedOutRes_Negative extends Accommodati
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "shareAccommodations" })
-    public void test_shareAccommodations_checkedOutRes_Negative() {
+    public void test_shareAccommodations_checkInRes_Negative() {
         helper = new CheckInHelper(getEnvironment(), getBook());
         helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-        helper.checkOut(getLocationId());
 
         // Add a wait to avoid async issues
 

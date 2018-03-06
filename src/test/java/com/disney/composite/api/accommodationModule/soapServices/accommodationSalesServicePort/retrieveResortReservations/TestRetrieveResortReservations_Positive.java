@@ -139,6 +139,7 @@ public class TestRetrieveResortReservations_Positive extends AccommodationBaseTe
                 + "join res_mgmt.tc c on b.tc_grp_nb = c.tc_grp_nb "
                 + "join res_mgmt.acm_cmpnt d on c.tc_id = d.acm_tc_id "
                 + "and a.TRVL_STS_NM = 'Booked' "
+                + "and c.TRVL_STS_NM not in ('Auto Cancelled','Cancelled','Past Visit', 'No Show', 'DF Checked Out', 'Not Arrived') "
                 + "and c.tc_typ_nm = 'AccommodationComponent' "
                 + "where rownum < 100 "
                 + "order by dbms_random.value");

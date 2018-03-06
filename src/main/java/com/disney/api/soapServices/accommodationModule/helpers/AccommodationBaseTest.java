@@ -14,7 +14,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.testng.Reporter;
@@ -891,7 +890,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             TestReporter.logDebug("[ useLocalXml] set to [ true ], xml repo is [ " + xmlRepoUrl + " ]");
             String token = "P2FjY2Vzc190b2tlbj00ZmExNzBlZjE3NTA2MTM1ZGJkZTFiMzdjYjlhZDRlNDQ1MjVjN2Vm";
             String url = "https://github.disney.com/api/v3/repos/phlej001/TestDataOnDemand/contents/TestDataOnDemand/soap-xml-storage/{environment}/{service}/{operation}.xml" + Base64Coder.decodeString(token);
-            url = url.replace("{environment}", WordUtils.capitalize(getEnvironment().replace("_CM", "")));
+            url = url.replace("{environment}", StringUtils.capitalize(getEnvironment().replace("_CM", "")));
             url = url.replace("{service}", getService());
             url = url.replace("{operation}", scenario);
             xml = downloadXMLFromGit(url);
@@ -1668,11 +1667,11 @@ public class AccommodationBaseTest extends BaseRestTest {
                 Database db = new Database(ProfileDatabase.getInfo(getEnvironment()));
                 Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getProfileInformationById(getProfileData().get(PROFILE_ID))));
                 TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that a profile is found in the DB for profile ID [" + getProfileData().get(PROFILE_ID) + "].");
-                getProfileData().put(PROFILE_CODE, rs.getValue("PRFL_VAL_CD"));
-                getProfileData().put(PROFILE_DESCRIPTION, rs.getValue("PRFL_VAL_DS"));
-                getProfileData().put(PROFILE_TYPE, rs.getValue("PRFL_TYP_NM"));
-                getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PRFL_RTE_TYP_NM"));
-                getProfileData().put(PROFILE_SELECTABLE, rs.getValue("SLCT_IN"));
+                getProfileData().put(PROFILE_CODE, rs.getValue("PROFILE_CODE"));
+                getProfileData().put(PROFILE_DESCRIPTION, rs.getValue("PROFILE_DESCRIPTION"));
+                getProfileData().put(PROFILE_TYPE, rs.getValue("PROFILE_TYPE"));
+                getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PROFILE_ROUTINGS_NAME"));
+                getProfileData().put(PROFILE_SELECTABLE, rs.getValue("PROFILE_SELECTABLE"));
                 getBook().setReservationDetail_Profiles(getProfileData());
             }
 
@@ -1930,20 +1929,11 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setLocationId(roomTypeAndFacInfo[index][5]);
 
                 String sql = null;
-                if (Environment.getBaseEnvironmentName(tempEnv).toLowerCase().equals("grumpy")) {
-                    sql = "select d.WRK_LOC_ID "
-                            + "from RSRC_INV.wrk_loc d "
-                            + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
-                            + "and d.TXN_ACCT_CTR_ID is not null "
-                            + "order by d.CREATE_DTS asc";
-                } else {
-                    sql = "select d.WRK_LOC_ID "
-                            + "from tfdb_3.wrk_loc d "
-                            + "where d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
-                            + "and d.TXN_ACCT_CTR_ID is not null "
-                            + "order by d.CREATE_DTS asc";
-                }
-                // System.out.println();
+                sql = "SELECT d.WRK_LOC_ID "
+                        + "FROM TFDB_3.WRK_LOC d "
+                        + "WHERE d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
+                        + "AND d.TXN_ACCT_CTR_ID IS NOT NULL "
+                        + "ORDER BY d.CREATE_DTS ASC";
                 Database db = new Database(FacilityDatabase.getInfo(Environment.getBaseEnvironmentName(tempEnv)));
                 Recordset rs = new Recordset(db.getResultSet(sql));
 

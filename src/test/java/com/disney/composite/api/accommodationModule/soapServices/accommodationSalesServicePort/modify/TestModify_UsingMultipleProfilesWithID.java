@@ -53,11 +53,11 @@ public class TestModify_UsingMultipleProfilesWithID extends AccommodationBaseTes
         Database db = new Database(ProfileDatabase.getInfo(getEnvironment()));
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getProfileInformationById(profileData.get(PROFILE_ID))));
         TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that a profile is found in the DB for profile ID [" + profileData.get(PROFILE_ID) + "].");
-        profileData.put(PROFILE_CODE, BaseSoapCommands.REMOVE_NODE.toString());
-        profileData.put(PROFILE_DESCRIPTION, rs.getValue("PRFL_VAL_DS"));
-        profileData.put(PROFILE_TYPE, rs.getValue("PRFL_TYP_NM"));
-        profileData.put(PROFILE_ROUTINGS_NAME, rs.getValue("PRFL_RTE_TYP_NM"));
-        profileData.put(PROFILE_SELECTABLE, rs.getValue("SLCT_IN"));
+        profileData.put(PROFILE_CODE, rs.getValue("PROFILE_CODE"));
+        profileData.put(PROFILE_DESCRIPTION, rs.getValue("PROFILE_DESCRIPTION"));
+        profileData.put(PROFILE_TYPE, rs.getValue("PROFILE_TYPE"));
+        profileData.put(PROFILE_ROUTINGS_NAME, rs.getValue("PROFILE_ROUTINGS_NAME"));
+        profileData.put(PROFILE_SELECTABLE, rs.getValue("PROFILE_SELECTABLE"));
         getBook().setReservationDetail_Profiles(profileData);
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/profiles[1]/code", BaseSoapCommands.REMOVE_NODE.toString());
         getBook().setTravelPlanId(tpId);

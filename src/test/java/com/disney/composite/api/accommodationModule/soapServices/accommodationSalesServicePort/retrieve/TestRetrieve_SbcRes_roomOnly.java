@@ -2,14 +2,18 @@ package com.disney.composite.api.accommodationModule.soapServices.accommodationS
 
 import org.testng.annotations.Test;
 
-import com.disney.api.helpers.OfferQueryHelper;
-import com.disney.api.helpers.RoomResHelper;
+import com.disney.api.mq.sbc.OfferQuery;
+import com.disney.api.mq.sbc.RoomInventoryDecrement;
+import com.disney.api.mq.sbc.RoomQuote;
+import com.disney.api.mq.sbc.RoomRes;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.RetrieveHelper;
 import com.disney.utils.Environment;
+import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class TestRetrieve_SbcRes_roomOnly extends AccommodationBaseTest {
 
@@ -78,15 +82,61 @@ public class TestRetrieve_SbcRes_roomOnly extends AccommodationBaseTest {
     }
 
     public void roomOnlyBooking() {
-        OfferQueryHelper offer = new OfferQueryHelper(Environment.getBaseEnvironmentName(getEnvironment()), "WDW", "RoomOnly", false);
-        RoomResHelper res = new RoomResHelper(Environment.getBaseEnvironmentName(getEnvironment()), "WDW", "Main", "1 Adult", offer.resortCode, offer.roomType, offer.packageCode);
+        HouseHold hh = new HouseHold(1);
+        hh.sendToApi(environment);
+
+        String startDayOut = "10";
+        String lengthOfStay = "2";
+        OfferQuery offer = new OfferQuery(environment, "WDW", "OfferQueryRQ_WDW_Dolphin", "offerQuery");
+
+        // Getting rid of any empty nodes and sending request
+        offer.removeEmptyGroups(offer);
+        offer.sendRequest();
+
+        TestReporter.logAPI(!offer.isSuccess(), "Failed to get Room Offer", offer);
+
+        // Requesting Room Quote
+        RoomQuote room = new RoomQuote(environment, "WDW", "Main");
+        room.setPackageCode(offer.getFirstAvailablePackageCode());
+        room.setFromDateInDaysOut(startDayOut);
+        room.setToDateInDaysOut(startDayOut, lengthOfStay);
+        room.setResortCode(offer.getFirstAvailableResort()); // Test failing at
+                                                             // this step
+        room.setRoomType(offer.getFirstAvailableRoom());
+        room.sendRequest();
+        TestReporter.logAPI(!room.isSuccess(), "Failed to get Room Quote", room);
+
+        // Requesting Freeze Room
+        RoomInventoryDecrement avail = new RoomInventoryDecrement(environment, "WDW");
+        avail.setLOS("3");
+        avail.setStartDate(Randomness.generateCurrentXMLDate(Integer.valueOf(startDayOut)));
+        avail.setEndDate(Randomness.generateCurrentXMLDate(Integer.valueOf(startDayOut) + Integer.valueOf(lengthOfStay)));
+        avail.setPackageCode(offer.getFirstAvailablePackageCode());
+        avail.setResortCode(offer.getFirstAvailableResort());
+        avail.setRoomType(offer.getFirstAvailableRoom());
+        avail.sendRequest();
+        TestReporter.logAPI(!avail.isSuccess(), "Failed to get Freeze Room", avail);
+
+        // Requesting Room Reservation
+        RoomRes res = new RoomRes(environment, "WDW", "Main");
+        res.setFreezeId(avail.getFreezeID());
+        res.setArrivalDaysOut(startDayOut);
+        res.setDepartureDaysOut(startDayOut, lengthOfStay);
+        res.setResortCode(offer.getFirstAvailableResort());
+        res.setRoomType(offer.getFirstAvailableRoom());
+        res.setDepositDueAmount(room.getMinimumDepositAmount());
+        res.setBalanceDueAmount(room.getNetAmount());
+        res.setPackageCode(offer.getFirstAvailablePackageCode());
+        res.setHouseholdInfo(hh);
+        res.sendRequest();
+        TestReporter.logAPI(!res.isSuccess(), "Failed to get Book Room", res);
         Sleeper.sleep(2000);
-        tpID = res.getRoomRes().getItineraryId();
-        firstName = res.getGuest().primaryGuest().getFirstName();
-        lastName = res.getGuest().primaryGuest().getLastName();
-        address = res.getGuest().primaryGuest().getAllAddresses().get(0).getAddress1();
-        email = res.getGuest().primaryGuest().getAllEmails().get(0).getEmail();
-        phone = res.getGuest().primaryGuest().getAllPhones().get(0).getNumber();
+        tpID = res.getItineraryId();
+        firstName = hh.primaryGuest().getFirstName();
+        lastName = hh.primaryGuest().getLastName();
+        address = hh.primaryGuest().primaryAddress().getAddress1();
+        email = hh.primaryGuest().primaryEmail().getEmail();
+        phone = hh.primaryGuest().primaryPhone().getNumber();
 
     }
 

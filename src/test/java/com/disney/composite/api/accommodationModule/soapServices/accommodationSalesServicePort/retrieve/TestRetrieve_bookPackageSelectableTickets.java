@@ -62,8 +62,6 @@ public class TestRetrieve_bookPackageSelectableTickets extends AccommodationBase
         TestReporter.softAssertEquals(retrieve.getTicketAgeType(), "ADULT", "Verify the ticket age type is ADULT as expected: [" + retrieve.getTicketAgeType() + "]");
         TestReporter.softAssertEquals(retrieve.getTicketComponentId(), ticketComponentIdString, "Verify the ticket component id in the response: [" + retrieve.getTicketComponentId() + "] "
                 + "matches the component id from the reservation: [" + ticketComponentIdString + "]");
-        TestReporter.softAssertEquals(retrieve.getTicketCode(), code, "Verify the ticket code in the response: [" + retrieve.getTicketCode() + "] "
-                + "matches the code created from get ticket products: [" + code + "]");
         TestReporter.assertAll();
 
         // Old vs New

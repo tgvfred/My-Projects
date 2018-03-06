@@ -1,6 +1,6 @@
 package com.disney.composite.api.accommodationModule.soapServices.accommodationSalesComponentServicePort.shareAccommodations;
 
-import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_SHARED;
+import static com.disney.api.soapServices.accommodationModule.applicationError.AccommodationErrorCode.ACCOMMODATION_INVALID_FOR_SHARE;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
@@ -14,7 +14,7 @@ import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 
-public class Test_shareAccommodations_checkedOutRes_Negative extends AccommodationBaseTest {
+public class Test_shareAccommodations_wholesaler_Negative extends AccommodationBaseTest {
     String guestId;
     private CheckInHelper helper;
 
@@ -29,6 +29,7 @@ public class Test_shareAccommodations_checkedOutRes_Negative extends Accommodati
         isComo.set("false");
         daysOut.set(0);
         nights.set(1);
+        setIsLibgoBooking(true);
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
         setValues();
@@ -39,10 +40,7 @@ public class Test_shareAccommodations_checkedOutRes_Negative extends Accommodati
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "shareAccommodations" })
-    public void test_shareAccommodations_checkedOutRes_Negative() {
-        helper = new CheckInHelper(getEnvironment(), getBook());
-        helper.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
-        helper.checkOut(getLocationId());
+    public void test_shareAccommodations_wholesaler_Negative() {
 
         // Add a wait to avoid async issues
 
@@ -264,7 +262,6 @@ public class Test_shareAccommodations_checkedOutRes_Negative extends Accommodati
         share.setShared("false");
         share.setSpecialNeedsRequested("0");
         share.sendRequest();
-        validateApplicationError(share, ACCOMMODATION_NOT_IN_BOOKED_STATUS_CANNOT_BE_SHARED);
-
+        validateApplicationError(share, ACCOMMODATION_INVALID_FOR_SHARE);
     }
 }
