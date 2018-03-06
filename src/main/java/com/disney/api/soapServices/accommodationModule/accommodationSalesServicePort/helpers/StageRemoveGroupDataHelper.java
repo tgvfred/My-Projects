@@ -133,6 +133,10 @@ public class StageRemoveGroupDataHelper {
                 TestReporter.softAssertTrue(!rs.getValue("CHRG_ITEM_ID").equals(""), "The charge item id is [" + rs.getValue("CHRG_ITEM_ID") + "] ");
                 TestReporter.softAssertTrue(!rs.getValue("CHRG_ITEM_AM").equals(""), "The charge item amount is [" + rs.getValue("CHRG_ITEM_AM") + "] ");
                 TestReporter.softAssertTrue(rs.getValue("BILL_CHRG_GRP_ID").equals("NULL"), "The bill charge group id is [" + rs.getValue("BILL_CHRG_GRP_ID") + "] ");
+<<<<<<< HEAD
+=======
+                TestReporter.softAssertTrue(rs.getValue("GUAR_TYP_NM").equals("NONE"), "The guar type name is [" + rs.getValue("GUAR_TYP_NM") + "] ");
+>>>>>>> 5d3b05c2b24f54afddc7faa73bc2530848a36c30
             }
         }
         TestReporter.assertAll();

@@ -26,8 +26,8 @@ public class Test_RemoveGroup_libgo extends AccommodationBaseTest {
 
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationsales", "removeGroup" })
-    public void testRemoveGroup_libgo() {
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesBatchService", "stageRemoveGroupData" })
+    public void testStageRemoveGroupData_libgo() {
         RemoveGroup removeGroup = new RemoveGroup(environment);
         removeGroup.setExternalReferenceInfo("01905", getExternalRefNumber(), getExternalRefSource());
         removeGroup.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
