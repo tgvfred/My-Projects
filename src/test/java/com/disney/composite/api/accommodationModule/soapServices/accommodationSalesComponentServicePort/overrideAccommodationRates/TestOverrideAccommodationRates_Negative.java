@@ -259,7 +259,7 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_invalidTCG() {
-        String fault = "No Accommodation Component found. : null";
+        String fault = "TravelComponentGrouping not found";
 
         TestReporter.logScenario("Test - Override Accommodation Rates   - Invalid TCG");
 
