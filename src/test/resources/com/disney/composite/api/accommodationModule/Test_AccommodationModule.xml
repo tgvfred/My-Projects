@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="AccommodationModule_Suite" parallel="methods" data-provider-thread-count="5" thread-count="10" configfailurepolicy="continue">
-	<parameter name="environment" value="${environment}" />
+	<parameter name="environment" value="shadow" />
 	<test name="AccommodationModule_gathering" parallel="methods" thread-count="1">
 		<groups>
 			<run>
