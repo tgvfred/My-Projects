@@ -118,6 +118,92 @@ public class RetrieveHelper {
         }
     }
 
+    public void baseValidationMultTCG(ReplaceAllForTravelPlanSegment book, Retrieve retrieve) {
+
+        TestReporter.logStep("Base Validation");
+
+        String guestfirstName = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/firstName");
+
+        String guestlastName = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/lastName");
+
+        String guestPhone = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/phoneDetails/number");
+
+        String guestAddress = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/addressDetails/addressLine1");
+
+        String guestEmail = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/emailDetails/address");
+
+        String startPeriod = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortPeriod/startDate");
+
+        String endPeriod = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/resortPeriod/endDate");
+
+        String guestPartyId = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/partyId");
+
+        String guestGuestId = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/guest/guestId");
+
+        String travelStatus = book.getResponseNodeValueByXPath("Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/travelStatus");
+
+        if (sbc) {
+            TpsValidation(retrieve);
+            TestReporter.softAssertTrue(!retrieve.getPartyId().isEmpty(), "Verify the party id is in the response [" + retrieve.getPartyId() + "].");
+
+            TestReporter.softAssertTrue(!retrieve.getPPFirstName().isEmpty(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPLastName().isEmpty(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPPhone().isEmpty(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPAddress().isEmpty(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
+            TestReporter.softAssertTrue(!retrieve.getPPEmail().isEmpty(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
+
+            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoTP().isEmpty(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getRoomReadyNotificationInfoTP() + "].");
+
+            TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoRequired().isEmpty(), "Verify the room ready notification information required in response [" + retrieve.getRoomReadyNotificationInfoRequired() + "].");
+
+            TestReporter.softAssertTrue(!retrieve.getTravelStatus().isEmpty(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "]-- ");
+            TestReporter.assertAll();
+        } else {
+
+            for (int i = 1; i <= 3; i++) {
+                if (retrieve.getGuestId(i).equals(guestGuestId)) {
+                    TestReporter.softAssertEquals(guestfirstName, retrieve.getFirstName(i), "Verify the first name [" + retrieve.getFirstName(i) + "] matches the expected [" + guestfirstName + "]");
+                    TestReporter.softAssertEquals(guestlastName, retrieve.getLastName(i), "Verify the last name [" + retrieve.getLastName(i) + "] matches the expected [" + guestlastName + "]");
+                    try {
+                        TestReporter.softAssertEquals(guestPhone, retrieve.getPhone(i), "Verify the guest phone [" + retrieve.getPhone(i) + "] matches the expected [" + guestPhone + "]");
+                    } catch (XPathNotFoundException e) {
+                    }
+                    TestReporter.softAssertEquals(guestAddress, retrieve.getAddress(i), "Verify the guest address [" + retrieve.getAddress(i) + "] matches the expected [" + guestAddress + "]");
+                    TestReporter.softAssertEquals(guestEmail, retrieve.getEmail(i), "Verify the email [" + retrieve.getEmail(i) + "] matches the expected [" + guestEmail + "]");
+
+                    TestReporter.softAssertEquals(startPeriod, retrieve.getPeriodSD(), "Verify the period start date [" + retrieve.getPeriodSD() + "] matches the expected [" + startPeriod + "]");
+                    TestReporter.softAssertEquals(endPeriod, retrieve.getPeriodED(), "Verify the period end date [" + retrieve.getPeriodED() + "] matches the expected [" + endPeriod + "]");
+                    TestReporter.softAssertTrue(!retrieve.getPartyId(i).isEmpty(), "Verify the party id is in the response [" + retrieve.getPartyId(i) + "].");
+
+                    TestReporter.softAssertTrue(!retrieve.getPPFirstName().isEmpty(), "Verify the primary party first name is in response [" + retrieve.getPPFirstName() + "].");
+                    TestReporter.softAssertTrue(!retrieve.getPPLastName().isEmpty(), "Verify the primary party last name  is in response [" + retrieve.getPPLastName() + "].");
+                    try {
+                        TestReporter.softAssertTrue(!retrieve.getPPPhone().isEmpty(), "Verify the primary party phone is in response [" + retrieve.getPPPhone() + "].");
+
+                    } catch (XPathNotFoundException e) {
+                    }
+                    TestReporter.softAssertTrue(!retrieve.getPPAddress().isEmpty(), "Verify the primary party address is in response [" + retrieve.getPPAddress() + "].");
+                    TestReporter.softAssertTrue(!retrieve.getPPEmail().isEmpty(), "Verify the primary party email is in response [" + retrieve.getPPEmail() + "].");
+
+                    TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoTP().isEmpty(), "Verify the room ready notification information travel plan id is in response [" + retrieve.getRoomReadyNotificationInfoTP() + "].");
+
+                    TestReporter.softAssertTrue(!retrieve.getRoomReadyNotificationInfoRequired().isEmpty(), "Verify the room ready notification information required in response [" + retrieve.getRoomReadyNotificationInfoRequired() + "].");
+
+                    try {
+                        TestReporter.assertEquals(guestGuestId, retrieve.getGuestId(i), "Verify the guest id [" + retrieve.getGuestId(i) + "] matches the expected [" + guestGuestId + "]");
+                    } catch (AssertionError e) {
+                        TestReporter.assertEquals(guestGuestId, retrieve.getGuestId(i), "Verify the guest id [" + retrieve.getGuestId(i) + "] matches the expected [" + guestGuestId + "]2.");
+                    }
+
+                    TestReporter.softAssertTrue(!retrieve.getTravelStatus().isEmpty(), "Verify the travel status is in the response [" + retrieve.getTravelStatus() + "].-- ");
+
+                    TpsValidation(retrieve);
+                    TestReporter.assertAll();
+                }
+            }
+        }
+    }
+
     public void baseValidationDVC(Book book, Retrieve retrieve) {
         TestReporter.logStep("Base Validation for DVC");
 
@@ -494,9 +580,11 @@ public class RetrieveHelper {
         TestReporter.softAssertEquals(retrieve.getTPAddressDetailsPrimary("2"), "true", "Verify the second TP primary returned [" + retrieve.getTPAddressDetailsPrimary("2") + "] is as expected "
                 + "[true]");
         /*
-         * TestReporter.softAssertTrue(!retrieve.getTPAddressDetailsAddressLine1(firstAddressLine1).isEmpty(), "Verify the first TP address1 returned is as expected "
+         * TestReporter.softAssertTrue(!retrieve.getTPAddressDetailsAddressLine1(firstAddressLine1).isEmpty(),
+         * "Verify the first TP address1 returned is as expected "
          * + "[" + firstAddressLine1 + "]");
-         * TestReporter.softAssertTrue(!retrieve.getTPAddressDetailsAddressLine1(secondAddressLine1).isEmpty(), "Verify the second TP address1 returned is as expected "
+         * TestReporter.softAssertTrue(!retrieve.getTPAddressDetailsAddressLine1(secondAddressLine1).isEmpty(),
+         * "Verify the second TP address1 returned is as expected "
          * + "[" + secondAddressLine1 + "]");
          */
         TestReporter.softAssertEquals(retrieve.getTPAddressDetailsAddressLine1("1"), firstAddressLine1, "Verify the first TP address returned [" + retrieve.getTPAddressDetailsAddressLine1("1") + "] is as expected "

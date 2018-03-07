@@ -52,6 +52,7 @@ public class TestRetrieve_shared extends AccommodationBaseTest {
         share.setTravelComponentGroupingId(tcg);
         share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(secondTcg);
+        Sleeper.sleep(15000);
         share.sendRequest();
         Sleeper.sleep(15000);
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred booking a second TPS: " + share.getFaultString(), share);
