@@ -6,10 +6,13 @@ import static com.disney.api.soapServices.accommodationModule.applicationError.A
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.api.BaseTest;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.RetrieveResortReservations;
+import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
+import com.disney.api.soapServices.accommodationModule.helpers.CheckInHelper;
 import com.disney.api.soapServices.applicationError.ApplicationErrorCode;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.TestReporter;
@@ -17,7 +20,22 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestRetrieveResortReservations_Negative extends BaseTest {
+public class TestRetrieveResortReservations_Negative extends AccommodationBaseTest {
+
+    @Override
+    @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
+    public void setup(String environment) {
+        setEnvironment(environment);
+        setDaysOut(0);
+        setNights(1); //
+        setArrivalDate(getDaysOut());
+        setDepartureDate(getNights());
+        setValues(getEnvironment());
+        isComo.set("true");
+        bookReservation();
+    }
+
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_NullReservationNumber() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Null Reservation Number");
@@ -105,8 +123,10 @@ public class TestRetrieveResortReservations_Negative extends BaseTest {
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "retrieveResortReservations", "negative" })
     public void testRetrieveResortReservations_CheckingIn() {
         TestReporter.logScenario("Test - Retrieve Resort Reservations - Checking In");
-        String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Checking In"));
-        sendRequestAndValidateApplicationError(tpsID, TRAVEL_PLAN_SEARCH_NO_RESULT);
+        // String tpsID = getTPSIdForQuery(accommodationComponentQueryBuilder("Checking In"));
+        CheckInHelper checkingIn = new CheckInHelper(environment, getBook());
+        checkingIn.checkingIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
+        sendRequestAndValidateApplicationError(getBook().getTravelPlanSegmentId(), TRAVEL_PLAN_SEARCH_NO_RESULT);
     }
 
     /*

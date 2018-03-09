@@ -257,9 +257,9 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         validateApplicationError(oar, AccommodationErrorCode.INVALID_CHANGE_REASON);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
     public void TestOverrideAccommodationRates_invalidTCG() {
-        String fault = "TravelComponentGrouping not found";
+        String fault = "Travel Component Grouping not found : TravelComponentGrouping not found";
 
         TestReporter.logScenario("Test - Override Accommodation Rates   - Invalid TCG");
 
@@ -271,10 +271,10 @@ public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTe
         oar.sendRequest();
 
         TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.NO_ACCOMMODATION_FOUND);
+        validateApplicationError(oar, AccommodationErrorCode.TRAVEL_COMPONENT_GROUPING_NOT_FOUND);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
     public void TestOverrideAccommodationRates_autoCancelled() {
 
         String fault = "Cancelled accommodations cannot be overriden : null";
