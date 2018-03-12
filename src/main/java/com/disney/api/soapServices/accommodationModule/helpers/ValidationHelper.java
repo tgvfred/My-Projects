@@ -905,7 +905,7 @@ public class ValidationHelper {
             }
 
             Database db = new OracleDatabase(environment, Database.DREAMS);
-            Recordset rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 10));
+            Recordset rs = new Recordset(db.tryGetResultSetUntil(sql, 6, 20));
 
             if (rs.getRowCount() == 0) {
                 throw new SQLValidationException("Failed to find Guest External Ref", sql);

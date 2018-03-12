@@ -72,9 +72,9 @@ public class TestUnShare_twoTcg_nullLocationId extends AccommodationBaseTest {
         share.setTravelComponentGroupingId(firstTCG);
         share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        Sleeper.sleep(10000);
         share.sendRequest();
 
-        Sleeper.sleep(10000);
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
         unshare = new UnShare(environment, "Main");
