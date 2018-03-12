@@ -2253,7 +2253,8 @@ public class AccommodationBaseTest extends BaseRestTest {
             }
         }
         ;
-        TestReporter.assertTrue(roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoom.getFaultString());
+        String assignRoomFaultString = assignRoom == null ? "" : assignRoom.getFaultString();
+        TestReporter.assertTrue(roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoomFaultString);
 
         CheckingIn checkingIn = new CheckingIn(environment, "UI_Booking");
         checkingIn.setLocationId(getLocationId());
