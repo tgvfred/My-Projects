@@ -71,7 +71,7 @@ public class TestCancel_Negative extends AccommodationBaseTest {
         validateApplicationError(cancel, ACCOMMODATIONS_NOT_FOUND);
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative" })
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentServicePort", "cancel", "negative", "debug" })
     public void testCancel_checkedIn() {
         setEnvironment(environment);
         setDaysOut(0);
