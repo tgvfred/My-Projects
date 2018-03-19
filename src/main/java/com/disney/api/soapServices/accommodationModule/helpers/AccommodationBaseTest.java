@@ -1337,7 +1337,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         }
         try {
             if ((skipCancel == null) || (skipCancel.get() == null) || (skipCancel.get() != true)) {
-                cancel(tcg);
+                cancel();
             }
         } catch (Exception e) {
         }

@@ -19,9 +19,21 @@ public class TestCheckout_roomOnly_BEREAV extends BookDVCCashHelper {
     @Parameters("environment")
     public void setup(String environment) {
         setUseDvcResort(true);
+        int daysOut = Integer.valueOf(Randomness.randomNumberBetween(50, 60));
+        setDaysOut(daysOut);
+        setArrivalDate(daysOut);
+        setDepartureDate(1);
+        setDaysOut(daysOut);
+        setArrivalDate(daysOut);
+        setDepartureDate(1);
         setValues("305669", "5A", "10068", "15");
         setUseExistingValues(true);
         setRetrieveAfterBook(false);
+    }
+
+    @Test(groups = { "api", "regression", "checkout", "Accommodation", "GCAL" })
+    public void testCheckout_roomOnly_BEREAV() {
+
         bookDvcReservation("DVC_RM_TPS_ContractInGoodStatus", 1);
         DVCSalesBaseTest.environment = environment;
         Modify modify = new Modify(getFirstBooking());
@@ -29,11 +41,6 @@ public class TestCheckout_roomOnly_BEREAV extends BookDVCCashHelper {
         modify.setTravelStatus("Checked In");
         modify.sendRequest();
         TestReporter.logAPI(!modify.getResponseStatusCode().equals("200"), "Verify that no error occurred modifying booking: " + modify.getFaultString(), modify);
-    }
-
-    @Test(groups = { "api", "regression", "checkout", "Accommodation", "GCAL" })
-    public void testCheckout_roomOnly_BEREAV() {
-
         String status = "false";
         String tcgId = getFirstBooking().getTravelComponentGroupingId();
         String locationId = getLocationId();
