@@ -15,6 +15,9 @@ public class Car {
 	public void setYear(int tempYear) {
 		// TODO Auto-generated method stub
 		this.year = tempYear;
+		if(year > 2000){
+			year += 566;
+		}
 	}
 
 	public int getYear() {
