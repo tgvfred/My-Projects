@@ -11,6 +11,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
 public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyLACDWithConfirmationDetails extends AccommodationBaseTest {
 
@@ -27,11 +28,23 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyLACDWithConfirmation
         setDepartureDate(getNights());
         setValues(getEnvironment());
         isComo.set("true");
+
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
     public void testReplaceAllForTravelPlanSegment_BookRoomOnlyLACDWithConfirmationDetails() {
         setSendRequest(false);
+        HouseHold guest = new HouseHold(1);
+        guest.primaryGuest().primaryAddress().setCity("Azcapotzalco");
+        guest.primaryGuest().primaryAddress().setState("Aguascalientes");
+        guest.primaryGuest().primaryAddress().setStateAbbv("AGU");
+        guest.primaryGuest().primaryAddress().setCountry("Brazil");
+        guest.primaryGuest().primaryAddress().setCountryAbbv("BRA");
+        guest.primaryGuest().primaryAddress().setZipCode("47834");
+
+        // Set guests language preference
+        guest.primaryGuest().setLanguagePreference("Spanish");
+        setHouseHold(guest);
         setAddConfirmationDetails(true);
         bookReservation();
         getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/confirmationDetails/confirmationType", "Email");

@@ -68,11 +68,34 @@ public class UnShareHelper {
             throw new SQLValidationException("No reservation found for tps ID [ " + TpsId + " ]", sql);
         }
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is
+        // expected [" + numExpectedRecords + "].");
 
         for (int i = 1; i <= rs.getRowCount(); i++) {
             if (rs.getValue("RES_HIST_PROC_DS", i).equals("Shared")) {
                 TestReporter.assertEquals(rs.getValue("RES_HIST_PROC_DS", i), "Shared", "Verify the reservation history status [" + rs.getValue("RES_HIST_PROC_DS", i) + "] matches the reservation history status in the DB [Shared]");
+            }
+            TestReporter.assertAll();
+        }
+    }
+
+    public void validateUnshare(int numExpectedRecords, String TpsId) {
+        TestReporter.logStep("Verify Unshare history");
+
+        String sql = "select * from res_mgmt.res_hist a where a.tps_id = '" + TpsId + "'";
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        if (rs.getRowCount() == 0) {
+            throw new SQLValidationException("No reservation found for tps ID [ " + TpsId + " ]", sql);
+        }
+
+        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is
+        // expected [" + numExpectedRecords + "].");
+
+        for (int i = 1; i <= rs.getRowCount(); i++) {
+            if (rs.getValue("RES_HIST_PROC_DS", i).equals("Unshared")) {
+                TestReporter.assertEquals(rs.getValue("RES_HIST_PROC_DS", i), "Unshared", "Verify the reservation history status [" + rs.getValue("RES_HIST_PROC_DS", i) + "] matches the reservation history status in the DB [Unshared]");
             }
             TestReporter.assertAll();
         }
@@ -89,7 +112,8 @@ public class UnShareHelper {
             throw new SQLValidationException("No share flag found for tcg ID [ " + TcgId + " ]", sql);
         }
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords2, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords2 + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords2, "Verify that the number of records [" + rs.getRowCount() + "] is that which is
+        // expected [" + numExpectedRecords2 + "].");
 
         for (int i = 1; i <= rs.getRowCount(); i++) {
             if (rs.getValue("RES_HIST_PROC_DS", i).equals("Shared")) {
@@ -110,7 +134,8 @@ public class UnShareHelper {
             throw new SQLValidationException("No assignment ownder id found for tcg ID [ " + TcgId + " ]", sql);
         }
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords3, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords3 + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords3, "Verify that the number of records [" + rs.getRowCount() + "] is that which is
+        // expected [" + numExpectedRecords3 + "].");
 
         do {
             TestReporter.softAssertTrue(rs.getValue("ASGN_OWN_ID") != assignOwnerId, "Verify the assignment owner Id [" + rs.getValue("ASGN_OWN_ID") + "] does not equal the old assignment owner id [" + assignOwnerId + "].");
@@ -156,7 +181,8 @@ public class UnShareHelper {
             throw new SQLValidationException("No group guarantee found for tcg ID [ " + TcgId + " ]", sql);
         }
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords4, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords4 + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords4, "Verify that the number of records [" + rs.getRowCount() + "] is that which is
+        // expected [" + numExpectedRecords4 + "].");
 
         do {
             TestReporter.assertEquals(rs.getValue("GUAR_TYP_NM"), "GROUP_GUARANTEED", "Verify the guarantee type name [" + rs.getValue("GUAR_TYP_NM") + "] is that which is expected in the DB [GROUP_GUARANTEED]");
@@ -176,7 +202,8 @@ public class UnShareHelper {
             throw new SQLValidationException("No reservation found for tps ID [ " + TpsId + " ]", sql);
         }
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords5, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numExpectedRecords5 + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numExpectedRecords5, "Verify that the number of records [" + rs.getRowCount() + "] is that which is
+        // expected [" + numExpectedRecords5 + "].");
 
         for (int i = 1; i <= rs.getRowCount(); i++) {
             if (rs.getValue("RES_HIST_PROC_DS", i).equals("Shared")) {

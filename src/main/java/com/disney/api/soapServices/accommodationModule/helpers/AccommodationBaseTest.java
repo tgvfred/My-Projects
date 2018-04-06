@@ -1,23 +1,14 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
@@ -31,12 +22,10 @@ import com.disney.api.restServices.BaseRestTest;
 import com.disney.api.restServices.ResourceRest;
 import com.disney.api.restServices.core.RestResponse;
 import com.disney.api.restServices.core.RestService;
-import com.disney.api.restServices.github.content.Content;
 import com.disney.api.restServices.roomInventory.v1.roomInventories.request.RoomInventoryFreezeRequest;
 import com.disney.api.restServices.roomInventory.v1.roomInventories.request.StayDateRange;
 import com.disney.api.restServices.roomInventory.v1.roomInventories.response.RoomInventoryFreezeResponse;
 import com.disney.api.soapServices.ServiceConstants;
-import com.disney.api.soapServices.SoapException;
 import com.disney.api.soapServices.accommodationModule.accommodationFulfillmentServicePort.operations.CheckingIn;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
@@ -53,11 +42,9 @@ import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentSe
 import com.disney.api.soapServices.roomInventoryModule.accommodationAssignmentServicePort.operations.FindRoomForReservation;
 import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.AddBundle;
 import com.disney.api.soapServices.tpsoModule.travelPlanSalesOrderServiceV1.operations.RetrieveDetailsByTravelPlanId;
-import com.disney.utils.Base64Coder;
 import com.disney.utils.Environment;
 import com.disney.utils.PackageCodes;
 import com.disney.utils.Randomness;
-import com.disney.utils.Regex;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
@@ -843,402 +830,6 @@ public class AccommodationBaseTest extends BaseRestTest {
         this.confirmationDetailsType = confirmationDetailsType;
     }
 
-    public boolean validateResponseNodeQuantity(String scenario, boolean exact) {
-        TestReporter.logDebug("Entering AccommodationBaseTest#validateResponseNodeQuantity");
-
-        String xml = null;
-        if (useLocalXml) {
-            TestReporter.logDebug("[ useLocalXml ] set to [ true ], xml repo is [ " + xmlRepoUrl + " ]");
-            String filePath = xmlRepoUrl + "/" + getOperation() + "/" + scenario + ".xml";
-            TestReporter.logDebug("XML to load [ " + filePath + " ]");
-            InputStream resource = this.getClass().getResourceAsStream(xmlRepoUrl + "/" + getOperation() + "/" + scenario + ".xml");
-            if (resource == null) {
-                resource = this.getClass().getResourceAsStream("/" + xmlRepoUrl + "/" + getOperation() + "/" + scenario + ".xml");
-                if (resource == null) {
-                    throw new SoapException("Failed to find XML [ " + filePath + " ] ");
-                }
-            }
-            TestReporter.logDebug("Successfully loaded XML Resource");
-            BufferedReader br = null;
-            StringBuilder sb = null;
-            try {
-                TestReporter.logDebug("Starting buffer reader to read XML Resource");
-                br = new BufferedReader(new InputStreamReader(resource));
-                TestReporter.logDebug("Successfully started buffer reader");
-                String line;
-                sb = new StringBuilder();
-
-                try {
-                    TestReporter.logDebug("Parse buffer to extract xml as String");
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line.trim());
-                    }
-                    TestReporter.logDebug("Successfully extracted XML from buffer reader");
-                } catch (IOException e) {
-                    throw new SoapException("Failed to read xml from file [ " + filePath + " ]", e);
-                }
-            } finally {
-                try {
-                    TestReporter.logDebug("Closing buffer reader");
-                    br.close();
-                    TestReporter.logDebug("Successfully closed buffer reader");
-                } catch (IOException e1) {
-                    throw new SoapException("Failed to close buffer reader", e1);
-                }
-            }
-            xml = sb.toString();
-        } else {
-            TestReporter.logDebug("[ useLocalXml] set to [ true ], xml repo is [ " + xmlRepoUrl + " ]");
-            String token = "P2FjY2Vzc190b2tlbj00ZmExNzBlZjE3NTA2MTM1ZGJkZTFiMzdjYjlhZDRlNDQ1MjVjN2Vm";
-            String url = "https://github.disney.com/api/v3/repos/phlej001/TestDataOnDemand/contents/TestDataOnDemand/soap-xml-storage/{environment}/{service}/{operation}.xml" + Base64Coder.decodeString(token);
-            url = url.replace("{environment}", WordUtils.capitalize(getEnvironment().replace("_CM", "")));
-            url = url.replace("{service}", getService());
-            url = url.replace("{operation}", scenario);
-            xml = downloadXMLFromGit(url);
-        }
-
-        boolean valid = validateResponseNodes(xml, exact, false);
-        TestReporter.logDebug("Exitting AccommodationBaseTest#validateResponseNodeQuantity");
-        return valid;
-    }
-
-    private String downloadXMLFromGit(String url) {
-        TestReporter.logDebug("Entering AccommodationBaseTest#downloadXMLFromGit");
-        TestReporter.logDebug("Building request for url [ " + url + " ]");
-        HttpGet request = new HttpGet(url);
-
-        TestReporter.logDebug("Send and build Github Conent class");
-        Content content = new RestService().sendRequest(request).mapJSONToObject(Content.class);
-        TestReporter.logDebug("Successfully retrieved Github Content");
-
-        TestReporter.logDebug("Get XML from Github Content");
-        String rawRequest = new String(Base64.decodeBase64(content.getContent().getBytes()));
-
-        TestReporter.logDebug("Successfully retrieved XML from Github Content");
-        TestReporter.logDebug("Exitting AccommodationBaseTest#downloadXMLFromGit");
-        return rawRequest;
-    }
-
-    private boolean validateResponseNodes(String xml, boolean exact, boolean isClone) {
-
-        StringBuffer buffer = new StringBuffer();
-        // Exclude header from Como 1 to 1 Validations
-        // if(strEnvironment.toLowerCase().contains("_cm")){
-        addExcludedXpathValidations("/Envelope/Header");
-        // }
-
-        TestReporter.logDebug("Entering AccommodationBaseTest#validateResponseNodes");
-        boolean success = true;
-        if (xpathNodeReplacements.size() > 0) {
-            for (String baseLineNodeName : xpathNodeReplacements.keySet()) {
-                xml = xml.replace("<" + baseLineNodeName + ">", "<" + xpathNodeReplacements.get(baseLineNodeName)) + ">";
-                xml = xml.replace("</" + baseLineNodeName + ">", "<" + xpathNodeReplacements.get(baseLineNodeName)) + ">";
-            }
-        }
-        Document baselineXmlDoc = XMLTools.makeXMLDocument(xml);
-
-        TestReporter.logDebug("Building Hashmap of Baseline XML");
-        LinkedHashMap<String, Object> baselineMap = XMLTools.getXpathsFromXML(xml, exact);
-        TestReporter.logDebug("Successfully built Baseline hashmap");
-
-        TestReporter.logDebug("Building Hashmap of Response XML");
-        LinkedHashMap<String, Object> responseMap = XMLTools.getXpathsFromXML(getResponse(), exact);
-        TestReporter.logDebug("Successfully built Response Hashmap");
-
-        TestReporter.logDebug("Built TestNG report table and columns");
-        buffer.append("<table border='1' width='100%'>");
-        buffer.append("<tr><td style='width: 100px; color: black; text-align: center;'><b>Response XPath and Value</b></td>");
-        buffer.append("<td style='width: 100px; color: black; text-align: center;'><b>Baseline Nodes</b></td>");
-        buffer.append("<td style='width: 100px; color: black; text-align: center;'><b>Response Nodes</b></td>");
-        buffer.append("<td style='width: 100px; color: black; text-align: center;'><b>Status</b></td></tr>");
-
-        TestReporter.logDebug("Validating hashmaps");
-
-        // Create iterators on Hashmaps to allow removal of map entries
-        Iterator<Entry<String, Object>> baselineIterator = baselineMap.entrySet().iterator();
-        Iterator<Entry<String, Object>> responseIterator = null;
-
-        String responsePath = "";
-        String baselinePath = "";
-        String baselineText = "";
-        String responseText = "";
-        boolean hasValue = false;
-        String temp = "";
-        String skippedAttribute;
-        boolean notFoundInResponse = false;
-        boolean regexSuccess = false;
-        boolean testedRegex = false;
-        boolean validateAttribute = true;
-        // Loop through all baseline map items
-        while (baselineIterator.hasNext()) {
-            hasValue = false;
-            notFoundInResponse = false;
-            regexSuccess = false;
-            testedRegex = false;
-            Map.Entry<String, Object> baselineEntry = baselineIterator.next();
-            Map.Entry<String, Object> responseEntry = null;
-            baselineEntry.getKey();
-
-            baselinePath = baselineEntry.getKey().contains("[text()") ? baselineEntry.getKey().substring(0, baselineEntry.getKey().indexOf("[text()")) : baselineEntry.getKey();
-            baselineText = baselineEntry.getKey().contains("[text()") ? baselineEntry.getKey().substring(baselineEntry.getKey().indexOf("[text()"), baselineEntry.getKey().lastIndexOf("']")) : baselineEntry.getKey();
-            if (baselineText.contains("[text()='")) {
-                baselineText = baselineText.replace("[text()='", "");
-                hasValue = true;
-            }
-
-            if (excludedBaselineAttributes.size() > 0) {
-                for (String attribute : excludedBaselineAttributes) {
-                    if (baselineText.contains(attribute)) {
-                        skippedAttribute = attribute;
-                        validateAttribute = false;
-                        break;
-                    }
-                }
-            }
-
-            if (excludedBaselineXpaths.contains(baselinePath)) {
-                // getResponseNodeValueByXPath(baselinePath);
-                // XMLTools.getValueByXpath(baselineXmlDoc, baselinePath);
-                buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + baselineEntry.getKey() + "</td>");
-                if (hasValue) {
-                    buffer.append("<td style='width: 100px; color: black; text-align: center;'>" + baselineText + "</td>");
-                } else {
-                    buffer.append("<td style='width: 100px; color: black; text-align: center;'></td>");
-                }
-                buffer.append("<td style='width: 100px; color: black; text-align: center;'>0</td>");
-                buffer.append("<td style='width: 100px; color: purple; text-align: center;'><b>Skipped - Overridden to allow this new XPath</b></td></tr>");
-                baselineIterator.remove();
-            } else if (validateAttribute == false) {
-                // getResponseNodeValueByXPath(baselinePath);
-                // XMLTools.getValueByXpath(baselineXmlDoc, baselinePath);
-                buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + baselineEntry.getKey() + "</td>");
-                buffer.append("<td style='width: 100px; color: black; text-align: center;'>" + baselineText + "</td>");
-                buffer.append("<td style='width: 100px; color: black; text-align: center;'>0</td>");
-                buffer.append("<td style='width: 100px; color: purple; text-align: center;'><b>Skipped - Overridden to skip validating this Attribute value</b></td></tr>");
-                baselineIterator.remove();
-                validateAttribute = true;
-            } else {
-
-                // Find corrosponding xpath in response map
-
-                responseIterator = responseMap.entrySet().iterator();
-                while (responseIterator.hasNext()) {
-                    responseEntry = responseIterator.next();
-                    responsePath = responseEntry.getKey().contains("[text()") ? responseEntry.getKey().substring(0, responseEntry.getKey().indexOf("[text()")) : responseEntry.getKey();
-
-                    if (isClone) {
-                        if (responseEntry.getKey().equals(baselineEntry.getKey())) {
-                            break;
-                        }
-                    }
-
-                    else if (responsePath.equals(baselinePath)) {
-                        break;
-                    }
-                    if (responseIterator.hasNext() == false) {
-                        notFoundInResponse = true;
-                    }
-                }
-                try {
-                    if (hasValue) {
-                        String responseTemp = responseEntry.getKey().contains("[text()") ? responseEntry.getKey().substring(responseEntry.getKey().indexOf("[text()"), responseEntry.getKey().lastIndexOf("']")) : responseEntry.getKey();
-                        responseTemp = responseTemp.replace("[text()='", "");
-                        temp = responsePath + "[text()=concat('" + responseTemp.replace("'", "', \"'\", '") + "', '')]";
-                    } else {
-                        temp = responseEntry.getKey();
-                    }
-                    responseText = getResponseNodeValueByXPath(temp);
-                } catch (RuntimeException xpe) {
-                    responseText = "Xpath not found in response";
-                }
-
-                if (exact) {
-                    /*
-                     * baselineText = baselineEntry.getKey().contains("[text()") ?
-                     * baselineEntry.getKey().substring(baselineEntry.getKey().indexOf("[text()"),baselineEntry.getKey().lastIndexOf("']")) :
-                     * baselineEntry.getKey();
-                     * if(baselineText.contains("[text()='")) baselineText = baselineText.replace("[text()='","");
-                     */
-
-                    try {
-                        if (regexXpaths.size() > 0 && regexXpaths.get(responsePath) != null) {
-                            baselineText = regexXpaths.get(responsePath);
-                        }
-                        regexSuccess = Regex.match(baselineText.replace("*", "\\*").replace("?", "\\?"), responseText.replace("*", "\\*").replace("?", "\\?"));
-                    } catch (Exception throwAway) {
-                    }
-
-                    if (!regexSuccess) {
-                        regexSuccess = baselineText.equals(responseText) ? true : false;
-                    }
-                    testedRegex = true;
-                }
-
-                // Compare number of xpaths and report findings
-                if (notFoundInResponse || responseEntry == null) {
-                    TestReporter.logDebug("FAIL: [ " + responseEntry.getKey() + " ] baseline node count was [ " + baselineEntry.getValue() + " ] but found [ 0 ] in given response");
-                    buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + baselineEntry.getKey() + "</td>");
-
-                    if (hasValue) {
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>" + baselineText + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: 0</td>");
-                    } else {
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + baselineEntry.getValue() + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: 0</td>");
-                    }
-                    buffer.append("<td style='width: 100px; color: red; text-align: center;'><b>Failed - Number of nodes did not match</b></td></tr>");
-                    success = false;
-                    notFoundInResponse = false;
-                    baselineIterator.remove();
-                } else if (regexSuccess) {
-                    TestReporter.logDebug("Successfully validated [ " + baselineEntry.getKey() + " ] xpath node count matches [ " + baselineEntry.getValue() + " ]");
-                    buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + responseEntry.getKey() + "</td>");
-
-                    if (hasValue) {
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>" + baselineText + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>" + responseText + "</td>");
-                    } else {
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + baselineEntry.getValue() + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + responseEntry.getValue() + "</td>");
-                    }
-                    buffer.append("<td style='width: 100px; color: green; text-align: center;'><b>Pass</b></td></tr>");
-                    baselineIterator.remove();
-                    responseIterator.remove();
-                    regexSuccess = false;
-                    testedRegex = false;
-                } else if (testedRegex && hasValue) {
-                    TestReporter.logDebug("FAIL: [ " + baselineEntry.getKey() + " ] baseline node count was [ " + baselineEntry.getValue() + " ] but found [ " + responseEntry.getValue() + " ] in given response");
-                    buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + responseEntry.getKey() + "</td>");
-
-                    if (hasValue) {
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>" + baselineText + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>" + responseText + "</td>");
-                    } else {
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + baselineEntry.getValue() + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + responseEntry.getValue() + "</td>");
-                    }
-                    buffer.append("<td style='width: 100px; color: red; text-align: center;'><b>Failed - Value did not match Regex</b></td></tr>");
-                    success = false;
-                    baselineIterator.remove();
-                    responseIterator.remove();
-                } else if (baselineEntry.getValue().equals(responseEntry.getValue())) {
-                    TestReporter.logDebug("Successfully validated [ " + baselineEntry.getKey() + " ] xpath node count matches [ " + baselineEntry.getValue() + " ]");
-                    buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + responseEntry.getKey() + "</td>");
-
-                    if (hasValue) {
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>" + baselineText + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>" + responseText + "</td>");
-                    } else {
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + baselineEntry.getValue() + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + responseEntry.getValue() + "</td>");
-                    }
-                    buffer.append("<td style='width: 100px; color: green; text-align: center;'><b>Pass</b></td></tr>");
-                    baselineIterator.remove();
-                    responseIterator.remove();
-                } else {
-                    TestReporter.logDebug("FAIL: [ " + baselineEntry.getKey() + " ] baseline node count was [ " + baselineEntry.getValue() + " ] but found [ " + responseEntry.getValue() + " ] in given response");
-                    buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + responseEntry.getKey() + "</td>");
-
-                    if (hasValue) {
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>" + baselineText + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'></td>");
-                    } else {
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + baselineEntry.getValue() + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + responseEntry.getValue() + "</td>");
-                    }
-                    buffer.append("<td style='width: 100px; color: red; text-align: center;'><b>Failed - Number of nodes did not match</b></td></tr>");
-                    success = false;
-                    baselineIterator.remove();
-                    responseIterator.remove();
-                }
-
-                // Remove entries from map to view leftovers at the end
-            }
-        }
-        TestReporter.logDebug("Finished validating hashmaps");
-
-        // Check for left over xpaths in response. If found this means there are extra nodes in the response
-        TestReporter.logDebug("Checking for left over response entries");
-        if (responseMap.size() > 0) {
-            TestReporter.logDebug("Extra entries found, report as failure if not overriden");
-            for (String key : responseMap.keySet()) {
-                if (excludedBaselineAttributes.size() > 0) {
-                    for (String attribute : excludedBaselineAttributes) {
-                        if (key.contains(attribute)) {
-                            skippedAttribute = attribute;
-                            validateAttribute = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (!exactResponse && excludedResponseXpaths.contains(key)) {
-                    buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + key + "</td>");
-                    buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: 0</td>");
-                    buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + responseMap.get(key) + "</td>");
-                    buffer.append("<td style='width: 100px; color: purple; text-align: center;'><b>Skipped - Overridden to allow this new XPath</b></td></tr>");
-                } else if (excludedResponseXpaths.size() > 0) {
-                    boolean excludeXpath = false;
-                    for (String xpath : excludedResponseXpaths) {
-                        if (key.contains(xpath)) {
-                            excludeXpath = true;
-                            break;
-                        }
-                    }
-                    if (excludeXpath) {
-                        buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + key + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: 0</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + responseMap.get(key) + "</td>");
-                        buffer.append("<td style='width: 100px; color: purple; text-align: center;'><b>Skipped - Overridden to not validate this XPath</b></td></tr>");
-                    } else if (!validateAttribute) {
-                        buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + key + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: 0</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + responseMap.get(key) + "</td>");
-                        buffer.append("<td style='width: 100px; color: purple; text-align: center;'><b>Skipped - Overridden to not validate this attribute</b></td></tr>");
-                        validateAttribute = true;
-                    } else {
-                        buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + key + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + responseMap.get(key) + "</td>");
-                        buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: 0</td>");
-                        buffer.append("<td style='width: 100px; color: red; text-align: center;'><b>Failed - Extra XML nodes found in baseline</b></td></tr>");
-                        success = false;
-                    }
-                } else if (!validateAttribute) {
-                    buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + key + "</td>");
-                    buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: 0</td>");
-                    buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + responseMap.get(key) + "</td>");
-                    buffer.append("<td style='width: 100px; color: purple; text-align: center;'><b>Skipped - Overridden to not validate this attribute</b></td></tr>");
-                    validateAttribute = true;
-                } else {
-                    buffer.append("<tr><td style='width: 100px; color: black; text-align: left;'>" + key + "</td>");
-                    buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: 0</td>");
-                    buffer.append("<td style='width: 100px; color: black; text-align: center;'>Instance Count: " + responseMap.get(key) + "</td>");
-                    buffer.append("<td style='width: 100px; color: red; text-align: center;'><b>Failed - Extra XML nodes found in response</b></td></tr>");
-                    success = false;
-                }
-            }
-
-        }
-
-        buffer.append("</table>");
-        if (isClone) {
-            TestReporter.logStep("Validating node count from Response matches Response from Cloned Request");
-        } else {
-            TestReporter.logStep("Validating node count from Response matches Response from Baselined XML");
-        }
-        if (xpathNodeReplacements.size() > 0) {
-            for (String baseLineNodeName : xpathNodeReplacements.keySet()) {
-                Reporter.log("<font size = 2 color=\"purple\"><b><u>Baseline Response node name [ " + baseLineNodeName + " ] replaced with  [ " + xpathNodeReplacements.keySet() + " ] to allow xpath comparisons</font></u></b><br />");
-            }
-        }
-        Reporter.log(buffer.toString() + "<br/>");
-
-        buffer.setLength(0);
-        buffer = null;
-        TestReporter.logDebug("Exitting AccommodationBaseTest#validateResponseNodes");
-        return success;
-    }
-
     @BeforeSuite(alwaysRun = true)
     @Parameters("environment")
     public void beforeSuite(String environment) {
@@ -1258,7 +849,32 @@ public class AccommodationBaseTest extends BaseRestTest {
 
         workLocations = workLocations.substring(0, workLocations.length() - 1);
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getRoomTypesWithHighRoomCounts(workLocations)));
+
+        String ids = workLocations.replace(",66 ", "");
+        String sql = "select NUMROOMS, ROOM_TYPE, c.SEQ_NM RESORT, ROOM_DESC, c.RSRT_FAC_ID , WRK_LOC_ID "
+                + "from( select NUMROOMS, b.RSRC_INVTRY_TYP_CD ROOM_TYPE, FAC_ID, RM_DS ROOM_DESC "
+                + "from( select count(a.rsrc_id) NUMROOMS, a.RSRC_INVTRY_TYP_ID  TYPE_ID, a.RSRT_FAC_ID FAC_ID, a.RM_DS "
+                + "from rsrc_inv.rm a "
+                + "group by a.RSRC_INVTRY_TYP_ID, a.RSRT_FAC_ID, a.RM_DS "
+                + "order by count(a.rsrc_id) desc) "
+                + "join rsrc_inv.RSRC_INVTRY_TYP b on b.RSRC_INVTRY_TYP_ID = TYPE_ID "
+                + "order by NUMROOMS desc) "
+                + "join rsrc_inv.rsrt_seq c on c.RSRT_FAC_ID = FAC_ID "
+                + "join rsrc_inv.WRK_LOC d on FAC_ID = d.HM_RSRT_FAC_ID "
+                + "join accting.FAC_TXN_ACCT_CTR e on TXN_ACCT_CTR_ID = e.DFLT_TXN_ACCT_CTR_ID "
+                + "where seq_nm not like ('New%') "
+                + "and seq_nm not like ('%20%') "
+                + "and NUMROOMS > 100 "
+                + "and ROOM_DESC not like '%accessible%' "
+                + "and c.SEQ_NM like '% %' AND WRK_LOC_ID IN ( " + ids + ") "
+                + "and TXN_ACCT_CTR_ID is not null "
+                + "and TXN_ACCT_CTR_ID not in (77803, 10054,66) "
+                + "and WRK_LOC_NM not like ('%HOLA%')"
+                + "and HM_RSRT_FAC_ID = e.FAC_ID "
+                + "and c.RSRT_FAC_ID not in (select unique(a.DVC_RSRT_FAC_ID) from rsrc_inv.dvc_rm_typ_xref a ) "
+                + "group by NUMROOMS, ROOM_TYPE, c.SEQ_NM, ROOM_DESC, c.RSRT_FAC_ID, WRK_LOC_ID "
+                + "order by NUMROOMS desc";
+        Recordset rs = new Recordset(db.getResultSet(sql));
         for (int i = 0; i < roomTypeAndFacInfo.length; i++) {
 
             // Removing Pop Century from the config list until after 7.23 release - WWA 11/3/2017
@@ -1303,26 +919,8 @@ public class AccommodationBaseTest extends BaseRestTest {
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
         setIsWdtcBooking(false);
-        setSendRequest(true);
-        // Hotfix to help avoid error with Pop Century - 10/27/17 - WWA
-        int tries = 0;
-        int maxTries = 20;
-        boolean success = false;
-        do {
-            setValues();
-            try {
-                bookReservation();
-                success = true;
-            } catch (Exception e) {
-                if (!getBook().getFaultString().contains("No default TransactionAccountingCenter found for TransactionFacilityID")) {
-                    throw new SoapException(e.getMessage(), e.fillInStackTrace());
-                }
-            }
-            tries++;
-        } while (tries < maxTries && !success);
-        // setValues();
-        // setSendRequest(true);
-        // bookReservation();
+        setValues();
+        bookReservation();
     }
 
     @AfterMethod(alwaysRun = true)
@@ -1338,7 +936,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         }
         try {
             if ((skipCancel == null) || (skipCancel.get() == null) || (skipCancel.get() != true)) {
-                cancel(tcg);
+                cancel();
             }
         } catch (Exception e) {
         }
@@ -1668,11 +1266,11 @@ public class AccommodationBaseTest extends BaseRestTest {
                 Database db = new Database(ProfileDatabase.getInfo(getEnvironment()));
                 Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getProfileInformationById(getProfileData().get(PROFILE_ID))));
                 TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that a profile is found in the DB for profile ID [" + getProfileData().get(PROFILE_ID) + "].");
-                getProfileData().put(PROFILE_CODE, rs.getValue("PRFL_VAL_CD"));
-                getProfileData().put(PROFILE_DESCRIPTION, rs.getValue("PRFL_VAL_DS"));
-                getProfileData().put(PROFILE_TYPE, rs.getValue("PRFL_TYP_NM"));
-                getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PRFL_RTE_TYP_NM"));
-                getProfileData().put(PROFILE_SELECTABLE, rs.getValue("SLCT_IN"));
+                getProfileData().put(PROFILE_CODE, rs.getValue("PROFILE_CODE"));
+                getProfileData().put(PROFILE_DESCRIPTION, rs.getValue("PROFILE_DESCRIPTION"));
+                getProfileData().put(PROFILE_TYPE, rs.getValue("PROFILE_TYPE"));
+                getProfileData().put(PROFILE_ROUTINGS_NAME, rs.getValue("PROFILE_ROUTINGS_NAME"));
+                getProfileData().put(PROFILE_SELECTABLE, rs.getValue("PROFILE_SELECTABLE"));
                 getBook().setReservationDetail_Profiles(getProfileData());
             }
 
@@ -1930,20 +1528,11 @@ public class AccommodationBaseTest extends BaseRestTest {
                 setLocationId(roomTypeAndFacInfo[index][5]);
 
                 String sql = null;
-                if (Environment.getBaseEnvironmentName(tempEnv).toLowerCase().equals("grumpy")) {
-                    sql = "select d.WRK_LOC_ID "
-                            + "from RSRC_INV.wrk_loc d "
-                            + "where d.HM_RSRT_FAC_ID = '" + getFacilityId() + "' "
-                            + "and d.TXN_ACCT_CTR_ID is not null "
-                            + "order by d.CREATE_DTS asc";
-                } else {
-                    sql = "select d.WRK_LOC_ID "
-                            + "from tfdb_3.wrk_loc d "
-                            + "where d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
-                            + "and d.TXN_ACCT_CTR_ID is not null "
-                            + "order by d.CREATE_DTS asc";
-                }
-                // System.out.println();
+                sql = "SELECT d.WRK_LOC_ID "
+                        + "FROM TFDB_3.WRK_LOC d "
+                        + "WHERE d.HM_ENTRPRS_FAC_ID = '" + getFacilityId() + "' "
+                        + "AND d.TXN_ACCT_CTR_ID IS NOT NULL "
+                        + "ORDER BY d.CREATE_DTS ASC";
                 Database db = new Database(FacilityDatabase.getInfo(Environment.getBaseEnvironmentName(tempEnv)));
                 Recordset rs = new Recordset(db.getResultSet(sql));
 
@@ -2263,7 +1852,8 @@ public class AccommodationBaseTest extends BaseRestTest {
             }
         }
         ;
-        TestReporter.assertTrue(roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoom.getFaultString());
+        String assignRoomFaultString = assignRoom == null ? "" : assignRoom.getFaultString();
+        TestReporter.assertTrue(roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoomFaultString);
 
         CheckingIn checkingIn = new CheckingIn(environment, "UI_Booking");
         checkingIn.setLocationId(getLocationId());

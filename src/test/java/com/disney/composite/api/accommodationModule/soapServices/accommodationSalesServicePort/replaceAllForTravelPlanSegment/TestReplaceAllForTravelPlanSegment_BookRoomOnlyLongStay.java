@@ -21,7 +21,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyLongStay extends Acc
     public void setup(String environment) {
         setEnvironment(environment);
         setDaysOut(0);
-        setNights(18);
+        setNights(14);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());
         setValues(getEnvironment());
@@ -44,7 +44,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyLongStay extends Acc
 
         // Validate Folio
         validations.verifyNameOnCharges(getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(), getBook().getTravelComponentGroupingId(), getHouseHold().primaryGuest());
-        validations.verifyNumberOfChargesByStatus("UnEarned", 18, getBook().getTravelPlanId());
+        validations.verifyNumberOfChargesByStatus("UnEarned", 14, getBook().getTravelPlanId());
         validations.verifyChargeDetail(72, getBook().getTravelPlanId());
         validations.verifyChargeGroupsStatusCount("UnEarned", 3, getBook().getTravelPlanId());
 

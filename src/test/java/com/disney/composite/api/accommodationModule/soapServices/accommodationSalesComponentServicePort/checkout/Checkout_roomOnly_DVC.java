@@ -19,6 +19,10 @@ public class Checkout_roomOnly_DVC extends BookDVCCashHelper {
     @Parameters("environment")
     public void setup(String environment) {
         setUseDvcResort(true);
+        int daysOut = Integer.valueOf(Randomness.randomNumberBetween(50, 60));
+        setDaysOut(daysOut);
+        setArrivalDate(daysOut);
+        setDepartureDate(1);
         setValues("305669", "5A", "10068", "15");
         setUseExistingValues(true);
         setRetrieveAfterBook(false);

@@ -33,7 +33,7 @@ public class TestRetrieveRate_RoomOnly_CheckIn extends AccommodationBaseTest {
         String tcgId = getBook().getTravelComponentGroupingId();
         String tpId = getBook().getTravelPlanId();
         String roomCode = getRoomTypeCode();
-        String packageName = "R Room Only";
+        String packageName = "Room Only";
         String rateDate = "";
 
         TestReporter.logScenario("Book and Check In");
@@ -48,7 +48,7 @@ public class TestRetrieveRate_RoomOnly_CheckIn extends AccommodationBaseTest {
         rateDate = retrieveRates.getRateDate("1");
         TestReporter.log("Travel Plan ID: " + tpId);
         TestReporter.assertEquals(retrieveRates.getroomTypeCode(), roomCode, "Verify that the room code matches '" + roomCode + "' for tcgId " + tcgId);
-        TestReporter.assertEquals(retrieveRates.getPackageName(), packageName, "Validate the package name of '" + packageName + "' matches for tcgId " + tcgId);
+        TestReporter.assertTrue(retrieveRates.getPackageName().contains(packageName), "Validate the package name of '" + packageName + "' matches for tcgId " + tcgId);
         TestReporter.assertEquals(Randomness.generateCurrentXMLDate(), rateDate.split("T")[0], "Validate the Rate Date of '" + rateDate.split("T")[0] + "' matches for tcgId '" + tcgId + "'.");
         TestReporter.logStep("Verify number of nodes being returned");
         TestReporter.assertTrue(retrieveRates.getRateDetails("1") != null, "One Rate Details node is present");

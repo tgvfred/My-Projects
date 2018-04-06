@@ -12,6 +12,7 @@ import com.disney.api.soapServices.accommodationModule.helpers.UnShareHelper;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
+import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
@@ -39,6 +40,7 @@ public class TestUnShare_twoTcg_nullLocationId extends AccommodationBaseTest {
         setValues(getEnvironment());
         isComo.set("true");
         setSendRequest(false);
+        Sleeper.sleep(10000);
         bookReservation();
         getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
         getBook().sendRequest();
@@ -55,6 +57,8 @@ public class TestUnShare_twoTcg_nullLocationId extends AccommodationBaseTest {
         setDepartureDate(getNights());
         isComo.set("true");
         setSendRequest(false);
+
+        Sleeper.sleep(10000);
         bookReservation();
         getBook().setEnvironment(Environment.getBaseEnvironmentName(environment));
         getBook().sendRequest();
@@ -68,7 +72,9 @@ public class TestUnShare_twoTcg_nullLocationId extends AccommodationBaseTest {
         share.setTravelComponentGroupingId(firstTCG);
         share.addSharedComponent();
         share.setSecondTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
+        Sleeper.sleep(10000);
         share.sendRequest();
+
         TestReporter.logAPI(!share.getResponseStatusCode().equals("200"), "Verify that no error occurred while sharing a room " + share.getFaultString(), share);
 
         unshare = new UnShare(environment, "Main");
@@ -82,6 +88,7 @@ public class TestUnShare_twoTcg_nullLocationId extends AccommodationBaseTest {
         validateResponse();
         validations();
 
+        Sleeper.sleep(10000);
         share.sendRequest();
         if (Environment.isSpecialEnvironment(environment)) {
             UnShare clone = (UnShare) unshare.clone();

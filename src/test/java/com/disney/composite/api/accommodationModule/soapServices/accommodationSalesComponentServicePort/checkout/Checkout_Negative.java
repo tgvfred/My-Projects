@@ -10,6 +10,7 @@ import com.disney.api.soapServices.accommodationModule.applicationError.Accommod
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.accommodationSales.operations.Cancel;
 import com.disney.api.soapServices.dvcModule.dvcSalesService.helpers.BookDVCCashHelper;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.date.DateTimeConversion;
 
@@ -20,6 +21,10 @@ public class Checkout_Negative extends BookDVCCashHelper {
     @Parameters("environment")
     public void setup(String environment) {
         setUseDvcResort(true);
+        int daysOut = Integer.valueOf(Randomness.randomNumberBetween(50, 60));
+        setDaysOut(daysOut);
+        setArrivalDate(daysOut);
+        setDepartureDate(1);
         setValues("305669", "5A", "10068", "15");
         setUseExistingValues(true);
         setRetrieveAfterBook(false);

@@ -48,8 +48,6 @@ public class TestRetrieve_wdtc extends AccommodationBaseTest {
         TestReporter.assertTrue(!retrieve.getExternalRefNum().equals(""), "The External Reference Number in the response is [" + retrieve.getExternalRefNum() + "].");
         TestReporter.assertTrue(!retrieve.getExternalRefSource().equals(""), "The External Reference Source in the response is [" + retrieve.getExternalRefSource() + "].");
 
-        TestReporter.assertTrue(!retrieve.getSecurityLevel().equals(""), "The Security level in the response is [" + retrieve.getSecurityLevel() + "].");
-
         // clone validations
         if (Environment.isSpecialEnvironment(getEnvironment())) {
 

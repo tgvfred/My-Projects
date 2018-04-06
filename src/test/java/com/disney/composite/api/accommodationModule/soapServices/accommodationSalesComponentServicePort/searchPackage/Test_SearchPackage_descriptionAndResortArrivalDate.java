@@ -27,7 +27,7 @@ public class Test_SearchPackage_descriptionAndResortArrivalDate extends Accommod
         search.sendRequest();
         TestReporter.logAPI(!search.getResponseStatusCode().equals("200"), "An error occurred retrieving the summary for the travel component grouping [" + getBook().getTravelComponentGroupingId() + "]: " + search.getFaultString(), search);
 
-        search.getPackageDescriptionByPackageCode(pkgCode);
+        // search.getPackageDescriptionByPackageCode(pkgCode);
         // Old vs New Validation
         if (Environment.isSpecialEnvironment(environment)) {
             SearchPackage clone = (SearchPackage) search.clone();

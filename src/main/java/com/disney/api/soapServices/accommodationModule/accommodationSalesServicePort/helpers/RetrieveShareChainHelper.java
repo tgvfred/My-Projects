@@ -190,7 +190,7 @@ public class RetrieveShareChainHelper {
         }
 
         String splitBasePrice[] = basePrice.split("\\.");
-        TestReporter.assertEquals(splitBasePrice[0], rs.getValue("CHRG_ITEM_AM"), "Verify the base price [" + splitBasePrice[0] + "] matches the expected [" + rs.getValue("CHRG_ITEM_AM") + "]");
+        TestReporter.assertEquals(splitBasePrice[0], rs.getValue("CHRG_ITEM_AM").split("\\.")[0], "Verify the base price [" + splitBasePrice[0] + "] matches the expected [" + rs.getValue("CHRG_ITEM_AM") + "]");
         String retrieveDate[] = date.split("T");
         String databaseDate[] = rs.getValue("CHRG_FFL_DTS").split(" ");
         TestReporter.assertEquals(retrieveDate[0], databaseDate[0], "Verify the date [" + retrieveDate[0] + "] matches the expected [" + databaseDate[0] + "]");
