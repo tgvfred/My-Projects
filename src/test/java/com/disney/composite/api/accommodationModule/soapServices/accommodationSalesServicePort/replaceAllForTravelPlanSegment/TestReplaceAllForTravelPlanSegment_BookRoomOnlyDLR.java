@@ -4,6 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.disney.api.mq.sbc.RoomRes;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
@@ -16,18 +17,25 @@ import com.disney.utils.dataFactory.guestFactory.HouseHold;
 public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyDLR extends AccommodationBaseTest {
 
     private String tpPtyId;
+    RoomRes room = null;
 
     @Override
-    @BeforeMethod(alwaysRun = true)
     @Parameters("environment")
+    @BeforeMethod(alwaysRun = true)
     public void setup(String environment) {
+        // AccommodationFacilityTO fac = FacilityHelper.getFacilityInfoByEnterpriseFacilityID(environment, "334222");
         setEnvironment(environment);
-        setDaysOut(0);
+        isComo.set("false");
+        setDaysOut(20);
         setNights(1);
         setArrivalDate(getDaysOut());
-        setDepartureDate(getNights());
+        setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        isComo.set("true");
+        setResortCode("15");
+        setRoomTypeCode("5A");
+        setFacilityId("305669");
+        setLocationId("511");
+        bookReservation();
 
     }
 
@@ -37,7 +45,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyDLR extends Accommod
         HouseHold guest = new HouseHold(1);
         guest.primaryGuest().primaryAddress().setCity("Azcapotzalco");
         guest.primaryGuest().primaryAddress().setState("Aguascalientes");
-        guest.primaryGuest().primaryAddress().setStateAbbv("AGU");
+        guest.primaryGuest().primaryAddress().setStateAbbv("NULL");
         guest.primaryGuest().primaryAddress().setCountry("Brazil");
         guest.primaryGuest().primaryAddress().setCountryAbbv("BRA");
         guest.primaryGuest().primaryAddress().setZipCode("47834");
