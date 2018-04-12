@@ -9,7 +9,7 @@
 			</run>
 		</groups> -->
 		<classes>
-			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.replaceAllForTravelPlanSegment.TestReplaceAllForTravelPlanSegment_BookRoomOnlyDLR" />
+			<class name="com.disney.composite.api.accommodationModule.soapServices.accommodationSalesServicePort.replaceAllForTravelPlanSegment.TestReplaceAllForTravelPlanSegment_BookRoomOnlyInternationalNumber" />
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

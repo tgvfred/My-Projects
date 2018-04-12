@@ -14,33 +14,27 @@ import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyDLR extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyInternationalNumber extends AccommodationBaseTest {
 
     private String tpPtyId;
     RoomRes room = null;
 
     @Override
-    @Parameters("environment")
     @BeforeMethod(alwaysRun = true)
+    @Parameters("environment")
     public void setup(String environment) {
-        // AccommodationFacilityTO fac = FacilityHelper.getFacilityInfoByEnterpriseFacilityID(environment, "334222");
         setEnvironment(environment);
-        isComo.set("false");
-        setDaysOut(20);
+        setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        setResortCode("15");
-        setRoomTypeCode("5A");
-        setFacilityId("305669");
-        setLocationId("511");
         bookReservation();
 
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyDLR() {
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyInternationalNumber() {
         setSendRequest(false);
         HouseHold guest = new HouseHold(1);
         guest.primaryGuest().primaryAddress().setCity("Azcapotzalco");
