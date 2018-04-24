@@ -78,28 +78,12 @@ public class TestModify_ModifyGuestChildToInfant_AddTickets extends Accommodatio
         CheckInHelper check = new CheckInHelper(environment, getBook());
         check.checkIn(getLocationId(), getDaysOut(), getNights(), getFacilityId());
 
-        // Add tickets
-        // FindTicketPriceGridByPackage find = new FindTicketPriceGridByPackage(environment);
-        // find.setPackageCode(getPackageCode());
-        // find.sendRequest();
-        // TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred finding tickets for package code [" +
-        // getPackageCode() + "].");
-
         GetTicketProducts get = new GetTicketProducts(environment, "Main");
         get.setTicketGroupName("634");
         get.setArrivalDate(getArrivalDate());
         get.sendRequest();
         TestReporter.assertTrue(get.getResponseStatusCode().equals("200"), "Verify that no error occurred finding ticket products for ticket group name [634].");
         code = get.getCodeByTicketDescriptionAndAgeType("2 Day Base Ticket", "Adult");
-
-        // bookPackage = new BookPackageSelectableTickets(environment, "SingleSelectableTicket");
-        // bookPackage.setExternalReference("01825", getExternalRefNumber());
-        // bookPackage.setSelectableTicket(code, getBook().getTravelComponentGroupingId(), getExternalRefNumber(), getHouseHold().primaryGuest(),
-        // getLocationId(), getBook().getTravelPlanSegmentId());
-        // bookPackage.addSelectableTicket("0", code, "0", "0", "0", "0", getHouseHold().primaryGuest(), getBook().getTravelComponentGroupingId(),
-        // getExternalRefNumber(), getLocationId(), getBook().getTravelPlanSegmentId());
-        // bookPackage.setRequestNodeValueByXPath("/Envelope/Body/bookPackageSelectableTickets/request/selectableTickets/ticket/guestReference/guest/addressDetails/addressLine2",
-        // BaseSoapCommands.REMOVE_NODE.toString());
 
         bookPackage = new BookPackageSelectableTickets(environment, "SingleSelectableTicket");
         bookPackage.setExternalReference("01825", getExternalRefNumber());
