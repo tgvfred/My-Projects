@@ -122,7 +122,7 @@ public class TestModify_ModifyGuestChildToInfant_AddTickets extends Accommodatio
                 + "and a.tp_id = '" + getBook().getTravelPlanId() + "' ";
         Recordset rs = new Recordset(db.getResultSet(sql));
 
-        TestReporter.assertEquals(rs.getValue("AGE_NB"), age, "The Aget on the database [" + rs.getValue("AGE_NB") + "] is equal to the Age associated with the booking [" + age + "]");
+        TestReporter.assertEquals(rs.getValue("AGE_NB"), age, "The Age on the database [" + rs.getValue("AGE_NB") + "] is equal to the Age associated with the booking [" + age + "]");
         TestReporter.assertEquals(rs.getValue("AGE_TYP_NM"), at, "The Age Type on the database [" + rs.getValue("AGE_TYP_NM") + "] is equal to the Age Type associated with the booking [" + at + "]");
     }
 }
