@@ -72,19 +72,33 @@ public class TestReplaceAllForTravelPlanSegment_BookDVCNonMemberNonPoints extend
 		validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
 		validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
-		// validations.validateTPV3(getBook().getTravelPlanId(), "Booked",
-		// getArrivalDate(), getDepartureDate(), tpPtyId,
-		// getHouseHold().primaryGuest(), 1, 1, "N", "NULL", getFacilityId());
-
-		String sql = "select STAYDATE, b.TPID, b.TPSID, b.TCGID, b.INVTRACKID, b.RESTYPE, b.HOMETYPE, b.EXPDPTDATE, b.ROOMNUMBER, b.SPECNEEDS, c.MEMBERID, b.RESORTCODE, STATUS"
-				+ " from dvcwishes.WPMRESPRC1 a, dvcwishes.WPMRESDTL1 b, dvcinvsys.WPIINVTRKP c "
-				+ " where a.guid = b.guid " + " and b.TPID = '" + getBook().getTravelPlanId() + "' "
-				+ " and b.INVTRACKID = c.ITI";
+		// given a non dvc member non points validation in dvc corpDatabase
+		String sql = "SELECT * FROM dvcwishes.WPMRESDTL1 WHERE TPID = '" + getBook().getTravelPlanId() + "'";
 
 		Database corpDb = new Database(DVCCorpDatabase.getInfo(environment));
 
-		Recordset rs = new Recordset(corpDb.getResultSet(sql));
-		rs.print();
+		Recordset rs = new Recordset(corpDb.tryGetResultSetUntil(sql, 8, 10));
+
+		if (rs.getRowCount() != 0) {
+
+			TestReporter.softAssertTrue(rs.getRowCount() >= 1, "A record was returned in the dvc corp database");
+			TestReporter.softAssertTrue(getBook().getTravelPlanId().equals(rs.getValue("TPID")),
+					"The travel plan id in the booking [" + getBook().getTravelPlanId()
+							+ "] matches the travelPlan in the dvc corp db [" + rs.getValue("TPID") + "]");
+			TestReporter.softAssertTrue(getBook().getTravelPlanSegmentId().equals(rs.getValue("TPSID")),
+					"The travel plan segment id in the booking [" + getBook().getTravelPlanSegmentId()
+							+ "] matches the travelPlanSegment in the dvc corp db [" + rs.getValue("TPSID") + "]");
+			TestReporter.softAssertTrue(getBook().getTravelComponentGroupingId().equals(rs.getValue("TCGID")),
+					"The travel component grouping id in the booking [" + getBook().getTravelComponentGroupingId()
+							+ "] matches the travelComponentGrouping in the dvc corp db [" + rs.getValue("TCGID")
+							+ "]");
+			TestReporter.softAssertTrue(!rs.getValue("GUID").equals(""),
+					"The GUID [" + rs.getValue("GUID") + "] is not null");
+			TestReporter.assertAll();
+		} else {
+			TestReporter.softAssertTrue(rs.getRowCount() >= 1, "A record was NOT returned in the dvc corp database");
+
+		}
 
 		// Validate the Old to the New
 		if (Environment.isSpecialEnvironment(environment)) {
