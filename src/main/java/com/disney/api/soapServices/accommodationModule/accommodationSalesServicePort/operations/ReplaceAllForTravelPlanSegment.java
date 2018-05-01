@@ -73,6 +73,22 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     // *********************************************************************************************************
     // *********************************************************************************************************
 
+    public void setExpMediaDetailsResDetail(String id, String optOut) {
+        String baseXpath = "//replaceAllForTravelPlanSegment/request/reservationDetail/guestReferenceDetails/experienceMediaDetails/";
+        String baseXpath2 = "//replaceAllForTravelPlanSegment/request/reservationDetail/guestReferenceDetails/experienceMediaDetails/mediaCustomization/";
+        setExpMediaDetailsId(baseXpath, id);
+        setExpMediaDetailsMediaCustomOptOut(baseXpath2, optOut);
+
+    }
+
+    public void setExpMediaDetailsRoomDetail(String id, String optOut) {
+        String baseXpath = "//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails/";
+        String baseXpath2 = "//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails/mediaCustomization/";
+        setExpMediaDetailsId(baseXpath, id);
+        setExpMediaDetailsMediaCustomOptOut(baseXpath2, optOut);
+
+    }
+
     public void setResExternalReference(String code, String number, String source, String type) {
         String baseXpath = "//replaceAllForTravelPlanSegment/request/resExternalReferences/";
         setExtRefCode(baseXpath, code);
@@ -1441,6 +1457,28 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
             } catch (XPathNotFoundException e) {
                 setRequestNodeValueByXPath(baseXpath.substring(0, baseXpath.lastIndexOf("/")), BaseSoapCommands.ADD_NODE.commandAppend("externalReferenceCode"));
                 setRequestNodeValueByXPath(baseXpath + "externalReferenceCode", value);
+            }
+        }
+    }
+
+    public void setExpMediaDetailsId(String baseXpath, String value) {
+        if (isValid(value)) {
+            try {
+                setRequestNodeValueByXPath(baseXpath + "id", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath(baseXpath.substring(0, baseXpath.lastIndexOf("/")), BaseSoapCommands.ADD_NODE.commandAppend("id"));
+                setRequestNodeValueByXPath(baseXpath + "id", value);
+            }
+        }
+    }
+
+    public void setExpMediaDetailsMediaCustomOptOut(String baseXpath, String value) {
+        if (isValid(value)) {
+            try {
+                setRequestNodeValueByXPath(baseXpath + "optOut", value);
+            } catch (XPathNotFoundException e) {
+                setRequestNodeValueByXPath(baseXpath.substring(0, baseXpath.lastIndexOf("/")), BaseSoapCommands.ADD_NODE.commandAppend("optOut"));
+                setRequestNodeValueByXPath(baseXpath + "optOut", value);
             }
         }
     }
