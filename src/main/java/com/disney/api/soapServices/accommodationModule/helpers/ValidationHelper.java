@@ -145,7 +145,8 @@ public class ValidationHelper {
             throw new SQLValidationException("No records were found for TP ID [" + tpId + "].");
         }
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected
+        // [" + numRecords + "].");
         for (int i = 1; i <= rs.getRowCount(); i++) {
             TestReporter.log("Verify Row: " + String.valueOf(i));
             TestReporter.softAssertEquals(rs.getValue("TP_ID", i), tpId, "Verify that the TP ID [" + rs.getValue("TP_ID", i) + "] is that which is expected [" + tpId + "].");
@@ -198,7 +199,8 @@ public class ValidationHelper {
         rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getReservationInfoByTpId(tpId)));
         // rs.print();
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected
+        // [" + numRecords + "].");
         for (int i = 1; i <= rs.getRowCount(); i++) {
             TestReporter.log("Verify Row: " + String.valueOf(i));
             TestReporter.softAssertEquals(rs.getValue("TP_ID", i), tpId, "Verify that the TP ID [" + rs.getValue("TP_ID", i) + "] is that which is expected [" + tpId + "].");
@@ -249,7 +251,8 @@ public class ValidationHelper {
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected
+        // [" + numRecords + "].");
         for (int i = 1; i <= rs.getRowCount(); i++) {
             TestReporter.log("Verify Row: " + String.valueOf(i));
             TestReporter.softAssertEquals(rs.getValue("TP_ID", i), tpId, "Verify that the TP ID [" + rs.getValue("TP_ID", i) + "] is that which is expected [" + tpId + "].");
@@ -283,7 +286,8 @@ public class ValidationHelper {
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected
+        // [" + numRecords + "].");
         int counter = 1;
         String mapKey = null;
         do {
@@ -327,7 +331,8 @@ public class ValidationHelper {
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected
+        // [" + numRecords + "].");
         int counter = 1;
         String mapKey = null;
         do {
@@ -388,7 +393,8 @@ public class ValidationHelper {
         rs = new Recordset(db.getResultSet(sql));
         // rs.print();
 
-        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected
+        // [" + numRecords + "].");
 
         do {
 
@@ -766,7 +772,8 @@ public class ValidationHelper {
                 + "and b.CHRG_GRP_ID = c.CHRG_GRP_ID "
                 + "and c.CHRG_GRP_STS_NM = '" + status + "'";
         rs = new Recordset(db.getResultSet(sql));
-        // TestReporter.softAssertEquals(rs.getRowCount(), numberRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numberRecords + "].");
+        // TestReporter.softAssertEquals(rs.getRowCount(), numberRecords, "Verify that the number of records [" + rs.getRowCount() + "] is that which is
+        // expected [" + numberRecords + "].");
         for (int i = 1; i <= rs.getRowCount(); i++) {
             TestReporter.softAssertEquals(rs.getValue("CHRG_GRP_STS_NM", i), status,
                     "Verify that the [" + rs.getValue("CHRG_GRP_TYP_NM", i) + "] charge group [" + rs.getValue("CHRG_GRP_ID", i) + "] status [" + rs.getValue("CHRG_GRP_STS_NM", i) + "] is [" + status + "] as expected.");
@@ -852,7 +859,8 @@ public class ValidationHelper {
          * } while (rs.hasNext());
          * rs.moveFirst();
          *
-         * TestReporter.softAssertEquals(rs.getRowCount(), numCharges, "Verify that the number of records [" + rs.getRowCount() + "] is that which is expected [" + numCharges + "].");
+         * TestReporter.softAssertEquals(rs.getRowCount(), numCharges, "Verify that the number of records [" + rs.getRowCount() +
+         * "] is that which is expected [" + numCharges + "].");
          *
          * TestReporter.assertAll();
          */
@@ -909,6 +917,7 @@ public class ValidationHelper {
 
             if (rs.getRowCount() == 0) {
                 throw new SQLValidationException("Failed to find Guest External Ref", sql);
+                // throw new SkipException("No approved records found in recordset ");
             }
             String odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL", 1);
 
@@ -1005,7 +1014,8 @@ public class ValidationHelper {
          * } while (rs.hasNext());
          * rs.moveFirst();
          *
-         * TestReporter.softAssertEquals(rs.getRowCount(), numChargesExpected, "Verify that the number of charge details [" + rs.getRowCount() + "] is that which is expected [" + numChargesExpected + "].");
+         * TestReporter.softAssertEquals(rs.getRowCount(), numChargesExpected, "Verify that the number of charge details [" + rs.getRowCount() +
+         * "] is that which is expected [" + numChargesExpected + "].");
          *
          * TestReporter.assertAll();
          */
@@ -1582,7 +1592,8 @@ public class ValidationHelper {
                 + "WHERE a.ADM_TC_ID IN (" + admissionComponentId + ")";
         Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
-        // TestReporter.assertTrue(rs.getValue("ATS_TKT_CD").equals(code), "Verify that the admission component ticket code [" + rs.getValue("ATS_TKT_CD") + "] is that which is expected [" + code + "].");
+        // TestReporter.assertTrue(rs.getValue("ATS_TKT_CD").equals(code), "Verify that the admission component ticket code [" + rs.getValue("ATS_TKT_CD") + "]
+        // is that which is expected [" + code + "].");
         return rs.getValue("TKT_PRC_AM");
     }
 
