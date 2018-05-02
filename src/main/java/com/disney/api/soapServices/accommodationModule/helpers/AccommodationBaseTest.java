@@ -1012,13 +1012,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         getBook().setRoomDetailsLocationId(getLocationId());
         getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
         getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
-        // getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails",
-        // BaseSoapCommands.ADD_NODE.commandAppend("experienceMediaDetails"));
-        // getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails",
-        // BaseSoapCommands.ADD_NODE.toString());
         getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails", BaseSoapCommands.ADD_NODE.commandAppend("mediaCustomization"));
-        // getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails/mediaCustomization/",
-        // BaseSoapCommands.ADD_NODE.toString());
         getBook().setExpMediaDetailsRoomDetail("1", "true");
 
         PackageCodes pkg = new PackageCodes();
