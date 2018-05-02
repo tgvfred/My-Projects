@@ -43,7 +43,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyInternationalNumber 
         guest.primaryGuest().primaryAddress().setCountry("Brazil");
         guest.primaryGuest().primaryAddress().setCountryAbbv("BRA");
         guest.primaryGuest().primaryAddress().setZipCode("47834");
-        guest.primaryGuest().primaryPhone().setNumber("0106434774000"); // place the number here
+        guest.primaryGuest().primaryPhone().setNumber("0106434774000");
 
         // Set guests language preference
         guest.primaryGuest().setLanguagePreference("Spanish");
@@ -83,7 +83,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyInternationalNumber 
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanSegmentId());
 
         // Validate TPS confirmation
         String contactName = getBook().getRequestNodeValueByXPath("//request/contactName");
