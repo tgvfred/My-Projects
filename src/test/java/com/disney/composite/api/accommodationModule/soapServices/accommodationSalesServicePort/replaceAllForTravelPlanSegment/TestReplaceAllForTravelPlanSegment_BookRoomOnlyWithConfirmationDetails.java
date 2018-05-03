@@ -37,6 +37,11 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithConfirmationDeta
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         validations();
+
+        // Test validations
+        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
+        TestReporter.assertTrue(getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
+
     }
 
     private void validations() {

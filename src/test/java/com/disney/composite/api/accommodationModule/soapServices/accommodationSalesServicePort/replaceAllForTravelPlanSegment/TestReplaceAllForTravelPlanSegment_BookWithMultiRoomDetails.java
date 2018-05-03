@@ -41,6 +41,10 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails extends
 
         validations();
 
+        // Test validations
+        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
+        TestReporter.assertTrue(getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
+
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
             ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();
@@ -122,6 +126,7 @@ public class TestReplaceAllForTravelPlanSegment_BookWithMultiRoomDetails extends
         getAdditionalGuests().get(1).setPrimary(false);
         validations.verifyTpPartyIds(tpPartyIds, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
-        // validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), getHouseHold().primaryGuest(), 2, 2, "N", "NULL", getFacilityId(), getAdditionalGuests());
+        // validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), getHouseHold().primaryGuest(), 2, 2, "N",
+        // "NULL", getFacilityId(), getAdditionalGuests());
     }
 }
