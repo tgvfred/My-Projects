@@ -85,7 +85,7 @@ public class TestModify_UsingMultipleProfilesWithCode extends AccommodationBaseT
         validations.verifyBookingIsFoundInResHistory(modify.getTravelPlanId());
         validations.verifyModificationIsFoundInResHistory(modify.getTravelPlanId());
         validations.verifyTcStatusByTcg(modify.getTravelComponentGroupingId(), "Booked");
-        validations.verifyTpProfileRequest(tpId, getProfileData());
+        // validations.verifyTpProfileRequest(tpId, getProfileData());
         validations.verifyTpProfileRequest(tpId, profileData);
         validations.verifyNumberOfResMgmtRequest("TP_ID", tpId, 3);
 

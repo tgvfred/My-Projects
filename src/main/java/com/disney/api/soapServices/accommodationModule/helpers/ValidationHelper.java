@@ -458,6 +458,28 @@ public class ValidationHelper {
         return rs;
     }
 
+    public Recordset validateGuestInformationV2(String tpId, HouseHold hh) {
+        TestReporter.logStep("Validated guest information");
+        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getTpPartyGuestInfoByTpId_NoMembership(tpId)));
+        // rs.print();
+        TestReporter.softAssertEquals(rs.getValue("IDVL_FST_NM", 1), hh.primaryGuest().getFirstName(), "Verify that the guest first name [" + rs.getValue("IDVL_FST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getFirstName() + "].");
+        TestReporter.softAssertEquals(rs.getValue("IDVL_MID_NM", 1), hh.primaryGuest().getMiddleName(), "Verify that the guest middle [" + rs.getValue("IDVL_MID_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getMiddleName() + "].");
+        TestReporter.softAssertEquals(rs.getValue("IDVL_LST_NM", 1), hh.primaryGuest().getLastName(), "Verify that the guest last name [" + rs.getValue("IDVL_LST_NM", 1) + "] is that which is expected [" + hh.primaryGuest().getLastName() + "].");
+        // TestReporter.softAssertTrue(rs.getValue("ADDR_LN_1_TX", 1).toUpperCase().contains(hh.primaryGuest().primaryAddress().getAddress1().toUpperCase()),
+        // "Verify that the address line 1 [" + rs.getValue("ADDR_LN_1_TX", 1) + "] contains that which is expected [" +
+        // hh.primaryGuest().primaryAddress().getAddress1() + "].");
+        if (!hh.primaryGuest().getOdsId().equals("0")) {
+            TestReporter.softAssertEquals(rs.getValue("CITY_NM", 1), hh.primaryGuest().primaryAddress().getCity(), "Verify that the address city [" + rs.getValue("CITY_NM", 1) + "] is that which is expected [" + hh.primaryGuest().primaryAddress().getCity() + "].");
+        }
+        TestReporter.softAssertEquals("AGU", hh.primaryGuest().primaryAddress().getStateAbbv(), "Verify that the state [AGU] is that which is expected [" + hh.primaryGuest().primaryAddress().getStateAbbv() + "].");
+        TestReporter.softAssertEquals(rs.getValue("PSTL_CD", 1), hh.primaryGuest().primaryAddress().getZipCode(), "Verify that the zip code [" + rs.getValue("PSTL_CD", 1) + "] is that which is expected [" + hh.primaryGuest().primaryAddress().getZipCode() + "].");
+        TestReporter.softAssertEquals(rs.getValue("TXN_PTY_EML_ADDR_TX", 1).toUpperCase(), hh.primaryGuest().primaryEmail().getEmail().toUpperCase(), "Verify that the email address [" + rs.getValue("TXN_PTY_EML_ADDR_TX", 1) + "] is that which is expected [" + hh.primaryGuest().primaryEmail().getEmail() + "].");
+        TestReporter.softAssertEquals(rs.getValue("PHN_NB", 1), hh.primaryGuest().primaryPhone().getNumber(), "Verify that the phone number [" + rs.getValue("PHN_NB", 1) + "] is that which is expected [" + hh.primaryGuest().primaryPhone().getNumber() + "].");
+        TestReporter.assertAll();
+        return rs;
+    }
+
     public Recordset validateGuestInformation(String tpId, HouseHold hh, Map<Integer, Guest> additionalGuests) {
         TestReporter.logStep("Validated guest information");
         Database db = new OracleDatabase(environment, Database.DREAMS);
