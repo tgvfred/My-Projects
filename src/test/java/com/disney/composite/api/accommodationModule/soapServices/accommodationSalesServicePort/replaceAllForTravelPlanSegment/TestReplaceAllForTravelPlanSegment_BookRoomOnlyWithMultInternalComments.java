@@ -68,6 +68,10 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithMultInternalComm
 
         validations.validateComments(getBook().getTravelPlanId(), getCommentsData(), "Internal", "N", "N", 2, "TravelPlanSegmentComment", "NULL");
 
+        // Test validations
+        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
+        TestReporter.assertTrue(getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
+
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
             ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();

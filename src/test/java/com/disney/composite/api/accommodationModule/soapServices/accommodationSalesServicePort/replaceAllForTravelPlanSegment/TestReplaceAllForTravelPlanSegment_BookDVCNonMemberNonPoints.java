@@ -72,6 +72,10 @@ public class TestReplaceAllForTravelPlanSegment_BookDVCNonMemberNonPoints extend
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
+        // Test validations
+        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
+        TestReporter.assertTrue(getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
+
         // given a non dvc member non points validation in dvc corpDatabase
         String sql = "SELECT * FROM dvcwishes.WPMRESDTL1 WHERE TPID = '" + getBook().getTravelPlanId() + "'";
 
