@@ -82,7 +82,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyLACDWithConfirmation
         validations.verifyRIMPartyMIx(getBook().getTravelPlanId(), "1", "0", true);
 
         // Validate guest
-        validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
+        validations.validateGuestInformationV2(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
