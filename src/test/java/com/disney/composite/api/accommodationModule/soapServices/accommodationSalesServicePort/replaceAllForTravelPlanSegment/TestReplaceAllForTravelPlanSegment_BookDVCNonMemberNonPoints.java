@@ -19,6 +19,8 @@ public class TestReplaceAllForTravelPlanSegment_BookDVCNonMemberNonPoints extend
 
 	private String tpPtyId = null;
 
+	// This books a DVC Reservation for a NON MEMBER with NO POINTS on DVC
+	// PROPERTY
 	@Override
 	@BeforeMethod(alwaysRun = true)
 	@Parameters("environment")
@@ -29,18 +31,16 @@ public class TestReplaceAllForTravelPlanSegment_BookDVCNonMemberNonPoints extend
 		setNights(1);
 		setArrivalDate(getDaysOut());
 		setDepartureDate(getNights());
-		// setValues("1", "4S", "83", "14");
+
 		setValues("1", "4S", "83");
 		// setValues(getFacilityId(), getRoomTypeCode(), getLocationId());
-		// setUseExistingValues(true);
 
 	}
 
 	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesService",
 			"replaceAllForTravelPlanSegment", "debug" })
 	public void testReplaceAllForTravelPlanSegment_BookDVCNonMemberNonPoints() {
-		// System.out.print(getBook().getRequest());
-		/// bookDvcReservation("", 1);
+
 		bookReservation();
 		getHouseHold().sendToApi(Environment.getBaseEnvironmentName(getEnvironment()));
 		tpPtyId = getBook().getGuestId();
@@ -85,7 +85,7 @@ public class TestReplaceAllForTravelPlanSegment_BookDVCNonMemberNonPoints extend
 		Database corpDb = new Database(DVCCorpDatabase.getInfo(environment));
 
 		Recordset rs = new Recordset(corpDb.tryGetResultSetUntil(sql, 8, 10));
-
+		TestReporter.logStep("Validating Record is found in DVC Corp.");
 		if (rs.getRowCount() != 0) {
 
 			TestReporter.softAssertTrue(rs.getRowCount() >= 1, "A record was returned in the dvc corp database");
