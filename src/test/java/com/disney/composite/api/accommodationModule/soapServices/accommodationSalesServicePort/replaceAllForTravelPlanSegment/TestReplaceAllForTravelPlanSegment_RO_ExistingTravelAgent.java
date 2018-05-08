@@ -42,10 +42,7 @@ public class TestReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent extends A
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
     public void testReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent() {
 
-        // setAddConfirmationDetails(true);
         bookReservation();
-        // getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/confirmationDetails/confirmationType", "Email Guest
-        // Agent");
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 
@@ -123,9 +120,9 @@ public class TestReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent extends A
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
         // Validate TPS confirmation
-        String firstName = getBook().getRequestNodeValueByXPath("//request/contactName/roomDetails/roomReservationDetail/guestReferenceDetails/guest/firstName");
-        String lastName = getBook().getRequestNodeValueByXPath("//request/contactName/roomDetails/roomReservationDetail/guestReferenceDetails/guest/lastName");
-        String contactName = firstName + lastName;
+        String firstName = getBook().getRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/firstName");
+        String lastName = getBook().getRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/lastName");
+        String contactName = firstName + " " + lastName;
         validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Email Guest Agent", tpPtyId, "Y", "N", contactName, "N");
 
         // Validate the Old to the New
