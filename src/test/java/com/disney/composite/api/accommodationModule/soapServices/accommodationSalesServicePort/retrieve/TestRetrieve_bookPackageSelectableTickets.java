@@ -107,6 +107,7 @@ public class TestRetrieve_bookPackageSelectableTickets extends AccommodationBase
 
         GetTicketProducts get = new GetTicketProducts(environment, "Main");
         get.setTicketGroupName(find.getTicketGroupName());
+        get.setArrivalDate(getArrivalDate());
         get.sendRequest();
         TestReporter.assertTrue(get.getResponseStatusCode().equals("200"), "Verify that no error occurred finding ticket products for ticket group name [" + find.getTicketGroupName() + "].");
         code = get.getCodeByTicketDescriptionAndAgeType("2 Day Base Ticket", "Adult");

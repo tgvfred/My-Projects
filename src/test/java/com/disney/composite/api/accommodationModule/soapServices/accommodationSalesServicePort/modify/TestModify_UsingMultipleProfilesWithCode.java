@@ -85,7 +85,7 @@ public class TestModify_UsingMultipleProfilesWithCode extends AccommodationBaseT
         validations.verifyBookingIsFoundInResHistory(modify.getTravelPlanId());
         validations.verifyModificationIsFoundInResHistory(modify.getTravelPlanId());
         validations.verifyTcStatusByTcg(modify.getTravelComponentGroupingId(), "Booked");
-        validations.verifyTpProfileRequest(tpId, getProfileData());
+        // validations.verifyTpProfileRequest(tpId, getProfileData());
         validations.verifyTpProfileRequest(tpId, profileData);
         validations.verifyNumberOfResMgmtRequest("TP_ID", tpId, 3);
 
@@ -107,6 +107,10 @@ public class TestModify_UsingMultipleProfilesWithCode extends AccommodationBaseT
 
         validations.validateResortAndRoomType(modify.getTravelPlanId(), getFacilityId(), getRoomTypeCode());
         validations.validateAreaPeriod(modify.getTravelPlanId(), getArrivalDate(), getDepartureDate());
+
+        // Test validations
+        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
+        TestReporter.assertTrue(modify.getNumberOfResponseNodesByXPath("/Envelope/Body/modifyResponse/modifyResponse/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {

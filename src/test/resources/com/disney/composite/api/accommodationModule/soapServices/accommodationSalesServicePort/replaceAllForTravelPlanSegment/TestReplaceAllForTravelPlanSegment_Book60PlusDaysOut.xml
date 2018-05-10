@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="TestReplaceAllForTravelPlanSegment_Book60PlusDaysOut" parallel="methods" thread-count="20">
-	<parameter name="environment" value="load" />
+	<parameter name="environment" value="latest" />
 	<test name="TestReplaceAllForTravelPlanSegment_Book60PlusDaysOut">
 		<!-- <groups>
 			<run>

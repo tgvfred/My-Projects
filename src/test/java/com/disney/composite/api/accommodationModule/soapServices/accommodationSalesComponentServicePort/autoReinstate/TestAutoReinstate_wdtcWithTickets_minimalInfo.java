@@ -56,7 +56,7 @@ public class TestAutoReinstate_wdtcWithTickets_minimalInfo extends Accommodation
 
         GetTicketProducts get = new GetTicketProducts(environment, "Main");
         get.setTicketGroupName(find.getTicketGroupName());
-
+        get.setArrivalDate(getArrivalDate());
         // Add a wait to avoid async issues
         Sleeper.sleep(5000);
 

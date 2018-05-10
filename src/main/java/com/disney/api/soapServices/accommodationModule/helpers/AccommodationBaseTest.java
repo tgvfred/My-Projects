@@ -1012,6 +1012,8 @@ public class AccommodationBaseTest extends BaseRestTest {
         getBook().setRoomDetailsLocationId(getLocationId());
         getBook().setRoomDetails_RoomReservationDetail_GuestRefDetails(getHouseHold().primaryGuest());
         getBook().setTravelPlanGuest(getHouseHold().primaryGuest());
+        getBook().setRequestNodeValueByXPath("//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails", BaseSoapCommands.ADD_NODE.commandAppend("mediaCustomization"));
+        getBook().setExpMediaDetailsRoomDetail("1", "true");
 
         PackageCodes pkg = new PackageCodes();
         int maxTries = 10;

@@ -4,22 +4,20 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.disney.AutomationException;
+import com.disney.api.mq.sbc.RoomRes;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
-import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
-import com.disney.utils.dataFactory.database.Database;
-import com.disney.utils.dataFactory.database.Recordset;
-import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
+import com.disney.utils.dataFactory.guestFactory.HouseHold;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithTravelAgency extends AccommodationBaseTest {
-    private String tpPtyId = null;
-    private String odsGuestId;
+public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyInternationalNumber extends AccommodationBaseTest {
+
+    private String tpPtyId;
+    RoomRes room = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -29,28 +27,44 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithTravelAgency ext
         setDaysOut(0);
         setNights(1);
         setArrivalDate(getDaysOut());
-        setDepartureDate(getNights());
+        setDepartureDate(getDaysOut() + getNights());
         setValues(getEnvironment());
-        setAddTravelAgency(true);
-        isComo.set("true");
+        bookReservation();
+
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithTravelAgency() {
-        bookReservation();
-        tpPtyId = getBook().getGuestId();
-        String sql = "select b.TXN_PTY_EXTNL_REF_VAL "
-                + "from res_mgmt.tp_pty a "
-                + "join guest.TXN_PTY_EXTNL_REF b on a.TXN_PTY_ID = b.TXN_PTY_ID "
-                + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
-        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-        if (rs.getRowCount() == 0) {
-            throw new AutomationException("No TXN_PTY_EXTNL_REF_VAL was found in GUEST.TXN_PTY_EXTNL_REF table for TP ID [" + getBook().getTravelPlanId() + "].");
-        }
-        odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "negative", "debug" })
+    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyInternationalNumber() {
+        setSendRequest(false);
+        HouseHold guest = new HouseHold(1);
+        guest.primaryGuest().primaryAddress().setCity("Azcapotzalco");
+        guest.primaryGuest().primaryAddress().setState("Aguascalientes");
+        guest.primaryGuest().primaryAddress().setStateAbbv("NULL");
+        guest.primaryGuest().primaryAddress().setCountry("Brazil");
+        guest.primaryGuest().primaryAddress().setCountryAbbv("BRA");
+        guest.primaryGuest().primaryAddress().setZipCode("47834");
+        guest.primaryGuest().primaryPhone().setNumber("0106434774000");
 
-        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
+        // Set guests language preference
+        guest.primaryGuest().setLanguagePreference("Spanish");
+        setHouseHold(guest);
+        setAddConfirmationDetails(true);
+        bookReservation();
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/confirmationDetails/confirmationType", "Email");
+        getBook().setRequestNodeValueByXPath("//serviceContext/addressRole", "LACD");
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+        validations();
+        // Test validations
+        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
+        TestReporter.assertTrue(getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
+
+    }
+
+    private void validations() {
+        tpPtyId = getBook().getGuestId();
+
+        ValidationHelper validations = new ValidationHelper(getEnvironment());
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",
@@ -73,35 +87,19 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithTravelAgency ext
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
-        validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanSegmentId());
 
-        validations.verifyTravelAgency(this);
-
-        // Test validations
-        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
-        TestReporter.assertTrue(getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
+        // Validate TPS confirmation
+        String contactName = getBook().getRequestNodeValueByXPath("//request/contactName");
+        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Email", tpPtyId, "Y", "N", contactName, "Y");
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
             ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.sendRequest();
-
-            int tries = 0;
-            int maxTries = 20;
-            boolean success = false;
-            do {
-                Sleeper.sleep(1000);
-                clone.sendRequest();
-                tries++;
-                if (clone.getResponseStatusCode().equals("200")) {
-                    success = true;
-                }
-            } while ((tries < maxTries) && !success);
-
             if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
             }
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");

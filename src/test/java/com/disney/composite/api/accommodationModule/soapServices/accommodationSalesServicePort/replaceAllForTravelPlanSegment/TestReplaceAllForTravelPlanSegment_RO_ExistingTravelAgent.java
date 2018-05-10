@@ -5,20 +5,23 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.disney.AutomationException;
+import com.disney.api.mq.sbc.ItineraryConfirmation;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Cancel;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
+import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.UpdateItineraryConfirmationHelper;
+import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.ManageConfirmationRecipient;
 import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
-import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithTravelAgency extends AccommodationBaseTest {
-    private String tpPtyId = null;
+public class TestReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent extends AccommodationBaseTest {
+
+    private String tpPtyId;
     private String odsGuestId;
 
     @Override
@@ -33,24 +36,65 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithTravelAgency ext
         setValues(getEnvironment());
         setAddTravelAgency(true);
         isComo.set("true");
+
     }
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment", "debug" })
-    public void testReplaceAllForTravelPlanSegment_BookRoomOnlyWithTravelAgency() {
+    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
+    public void testReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent() {
+
         bookReservation();
-        tpPtyId = getBook().getGuestId();
-        String sql = "select b.TXN_PTY_EXTNL_REF_VAL "
-                + "from res_mgmt.tp_pty a "
-                + "join guest.TXN_PTY_EXTNL_REF b on a.TXN_PTY_ID = b.TXN_PTY_ID "
-                + "where a.tp_id = '" + getBook().getTravelPlanId() + "' ";
+        getBook().sendRequest();
+        TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
+
+        // Sets up the confirmation to "Email Guest Agent"
+        ManageConfirmationRecipient manage = new ManageConfirmationRecipient(getEnvironment(), "PhoneAndEmail");
+        manage.setTpsId(getBook().getTravelPlanSegmentId());
+        manage.setConfirmationType(UpdateItineraryConfirmationHelper.EMAIL_GUEST_AGENT);
+        manage.setDefaultConfirmationIndicator("true");
+        manage.setGuestFirstName(getHouseHold().primaryGuest().getFirstName());
+        manage.setGuestLastName(getHouseHold().primaryGuest().getLastName());
+        manage.setGuestMiddleName(getHouseHold().primaryGuest().getMiddleName());
+        manage.setPhoneNumber(getHouseHold().primaryGuest().primaryPhone().getNumber());
+        manage.setEmailAddress(getHouseHold().primaryGuest().primaryEmail().getEmail());
+        manage.sendRequest();
+        TestReporter.assertTrue(manage.getResponseStatusCode().equals("200"), "Verify that no error occurred managing confirmation recipient: " + manage.getFaultString());
+
+        // Grabs the ODSGuestId for use in ItineraryConfirmation
+        String sql = "select a.TXN_PTY_EXTNL_REF_VAL "
+                + "from guest.txn_pty_extnl_ref a "
+                + "where a.TXN_PTY_ID = '" + getBook().getGuestId() + "' "
+                + "and a.PTY_EXTNL_SRC_NM = 'ODS' ";
+
         Database db = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
         if (rs.getRowCount() == 0) {
-            throw new AutomationException("No TXN_PTY_EXTNL_REF_VAL was found in GUEST.TXN_PTY_EXTNL_REF table for TP ID [" + getBook().getTravelPlanId() + "].");
+            throw new AutomationException("No TXN_PTY_EXTNL_REF_VAL was found in GUEST.TXN_PTY_EXTNL_REF table for Guest ID [" + getBook().getGuestId() + "].");
         }
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
-        ValidationHelper validations = new ValidationHelper(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())));
+        ItineraryConfirmation confirmation = new ItineraryConfirmation(environment, "WDW", "ItineraryConfirmationRQ");
+        confirmation.setGlobalGuestID(odsGuestId);
+        confirmation.setItineraryId(getBook().getTravelPlanId());
+        confirmation.setParentId(getBook().getTravelPlanSegmentId());
+        confirmation.setChildId(getBook().getTravelComponentGroupingId());
+        confirmation.setSubChildId(getBook().getTravelComponentId());
+        confirmation.setSystemOfRecord("DPMS");
+        confirmation.setEndDate(getDepartureDate());
+        confirmation.setLocation("WDW");
+        confirmation.sendRequest();
+        TestReporter.logAPI(!confirmation.isSuccess(), "Verify that no error occurred when checking the Itinerary Confirmation: " + confirmation.getFaultString(), confirmation);
+        validations();
+
+        // Test validations
+        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
+        TestReporter.assertTrue(getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
+
+    }
+
+    private void validations() {
+        tpPtyId = getBook().getGuestId();
+
+        ValidationHelper validations = new ValidationHelper(getEnvironment());
 
         // Validate reservation
         validations.validateModificationBackend(2, "Booked", "", getArrivalDate(), getDepartureDate(), "NULL", "NULL",
@@ -74,34 +118,20 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyWithTravelAgency ext
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
-        validations.verifyGoMasterInfoForNewGuest(getHouseHold().primaryGuest(), odsGuestId);
 
-        validations.verifyTravelAgency(this);
-
-        // Test validations
-        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
-        TestReporter.assertTrue(getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
+        // Validate TPS confirmation
+        String firstName = getBook().getRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/firstName");
+        String lastName = getBook().getRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/lastName");
+        String contactName = firstName + " " + lastName;
+        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Email Guest Agent", tpPtyId, "Y", "N", contactName, "N");
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
             ReplaceAllForTravelPlanSegment clone = (ReplaceAllForTravelPlanSegment) getBook().clone();
             clone.setEnvironment(Environment.getBaseEnvironmentName(environment));
             clone.sendRequest();
-
-            int tries = 0;
-            int maxTries = 20;
-            boolean success = false;
-            do {
-                Sleeper.sleep(1000);
-                clone.sendRequest();
-                tries++;
-                if (clone.getResponseStatusCode().equals("200")) {
-                    success = true;
-                }
-            } while ((tries < maxTries) && !success);
-
             if (!clone.getResponseStatusCode().equals("200")) {
-                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned: " + clone.getFaultString(), clone);
+                TestReporter.logAPI(!clone.getResponseStatusCode().equals("200"), "Error was returned", clone);
             }
             clone.addExcludedBaselineAttributeValidations("@xsi:nil");
             clone.addExcludedBaselineAttributeValidations("@xsi:type");

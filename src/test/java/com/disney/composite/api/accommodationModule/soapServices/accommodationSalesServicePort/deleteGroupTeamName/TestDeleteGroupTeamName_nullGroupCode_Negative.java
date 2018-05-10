@@ -18,7 +18,7 @@ public class TestDeleteGroupTeamName_nullGroupCode_Negative extends Accommodatio
         delete = new DeleteGroupTeamName(environment, "_Main");
         delete.setgroupCode(BaseSoapCommands.REMOVE_NODE.toString());
         delete.setGroupName("Marbles3");
-        delete.setGroupTeamId(BaseSoapCommands.REMOVE_NODE.toString());
+        // delete.setGroupTeamId(BaseSoapCommands.REMOVE_NODE.toString());
         delete.setgroupTeamName("Marbles3");
         delete.setSelected("true");
         delete.sendRequest();

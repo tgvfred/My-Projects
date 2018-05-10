@@ -5,7 +5,6 @@ import org.testng.annotations.Test;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.CreateGroupTeamName;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.DeleteGroupTeamName;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
@@ -29,7 +28,7 @@ public class TestDeleteGroupTeamName_withoutGroupTeamID extends AccommodationBas
 
         delete = new DeleteGroupTeamName(environment, "_Main");
         delete.setgroupCode("01825");
-        delete.setGroupTeamId(BaseSoapCommands.REMOVE_NODE.toString());
+        // delete.setGroupTeamId(BaseSoapCommands.REMOVE_NODE.toString());
         delete.setGroupName(name);
         delete.setgroupTeamName(name);
         delete.setSelected("false");

@@ -18,7 +18,7 @@ public class TestDeleteGroupTeamName_nullGroupTeamViewTO_Negative extends Accomm
         delete = new DeleteGroupTeamName(environment, "_Main");
         delete.setgroupCode(BaseSoapCommands.REMOVE_NODE.toString());
         delete.setGroupName(BaseSoapCommands.REMOVE_NODE.toString());
-        delete.setGroupTeamId(BaseSoapCommands.REMOVE_NODE.toString());
+        // delete.setGroupTeamId(BaseSoapCommands.REMOVE_NODE.toString());
         delete.setgroupTeamName(BaseSoapCommands.REMOVE_NODE.toString());
         delete.setSelected(BaseSoapCommands.REMOVE_NODE.toString());
         delete.sendRequest();
