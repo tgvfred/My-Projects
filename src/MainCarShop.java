@@ -1,13 +1,13 @@
 
 public class MainCarShop {
     public static void main(String[] args) {
-        String dealerName = "CryoStatus Motors";
-        String vehicleType = "Commercial";
-        String make = "Mercedes";
-        String model = "S650";
-        String color = "Black";
-        int year = 2018;
-        double msrp = 151800.00;
+        String dealerName = "Dodge of the Tricities";
+        String vehicleType = "passenger";
+        String make = "Dodge";
+        String model = "Ram 1500 V8 Diesel";
+        String color = "Red-Black Trim Terracotta";
+        int year = 2015;
+        double msrp = 37800.95;
 
         if(vehicleType.equalsIgnoreCase("passenger")){
             Passenger myNewCar = new Passenger();
@@ -36,9 +36,5 @@ public class MainCarShop {
         else {
             System.out.println("Not A Valid Vehicle");
         }
-
-
-
     }
-
 }

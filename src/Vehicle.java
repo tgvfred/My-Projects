@@ -4,7 +4,6 @@ public class Vehicle extends Dealership {
     private String type;
 
     public Vehicle() {
-
     }
 
     public void setType(String type) {

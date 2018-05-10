@@ -1,6 +1,6 @@
-
+import java.text.DecimalFormat;
 public class Passenger extends Vehicle{
-
+    DecimalFormat fmt = new DecimalFormat("#0.00");
     private String make;
     private String model;
     private String color;
@@ -8,7 +8,6 @@ public class Passenger extends Vehicle{
     private double MSRP;
 
     public Passenger() {
-
     }
 
     public void setMake(String make) {
@@ -51,7 +50,6 @@ public class Passenger extends Vehicle{
         return MSRP;
     }
 
-
     @Override
     public String toString() {
         String priceStatement;
@@ -62,14 +60,14 @@ public class Passenger extends Vehicle{
             choiceTaxTotal = (getMSRP() * .12) + getMSRP();
         }
         else {
-            priceStatement = "This vehicle meets the economy reduced rate of 12%: $" + (getMSRP() * .12);
-            choiceTaxTotal = getMSRP() - (getMSRP() * .12);
+            priceStatement = "This vehicle meets the economy reduced rate of 10%: $" + (getMSRP() * .10);
+            choiceTaxTotal = getMSRP() - (getMSRP() * .10);
         }
 
         vehicleStats = priceStatement + "\n==========================================================" + "\n"
                 + getType() + "\nMake: " + getMake() + "\nModel: " + getModel() +
                 "\nColor: " + getColor() + "\nYear: " + getYear() + "\nMSRP: " + getMSRP() +
-                "\nChoice Tax MSRP "+ choiceTaxTotal + "\nSeller: " + getDealershipName();
+                "\nChoice Tax MSRP: "+ fmt.format(choiceTaxTotal) + "\nSeller: " + getDealershipName();
 
         return vehicleStats;
     }

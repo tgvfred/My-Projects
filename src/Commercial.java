@@ -1,5 +1,8 @@
+import java.text.DecimalFormat;
+
 
 public class Commercial extends Vehicle {
+    DecimalFormat fmt = new DecimalFormat("#0.00");
     private String make;
     private String model;
     private String color;
@@ -7,7 +10,6 @@ public class Commercial extends Vehicle {
     private double MSRP;
 
     public Commercial() {
-
     }
 
     public void setMake(String make) {
@@ -50,7 +52,6 @@ public class Commercial extends Vehicle {
         return MSRP;
     }
 
-
     @Override
     public String toString() {
         String priceStatement;
@@ -68,7 +69,7 @@ public class Commercial extends Vehicle {
         vehicleStats = priceStatement + "\n==========================================================" + "\n"
                 + getType() + "\nMake: " + getMake() + "\nModel: " + getModel() +
                 "\nColor: " + getColor() + "\nYear: " + getYear() + "\nMSRP: " + getMSRP() +
-                "\nChoice Tax MSRP "+ choiceTaxTotal + "\nSeller: " + getDealershipName();
+                "\nChoice Tax MSRP: "+ fmt.format(choiceTaxTotal) + "\nSeller: " + getDealershipName();
 
         return vehicleStats;
     }

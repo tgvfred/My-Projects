@@ -3,7 +3,6 @@ public class Dealership {
 
     private String dealerName;
     public Dealership() {
-
     }
 
     public void setDealershipName(String name){
@@ -15,3 +14,5 @@ public class Dealership {
     }
 
 }
+
+
