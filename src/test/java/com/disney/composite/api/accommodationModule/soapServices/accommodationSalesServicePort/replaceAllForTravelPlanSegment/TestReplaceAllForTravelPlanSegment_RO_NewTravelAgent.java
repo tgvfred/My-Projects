@@ -10,6 +10,9 @@ import com.disney.api.soapServices.accommodationModule.accommodationSalesService
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
+import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operations.AssociateOrganizationIndividual;
+import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operations.CreateIndividual;
+import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operations.CreateOrganization;
 import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operations.UpdateIndividual;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.UpdateItineraryConfirmationHelper;
@@ -21,10 +24,16 @@ import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
-public class TestReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent extends AccommodationBaseTest {
+public class TestReplaceAllForTravelPlanSegment_RO_NewTravelAgent extends AccommodationBaseTest {
 
     private String tpPtyId;
     private String odsGuestId;
+    String agencyId = null;
+    String organizationId = null;
+    String agentId = null;
+    CreateOrganization createAgency = null;
+    CreateIndividual createAgent = null;
+    AssociateOrganizationIndividual associate = null;
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -42,7 +51,7 @@ public class TestReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent extends A
     }
 
     @Test(groups = { "api", "regression", "accommodation", "accommodationSalesService", "replaceAllForTravelPlanSegment" })
-    public void testReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent() {
+    public void testReplaceAllForTravelPlanSegment_RO_NewTravelAgent() {
 
         bookReservation();
 
@@ -50,36 +59,41 @@ public class TestReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent extends A
         String email = randemail + "@disney.com";
         String agentId = getBook().getRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelAgency/agentId");
 
-        // CreateIndividual create = new CreateIndividual(environment, "Main");
-        // create.setPhoneNumber("3369875678");
-        // create.setEmail(email);
-        // create.setFirstName("Kraven");
-        // create.setLastName("Morhead");
-        // create.setTravelAgencyId("423996915");
-        // create.sendRequest();
+        // Creating new agency
+        CreateOrganization createAgency = new CreateOrganization(environment, "Main");
+        createAgency.setName("DEFENDERS Automation " + Randomness.generateCurrentDatetime());
+        createAgency.sendRequest();
+        agencyId = createAgency.getId();
+        organizationId = createAgency.getOdsOrganizationId();
 
-        // Grabs the First and Last name of the Travel Agent
-        String sql1 = "select * "
-                + "from odsp.TXN_IDVL a "
-                + "where a.TXN_IDVL_ID = '" + agentId + "' ";
+        // Creating new agent
+        CreateIndividual create = new CreateIndividual(environment, "Main");
+        create.setPhoneNumber("3369875678");
+        create.setEmail(email);
+        create.setFirstName("Kraven");
+        create.setLastName("Morhead");
+        create.setTravelAgencyId(agencyId);
+        create.sendRequest();
 
-        Database db1 = new OracleDatabase(Environment.getBaseEnvironmentName(Environment.getBaseEnvironmentName(getEnvironment())), Database.GOMASTER);
-        Recordset rs1 = new Recordset(db1.getResultSet(sql1));
-        if (rs1.getRowCount() == 0) {
-            throw new AutomationException("No TXN_PTY_EXTNL_REF_VAL was found in GUEST.TXN_PTY_EXTNL_REF table for Guest ID [" + getBook().getGuestId() + "].");
-        }
+        // Associating new agent to new agency
+        AssociateOrganizationIndividual associate = new AssociateOrganizationIndividual(environment, "Main");
+        associate.setIndividualId(create.getOdsIndividualId());
+        associate.setOrganizationId(organizationId);
+        associate.sendRequest();
 
-        // Updates the existing Travel Agents Email
         UpdateIndividual update = new UpdateIndividual(environment, "Main");
         update.setEmail(email);
-        update.setFirstName(rs1.getValue("IDVL_FRST_NM"));
-        update.setLastName(rs1.getValue("IDVL_LST_NM"));
+        update.setFirstName("Kraven");
+        update.setLastName("Morhead");
         update.setId(agentId);
         update.setRequestNodeValueByXPath("/Envelope/Body/updateIndividual/updateIndividualRequest/individual/telecomAddresses", BaseSoapCommands.REMOVE_NODE.toString());
         update.sendRequest();
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "Verify that no error occurred when checking the Itinerary Confirmation: " + update.getFaultString(), update);
 
         bookReservation();
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelAgency/agencyName", createAgency.getName());
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelAgency/agencyOdsId", createAgency.getId());
+        getBook().setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelAgency/agentId", create.getOdsIndividualId());
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 

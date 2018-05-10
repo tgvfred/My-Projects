@@ -16,7 +16,8 @@
 	    <apiUtilsSoap.version>1.1.16</apiUtilsSoap.version>
 	    <accommodationSalesBatchService.version>1.1.00</accommodationSalesBatchService.version>  
 	    <activity.version>1.1.00</activity.version>  
-	    <admission.version>1.1.00</admission.version>    
+	    <admission.version>1.1.00</admission.version>
+	    <businessServices.version>1.1.01</businessServices.version>    
 	    <dining.version>1.1.01</dining.version>    
 	    <dvcCorp.version>1.1.00</dvcCorp.version>     
 	    <dvcPoints.version>1.1.06</dvcPoints.version>     
@@ -56,6 +57,12 @@
 			<groupId>com.disney.mslt.composite.api</groupId>
 			<artifactId>Admission</artifactId>
 			<version>${admission.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.disney.mslt.composite.api</groupId>
+			<artifactId>BusinessServices</artifactId>
+			<version>${businessServices.version}</version>
+ 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.disney.mslt.composite.api</groupId>
