@@ -102,7 +102,12 @@ public class TestReplaceAllForTravelPlanSegment_ModifyWDTCWithRoomOnly extends A
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
         validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
 
-        // validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1, "N", "NULL", getFacilityId());
+        // validations.validateTPV3(getBook().getTravelPlanId(), "Booked", getArrivalDate(), getDepartureDate(), tpPtyId, getHouseHold().primaryGuest(), 1, 1,
+        // "N", "NULL", getFacilityId());
+
+        // Test validations
+        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
+        TestReporter.assertTrue(getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {

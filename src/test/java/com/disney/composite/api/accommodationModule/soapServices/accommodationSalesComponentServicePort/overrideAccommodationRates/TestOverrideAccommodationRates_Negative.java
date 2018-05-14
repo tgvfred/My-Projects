@@ -15,347 +15,381 @@ import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 
 public class TestOverrideAccommodationRates_Negative extends AccommodationBaseTest {
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_nullRequest() {
-        String fault = "OverrideAccommodationRatesRequest is Null";
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_nullRequest() {
+		String fault = "OverrideAccommodationRatesRequest is Null";
 
-        TestReporter.logScenario("Test - Override Accommodation Rates - Null Request");
+		TestReporter.logScenario("Test - Override Accommodation Rates - Null Request");
 
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment);
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment);
 
-        // validation of removing optionKeyValue
-        oar.setRequest(BaseSoapCommands.REMOVE_NODE.toString());
+		// validation of removing optionKeyValue
+		oar.setRequest(BaseSoapCommands.REMOVE_NODE.toString());
 
-        oar.sendRequest();
+		oar.sendRequest();
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
-    }
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
+	}
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_nullTCG() {
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_nullTCG() {
 
-        String fault = "Required parameters are missing : ExternalReferences and TCG Id needs to be provided";
+		String fault = "Required parameters are missing : ExternalReferences and TCG Id needs to be provided";
 
-        TestReporter.logScenario("Test - OVerride Accommodation Rates - Null TCG");
+		TestReporter.logScenario("Test - OVerride Accommodation Rates - Null TCG");
 
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
 
-        oar.setTcgId(BaseSoapCommands.REMOVE_NODE.toString());
+		oar.setTcgId(BaseSoapCommands.REMOVE_NODE.toString());
 
-        oar.sendRequest();
+		oar.sendRequest();
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
-    }
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
+	}
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_nullRateDetails() {
-        String fault = "Required parameters are missing : Rate Details is Null";
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_nullRateDetails() {
+		String fault = "Required parameters are missing : Rate Details is Null";
 
-        TestReporter.logScenario("Test - Override Accommodation Rates  - Null RateDetails");
+		TestReporter.logScenario("Test - Override Accommodation Rates  - Null RateDetails");
 
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
 
-        oar.setRateDetails(BaseSoapCommands.REMOVE_NODE.toString());
+		oar.setRateDetails(BaseSoapCommands.REMOVE_NODE.toString());
 
-        oar.sendRequest();
+		oar.sendRequest();
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
-    }
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
+	}
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_emptyRateDetails() {
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_emptyRateDetails() {
 
-        String fault = "Required parameters are missing : Rate Details is Null";
+		String fault = "Required parameters are missing : Rate Details is Null";
 
-        TestReporter.logScenario("Test - Override Accommdation Rates - empty Rate Details");
+		TestReporter.logScenario("Test - Override Accommdation Rates - empty Rate Details");
 
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        // validation of removing AccommodationSalesOptionsEnum
-        oar.setRateDetails(BaseSoapCommands.BLANK.toString());
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+		// validation of removing AccommodationSalesOptionsEnum
+		oar.setRateDetails(BaseSoapCommands.BLANK.toString());
 
-        oar.sendRequest();
+		oar.sendRequest();
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
-    }
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
+	}
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_nullExtRefNumber() {
-        String fault = "External Reference is required : External Reference Number is missing !";
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_nullExtRefNumber() {
+		String fault = "External Reference is required : External Reference Number is missing !";
 
-        TestReporter.logScenario("Test - Override Accommodation Rates  - Null ExtRef Number");
+		TestReporter.logScenario("Test - Override Accommodation Rates  - Null ExtRef Number");
 
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "externalRefDetail");
-        // validation
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "externalRefDetail");
+		// validation
 
-        oar.setExternalReferenceType(BaseSoapCommands.BLANK.toString());
-        oar.setExternalReferenceNumber(BaseSoapCommands.REMOVE_NODE.toString());
-        oar.setExternalReferenceCode(BaseSoapCommands.BLANK.toString());
-        oar.setExternalReferenceSource(BaseSoapCommands.BLANK.toString());
-        oar.sendRequest();
+		oar.setExternalReferenceType(BaseSoapCommands.BLANK.toString());
+		oar.setExternalReferenceNumber(BaseSoapCommands.REMOVE_NODE.toString());
+		oar.setExternalReferenceCode(BaseSoapCommands.BLANK.toString());
+		oar.setExternalReferenceSource(BaseSoapCommands.BLANK.toString());
+		oar.sendRequest();
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
-    }
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.EXTERNAL_REFERENCE_NUMBER_REQUIRED);
+	}
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_nullExtRefSourceAndCode() {
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_nullExtRefSourceAndCode() {
 
-        String fault = "External Reference Source or Code required : External Reference Code is missing !";
+		String fault = "External Reference Source or Code required : External Reference Code is missing !";
+
+		TestReporter.logScenario("Test - Override Accommodation Rates - Null ExtRefSource and Code");
+
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "externalRefDetail");
+		// validation
+
+		oar.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
+		oar.setExternalReferenceSource(BaseSoapCommands.REMOVE_NODE.toString());
+		oar.sendRequest();
+
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar,
+				AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_EXTERNAL_REFERENCE_CODE_REQUIRED);
+	}
+
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_invalidExtRefCode() {
+		String fault = "Invalid External Reference Code : Unable to retrieve External Reference Source - Invalid External Reference Code";
+
+		TestReporter.logScenario("Test - Override Accommodation Rates - invalid ExtRefCode");
+
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "externalRefDetail");
+		oar.setExternalReferenceCode("-1");
+		oar.setExternalReferenceType(BaseSoapCommands.BLANK.toString());
+		oar.setExternalReferenceNumber(BaseSoapCommands.BLANK.toString());
+		oar.setExternalReferenceSource(BaseSoapCommands.BLANK.toString());
+		oar.sendRequest();
+
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.INVALID_EXTERNAL_REFERNCE_CODE);
+	}
+
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_invalidExtRefSource() {
 
-        TestReporter.logScenario("Test - Override Accommodation Rates - Null ExtRefSource and Code");
+		String fault = "Booking Source not found :  Invalid Booking Source 'INVALID'";
 
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "externalRefDetail");
-        // validation
+		TestReporter.logScenario("Test - Override Accommodation Rates - Invalid ExtRefSource");
 
-        oar.setExternalReferenceCode(BaseSoapCommands.REMOVE_NODE.toString());
-        oar.setExternalReferenceSource(BaseSoapCommands.REMOVE_NODE.toString());
-        oar.sendRequest();
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "externalRefDetail");
+		oar.setExternalReferenceCode(BaseSoapCommands.BLANK.toString());
+		oar.setExternalReferenceType(BaseSoapCommands.BLANK.toString());
+		oar.setExternalReferenceNumber(BaseSoapCommands.BLANK.toString());
+		oar.setExternalReferenceSource("INVALID");
+		oar.sendRequest();
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.EXTERNAL_REFERENCE_SOURCE_OR_EXTERNAL_REFERENCE_CODE_REQUIRED);
-    }
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.BOOKING_SOURCE_NOT_FOUND);
+	}
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_invalidExtRefCode() {
-        String fault = "Invalid External Reference Code : Unable to retrieve External Reference Source - Invalid External Reference Code";
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_invalidOverrideRate() {
+
+		String fault = "Override rate cannot be more than rack rate. : null";
+
+		TestReporter.logScenario("Test - Override Accommodation Rates - Invalid OverrideRate");
 
-        TestReporter.logScenario("Test - Override Accommodation Rates - invalid ExtRefCode");
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+		// validation of removing AccommodationSalesOptionsEnum
+		oar.setOverridden("true");
+		oar.setBasePrice("10.0");
+		oar.setRackRateRate("1.0");
+		oar.sendRequest();
 
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "externalRefDetail");
-        oar.setExternalReferenceCode("-1");
-        oar.setExternalReferenceType(BaseSoapCommands.BLANK.toString());
-        oar.setExternalReferenceNumber(BaseSoapCommands.BLANK.toString());
-        oar.setExternalReferenceSource(BaseSoapCommands.BLANK.toString());
-        oar.sendRequest();
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.OVERRIDE_RATE_RACK_RATE_ERROR);
+	}
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.INVALID_EXTERNAL_REFERNCE_CODE);
-    }
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_upgradeRes() {
+
+		String fault = "Rate override failed : Rate override cannot be performed on an upgraded accommodation!";
+
+		TestReporter.logScenario("Test - Override Accommodation Rates - upgradeRes");
+		// Book room only booking (1 night, 1 adult)
+		setEnvironment(environment);
+		setDaysOut(0);
+		setNights(1);
+		setArrivalDate(getDaysOut());
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_invalidExtRefSource() {
+		setDepartureDate(getDaysOut() + getNights());
+		setValues();
 
-        String fault = "Booking Source not found :  Invalid Booking Source 'INVALID'";
+		isComo.set("false");
+		bookReservation();
 
-        TestReporter.logScenario("Test - Override Accommodation Rates - Invalid ExtRefSource");
+		// Upgrade reservation using
+		// AccommodationFulfillmentServicePort#upgradeResortRoomType
+		UpgradeResortRoomType urrt = new UpgradeResortRoomType(Environment.getBaseCICDEnvironmentName(environment),
+				"upgradeResortRoomType");
+		urrt.setTcg(getBook().getTravelComponentGroupingId());
+		urrt.setTc(getBook().getTravelComponentId());
+		urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail",
+				BaseSoapCommands.ADD_NODE.commandAppend("startDate"));
+		urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail/startDate",
+				"2018-09-09");
 
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "externalRefDetail");
-        oar.setExternalReferenceCode(BaseSoapCommands.BLANK.toString());
-        oar.setExternalReferenceType(BaseSoapCommands.BLANK.toString());
-        oar.setExternalReferenceNumber(BaseSoapCommands.BLANK.toString());
-        oar.setExternalReferenceSource("INVALID");
-        oar.sendRequest();
+		urrt.setFacilityId(getFacilityId());
+		urrt.setLocationIdString(BaseSoapCommands.REMOVE_NODE.toString());
+		urrt.setRoomTypeCode(getRoomTypeCode());
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.BOOKING_SOURCE_NOT_FOUND);
-    }
+		urrt.sendRequest();
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_invalidOverrideRate() {
+		TestReporter.logAPI(!urrt.getResponseStatusCode().equals("200"),
+				"Verify that no error occurred upgrading a room: " + urrt.getFaultString(), urrt);
 
-        String fault = "Override rate cannot be more than rack rate. : null";
+		// Override the rate for the one night
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+		oar.setTcgId(getBook().getTravelComponentGroupingId());
 
-        TestReporter.logScenario("Test - Override Accommodation Rates - Invalid OverrideRate");
+		oar.sendRequest();
 
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        // validation of removing AccommodationSalesOptionsEnum
-        oar.setOverridden("true");
-        oar.setBasePrice("10.0");
-        oar.setRackRateRate("1.0");
-        oar.sendRequest();
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.RATE_OVERRIDE_FAILURE);
+	}
 
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.OVERRIDE_RATE_RACK_RATE_ERROR);
-    }
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_nullOverrideReason() {
+		String fault = "Required parameters are missing : REASON CODE IS REQUIRED!";
 
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_upgradeRes() {
+		TestReporter.logScenario("Test - Override Accommodation Rates   - Null OverrideReason");
 
-        String fault = "Rate override failed : Rate override cannot be performed on an upgraded accommodation!";
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+		// validation
 
-        TestReporter.logScenario("Test - Override Accommodation Rates - upgradeRes");
-        // Book room only booking (1 night, 1 adult)
-        setEnvironment(environment);
-        setDaysOut(0);
-        setNights(1);
-        setArrivalDate(getDaysOut());
+		oar.setOverrideReason(BaseSoapCommands.REMOVE_NODE.toString());
 
-        setDepartureDate(getDaysOut() + getNights());
-        setValues();
+		oar.sendRequest();
 
-        isComo.set("false");
-        bookReservation();
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
+	}
 
-        // Upgrade reservation using AccommodationFulfillmentServicePort#upgradeResortRoomType
-        UpgradeResortRoomType urrt = new UpgradeResortRoomType(Environment.getBaseCICDEnvironmentName(environment), "upgradeResortRoomType");
-        urrt.setTcg(getBook().getTravelComponentGroupingId());
-        urrt.setTc(getBook().getTravelComponentId());
-        urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail", BaseSoapCommands.ADD_NODE.commandAppend("startDate"));
-        urrt.setRequestNodeValueByXPath("/Envelope/Body/upgradeResortRoomType/request/upgradeRoomDetail/startDate", "2018-09-09");
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_invalidOverrideReason() {
 
-        urrt.setFacilityId(getFacilityId());
-        urrt.setLocationIdString(BaseSoapCommands.REMOVE_NODE.toString());
-        urrt.setRoomTypeCode(getRoomTypeCode());
-
-        urrt.sendRequest();
-
-        TestReporter.logAPI(!urrt.getResponseStatusCode().equals("200"), "Verify that no error occurred upgrading a room: " + urrt.getFaultString(), urrt);
-
-        // Override the rate for the one night
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        oar.setTcgId(getBook().getTravelComponentGroupingId());
-
-        oar.sendRequest();
-
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.RATE_OVERRIDE_FAILURE);
-    }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_nullOverrideReason() {
-        String fault = "Required parameters are missing : REASON CODE IS REQUIRED!";
-
-        TestReporter.logScenario("Test - Override Accommodation Rates   - Null OverrideReason");
-
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        // validation
-
-        oar.setOverrideReason(BaseSoapCommands.REMOVE_NODE.toString());
-
-        oar.sendRequest();
-
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.MISSING_REQUIRED_PARAM_EXCEPTION);
-    }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_invalidOverrideReason() {
-
-        String fault = "Change Reason is invalid  : Reason code not found";
-
-        TestReporter.logScenario("Test - Override Accommodation Rates   - Invalid OverrideReason");
-        setEnvironment(environment);
-        setDaysOut(0);
-        setNights(1);
-        setArrivalDate(getDaysOut());
-        setDepartureDate(getDaysOut() + getNights());
-        setValues();
-        bookReservation();
-
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        oar.setTcgId(getBook().getTravelComponentGroupingId());
-
-        oar.setOverrideReason("INVALID");
-
-        oar.sendRequest();
-
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.INVALID_CHANGE_REASON);
-    }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
-    public void TestOverrideAccommodationRates_invalidTCG() {
-        String fault = "Travel Component Grouping not found : TravelComponentGrouping not found";
-
-        TestReporter.logScenario("Test - Override Accommodation Rates   - Invalid TCG");
-
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        // validation
-
-        oar.setTcgId("1");
-
-        oar.sendRequest();
-
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.TRAVEL_COMPONENT_GROUPING_NOT_FOUND);
-    }
-
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_autoCancelled() {
-
-        String fault = "Cancelled accommodations cannot be overriden : null";
-
-        TestReporter.logScenario("Test - Override Accommodation Rates   - Auto Cancelled");
-
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-
-        String sql = "  select d.tps_id, b.tc_grp_nb, d.TPS_ARVL_DT "
-                + " from res_mgmt.ACM_CMPNT a "
-                + " join res_mgmt.TC b on a.ACM_TC_ID = b.TC_ID "
-                + " join res_mgmt.TC_GRP c on b.TC_GRP_NB = c.TC_GRP_NB "
-                + " join res_mgmt.TPS d on c.TPS_ID = d.TPS_ID "
-                + " where d.create_usr_id_cd = 'AutoJUnit.us' "
-                + " and d.trvl_sts_nm = 'Auto Cancelled' "
-                + " and d.TPS_ARVL_DT > sysdate "
-                + " and rownum = 1";
-
-        Database db = new OracleDatabase(environment, Database.DREAMS);
-        Recordset rs = new Recordset(db.getResultSet(sql));
-
-        oar.setTpsID(rs.getValue("tps_id"));
-        oar.setTcgId(rs.getValue("tc_grp_nb"));
-        oar.sendRequest();
-
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS);
-    }
-
-    // giving java null pointer exception -works in database
-    @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative" })
-    public void TestOverrideAccommodationRates_cancelled() {
-
-        cancel(getBook().getTravelComponentGroupingId());
-        String fault = "Cancelled accommodations cannot be overriden : null";
-
-        TestReporter.logScenario("Test - Override Accommodation Rates   - Cancelled");
-
-        OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-        oar.setTpsID(getBook().getTravelPlanSegmentId());
-        oar.setTcgId(getBook().getTravelComponentGroupingId());
-        oar.sendRequest();
-
-        TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [" + fault + "] exists. Found [ " + oar.getFaultString() + " ]", oar);
-        validateApplicationError(oar, AccommodationErrorCode.CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS);
-    }
-
-    /*
-     * @Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService", "overrideAccommodationRates", "negative", "debug" })
-     * public void TestOverrideAccommodationRates_invalidLocationId() {
-     *
-     * String fault = "ResManagementMapper.getSettlementLocationByFacility:ResManagementMapper.getSettlementLocationByFacility:";
-     *
-     * TestReporter.logScenario("Test - Override Accommodation Rates   - Invalid LocationId");
-     *
-     * setEnvironment(environment);
-     * setDaysOut(0);
-     * setNights(1);
-     * setArrivalDate(getDaysOut());
-     * setDepartureDate(getDaysOut() + getNights());
-     * setValues();
-     * bookReservation();
-     *
-     * // Cancel cancel = new Cancel(environment);
-     * //
-     * // cancel.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
-     * // //System.out.println(cancel.getRequest());
-     * // cancel.sendRequest();
-     *
-     * OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
-     *
-     * oar.setTcgId(getBook().getTravelComponentGroupingId());
-     *
-     * oar.setLocationId("-1");
-     *
-     * oar.sendRequest();
-     * //System.out.println(oar.getResponse());
-     * TestReporter.logAPI(!oar.getFaultString().contains(fault), "Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() +
-     * " ]", oar);
-     * validateApplicationError(oar, AccommodationErrorCode.INVALID_FACILITY);
-     * }
-     */
+		String fault = "Change Reason is invalid  : Reason code not found";
+
+		TestReporter.logScenario("Test - Override Accommodation Rates   - Invalid OverrideReason");
+		setEnvironment(environment);
+		setDaysOut(0);
+		setNights(1);
+		setArrivalDate(getDaysOut());
+		setDepartureDate(getDaysOut() + getNights());
+		setValues();
+		bookReservation();
+
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+		oar.setTcgId(getBook().getTravelComponentGroupingId());
+
+		oar.setOverrideReason("INVALID");
+
+		oar.sendRequest();
+
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.INVALID_CHANGE_REASON);
+	}
+
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative", "debug" })
+	public void TestOverrideAccommodationRates_invalidTCG() {
+		// String fault = "Travel Component Grouping not found :
+		// TravelComponentGrouping not found";
+		String fault = "No Accommodation Component found";
+		TestReporter.logScenario("Test - Override Accommodation Rates   - Invalid TCG");
+
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+		// validation
+
+		oar.setTcgId("1");
+
+		oar.sendRequest();
+
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		// validateApplicationError(oar,
+		// AccommodationErrorCode.TRAVEL_COMPONENT_GROUPING_NOT_FOUND);
+		validateApplicationError(oar, AccommodationErrorCode.NO_ACCOMMODATION_FOUND);
+	}
+
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_autoCancelled() {
+
+		String fault = "Cancelled accommodations cannot be overriden : null";
+
+		TestReporter.logScenario("Test - Override Accommodation Rates   - Auto Cancelled");
+
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+
+		String sql = "  select d.tps_id, b.tc_grp_nb, d.TPS_ARVL_DT " + " from res_mgmt.ACM_CMPNT a "
+				+ " join res_mgmt.TC b on a.ACM_TC_ID = b.TC_ID "
+				+ " join res_mgmt.TC_GRP c on b.TC_GRP_NB = c.TC_GRP_NB "
+				+ " join res_mgmt.TPS d on c.TPS_ID = d.TPS_ID " + " where d.create_usr_id_cd = 'AutoJUnit.us' "
+				+ " and d.trvl_sts_nm = 'Auto Cancelled' " + " and d.TPS_ARVL_DT > sysdate " + " and rownum = 1";
+
+		Database db = new OracleDatabase(environment, Database.DREAMS);
+		Recordset rs = new Recordset(db.getResultSet(sql));
+
+		oar.setTpsID(rs.getValue("tps_id"));
+		oar.setTcgId(rs.getValue("tc_grp_nb"));
+		oar.sendRequest();
+
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [ " + fault + " ] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS);
+	}
+
+	// giving java null pointer exception -works in database
+	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesComponentService",
+			"overrideAccommodationRates", "negative" })
+	public void TestOverrideAccommodationRates_cancelled() {
+
+		cancel(getBook().getTravelComponentGroupingId());
+		String fault = "Cancelled accommodations cannot be overriden : null";
+
+		TestReporter.logScenario("Test - Override Accommodation Rates   - Cancelled");
+
+		OverrideAccommodationRatesRequest oar = new OverrideAccommodationRatesRequest(environment, "Main");
+		oar.setTpsID(getBook().getTravelPlanSegmentId());
+		oar.setTcgId(getBook().getTravelComponentGroupingId());
+		oar.sendRequest();
+
+		TestReporter.logAPI(!oar.getFaultString().contains(fault),
+				"Validate correct fault string [" + fault + "] exists. Found [ " + oar.getFaultString() + " ]", oar);
+		validateApplicationError(oar, AccommodationErrorCode.CANNOT_OVERRIDE_CANCELLED_ACCOMMODATIONS);
+	}
+
+	/*
+	 * @Test(groups = { "api", "regression", "accommodation",
+	 * "accommodationSalesComponentService", "overrideAccommodationRates",
+	 * "negative", "debug" }) public void
+	 * TestOverrideAccommodationRates_invalidLocationId() {
+	 *
+	 * String fault =
+	 * "ResManagementMapper.getSettlementLocationByFacility:ResManagementMapper.getSettlementLocationByFacility:";
+	 *
+	 * TestReporter.logScenario(
+	 * "Test - Override Accommodation Rates   - Invalid LocationId");
+	 *
+	 * setEnvironment(environment); setDaysOut(0); setNights(1);
+	 * setArrivalDate(getDaysOut()); setDepartureDate(getDaysOut() +
+	 * getNights()); setValues(); bookReservation();
+	 *
+	 * // Cancel cancel = new Cancel(environment); // //
+	 * cancel.setTravelComponentGroupingId(getBook().
+	 * getTravelComponentGroupingId()); //
+	 * //System.out.println(cancel.getRequest()); // cancel.sendRequest();
+	 *
+	 * OverrideAccommodationRatesRequest oar = new
+	 * OverrideAccommodationRatesRequest(environment, "Main");
+	 *
+	 * oar.setTcgId(getBook().getTravelComponentGroupingId());
+	 *
+	 * oar.setLocationId("-1");
+	 *
+	 * oar.sendRequest(); //System.out.println(oar.getResponse());
+	 * TestReporter.logAPI(!oar.getFaultString().contains(fault),
+	 * "Validate correct fault string [ " + fault + " ] exists. Found [ " +
+	 * oar.getFaultString() + " ]", oar); validateApplicationError(oar,
+	 * AccommodationErrorCode.INVALID_FACILITY); }
+	 */
 
 }

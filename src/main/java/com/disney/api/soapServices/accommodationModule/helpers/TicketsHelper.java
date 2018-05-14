@@ -11,6 +11,7 @@ import com.disney.api.soapServices.core.BaseSoapService;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.FindTicketPriceGridByPackage;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.GetTicketProducts;
+import com.disney.utils.Randomness;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.guestFactory.Guest;
 
@@ -196,6 +197,7 @@ public class TicketsHelper {
     public GetTicketProducts getTicketProducts(String ticketDescription) {
         GetTicketProducts get = new GetTicketProducts(getEnvironment(), "Main");
         get.setTicketGroupName(getTicketGroupName());
+        get.setArrivalDate(Randomness.generateCurrentXMLDate());
         get.sendRequest();
         TestReporter.assertTrue(get.getResponseStatusCode().equals("200"), "Verify that no error occurred finding ticket products for ticket group name [" + getTicketGroupName() + "].");
         setAdmissionProductId(get.getAdmissionProductIdByTicketDescription(ticketDescription));

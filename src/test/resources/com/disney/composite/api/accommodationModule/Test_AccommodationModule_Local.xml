@@ -1,55 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="AccommodationModule_Suite" parallel="methods" thread-count="20" configfailurepolicy="continue">
-	<parameter name="environment" value="latest_cm" />
-	<parameter name="localHostList" value="AccommodationSalesServicePort" />
-	<parameter name="localHostUrlList" value="http://accommodationsvcslpy.wdw.disney.com/Accommodation/AccommodationSalesServicePort" /> 
+<suite name="ccommodationModule_Suite" parallel="methods" thread-count="20" configfailurepolicy="continue">
+	<parameter name="environment" value="latest" />
+	<!-- <parameter name="localHostList" value="AccommodationSalesServicePort;AccommodationSalesComponentServicePort" />
+	<parameter name="localHostUrlList" value="http://fldcvdsla16120.wdw.disney.com:9081/Accommodation/AccommodationSalesServicePort;http://fldcvdsla16120.wdw.disney.com:9081/Accommodation/AccommodationSalesComponentServicePort" /> --> 
 	
-	
-	<parameter name="darksideServiceList" value="AccommodationSalesServicePort;AccommodationSalesComponentServicePort;REST_AccommodationSalesService" />
+	<!-- <parameter name="darksideServiceList" value="AccommodationSalesServicePort;AccommodationSalesComponentServicePort;REST_AccommodationS?alesService" /> -->
 	<test name="AccommodationModule_tpv3" parallel="methods" thread-count="1">
 		<groups>
-			<run>
-				<exclude name="presmoke"/>
-				<exclude name="smoke"/>					
+			<run>					
 				<exclude name="dev"/>
 				<!-- <exclude name="debug"/> -->
+				<include name="gathering"></include>
 				<include name="tpv3"></include>
 				<include name="GCAL"></include>
-				<exclude name="example"></exclude>
-			</run>
-		</groups>
-		<packages>
-			<package name="com.disney.composite.api.accommodationModule.*"></package>
-		</packages>
-	</test>
-	<test name="AccommodationModule_checkout" parallel="methods" thread-count="3">
-		<groups>
-			<run>
-				<exclude name="presmoke"/>
-				<exclude name="smoke"/>					
-				<exclude name="dev"/>
-				<!-- <exclude name="debug"/> -->
-				<include name="checkout"></include>
-				<exclude name="tpv3"></exclude>
-				<exclude name="GCAL"></exclude>
-				<exclude name="example"></exclude>
-			</run>
-		</groups>
-		<packages>
-			<package name="com.disney.composite.api.accommodationModule.*"></package>
-		</packages>
-	</test>
-	<test name="AccommodationModule_reinstate" parallel="methods" thread-count="5">
-		<groups>
-			<run>
-				<exclude name="presmoke"/>
-				<exclude name="smoke"/>					
-				<exclude name="dev"/>
-				<!-- <exclude name="debug"/> -->
-				<include name="reinstate"></include>
-				<exclude name="tpv3"></exclude>
-				<exclude name="GCAL"></exclude>
 				<exclude name="example"></exclude>
 			</run>
 		</groups>
@@ -64,9 +28,11 @@
 				<exclude name="smoke"/>					
 				<exclude name="dev"/>
 				<!-- <exclude name="debug"/> -->
+				<exclude name="getoptions"></exclude>
 				<exclude name="checkout"></exclude>
 				<exclude name="reinstate"></exclude>
 				<exclude name="tpv3"></exclude>
+				<exclude name="gathering"></exclude>
 				<exclude name="GCAL"></exclude>
 				<exclude name="example"></exclude>
 			</run>

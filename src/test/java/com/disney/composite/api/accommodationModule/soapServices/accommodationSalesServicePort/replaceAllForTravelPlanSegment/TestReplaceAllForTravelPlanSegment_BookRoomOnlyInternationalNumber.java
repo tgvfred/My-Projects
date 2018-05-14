@@ -43,7 +43,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyInternationalNumber 
         guest.primaryGuest().primaryAddress().setCountry("Brazil");
         guest.primaryGuest().primaryAddress().setCountryAbbv("BRA");
         guest.primaryGuest().primaryAddress().setZipCode("47834");
-        guest.primaryGuest().primaryPhone().setNumber("0106434774000"); // place the number here
+        guest.primaryGuest().primaryPhone().setNumber("0106434774000");
 
         // Set guests language preference
         guest.primaryGuest().setLanguagePreference("Spanish");
@@ -55,6 +55,10 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyInternationalNumber 
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
         validations();
+        // Test validations
+        TestReporter.logStep("Validating ExperienceMediaDetails Node Found");
+        TestReporter.assertTrue(getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegmentResponse/response/roomDetails/roomReservationDetail/guestReferenceDetails/experienceMediaDetails") == 1, "Verify an ExperienceMediaDetails Node was found in the Response.");
+
     }
 
     private void validations() {
@@ -83,7 +87,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyInternationalNumber 
         validations.validateGuestInformation(getBook().getTravelPlanId(), getHouseHold());
         validations.verifyNumberOfTpPartiesByTpId(1, getBook().getTravelPlanId());
         validations.verifyTpPartyId(tpPtyId, getBook().getTravelPlanId());
-        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanId());
+        validations.verifyOdsGuestIdCreated(true, getBook().getTravelPlanSegmentId());
 
         // Validate TPS confirmation
         String contactName = getBook().getRequestNodeValueByXPath("//request/contactName");
