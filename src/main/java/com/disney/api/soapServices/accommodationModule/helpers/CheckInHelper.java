@@ -320,7 +320,6 @@ public class CheckInHelper {
             checkIn.setGuestId(getPrimaryGuestId());
             checkIn.setLocationId(locationId);
             checkIn.setTravelComponentGroupingId(getTcgId());
-
             // Sleeper.sleep(Randomness.randomNumberBetween(3, 5) * 1000);
             checkIn.sendRequest();
             if (!checkIn.getResponseStatusCode().equals("200")) {

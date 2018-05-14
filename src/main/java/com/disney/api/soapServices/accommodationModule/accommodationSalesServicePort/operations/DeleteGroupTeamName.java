@@ -28,7 +28,7 @@ public class DeleteGroupTeamName extends AccommodationSalesServicePort {
     }
 
     public void setGroupTeamId(String value) {
-        setRequestNodeValueByXPath("/Envelope/Body/deleteGroupTeamName/request/groupTeamViewTO/groupTeamId", value);
+        setRequestNodeValueByXPathAndAddNode("/Envelope/Body/deleteGroupTeamName/request/groupTeamViewTO/groupTeamId", value);
     }
 
     public void setSelected(String value) {

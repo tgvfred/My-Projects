@@ -29,9 +29,9 @@ public class TestCancel_addBundle_cancelAccommodation_tcgOnly extends Accommodat
         arrivalDate.set(Randomness.generateCurrentXMLDate(getDaysOut()));
         departureDate.set(Randomness.generateCurrentXMLDate(getDaysOut() + getNights()));
 
-        setIsWdtcBooking(false);
+        setIsWdtcBooking(true);
         setValues(getEnvironment());
-        // setIsBundle(true);
+        setIsBundle(true);
         setSkipDeposit(true);
         bookReservation();
 

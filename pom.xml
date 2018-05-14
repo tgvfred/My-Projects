@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.disney.mslt.composite.api</groupId>
 	<artifactId>Accommodation</artifactId>
-	<version>1.1.13</version>
+	<version>1.1.16</version>
 	<name>Accommodation API</name>
 	<description>Project for housing Composite Accommodation API</description>
 	<distributionManagement>
@@ -13,20 +13,20 @@
 	    </repository>
   	</distributionManagement>	
   	<properties>
-	    <apiUtilsSoap.version>1.1.16</apiUtilsSoap.version>
+	    <apiUtilsSoap.version>1.1.18</apiUtilsSoap.version>
 	    <accommodationSalesBatchService.version>1.1.00</accommodationSalesBatchService.version>  
-	    <activity.version>1.1.00</activity.version>  
+	    <activity.version>1.1.02</activity.version>  
 	    <admission.version>1.1.00</admission.version>    
-	    <dining.version>1.1.01</dining.version>    
+	    <dining.version>1.1.03</dining.version>    
 	    <dvcCorp.version>1.1.00</dvcCorp.version>     
 	    <dvcPoints.version>1.1.06</dvcPoints.version>     
 	    <dvcSales.version>1.1.22</dvcSales.version>     
-	    <eai.version>1.1.00</eai.version>      
+	    <eai.version>1.1.01</eai.version>      
 	    <facility.version>1.1.03</facility.version>      
 	    <folio.version>1.1.04</folio.version>      
 	    <guestCelebrations.version>1.1.00</guestCelebrations.version>  
 	    <groups.version>1.1.00</groups.version>
-	    <party.version>1.1.00</party.version>    
+	    <party.version>1.1.04</party.version>    
 	    <pricing.version>1.1.04</pricing.version>  
 	    <profile.version>1.1.01</profile.version>        
 	    <resource.version>1.1.00</resource.version>           

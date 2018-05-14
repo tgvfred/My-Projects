@@ -1,7 +1,5 @@
 package com.disney.api.soapServices.accommodationModule.helpers;
 
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.disney.AutomationException;
@@ -14,12 +12,13 @@ import com.disney.api.soapServices.folioModule.folioServicePort.operations.Retri
 import com.disney.api.soapServices.folioModule.paymentService.operations.PostCardPayment;
 import com.disney.api.utils.dataFactory.database.sqlStorage.Dreams;
 import com.disney.utils.Datatable;
-import com.disney.utils.GenerateCard;
 import com.disney.utils.TestReporter;
 import com.disney.utils.dataFactory.database.Database;
 import com.disney.utils.dataFactory.database.Recordset;
 import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.guestFactory.HouseHold;
+import com.disney.utils.tdm.pCard.Card;
+import com.disney.utils.tdm.pCard.PCard;
 
 public class PaymentSettlementHelper {
     private String environment;
@@ -148,42 +147,31 @@ public class PaymentSettlementHelper {
     }
 
     public void createSettlementMethod(String scenario) {
-        Datatable datatable = new Datatable();
-        datatable.setVirtualtablePath(Datatable.PAYMENTUI_MASTER_DATA_PATH);
-        datatable.setVirtualtablePage("PaymentUI");
-        datatable.setVirtualtableScenario(scenario);
+        Datatable.setVirtualtablePath(Datatable.PAYMENTUI_MASTER_DATA_PATH);
+        Datatable.setVirtualtablePage("PaymentUI");
+        Datatable.setVirtualtableScenario(scenario);
 
         String paymentMethod = null;
         String status = null;
         String delay = null;
         String expressCheckout = null;
 
-        paymentMethod = datatable.getDataParameter("PaymentMethod");
-        status = datatable.getDataParameter("Status");
-        delay = datatable.getDataParameter("Delay");
-        expressCheckout = datatable.getDataParameter("ExpressCheckout");
+        paymentMethod = Datatable.getDataParameter("PaymentMethod");
+        status = Datatable.getDataParameter("Status");
+        delay = Datatable.getDataParameter("Delay");
+        expressCheckout = Datatable.getDataParameter("ExpressCheckout");
 
-        GenerateCard card = new GenerateCard();
-        Map<String, String> cardInfo = null;
-        // System.out.println();
-        try {
-            cardInfo = card.getCardInfo(status, delay, card.getCradTypeEnum(paymentMethod));
-        } catch (Exception e) {
-            TestReporter.assertNotNull(cardInfo, "An error occurred retrieving the card.  The search parameters are as follows:"
-                    + "\nSTATUS: " + status
-                    + "\nDELAY:  " + delay
-                    + "\nMETHOD: " + paymentMethod
-                    + "\nStacktrace: " + e.getMessage());
-        }
-        String cardPaymentMethod = datatable.getDataParameter("PaymentMethod");
-        String cardNumber = cardInfo.get("AccountNumber").replace("", "");
-        String cardExpirationMonth = cardInfo.get("ExpMonth");
-        String cardExpirationYear = cardInfo.get("ExpYear");
-        String cardHolderName = cardInfo.get("NameOnCard");
-        String cardAddressLine1 = cardInfo.get("BillingStreet");
-        String cardAddressLine2 = cardInfo.get("BillingStreet2");
-        String cardState = cardInfo.get("BillingState");
-        String cardPostalCode = cardInfo.get("BillingZip");
+        Card card = PCard.getCard(status, delay, PCard.getCardTypeEnum(paymentMethod));
+
+        String cardPaymentMethod = Datatable.getDataParameter("PaymentMethod");
+        String cardNumber = card.getAccountNumber().replace("", "");
+        String cardExpirationMonth = card.getExpMonth();
+        String cardExpirationYear = card.getExpYear();
+        String cardHolderName = card.getNameOnCard();
+        String cardAddressLine1 = card.getBillingStreet();
+        String cardAddressLine2 = card.getBillingStreet2();
+        String cardState = card.getBillingState();
+        String cardPostalCode = card.getBillingZip();
 
         RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(getEnvironment().toLowerCase().replace("_cm", ""), "UI booking");
         retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getTpId());

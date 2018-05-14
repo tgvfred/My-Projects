@@ -15,7 +15,7 @@ public class TestReplaceAllForTravelPlanSegment_BookRoomOnlyRSR extends Accommod
     @Parameters("environment")
     public void setup(String environment) {
         setEnvironment(environment);
-        setDaysOut(0);
+        setDaysOut(200);
         setNights(1);
         setArrivalDate(getDaysOut());
         setDepartureDate(getNights());

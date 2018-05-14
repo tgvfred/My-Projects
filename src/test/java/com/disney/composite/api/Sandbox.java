@@ -4,15 +4,16 @@ import java.util.Date;
 
 import org.testng.annotations.Test;
 
+import com.disney.api.helpers.Agency;
+
 public class Sandbox {
 
     @Test
     public void roomOnlyBooking() {
-        Date currentDate = new Date();
-        Date effectiveFrom = new Date(currentDate.getTime() - (10 * 24 * 60 * 60 * 1000));
-        // Date effectiveTo = null;
-        Date effectiveTo = new Date(currentDate.getTime() + (10 * 24 * 60 * 60 * 1000));
-        System.out.println(isActive(currentDate, effectiveFrom, effectiveTo));
+        Agency agency = new Agency("Latest");
+        System.out.println(agency.getAgencyId());
+        System.out.println(agency.getOrganizationId());
+
     }
 
     private boolean isActive(

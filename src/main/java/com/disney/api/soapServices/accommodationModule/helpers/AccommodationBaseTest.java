@@ -2,11 +2,9 @@ package com.disney.api.soapServices.accommodationModule.helpers;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.AfterMethod;
@@ -14,10 +12,8 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Parameters;
-import org.w3c.dom.Document;
 
 import com.disney.AutomationException;
-import com.disney.api.DVCSalesBaseTest;
 import com.disney.api.restServices.BaseRestTest;
 import com.disney.api.restServices.ResourceRest;
 import com.disney.api.restServices.core.RestResponse;
@@ -47,7 +43,6 @@ import com.disney.utils.PackageCodes;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
-import com.disney.utils.XMLTools;
 import com.disney.utils.dataFactory.ResortInfo;
 import com.disney.utils.dataFactory.ResortInfo.ResortColumns;
 import com.disney.utils.dataFactory.database.Database;
@@ -165,18 +160,6 @@ public class AccommodationBaseTest extends BaseRestTest {
     private ThreadLocal<Boolean> mywPlusDinePackageCode = new ThreadLocal<>();
     private ThreadLocal<Boolean> addRoom = new ThreadLocal<>();
     private static String tempEnv;
-    private boolean useLocalXml = false;
-    private String xmlRepoUrl = "https://github.disney.com/api/v3/repos/phlej001/TestDataOnDemand/contents/TestDataOnDemand/soap-xml-storage";
-    private String strOperationName = null;
-    private String strService = null;
-    private Map<String, String> xpathNodeReplacements = new HashMap<>();
-    private Set<String> excludedResponseXpaths = new HashSet<>();
-    private static boolean exactResponse = true;
-    private Set<String> excludedBaselineAttributes = new HashSet<>();
-    private Map<String, String> regexXpaths = new HashMap<>();
-    private Document responseDocument = null;
-    private Set<String> excludedBaselineXpaths = new HashSet<>();
-    private String tcg;
 
     public void addToNoPackageCodes(String key, String value) {
         noPackageCodes.put(key, value);
@@ -436,44 +419,6 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public void setSalesChannelId(String salesChannelId) {
         this.salesChannelId.set(salesChannelId);
-    }
-
-    protected void setXmlRepo(String location) {
-        this.xmlRepoUrl = location;
-        this.useLocalXml = true;
-    }
-
-    public String getOperation() {
-        return strOperationName;
-    }
-
-    public String getService() {
-        return strService;
-    }
-
-    public Document getResponseDocument() {
-        return responseDocument;
-    }
-
-    public String getResponseNodeValueByXPath(String xpath) {
-        return XMLTools.getValueByXpath(getResponseDocument(), xpath);
-    }
-
-    public void addExcludedXpathValidations(String xpath) {
-        TestReporter.logDebug("Excluding XPath from validateNode [ " + xpath + " ]");
-        excludedResponseXpaths.add(xpath);
-    }
-
-    /**
-     * @summary Takes the current Response XML Document stored in memory and
-     *          return it as a string for simple output
-     * @precondition Requires XML Document to be loaded by using {@link #setResponseDocument}
-     * @author Justin Phlegar
-     * @version Created 08/28/2014
-     * @return Will return the current Response XML as a string
-     */
-    public String getResponse() {
-        return XMLTools.transformXmlToString(getResponseDocument());
     }
 
     /**
@@ -928,7 +873,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         try {
             retrieveReservation();
             if (getRetrieve().getTravelStatus().toLowerCase().contains("check")) {
-                CheckInHelper helper = new CheckInHelper(environment, getBook());
+                CheckInHelper helper = new CheckInHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook());
                 helper.checkOut(locationId.get());
             }
 
@@ -999,7 +944,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             getHouseHold().primaryGuest().primaryAddress().setCity("Winston Salem");
         }
 
-        book.set(new ReplaceAllForTravelPlanSegment(getEnvironment(), scenario));
+        book.set(new ReplaceAllForTravelPlanSegment(Environment.getBaseEnvironmentName(getEnvironment()), scenario));
 
         if ((skipExternalRef.get() == null) || (skipExternalRef.get() == false)) {
             externalRefNumber.set(Randomness.randomNumber(12));
@@ -1107,7 +1052,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             if (StringUtils.isEmpty(packageCode.get())) {
                 do {
                     try {
-                        packageCode.set(pkg.retrievePackageCode(getEnvironment(), String.valueOf(getDaysOut()),
+                        packageCode.set(pkg.retrievePackageCode(Environment.getBaseEnvironmentName(getEnvironment()), String.valueOf(getDaysOut()),
                                 getLocationId(), getPackageType(), getPackageBillCode(), getResortCode(), getRoomTypeCode(), getPackageDescription()));
                         success = true;
                     } catch (AssertionError e) {
@@ -1135,9 +1080,9 @@ public class AccommodationBaseTest extends BaseRestTest {
 
             if (isValid(getSetTickets()) && (getSetTickets() == true)) {
                 if ((isValid(isWdtcBooking()) && (isWdtcBooking() == true)) || (isValid(getIsLibgoBooking()) && getIsLibgoBooking())) {
-                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook(), getPackageCode()));
+                    ticketsHelper.set(new TicketsHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook(), getPackageCode()));
                 } else {
-                    ticketsHelper.set(new TicketsHelper(getEnvironment(), getBook()));
+                    ticketsHelper.set(new TicketsHelper(Environment.getBaseEnvironmentName(getEnvironment()), getBook()));
                 }
                 ticketsHelper.get().setAdultTicket(true);
                 if (isValid(getTicketDescription())) {
@@ -1263,7 +1208,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                     getProfileData().put(PROFILE_ID, "600");
                 }
 
-                Database db = new Database(ProfileDatabase.getInfo(getEnvironment()));
+                Database db = new Database(ProfileDatabase.getInfo(Environment.getBaseEnvironmentName(getEnvironment())));
                 Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getProfileInformationById(getProfileData().get(PROFILE_ID))));
                 TestReporter.assertTrue(rs.getRowCount() > 0, "Verify that a profile is found in the DB for profile ID [" + getProfileData().get(PROFILE_ID) + "].");
                 getProfileData().put(PROFILE_CODE, rs.getValue("PROFILE_CODE"));
@@ -1292,16 +1237,6 @@ public class AccommodationBaseTest extends BaseRestTest {
             getBook().setLocationIds(getLocationId());
 
             if ((getSendRequest() == null) || (getSendRequest() == true)) {
-                // if (!isValid(isComo.get())) {
-                // throw new AutomationException("The 'isComo' field cannot be null or empty.");
-                // }
-                /*
-                 * if (!isValid(isComo) || !isValid(isComo.get()) || isComo.get().equals("false")) {
-                 * getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));
-                 * } else {
-                 * getBook().setEnvironment(getEnvironment());
-                 * }
-                 */
                 getBook().sendRequest();
                 TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
                 tries++;
@@ -1369,6 +1304,9 @@ public class AccommodationBaseTest extends BaseRestTest {
         FindMiscPackages find = new FindMiscPackages(Environment.getBaseEnvironmentName(getEnvironment()), "MinimalInfo");
         find.setArrivalDate(Randomness.generateCurrentXMLDate(getDaysOut()));
         find.setBookDate(Randomness.generateCurrentXMLDate());
+        if (isWdtcBooking()) {
+            find.setChannelIds("474562");
+        }
         find.sendRequest();
         TestReporter.assertTrue(find.getResponseStatusCode().equals("200"), "Verify that no error occurred adding a bundle to TP ID [" + getBook().getTravelPlanId() + "]: " + add.getFaultString());
         add.setPackageBundleRequestsCode(find.getPackageCode());
@@ -1443,7 +1381,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
         Sleeper.sleep(5000);
         // retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
-        retrieve.set(new Retrieve(getEnvironment(), "Main"));
+        retrieve.set(new Retrieve(Environment.getBaseEnvironmentName(getEnvironment()), "Main"));
         getRetrieve().setRequestNodeValueByXPath("//request/travelPlanId", getBook().getTravelPlanId());
         getRetrieve().setRequestNodeValueByXPath("//request/locationId", getLocationId());
         getRetrieve().sendRequest();
@@ -1456,7 +1394,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                     + "and a.tps_id = b.tps_id "
                     + "and b.tc_grp_nb = c.tc_grp_nb "
                     + "and c.fac_id is not null )";
-            Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+            Database db = new OracleDatabase(Environment.getBaseEnvironmentName(getEnvironment()), Database.DREAMS);
             Recordset rs = new Recordset(db.getResultSet(sql));
             for (int i = 1; i <= rs.getRowCount(); i++) {
                 getRetrieve().setRequestNodeValueByXPath("//request/locationId", rs.getValue("WRK_LOC_ID", i));
@@ -1492,7 +1430,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                     + "and a.tps_id = b.tps_id "
                     + "and b.tc_grp_nb = c.tc_grp_nb "
                     + "and c.fac_id is not null )";
-            Database db = new OracleDatabase(getEnvironment(), Database.DREAMS);
+            Database db = new OracleDatabase(Environment.getBaseEnvironmentName(getEnvironment()), Database.DREAMS);
             Recordset rs = new Recordset(db.getResultSet(sql));
             for (int i = 1; i <= rs.getRowCount(); i++) {
                 getRetrieve().setRequestNodeValueByXPath("//request/locationId", rs.getValue("WRK_LOC_ID", i));
@@ -1515,7 +1453,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public void setValues() {
         boolean success = false;
         int index;
-        if (!isValid(tempEnv) && !isValid(getEnvironment())) {
+        if (!isValid(tempEnv) && !isValid(Environment.getBaseEnvironmentName(getEnvironment()))) {
             throw new AutomationException("The environment variable cannot be null or empty.");
         } else if (!isValid(tempEnv)) {
             tempEnv = getEnvironment();
@@ -1562,7 +1500,7 @@ public class AccommodationBaseTest extends BaseRestTest {
 
     public void setValues(String environment) {
         // setEnvironment(environment);
-        tempEnv = environment;
+        tempEnv = Environment.getBaseEnvironmentName(environment);
         setValues();
     }
 
@@ -1578,7 +1516,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public String getAssignmentOwnerId(String tpId) {
-        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(Dreams_AccommodationQueries.getAccommodationComponentAssignemtnOwnerIDByTpId(tpId)));
         return rs.getValue("ASGN_OWN_ID", 1);
     }
@@ -1605,7 +1543,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void makeFirstNightDeposit() {
-        RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
+        RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(Environment.getBaseEnvironmentName(environment), "UI booking");
         if ((getBook() != null) && (getBook().getTravelPlanId() != null)) {
             retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, getBook().getTravelPlanId());
         } else {
@@ -1627,7 +1565,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                 + "and a.tps_id = b.tps_id "
                 + "and b.tc_grp_nb = c.tc_grp_nb "
                 + "and c.fac_id is not null )";
-        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         for (int i = 1; i <= rs.getRowCount(); i++) {
@@ -1654,7 +1592,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         }
         TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200", "Verify that no error occurred retrieving the balance for the reservation: " + retrieveBalance.getFaultString());
 
-        PostCardPayment postPayment = new PostCardPayment(environment, "Visa-CreditCard");
+        PostCardPayment postPayment = new PostCardPayment(Environment.getBaseEnvironmentName(environment), "Visa-CreditCard");
         postPayment.setAmount(retrieveBalance.getDepositRequired());
         postPayment.setFolioId(retrieveBalance.getFolioId());
         if ((getBook() != null) && (getBook().getTravelPlanId() != null)) {
@@ -1691,7 +1629,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public void makeFirstNightDeposit(ReplaceAllForTravelPlanSegment book) {
-        RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(environment, "UI booking");
+        RetrieveFolioBalanceDue retrieveBalance = new RetrieveFolioBalanceDue(Environment.getBaseEnvironmentName(environment), "UI booking");
         if ((book != null) && (book.getTravelPlanId() != null)) {
             retrieveBalance.setExternalReference(ServiceConstants.FolioExternalReference.DREAMS_TP, book.getTravelPlanId());
         } else {
@@ -1713,7 +1651,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                 + "and a.tps_id = b.tps_id "
                 + "and b.tc_grp_nb = c.tc_grp_nb "
                 + "and c.fac_id is not null )";
-        Database db = new OracleDatabase(environment, Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(sql));
 
         for (int i = 1; i <= rs.getRowCount(); i++) {
@@ -1740,7 +1678,7 @@ public class AccommodationBaseTest extends BaseRestTest {
         }
         TestReporter.assertEquals(retrieveBalance.getResponseStatusCode(), "200", "Verify that no error occurred retrieving the balance for the reservation: " + retrieveBalance.getFaultString());
 
-        PostCardPayment postPayment = new PostCardPayment(environment, "Visa-CreditCard");
+        PostCardPayment postPayment = new PostCardPayment(Environment.getBaseEnvironmentName(environment), "Visa-CreditCard");
         postPayment.setAmount(retrieveBalance.getDepositRequired());
         postPayment.setFolioId(retrieveBalance.getFolioId());
         if ((book != null) && (book.getTravelPlanId() != null)) {
@@ -1779,7 +1717,7 @@ public class AccommodationBaseTest extends BaseRestTest {
     public String findBundleTcg(String tpId) {
         String baseSql = DVCSalesDreams.getReservationInfoByTpId(tpId).replace("and rownum = 1", "").replace("*", "unique(c.TC_GRP_NB)");
         String sql = "select PROD_TYP_NM from res_mgmt.tc a where a.tc_grp_nb in({INPUT})";
-        Database db = new OracleDatabase(DVCSalesBaseTest.removeCM(environment), Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(baseSql));
 
         for (int i = 1; i <= rs.getRowCount(); i++) {
@@ -1812,14 +1750,14 @@ public class AccommodationBaseTest extends BaseRestTest {
     }
 
     public String findDiningResTcg(String confirmationNumber) {
-        Database db = new OracleDatabase(environment.toLowerCase().replace("_cm", ""), Database.DREAMS);
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(environment), Database.DREAMS);
         Recordset rs = new Recordset(db.getResultSet(DVCSalesDreams.getReservationInfoByTpsId(confirmationNumber)));
         return rs.getValue("TC_GRP_NB", 1);
     }
 
     public void checkingIn(String environment) {
 
-        FindRoomForReservation findRoom = new FindRoomForReservation(environment, "UI Booking");
+        FindRoomForReservation findRoom = new FindRoomForReservation(Environment.getBaseEnvironmentName(getEnvironment()), "UI Booking");
         findRoom.setTravelPlanId(getBook().getTravelPlanId());
         findRoom.setNumberOfResponseRows("50");
         findRoom.sendRequest();
@@ -1836,7 +1774,7 @@ public class AccommodationBaseTest extends BaseRestTest {
             roomNumber = et.getKey();
             resourceId = et.getValue();
 
-            assignRoom = new AssignRoomForReservation(environment, "UI Booking");
+            assignRoom = new AssignRoomForReservation(Environment.getBaseEnvironmentName(getEnvironment()), "UI Booking");
             assignRoom.setArrivalAndDepartureDaysOut(String.valueOf(getDaysOut()), String.valueOf(getNights()));
             assignRoom.setAssignmentOwnerNumber(findRoom.getAssignmentOwnerNumber());
             assignRoom.setFacilityId(getFacilityId());
@@ -1855,30 +1793,13 @@ public class AccommodationBaseTest extends BaseRestTest {
         String assignRoomFaultString = assignRoom == null ? "" : assignRoom.getFaultString();
         TestReporter.assertTrue(roomAdded, "Verify no error occurred assigning a room to a reservation: " + assignRoomFaultString);
 
-        CheckingIn checkingIn = new CheckingIn(environment, "UI_Booking");
+        CheckingIn checkingIn = new CheckingIn(Environment.getBaseEnvironmentName(getEnvironment()), "UI_Booking");
         checkingIn.setLocationId(getLocationId());
         checkingIn.setTravelComponentGroupingId(getBook().getTravelComponentGroupingId());
         checkingIn.sendRequest();
         TestReporter.assertTrue(checkingIn.getResponseStatusCode().equals("200"), "Verify that no error occurred checking-in TP ID [" + getBook().getTravelPlanId() + "]: " + getBook().getFaultString());
 
     }
-
-    // public static boolean isValid(Object o) {
-    // boolean valid = false;
-    // if (o == null) {
-    // valid = false;
-    // }
-    //
-    // if (o instanceof String) {
-    // if (StringUtils.isEmpty((String) o)) {
-    // valid = false;
-    // } else {
-    // valid = true;
-    // }
-    // }
-    //
-    // return valid;
-    // }
 
     public static Boolean isValid(Object obj) {
         Boolean valid = false;
