@@ -1297,6 +1297,7 @@ public class AccommodationBaseTest extends BaseRestTest {
                 // if (!isValid(isComo.get())) {
                 // throw new AutomationException("The 'isComo' field cannot be null or empty.");
                 // }
+
                 /*
                  * if (!isValid(isComo) || !isValid(isComo.get()) || isComo.get().equals("false")) {
                  * getBook().setEnvironment(Environment.getBaseEnvironmentName(getEnvironment()));

@@ -94,7 +94,7 @@ public class TestReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent extends A
         manage.setPhoneNumber(getHouseHold().primaryGuest().primaryPhone().getNumber());
         manage.setEmailAddress(getHouseHold().primaryGuest().primaryEmail().getEmail());
         manage.sendRequest();
-        TestReporter.assertTrue(manage.getResponseStatusCode().equals("200"), "Verify that no error occurred managing confirmation recipient: " + manage.getFaultString());
+        TestReporter.logAPI(!manage.getResponseStatusCode().equals("200"), "Verify that no error occurred when checking the Itinerary Confirmation: " + manage.getFaultString(), manage);
 
         // Grabs the ODSGuestId for use in ItineraryConfirmation
         String sql = "select a.TXN_PTY_EXTNL_REF_VAL "
