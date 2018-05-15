@@ -133,11 +133,11 @@ public class PackageCodes_RSR {
 
     public void takePackageCode(String scenario) {
 
-        datatable.setVirtualtablePage("ackageInformation");
-        datatable.setVirtualtableScenario(scenario);
+        Datatable.setVirtualtablePage("ackageInformation");
+        Datatable.setVirtualtableScenario(scenario);
 
-        String packageDeascription = datatable.getDataParameter("PackageDeascription");
-        String packageType = datatable.getDataParameter("PackageType");
+        String packageDeascription = Datatable.getDataParameter("PackageDeascription");
+        String packageType = Datatable.getDataParameter("PackageType");
     }
 
     public void addPackageCodeSql(String addSql) {

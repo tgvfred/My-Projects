@@ -27,6 +27,7 @@ public class TestReplaceAllForTravelPlanSegment_ModifyNonDisneyToDisney extends 
         setDepartureDate(getNights());
         setValues(getEnvironment());
         isComo.set("true");
+
         setSendRequest(false);
         setResortCode("SWN");
         setRoomTypeCode("SA");
