@@ -89,6 +89,7 @@ public class TestReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent extends A
         manage.sendRequest();
         TestReporter.logAPI(!manage.getResponseStatusCode().equals("200"), "Verify that no error occurred when checking the Itinerary Confirmation: " + manage.getFaultString(), manage);
 
+        // Confirms that the confirmation was a success
         ItineraryConfirmation confirmation = new ItineraryConfirmation(environment, "WDW", "ItineraryConfirmationRQ");
         confirmation.setGlobalGuestID(agentId);
         confirmation.setItineraryId(getBook().getTravelPlanId());

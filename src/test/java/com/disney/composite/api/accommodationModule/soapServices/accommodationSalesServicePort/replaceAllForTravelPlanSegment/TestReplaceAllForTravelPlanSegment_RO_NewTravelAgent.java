@@ -81,6 +81,7 @@ public class TestReplaceAllForTravelPlanSegment_RO_NewTravelAgent extends Accomm
         associate.setOrganizationId(organizationId);
         associate.sendRequest();
 
+        // Updates the Travel Agents Email
         UpdateIndividual update = new UpdateIndividual(environment, "Main");
         update.setEmail(email);
         update.setFirstName("Kraven");
@@ -123,6 +124,7 @@ public class TestReplaceAllForTravelPlanSegment_RO_NewTravelAgent extends Accomm
         }
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
+        // Confirms that the confirmation was a success
         ItineraryConfirmation confirmation = new ItineraryConfirmation(environment, "WDW", "ItineraryConfirmationRQ");
         confirmation.setGlobalGuestID(agentId);
         confirmation.setItineraryId(getBook().getTravelPlanId());
