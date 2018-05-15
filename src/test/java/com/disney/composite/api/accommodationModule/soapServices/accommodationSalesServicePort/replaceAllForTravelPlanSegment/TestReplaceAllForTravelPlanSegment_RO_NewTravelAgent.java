@@ -124,7 +124,7 @@ public class TestReplaceAllForTravelPlanSegment_RO_NewTravelAgent extends Accomm
         odsGuestId = rs.getValue("TXN_PTY_EXTNL_REF_VAL");
 
         ItineraryConfirmation confirmation = new ItineraryConfirmation(environment, "WDW", "ItineraryConfirmationRQ");
-        confirmation.setGlobalGuestID(odsGuestId);
+        confirmation.setGlobalGuestID(agentId);
         confirmation.setItineraryId(getBook().getTravelPlanId());
         confirmation.setParentId(getBook().getTravelPlanSegmentId());
         confirmation.setChildId(getBook().getTravelComponentGroupingId());
@@ -132,6 +132,18 @@ public class TestReplaceAllForTravelPlanSegment_RO_NewTravelAgent extends Accomm
         confirmation.setSystemOfRecord("DPMS");
         confirmation.setEndDate(getDepartureDate());
         confirmation.setLocation("WDW");
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec/@ConfirmationTypeName", "Email Guest Agent");
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec", BaseSoapCommands.ADD_NODE.commandAppend("AgencyReference"));
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec/AgencyReference", BaseSoapCommands.ADD_ATTIRBUTE.commandAppend("PrimaryAgentFlag"));
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec/AgencyReference", BaseSoapCommands.ADD_ATTIRBUTE.commandAppend("AgencyType"));
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec/AgencyReference", BaseSoapCommands.ADD_ATTIRBUTE.commandAppend("AgencyId"));
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec/AgencyReference", BaseSoapCommands.ADD_ATTIRBUTE.commandAppend("AgentId"));
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec/AgencyReference/@PrimaryAgentFlag", "true");
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec/AgencyReference/@AgencyType", "SYSTEM SUPPORT TEST AGENCY");
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec/AgencyReference/@AgencyId", agencyId);
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec/AgencyReference/@AgentId", agentId);
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec", BaseSoapCommands.ADD_NODE.commandAppend("Email"));
+        confirmation.setRequestNodeValueByXPath("/ItineraryConfirmationRQ/ItineraryConfirmationSpec/Email", email);
         confirmation.sendRequest();
         TestReporter.logAPI(!confirmation.isSuccess(), "Verify that no error occurred when checking the Itinerary Confirmation: " + confirmation.getFaultString(), confirmation);
         validations();
@@ -174,7 +186,7 @@ public class TestReplaceAllForTravelPlanSegment_RO_NewTravelAgent extends Accomm
         String firstName = getBook().getRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/firstName");
         String lastName = getBook().getRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/lastName");
         String contactName = firstName + " " + lastName;
-        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Email Guest Agent", tpPtyId, "Y", "N", contactName, "N");
+        validations.validateConfirmationDetails(getBook().getTravelPlanSegmentId(), "Email", tpPtyId, "Y", "N", contactName, "N");
 
         // Validate the Old to the New
         if (Environment.isSpecialEnvironment(environment)) {
