@@ -12,6 +12,9 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.accommodationModule.helpers.ValidationHelper;
 import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operations.UpdateIndividual;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.pricingModule.enums.DistributionProductChannel;
+import com.disney.api.soapServices.pricingModule.enums.PlanType;
+import com.disney.api.soapServices.pricingModule.packagingService.operations.helpers.PackageCodeHelper;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.UpdateItineraryConfirmationHelper;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.ManageConfirmationRecipient;
 import com.disney.utils.Environment;
@@ -35,15 +38,18 @@ public class TestReplaceAllForTravelPlanSegment_Aulani_ExistingTravelAgent exten
 		setNights(1);
 		setArrivalDate(getDaysOut());
 		setDepartureDate(getNights());
-
-		// below makes it an Aulani Resort
-		setResortCode("17");
-		setRoomTypeCode("7A");
-		setFacilityId("367506");
-
-		setAddTravelAgency(true);
 		setValues(getEnvironment());
+		setAddTravelAgency(true);
+		setSendRequest(false);
+		bookReservation();
 		isComo.set("true");
+		getBook().setRoomDetailsResortCode("17");
+		getBook().setRoomDetailsRoomTypeCode("7A");
+		PackageCodeHelper pkg = new PackageCodeHelper(environment, Randomness.generateCurrentXMLDate(),
+				PlanType.ROOM_ONLY, DistributionProductChannel.AULANI_SALES_CENTER_ROOM_ONLY, "17", "7A",
+				Randomness.generateCurrentXMLDate(0));
+		getBook().setRoomDetailsPackageCode(pkg.getPackageCode());
+		getBook().sendRequest();
 
 	}
 
@@ -51,7 +57,7 @@ public class TestReplaceAllForTravelPlanSegment_Aulani_ExistingTravelAgent exten
 			"replaceAllForTravelPlanSegment" })
 	public void testReplaceAllForTravelPlanSegment_Aulani_ExistingTravelAgent() {
 
-		bookReservation();
+		// bookReservation();
 
 		String randemail = Randomness.randomString(5);
 		String email = randemail + "@disney.com";

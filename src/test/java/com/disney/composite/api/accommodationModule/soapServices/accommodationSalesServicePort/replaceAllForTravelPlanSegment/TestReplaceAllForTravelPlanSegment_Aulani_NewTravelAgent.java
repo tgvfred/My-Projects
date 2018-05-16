@@ -15,6 +15,9 @@ import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operation
 import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operations.CreateOrganization;
 import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operations.UpdateIndividual;
 import com.disney.api.soapServices.core.BaseSoapCommands;
+import com.disney.api.soapServices.pricingModule.enums.DistributionProductChannel;
+import com.disney.api.soapServices.pricingModule.enums.PlanType;
+import com.disney.api.soapServices.pricingModule.packagingService.operations.helpers.PackageCodeHelper;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.helpers.UpdateItineraryConfirmationHelper;
 import com.disney.api.soapServices.travelPlanSegmentModule.travelPlanSegmentServicePort.operations.ManageConfirmationRecipient;
 import com.disney.utils.Environment;
@@ -44,16 +47,18 @@ public class TestReplaceAllForTravelPlanSegment_Aulani_NewTravelAgent extends Ac
 		setNights(1);
 		setArrivalDate(getDaysOut());
 		setDepartureDate(getNights());
-		// below makes it an Aulani Resort
-		setResortCode("17");
-		setRoomTypeCode("7A");
-		setFacilityId("367506");
-
 		setValues(getEnvironment());
-
 		setAddTravelAgency(true);
+		setSendRequest(false);
+		bookReservation();
 		isComo.set("true");
-
+		getBook().setRoomDetailsResortCode("17");
+		getBook().setRoomDetailsRoomTypeCode("7A");
+		PackageCodeHelper pkg = new PackageCodeHelper(environment, Randomness.generateCurrentXMLDate(),
+				PlanType.ROOM_ONLY, DistributionProductChannel.AULANI_SALES_CENTER_ROOM_ONLY, "17", "7A",
+				Randomness.generateCurrentXMLDate(0));
+		getBook().setRoomDetailsPackageCode(pkg.getPackageCode());
+		getBook().sendRequest();
 	}
 
 	@Test(groups = { "api", "regression", "accommodation", "accommodationSalesService",
