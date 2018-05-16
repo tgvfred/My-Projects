@@ -72,7 +72,7 @@ public class TestReplaceAllForTravelPlanSegment_RO_ExistingTravelAgent extends A
         update.sendRequest();
         TestReporter.logAPI(!update.getResponseStatusCode().equals("200"), "Verify that no error occurred when checking the Itinerary Confirmation: " + update.getFaultString(), update);
 
-        bookReservation();
+        // bookReservation();
         getBook().sendRequest();
         TestReporter.logAPI(!getBook().getResponseStatusCode().equals("200"), "Verify that no error occurred booking a reservation: " + getBook().getFaultString(), getBook());
 
