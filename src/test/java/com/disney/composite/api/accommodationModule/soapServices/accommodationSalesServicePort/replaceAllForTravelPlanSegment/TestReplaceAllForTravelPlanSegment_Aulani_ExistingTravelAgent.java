@@ -35,13 +35,14 @@ public class TestReplaceAllForTravelPlanSegment_Aulani_ExistingTravelAgent exten
 		setNights(1);
 		setArrivalDate(getDaysOut());
 		setDepartureDate(getNights());
-		setValues(getEnvironment());
+
 		// below makes it an Aulani Resort
-		setResortCode("16");
+		setResortCode("17");
 		setRoomTypeCode("7A");
 		setFacilityId("367506");
-		setLocationId("7003");
+
 		setAddTravelAgency(true);
+		setValues(getEnvironment());
 		isComo.set("true");
 
 	}
