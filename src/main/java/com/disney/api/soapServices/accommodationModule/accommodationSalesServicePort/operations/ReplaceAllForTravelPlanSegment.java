@@ -2210,7 +2210,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     // Xpath may need to be updated
     public String getTicketValidity_startDate() {
         try {
-            return getResponseNodeValueByXPath("/Envelope/Body/retrieveDetailsResponse/travelPlanSegmentDetails/componentGroupings/accommodation/ticketDetails/ticketValidityPeriod/startDate");
+            return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/ticketDetails/complimentaryTicketDetail/validityPeriod/startDate");
         } catch (XPathNotFoundException e) {
             TestReporter.assertTrue(false, "'Ticket Validity - Start Date' attribute could not be found");
             return null;
@@ -2220,7 +2220,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     // Xpath may need to be updated
     public String getTicketValidity_endDate() {
         try {
-            return getResponseNodeValueByXPath("/Envelope/Body/retrieveDetailsResponse/travelPlanSegmentDetails/componentGroupings/accommodation/ticketDetails/ticketValidityPeriod/endDate");
+            return getResponseNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/ticketDetails/complimentaryTicketDetail/validityPeriod/endDate");
         } catch (XPathNotFoundException e) {
             TestReporter.assertTrue(false, "'Ticket Validity - End Date' attribute could not be found");
             return null;
