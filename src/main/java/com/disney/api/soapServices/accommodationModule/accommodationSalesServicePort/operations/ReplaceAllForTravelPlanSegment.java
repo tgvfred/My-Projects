@@ -24,10 +24,14 @@ import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBase
 import com.disney.api.soapServices.bussvcsModule.organizationServiceV2.operations.SearchOrganizationByMembershipId;
 import com.disney.api.soapServices.core.BaseSoapCommands;
 import com.disney.api.soapServices.core.exceptions.XPathNotFoundException;
+import com.disney.utils.Environment;
 import com.disney.utils.Randomness;
 import com.disney.utils.Sleeper;
 import com.disney.utils.TestReporter;
 import com.disney.utils.XMLTools;
+import com.disney.utils.dataFactory.database.Database;
+import com.disney.utils.dataFactory.database.Recordset;
+import com.disney.utils.dataFactory.database.databaseImpl.OracleDatabase;
 import com.disney.utils.dataFactory.guestFactory.Address;
 import com.disney.utils.dataFactory.guestFactory.Email;
 import com.disney.utils.dataFactory.guestFactory.Guest;
@@ -2197,5 +2201,51 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
     public void setDclGuestId(String id) {
         setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/travelPlanGuest/dclGuestId", id);
         setRequestNodeValueByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/guest/dclGuestId", id);
+    }
+
+    public String getTcgId() {
+        return getResponseNodeValueByXPath("/Envelope/Body/retrieveDetailsResponse/travelPlanSegmentDetails/componentGroupings/travelComponentGroupingId");
+    }
+
+    // Xpath may need to be updated
+    public String getTicketValidity_startDate() {
+        try {
+            return getResponseNodeValueByXPath("/Envelope/Body/retrieveDetailsResponse/travelPlanSegmentDetails/componentGroupings/accommodation/ticketDetails/ticketValidityPeriod/startDate");
+        } catch (XPathNotFoundException e) {
+            TestReporter.assertTrue(false, "'Ticket Validity - Start Date' attribute could not be found");
+            return null;
+        }
+    }
+
+    // Xpath may need to be updated
+    public String getTicketValidity_endDate() {
+        try {
+            return getResponseNodeValueByXPath("/Envelope/Body/retrieveDetailsResponse/travelPlanSegmentDetails/componentGroupings/accommodation/ticketDetails/ticketValidityPeriod/endDate");
+        } catch (XPathNotFoundException e) {
+            TestReporter.assertTrue(false, "'Ticket Validity - End Date' attribute could not be found");
+            return null;
+        }
+    }
+
+    public void validateTicketValidityDates(String ticketStartDate_RS, String ticketEndDate_RS) {
+        String sql = "select b.* "
+                + "from res_mgmt.tc a "
+                + "join res_mgmt.adm_cmpnt b on a.tc_id = b.adm_tc_id "
+                + "where a.tc_grp_nb = '" + getTcgId() + "' "
+                + "and a.tc_typ_nm = 'AdmissionComponent'";
+
+        TestReporter.logStep("Verify ticket validity dates in 'RES_MGMT.ADM_CMPNT' match response <br />" +
+                "SQL: " + sql);
+
+        Database db = new OracleDatabase(Environment.getBaseEnvironmentName(getEnvironment()), Database.DREAMS);
+        Recordset rs = new Recordset(db.getResultSet(sql));
+
+        // Capturing start/end dates from query results
+        String ticketStartDate_SQL = rs.getValue("VALIDITY_STRT_DT", 1);
+        String ticketEndDate_SQL = rs.getValue("VALIDITY_END_DT", 1);
+
+        // Verify that the actual number of records is that which is expected
+        TestReporter.softAssertEquals(ticketStartDate_RS, ticketStartDate_SQL, "Verify that Ticket validity 'Start Date' in response [" + ticketStartDate_RS + "] matches the [" + ticketStartDate_SQL + "] value from 'RES_MGMT.ADM_CMPNT' table.");
+        TestReporter.softAssertEquals(ticketEndDate_RS, ticketEndDate_SQL, "Verify that Ticket validity 'End Date' in response [" + ticketEndDate_RS + "] matches the [" + ticketEndDate_SQL + "] value from 'RES_MGMT.ADM_CMPNT' table.");
     }
 }

@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.disney.api.mq.sbc.MiscRes;
 import com.disney.api.mq.sbc.RoomRes;
+import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
 import com.disney.api.soapServices.admissionModule.admissionSalesServicePort.helpers.BookPackageSelectableTicketsHelper;
@@ -84,6 +85,7 @@ public class TestReplaceAllForTravelPlanSegment_Tickets_validityDates extends Ac
         // retrieving a reservation: " + bookRetrieve.getResponse(), res);
 
         validations();
+        assertResponseValidations(getBook());
     }
 
     public void validations() {
@@ -105,6 +107,18 @@ public class TestReplaceAllForTravelPlanSegment_Tickets_validityDates extends Ac
         String ticketEndDate = getTicketEndDate;
         bookHelper.validateTicketValidityDates(ticketStartDate, ticketEndDate);
 
+        TestReporter.assertAll();
+    }
+
+    private void assertResponseValidations(ReplaceAllForTravelPlanSegment rq) {
+        TestReporter.setAssertFailed(false);
+
+        // Capturing ticket validity dates for later validations
+        getTicketStartDate = rq.getTicketValidity_startDate().replace("T", " ") + ".0";
+        getTicketEndDate = rq.getTicketValidity_endDate().replace("T", " ") + ".0";
+
+        // Verifying ticket validity dates
+        rq.validateTicketValidityDates(getTicketStartDate, getTicketEndDate);
         TestReporter.assertAll();
     }
 
