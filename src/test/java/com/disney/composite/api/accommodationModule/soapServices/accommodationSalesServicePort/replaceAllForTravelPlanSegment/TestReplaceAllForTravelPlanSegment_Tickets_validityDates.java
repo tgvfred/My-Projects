@@ -9,7 +9,6 @@ import com.disney.api.mq.sbc.RoomRes;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.ReplaceAllForTravelPlanSegment;
 import com.disney.api.soapServices.accommodationModule.accommodationSalesServicePort.operations.Retrieve;
 import com.disney.api.soapServices.accommodationModule.helpers.AccommodationBaseTest;
-import com.disney.api.soapServices.admissionModule.admissionSalesServicePort.helpers.BookPackageSelectableTicketsHelper;
 import com.disney.api.soapServices.admissionModule.admissionSalesServicePort.operations.BookPackageSelectableTickets;
 import com.disney.api.soapServices.pricingModule.packagingService.operations.GetTicketProducts;
 import com.disney.utils.TestReporter;
@@ -81,33 +80,14 @@ public class TestReplaceAllForTravelPlanSegment_Tickets_validityDates extends Ac
         bookRetrieve.setLocationId(getLocationId());
         bookRetrieve.sendRequest();
 
-        // TestReporter.logAPI(!res.isSuccess(), "Verify that no error occurred
-        // retrieving a reservation: " + bookRetrieve.getResponse(), res);
+        Integer test;
+        test = getBook().getNumberOfResponseNodesByXPath("/Envelope/Body/replaceAllForTravelPlanSegment/request/roomDetails/ticketDetails/complimentaryTicketDetail/validityPeriod/startDate");
+        if (test.equals(0)) {
+            TestReporter.log("Toggle is OFF");
+        } else {
+            assertResponseValidations(getBook());
+        }
 
-        validations();
-        assertResponseValidations(getBook());
-    }
-
-    public void validations() {
-        BookPackageSelectableTicketsHelper bookHelper = new BookPackageSelectableTicketsHelper(environment,
-                getBook().getTravelPlanId(), getBook().getTravelPlanSegmentId(),
-                getBook().getTravelComponentGroupingId(), getBook().getTravelComponentId());
-
-        // Verifying successful response
-        TestReporter.logAPI(!bookPackage.getResponseStatusCode().equals("200"),
-                "Verify that no error occurred booking package selectable tickets: " + bookPackage.getFaultString(),
-                bookPackage);
-
-        // Capturing ticket validity dates for later validations
-        getTicketStartDate = bookPackage.getTicketValidity_startDate().replace("T", " ") + ".0";
-        getTicketEndDate = bookPackage.getTicketValidity_endDate().replace("T", " ") + ".0";
-
-        // Verifying ticket validity dates
-        String ticketStartDate = getTicketStartDate;
-        String ticketEndDate = getTicketEndDate;
-        bookHelper.validateTicketValidityDates(ticketStartDate, ticketEndDate);
-
-        TestReporter.assertAll();
     }
 
     private void assertResponseValidations(ReplaceAllForTravelPlanSegment rq) {

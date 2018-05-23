@@ -339,7 +339,7 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         String baseXpath = "//replaceAllForTravelPlanSegment/request/roomDetails/roomReservationDetail/guestReferenceDetails/";
         setRequestNodeValueByXPath(baseXpath + "/age", guest.getAge());
         setRequestNodeValueByXPath(baseXpath + "/ageType", getAgeTypeByAge(guest.getAge()));
-        setGuest(baseXpath + "guest/", guest);
+        setGuest(baseXpath + "guest", guest);
     }
 
     public void setRoomDetails_RoomReservationDetail_GuestRefDetails_MembershipDetails(String expDate, String membershipType, String membershipId, String policyId, String prodChannelId, String guestMembershipId) {
@@ -591,6 +591,9 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
             throw new AutomationException("The guest object cannot be null");
         }
         // setRequestNodeValueByXPath(baseXpath + "/suffix", guest.getSuffix());
+        if (getNumberOfRequestNodesByXPath(baseXpath + "/title") == 0) {
+            setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("title"));
+        }
         setRequestNodeValueByXPath(baseXpath + "/title", guest.getTitle());
         setRequestNodeValueByXPath(baseXpath + "/firstName", guest.getFirstName());
         setRequestNodeValueByXPath(baseXpath + "/lastName", guest.getLastName());
@@ -602,10 +605,25 @@ public class ReplaceAllForTravelPlanSegment extends AccommodationSalesServicePor
         setRequestNodeValueByXPath(baseXpath + "/dclGuestId", "0");
         setRequestNodeValueByXPath(baseXpath + "/guestId", guest.getGuestId());
         setRequestNodeValueByXPath(baseXpath + "/active", "true");
-        setRequestNodeValueByXPath(baseXpath + "/dob", guest.getBirthDate());
-        setGuestPhone(baseXpath, guest.primaryPhone());
-        setGuestAddress(baseXpath, guest.primaryAddress());
-        setGuestEmail(baseXpath, guest.primaryEmail());
+        // if (getNumberOfRequestNodesByXPath(baseXpath + "/dob") == 0) {
+        // setRequestNodeValueByXPath(baseXpath, BaseSoapCommands.ADD_NODE.commandAppend("dob"));
+        // }
+        try {
+            setRequestNodeValueByXPath(baseXpath + "/dob", guest.getBirthDate());
+        } catch (Exception e) {
+        }
+        try {
+            setGuestPhone(baseXpath, guest.primaryPhone());
+        } catch (Exception e) {
+        }
+        try {
+            setGuestAddress(baseXpath, guest.primaryAddress());
+        } catch (Exception e) {
+        }
+        try {
+            setGuestEmail(baseXpath, guest.primaryEmail());
+        } catch (Exception e) {
+        }
 
     }
 
